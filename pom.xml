@@ -23,6 +23,11 @@
             <artifactId>dropwizard-assets</artifactId>
             <version>${dropwizard.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>angularjs</artifactId>
+            <version>1.4.1</version>
+        </dependency>
     </dependencies>
 
     <build>

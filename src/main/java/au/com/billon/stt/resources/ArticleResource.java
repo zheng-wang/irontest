@@ -1,7 +1,7 @@
 package au.com.billon.stt.resources;
 
 import au.com.billon.stt.db.ArticleDAO;
-import au.com.billon.stt.representations.Article;
+import au.com.billon.stt.models.Article;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

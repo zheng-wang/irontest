@@ -1,6 +1,6 @@
 package au.com.billon.stt.db;
 
-import au.com.billon.stt.representations.Article;
+import au.com.billon.stt.models.Article;
 
 import java.util.ArrayList;
 import java.util.List;

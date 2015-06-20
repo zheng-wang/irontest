@@ -1,4 +1,4 @@
-package au.com.billon.stt.representations;
+package au.com.billon.stt.models;
 
 /**
  * Created by Zheng on 20/06/2015.
