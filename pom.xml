@@ -84,22 +84,35 @@
                 <version>1.4.0</version>
                 <executions>
                     <execution>
+                        <id>exec-bower-install</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>bower</executable>
+                            <arguments>
+                                <argument>install</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>start-dropwizard-app</id>
                         <phase>pre-integration-test</phase>
                         <goals>
                             <goal>exec</goal>
                         </goals>
+                        <configuration>
+                            <executable>java</executable>
+                            <arguments>
+                                <argument>-jar</argument>
+                                <argument>target/${project.artifactId}-${project.version}.jar</argument>
+                                <argument>server</argument>
+                                <argument>config.yml</argument>
+                            </arguments>
+                        </configuration>
                     </execution>
                 </executions>
-                <!-- start the Dropwizard application -->
-                <configuration>
-                    <executable>java</executable>
-                    <arguments>
-                        <argument>-jar</argument>
-                        <argument>target/${project.artifactId}-${project.version}.jar</argument>
-                        <argument>server</argument>
-                        <argument>config.yml</argument>
-                    </arguments>
-                </configuration>
             </plugin>
         </plugins>
     </build>
