@@ -21,7 +21,8 @@ public class STTApplication extends Application<STTConfiguration> {
 
     @Override
     public void initialize(Bootstrap<STTConfiguration> bootstrap) {
-        bootstrap.addBundle(new AssetsBundle("/assets/", "/ui"));
+        bootstrap.addBundle(new AssetsBundle("/assets", "/"));    // to resolve the favicon 404 error
+        bootstrap.addBundle(new AssetsBundle("/assets/app", "/ui"));
     }
 
     @Override
