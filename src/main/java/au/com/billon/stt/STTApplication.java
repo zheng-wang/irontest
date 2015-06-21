@@ -21,7 +21,7 @@ public class STTApplication extends Application<STTConfiguration> {
 
     @Override
     public void initialize(Bootstrap<STTConfiguration> bootstrap) {
-        bootstrap.addBundle(new AssetsBundle("/assets/", "/"));
+        bootstrap.addBundle(new AssetsBundle("/assets/", "/ui"));
     }
 
     @Override
