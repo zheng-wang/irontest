@@ -25,7 +25,11 @@ public class STTApplication extends Application<STTConfiguration> {
     }
 
     @Override
-    public void run(STTConfiguration configuration, Environment environment) {
+    public void run(STTConfiguration configuration, Environment environment) throws Exception {
+        //  create database tables
+        new DBSchemaInitializer().init(configuration.getDatabase());
+
+        //  register REST resources
         final ArticleResource resource = new ArticleResource();
         environment.jersey().register(resource);
     }

@@ -10,6 +10,7 @@
 
     <properties>
         <dropwizard.version>0.8.1</dropwizard.version>
+        <h2.version>1.4.187</h2.version>
     </properties>
 
     <dependencies>
@@ -22,6 +23,16 @@
             <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-assets</artifactId>
             <version>${dropwizard.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.dropwizard</groupId>
+            <artifactId>dropwizard-db</artifactId>
+            <version>${dropwizard.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${h2.version}</version>
         </dependency>
     </dependencies>
 
