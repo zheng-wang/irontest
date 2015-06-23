@@ -3,3 +3,7 @@ body {
   padding: 10px;
   background-color: #ECF0F1;
 }
+.myGrid {
+  width: 500px;
+  height: 250px;
+}

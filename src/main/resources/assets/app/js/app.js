@@ -1,5 +1,5 @@
 // Declare app level module dependencies
-angular.module('service-testing-tool', ['ngResource', 'ui.router'])
+angular.module('service-testing-tool', ['ngResource', 'ui.router', 'ui.grid'])
     .config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
         $urlRouterProvider.otherwise('/');
 
