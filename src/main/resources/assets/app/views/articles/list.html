@@ -2,7 +2,7 @@
   <ul class="articles unstyled">
     <li data-ng-repeat="article in articles">
       <h2>
-        <a ng-href="#/articles/{{article.id}}">{{article.title}}</a>
+        <a ui-sref="article_id({articleId: article.id})">{{article.title}}</a>
       </h2>
       <div>{{article.content}}</div>
     </li>
