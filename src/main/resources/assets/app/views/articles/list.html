@@ -1,11 +1,20 @@
 <section data-ng-controller="ArticlesController" data-ng-init="find()">
   <ul class="articles unstyled">
     <li data-ng-repeat="article in articles">
+      <span>Created on {{article.created | date:'medium'}}</span>
       <h2>
         <a ui-sref="article_id({articleId: article.id})">{{article.title}}</a>
+        <span>
+          <a class="btn" ui-sref="article_edit({articleId: article.id})">
+            <i class="glyphicon glyphicon-edit"></i>
+          </a>
+          <a class="btn" ng-click="remove(article)">
+            <i class="glyphicon glyphicon-trash"></i>
+          </a>
+        </span>
       </h2>
       <div>{{article.content}}</div>
     </li>
   </ul>
-  <h1 ng-hide="!articles || articles.length">No articles yet. <br> Why don't you <a href="/#/articles/create">Create One</a>?</h1>
+  <h1 ng-hide="!articles || articles.length">No articles yet. <br> Why don't you <a ui-sref="article_create">Create One</a>?</h1>
 </section>

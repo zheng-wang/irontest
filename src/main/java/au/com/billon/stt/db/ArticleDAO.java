@@ -1,34 +1,32 @@
 package au.com.billon.stt.db;
 
 import au.com.billon.stt.models.Article;
+import org.skife.jdbi.v2.sqlobject.*;
+import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Zheng on 20/06/2015.
+ * Created by Zheng on 23/06/2015.
  */
-public class ArticleDAO {
-    private List<Article> articles;
+@RegisterMapper(ArticleMapper.class)
+public interface ArticleDAO {
+    @SqlUpdate("create table IF NOT EXISTS article (id INT PRIMARY KEY auto_increment, title varchar(50), content varchar(500), created timestamp DEFAULT CURRENT_TIMESTAMP, updated timestamp DEFAULT CURRENT_TIMESTAMP)")
+    void createTableIfNotExists();
 
-    public ArticleDAO() {
-        articles = new ArrayList<Article>();
-        articles.add(new Article(1, "Article 1 Title", "Article 1 Content"));
-        articles.add(new Article(2, "Article 2 Title", "Article 2 Content"));
-    }
+    @SqlUpdate("insert into article (title, content) values (:title, :content)")
+    @GetGeneratedKeys
+    long insert(@BindBean Article article);
 
-    public List<Article> findAll() {
-        return articles;
-    }
+    @SqlUpdate("update article set title = :title, content = :content, updated = CURRENT_TIMESTAMP where id = :id")
+    int update(@BindBean Article article);
 
-    public Article findById(long articleId) {
-        Article result = null;
-        for (Article article: articles) {
-            if (article.getId() == articleId) {
-                result = article;
-                break;
-            }
-        }
-        return result;
-    }
+    @SqlUpdate("delete from article where id = :id")
+    void deleteById(@Bind("id") long id);
+
+    @SqlQuery("select * from article")
+    List<Article> findAll();
+
+    @SqlQuery("select * from article where id = :id")
+    Article findById(@Bind("id") long id);
 }

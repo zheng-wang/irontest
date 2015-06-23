@@ -1,10 +1,14 @@
 package au.com.billon.stt;
 
+import au.com.billon.stt.db.ArticleDAO;
 import au.com.billon.stt.resources.ArticleResource;
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
+import io.dropwizard.jdbi.DBIFactory;
+import io.dropwizard.jdbi.bundles.DBIExceptionsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import org.skife.jdbi.v2.DBI;
 
 /**
  * Created by Zheng on 20/06/2015.
@@ -22,16 +26,19 @@ public class STTApplication extends Application<STTConfiguration> {
     @Override
     public void initialize(Bootstrap<STTConfiguration> bootstrap) {
         bootstrap.addBundle(new AssetsBundle("/assets/app", "/ui"));
+        bootstrap.addBundle(new DBIExceptionsBundle());
     }
 
     @Override
     public void run(STTConfiguration configuration, Environment environment) throws Exception {
         //  create database tables
-        new DBSchemaInitializer().init(configuration.getDatabase());
+        final DBIFactory factory = new DBIFactory();
+        final DBI jdbi = factory.build(environment, configuration.getDatabase(), "h2");
+        final ArticleDAO articleDAO = jdbi.onDemand(ArticleDAO.class);
+        articleDAO.createTableIfNotExists();
 
         //  register REST resources
-        final ArticleResource resource = new ArticleResource();
-        environment.jersey().register(resource);
+        environment.jersey().register(new ArticleResource(articleDAO));
     }
 
 }
