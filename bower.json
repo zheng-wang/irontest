@@ -5,6 +5,7 @@
     "angular": "1.4.1",
     "angular-resource": "1.4.1",
     "angular-route": "1.4.1",
+    "angular-ui-router": "0.2.15",
     "bootstrap": "3.3.5"
   }
 }
