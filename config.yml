@@ -1,6 +1,6 @@
 # Web server settings.
 server:
-  # Root URI for REST resources
+  # (Do not modify) Root URI for REST resources
   rootPath: '/api/*'
 
 # Database settings.
@@ -12,5 +12,5 @@ database:
   # the password
   password: pass
   # the JDBC URL
-  url: jdbc:h2:~/test
+  url: jdbc:h2:~/test;AUTO_SERVER=TRUE
 
