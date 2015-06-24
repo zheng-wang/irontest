@@ -42,6 +42,16 @@ angular.module('service-testing-tool').controller('ArticlesController', ['$scope
       });
     };
 
+    $scope.findGrid = function() {
+      Articles.query(function(articles) {
+        $scope.articles = articles;
+        $scope.columnDefs = [
+          {name: 'title', cellTemplate:'<div><a href="#/articles/{{row.entity.id}}">{{COL_FIELD}}</a></div>'},
+          {name: 'content'}
+        ];
+      });
+    };
+
     $scope.findOne = function() {
       Articles.get({
         articleId: $stateParams.articleId
