@@ -39,14 +39,14 @@ angular.module('service-testing-tool').controller('ArticlesController', ['$scope
     $scope.find = function() {
       $scope.columnDefs = [
         {
-          name: 'title', width: 150,
+          name: 'title', width: 150, minWidth: 100,
           sort: {
             direction: uiGridConstants.ASC,
             priority: 1
           },
           cellTemplate:'gridCellTemplate.html'
         },
-        {name: 'content', width: 400}
+        {name: 'content', width: 400, minWidth: 300}
       ];
 
       Articles.query(function(articles) {

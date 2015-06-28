@@ -1,5 +1,5 @@
 <div ng-controller="ArticlesController" ng-init="find()">
-    <div ui-grid="{enableFiltering: true, data: articles, columnDefs: columnDefs}" class="myGrid"></div>
+    <div ui-grid="{enableFiltering: true, data: articles, columnDefs: columnDefs}" ui-grid-resize-columns ui-grid-move-columns class="myGrid"></div>
 </div>
 
 <script type="text/ng-template" id="gridCellTemplate.html">
