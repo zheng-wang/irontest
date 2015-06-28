@@ -1,3 +1,9 @@
-<div ng-controller="ArticlesController" ng-init="findGrid()">
+<div ng-controller="ArticlesController" ng-init="find()">
     <div ui-grid="{data: articles, columnDefs: columnDefs}" class="myGrid"></div>
 </div>
+
+<script type="text/ng-template" id="gridCellTemplate.html">
+    <div class="ui-grid-cell-contents">
+        <div><a ui-sref="article_id({ articleId: row.entity.id })">{{COL_FIELD}}</a></div>
+    </div>
+</script>

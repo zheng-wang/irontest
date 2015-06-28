@@ -37,18 +37,13 @@ angular.module('service-testing-tool').controller('ArticlesController', ['$scope
     };
 
     $scope.find = function() {
-      Articles.query(function(articles) {
-        $scope.articles = articles;
-      });
-    };
+      $scope.columnDefs = [
+        {name: 'title', cellTemplate:'gridCellTemplate.html'},
+        {name: 'content'}
+      ];
 
-    $scope.findGrid = function() {
       Articles.query(function(articles) {
         $scope.articles = articles;
-        $scope.columnDefs = [
-          {name: 'title', cellTemplate:'<div><a href="#/articles/{{row.entity.id}}">{{COL_FIELD}}</a></div>'},
-          {name: 'content'}
-        ];
       });
     };
 
