@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('service-testing-tool').controller('ArticlesController', ['$scope', 'Articles', '$stateParams', '$location', '$state',
-  function($scope, Articles, $stateParams, $location, $state) {
+angular.module('service-testing-tool').controller('ArticlesController', ['$scope', 'Articles', '$stateParams', '$location', '$state', 'uiGridConstants',
+  function($scope, Articles, $stateParams, $location, $state, uiGridConstants) {
     $scope.create = function(isValid) {
       if (isValid) {
         var article = new Articles({
@@ -38,8 +38,15 @@ angular.module('service-testing-tool').controller('ArticlesController', ['$scope
 
     $scope.find = function() {
       $scope.columnDefs = [
-        {name: 'title', cellTemplate:'gridCellTemplate.html'},
-        {name: 'content'}
+        {
+          name: 'title', width: 150,
+          sort: {
+            direction: uiGridConstants.ASC,
+            priority: 1
+          },
+          cellTemplate:'gridCellTemplate.html'
+        },
+        {name: 'content', width: 400}
       ];
 
       Articles.query(function(articles) {
