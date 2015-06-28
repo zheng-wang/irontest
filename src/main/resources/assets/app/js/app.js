@@ -13,6 +13,8 @@ angular.module('service-testing-tool', ['ngResource', 'ui.router', 'ui.grid', 'u
 
         }])
     .run(function ($rootScope) {
+        //  When a sidebar menu item is clicked (which by design will change ui-router state),
+        //  remove 'active' class from all other menu items, so that the clicked menu item is highlighted.
         $rootScope.$on('$stateChangeStart', function () {
             var url = window.location;
             $('ul.nav a').filter(function() {

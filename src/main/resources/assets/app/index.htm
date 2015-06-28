@@ -31,71 +31,7 @@
             </div>
             <!-- /.navbar-header -->
 
-            <ul class="nav navbar-top-links navbar-right">
-                <!-- /.dropdown -->
-                <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-user">
-                        <li><a href="#UserProfile"><i class="fa fa-user fa-fw"></i> User Profile</a>
-                        </li>
-                        <li><a href="#Settings"><i class="fa fa-gear fa-fw"></i> Settings</a>
-                        </li>
-                        <li class="divider"></li>
-                        <li><a href="#Logout"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
-                        </li>
-                    </ul>
-                    <!-- /.dropdown-user -->
-                </li>
-                <!-- /.dropdown -->
-            </ul>
-            <!-- /.navbar-top-links -->
-
-            <div class="navbar-default sidebar" role="navigation">
-                <div class="sidebar-nav navbar-collapse">
-                    <ul class="nav" id="side-menu">
-                        <li>
-                            <a href="#Administration"><i class="fa fa-wrench fa-fw"></i> Administration<span class="fa arrow"></span></a>
-                            <ul class="nav nav-second-level">
-                                <li>
-                                    <a href="#Endpoints">Endpoints</a>
-                                </li>
-                                <li>
-                                    <a href="#Interfaces">Interfaces</a>
-                                </li>
-                                <li>
-                                    <a href="#Environments">Environments</a>
-                                </li>
-                            </ul>
-                            <!-- /.nav-second-level -->
-                        </li>
-                        <li>
-                            <a ui-sref="testcase_all"><i class="fa fa-edit fa-fw"></i> Test Cases</a>
-                        </li>
-                        <li>
-                            <a href="#TestRuns"><i class="fa fa-table fa-fw"></i> Test Runs</a>
-                        </li>
-                        <li>
-                            <a href="#Samples"><i class="fa fa-files-o fa-fw"></i> Samples<span class="fa arrow"></span></a>
-                            <ul class="nav nav-second-level">
-                                <li>
-                                    <a ui-sref="blank">Blank</a>
-                                </li>
-                                <li>
-                                    <a ui-sref="article_all">Articles</a>
-                                </li>
-                                <li>
-                                    <a ui-sref="article_grid">Articles-Grid</a>
-                                </li>
-                            </ul>
-                            <!-- /.nav-second-level -->
-                        </li>
-                    </ul>
-                </div>
-                <!-- /.sidebar-collapse -->
-            </div>
-            <!-- /.navbar-static-side -->
+            <div ng-include="'/ui/sidebar.html'"></div>
         </nav>
 
         <div id="page-wrapper" ui-view></div>
@@ -111,9 +47,9 @@
     <script src="/ui/lib/angular-ui-router/release/angular-ui-router.js"></script>
     <script src="/ui/lib/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="/ui/lib/metisMenu/dist/metisMenu.min.js"></script>
+    <!-- use ng-src here to make the sidebar init script run after the sidebar ng-include (actually all ng-includes) in this html -->
+    <script ng-src="/ui/lib/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js"></script>
 
-    <!-- Custom Theme JavaScript -->
-    <script src="/ui/lib/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js"></script>
     <script src="/ui/js/app.js"></script>
     <script src="/ui/js/articles/articles-routes.js"></script>
     <script src="/ui/js/articles/articles-services.js"></script>
