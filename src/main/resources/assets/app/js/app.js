@@ -1,5 +1,5 @@
 // Declare app level module dependencies
-angular.module('service-testing-tool', ['ngResource', 'ui.router', 'ui.grid', 'ui.grid.resizeColumns', 'ui.grid.moveColumns', 'ui.grid.pagination'])
+angular.module('service-testing-tool', ['ngResource', 'ui.router', 'schemaForm', 'ui.grid', 'ui.grid.resizeColumns', 'ui.grid.moveColumns', 'ui.grid.pagination'])
     .config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
         // set default(home) view
         // $urlRouterProvider.otherwise('/');

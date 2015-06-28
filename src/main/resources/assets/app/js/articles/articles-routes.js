@@ -18,6 +18,10 @@ angular.module('service-testing-tool').config(['$stateProvider', function ($stat
             url: '/articles/:articleId/edit',
             templateUrl: '/ui/views/articles/edit.html'
         })
+        .state('article_schemaform', {
+            url: '/article-schemaform',
+            templateUrl: '/ui/views/articles/schemaform.html'
+        })
         .state('article_id', {
             url: '/articles/:articleId',
             templateUrl: '/ui/views/articles/view.html'
