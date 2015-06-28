@@ -1,11 +1,22 @@
 // Declare app level module dependencies
 angular.module('service-testing-tool', ['ngResource', 'ui.router', 'ui.grid', 'ui.grid.resizeColumns', 'ui.grid.moveColumns', 'ui.grid.pagination'])
     .config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
-        $urlRouterProvider.otherwise('/');
+        // set default(home) view
+        // $urlRouterProvider.otherwise('/');
+        $urlRouterProvider.otherwise('/testcases');
 
         $stateProvider
-            .state('home', {
-                url: '/',
-                templateUrl: '/ui/views/home/home.html'
-            })
-}]);
+            .state('blank', {
+                url: '/blank',
+                templateUrl: '/ui/views/blank.html'
+            });
+
+        }])
+    .run(function ($rootScope) {
+        $rootScope.$on('$stateChangeStart', function () {
+            var url = window.location;
+            $('ul.nav a').filter(function() {
+                return this.href == url;
+            }).removeClass('active');
+        });
+    });
