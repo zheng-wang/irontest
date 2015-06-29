@@ -1,15 +1,13 @@
 'use strict';
 
-angular.module('service-testing-tool').controller('ArticlesController', ['$scope', 'Articles', '$stateParams', '$location', '$state', 'uiGridConstants',
-  function($scope, Articles, $stateParams, $location, $state, uiGridConstants) {
+angular.module('service-testing-tool').controller('ArticlesController', ['$scope', 'Articles', '$stateParams', '$state', 'uiGridConstants',
+  function($scope, Articles, $stateParams, $state, uiGridConstants) {
     $scope.schema = {
       type: "object",
       properties: {
         id: { type: "string" },
         title: { type: "string" },
-        content: { type: "string" },
-        created: { type: "string" },
-        updated: { type: "string" }
+        content: { type: "string" }
       },
       "required": ["title", "content"]
     };
@@ -25,41 +23,36 @@ angular.module('service-testing-tool').controller('ArticlesController', ['$scope
         title: "Content"
       },
       {
-        key: "created",
-        title: "Created Date",
-        readonly: true,
-        condition: "article.id"
-      },
-      {
-        key: "updated",
-        title: "Updated Date",
-        readonly: true,
-        condition: "article.id"
-      },
-      {
         type: "actions",
         items: [
           { type: 'submit', style: 'btn-success', title: 'Save' },
-          { type: 'button', style: 'btn-warning', title: 'Delete', onClick: "delete()" }
+          { type: 'button', style: 'btn-warning', title: 'Delete', onClick: "remove(article)" }
         ]
       }
     ];
 
     $scope.article = {};
 
-    $scope.create = function(form) {
+    $scope.create_update = function(form) {
       $scope.$broadcast('schemaFormValidate');
 
       if (form.$valid) {
-        var article = new Articles(this.article);
-        article.$save(function(response) {
-          $location.path('articles/' + response.id);
-        });
+        if (this.article.id) {
+          var article = this.article;
+          article.$update(function() {
+            $state.go('article_edit', {articleId: article.id});
+          });
+        } else {
+          var article = new Articles(this.article);
+          article.$save(function(response) {
+            $state.go('article_edit', {articleId: response.id});
+          });
+        }
       }
     };
 
-    $scope.go = function(path) {
-      $location.path(path);
+    $scope.stateGo = function(state) {
+      $state.go(state);
     };
 
     $scope.update = function(isValid) {
@@ -75,7 +68,7 @@ angular.module('service-testing-tool').controller('ArticlesController', ['$scope
 
     $scope.remove = function(article) {
       article.$remove(function(response) {
-          $state.go($state.current, {}, {reload: true});
+          $state.go('article_grid');
       });
     };
 

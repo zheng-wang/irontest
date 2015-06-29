@@ -1,10 +1,10 @@
 <div ng-controller="ArticlesController" ng-init="find()">
     <div ui-grid="{paginationPageSizes: [10,20,50,100], paginationPageSize: 10, enableFiltering: true, data: articles, columnDefs: columnDefs}" ui-grid-pagination ui-grid-resize-columns ui-grid-move-columns class="myGrid"></div>
-    <button class="btn bt-primary" ng-click="go('/articles/create')">Create</button>
+    <button class="btn bt-primary" ng-click="stateGo('article_create')">Create</button>
 </div>
 
 <script type="text/ng-template" id="gridCellTemplate.html">
     <div class="ui-grid-cell-contents">
-        <div><a ui-sref="article_id({ articleId: row.entity.id })">{{COL_FIELD}}</a></div>
+        <div><a ui-sref="article_edit({ articleId: row.entity.id })">{{COL_FIELD}}</a></div>
     </div>
 </script>
