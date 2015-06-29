@@ -17,9 +17,5 @@ angular.module('service-testing-tool').config(['$stateProvider', function ($stat
         .state('article_edit', {
             url: '/articles/:articleId/edit',
             templateUrl: '/ui/views/articles/schemaform.html'
-        })
-        .state('article_id', {
-            url: '/articles/:articleId',
-            templateUrl: '/ui/views/articles/view.html'
         });
 }]);

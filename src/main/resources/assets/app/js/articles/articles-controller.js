@@ -56,17 +56,6 @@ angular.module('service-testing-tool').controller('ArticlesController', ['$scope
       $state.go(state);
     };
 
-    $scope.update = function(isValid) {
-      if (isValid) {
-        var article = $scope.article;
-        article.$update(function() {
-          $location.path('articles/' + article.id);
-        });
-      } else {
-        $scope.submitted = true;
-      }
-    };
-
     $scope.remove = function(article) {
       article.$remove(function(response) {
           $state.go('article_grid');
