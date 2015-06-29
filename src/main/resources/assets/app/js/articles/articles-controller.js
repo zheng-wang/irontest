@@ -15,10 +15,27 @@ angular.module('service-testing-tool').controller('ArticlesController', ['$scope
     };
 
     $scope.form = [
-      { key: "title" },
-      { key: "content" },
-      { key: "created" },
-      { key: "updated" },
+      {
+        key: "title",
+        title: "Title",
+        condition: "! article.id"
+      },
+      {
+        key: "content",
+        title: "Content"
+      },
+      {
+        key: "created",
+        title: "Created Date",
+        readonly: true,
+        condition: "article.id"
+      },
+      {
+        key: "updated",
+        title: "Updated Date",
+        readonly: true,
+        condition: "article.id"
+      },
       {
         type: "actions",
         items: [
@@ -28,13 +45,13 @@ angular.module('service-testing-tool').controller('ArticlesController', ['$scope
       }
     ];
 
-    $scope.model = {};
+    $scope.article = {};
 
     $scope.create = function(form) {
       $scope.$broadcast('schemaFormValidate');
 
       if (form.$valid) {
-        var article = new Articles(this.model);
+        var article = new Articles(this.article);
         article.$save(function(response) {
           $location.path('articles/' + response.id);
         });
@@ -81,11 +98,13 @@ angular.module('service-testing-tool').controller('ArticlesController', ['$scope
     };
 
     $scope.findOne = function() {
-      Articles.get({
-        articleId: $stateParams.articleId
-      }, function(article) {
-        $scope.article = article;
-      });
+      if ($stateParams.articleId) {
+        Articles.get({
+          articleId: $stateParams.articleId
+        }, function(article) {
+          $scope.article = article;
+        });
+      }
     };
   }
 ]);

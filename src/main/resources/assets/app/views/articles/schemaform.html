@@ -1,3 +1,4 @@
-<div ng-controller="ArticlesController">
-    <form name="myForm" sf-schema="schema" sf-form="form" sf-model="model" ng-submit="create(myForm)"></form>
+<div ng-controller="ArticlesController" data-ng-init="findOne()">
+    <h2 ng-if="article.id > 0">{{article.title}}</h2>
+    <form name="myForm" sf-schema="schema" sf-form="form" sf-model="article" ng-submit="create(myForm)"></form>
 </div>
