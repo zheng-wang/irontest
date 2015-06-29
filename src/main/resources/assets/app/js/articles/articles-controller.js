@@ -20,7 +20,8 @@ angular.module('service-testing-tool').controller('ArticlesController', ['$scope
       },
       {
         key: "content",
-        title: "Content"
+        title: "Content",
+        type: "textarea"
       },
       {
         type: "actions",
