@@ -2,47 +2,21 @@
 
 angular.module('service-testing-tool').controller('ArticlesController', ['$scope', 'Articles', '$stateParams', '$location', '$state', 'uiGridConstants',
   function($scope, Articles, $stateParams, $location, $state, uiGridConstants) {
-    $scope.schema = {
-      type: "object",
-      properties: {
-        id: { type: "string" },
-        title: { type: "string" },
-        content: { type: "string" },
-        created: { type: "string" },
-        updated: { type: "string" }
-      },
-      "required": ["title", "content"]
-    };
-
-    $scope.form = [
-      { key: "title" },
-      { key: "content" },
-      { key: "created" },
-      { key: "updated" },
-      {
-        type: "actions",
-        items: [
-          { type: 'submit', style: 'btn-success', title: 'Save' },
-          { type: 'button', style: 'btn-warning', title: 'Delete', onClick: "delete()" }
-        ]
-      }
-    ];
-
-    $scope.model = {};
-
-    $scope.create = function(form) {
-      $scope.$broadcast('schemaFormValidate');
-
-      if (form.$valid) {
-        var article = new Articles(this.model);
+    $scope.create = function(isValid) {
+      if (isValid) {
+        var article = new Articles({
+          title: this.title,
+          content: this.content
+        });
         article.$save(function(response) {
           $location.path('articles/' + response.id);
         });
-      }
-    };
 
-    $scope.go = function(path) {
-      $location.path(path);
+        this.title = '';
+        this.content = '';
+      } else {
+        $scope.submitted = true;
+      }
     };
 
     $scope.update = function(isValid) {
