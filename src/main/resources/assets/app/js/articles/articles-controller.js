@@ -65,7 +65,9 @@ angular.module('service-testing-tool').controller('ArticlesController', ['$scope
           },
           cellTemplate:'gridCellTemplate.html'
         },
-        {name: 'content', width: 585, minWidth: 300}
+        {
+          name: 'content', width: 600, minWidth: 300
+        }
       ];
 
       Articles.query(function(articles) {
