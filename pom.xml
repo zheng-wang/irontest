@@ -39,6 +39,11 @@
             <artifactId>h2</artifactId>
             <version>${h2.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.roskart.dropwizard-jaxws</groupId>
+            <artifactId>dropwizard-jaxws</artifactId>
+            <version>0.8.0</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -71,6 +76,9 @@
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>au.com.billon.stt.STTApplication</mainClass>
+                                </transformer>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>META-INF/cxf/bus-extensions.txt</resource>
                                 </transformer>
                             </transformers>
                         </configuration>

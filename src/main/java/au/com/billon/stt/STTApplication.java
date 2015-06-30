@@ -2,6 +2,9 @@ package au.com.billon.stt;
 
 import au.com.billon.stt.db.ArticleDAO;
 import au.com.billon.stt.resources.ArticleResource;
+import au.com.billon.stt.ws.ArticleSOAP;
+import com.roskart.dropwizard.jaxws.EndpointBuilder;
+import com.roskart.dropwizard.jaxws.JAXWSBundle;
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.jdbi.DBIFactory;
@@ -18,6 +21,8 @@ public class STTApplication extends Application<STTConfiguration> {
         new STTApplication().run(args);
     }
 
+    private JAXWSBundle jaxWsBundle = new JAXWSBundle();
+
     @Override
     public String getName() {
         return "service-testing-tool";
@@ -27,18 +32,25 @@ public class STTApplication extends Application<STTConfiguration> {
     public void initialize(Bootstrap<STTConfiguration> bootstrap) {
         bootstrap.addBundle(new AssetsBundle("/assets/app", "/ui"));
         bootstrap.addBundle(new DBIExceptionsBundle());
+        bootstrap.addBundle(jaxWsBundle);
     }
 
     @Override
     public void run(STTConfiguration configuration, Environment environment) throws Exception {
-        //  create database tables
         final DBIFactory factory = new DBIFactory();
         final DBI jdbi = factory.build(environment, configuration.getDatabase(), "h2");
+
+        //  create DAO objects
         final ArticleDAO articleDAO = jdbi.onDemand(ArticleDAO.class);
+
+        //  create database tables
         articleDAO.createTableIfNotExists();
 
         //  register REST resources
         environment.jersey().register(new ArticleResource(articleDAO));
+
+        //  register SOAP web services
+        jaxWsBundle.publishEndpoint(new EndpointBuilder("/article", new ArticleSOAP(articleDAO)));
     }
 
 }

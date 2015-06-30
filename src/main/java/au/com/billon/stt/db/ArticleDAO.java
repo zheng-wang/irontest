@@ -4,6 +4,7 @@ import au.com.billon.stt.models.Article;
 import org.skife.jdbi.v2.sqlobject.*;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,4 +30,7 @@ public interface ArticleDAO {
 
     @SqlQuery("select * from article where id = :id")
     Article findById(@Bind("id") long id);
+
+    @SqlQuery("select * from article where created >= :startTime and created <= :endTime")
+    List<Article> findByCreationTime(@Bind("startTime") Date startTime, @Bind("endTime") Date endTime);
 }
