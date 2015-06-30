@@ -1,7 +1,12 @@
 package au.com.billon.stt;
 
 import au.com.billon.stt.db.ArticleDAO;
+import au.com.billon.stt.db.EndpointDAO;
 import au.com.billon.stt.resources.ArticleResource;
+import au.com.billon.stt.resources.EndpointResource;
+import au.com.billon.stt.ws.ArticleSOAP;
+import com.roskart.dropwizard.jaxws.EndpointBuilder;
+import com.roskart.dropwizard.jaxws.JAXWSBundle;
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.jdbi.DBIFactory;
