@@ -1,6 +1,8 @@
 <div ng-controller="ArticlesController" ng-init="find()">
     <div ui-grid="{paginationPageSizes: [10,20,50,100], paginationPageSize: 10, enableFiltering: true, data: articles, columnDefs: columnDefs}" ui-grid-pagination ui-grid-resize-columns ui-grid-move-columns class="myGrid"></div>
-    <button class="btn bt-primary" ng-click="stateGo('article_create')">Create</button>
+    <div class="col-md-offset-3 col-md-1">
+        <button class="btn bt-primary" ng-click="stateGo('article_create')">Create</button>
+    </div>
 </div>
 
 <script type="text/ng-template" id="gridCellTemplate.html">

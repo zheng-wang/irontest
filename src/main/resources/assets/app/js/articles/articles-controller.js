@@ -22,13 +22,6 @@ angular.module('service-testing-tool').controller('ArticlesController', ['$scope
         key: "content",
         title: "Content",
         type: "textarea"
-      },
-      {
-        type: "actions",
-        items: [
-          { type: 'submit', style: 'btn-success', title: 'Save' },
-          { type: 'button', style: 'btn-warning', title: 'Delete', onClick: "remove(article)" }
-        ]
       }
     ];
 

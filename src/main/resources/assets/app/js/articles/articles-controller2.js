@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('service-testing-tool').controller('ArticlesController', ['$scope', 'Articles', '$stateParams', '$location', '$state', 'uiGridConstants',
+angular.module('service-testing-tool').controller('ArticlesController2', ['$scope', 'Articles', '$stateParams', '$location', '$state', 'uiGridConstants',
   function($scope, Articles, $stateParams, $location, $state, uiGridConstants) {
     $scope.create = function(isValid) {
       if (isValid) {

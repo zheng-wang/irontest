@@ -5,7 +5,7 @@
       <h2>
         <a ui-sref="article_id({articleId: article.id})">{{article.title}}</a>
         <span>
-          <a class="btn" ui-sref="article_edit({articleId: article.id})">
+          <a class="btn" ui-sref="article_edit2({articleId: article.id})">
             <i class="glyphicon glyphicon-edit"></i>
           </a>
           <a class="btn" ng-click="remove(article)">
@@ -16,5 +16,5 @@
       <div>{{article.content}}</div>
     </li>
   </ul>
-  <h1 ng-hide="!articles || articles.length">No articles yet. <br> Why don't you <a ui-sref="article_create">Create One</a>?</h1>
+  <h1 ng-hide="!articles || articles.length">No articles yet. <br> Why don't you <a ui-sref="article_create2">Create One</a>?</h1>
 </section>

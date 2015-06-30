@@ -1,4 +1,12 @@
 <div ng-controller="ArticlesController" data-ng-init="findOne()">
-    <h2 ng-if="article.id > 0">{{article.title}}</h2>
-    <form name="myForm" sf-schema="schema" sf-form="form" sf-model="article" ng-submit="create_update(myForm)"></form>
+    <h2 ng-if="article.id">{{article.title}}</h2>
+    <form name="myForm" class="col-md-6" ng-submit="create_update(myForm)">
+        <div sf-schema="schema" sf-form="form" sf-model="article" ></div>
+        <div class="col-md-offset-1 col-md-3">
+            <button type="submit" class="btn btn-success">Save</button>
+        </div>
+        <div class="col-md-offset-4 col-md-1">
+            <button type="button" class="btn btn-warning" ng-click="remove(article)">Delete</button>
+        </div>
+    </form>
 </div>
