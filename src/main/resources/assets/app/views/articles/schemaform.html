@@ -1,12 +1,19 @@
-<div ng-controller="ArticlesController" data-ng-init="findOne()">
-    <h2 ng-if="article.id">{{article.title}}</h2>
-    <form name="myForm" class="col-md-6" ng-submit="create_update(myForm)">
-        <div sf-schema="schema" sf-form="form" sf-model="article" ></div>
-        <div class="col-md-offset-1 col-md-3">
-            <button type="submit" class="btn btn-success">Save</button>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Article Detail</h1>
+            <div ng-controller="ArticlesController" data-ng-init="findOne()">
+                <h2 ng-if="article.id">{{article.title}}</h2>
+                <form name="articleForm" class="col-lg-10" ng-submit="create_update(articleForm)">
+                    <div sf-schema="schema" sf-form="form" sf-model="article" ></div>
+                    <div class="col-lg-offset-2 col-lg-2">
+                        <button type="submit" class="btn btn-success">Save</button>
+                    </div>
+                    <div class="col-lg-offset-4 col-lg-2">
+                        <button type="button" class="btn btn-warning" ng-click="remove(article)">Delete</button>
+                    </div>
+                </form>
+            </div>
         </div>
-        <div class="col-md-offset-4 col-md-1">
-            <button type="button" class="btn btn-warning" ng-click="remove(article)">Delete</button>
-        </div>
-    </form>
+    </div>
 </div>
