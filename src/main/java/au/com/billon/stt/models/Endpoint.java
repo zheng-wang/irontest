@@ -123,4 +123,6 @@ public class Endpoint {
 
         return address;
     }
+
+    public void setAddress(String address) { }
 }
