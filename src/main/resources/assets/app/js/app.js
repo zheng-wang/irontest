@@ -13,12 +13,13 @@ angular.module('service-testing-tool', ['ngResource', 'ui.router', 'schemaForm',
 
         }])
     .run(function ($rootScope) {
-        //  When a sidebar menu item is clicked (which by design will change ui-router state),
-        //  remove 'active' class from all other menu items, so that the clicked menu item is highlighted.
+        //  When a leaf (i.e. <a>) sidebar menu item is clicked (which by design will change ui-router state),
+        //  remove 'active' class from previous menu item (i.e. with the url before state transition),
+        //  so that only the clicked menu item is highlighted.
         $rootScope.$on('$stateChangeStart', function () {
             var url = window.location;
             $('ul.nav a').filter(function() {
-                return this.href == url;
+                return url.href.indexOf(this.href) === 0;
             }).removeClass('active');
         });
     });
