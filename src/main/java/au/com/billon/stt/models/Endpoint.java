@@ -10,7 +10,7 @@ public class Endpoint {
     private String name;
     private String description;
     private String host;
-    private String port;
+    private Integer port;
     private String protocol;
     private String ctxroot;
     private Date created;
@@ -19,7 +19,7 @@ public class Endpoint {
     public Endpoint() {
     }
 
-    public Endpoint(long id, String name, String description, String host, String port, String protocol, String ctxroot, Date created, Date updated) {
+    public Endpoint(long id, String name, String description, String host, Integer port, String protocol, String ctxroot, Date created, Date updated) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -63,11 +63,11 @@ public class Endpoint {
         this.host = host;
     }
 
-    public String getPort() {
+    public Integer getPort() {
         return port;
     }
 
-    public void setPort(String port) {
+    public void setPort(Integer port) {
         this.port = port;
     }
 
@@ -101,5 +101,26 @@ public class Endpoint {
 
     public void setUpdated(Date updated) {
         this.updated = updated;
+    }
+
+    public String getAddress() {
+        String address = "";
+
+        if ("http".equalsIgnoreCase(this.protocol)) {
+            address = "http://";
+            if (this.host != null) {
+                address = address + host;
+                if (this.port != null) {
+                    if (this.port != 80) {
+                        address = address + ":" + this.port;
+                    }
+                    if (this.ctxroot != null) {
+                        address = address + this.ctxroot;
+                    }
+                }
+            }
+        }
+
+        return address;
     }
 }

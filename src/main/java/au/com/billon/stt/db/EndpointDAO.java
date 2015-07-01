@@ -11,7 +11,7 @@ import java.util.List;
  */
 @RegisterMapper(EndpointMapper.class)
 public interface EndpointDAO {
-    @SqlUpdate("create table IF NOT EXISTS endpoint (id INT PRIMARY KEY auto_increment, name varchar(50) UNIQUE, description varchar(500), host varchar(50), port varchar(10), protocol varchar(20), ctxroot varchar(50)," +
+    @SqlUpdate("create table IF NOT EXISTS endpoint (id INT PRIMARY KEY auto_increment, name varchar(50) UNIQUE not null, description varchar(500), host varchar(50), port int, protocol varchar(20), ctxroot varchar(50)," +
             "created timestamp DEFAULT CURRENT_TIMESTAMP, updated timestamp DEFAULT CURRENT_TIMESTAMP)")
     void createTableIfNotExists();
 
