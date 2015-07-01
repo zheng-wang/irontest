@@ -2,6 +2,26 @@
 
 angular.module('service-testing-tool').controller('ArticlesController2', ['$scope', 'Articles', '$stateParams', '$location', '$state', 'uiGridConstants',
   function($scope, Articles, $stateParams, $location, $state, uiGridConstants) {
+    $scope.article = {};
+
+    $scope.create_update = function(isValid) {
+      if (isValid) {
+        if (this.article.id) {
+          var article = this.article;
+          article.$update(function() {
+            $state.go('article_edit3', {articleId: article.id});
+          });
+        } else {
+          var article = new Articles(this.article);
+          article.$save(function(response) {
+            $state.go('article_edit3', {articleId: response.id});
+          });
+        }
+      } else {
+        $scope.submitted = true;
+      }
+    };
+
     $scope.create = function(isValid) {
       if (isValid) {
         var article = new Articles({
