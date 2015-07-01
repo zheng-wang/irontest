@@ -32,7 +32,8 @@ angular.module('service-testing-tool').controller('EndpointsController', ['$scop
         title: "Protocol",
         type: "select",
         titleMap: [
-          { value: "http", name: "http" }
+          { value: "http", name: "http" },
+          { value: "https", name: "https" }
         ]
       },
       {

@@ -1,10 +1,10 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-12">
-            <h1 class="page-header">Endpoint Detail</h1>
             <div ng-controller="EndpointsController" data-ng-init="findOne()">
-                <h2 ng-if="endpoint.id">{{endpoint.title}}</h2>
                 <form name="endpointForm" class="col-lg-10" ng-submit="create_update(endpointForm)">
+                    <h1 class="page-header">Endpoint Detail</h1>
+                    <h4 ng-if="endpoint.id">Name: {{endpoint.name}}</h4>
                     <div sf-schema="schema" sf-form="form" sf-model="endpoint" ></div>
                     <div class="col-lg-offset-2 col-lg-2">
                         <button type="submit" class="btn btn-success">Save</button>

@@ -1,10 +1,10 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-12">
-            <h1 class="page-header">Article Detail</h1>
             <div ng-controller="ArticlesController" data-ng-init="findOne()">
-                <h2 ng-if="article.id">{{article.title}}</h2>
                 <form name="articleForm" class="col-lg-10" ng-submit="create_update(articleForm)">
+                    <h1 class="page-header">Article Detail</h1>
+                    <h4 ng-if="article.id">Title: {{article.title}}</h4>
                     <div sf-schema="schema" sf-form="form" sf-model="article" ></div>
                     <div class="col-lg-offset-2 col-lg-2">
                         <button type="submit" class="btn btn-success">Save</button>
