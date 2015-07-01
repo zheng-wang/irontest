@@ -2,8 +2,10 @@ package au.com.billon.stt;
 
 import au.com.billon.stt.db.ArticleDAO;
 import au.com.billon.stt.db.EndpointDAO;
+import au.com.billon.stt.db.TestcaseDAO;
 import au.com.billon.stt.resources.ArticleResource;
 import au.com.billon.stt.resources.EndpointResource;
+import au.com.billon.stt.resources.TestcaseResource;
 import au.com.billon.stt.ws.ArticleSOAP;
 import com.roskart.dropwizard.jaxws.EndpointBuilder;
 import com.roskart.dropwizard.jaxws.JAXWSBundle;
@@ -45,14 +47,17 @@ public class STTApplication extends Application<STTConfiguration> {
         //  create DAO objects
         final ArticleDAO articleDAO = jdbi.onDemand(ArticleDAO.class);
         final EndpointDAO endpointDAO = jdbi.onDemand(EndpointDAO.class);
+        final TestcaseDAO testcaseDAO = jdbi.onDemand(TestcaseDAO.class);
 
         //  create database tables        
         articleDAO.createTableIfNotExists();
         endpointDAO.createTableIfNotExists();
+        testcaseDAO.createTableIfNotExists();
 
         //  register REST resources
         environment.jersey().register(new ArticleResource(articleDAO));
         environment.jersey().register(new EndpointResource(endpointDAO));
+        environment.jersey().register(new TestcaseResource(testcaseDAO));
 
         //  register SOAP web services
         jaxWsBundle.publishEndpoint(new EndpointBuilder("/article", new ArticleSOAP(articleDAO)));
