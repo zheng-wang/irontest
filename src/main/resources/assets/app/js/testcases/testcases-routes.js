@@ -9,6 +9,10 @@ angular.module('service-testing-tool').config(['$stateProvider', function ($stat
         .state('testcase_create', {
             url: '/testcases/create',
             templateUrl: '/ui/views/testcases/create_edit.html'
+        })
+        .state('testcase_edit', {
+            url: '/testcases/:testcaseId/edit',
+            templateUrl: '/ui/views/testcases/create_edit.html'
         });
 
 }]);
