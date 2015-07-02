@@ -1,7 +1,7 @@
 <section data-ng-controller="ArticlesController2">
   <form name="articleForm" class="form-horizontal col-md-6" role="form" ng-submit="create(articleForm.$valid)" novalidate>
     <div class="form-group" ng-class="{ 'has-error' : submitted && articleForm.title.$invalid }">
-      <label class="col-md-3 control-label">Title</label>
+      <label for="title" class="col-md-3 control-label">Title</label>
       <div class="col-md-9">
         <input name="title" type="text" class="form-control" data-ng-model="title" id="title" placeholder="Title" required>
         <div ng-show="submitted && articleForm.title.$invalid" class="help-block">

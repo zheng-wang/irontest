@@ -75,11 +75,13 @@ angular.module('service-testing-tool').controller('ArticlesController2', ['$scop
     };
 
     $scope.findOne = function() {
-      Articles.get({
-        articleId: $stateParams.articleId
-      }, function(article) {
-        $scope.article = article;
-      });
-    };
+      if ($stateParams.articleId) {
+        Articles.get({
+          articleId: $stateParams.articleId
+        }, function(article) {
+          $scope.article = article;
+        });
+      };
+    }
   }
 ]);

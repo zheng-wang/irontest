@@ -12,6 +12,7 @@ public class Testcase {
     private Date created;
     private Date updated;
 
+    public Testcase() {}
 
     public Testcase(long id, String name, String description, Date created, Date updated) {
         this.id = id;

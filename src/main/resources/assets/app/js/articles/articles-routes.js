@@ -20,7 +20,7 @@ angular.module('service-testing-tool').config(['$stateProvider', function ($stat
         })
         .state('article_create3', {
             url: '/articles/create3',
-            templateUrl: '/ui/views/articles/create_update.html'
+            templateUrl: '/ui/views/articles/create_edit.html'
         })
         .state('article_edit', {
             url: '/articles/:articleId/edit',
@@ -32,7 +32,7 @@ angular.module('service-testing-tool').config(['$stateProvider', function ($stat
         })
         .state('article_edit3', {
             url: '/articles/:articleId/edit3',
-            templateUrl: '/ui/views/articles/create_update.html'
+            templateUrl: '/ui/views/articles/create_edit.html'
         })
         .state('article_id', {
             url: '/articles/:articleId',
