@@ -1,10 +1,12 @@
-<div class="row">
-  <div>
-    <h2 class="page-header">Test Case Details</h2>
+<div ng-controller="TestcasesController" ng-init="findOne()">
+  <div class="row">
+    <div>
+      <h3 class="page-header">Test Case Details
+        <small ng-show="testcase.updated">Last edit at {{testcase.updated | date:'medium'}}</small>
+      </h3>
+    </div>
   </div>
-</div>
-<div class="row">
-  <div ng-controller="TestcasesController" ng-init="findOne()">
+  <div class="row">
     <form name="testcaseForm" class="form-horizontal col-md-6" role="form" ng-submit="create_update(testcaseForm.$valid)" novalidate>
       <div class="form-group" ng-class="{ 'has-error' : submitted && testcaseForm.title.$invalid }">
         <label for="name" class="col-md-2 control-label">Name</label>
