@@ -6,12 +6,20 @@ angular.module('service-testing-tool').controller('EndpointsController', ['$scop
       type: "object",
       properties: {
         id: { type: "integer" },
-        name: { type: "string" },
-        description: { type: "string" },
-        host: { type: "string" },
-        port: { type: "integer" },
-        protocol: { type: "string" },
-        ctxroot: { type: "string" }
+        name: { type: "string", maxLength: 50 },
+        description: { type: "string", maxLength: 500 },
+        host: {
+          type: "string",
+          maxLength: 50,
+          pattern: "^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$"
+        },
+        port: { type: "integer", minimum: 0, maximum: 65535 },
+        protocol: { type: "string", maxLength: 20 },
+        ctxroot: {
+          type: "string",
+          maxLength: 50,
+          pattern: "^\/(([a-z0-9_\.-])+\/)*$"
+        }
       },
       "required": ["name", "description", "host", "port", "protocol"]
     };
@@ -19,12 +27,14 @@ angular.module('service-testing-tool').controller('EndpointsController', ['$scop
     $scope.form = [
       {
         key: "name",
-        title: "Name"
+        title: "Name",
+        validationMessage: "The Name is required and should be less than 50 characters"
       },
       {
         key: "description",
         title: "Description",
-        type: "textarea"
+        type: "textarea",
+        validationMessage: "The Description is required and should be less than 500 characters"
       },
       {
         key: "protocol",
@@ -37,15 +47,18 @@ angular.module('service-testing-tool').controller('EndpointsController', ['$scop
       },
       {
         key: "host",
-        title: "Host"
+        title: "Host",
+        validationMessage: "The Host is required and and should be a valid Host name or IP address"
       },
       {
         key: "port",
-        title: "Port"
+        title: "Port",
+        validationMessage: "The Port is required and should between 0 and 65536"
       },
       {
         key: "ctxroot",
-        title: "Context Root"
+        title: "Context Root",
+        validationMessage: "The Context root is required and should start and end with /"
       }
     ];
 
