@@ -19,8 +19,7 @@ angular.module('service-testing-tool').controller('EndpointsController', ['$scop
     $scope.form = [
       {
         key: "name",
-        title: "Name",
-        condition: "! endpoint.id"
+        title: "Name"
       },
       {
         key: "description",

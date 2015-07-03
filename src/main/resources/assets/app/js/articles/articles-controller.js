@@ -15,8 +15,7 @@ angular.module('service-testing-tool').controller('ArticlesController', ['$scope
     $scope.form = [
       {
         key: "title",
-        title: "Title",
-        condition: "! article.id"
+        title: "Title"
       },
       {
         key: "content",
