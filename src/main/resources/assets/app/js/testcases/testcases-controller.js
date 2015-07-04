@@ -8,9 +8,9 @@ angular.module('service-testing-tool').controller('TestcasesController', ['$scop
       if (isValid) {
         if (this.testcase.id) {
           var testcase = this.testcase;
-          testcase.$update(function() {
-            $scope.findOne();
+          testcase.$update(function(response) {
             $scope.saveSuccessful = true;
+            $scope.testcase = response;
           });
         } else {
           var testcase = new Testcases(this.testcase);

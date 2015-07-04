@@ -28,7 +28,7 @@ public class TestcaseResource {
     @PUT @Path("{testcaseId}")
     public Testcase update(Testcase testcase) {
         dao.update(testcase);
-        return testcase;
+        return dao.findById(testcase.getId());
     }
 
     @DELETE @Path("{testcaseId}")
