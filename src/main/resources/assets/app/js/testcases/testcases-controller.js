@@ -3,6 +3,7 @@
 angular.module('service-testing-tool').controller('TestcasesController', ['$scope', 'Testcases', '$stateParams', '$state', 'uiGridConstants', '$timeout',
   function($scope, Testcases, $stateParams, $state, uiGridConstants, $timeout) {
     $scope.testcase = {};
+    $scope.saveSuccessful = null;
 
     $scope.create_update = function(isValid) {
       if (isValid) {
@@ -11,6 +12,9 @@ angular.module('service-testing-tool').controller('TestcasesController', ['$scop
           testcase.$update(function(response) {
             $scope.saveSuccessful = true;
             $scope.testcase = response;
+          }, function(error) {
+            $scope.savingErrorMessage = error.data.message;
+            $scope.saveSuccessful = false;
           });
         } else {
           var testcase = new Testcases(this.testcase);
