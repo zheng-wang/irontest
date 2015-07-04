@@ -18,7 +18,7 @@ angular.module('service-testing-tool').controller('EndpointsController', ['$scop
         ctxroot: {
           type: "string",
           maxLength: 50,
-          pattern: "^(\/([a-z0-9_\.-])+)*$"
+          pattern: "^(\/([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-\.]*[A-Za-z0-9])+)*$"
         }
       },
       "required": ["name", "description", "host", "port", "protocol"]
