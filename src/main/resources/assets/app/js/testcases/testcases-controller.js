@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('service-testing-tool').controller('TestcasesController', ['$scope', 'Testcases', '$stateParams', '$state', 'uiGridConstants',
-  function($scope, Testcases, $stateParams, $state, uiGridConstants) {
+angular.module('service-testing-tool').controller('TestcasesController', ['$scope', 'Testcases', '$stateParams', '$state', 'uiGridConstants', '$timeout',
+  function($scope, Testcases, $stateParams, $state, uiGridConstants, $timeout) {
     $scope.testcase = {};
 
     $scope.create_update = function(isValid) {
@@ -9,7 +9,8 @@ angular.module('service-testing-tool').controller('TestcasesController', ['$scop
         if (this.testcase.id) {
           var testcase = this.testcase;
           testcase.$update(function() {
-            $state.go('testcase_edit', {testcaseId: testcase.id});
+            $scope.findOne();
+            $scope.saveSuccessful = true;
           });
         } else {
           var testcase = new Testcases(this.testcase);

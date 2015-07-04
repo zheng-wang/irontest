@@ -2,3 +2,26 @@
     font-size: 55%;
     float: right;
 }
+
+.successful-message {
+    opacity: 0;
+    color: green;
+    font-size: 60%;
+}
+
+.successful-message-animation {
+    animation-name: successful-message-show, successful-message-hide;
+    animation-duration: 2s, 2s;
+    animation-timing-function: ease, ease;
+    animation-delay: 0s, 2s;
+}
+
+@keyframes successful-message-show {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+@keyframes successful-message-hide {
+    from {opacity: 1;}
+    to {opacity: 0;}
+}
