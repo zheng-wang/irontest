@@ -3,7 +3,7 @@ package au.com.billon.stt;
 import au.com.billon.stt.db.ArticleDAO;
 import au.com.billon.stt.db.EndpointDAO;
 import au.com.billon.stt.db.IntfaceDAO;
-import au.com.billon.stt.exception.EndpointExceptionMapper;
+import au.com.billon.stt.exception.DBIExceptionMapper;
 import au.com.billon.stt.db.TestcaseDAO;
 import au.com.billon.stt.resources.ArticleResource;
 import au.com.billon.stt.resources.EndpointResource;
@@ -66,7 +66,7 @@ public class STTApplication extends Application<STTConfiguration> {
         environment.jersey().register(new IntfaceResource(intfaceDAO));
 
         //  register exception mappers
-        environment.jersey().register(new EndpointExceptionMapper());
+        environment.jersey().register(new DBIExceptionMapper());
 
         //  register SOAP web services
         jaxWsBundle.publishEndpoint(new EndpointBuilder("/article", new ArticleSOAP(articleDAO)));

@@ -6,10 +6,10 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 /**
- * Iterates through a DBIException's cause if it's a SQLException otherwise log as normal.
+ * Created by Trevor Li on 7/4/15.
  */
 @Provider
-public class EndpointExceptionMapper implements ExceptionMapper<DBIException> {
+public class DBIExceptionMapper implements ExceptionMapper<DBIException> {
 
     public Response toResponse(DBIException exception) {
         if (exception.getMessage().indexOf("Unique index or primary key violation") > -1) {
