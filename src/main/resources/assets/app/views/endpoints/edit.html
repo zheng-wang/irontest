@@ -4,6 +4,7 @@
             <div ng-controller="EndpointsController" data-ng-init="findOne()">
                 <form name="endpointForm" class="col-lg-10" ng-submit="create_update(endpointForm)">
                     <h1 class="page-header">Endpoint Detail</h1>
+                    <p><medium ng-show="endpoint.updated">Last update at {{endpoint.updated | date:'dd-MM-yyyy HH:mm:ss'}}</medium></p>
                     <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
                     <div sf-schema="schema" sf-form="form" sf-model="endpoint" ></div>
                     <div class="col-lg-offset-2 col-lg-2">

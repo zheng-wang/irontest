@@ -25,15 +25,13 @@ public class EndpointResource {
         return endpoint;
     }
 
-    @PUT
-    @Path("{endpointId}")
+    @PUT @Path("{endpointId}")
     public Endpoint update(Endpoint endpoint) {
         dao.update(endpoint);
         return endpoint;
     }
 
-    @DELETE
-    @Path("{endpointId}")
+    @DELETE @Path("{endpointId}")
     public void delete(@PathParam("endpointId") long endpointId) {
         dao.deleteById(endpointId);
     }

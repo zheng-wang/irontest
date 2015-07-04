@@ -73,7 +73,7 @@ angular.module('service-testing-tool').controller('EndpointsController', ['$scop
         if (this.endpoint.id) {
           var endpoint = this.endpoint;
           endpoint.$update(function() {
-            $state.go('endpoint_edit', {endpointId: endpoint.id});
+            $scope.alerts.push({type: 'success', msg: 'The Endpoint has been updated successfully'});
           }, function(exception) {
             $scope.alerts.push({type: 'warning', msg: exception.data});
           });
@@ -81,6 +81,8 @@ angular.module('service-testing-tool').controller('EndpointsController', ['$scop
           var endpoint = new Endpoints(this.endpoint);
           endpoint.$save(function(response) {
             $state.go('endpoint_edit', {endpointId: response.id});
+          }, function(exception) {
+            $scope.alerts.push({type: 'warning', msg: exception.data});
           });
         }
       }
