@@ -64,6 +64,8 @@ angular.module('service-testing-tool').controller('EndpointsController', ['$scop
 
     $scope.endpoint = {};
 
+    $scope.alerts = [];
+
     $scope.create_update = function(form) {
       $scope.$broadcast('schemaFormValidate');
 
@@ -72,6 +74,8 @@ angular.module('service-testing-tool').controller('EndpointsController', ['$scop
           var endpoint = this.endpoint;
           endpoint.$update(function() {
             $state.go('endpoint_edit', {endpointId: endpoint.id});
+          }, function(exception) {
+            $scope.alerts.push({type: 'warning', msg: exception.data});
           });
         } else {
           var endpoint = new Endpoints(this.endpoint);
@@ -84,6 +88,10 @@ angular.module('service-testing-tool').controller('EndpointsController', ['$scop
 
     $scope.stateGo = function(state) {
       $state.go(state);
+    };
+
+    $scope.closeAlert = function(index) {
+      $scope.alerts.splice(index, 1);
     };
 
     $scope.remove = function(endpoint) {
