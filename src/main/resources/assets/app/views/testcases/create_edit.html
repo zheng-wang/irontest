@@ -13,7 +13,7 @@
       <div class="form-group" ng-class="{ 'has-error' : submitted && testcaseForm.title.$invalid }">
         <label for="name" class="col-md-2 control-label">Name</label>
         <div class="col-md-10">
-          <input name="name" type="text" class="form-control" ng-model="testcase.name" id="name" placeholder="Name" required>
+          <input name="name" type="text" class="form-control" ng-model="testcase.name" id="name" placeholder="Name" maxlength="200" required>
           <div ng-show="submitted && testcaseForm.name.$invalid" class="help-block">
             <p ng-show="testcaseForm.name.$error.required">Name is required</p>
           </div>
