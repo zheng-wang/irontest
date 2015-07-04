@@ -1,0 +1,20 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12">
+            <div ng-controller="IntfacesController" data-ng-init="findOne()">
+                <form name="intfaceForm" class="col-lg-10" ng-submit="create_update(intfaceForm)">
+                    <h1 class="page-header">Interface Detail</h1>
+                    <p><medium ng-show="intface.updated">Last updated at {{intface.updated | date:'dd-MM-yyyy HH:mm:ss'}}</medium></p>
+                    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+                    <div sf-schema="schema" sf-form="form" sf-model="intface" ></div>
+                    <div class="col-lg-offset-2 col-lg-2">
+                        <button type="submit" class="btn btn-success">Save</button>
+                    </div>
+                    <div class="col-lg-offset-4 col-lg-2">
+                        <button type="button" class="btn btn-warning" ng-click="remove(intface)">Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

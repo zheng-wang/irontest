@@ -18,7 +18,7 @@ angular.module('service-testing-tool').controller('EndpointsController', ['$scop
         ctxroot: {
           type: "string",
           maxLength: 50,
-          pattern: "^\/(([a-z0-9_\.-])+\/)*$"
+          pattern: "^(\/([a-z0-9_\.-])+)*$"
         }
       },
       "required": ["name", "description", "host", "port", "protocol"]
@@ -58,7 +58,7 @@ angular.module('service-testing-tool').controller('EndpointsController', ['$scop
       {
         key: "ctxroot",
         title: "Context Root",
-        validationMessage: "The Context root is required and should start and end with /"
+        validationMessage: "The Context root is required and should start with /"
       }
     ];
 
@@ -98,7 +98,7 @@ angular.module('service-testing-tool').controller('EndpointsController', ['$scop
 
     $scope.remove = function(endpoint) {
       endpoint.$remove(function(response) {
-          $state.go('endpoint_grid');
+          $state.go('endpoint_all');
       });
     };
 
