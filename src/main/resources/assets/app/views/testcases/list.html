@@ -13,4 +13,10 @@
     <div ui-grid="{paginationPageSizes: [10,20,50,100], paginationPageSize: 20, enableFiltering: true, data: testcases, columnDefs: columnDefs}"
          ui-grid-pagination ui-grid-resize-columns ui-grid-move-columns class="ui-grid col-md-7 testcase-grid"></div>
   </div>
+
+  <script type="text/ng-template" id="gridCellTemplate.html">
+    <div class="ui-grid-cell-contents">
+      <div><a ui-sref="testcase_edit({ testcaseId: row.entity.id })">{{COL_FIELD}}</a></div>
+    </div>
+  </script>
 </div>

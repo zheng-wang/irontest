@@ -29,7 +29,7 @@ angular.module('service-testing-tool').controller('TestcasesController', ['$scop
 
     $scope.remove = function(testcase) {
       testcase.$remove(function(response) {
-          $state.go($state.current, {}, {reload: true});
+        $state.go('testcase_all');
       });
     };
 
@@ -40,7 +40,8 @@ angular.module('service-testing-tool').controller('TestcasesController', ['$scop
           sort: {
             direction: uiGridConstants.ASC,
             priority: 1
-          }
+          },
+          cellTemplate: 'gridCellTemplate.html'
         },
         {name: 'description', width: 585, minWidth: 300}
       ];
