@@ -30,3 +30,7 @@
     from {opacity: 1;}
     to {opacity: 0;}
 }
+
+.testcase-grid {
+    height: 500px;
+}

@@ -1,9 +1,16 @@
-<div class="row">
-  <div>
-    <h2 class="page-header">Test Cases</h2>
+<div ng-controller="TestcasesController" ng-init="find()">
+  <div class="row">
+    <div>
+      <h3 class="page-header">Test Cases</h3>
+    </div>
+  </div>
+  <div class="row">
+    <div>
+      <button class="btn btn-info" style="margin-bottom: 20px" ui-sref="testcase_create">Create</button>
+    </div>
+  </div>
+  <div class="row">
+    <div ui-grid="{paginationPageSizes: [10,20,50,100], paginationPageSize: 20, enableFiltering: true, data: testcases, columnDefs: columnDefs}"
+         ui-grid-pagination ui-grid-resize-columns ui-grid-move-columns class="ui-grid col-md-7 testcase-grid"></div>
   </div>
 </div>
-
-
-
-

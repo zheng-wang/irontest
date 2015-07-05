@@ -36,14 +36,13 @@ angular.module('service-testing-tool').controller('TestcasesController', ['$scop
     $scope.find = function() {
       $scope.columnDefs = [
         {
-          name: 'title', width: 200, minWidth: 100,
+          name: 'name', width: 200, minWidth: 100,
           sort: {
             direction: uiGridConstants.ASC,
             priority: 1
-          },
-          cellTemplate:'gridCellTemplate.html'
+          }
         },
-        {name: 'content', width: 585, minWidth: 300}
+        {name: 'description', width: 585, minWidth: 300}
       ];
 
       Testcases.query(function(testcases) {
