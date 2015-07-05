@@ -28,7 +28,7 @@ public class EndpointResource {
     @PUT @Path("{endpointId}")
     public Endpoint update(Endpoint endpoint) {
         dao.update(endpoint);
-        return endpoint;
+        return dao.findById(endpoint.getId());
     }
 
     @DELETE @Path("{endpointId}")

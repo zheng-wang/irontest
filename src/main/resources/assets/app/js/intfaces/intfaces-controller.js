@@ -37,12 +37,12 @@ angular.module('service-testing-tool').controller('IntfacesController', ['$scope
       {
         key: "relpath",
         title: "Relative Path",
-        validationMessage: "The Context root is required and should start and end with /"
+        validationMessage: "The Context root is required and should start with /"
       },
       {
         key: "defurl",
         title: "Interface Definition",
-        validationMessage: "The Definition should be at a valid URL"
+        validationMessage: "The Definition is required and should be at a valid URL"
       }
     ];
 
