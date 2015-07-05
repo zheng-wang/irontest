@@ -1,14 +1,8 @@
 package au.com.billon.stt;
 
-import au.com.billon.stt.db.ArticleDAO;
-import au.com.billon.stt.db.EndpointDAO;
-import au.com.billon.stt.db.IntfaceDAO;
+import au.com.billon.stt.db.*;
 import au.com.billon.stt.exception.DBIExceptionMapper;
-import au.com.billon.stt.db.TestcaseDAO;
-import au.com.billon.stt.resources.ArticleResource;
-import au.com.billon.stt.resources.EndpointResource;
-import au.com.billon.stt.resources.IntfaceResource;
-import au.com.billon.stt.resources.TestcaseResource;
+import au.com.billon.stt.resources.*;
 import au.com.billon.stt.ws.ArticleSOAP;
 import com.roskart.dropwizard.jaxws.EndpointBuilder;
 import com.roskart.dropwizard.jaxws.JAXWSBundle;
@@ -52,18 +46,21 @@ public class STTApplication extends Application<STTConfiguration> {
         final EndpointDAO endpointDAO = jdbi.onDemand(EndpointDAO.class);
         final TestcaseDAO testcaseDAO = jdbi.onDemand(TestcaseDAO.class);
         final IntfaceDAO intfaceDAO = jdbi.onDemand(IntfaceDAO.class);
+        final EnvironmentDAO environmentDAO = jdbi.onDemand(EnvironmentDAO.class);
 
         //  create database tables        
         articleDAO.createTableIfNotExists();
         endpointDAO.createTableIfNotExists();
         testcaseDAO.createTableIfNotExists();
         intfaceDAO.createTableIfNotExists();
+        environmentDAO.createTableIfNotExists();
 
         //  register REST resources
         environment.jersey().register(new ArticleResource(articleDAO));
         environment.jersey().register(new EndpointResource(endpointDAO));
         environment.jersey().register(new TestcaseResource(testcaseDAO));
         environment.jersey().register(new IntfaceResource(intfaceDAO));
+        environment.jersey().register(new EnvironmentResource(environmentDAO));
 
         //  register exception mappers
         environment.jersey().register(new DBIExceptionMapper());
