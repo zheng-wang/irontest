@@ -88,10 +88,6 @@ angular.module('service-testing-tool').controller('EndpointsController', ['$scop
       }
     };
 
-    $scope.stateGo = function(state) {
-      $state.go(state);
-    };
-
     $scope.closeAlert = function(index) {
       $scope.alerts.splice(index, 1);
     };

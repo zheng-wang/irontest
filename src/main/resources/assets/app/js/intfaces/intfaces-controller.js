@@ -72,10 +72,6 @@ angular.module('service-testing-tool').controller('IntfacesController', ['$scope
       }
     };
 
-    $scope.stateGo = function(state) {
-      $state.go(state);
-    };
-
     $scope.closeAlert = function(index) {
       $scope.alerts.splice(index, 1);
     };
