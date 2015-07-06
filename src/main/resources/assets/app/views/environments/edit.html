@@ -1,20 +1,16 @@
-<div class="container-fluid">
+<div ng-controller="EnvironmentsController" data-ng-init="findOne()">
     <div class="row">
-        <div class="col-lg-12">
-            <div ng-controller="EnvironmentsController" data-ng-init="findOne()">
-                <form name="environmentForm" class="col-lg-10" ng-submit="create_update(environmentForm)">
-                    <h1 class="page-header">Environment Detail</h1>
-                    <p><medium ng-show="environment.updated">Last updated at {{environment.updated | date:'dd-MM-yyyy HH:mm:ss'}}</medium></p>
-                    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
-                    <div sf-schema="schema" sf-form="form" sf-model="environment" ></div>
-                    <div class="col-lg-offset-2 col-lg-2">
-                        <button type="submit" class="btn btn-success">Save</button>
-                    </div>
-                    <div class="col-lg-offset-4 col-lg-2">
-                        <button type="button" class="btn btn-warning" ng-click="remove(environment)">Delete</button>
-                    </div>
-                </form>
-            </div>
-        </div>
+        <h3 class="page-header">Environment Detail</h3>
     </div>
+    <form name="environmentForm" class="form-horizontal col-md-10" ng-submit="create_update(environmentForm)">
+        <p><medium ng-show="environment.updated">Last updated at {{environment.updated | date:'dd-MM-yyyy HH:mm:ss'}}</medium></p>
+        <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+        <div sf-schema="schema" sf-form="form" sf-model="environment" ></div>
+        <div class="col-md-offset-2 col-md-2">
+            <button type="submit" class="btn btn-success btn-block">Save</button>
+        </div>
+        <div class="col-md-offset-4 col-md-2">
+            <button type="button" class="btn btn-warning btn-block" ng-click="remove(environment)">Delete</button>
+        </div>
+    </form>
 </div>
