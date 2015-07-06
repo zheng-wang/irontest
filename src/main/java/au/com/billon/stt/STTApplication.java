@@ -47,6 +47,7 @@ public class STTApplication extends Application<STTConfiguration> {
         final TestcaseDAO testcaseDAO = jdbi.onDemand(TestcaseDAO.class);
         final IntfaceDAO intfaceDAO = jdbi.onDemand(IntfaceDAO.class);
         final EnvironmentDAO environmentDAO = jdbi.onDemand(EnvironmentDAO.class);
+        final EnvEntryDAO enventryDAO = jdbi.onDemand(EnvEntryDAO.class);
 
         //  create database tables        
         articleDAO.createTableIfNotExists();
@@ -54,6 +55,7 @@ public class STTApplication extends Application<STTConfiguration> {
         testcaseDAO.createTableIfNotExists();
         intfaceDAO.createTableIfNotExists();
         environmentDAO.createTableIfNotExists();
+        enventryDAO.createTableIfNotExists();
 
         //  register REST resources
         environment.jersey().register(new ArticleResource(articleDAO));
@@ -61,6 +63,7 @@ public class STTApplication extends Application<STTConfiguration> {
         environment.jersey().register(new TestcaseResource(testcaseDAO));
         environment.jersey().register(new IntfaceResource(intfaceDAO));
         environment.jersey().register(new EnvironmentResource(environmentDAO));
+        environment.jersey().register(new EnvEntryResource(enventryDAO));
 
         //  register exception mappers
         environment.jersey().register(new DBIExceptionMapper());
