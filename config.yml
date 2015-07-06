@@ -2,6 +2,7 @@
 server:
   # (Do not modify) Root URI for REST resources
   rootPath: '/api/*'
+  registerDefaultExceptionMappers: false
 
 # Database settings.
 database:

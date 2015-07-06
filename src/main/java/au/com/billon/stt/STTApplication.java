@@ -1,7 +1,7 @@
 package au.com.billon.stt;
 
 import au.com.billon.stt.db.*;
-import au.com.billon.stt.exception.DBIExceptionMapper;
+import au.com.billon.stt.exception.STTDBIExceptionMapper;
 import au.com.billon.stt.resources.*;
 import au.com.billon.stt.ws.ArticleSOAP;
 import com.roskart.dropwizard.jaxws.EndpointBuilder;
@@ -66,10 +66,9 @@ public class STTApplication extends Application<STTConfiguration> {
         environment.jersey().register(new EnvEntryResource(enventryDAO));
 
         //  register exception mappers
-        environment.jersey().register(new DBIExceptionMapper());
+        environment.jersey().register(new STTDBIExceptionMapper());
 
         //  register SOAP web services
         jaxWsBundle.publishEndpoint(new EndpointBuilder("/article", new ArticleSOAP(articleDAO)));
     }
-
 }

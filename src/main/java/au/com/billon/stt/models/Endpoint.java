@@ -9,31 +9,27 @@ public class Endpoint {
     private long id;
     private String name;
     private String description;
-    private String host;
-    private Integer port;
-    private String protocol;
-    private String ctxroot;
+    private String url;
+    private String username;
+    private String password;
     private Date created;
     private Date updated;
 
     public Endpoint() {
     }
 
-    public Endpoint(long id, String name, String description, String host, Integer port, String protocol, String ctxroot, Date created, Date updated) {
+    public Endpoint(long id, String name, String description, String url, String username, String password, Date created, Date updated) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.host = host;
-        this.port = port;
-        this.protocol = protocol;
-        this.ctxroot = ctxroot;
+        this.url = url;
+        this.username = username;
+        this.password = password;
         this.created = created;
         this.updated = updated;
     }
 
-    public long getId() {
-        return id;
-    }
+    public long getId() { return id; }
 
     public void setId(long id) {
         this.id = id;
@@ -55,36 +51,28 @@ public class Endpoint {
         this.description = description;
     }
 
-    public String getHost() {
-        return host;
+    public String getUrl() {
+        return url;
     }
 
-    public void setHost(String host) {
-        this.host = host;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
-    public Integer getPort() {
-        return port;
+    public String getUsername() {
+        return username;
     }
 
-    public void setPort(Integer port) {
-        this.port = port;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public String getProtocol() {
-        return protocol;
+    public String getPassword() {
+        return password;
     }
 
-    public void setProtocol(String protocol) {
-        this.protocol = protocol;
-    }
-
-    public String getCtxroot() {
-        return ctxroot;
-    }
-
-    public void setCtxroot(String ctxroot) {
-        this.ctxroot = ctxroot;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Date getCreated() {
@@ -103,26 +91,7 @@ public class Endpoint {
         this.updated = updated;
     }
 
-    public String getAddress() {
-        String address = "";
-
-        if ("http".equalsIgnoreCase(this.protocol)) {
-            address = "http://";
-            if (this.host != null) {
-                address = address + host;
-                if (this.port != null) {
-                    if (this.port != 80) {
-                        address = address + ":" + this.port;
-                    }
-                    if (this.ctxroot != null) {
-                        address = address + this.ctxroot;
-                    }
-                }
-            }
-        }
-
-        return address;
-    }
+    public String getAddress() { return url; }
 
     public void setAddress(String address) { }
 }

@@ -9,14 +9,14 @@ import javax.ws.rs.ext.Provider;
  * Created by Trevor Li on 7/4/15.
  */
 @Provider
-public class DBIExceptionMapper extends LoggingDBIExceptionMapper {
+public class STTDBIExceptionMapper extends LoggingDBIExceptionMapper {
 
     @Override
     public Response toResponse(DBIException exception) {
         if (exception.getMessage().indexOf("Unique index or primary key violation") > -1) {
             return Response.status(Response.Status.CONFLICT).type("text/plain").entity("The name is already taken").build();
         }
-        return Response.status(Response.Status.BAD_REQUEST).type("text/plain").entity("The request is not valid").build();
+        return super.toResponse(exception);
     }
 
 }

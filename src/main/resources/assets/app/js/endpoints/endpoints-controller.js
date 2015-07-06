@@ -8,20 +8,22 @@ angular.module('service-testing-tool').controller('EndpointsController', ['$scop
         id: { type: "integer" },
         name: { type: "string", maxLength: 50 },
         description: { type: "string", maxLength: 500 },
-        host: {
+        url: {
           type: "string",
-          maxLength: 50,
-          pattern: "^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$"
+          maxLength: 200,
+          pattern: "^http:\/{2}(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])(\/([a-z0-9_\.-])+)*\/?[A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-\.]*[A-Za-z0-9]$"
         },
-        port: { type: "integer", minimum: 0, maximum: 65535 },
-        protocol: { type: "string", maxLength: 20 },
-        ctxroot: {
+        username: {
           type: "string",
-          maxLength: 50,
-          pattern: "^(\/([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-\.]*[A-Za-z0-9])+)*$"
+          maxLength: 20,
+
+        },
+        password: {
+          type: "string",
+          maxLength: 20
         }
       },
-      "required": ["name", "description", "host", "port", "protocol"]
+      "required": ["name", "description", "url"]
     };
 
     $scope.form = [
@@ -37,28 +39,18 @@ angular.module('service-testing-tool').controller('EndpointsController', ['$scop
         validationMessage: "The Description is required and should be less than 500 characters"
       },
       {
-        key: "protocol",
-        title: "Protocol",
-        type: "select",
-        titleMap: [
-          { value: "http", name: "http" },
-          { value: "https", name: "https" }
-        ]
+        key: "url",
+        title: "URL",
+        validationMessage: "The URL is required and should be started with http"
       },
       {
-        key: "host",
-        title: "Host",
-        validationMessage: "The Host is required and and should be a valid Host name or IP address"
+        key: "username",
+        title: "User Name"
       },
       {
-        key: "port",
-        title: "Port",
-        validationMessage: "The Port is required and should between 0 and 65536"
-      },
-      {
-        key: "ctxroot",
-        title: "Context Root",
-        validationMessage: "The Context root is required and should start with /"
+        key: "password",
+        title: "Password",
+        type: "password"
       }
     ];
 
