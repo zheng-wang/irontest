@@ -1,19 +1,19 @@
-<div class="container-fluid">
+<div ng-controller="IntfacesController" ng-init="find()">
     <div class="row">
-        <div class="col-lg-12">
-            <div ng-controller="IntfacesController" ng-init="find()">
-                <h1 class="page-header">Interface List</h1>
-                <div>
-                    <button class="btn bt-primary" ng-click="stateGo('intface_create')">Create</button>
-                </div>
-                <div ui-grid="{paginationPageSizes: [10,20,50,100], paginationPageSize: 10, enableFiltering: true, data: intfaces, columnDefs: columnDefs}" ui-grid-pagination ui-grid-resize-columns ui-grid-move-columns class="ui-grid"></div>
-            </div>
-
-            <script type="text/ng-template" id="gridCellTemplate.html">
-                <div class="ui-grid-cell-contents">
-                    <div><a ui-sref="intface_edit({ intfaceId: row.entity.id })">{{COL_FIELD}}</a></div>
-                </div>
-            </script>
+        <h3 class="page-header">Interfaces</h3>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <p><button class="btn btn-primary btn-block" ui-sref="intface_create">Create</button></p>
         </div>
     </div>
+    <div class="row">
+        <div ui-grid="{paginationPageSizes: [10,20,50,100], paginationPageSize: 10, enableFiltering: true, data: intfaces, columnDefs: columnDefs}"
+             ui-grid-pagination ui-grid-resize-columns ui-grid-move-columns class="ui-grid"></div>
+    </div>
+    <script type="text/ng-template" id="gridCellTemplate.html">
+        <div class="ui-grid-cell-contents">
+            <div><a ui-sref="intface_edit({ intfaceId: row.entity.id })">{{COL_FIELD}}</a></div>
+        </div>
+    </script>
 </div>
