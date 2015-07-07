@@ -1,6 +1,7 @@
 package au.com.billon.stt.models;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Zheng on 1/07/2015.
@@ -11,6 +12,7 @@ public class Testcase {
     private String description;
     private Date created;
     private Date updated;
+    private List<Teststep> teststeps;
 
     public Testcase() {}
 
