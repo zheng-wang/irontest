@@ -2,15 +2,17 @@
     <div class="row">
         <h1 class="page-header">Interface Detail</h1>
     </div>
-    <form name="intfaceForm" class="form-horizontal col-md-10" ng-submit="create_update(intfaceForm)">
-        <p><medium ng-show="intface.updated">Last updated at {{intface.updated | date:'dd-MM-yyyy HH:mm:ss'}}</medium></p>
-        <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
-        <div sf-schema="schema" sf-form="form" sf-model="intface" ></div>
-        <div class="col-md-offset-2 col-md-2">
-            <button type="submit" class="btn btn-success btn-block">Save</button>
-        </div>
-        <div class="col-md-offset-4 col-md-2">
-            <button type="button" class="btn btn-warning btn-block" ng-click="remove(intface)">Delete</button>
-        </div>
-    </form>
+    <div class="row">
+        <form name="intfaceForm" class="form-horizontal col-md-10" ng-submit="create_update(intfaceForm)">
+            <p><medium ng-show="intface.updated">Last updated at {{intface.updated | date:'dd-MM-yyyy HH:mm:ss'}}</medium></p>
+            <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+            <div sf-schema="schema" sf-form="form" sf-model="intface" ></div>
+            <div class="col-md-offset-2 col-md-2">
+                <button type="submit" class="btn btn-success btn-block">Save</button>
+            </div>
+            <div class="col-md-offset-4 col-md-2">
+                <button type="button" class="btn btn-warning btn-block" ng-click="remove(intface)">Delete</button>
+            </div>
+        </form>
+    </div>
 </div>
