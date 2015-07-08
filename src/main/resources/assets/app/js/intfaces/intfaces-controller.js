@@ -93,6 +93,9 @@ angular.module('service-testing-tool').controller('IntfacesController', ['$scope
           cellTemplate:'gridCellTemplate.html'
         },
         {
+          name: 'description', width: 600, minWidth: 300
+        },
+        {
           name: 'relpath', displayName: 'Relative Path', width: 600, minWidth: 300
         }
       ];

@@ -101,6 +101,9 @@ angular.module('service-testing-tool').controller('EndpointsController', ['$scop
           cellTemplate:'gridCellTemplate.html'
         },
         {
+          name: 'description', width: 600, minWidth: 300
+        },
+        {
           name: 'address', width: 600, minWidth: 300
         }
       ];
