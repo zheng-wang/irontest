@@ -15,6 +15,11 @@ angular.module('service-testing-tool').controller('EnvEntriesController', ['$sco
 
     $scope.form = [
       {
+        key: "environmentId",
+        title: "Environment",
+        readonly: true
+      },
+      {
         key: "intfaceId",
         title: "Interface"
       },
@@ -67,6 +72,8 @@ angular.module('service-testing-tool').controller('EnvEntriesController', ['$sco
         }, function(enventry) {
           $scope.enventry = enventry;
         });
+      } else if ($stateParams.environmentId) {
+        $scope.enventry.environmentId = Number($stateParams.environmentId);
       }
     };
   }

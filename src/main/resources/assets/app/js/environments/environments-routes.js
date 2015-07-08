@@ -15,7 +15,7 @@ angular.module('service-testing-tool').config(['$stateProvider', function ($stat
             templateUrl: '/ui/views/environments/edit.html'
         })
         .state('enventry_create', {
-            url: '/enventries/create',
+            url: '/enventries/:environmentId/create',
             templateUrl: '/ui/views/environments/entryedit.html'
         })
         .state('enventry_edit', {
