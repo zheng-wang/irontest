@@ -2,15 +2,36 @@
     <div class="row">
         <h3 class="page-header">Environment Detail</h3>
     </div>
-    <form name="environmentForm" class="form-horizontal col-md-10" ng-submit="create_update(environmentForm)">
-        <p><medium ng-show="environment.updated">Last updated at {{environment.updated | date:'dd-MM-yyyy HH:mm:ss'}}</medium></p>
-        <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
-        <div sf-schema="schema" sf-form="form" sf-model="environment" ></div>
-        <div class="col-md-offset-2 col-md-2">
-            <button type="submit" class="btn btn-success btn-block">Save</button>
+    <div class="row">
+        <form name="environmentForm" class="form-horizontal" ng-submit="create_update(environmentForm)">
+            <div class="form-group">
+                <label ng-show="environment.updated" class="control-label col-md-offset-8">Last updated at {{environment.updated | date:'dd-MM-yyyy HH:mm:ss'}}</label>
+            </div>
+            <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+            <label class="control-label col-md-2">Name</label>
+            <div sf-schema="schema" sf-form="form.name" sf-model="environment" class="col-md-10"></div>
+            <label class="control-label col-md-2">Description</label>
+            <div sf-schema="schema" sf-form="form.description" sf-model="environment" class="col-md-10"></div>
+            <div class="col-md-offset-4 col-md-2">
+                <button type="submit" class="btn btn-success btn-block">Save</button>
+            </div>
+            <div class="col-md-offset-2 col-md-2">
+                <button type="button" class="btn btn-warning btn-block" ng-click="remove(environment)">Delete</button>
+            </div>
+        </form>
+    </div>
+    <div class="row spacer-top-40">
+        <div ui-grid="{paginationPageSizes: [10,20,50,100], paginationPageSize: 10, enableFiltering: true, data: enventries, columnDefs: columnDefs}"
+             ui-grid-pagination ui-grid-resize-columns ui-grid-move-columns class="ui-grid"></div>
+    </div>
+    <div class="row spacer-top-20">
+        <div class="col-md-2">
+            <p><button class="btn btn-primary btn-block" ui-sref="enventry_create">Create</button></p>
         </div>
-        <div class="col-md-offset-4 col-md-2">
-            <button type="button" class="btn btn-warning btn-block" ng-click="remove(environment)">Delete</button>
+    </div>
+    <script type="text/ng-template" id="gridCellTemplate.html">
+        <div class="ui-grid-cell-contents">
+            <div><a ui-sref="enventry_edit({ enventryId: row.entity.id })">{{COL_FIELD}}</a></div>
         </div>
-    </form>
+    </script>
 </div>

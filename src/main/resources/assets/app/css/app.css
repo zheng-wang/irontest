@@ -38,3 +38,11 @@
 .ws-uiview {
     height: 800px;
 }
+
+.spacer-top-40 {
+    margin-top: 40px; /* define margin as you see fit */
+}
+
+.spacer-top-20 {
+    margin-top: 20px; /* define margin as you see fit */
+}

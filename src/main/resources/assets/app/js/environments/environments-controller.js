@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('service-testing-tool').controller('EnvironmentsController', ['$scope', 'Environments', '$stateParams', '$state', 'uiGridConstants',
-  function($scope, Environments, $stateParams, $state, uiGridConstants) {
+angular.module('service-testing-tool').controller('EnvironmentsController', ['$scope', 'Environments', 'EnvEntries', '$stateParams', '$state', 'uiGridConstants',
+  function($scope, Environments, EnvEntries, $stateParams, $state, uiGridConstants) {
     $scope.schema = {
       type: "object",
       properties: {
@@ -12,19 +12,19 @@ angular.module('service-testing-tool').controller('EnvironmentsController', ['$s
       "required": ["name", "description"]
     };
 
-    $scope.form = [
-      {
+    $scope.form = {
+      name: [{
         key: "name",
-        title: "Name",
+        notitle: true,
         validationMessage: "The Name is required and should be less than 50 characters"
-      },
-      {
+      }],
+      description: [{
         key: "description",
-        title: "Description",
+        notitle: true,
         type: "textarea",
         validationMessage: "The Description is required and should be less than 500 characters"
-      }
-    ];
+      }]
+    }
 
     $scope.environment = {};
 
@@ -88,6 +88,26 @@ angular.module('service-testing-tool').controller('EnvironmentsController', ['$s
           environmentId: $stateParams.environmentId
         }, function(environment) {
           $scope.environment = environment;
+
+          $scope.columnDefs = [
+            {
+              name: 'intfaceId', width: 200, minWidth: 100,
+              sort: {
+                direction: uiGridConstants.ASC,
+                priority: 1
+              },
+              cellTemplate:'gridCellTemplate.html'
+            },
+            {
+              name: 'endpointId', width: 600, minWidth: 300
+            }
+          ];
+
+          EnvEntries.queryByEnv({
+            environmentId: $scope.environment.id
+          },function(enventries) {
+            $scope.enventries = enventries;
+          });
         });
       }
     };
