@@ -61,7 +61,7 @@ angular.module('service-testing-tool').controller('EnvEntriesController', ['$sco
 
     $scope.remove = function(enventry) {
       enventry.$remove(function(response) {
-          $state.go('enventry_all');
+          $state.go('environment_edit', {environmentId: enventry.environmentId});
       });
     };
 

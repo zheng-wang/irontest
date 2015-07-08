@@ -5,7 +5,10 @@
     <div class="row">
         <form name="environmentForm" class="form-horizontal" ng-submit="create_update(environmentForm)">
             <div class="form-group">
-                <label ng-show="environment.updated" class="control-label col-md-offset-8">Last updated at {{environment.updated | date:'dd-MM-yyyy HH:mm:ss'}}</label>
+                <div class="col-md-2">
+                    <button class="btn btn-default btn-block" ui-sref="environment_all">Return</button>
+                </div>
+                <label ng-show="environment.updated" class="control-label col-md-offset-6">Last updated at {{environment.updated | date:'dd-MM-yyyy HH:mm:ss'}}</label>
             </div>
             <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
             <label class="control-label col-md-2">Name</label>
