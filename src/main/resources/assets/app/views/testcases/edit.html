@@ -2,14 +2,14 @@
   <div class="row">
     <div>
       <h3 class="page-header">Test Case Details
-        <label class="col-md-offset-1 failure-message" ng-show="saveSuccessful !== null && !saveSuccessful">Failed to save: {{savingErrorMessage}}</label>
-        <label class="col-md-offset-1" successful-message ng-class="{ 'successful-message-animation' : saveSuccessful }">Successfully saved</label>
+        <label class="col-md-offset-1 failure-message" ng-show="saveSuccessful !== null && !saveSuccessful">Failed to update: {{savingErrorMessage}}</label>
+        <label class="col-md-offset-1" successful-message ng-class="{ 'successful-message-animation' : saveSuccessful }">Successfully updated</label>
         <small ng-show="testcase.updated">Last edit at {{testcase.updated | date:'medium'}}</small>
       </h3>
     </div>
   </div>
   <div class="row">
-    <form name="testcaseForm" class="form-horizontal col-md-10" role="form" ng-submit="create_update(testcaseForm.$valid)" novalidate>
+    <form name="testcaseForm" class="form-horizontal col-md-6" role="form" ng-submit="update(testcaseForm.$valid)" novalidate>
       <div class="form-group" ng-class="{ 'has-error' : submitted && testcaseForm.title.$invalid }">
         <label for="name" class="col-md-2 control-label">Name</label>
         <div class="col-md-10">
@@ -26,13 +26,26 @@
         </div>
       </div>
       <div class="form-group">
-        <div class="col-md-offset-3 col-md-2">
-          <button type="submit" class="btn btn-info btn-block">Save</button>
+        <div class="col-md-offset-3 col-md-3">
+          <button type="submit" class="btn btn-info">Update</button>
         </div>
-        <div class="col-md-offset-2 col-md-2">
-          <button type="button" class="btn btn-info btn-block" ng-click="remove(testcase)">Delete</button>
+        <div class="col-md-offset-2 col-md-3">
+          <button type="button" class="btn btn-info" ng-click="remove(testcase)">Delete</button>
         </div>
       </div>
     </form>
+    <div class="col-md-6">
+      <div class="row">
+        <div class="btn-group" dropdown is-open="status.isopen">
+          <button type="button" class="btn btn-info dropdown-toggle" dropdown-toggle ng-disabled="disabled">
+            Create <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="#">SOAP Test Step</a></li>
+            <li><a href="#">Database Test Step</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

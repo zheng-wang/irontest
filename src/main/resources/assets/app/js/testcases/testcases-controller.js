@@ -2,26 +2,32 @@
 
 angular.module('service-testing-tool').controller('TestcasesController', ['$scope', 'Testcases', '$stateParams', '$state', 'uiGridConstants', '$timeout',
   function($scope, Testcases, $stateParams, $state, uiGridConstants, $timeout) {
-    $scope.testcase = {};
     $scope.saveSuccessful = null;
 
-    $scope.create_update = function(isValid) {
+    $scope.update = function(isValid) {
       if (isValid) {
-        if (this.testcase.id) {
-          var testcase = this.testcase;
-          testcase.$update(function(response) {
-            $scope.saveSuccessful = true;
-            $scope.testcase = response;
-          }, function(error) {
-            $scope.savingErrorMessage = error.data.message;
-            $scope.saveSuccessful = false;
-          });
-        } else {
-          var testcase = new Testcases(this.testcase);
-          testcase.$save(function(response) {
-            $state.go('testcase_edit', {testcaseId: response.id});
-          });
-        }
+        var testcase = this.testcase;
+        testcase.$update(function(response) {
+          $scope.saveSuccessful = true;
+          $scope.testcase = response;
+        }, function(error) {
+          $scope.savingErrorMessage = error.data.message;
+          $scope.saveSuccessful = false;
+        });
+      } else {
+        $scope.submitted = true;
+      }
+    };
+
+    $scope.create = function(isValid) {
+      if (isValid) {
+        var testcase = new Testcases(this.testcase);
+        testcase.$save(function(response) {
+          $state.go('testcase_edit', {testcaseId: response.id});
+        });
+
+        this.name = '';
+        this.description = '';
       } else {
         $scope.submitted = true;
       }
@@ -52,13 +58,11 @@ angular.module('service-testing-tool').controller('TestcasesController', ['$scop
     };
 
     $scope.findOne = function() {
-      if ($stateParams.testcaseId) {
-        Testcases.get({
-          testcaseId: $stateParams.testcaseId
-        }, function(testcase) {
-          $scope.testcase = testcase;
-        });
-      };
+      Testcases.get({
+        testcaseId: $stateParams.testcaseId
+      }, function(testcase) {
+        $scope.testcase = testcase;
+      });
     }
   }
 ]);
