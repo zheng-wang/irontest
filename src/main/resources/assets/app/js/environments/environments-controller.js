@@ -91,7 +91,7 @@ angular.module('service-testing-tool').controller('EnvironmentsController', ['$s
 
           $scope.columnDefs = [
             {
-              name: 'intfaceId', displayName: 'Interface', width: 200, minWidth: 100,
+              field: 'intface.name', displayName: 'Interface', width: 200, minWidth: 100,
               sort: {
                 direction: uiGridConstants.ASC,
                 priority: 1
@@ -99,7 +99,7 @@ angular.module('service-testing-tool').controller('EnvironmentsController', ['$s
               cellTemplate:'gridCellTemplate.html'
             },
             {
-              name: 'endpointId', displayName: 'Endpoint',width: 600, minWidth: 300
+              field: 'endpoint.name', displayName: 'Endpoint',width: 600, minWidth: 300
             }
           ];
 

@@ -10,6 +10,9 @@ public class EnvEntry {
     private long environmentId;
     private long intfaceId;
     private long endpointId;
+    private Environment environment;
+    private Intface intface;
+    private Endpoint endpoint;
     private Date created;
     private Date updated;
 
@@ -55,6 +58,28 @@ public class EnvEntry {
 
     public void setEndpointId(long endpointId) {
         this.endpointId = endpointId;
+    }
+
+    public Environment getEnvironment() { return environment; }
+
+    public void setEnvironment(Environment environment) {
+        this.environment = environment;
+    }
+
+    public Intface getIntface() {
+        return intface;
+    }
+
+    public void setIntface(Intface intface) {
+        this.intface = intface;
+    }
+
+    public Endpoint getEndpoint() {
+        return endpoint;
+    }
+
+    public void setEndpoint(Endpoint endpoint) {
+        this.endpoint = endpoint;
     }
 
     public Date getCreated() { return created; }

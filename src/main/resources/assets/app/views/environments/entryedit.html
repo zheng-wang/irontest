@@ -5,17 +5,17 @@
     <div class="row">
         <form name="enventryForm" class="form-horizontal col-md-10" ng-submit="create_update(enventryForm)">
             <div class="form-group">
-                <div class="col-md-2">
-                    <button class="btn btn-default btn-block" ui-sref="environment_edit({environmentId: enventry.environmentId})">Return</button>
-                </div>
                 <label ng-show="enventry.updated" class="control-label col-md-offset-6">Last updated at {{enventry.updated | date:'dd-MM-yyyy HH:mm:ss'}}</label>
             </div>
             <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
             <div sf-schema="schema" sf-form="form" sf-model="enventry" ></div>
+            <div class="col-md-2">
+                <button type="button" class="btn btn-default btn-block" ui-sref="environment_edit({environmentId: enventry.environmentId})">Back</button>
+            </div>
             <div class="col-md-offset-2 col-md-2">
                 <button type="submit" class="btn btn-success btn-block">Save</button>
             </div>
-            <div class="col-md-offset-4 col-md-2">
+            <div class="col-md-offset-2 col-md-2">
                 <button type="button" class="btn btn-warning btn-block" ng-click="remove(enventry)">Delete</button>
             </div>
         </form>

@@ -1,21 +1,23 @@
 <div ng-controller="EnvironmentsController" data-ng-init="findOne()">
     <div class="row">
-        <h3 class="page-header">Environment Detail</h3>
+        <div class="col-md-8">
+            <h3 class="page-header">Environment Detail</h3>
+        </div>
+        <div ng-show="environment.updated" class="updated-date">
+            <label class="control-label">Last updated at {{environment.updated | date:'dd-MM-yyyy HH:mm:ss'}}</label>
+        </div>
     </div>
     <div class="row">
         <form name="environmentForm" class="form-horizontal" ng-submit="create_update(environmentForm)">
-            <div class="form-group">
-                <div class="col-md-2">
-                    <button class="btn btn-default btn-block" ui-sref="environment_all">Return</button>
-                </div>
-                <label ng-show="environment.updated" class="control-label col-md-offset-6">Last updated at {{environment.updated | date:'dd-MM-yyyy HH:mm:ss'}}</label>
-            </div>
             <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
-            <label class="control-label col-md-2">Name</label>
+            <label class="control-label{ text-align: left } col-md-2">Name</label>
             <div sf-schema="schema" sf-form="form.name" sf-model="environment" class="col-md-10"></div>
-            <label class="control-label col-md-2">Description</label>
+            <label class="control-label{ text-align: left } col-md-2">Description</label>
             <div sf-schema="schema" sf-form="form.description" sf-model="environment" class="col-md-10"></div>
-            <div class="col-md-offset-4 col-md-2">
+            <div class="col-md-2">
+                <button type="button" class="btn btn-default btn-block" ui-sref="environment_all">Back</button>
+            </div>
+            <div class="col-md-offset-2 col-md-2">
                 <button type="submit" class="btn btn-success btn-block">Save</button>
             </div>
             <div class="col-md-offset-2 col-md-2">

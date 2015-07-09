@@ -62,7 +62,7 @@ public class STTApplication extends Application<STTConfiguration> {
         environment.jersey().register(new EndpointResource(endpointDAO));
         environment.jersey().register(new TestcaseResource(testcaseDAO));
         environment.jersey().register(new IntfaceResource(intfaceDAO));
-        environment.jersey().register(new EnvironmentResource(environmentDAO));
+        environment.jersey().register(new EnvironmentResource(environmentDAO, enventryDAO));
         environment.jersey().register(new EnvEntryResource(enventryDAO));
 
         //  register exception mappers

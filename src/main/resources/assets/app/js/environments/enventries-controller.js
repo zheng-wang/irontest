@@ -1,31 +1,51 @@
 'use strict';
 
-angular.module('service-testing-tool').controller('EnvEntriesController', ['$scope', 'EnvEntries', '$stateParams', '$state', 'uiGridConstants',
-  function($scope, EnvEntries, $stateParams, $state, uiGridConstants) {
+angular.module('service-testing-tool').controller('EnvEntriesController', ['$scope', 'EnvEntries', 'Environments', 'Intfaces', 'Endpoints', '$stateParams', '$state', 'uiGridConstants',
+  function($scope, EnvEntries, Environments, Intfaces, Endpoints, $stateParams, $state, uiGridConstants) {
      $scope.schema = {
       type: "object",
       properties: {
         id: { type: "integer" },
         environmentId: { type: "integer" },
         intfaceId: { type: "integer" },
-        endpointId: { type: "integer" }
+        endpointId: { type: "integer" },
+        environment: {
+          type: "object",
+          properties: {
+            name: { type: "string" }
+          }
+        },
+        intface: {
+          type: "object",
+          properties: {
+            name: { type: "string" }
+          }
+        },
+        endpoint: {
+          type: "object",
+          properties: {
+            name: { type: "string" }
+          }
+        }
       },
       "required": ["id", "enventryId", "intfaceId", "endpointId"]
     };
 
     $scope.form = [
       {
-        key: "environmentId",
-        title: "Environment",
+          key: "environment.name",
+          title: "Environment",
+          readonly: true
+      },
+      {
+        key: "intface.name",
+        title: "Interface",
         readonly: true
       },
       {
-        key: "intfaceId",
-        title: "Interface"
-      },
-      {
-        key: "endpointId",
-        title: "Endpoint"
+        key: "endpoint.name",
+        title: "Endpoint",
+        readonly: true
       }
     ];
 
@@ -74,6 +94,12 @@ angular.module('service-testing-tool').controller('EnvEntriesController', ['$sco
         });
       } else if ($stateParams.environmentId) {
         $scope.enventry.environmentId = Number($stateParams.environmentId);
+
+        Environments.get({
+          environmentId: $scope.enventry.environmentId
+        }, function(environment) {
+          $scope.enventry.environment = environment;
+        });
       }
     };
   }

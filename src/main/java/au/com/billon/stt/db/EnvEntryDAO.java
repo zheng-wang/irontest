@@ -11,7 +11,7 @@ import java.util.List;
  */
 @RegisterMapper(EnvEntryMapper.class)
 public interface EnvEntryDAO {
-    @SqlUpdate("create table IF NOT EXISTS enventry (id INT PRIMARY KEY auto_increment, environmentId int, intfaceId int, endpointId int," +
+    @SqlUpdate("create table IF NOT EXISTS enventry (id INT PRIMARY KEY auto_increment, environmentId int, intfaceId int, endpointId int, " +
             "created timestamp DEFAULT CURRENT_TIMESTAMP, updated timestamp DEFAULT CURRENT_TIMESTAMP)")
     void createTableIfNotExists();
 
@@ -25,12 +25,18 @@ public interface EnvEntryDAO {
     @SqlUpdate("delete from enventry where id = :id")
     void deleteById(@Bind("id") long id);
 
-    @SqlQuery("select * from enventry")
+    @SqlUpdate("delete from enventry where environmentId = :environmentId")
+    void deleteByEnv(@Bind("environmentId") long environmentId);
+
+    @SqlQuery("select ENVENTRY.*, ENVIRONMENT.NAME as environmentname, intface.name as intfacename, endpoint.name as endpointname from ENVENTRY, ENVIRONMENT, intface, endpoint " +
+            "where ENVENTRY.ENVIRONMENTID = ENVIRONMENT.ID and ENVENTRY.intfaceid = intface.id and ENVENTRY.endpointid = endpoint.id")
     List<EnvEntry> findAll();
 
-    @SqlQuery("select * from enventry where id = :id")
+    @SqlQuery("select ENVENTRY.*, ENVIRONMENT.NAME as environmentname, intface.name as intfacename, endpoint.name as endpointname from enventry, ENVIRONMENT, intface, endpoint " +
+            "where ENVENTRY.id = :id and ENVENTRY.ENVIRONMENTID = ENVIRONMENT.ID and ENVENTRY.intfaceid = intface.id and ENVENTRY.endpointid = endpoint.id")
     EnvEntry findById(@Bind("id") long id);
 
-    @SqlQuery("select * from enventry where environmentId = :environmentId")
+    @SqlQuery("select ENVENTRY.*, ENVIRONMENT.NAME as environmentname, intface.name as intfacename, endpoint.name as endpointname from enventry, ENVIRONMENT, intface, endpoint " +
+            "where ENVENTRY.environmentId = :environmentId and ENVENTRY.ENVIRONMENTID = ENVIRONMENT.ID and ENVENTRY.intfaceid = intface.id and ENVENTRY.endpointid = endpoint.id")
     List<EnvEntry> findByEnv(@Bind("environmentId") long environmentId);
 }
