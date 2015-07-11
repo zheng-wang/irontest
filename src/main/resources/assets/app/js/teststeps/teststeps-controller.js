@@ -1,15 +1,15 @@
 'use strict';
 
-angular.module('service-testing-tool').controller('TestcasesController', ['$scope', 'Testcases', '$stateParams', '$state', 'uiGridConstants',
-  function($scope, Testcases, $stateParams, $state, uiGridConstants) {
+angular.module('service-testing-tool').controller('TeststepsController', ['$scope', 'Teststeps', '$stateParams', '$state', 'uiGridConstants',
+  function($scope, Teststeps, $stateParams, $state, uiGridConstants) {
     $scope.saveSuccessful = null;
 
     $scope.update = function(isValid) {
       if (isValid) {
-        var testcase = this.testcase;
-        testcase.$update(function(response) {
+        var teststep = this.teststep;
+        teststep.$update(function(response) {
           $scope.saveSuccessful = true;
-          $scope.testcase = response;
+          $scope.teststep = response;
         }, function(error) {
           $scope.savingErrorMessage = error.data.message;
           $scope.saveSuccessful = false;
@@ -21,9 +21,9 @@ angular.module('service-testing-tool').controller('TestcasesController', ['$scop
 
     $scope.create = function(isValid) {
       if (isValid) {
-        var testcase = new Testcases(this.testcase);
-        testcase.$save(function(response) {
-          $state.go('testcase_edit', {testcaseId: response.id});
+        var teststep = new Teststeps(this.teststep);
+        teststep.$save(function(response) {
+          $state.go('teststep_edit', {teststepId: response.id});
         });
 
         this.name = '';
@@ -33,9 +33,9 @@ angular.module('service-testing-tool').controller('TestcasesController', ['$scop
       }
     };
 
-    $scope.remove = function(testcase) {
-      testcase.$remove(function(response) {
-        $state.go('testcase_all');
+    $scope.remove = function(teststep) {
+      teststep.$remove(function(response) {
+        $state.go('teststep_all');
       });
     };
 
@@ -52,16 +52,16 @@ angular.module('service-testing-tool').controller('TestcasesController', ['$scop
         {name: 'description', width: 585, minWidth: 300}
       ];
 
-      Testcases.query(function(testcases) {
-        $scope.testcases = testcases;
+      Teststeps.query(function(teststeps) {
+        $scope.teststeps = teststeps;
       });
     };
 
     $scope.findOne = function() {
-      Testcases.get({
-        testcaseId: $stateParams.testcaseId
-      }, function(testcase) {
-        $scope.testcase = testcase;
+      Teststeps.get({
+        teststepId: $stateParams.teststepId
+      }, function(teststep) {
+        $scope.teststep = teststep;
       });
     }
   }
