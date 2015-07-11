@@ -6,7 +6,7 @@
   </div>
   <div class="row">
     <form name="teststepForm" class="form-horizontal col-md-10 col-lg-6" role="form" ng-submit="create(teststepForm.$valid)" novalidate>
-      <div class="form-group" ng-class="{ 'has-error' : submitted && teststepForm.title.$invalid }">
+      <div class="form-group" ng-class="{ 'has-error' : submitted && teststepForm.name.$invalid }">
         <label for="name" class="col-md-3 control-label">Name</label>
         <div class="col-md-9">
           <input name="name" type="text" class="form-control" ng-model="name" id="name" placeholder="Invoke and verify SOAP service" maxlength="200" required>
@@ -21,10 +21,13 @@
           <textarea name="description" ng-model="description" id="description" cols="30" rows="10" placeholder="Description" class="form-control"></textarea>
         </div>
       </div>
-      <div class="form-group">
+      <div class="form-group" ng-class="{ 'has-error' : submitted && teststepForm.wsdlUrl.$invalid }">
         <label for="wsdlUrl" class="col-md-3 control-label">WSDL URL</label>
         <div class="col-md-8">
           <input name="wsdlUrl" type="text" class="form-control" ng-model="wsdlUrl" id="wsdlUrl" placeholder="http://localhost:8080/soap/article?wsdl" required>
+          <div ng-show="submitted && teststepForm.wsdlUrl.$invalid" class="help-block">
+            <p ng-show="teststepForm.wsdlUrl.$error.required">WSDL URL is required</p>
+          </div>
         </div>
         <div class="col-md-1">
           <button type="button" class="btn btn-info" ng-click="loadWsdl()">Load</button>

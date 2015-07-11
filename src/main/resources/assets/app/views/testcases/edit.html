@@ -18,7 +18,7 @@
           <button type="button" class="btn btn-info" ng-click="remove(testcase)">Delete</button>
         </div>
       </div>
-      <div class="form-group" ng-class="{ 'has-error' : submitted && testcaseForm.title.$invalid }">
+      <div class="form-group" ng-class="{ 'has-error' : submitted && testcaseForm.name.$invalid }">
         <label for="name" class="col-md-2 control-label">Name</label>
         <div class="col-md-10">
           <input name="name" type="text" class="form-control" ng-model="testcase.name" id="name" placeholder="Name" maxlength="200" required>

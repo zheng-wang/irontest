@@ -1,0 +1,60 @@
+<div ng-controller="TeststepsController" ng-init="findOne()">
+  <div class="row">
+    <div>
+      <h3 class="page-header">Test Step Details
+        <label class="col-md-offset-1 failure-message" ng-show="saveSuccessful !== null && !saveSuccessful">Failed to update: {{savingErrorMessage}}</label>
+        <label class="col-md-offset-1" successful-message ng-class="{ 'successful-message-animation' : saveSuccessful }">Successfully updated</label>
+        <small ng-show="teststep.updated">Last edit at {{teststep.updated | date:'medium'}}</small>
+      </h3>
+    </div>
+  </div>
+  <form name="teststepForm" class="form-horizontal" role="form" ng-submit="update(teststepForm.$valid)" novalidate>
+    <div class="form-group">
+      <div class="col-md-6">
+        <div class="col-md-offset-3 col-md-3">
+          <button type="submit" class="btn btn-info">Update</button>
+        </div>
+        <div class="col-md-offset-2 col-md-3">
+          <button type="button" class="btn btn-info" ng-click="remove(teststep)">Delete</button>
+        </div>
+      </div>
+    </div>
+    <div>
+      <tabset>
+        <tab heading="Request Response">
+          <div class="row">&nbsp;</div> <!-- spacer -->
+          <div class="form-group">
+            <div class="col-md-6">
+              <textarea name="request" ng-model="teststep.request" id="request" rows="30" placeholder="Request" class="form-control"></textarea>
+            </div>
+            <div class="col-md-6">
+              <textarea name="response" id="response" rows="30" placeholder="Response" class="form-control"></textarea>
+            </div>
+          </div>
+        </tab>
+        <tab heading="Basics">
+          <div class="row">&nbsp;</div> <!-- spacer -->
+          <div class="form-group" ng-class="{ 'has-error' : submitted && teststepForm.name.$invalid }">
+            <div class="col-md-6">
+              <label for="name" class="col-md-2 control-label">Name</label>
+              <div class="col-md-10">
+                <input name="name" type="text" class="form-control" ng-model="teststep.name" id="name" placeholder="Name" maxlength="200" required>
+                <div ng-show="submitted && teststepForm.name.$invalid" class="help-block">
+                  <p ng-show="teststepForm.name.$error.required">Name is required</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-6">
+              <label for="description" class="col-md-2 control-label">Description</label>
+              <div class="col-md-10">
+                <textarea name="description" ng-model="teststep.description" id="description" cols="30" rows="10" placeholder="Description" class="form-control"></textarea>
+              </div>
+            </div>
+          </div>
+        </tab>
+      </tabset>
+    </div>
+  </form>
+</div>

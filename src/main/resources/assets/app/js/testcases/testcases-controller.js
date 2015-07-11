@@ -27,9 +27,6 @@ angular.module('service-testing-tool').controller('TestcasesController', ['$scop
         testcase.$save(function(response) {
           $state.go('testcase_edit', {testcaseId: response.id});
         });
-
-        this.name = '';
-        this.description = '';
       } else {
         $scope.submitted = true;
       }

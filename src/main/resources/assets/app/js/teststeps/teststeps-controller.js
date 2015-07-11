@@ -46,15 +46,18 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
     $scope.create = function(isValid) {
       if (isValid) {
         var teststep = new Teststeps({
+          testcaseId: $stateParams.testcaseId,
           name: this.name,
-          description: this.description
+          description: this.description,
+          wsdlUrl: this.wsdlUrl,
+          wsdlBindingName: this.wsdlBinding.name,
+          wsdlOperationName: this.wsdlOperation
         });
         teststep.$save(function(response) {
-          $state.go('teststep_edit', {teststepId: response.id});
+          $state.go('teststep_edit', {testcaseId: response.testcaseId, teststepId: response.id});
+        }, function(error) {
+          alert('Error');
         });
-
-        this.name = '';
-        this.description = '';
       } else {
         $scope.submitted = true;
       }
@@ -86,6 +89,7 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
 
     $scope.findOne = function() {
       Teststeps.get({
+        testcaseId: $stateParams.testcaseId,
         teststepId: $stateParams.teststepId
       }, function(teststep) {
         $scope.teststep = teststep;

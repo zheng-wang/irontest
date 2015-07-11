@@ -1,10 +1,10 @@
 'use strict';
 
-//Teststeps service used for testcases REST endpoint
+//Teststeps service used for teststeps REST endpoint
 angular.module('service-testing-tool').factory('Teststeps', ['$resource',
   function($resource) {
-    return $resource('api/teststeps/:teststepId', {
-      teststepId: '@id'
+    return $resource('api/testcases/:testcaseId/teststeps/:teststepId', {
+      testcaseId: '@testcaseId', teststepId: '@id'
     }, {
       update: {
         method: 'PUT'
