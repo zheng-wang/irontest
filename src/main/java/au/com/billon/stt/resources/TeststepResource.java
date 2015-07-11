@@ -1,15 +1,14 @@
 package au.com.billon.stt.resources;
 
 import au.com.billon.stt.db.TeststepDAO;
+import au.com.billon.stt.models.Testcase;
 import au.com.billon.stt.models.Teststep;
 import au.com.billon.stt.models.WSDLBinding;
 import org.reficio.ws.builder.SoapBuilder;
 import org.reficio.ws.builder.SoapOperation;
 import org.reficio.ws.builder.core.Wsdl;
 
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.xml.namespace.QName;
 import java.util.ArrayList;
@@ -39,5 +38,11 @@ public class TeststepResource {
         teststep.setId(id);
         teststep.setRequest(null);  //  no need to bring request to client at this point
         return teststep;
+    }
+
+    @GET
+    @Path("{teststepId}")
+    public Teststep findById(@PathParam("teststepId") long teststepId) {
+        return dao.findById(teststepId);
     }
 }

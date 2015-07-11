@@ -1,5 +1,6 @@
 package au.com.billon.stt.models;
 
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
@@ -20,6 +21,16 @@ public class Teststep {
     private List<TeststepProperty> properties;
 
     public Teststep() {}
+
+    public Teststep(long id, long testcaseId, String name, String description, Date created, Date updated, String request) {
+        this.id = id;
+        this.testcaseId = testcaseId;
+        this.name = name;
+        this.description = description;
+        this.created = created;
+        this.updated = updated;
+        this.request = request;
+    }
 
     public long getId() {
         return id;

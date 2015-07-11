@@ -54,7 +54,7 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
           wsdlOperationName: this.wsdlOperation
         });
         teststep.$save(function(response) {
-          //$state.go('teststep_edit', {testcaseId: response.testcaseId, teststepId: response.id});
+          $state.go('teststep_edit', {testcaseId: response.testcaseId, teststepId: response.id});
         }, function(error) {
           alert('Error');
         });
@@ -89,6 +89,7 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
 
     $scope.findOne = function() {
       Teststeps.get({
+        testcaseId: $stateParams.testcaseId,
         teststepId: $stateParams.teststepId
       }, function(teststep) {
         $scope.teststep = teststep;
