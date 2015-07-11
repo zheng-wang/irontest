@@ -28,15 +28,18 @@ public interface EnvEntryDAO {
     @SqlUpdate("delete from enventry where environmentId = :environmentId")
     void deleteByEnv(@Bind("environmentId") long environmentId);
 
-    @SqlQuery("select ENVENTRY.*, ENVIRONMENT.NAME as environmentname, intface.name as intfacename, endpoint.name as endpointname from ENVENTRY, ENVIRONMENT, intface, endpoint " +
+    @SqlQuery("select ENVENTRY.*, ENVIRONMENT.NAME as environmentname, ENVIRONMENT.description as environmentdesc, intface.name as intfacename, intface.description as intfacedesc, " +
+            "endpoint.name as endpointname, endpoint.description as endpointdesc from ENVENTRY, ENVIRONMENT, intface, endpoint " +
             "where ENVENTRY.ENVIRONMENTID = ENVIRONMENT.ID and ENVENTRY.intfaceid = intface.id and ENVENTRY.endpointid = endpoint.id")
     List<EnvEntry> findAll();
 
-    @SqlQuery("select ENVENTRY.*, ENVIRONMENT.NAME as environmentname, intface.name as intfacename, endpoint.name as endpointname from enventry, ENVIRONMENT, intface, endpoint " +
+    @SqlQuery("select ENVENTRY.*, ENVIRONMENT.NAME as environmentname, ENVIRONMENT.description as environmentdesc, intface.name as intfacename, intface.description as intfacedesc, " +
+            "endpoint.name as endpointname, endpoint.description as endpointdesc from ENVENTRY, ENVIRONMENT, intface, endpoint " +
             "where ENVENTRY.id = :id and ENVENTRY.ENVIRONMENTID = ENVIRONMENT.ID and ENVENTRY.intfaceid = intface.id and ENVENTRY.endpointid = endpoint.id")
     EnvEntry findById(@Bind("id") long id);
 
-    @SqlQuery("select ENVENTRY.*, ENVIRONMENT.NAME as environmentname, intface.name as intfacename, endpoint.name as endpointname from enventry, ENVIRONMENT, intface, endpoint " +
+    @SqlQuery("select ENVENTRY.*, ENVIRONMENT.NAME as environmentname, ENVIRONMENT.description as environmentdesc, intface.name as intfacename, intface.description as intfacedesc, " +
+            "endpoint.name as endpointname, endpoint.description as endpointdesc from ENVENTRY, ENVIRONMENT, intface, endpoint " +
             "where ENVENTRY.environmentId = :environmentId and ENVENTRY.ENVIRONMENTID = ENVIRONMENT.ID and ENVENTRY.intfaceid = intface.id and ENVENTRY.endpointid = endpoint.id")
     List<EnvEntry> findByEnv(@Bind("environmentId") long environmentId);
 }

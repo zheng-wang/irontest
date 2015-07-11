@@ -38,13 +38,28 @@ angular.module('service-testing-tool').controller('EnvEntriesController', ['$sco
           readonly: true
       },
       {
+        key: "environment.description",
+        notitle: true,
+        readonly: true
+      },
+      {
         key: "intface.name",
         title: "Interface",
         readonly: true
       },
       {
+        key: "intface.description",
+        notitle: true,
+        readonly: true
+      },
+      {
         key: "endpoint.name",
         title: "Endpoint",
+        readonly: true
+      },
+      {
+        key: "endpoint.description",
+        notitle: true,
         readonly: true
       }
     ];
