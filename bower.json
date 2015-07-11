@@ -9,6 +9,7 @@
     "angular-schema-form": "0.8.2",
     "bootstrap": "3.3.5",
     "angular-bootstrap": "0.12.1",
-    "startbootstrap-sb-admin-2": "1.0.7"
+    "startbootstrap-sb-admin-2": "1.0.7",
+    "underscore": "1.8.3"
   }
 }

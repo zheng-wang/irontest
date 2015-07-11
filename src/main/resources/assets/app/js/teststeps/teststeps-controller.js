@@ -1,7 +1,8 @@
 'use strict';
 
-angular.module('service-testing-tool').controller('TeststepsController', ['$scope', 'Teststeps', '$stateParams', '$state', 'uiGridConstants', '$http',
-  function($scope, Teststeps, $stateParams, $state, uiGridConstants, $http) {
+angular.module('service-testing-tool').controller('TeststepsController', ['$scope', 'Teststeps', '$stateParams',
+  '$state', 'uiGridConstants', '$http', '_',
+  function($scope, Teststeps, $stateParams, $state, uiGridConstants, $http, _) {
     $scope.saveSuccessful = null;
 
     $scope.update = function(isValid) {
@@ -28,13 +29,18 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
         })
         .success(function(data, status) {
           $scope.wsdlBindings = data;
-          $scope.wsdlBinding = data[0];
-          $scope.wsdlOperations = data[0].operations;
-          $scope.wsdlOperation = data[0].operations[0];
+          $scope.wsdlBinding = $scope.wsdlBindings[0];
+          $scope.wsdlOperations = $scope.wsdlBindings[0].operations;
+          $scope.wsdlOperation = $scope.wsdlOperations[0];
         })
         .error(function(data, status) {
           alert('Error');
         });
+    }
+
+    $scope.refreshOperations = function() {
+      $scope.wsdlOperations = _.findWhere($scope.wsdlBindings, { name: $scope.wsdlBinding.name }).operations;
+      $scope.wsdlOperation = $scope.wsdlOperations[0];
     }
 
     $scope.create = function(isValid) {
