@@ -45,6 +45,7 @@ public class STTApplication extends Application<STTConfiguration> {
         final ArticleDAO articleDAO = jdbi.onDemand(ArticleDAO.class);
         final EndpointDAO endpointDAO = jdbi.onDemand(EndpointDAO.class);
         final TestcaseDAO testcaseDAO = jdbi.onDemand(TestcaseDAO.class);
+        final TeststepDAO teststepDAO = jdbi.onDemand(TeststepDAO.class);
         final IntfaceDAO intfaceDAO = jdbi.onDemand(IntfaceDAO.class);
         final EnvironmentDAO environmentDAO = jdbi.onDemand(EnvironmentDAO.class);
         final EnvEntryDAO enventryDAO = jdbi.onDemand(EnvEntryDAO.class);
@@ -53,6 +54,7 @@ public class STTApplication extends Application<STTConfiguration> {
         articleDAO.createTableIfNotExists();
         endpointDAO.createTableIfNotExists();
         testcaseDAO.createTableIfNotExists();
+        teststepDAO.createTableIfNotExists();
         intfaceDAO.createTableIfNotExists();
         environmentDAO.createTableIfNotExists();
         enventryDAO.createTableIfNotExists();
@@ -61,6 +63,7 @@ public class STTApplication extends Application<STTConfiguration> {
         environment.jersey().register(new ArticleResource(articleDAO));
         environment.jersey().register(new EndpointResource(endpointDAO));
         environment.jersey().register(new TestcaseResource(testcaseDAO));
+        environment.jersey().register(new TeststepResource(teststepDAO));
         environment.jersey().register(new WSDLResource());
         environment.jersey().register(new IntfaceResource(intfaceDAO));
         environment.jersey().register(new EnvironmentResource(environmentDAO, enventryDAO));
