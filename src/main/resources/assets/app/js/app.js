@@ -33,7 +33,10 @@ angular.module('service-testing-tool', ['ngResource', 'ui.router', 'schemaForm',
 
 angular.module('service-testing-tool').factory('PageNavigation', [
     function() {
-        var navigation = { };
+        var navigation = {
+            contexts: [],
+            returns: []
+        };
         
         this.navigation = navigation;
 

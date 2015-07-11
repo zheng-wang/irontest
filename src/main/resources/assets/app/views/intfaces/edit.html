@@ -8,7 +8,7 @@
                 <div class="col-md-2" ng-show="context && context.url">
                     <button type="button" class="btn btn-info btn-block" ng-click="return()">Return</button>
                 </div>
-                <div class="col-md-2" ng-show="context && context.expect">
+                <div class="col-md-2" ng-show="context && context.expect && intface.id">
                     <button type="button" class="btn btn-info btn-block" ng-click="select()">Select</button>
                 </div>
             </div>
@@ -19,7 +19,7 @@
                 <button type="submit" class="btn btn-success btn-block">Save</button>
             </div>
             <div class="col-md-offset-4 col-md-2">
-                <button type="button" class="btn btn-warning btn-block" ng-click="remove(intface)">Delete</button>
+                <button type="button" class="btn btn-warning btn-block" ng-hide="context" ng-click="remove(intface)">Delete</button>
             </div>
         </form>
     </div>

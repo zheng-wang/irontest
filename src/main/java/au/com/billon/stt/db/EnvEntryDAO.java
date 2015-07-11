@@ -28,18 +28,35 @@ public interface EnvEntryDAO {
     @SqlUpdate("delete from enventry where environmentId = :environmentId")
     void deleteByEnv(@Bind("environmentId") long environmentId);
 
-    @SqlQuery("select ENVENTRY.*, ENVIRONMENT.NAME as environmentname, ENVIRONMENT.description as environmentdesc, intface.name as intfacename, intface.description as intfacedesc, " +
-            "endpoint.name as endpointname, endpoint.description as endpointdesc from ENVENTRY, ENVIRONMENT, intface, endpoint " +
-            "where ENVENTRY.ENVIRONMENTID = ENVIRONMENT.ID and ENVENTRY.intfaceid = intface.id and ENVENTRY.endpointid = endpoint.id")
+    @SqlQuery("select ENVENTRY.*, " +
+            "ENVIRONMENT.NAME as environmentname, ENVIRONMENT.description as environmentdesc, " +
+            "intface.name as intfacename, intface.description as intfacedesc, " +
+            "endpoint.name as endpointname, endpoint.description as endpointdesc " +
+            "from ENVENTRY " +
+            "left outer join ENVIRONMENT on ENVENTRY.ENVIRONMENTID = ENVIRONMENT.ID " +
+            "left outer join intface on ENVENTRY.intfaceid = intface.id " +
+            "left outer join endpoint on ENVENTRY.endpointid = endpoint.id")
     List<EnvEntry> findAll();
 
-    @SqlQuery("select ENVENTRY.*, ENVIRONMENT.NAME as environmentname, ENVIRONMENT.description as environmentdesc, intface.name as intfacename, intface.description as intfacedesc, " +
-            "endpoint.name as endpointname, endpoint.description as endpointdesc from ENVENTRY, ENVIRONMENT, intface, endpoint " +
-            "where ENVENTRY.id = :id and ENVENTRY.ENVIRONMENTID = ENVIRONMENT.ID and ENVENTRY.intfaceid = intface.id and ENVENTRY.endpointid = endpoint.id")
+    @SqlQuery("select ENVENTRY.*, " +
+            "ENVIRONMENT.NAME as environmentname, ENVIRONMENT.description as environmentdesc, " +
+            "intface.name as intfacename, intface.description as intfacedesc, " +
+            "endpoint.name as endpointname, endpoint.description as endpointdesc " +
+            "from ENVENTRY " +
+            "left outer join ENVIRONMENT on ENVENTRY.ENVIRONMENTID = ENVIRONMENT.ID " +
+            "left outer join intface on ENVENTRY.intfaceid = intface.id " +
+            "left outer join endpoint on ENVENTRY.endpointid = endpoint.id " +
+            "where ENVENTRY.id = :id")
     EnvEntry findById(@Bind("id") long id);
 
-    @SqlQuery("select ENVENTRY.*, ENVIRONMENT.NAME as environmentname, ENVIRONMENT.description as environmentdesc, intface.name as intfacename, intface.description as intfacedesc, " +
-            "endpoint.name as endpointname, endpoint.description as endpointdesc from ENVENTRY, ENVIRONMENT, intface, endpoint " +
-            "where ENVENTRY.environmentId = :environmentId and ENVENTRY.ENVIRONMENTID = ENVIRONMENT.ID and ENVENTRY.intfaceid = intface.id and ENVENTRY.endpointid = endpoint.id")
+    @SqlQuery("select ENVENTRY.*, " +
+            "ENVIRONMENT.NAME as environmentname, ENVIRONMENT.description as environmentdesc, " +
+            "intface.name as intfacename, intface.description as intfacedesc, " +
+            "endpoint.name as endpointname, endpoint.description as endpointdesc " +
+            "from ENVENTRY " +
+            "left outer join ENVIRONMENT on ENVENTRY.ENVIRONMENTID = ENVIRONMENT.ID " +
+            "left outer join intface on ENVENTRY.intfaceid = intface.id " +
+            "left outer join endpoint on ENVENTRY.endpointid = endpoint.id " +
+            "where ENVENTRY.environmentId = :environmentId")
     List<EnvEntry> findByEnv(@Bind("environmentId") long environmentId);
 }

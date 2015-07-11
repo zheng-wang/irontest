@@ -64,6 +64,7 @@ angular.module('service-testing-tool').controller('IntfacesController', ['$scope
         } else {
           var intface = new Intfaces(this.intface);
           intface.$save(function(response) {
+            PageNavigation.contexts.push($scope.context);
             $state.go('intface_edit', {intfaceId: response.id});
           }, function(exception) {
             $scope.alerts.push({type: 'warning', msg: exception.data});
@@ -110,16 +111,15 @@ angular.module('service-testing-tool').controller('IntfacesController', ['$scope
     };
 
     $scope.select = function() {
-      if ($scope.intface.id) {
-        $scope.context.model.intfaceId = $scope.intface.id;
-        $location.path($scope.context.url);
-      } else {
-        $scope.alerts.push({type: 'warning', msg: 'Please save the Interface before select it'});
-      }
+      var returnObj = {
+        intfaceId : $scope.intface.id
+      };
+      PageNavigation.returns.push(returnObj);
+      $location.path($scope.context.url);
     };
 
     $scope.findOne = function() {
-      $scope.context = PageNavigation.context;
+      $scope.context = PageNavigation.contexts.pop();
 
       if ($stateParams.intfaceId) {
         Intfaces.get({

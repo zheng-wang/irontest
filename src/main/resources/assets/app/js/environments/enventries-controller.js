@@ -55,6 +55,7 @@ angular.module('service-testing-tool').controller('EnvEntriesController', ['$sco
         {
           key: "intface.description",
           notitle: true,
+          htmlClass: 'spacer-bottom-0',
           readonly: true
         }
       ],
@@ -68,6 +69,7 @@ angular.module('service-testing-tool').controller('EnvEntriesController', ['$sco
         {
           key: "endpoint.description",
           notitle: true,
+          htmlClass: 'spacer-bottom-0',
           readonly: true
         }
       ]
@@ -106,7 +108,7 @@ angular.module('service-testing-tool').controller('EnvEntriesController', ['$sco
         expect: expect
       };
 
-      PageNavigation.context = context;
+      PageNavigation.contexts.push(context);
 
       $state.go(state, params);
     };
@@ -121,26 +123,39 @@ angular.module('service-testing-tool').controller('EnvEntriesController', ['$sco
       });
     };
 
+    var populateReturnObj = function() {
+      // Return from the interface details page
+      var returnObj = PageNavigation.returns.pop();
+
+      if (returnObj) {
+        if (returnObj.intfaceId) {
+          $scope.enventry.intfaceId = returnObj.intfaceId;
+
+          Intfaces.get({
+            intfaceId: $scope.enventry.intfaceId
+          }, function(intface) {
+            $scope.enventry.intface = intface;
+          });
+        }
+        if (returnObj.endpointId) {
+          $scope.enventry.endpointId = returnObj.endpointId;
+
+          Endpionts.get({
+            endpointId: $scope.enventry.endpointId
+          }, function(endpoint) {
+            $scope.enventry.endpoint = endpoint;
+          });
+        }
+      }
+    };
+
     $scope.findOne = function() {
       if ($stateParams.enventryId) {
         EnvEntries.get({
           enventryId: $stateParams.enventryId
         }, function(enventry) {
           $scope.enventry = enventry;
-
-          // Return from the interface details page
-          $scope.context = PageNavigation.context;
-          PageNavigation.context = null;
-
-          if ($scope.context) {
-            $scope.enventry.intfaceId = $scope.context.model.intfaceId;
-
-            Intfaces.get({
-              intfaceId: $scope.enventry.intfaceId
-            }, function(intface) {
-              $scope.enventry.intface = intface;
-            });
-          }
+          populateReturnObj();
         });
       // create a new enventry
       } else if ($stateParams.environmentId) {
@@ -150,6 +165,7 @@ angular.module('service-testing-tool').controller('EnvEntriesController', ['$sco
           environmentId: $scope.enventry.environmentId
         }, function(environment) {
           $scope.enventry.environment = environment;
+          populateReturnObj();
         });
       }
     };
