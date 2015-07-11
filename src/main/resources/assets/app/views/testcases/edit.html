@@ -10,6 +10,14 @@
   </div>
   <div class="row">
     <form name="testcaseForm" class="form-horizontal col-md-6" role="form" ng-submit="update(testcaseForm.$valid)" novalidate>
+      <div class="form-group">
+        <div class="col-md-offset-3 col-md-3">
+          <button type="submit" class="btn btn-info">Update</button>
+        </div>
+        <div class="col-md-offset-2 col-md-3">
+          <button type="button" class="btn btn-info" ng-click="remove(testcase)">Delete</button>
+        </div>
+      </div>
       <div class="form-group" ng-class="{ 'has-error' : submitted && testcaseForm.title.$invalid }">
         <label for="name" class="col-md-2 control-label">Name</label>
         <div class="col-md-10">
@@ -25,24 +33,16 @@
           <textarea name="description" ng-model="testcase.description" id="description" cols="30" rows="10" placeholder="Description" class="form-control"></textarea>
         </div>
       </div>
-      <div class="form-group">
-        <div class="col-md-offset-3 col-md-3">
-          <button type="submit" class="btn btn-info">Update</button>
-        </div>
-        <div class="col-md-offset-2 col-md-3">
-          <button type="button" class="btn btn-info" ng-click="remove(testcase)">Delete</button>
-        </div>
-      </div>
     </form>
     <div class="col-md-6">
       <div class="row">
         <div class="btn-group pull-right" dropdown is-open="status.isopen">
           <button type="button" class="btn btn-info dropdown-toggle" dropdown-toggle ng-disabled="disabled">
-            Create <span class="caret"></span>
+            Create Test Step <span class="caret"></span>
           </button>
           <ul class="dropdown-menu" role="menu">
-            <li><a href="#">SOAP Test Step</a></li>
-            <li><a href="#">Database Test Step</a></li>
+            <li><a ui-sref="teststep_create({testcaseId: testcase.id})">SOAP</a></li>
+            <li><a href="#">Database</a></li>
           </ul>
         </div>
       </div>

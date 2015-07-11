@@ -1,5 +1,12 @@
+//  Add underscore to AngularJS
+angular.module('underscore', [])
+    .factory('_', ['$window', function($window) {
+        return $window._; // assumes underscore has already been loaded on the page
+    }]);
+
 // Declare app level module dependencies
-angular.module('service-testing-tool', ['ngResource', 'ui.router', 'schemaForm', 'ui.grid', 'ui.grid.resizeColumns', 'ui.grid.moveColumns', 'ui.grid.pagination', 'ui.bootstrap'])
+angular.module('service-testing-tool', ['ngResource', 'ui.router', 'schemaForm', 'ui.grid', 'ui.grid.resizeColumns',
+        'ui.grid.moveColumns', 'ui.grid.pagination', 'ui.bootstrap', 'underscore'])
     .config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
         // set default(home) view
         // $urlRouterProvider.otherwise('/');
