@@ -23,11 +23,14 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
       $http
         .get('api/wsdls/anywsdl/operations', {
           params: {
-            wsdlUrl: 'http://localhost:8080/soap/article?wsdl'
+            wsdlUrl: $scope.wsdlUrl
           }
         })
         .success(function(data, status) {
-          $scope.posts = data;
+          $scope.wsdlBindings = data;
+          $scope.wsdlBinding = data[0];
+          $scope.wsdlOperations = data[0].operations;
+          $scope.wsdlOperation = data[0].operations[0];
         })
         .error(function(data, status) {
           alert('Error');

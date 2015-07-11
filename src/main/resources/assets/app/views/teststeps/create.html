@@ -33,13 +33,13 @@
       <div class="form-group">
         <label for="wsdlBinding" class="col-md-3 control-label">WSDL Binding</label>
         <div class="col-md-9">
-          <select name="wsdlBinding" id="wsdlBinding" class="form-control" data-ng-model="wsdlBinding" data-ng-options="item for item in wsdlBindings"></select>
+          <select name="wsdlBinding" id="wsdlBinding" class="form-control" ng-model="wsdlBinding" ng-options="item.name for item in wsdlBindings" ng-change="refreshOperations()"></select>
         </div>
       </div>
       <div class="form-group">
         <label for="wsdlOperation" class="col-md-3 control-label">WSDL Operation</label>
         <div class="col-md-9">
-          <select name="wsdlOperation" id="wsdlOperation" class="form-control" data-ng-model="wsdlOperation" data-ng-options="item for item in wsdlOperations"></select>
+          <select name="wsdlOperation" id="wsdlOperation" class="form-control" ng-model="wsdlOperation" ng-options="item for item in wsdlOperations"></select>
         </div>
       </div>
       <div class="form-group">

@@ -11,8 +11,9 @@ public class WSDLBinding {
 
     public WSDLBinding() {}
 
-    public WSDLBinding(String name) {
+    public WSDLBinding(String name, List<String> operations) {
         this.name = name;
+        this.operations = operations;
     }
 
     public String getName() {
