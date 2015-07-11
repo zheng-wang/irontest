@@ -5,24 +5,45 @@
     </div>
   </div>
   <div class="row">
-    <form name="teststepForm" class="form-horizontal col-md-6" role="form" ng-submit="create(teststepForm.$valid)" novalidate>
+    <form name="teststepForm" class="form-horizontal col-md-10 col-lg-6" role="form" ng-submit="create(teststepForm.$valid)" novalidate>
       <div class="form-group" ng-class="{ 'has-error' : submitted && teststepForm.title.$invalid }">
-        <label for="name" class="col-md-2 control-label">Name</label>
-        <div class="col-md-10">
-          <input name="name" type="text" class="form-control" ng-model="teststep.name" id="name" placeholder="Name" maxlength="200" required>
+        <label for="name" class="col-md-3 control-label">Name</label>
+        <div class="col-md-9">
+          <input name="name" type="text" class="form-control" ng-model="name" id="name" placeholder="Invoke and verify SOAP service" maxlength="200" required>
           <div ng-show="submitted && teststepForm.name.$invalid" class="help-block">
             <p ng-show="teststepForm.name.$error.required">Name is required</p>
           </div>
         </div>
       </div>
       <div class="form-group">
-        <label for="description" class="col-md-2 control-label">Description</label>
-        <div class="col-md-10">
-          <textarea name="description" ng-model="teststep.description" id="description" cols="30" rows="10" placeholder="Description" class="form-control"></textarea>
+        <label for="description" class="col-md-3 control-label">Description</label>
+        <div class="col-md-9">
+          <textarea name="description" ng-model="description" id="description" cols="30" rows="10" placeholder="Description" class="form-control"></textarea>
         </div>
       </div>
       <div class="form-group">
-        <div class="col-md-offset-3">
+        <label for="wsdlUrl" class="col-md-3 control-label">WSDL URL</label>
+        <div class="col-md-8">
+          <input name="wsdlUrl" type="text" class="form-control" ng-model="wsdlUrl" id="wsdlUrl" placeholder="http://localhost:8080/soap/article?wsdl" required>
+        </div>
+        <div class="col-md-1">
+          <button type="button" class="btn btn-info" ng-click="loadWsdl()">Load</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="wsdlBinding" class="col-md-3 control-label">WSDL Binding</label>
+        <div class="col-md-9">
+          <select name="wsdlBinding" id="wsdlBinding" class="form-control" data-ng-model="wsdlBinding" data-ng-options="item for item in wsdlBindings"></select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="wsdlOperation" class="col-md-3 control-label">WSDL Operation</label>
+        <div class="col-md-9">
+          <select name="wsdlOperation" id="wsdlOperation" class="form-control" data-ng-model="wsdlOperation" data-ng-options="item for item in wsdlOperations"></select>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-md-offset-5">
           <button type="submit" class="btn btn-info">Submit</button>
         </div>
       </div>

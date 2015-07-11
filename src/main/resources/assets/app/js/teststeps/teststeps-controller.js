@@ -19,9 +19,16 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
       }
     };
 
+    $scope.loadWsdl = function() {
+      console.log('aaaaaaaaaaaaaaaaaaaa');
+    }
+
     $scope.create = function(isValid) {
       if (isValid) {
-        var teststep = new Teststeps(this.teststep);
+        var teststep = new Teststeps({
+          name: this.name,
+          description: this.description
+        });
         teststep.$save(function(response) {
           $state.go('teststep_edit', {teststepId: response.id});
         });
