@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('service-testing-tool').controller('EnvEntriesController', ['$scope', 'EnvEntries', 'Environments', 'Intfaces', 'Endpoints', '$stateParams', '$state', 'uiGridConstants',
-  function($scope, EnvEntries, Environments, Intfaces, Endpoints, $stateParams, $state, uiGridConstants) {
+angular.module('service-testing-tool').controller('EnvEntriesController', ['$scope', 'EnvEntries', 'Environments', 'Intfaces', 'Endpoints', 'PageNavigation', '$location', '$stateParams', '$state', 'uiGridConstants',
+  function($scope, EnvEntries, Environments, Intfaces, Endpoints, PageNavigation, $location, $stateParams, $state, uiGridConstants) {
      $scope.schema = {
       type: "object",
       properties: {
@@ -31,41 +31,47 @@ angular.module('service-testing-tool').controller('EnvEntriesController', ['$sco
       "required": ["id", "enventryId", "intfaceId", "endpointId"]
     };
 
-    $scope.form = [
-      {
+    $scope.form = {
+      environment: [
+        {
           key: "environment.name",
           title: "Environment",
           htmlClass: 'spacer-bottom-0',
           readonly: true
-      },
-      {
-        key: "environment.description",
-        notitle: true,
-        readonly: true
-      },
-      {
-        key: "intface.name",
-        title: "Interface",
-        htmlClass: 'spacer-bottom-0',
-        readonly: true
-      },
-      {
-        key: "intface.description",
-        notitle: true,
-        readonly: true
-      },
-      {
-        key: "endpoint.name",
-        title: "Endpoint",
-        htmlClass: 'spacer-bottom-0',
-        readonly: true
-      },
-      {
-        key: "endpoint.description",
-        notitle: true,
-        readonly: true
-      }
-    ];
+        },
+        {
+          key: "environment.description",
+          notitle: true,
+          readonly: true
+        }
+      ],
+      interface: [
+        {
+          key: "intface.name",
+          title: "Interface",
+          htmlClass: 'spacer-bottom-0',
+          readonly: true
+        },
+        {
+          key: "intface.description",
+          notitle: true,
+          readonly: true
+        }
+      ],
+      endpoint: [
+        {
+          key: "endpoint.name",
+          title: "Endpoint",
+          htmlClass: 'spacer-bottom-0',
+          readonly: true
+        },
+        {
+          key: "endpoint.description",
+          notitle: true,
+          readonly: true
+        }
+      ]
+    };
 
     $scope.enventry = {};
 
@@ -93,6 +99,18 @@ angular.module('service-testing-tool').controller('EnvEntriesController', ['$sco
       }
     };
 
+    $scope.goto = function(state, params, expect) {
+      var context = {
+        model: $scope.enventry,
+        url: $location.path(),
+        expect: expect
+      };
+
+      PageNavigation.context = context;
+
+      $state.go(state, params);
+    };
+
     $scope.closeAlert = function(index) {
       $scope.alerts.splice(index, 1);
     };
@@ -109,7 +127,22 @@ angular.module('service-testing-tool').controller('EnvEntriesController', ['$sco
           enventryId: $stateParams.enventryId
         }, function(enventry) {
           $scope.enventry = enventry;
+
+          // Return from the interface details page
+          $scope.context = PageNavigation.context;
+          PageNavigation.context = null;
+
+          if ($scope.context) {
+            $scope.enventry.intfaceId = $scope.context.model.intfaceId;
+
+            Intfaces.get({
+              intfaceId: $scope.enventry.intfaceId
+            }, function(intface) {
+              $scope.enventry.intface = intface;
+            });
+          }
         });
+      // create a new enventry
       } else if ($stateParams.environmentId) {
         $scope.enventry.environmentId = Number($stateParams.environmentId);
 

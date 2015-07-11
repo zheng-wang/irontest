@@ -11,7 +11,7 @@ angular.module('service-testing-tool', ['ngResource', 'ui.router', 'schemaForm',
                 templateUrl: '/ui/views/blank.html'
             });
 
-        }])
+    }])
     .run(function ($rootScope) {
         //  When a leaf (i.e. <a>) sidebar menu item is clicked (which by design will change ui-router state),
         //  remove 'active' class from previous menu item (i.e. with the url before state transition),
@@ -23,3 +23,13 @@ angular.module('service-testing-tool', ['ngResource', 'ui.router', 'schemaForm',
             }).removeClass('active');
         });
     });
+
+angular.module('service-testing-tool').factory('PageNavigation', [
+    function() {
+        var navigation = { };
+        
+        this.navigation = navigation;
+
+        return navigation;
+    }
+]);

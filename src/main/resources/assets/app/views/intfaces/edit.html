@@ -4,6 +4,14 @@
     </div>
     <div class="row">
         <form name="intfaceForm" class="form-horizontal col-md-10" ng-submit="create_update(intfaceForm)">
+            <div class="form-group">
+                <div class="col-md-2" ng-show="context && context.url">
+                    <button type="button" class="btn btn-info btn-block" ng-click="return()">Return</button>
+                </div>
+                <div class="col-md-2" ng-show="context && context.expect">
+                    <button type="button" class="btn btn-info btn-block" ng-click="select()">Select</button>
+                </div>
+            </div>
             <p><medium ng-show="intface.updated">Last updated at {{intface.updated | date:'dd-MM-yyyy HH:mm:ss'}}</medium></p>
             <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
             <div sf-schema="schema" sf-form="form" sf-model="intface" ></div>

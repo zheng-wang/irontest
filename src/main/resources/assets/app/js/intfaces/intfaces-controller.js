@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('service-testing-tool').controller('IntfacesController', ['$scope', 'Intfaces', '$stateParams', '$state', 'uiGridConstants',
-  function($scope, Intfaces, $stateParams, $state, uiGridConstants) {
+angular.module('service-testing-tool').controller('IntfacesController', ['$scope', 'Intfaces', 'PageNavigation', '$location', '$stateParams', '$state', 'uiGridConstants',
+  function($scope, Intfaces, PageNavigation, $location, $stateParams, $state, uiGridConstants) {
     $scope.schema = {
       type: "object",
       properties: {
@@ -37,7 +37,7 @@ angular.module('service-testing-tool').controller('IntfacesController', ['$scope
       {
         key: "relpath",
         title: "Relative Path",
-        validationMessage: "The Context root is required and should start with /"
+        validationMessage: "The Relative Path should start with /"
       },
       {
         key: "defurl",
@@ -105,7 +105,22 @@ angular.module('service-testing-tool').controller('IntfacesController', ['$scope
       });
     };
 
+    $scope.return = function() {
+      $location.path($scope.context.url);
+    };
+
+    $scope.select = function() {
+      if ($scope.intface.id) {
+        $scope.context.model.intfaceId = $scope.intface.id;
+        $location.path($scope.context.url);
+      } else {
+        $scope.alerts.push({type: 'warning', msg: 'Please save the Interface before select it'});
+      }
+    };
+
     $scope.findOne = function() {
+      $scope.context = PageNavigation.context;
+
       if ($stateParams.intfaceId) {
         Intfaces.get({
           intfaceId: $stateParams.intfaceId
