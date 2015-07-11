@@ -47,6 +47,10 @@
     margin-top: 20px; /* define margin as you see fit */
 }
 
+.spacer-bottom-0 {
+    margin-bottom: 0px; /* define margin as you see fit */
+}
+
 .updated-date {
     padding-bottom: 0px;
     margin: 50px 0 20px;

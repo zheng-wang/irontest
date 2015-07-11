@@ -1,12 +1,14 @@
 <div ng-controller="EnvEntriesController" data-ng-init="findOne()">
     <div class="row">
-        <h3 class="page-header">Environment Entry</h3>
+        <div class="col-md-6">
+            <h3 class="page-header">Environment Entry</h3>
+        </div>
+        <div ng-show="enventry.updated" class="updated-date">
+            <label class="control-label">Last updated at {{enventry.updated | date:'dd-MM-yyyy HH:mm:ss'}}</label>
+        </div>
     </div>
     <div class="row">
         <form name="enventryForm" class="form-horizontal col-md-10" ng-submit="create_update(enventryForm)">
-            <div class="form-group">
-                <label ng-show="enventry.updated" class="control-label col-md-offset-6">Last updated at {{enventry.updated | date:'dd-MM-yyyy HH:mm:ss'}}</label>
-            </div>
             <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
             <div sf-schema="schema" sf-form="form" sf-model="enventry" ></div>
             <div class="col-md-2">

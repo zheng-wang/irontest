@@ -35,6 +35,7 @@ angular.module('service-testing-tool').controller('EnvEntriesController', ['$sco
       {
           key: "environment.name",
           title: "Environment",
+          htmlClass: 'spacer-bottom-0',
           readonly: true
       },
       {
@@ -45,6 +46,7 @@ angular.module('service-testing-tool').controller('EnvEntriesController', ['$sco
       {
         key: "intface.name",
         title: "Interface",
+        htmlClass: 'spacer-bottom-0',
         readonly: true
       },
       {
@@ -55,6 +57,7 @@ angular.module('service-testing-tool').controller('EnvEntriesController', ['$sco
       {
         key: "endpoint.name",
         title: "Endpoint",
+        htmlClass: 'spacer-bottom-0',
         readonly: true
       },
       {

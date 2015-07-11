@@ -16,6 +16,7 @@ angular.module('service-testing-tool').controller('EnvironmentsController', ['$s
       name: [{
         key: "name",
         notitle: true,
+        htmlClass: 'spacer-bottom-0',
         validationMessage: "The Name is required and should be less than 50 characters"
       }],
       description: [{
