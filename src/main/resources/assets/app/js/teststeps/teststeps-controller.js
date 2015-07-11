@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('service-testing-tool').controller('TeststepsController', ['$scope', 'Teststeps', '$stateParams', '$state', 'uiGridConstants',
-  function($scope, Teststeps, $stateParams, $state, uiGridConstants) {
+angular.module('service-testing-tool').controller('TeststepsController', ['$scope', 'Teststeps', '$stateParams', '$state', 'uiGridConstants', '$http',
+  function($scope, Teststeps, $stateParams, $state, uiGridConstants, $http) {
     $scope.saveSuccessful = null;
 
     $scope.update = function(isValid) {
@@ -20,7 +20,18 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
     };
 
     $scope.loadWsdl = function() {
-      console.log('aaaaaaaaaaaaaaaaaaaa');
+      $http
+        .get('api/wsdls/anywsdl/operations', {
+          params: {
+            wsdlUrl: 'http://localhost:8080/soap/article?wsdl'
+          }
+        })
+        .success(function(data, status) {
+          $scope.posts = data;
+        })
+        .error(function(data, status) {
+          alert('Error');
+        });
     }
 
     $scope.create = function(isValid) {
