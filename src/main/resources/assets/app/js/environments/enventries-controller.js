@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('service-testing-tool').controller('EnvEntriesController', ['$scope', 'EnvEntries', 'Environments', 'Intfaces', 'Endpoints', 'PageNavigation', '$location', '$stateParams', '$state', 'uiGridConstants',
-  function($scope, EnvEntries, Environments, Intfaces, Endpoints, PageNavigation, $location, $stateParams, $state, uiGridConstants) {
+angular.module('service-testing-tool').controller('EnvEntriesController', ['$scope', 'EnvEntries', 'Environments', 'PageNavigation', '$location', '$stateParams', '$state', 'uiGridConstants',
+  function($scope, EnvEntries, Environments, PageNavigation, $location, $stateParams, $state, uiGridConstants) {
      $scope.schema = {
       type: "object",
       properties: {
@@ -13,19 +13,22 @@ angular.module('service-testing-tool').controller('EnvEntriesController', ['$sco
           type: "object",
           properties: {
             name: { type: "string" }
-          }
+          },
+          "required": ["name"]
         },
         intface: {
           type: "object",
           properties: {
             name: { type: "string" }
-          }
+          },
+          "required": ["name"]
         },
         endpoint: {
           type: "object",
           properties: {
             name: { type: "string" }
-          }
+          },
+          "required": ["name"]
         }
       },
       "required": ["id", "enventryId", "intfaceId", "endpointId"]
@@ -133,50 +136,29 @@ angular.module('service-testing-tool').controller('EnvEntriesController', ['$sco
       });
     };
 
-    var populateReturnObj = function() {
-      // Return from the interface details page
-      var returnObj = PageNavigation.returns.pop();
-
-      if (returnObj) {
-        if (returnObj.intfaceId) {
-          $scope.enventry.intfaceId = returnObj.intfaceId;
-
-          Intfaces.get({
-            intfaceId: $scope.enventry.intfaceId
-          }, function(intface) {
-            $scope.enventry.intface = intface;
-          });
-        }
-        if (returnObj.endpointId) {
-          $scope.enventry.endpointId = returnObj.endpointId;
-
-          Endpionts.get({
-            endpointId: $scope.enventry.endpointId
-          }, function(endpoint) {
-            $scope.enventry.endpoint = endpoint;
-          });
-        }
-      }
-    };
-
     $scope.findOne = function() {
-      if ($stateParams.enventryId) {
-        EnvEntries.get({
-          enventryId: $stateParams.enventryId
-        }, function(enventry) {
-          $scope.enventry = enventry;
-          populateReturnObj();
-        });
-      // create a new enventry
-      } else if ($stateParams.environmentId) {
-        $scope.enventry.environmentId = Number($stateParams.environmentId);
+      // entry returned from other pages
+      var model = PageNavigation.returns.pop();
+      if (model) {
+        $scope.enventry = model;
+      } else {
+        // edit an existing entry
+        if ($stateParams.enventryId) {
+          EnvEntries.get({
+            enventryId: $stateParams.enventryId
+          }, function(enventry) {
+            $scope.enventry = enventry;
+          });
+          // create a new enventry
+        } else if ($stateParams.environmentId) {
+          $scope.enventry.environmentId = Number($stateParams.environmentId);
 
-        Environments.get({
-          environmentId: $scope.enventry.environmentId
-        }, function(environment) {
-          $scope.enventry.environment = environment;
-          populateReturnObj();
-        });
+          Environments.get({
+            environmentId: $scope.enventry.environmentId
+          }, function(environment) {
+            $scope.enventry.environment = environment;
+          });
+        }
       }
     };
   }

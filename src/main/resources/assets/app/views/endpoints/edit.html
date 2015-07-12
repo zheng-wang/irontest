@@ -4,6 +4,14 @@
     </div>
     <div class="row">
         <form name="endpointForm" class="form-horizontal col-md-10" ng-submit="create_update(endpointForm)">
+            <div class="form-group">
+                <div class="col-md-2" ng-show="context && context.url">
+                    <button type="button" class="btn btn-info btn-block" ng-click="return()">Return</button>
+                </div>
+                <div class="col-md-2" ng-show="context && context.expect && endpoint.id">
+                    <button type="button" class="btn btn-info btn-block" ng-click="select()">Select</button>
+                </div>
+            </div>
             <p><medium ng-show="endpoint.updated">Last updated at {{endpoint.updated | date:'dd-MM-yyyy HH:mm:ss'}}</medium></p>
             <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
             <div sf-schema="schema" sf-form="form" sf-model="endpoint" ></div>
@@ -11,7 +19,7 @@
                 <button type="submit" class="btn btn-success btn-block">Save</button>
             </div>
             <div class="col-md-offset-4 col-md-2">
-                <button type="button" class="btn btn-warning btn-block" ng-click="remove(endpoint)">Delete</button>
+                <button type="button" class="btn btn-warning btn-block" ng-hide="context" ng-click="remove(endpoint)">Delete</button>
             </div>
         </form>
     </div>

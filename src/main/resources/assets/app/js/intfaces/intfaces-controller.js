@@ -107,15 +107,21 @@ angular.module('service-testing-tool').controller('IntfacesController', ['$scope
     };
 
     $scope.return = function() {
+      PageNavigation.returns.push($scope.context.model);
       $location.path($scope.context.url);
     };
 
     $scope.select = function() {
-      var returnObj = {
-        intfaceId : $scope.intface.id
-      };
-      PageNavigation.returns.push(returnObj);
-      $location.path($scope.context.url);
+      $scope.context.model.intfaceId = $scope.intface.id;
+
+      Intfaces.get({
+        intfaceId: $scope.context.model.intfaceId
+      }, function(intface) {
+        $scope.context.model.intface = intface;
+
+        PageNavigation.returns.push($scope.context.model);
+        $location.path($scope.context.url);
+      });
     };
 
     $scope.findOne = function() {

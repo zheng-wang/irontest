@@ -44,9 +44,9 @@
                         Go to <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu">
-                        <li ng-show="enventry.endpointId"><a style="cursor: pointer" onclick="goto('endpoint_edit', {endpointId: enventry.endpointId})">Endpoint Details</a></li>
-                        <li><a style="cursor: pointer" onclick="goto('endpoint_all', null, 'endpoint')">Endpoint List</a></li>
-                        <li><a style="cursor: pointer" onclick="goto('endpoint_create', null, 'endpoint')">Create an Endpoint</a></li>
+                        <li ng-show="enventry.endpointId"><a style="cursor: pointer" ng-click="goto('endpoint_edit', {endpointId: enventry.endpointId})">Endpoint Details</a></li>
+                        <li><a style="cursor: pointer" ng-click="goto('endpoint_all', null, 'endpoint')">Endpoint List</a></li>
+                        <li><a style="cursor: pointer" ng-click="goto('endpoint_create', null, 'endpoint')">Create an Endpoint</a></li>
                     </ul>
                 </div>
             </div>
