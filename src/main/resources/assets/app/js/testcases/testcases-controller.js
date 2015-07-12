@@ -23,7 +23,8 @@ angular.module('service-testing-tool').controller('TestcasesController', ['$scop
         },
         cellTemplate: 'teststepGridCellTemplate.html'
       },
-      {name: 'description', width: 585, minWidth: 300}
+      {name: 'type', width: 80, minWidth: 80},
+      {name: 'description', width: 485, minWidth: 300}
     ];
 
     $scope.saveSuccessful = null;

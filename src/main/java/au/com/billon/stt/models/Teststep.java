@@ -8,9 +8,11 @@ import java.util.List;
  * Created by Zheng on 7/07/2015.
  */
 public class Teststep {
+    public static final String TEST_STEP_TYPE_SOAP = "SOAP";
     private long id;
     private long testcaseId;
     private String name;
+    private String type;
     private String description;
     private String request;
     private Date created;
@@ -18,10 +20,15 @@ public class Teststep {
 
     public Teststep() {}
 
-    public Teststep(long id, long testcaseId, String name, String description, Date created, Date updated, String request) {
+    public Teststep(String type) {
+        this.type = type;
+    }
+
+    public Teststep(long id, long testcaseId, String name, String type, String description, Date created, Date updated, String request) {
         this.id = id;
         this.testcaseId = testcaseId;
         this.name = name;
+        this.type = type;
         this.description = description;
         this.created = created;
         this.updated = updated;
@@ -82,5 +89,13 @@ public class Teststep {
 
     public void setUpdated(Date updated) {
         this.updated = updated;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

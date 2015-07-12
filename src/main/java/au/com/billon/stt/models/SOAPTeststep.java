@@ -12,15 +12,18 @@ public class SOAPTeststep extends Teststep {
     private String wsdlOperationName;
     private String soapAddress;
 
-    public SOAPTeststep() {}
-
-    public SOAPTeststep(Teststep teststep) {
-        super(teststep.getId(), teststep.getTestcaseId(), teststep.getName(), teststep.getDescription(),
-                teststep.getCreated(), teststep.getUpdated(), teststep.getRequest());
+    public SOAPTeststep() {
+        super(TEST_STEP_TYPE_SOAP);
     }
 
-    public SOAPTeststep(long id, long testcaseId, String name, String description, Date created, Date updated, String request) {
-        super(id, testcaseId, name, description, created, updated, request);
+    public SOAPTeststep(Teststep teststep) {
+        super(teststep.getId(), teststep.getTestcaseId(), teststep.getName(), TEST_STEP_TYPE_SOAP,
+                teststep.getDescription(), teststep.getCreated(), teststep.getUpdated(), teststep.getRequest());
+    }
+
+    public SOAPTeststep(long id, long testcaseId, String name, String description,
+                        Date created, Date updated, String request) {
+        super(id, testcaseId, name, TEST_STEP_TYPE_SOAP, description, created, updated, request);
     }
 
     public String getWsdlUrl() {

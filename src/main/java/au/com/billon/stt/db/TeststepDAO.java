@@ -17,7 +17,7 @@ public interface TeststepDAO {
             "type varchar(20), request clob, FOREIGN KEY (testcase_id) REFERENCES testcase(id))")
     void createTableIfNotExists();
 
-    @SqlUpdate("insert into teststep (testcase_id, name, description, request) values (:testcaseId, :name, :description, :request)")
+    @SqlUpdate("insert into teststep (testcase_id, name, type, description, request) values (:testcaseId, :name, :type, :description, :request)")
     @GetGeneratedKeys
     long insert(@BindBean Teststep teststep);
 
