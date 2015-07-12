@@ -12,7 +12,11 @@ import java.util.List;
 @RegisterMapper(EnvEntryMapper.class)
 public interface EnvEntryDAO {
     @SqlUpdate("create table IF NOT EXISTS enventry (id INT PRIMARY KEY auto_increment, environmentId int, intfaceId int, endpointId int, " +
-            "created timestamp DEFAULT CURRENT_TIMESTAMP, updated timestamp DEFAULT CURRENT_TIMESTAMP)")
+            "created timestamp DEFAULT CURRENT_TIMESTAMP, updated timestamp DEFAULT CURRENT_TIMESTAMP, " +
+            "CONSTRAINT cons_enventry_1 unique (environmentId, intfaceId, endpointId), " +
+            "FOREIGN KEY (environmentId) REFERENCES environment(id), " +
+            "FOREIGN KEY (intfaceId) REFERENCES intface(id), " +
+            "FOREIGN KEY (endpointId) REFERENCES endpoint(id))")
     void createTableIfNotExists();
 
     @SqlUpdate("insert into enventry (environmentId, intfaceId, endpointId) values (:environmentId, :intfaceId, :endpointId)")

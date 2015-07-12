@@ -32,44 +32,54 @@ angular.module('service-testing-tool').controller('EnvEntriesController', ['$sco
     };
 
     $scope.form = {
-      environment: [
+      environmentname: [
         {
           key: "environment.name",
-          title: "Environment",
-          htmlClass: 'spacer-bottom-0',
-          readonly: true
-        },
-        {
-          key: "environment.description",
           notitle: true,
+          htmlClass: 'spacer-bottom-0',
           readonly: true
         }
       ],
-      interface: [
+      environmentdesc: [
+        {
+          key: "environment.description",
+          notitle: true,
+          htmlClass: 'spacer-bottom-0',
+          type: "textarea",
+          readonly: true
+        }
+      ],
+      interfacename: [
         {
           key: "intface.name",
-          title: "Interface",
+          notitle: true,
           htmlClass: 'spacer-bottom-0',
           readonly: true
-        },
+        }
+      ],
+      interfacedesc: [
         {
           key: "intface.description",
           notitle: true,
           htmlClass: 'spacer-bottom-0',
+          type: "textarea",
           readonly: true
         }
       ],
-      endpoint: [
+      endpointname: [
         {
           key: "endpoint.name",
-          title: "Endpoint",
+          notitle: true,
           htmlClass: 'spacer-bottom-0',
           readonly: true
-        },
+        }
+      ],
+      endpointdesc: [
         {
           key: "endpoint.description",
           notitle: true,
           htmlClass: 'spacer-bottom-0',
+          type: "textarea",
           readonly: true
         }
       ]
