@@ -93,6 +93,7 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
         teststepId: $stateParams.teststepId
       }, function(teststep) {
         $scope.teststep = teststep;
+        $scope.soapAddress = _.findWhere($scope.teststep.properties, { name: 'soapAddress' }).value;
       });
     }
   }

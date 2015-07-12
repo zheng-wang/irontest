@@ -11,10 +11,10 @@
   <form name="teststepForm" class="form-horizontal" role="form" ng-submit="update(teststepForm.$valid)" novalidate>
     <div class="form-group">
       <div class="col-md-6">
-        <div class="col-md-offset-3 col-md-3">
+        <div class="col-md-offset-1 col-md-2">
           <button type="submit" class="btn btn-info">Update</button>
         </div>
-        <div class="col-md-offset-2 col-md-3">
+        <div class="col-md-offset-2 col-md-2">
           <button type="button" class="btn btn-info" ng-click="remove(teststep)">Delete</button>
         </div>
       </div>
@@ -22,7 +22,18 @@
     <div>
       <tabset>
         <tab heading="Request Response">
-          <div class="row">&nbsp;</div> <!-- spacer -->
+          <div class="form-group">&nbsp;</div> <!-- spacer -->
+          <div class="form-group">
+            <div class="col-md-8">
+              <label for="soapAddress" class="col-md-2 control-label">SOAP Address</label>
+              <div class="col-md-8">
+                <input name="soapAddress" type="text" class="form-control" ng-model="soapAddress" id="soapAddress" placeholder="SOAP Address">
+              </div>
+              <div class="col-md-2">
+                <button type="button" class="btn btn-info" ng-click="invoke(teststep)">Invoke</button>
+              </div>
+            </div>
+          </div>
           <div class="form-group">
             <div class="col-md-6">
               <textarea name="request" ng-model="teststep.request" id="request" rows="30" placeholder="Request" class="form-control"></textarea>
@@ -33,7 +44,7 @@
           </div>
         </tab>
         <tab heading="Basics">
-          <div class="row">&nbsp;</div> <!-- spacer -->
+          <div class="form-group">&nbsp;</div> <!-- spacer -->
           <div class="form-group" ng-class="{ 'has-error' : submitted && teststepForm.name.$invalid }">
             <div class="col-md-6">
               <label for="name" class="col-md-2 control-label">Name</label>
