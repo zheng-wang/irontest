@@ -20,6 +20,9 @@ public interface TeststepPropertyDAO {
     @GetGeneratedKeys
     long insert(@BindBean TeststepProperty teststepProperty);
 
+    @SqlUpdate("update teststep_property set name = :name, value = :value, updated = CURRENT_TIMESTAMP where id = :id")
+    int update(@BindBean TeststepProperty teststepProperty);
+
     @SqlQuery("select * from teststep_property where teststep_id = :teststepId")
     List<TeststepProperty> findByTeststepId(@Bind("teststepId") long teststepId);
 }

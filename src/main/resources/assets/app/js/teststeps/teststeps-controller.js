@@ -5,12 +5,15 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
   function($scope, Teststeps, $stateParams, $state, uiGridConstants, $http, _) {
     $scope.saveSuccessful = null;
 
+    $scope.propertiesObj = {};
+
     $scope.update = function(isValid) {
       if (isValid) {
-        var teststep = this.teststep;
+        var teststep = $scope.teststep;
+        _.findWhere(teststep.properties, { name: 'soapAddress' }).value = $scope.propertiesObj.soapAddress;
         teststep.$update(function(response) {
           $scope.saveSuccessful = true;
-          $scope.teststep = response;
+          refreshViewWithData(response);
         }, function(error) {
           $scope.savingErrorMessage = error.data.message;
           $scope.saveSuccessful = false;
@@ -91,10 +94,14 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
       Teststeps.get({
         testcaseId: $stateParams.testcaseId,
         teststepId: $stateParams.teststepId
-      }, function(teststep) {
-        $scope.teststep = teststep;
-        $scope.soapAddress = _.findWhere($scope.teststep.properties, { name: 'soapAddress' }).value;
+      }, function(response) {
+        refreshViewWithData(response);
       });
-    }
+    };
+
+    var refreshViewWithData = function(teststep) {
+      $scope.teststep = teststep;
+      $scope.propertiesObj.soapAddress = _.findWhere(teststep.properties, { name: 'soapAddress' }).value;
+    };
   }
 ]);

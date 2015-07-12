@@ -2,6 +2,7 @@ package au.com.billon.stt.resources;
 
 import au.com.billon.stt.db.TeststepDAO;
 import au.com.billon.stt.db.TeststepPropertyDAO;
+import au.com.billon.stt.models.Testcase;
 import au.com.billon.stt.models.Teststep;
 import au.com.billon.stt.models.TeststepProperty;
 import org.reficio.ws.builder.SoapBuilder;
@@ -51,5 +52,14 @@ public class TeststepResource {
         Teststep result = stepDAO.findById(teststepId);
         result.setProperties(propertyDAO.findByTeststepId(teststepId));
         return result;
+    }
+
+    @PUT @Path("{testcaseId}")
+    public Teststep update(Teststep teststep) {
+        stepDAO.update(teststep);
+        for (TeststepProperty property: teststep.getProperties()) {
+            propertyDAO.update(property);
+        }
+        return findById(teststep.getId());
     }
 }

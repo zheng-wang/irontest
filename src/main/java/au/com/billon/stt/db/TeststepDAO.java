@@ -19,6 +19,9 @@ public interface TeststepDAO {
     @GetGeneratedKeys
     long insert(@BindBean Teststep teststep);
 
+    @SqlUpdate("update teststep set name = :name, description = :description, request = :request, updated = CURRENT_TIMESTAMP where id = :id")
+    int update(@BindBean Teststep teststep);
+
     @SqlQuery("select * from teststep where id = :id")
     Teststep findById(@Bind("id") long id);
 }
