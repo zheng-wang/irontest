@@ -2,7 +2,7 @@ package au.com.billon.stt.resources;
 
 import au.com.billon.stt.db.TeststepDAO;
 import au.com.billon.stt.db.TeststepPropertyDAO;
-import au.com.billon.stt.models.Testcase;
+import au.com.billon.stt.models.SOAPTeststep;
 import au.com.billon.stt.models.Teststep;
 import au.com.billon.stt.models.TeststepProperty;
 import org.reficio.ws.builder.SoapBuilder;
@@ -26,7 +26,7 @@ public class TeststepResource {
     }
 
     @POST
-    public Teststep create(Teststep teststep) {
+    public Teststep create(SOAPTeststep teststep) {
         //  create sample soap request
         Wsdl wsdl = Wsdl.parse(teststep.getWsdlUrl());
         SoapBuilder builder = wsdl.binding().localPart(teststep.getWsdlBindingName()).find();
@@ -48,18 +48,23 @@ public class TeststepResource {
 
     @GET
     @Path("{teststepId}")
-    public Teststep findById(@PathParam("teststepId") long teststepId) {
-        Teststep result = stepDAO.findById(teststepId);
-        result.setProperties(propertyDAO.findByTeststepId(teststepId));
+    public SOAPTeststep findById(@PathParam("teststepId") long teststepId) {
+        SOAPTeststep result = new SOAPTeststep(stepDAO.findById(teststepId));
+
+        result.setSoapAddress(propertyDAO.findByTeststepIdAndPropertyName(
+                teststepId,
+                TeststepProperty.PROPERTY_NAME_SOAP_ADDRESS).getValue());
         return result;
     }
 
     @PUT @Path("{testcaseId}")
-    public Teststep update(Teststep teststep) {
+    public SOAPTeststep update(SOAPTeststep teststep) {
         stepDAO.update(teststep);
-        for (TeststepProperty property: teststep.getProperties()) {
-            propertyDAO.update(property);
-        }
+        TeststepProperty soapAddressProperty = new TeststepProperty(
+                teststep.getId(),
+                TeststepProperty.PROPERTY_NAME_SOAP_ADDRESS,
+                teststep.getSoapAddress());
+        propertyDAO.updateByTeststepIdAndPropertyName(soapAddressProperty);
         return findById(teststep.getId());
     }
 }

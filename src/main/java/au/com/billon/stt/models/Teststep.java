@@ -12,13 +12,9 @@ public class Teststep {
     private long testcaseId;
     private String name;
     private String description;
-    private String wsdlUrl;
-    private String wsdlBindingName;
-    private String wsdlOperationName;
     private String request;
     private Date created;
     private Date updated;
-    private List<TeststepProperty> properties;
 
     public Teststep() {}
 
@@ -86,37 +82,5 @@ public class Teststep {
 
     public void setUpdated(Date updated) {
         this.updated = updated;
-    }
-
-    public List<TeststepProperty> getProperties() {
-        return properties;
-    }
-
-    public void setProperties(List<TeststepProperty> properties) {
-        this.properties = properties;
-    }
-
-    public String getWsdlUrl() {
-        return wsdlUrl;
-    }
-
-    public void setWsdlUrl(String wsdlUrl) {
-        this.wsdlUrl = wsdlUrl;
-    }
-
-    public String getWsdlBindingName() {
-        return wsdlBindingName;
-    }
-
-    public void setWsdlBindingName(String wsdlBindingName) {
-        this.wsdlBindingName = wsdlBindingName;
-    }
-
-    public String getWsdlOperationName() {
-        return wsdlOperationName;
-    }
-
-    public void setWsdlOperationName(String wsdlOperationName) {
-        this.wsdlOperationName = wsdlOperationName;
     }
 }

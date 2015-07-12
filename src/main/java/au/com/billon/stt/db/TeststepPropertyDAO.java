@@ -23,6 +23,13 @@ public interface TeststepPropertyDAO {
     @SqlUpdate("update teststep_property set name = :name, value = :value, updated = CURRENT_TIMESTAMP where id = :id")
     int update(@BindBean TeststepProperty teststepProperty);
 
+    @SqlUpdate("update teststep_property set value = :value, updated = CURRENT_TIMESTAMP where teststep_id = :teststepId and name = :name")
+    int updateByTeststepIdAndPropertyName(@BindBean TeststepProperty teststepProperty);
+
     @SqlQuery("select * from teststep_property where teststep_id = :teststepId")
     List<TeststepProperty> findByTeststepId(@Bind("teststepId") long teststepId);
+
+    @SqlQuery("select * from teststep_property where teststep_id = :teststepId and name = :name")
+    TeststepProperty findByTeststepIdAndPropertyName(@Bind("teststepId") long teststepId,
+                                                     @Bind("name") String propertyName);
 }
