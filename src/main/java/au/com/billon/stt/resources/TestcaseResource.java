@@ -1,7 +1,9 @@
 package au.com.billon.stt.resources;
 
 import au.com.billon.stt.db.TestcaseDAO;
+import au.com.billon.stt.db.TeststepDAO;
 import au.com.billon.stt.models.Testcase;
+import au.com.billon.stt.models.Teststep;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -12,37 +14,45 @@ import java.util.List;
  */
 @Path("/testcases") @Produces({ MediaType.APPLICATION_JSON })
 public class TestcaseResource {
-    private final TestcaseDAO dao;
+    private final TestcaseDAO testcaseDAO;
+    private final TeststepDAO teststepDAO;
 
-    public TestcaseResource(TestcaseDAO dao) {
-        this.dao = dao;
+    public TestcaseResource(TestcaseDAO testcaseDAO, TeststepDAO teststepDAO) {
+        this.testcaseDAO = testcaseDAO;
+        this.teststepDAO = teststepDAO;
     }
 
     @POST
     public Testcase create(Testcase testcase) {
-        long id = dao.insert(testcase);
+        long id = testcaseDAO.insert(testcase);
         testcase.setId(id);
         return testcase;
     }
 
     @PUT @Path("{testcaseId}")
     public Testcase update(Testcase testcase) {
-        dao.update(testcase);
-        return dao.findById(testcase.getId());
+        testcaseDAO.update(testcase);
+        return testcaseDAO.findById(testcase.getId());
     }
 
     @DELETE @Path("{testcaseId}")
     public void delete(@PathParam("testcaseId") long testcaseId) {
-        dao.deleteById(testcaseId);
+        testcaseDAO.deleteById(testcaseId);
     }
 
     @GET
     public List<Testcase> findAll() {
-        return dao.findAll();
+        return testcaseDAO.findAll();
     }
 
     @GET @Path("{testcaseId}")
     public Testcase findById(@PathParam("testcaseId") long testcaseId) {
-        return dao.findById(testcaseId);
+        Testcase result = testcaseDAO.findById(testcaseId);
+        List<Teststep> teststeps = teststepDAO.findByTestcaseId(testcaseId);
+        for(Teststep teststep: teststeps) {
+            teststep.setRequest(null);     //  no need to bring request to client at this point
+        }
+        result.setTeststeps(teststeps);
+        return result;
     }
 }

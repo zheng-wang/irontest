@@ -63,4 +63,12 @@ public class Testcase {
     public void setUpdated(Date updated) {
         this.updated = updated;
     }
+
+    public List<Teststep> getTeststeps() {
+        return teststeps;
+    }
+
+    public void setTeststeps(List<Teststep> teststeps) {
+        this.teststeps = teststeps;
+    }
 }

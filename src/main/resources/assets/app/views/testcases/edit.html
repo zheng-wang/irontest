@@ -46,6 +46,18 @@
           </ul>
         </div>
       </div>
+      <div class="row">&nbsp;</div> <!-- spacer -->
+      <div class="row">
+        <div ui-grid="{paginationPageSizes: [10,20,50,100], paginationPageSize: 10, enableFiltering: true, data: testcase.teststeps, columnDefs: teststepsColumnDefs}"
+             ui-grid-pagination ui-grid-resize-columns ui-grid-move-columns class="ui-grid"></div>
+      </div>
+      <script type="text/ng-template" id="teststepGridCellTemplate.html">
+        <div class="ui-grid-cell-contents">
+          <div><a ui-sref="teststep_edit({ testcaseId: row.entity.testcaseId, teststepId: row.entity.id })">{{COL_FIELD}}</a></div>
+        </div>
+      </script>
     </div>
   </div>
+
+
 </div>

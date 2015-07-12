@@ -2,6 +2,30 @@
 
 angular.module('service-testing-tool').controller('TestcasesController', ['$scope', 'Testcases', '$stateParams', '$state', 'uiGridConstants',
   function($scope, Testcases, $stateParams, $state, uiGridConstants) {
+    $scope.columnDefs = [
+      {
+        name: 'name', width: 200, minWidth: 100,
+        sort: {
+          direction: uiGridConstants.ASC,
+          priority: 1
+        },
+        cellTemplate: 'testcaseGridCellTemplate.html'
+      },
+      {name: 'description', width: 585, minWidth: 300}
+    ];
+
+    $scope.teststepsColumnDefs = [
+      {
+        name: 'name', width: 200, minWidth: 100,
+        sort: {
+          direction: uiGridConstants.ASC,
+          priority: 1
+        },
+        cellTemplate: 'teststepGridCellTemplate.html'
+      },
+      {name: 'description', width: 585, minWidth: 300}
+    ];
+
     $scope.saveSuccessful = null;
 
     $scope.update = function(isValid) {
@@ -39,18 +63,6 @@ angular.module('service-testing-tool').controller('TestcasesController', ['$scop
     };
 
     $scope.find = function() {
-      $scope.columnDefs = [
-        {
-          name: 'name', width: 200, minWidth: 100,
-          sort: {
-            direction: uiGridConstants.ASC,
-            priority: 1
-          },
-          cellTemplate: 'gridCellTemplate.html'
-        },
-        {name: 'description', width: 585, minWidth: 300}
-      ];
-
       Testcases.query(function(testcases) {
         $scope.testcases = testcases;
       });
