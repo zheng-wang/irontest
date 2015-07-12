@@ -5,6 +5,8 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
   function($scope, Teststeps, $stateParams, $state, uiGridConstants, $http, _) {
     $scope.saveSuccessful = null;
 
+    $scope.tempData = {}
+
     $scope.update = function(isValid) {
       if (isValid) {
         $scope.teststep.$update(function(response) {
@@ -95,6 +97,21 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
       }, function(response) {
         $scope.teststep = response;
       });
+    };
+
+    $scope.invoke = function(teststep) {
+       var url = 'api/testcases/' + $stateParams.testcaseId + '/teststeps/' + $stateParams.teststepId + '/invoke';
+       $http
+        .post(url, {
+          soapAddress: $scope.teststep.soapAddress,
+          request: $scope.teststep.request
+        })
+        .success(function(data, status) {
+          $scope.tempData.response = data;
+        })
+        .error(function(data, status) {
+          alert('Error');
+        });
     };
   }
 ]);
