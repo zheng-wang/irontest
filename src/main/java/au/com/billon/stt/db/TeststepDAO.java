@@ -24,6 +24,9 @@ public interface TeststepDAO {
     @SqlUpdate("update teststep set name = :name, description = :description, request = :request, updated = CURRENT_TIMESTAMP where id = :id")
     int update(@BindBean Teststep teststep);
 
+    @SqlUpdate("delete from teststep where id = :id")
+    void deleteById(@Bind("id") long id);
+
     @SqlQuery("select * from teststep where id = :id")
     Teststep findById(@Bind("id") long id);
 

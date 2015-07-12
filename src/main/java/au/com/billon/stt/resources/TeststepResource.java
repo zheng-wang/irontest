@@ -57,7 +57,7 @@ public class TeststepResource {
         return result;
     }
 
-    @PUT @Path("{testcaseId}")
+    @PUT @Path("{teststepId}")
     public SOAPTeststep update(SOAPTeststep teststep) {
         stepDAO.update(teststep);
         TeststepProperty soapAddressProperty = new TeststepProperty(
@@ -66,5 +66,10 @@ public class TeststepResource {
                 teststep.getSoapAddress());
         propertyDAO.updateByTeststepIdAndPropertyName(soapAddressProperty);
         return findById(teststep.getId());
+    }
+
+    @DELETE @Path("{teststepId}")
+    public void delete(@PathParam("teststepId") long teststepId) {
+        stepDAO.deleteById(teststepId);
     }
 }

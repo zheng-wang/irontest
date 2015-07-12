@@ -13,7 +13,8 @@ import java.util.List;
 public interface TeststepPropertyDAO {
     @SqlUpdate("create table IF NOT EXISTS teststep_property (id INT PRIMARY KEY auto_increment, teststep_id INT, " +
             "name varchar(200), value clob, created timestamp DEFAULT CURRENT_TIMESTAMP, " +
-            "updated timestamp DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (teststep_id) REFERENCES teststep(id))")
+            "updated timestamp DEFAULT CURRENT_TIMESTAMP, " +
+            "FOREIGN KEY (teststep_id) REFERENCES teststep(id) ON DELETE CASCADE)")
     void createTableIfNotExists();
 
     @SqlUpdate("insert into teststep_property (teststep_id, name, value) values (:teststepId, :name, :value)")
