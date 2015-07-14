@@ -1,7 +1,7 @@
 package au.com.billon.stt;
 
 import au.com.billon.stt.db.*;
-import au.com.billon.stt.exception.STTDBIExceptionMapper;
+import au.com.billon.stt.exceptions.STTDBIExceptionMapper;
 import au.com.billon.stt.resources.*;
 import au.com.billon.stt.ws.ArticleSOAP;
 import com.roskart.dropwizard.jaxws.EndpointBuilder;
