@@ -13,6 +13,10 @@ angular.module('service-testing-tool').controller('EndpointsController', ['$scop
           maxLength: 200,
           pattern: "^http:\/{2}(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])(\/([a-z0-9_\.-])+)*\/?[A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-\.]*[A-Za-z0-9]$"
         },
+        handler: {
+          type: "string",
+          maxLength: 50
+        },
         username: {
           type: "string",
           maxLength: 20,
@@ -23,7 +27,7 @@ angular.module('service-testing-tool').controller('EndpointsController', ['$scop
           maxLength: 20
         }
       },
-      "required": ["name", "description", "url"]
+      "required": ["name", "description", "handler", "url"]
     };
 
     $scope.form = [
@@ -37,6 +41,16 @@ angular.module('service-testing-tool').controller('EndpointsController', ['$scop
         title: "Description",
         type: "textarea",
         validationMessage: "The Description is required and should be less than 500 characters"
+      },
+      {
+        key: "handler",
+        title: "Handler",
+        type: "select",
+        titleMap: [
+          { value: "DBHandler", name: "DBHandler" },
+          { value: "SOAPHandler", name: "SOAPHandler" },
+          { value: "RestHandler", name: "RestHandler"}
+        ]
       },
       {
         key: "url",

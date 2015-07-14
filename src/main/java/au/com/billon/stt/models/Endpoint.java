@@ -9,6 +9,7 @@ public class Endpoint {
     private long id;
     private String name;
     private String description;
+    private String handler;
     private String url;
     private String username;
     private String password;
@@ -18,10 +19,11 @@ public class Endpoint {
     public Endpoint() {
     }
 
-    public Endpoint(long id, String name, String description, String url, String username, String password, Date created, Date updated) {
+    public Endpoint(long id, String name, String description, String handler, String url, String username, String password, Date created, Date updated) {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.handler = handler;
         this.url = url;
         this.username = username;
         this.password = password;
@@ -49,6 +51,14 @@ public class Endpoint {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getHandler() {
+        return handler;
+    }
+
+    public void setHandler(String handler) {
+        this.handler = handler;
     }
 
     public String getUrl() {
