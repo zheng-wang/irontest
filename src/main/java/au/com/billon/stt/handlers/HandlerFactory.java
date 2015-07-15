@@ -1,9 +1,5 @@
 package au.com.billon.stt.handlers;
 
-import au.com.billon.stt.models.Endpoint;
-
-import java.lang.reflect.Constructor;
-
 /**
  * Created by Trevor Li on 7/14/15.
  */
@@ -19,14 +15,12 @@ public class HandlerFactory {
         return instance;
     }
 
-    public STTHandler getHandler(Endpoint endpoint) {
-        String handlerName = endpoint.getHandler();
+    public STTHandler getHandler(String handlerName) {
         STTHandler handler = null;
         if (handlerName != null) {
             try {
                 Class handlerClass = Class.forName("au.com.billon.stt.handlers." + handlerName);
-                Constructor handlerConstructor = handlerClass.getConstructor(Endpoint.class);
-                handler = (STTHandler) handlerConstructor.newInstance(endpoint);
+                handler = (STTHandler) handlerClass.newInstance();
             } catch (Exception e) {
                 e.printStackTrace();
             }

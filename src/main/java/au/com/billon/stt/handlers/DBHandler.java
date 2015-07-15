@@ -7,6 +7,7 @@ import org.skife.jdbi.v2.Handle;
 import org.skife.jdbi.v2.Query;
 
 import java.io.StringWriter;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -14,13 +15,9 @@ import java.util.Map;
  * Created by Trevor Li on 7/14/15.
  */
 public class DBHandler implements STTHandler {
-    private Endpoint endpoint;
+    public DBHandler() { }
 
-    public DBHandler(Endpoint endpoint) {
-        this.endpoint = endpoint;
-    }
-
-    public String invoke(String request) throws Exception {
+    public String invoke(String request, Endpoint endpoint) throws Exception {
         DBI jdbi = new DBI(endpoint.getUrl(), endpoint.getUsername(), endpoint.getPassword());
         Handle handle = jdbi.open();
 
@@ -36,5 +33,10 @@ public class DBHandler implements STTHandler {
         handle.close();
 
         return responseWriter.toString();
+    }
+
+    public List<String> getProperties() {
+        String[] properties = {"url", "username", "password"};
+        return Arrays.asList(properties);
     }
 }
