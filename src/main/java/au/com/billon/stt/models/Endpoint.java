@@ -10,23 +10,17 @@ public class Endpoint {
     private String name;
     private String description;
     private String handler;
-    private String url;
-    private String username;
-    private String password;
     private Date created;
     private Date updated;
 
     public Endpoint() {
     }
 
-    public Endpoint(long id, String name, String description, String handler, String url, String username, String password, Date created, Date updated) {
+    public Endpoint(long id, String name, String description, String handler, Date created, Date updated) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.handler = handler;
-        this.url = url;
-        this.username = username;
-        this.password = password;
         this.created = created;
         this.updated = updated;
     }
@@ -61,30 +55,6 @@ public class Endpoint {
         this.handler = handler;
     }
 
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public Date getCreated() {
         return created;
     }
@@ -100,8 +70,4 @@ public class Endpoint {
     public void setUpdated(Date updated) {
         this.updated = updated;
     }
-
-    public String getAddress() { return url; }
-
-    public void setAddress(String address) { }
 }
