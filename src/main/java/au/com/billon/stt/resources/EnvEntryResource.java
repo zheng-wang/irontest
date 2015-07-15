@@ -36,11 +36,6 @@ public class EnvEntryResource {
         dao.deleteById(enventryId);
     }
 
-    @GET
-    public List<EnvEntry> findAll() {
-        return dao.findAll();
-    }
-
     @GET @Path("{enventryId}")
     public EnvEntry findById(@PathParam("enventryId") long enventryId) {
         return dao.findById(enventryId);
