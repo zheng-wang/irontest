@@ -8,26 +8,27 @@ angular.module('service-testing-tool').controller('EndpointsController', ['$scop
         id: { type: "integer" },
         name: { type: "string", maxLength: 50 },
         description: { type: "string", maxLength: 500 },
-        url: {
-          type: "string",
-          maxLength: 200,
-          pattern: "^http:\/{2}(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])(\/([a-z0-9_\.-])+)*\/?[A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-\.]*[A-Za-z0-9]$"
-        },
         handler: {
           type: "string",
           maxLength: 50
         },
-        username: {
-          type: "string",
-          maxLength: 20,
-
-        },
-        password: {
-          type: "string",
-          maxLength: 20
+        details: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              name: { type: "string", maxLength: 50 },
+              value: { type: "string", maxLength: 200 }
+            }
+          }
         }
+        /*url: {
+          type: "string",
+          maxLength: 200,
+          pattern: "^http:\/{2}(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])(\/([a-z0-9_\.-])+)*\/?[A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-\.]*[A-Za-z0-9]$"
+        }*/
       },
-      "required": ["name", "description", "handler", "url"]
+      "required": ["name", "description", "handler"]
     };
 
     $scope.form = [
@@ -47,24 +48,17 @@ angular.module('service-testing-tool').controller('EndpointsController', ['$scop
         title: "Handler",
         type: "select",
         titleMap: [
-          { value: "DBHandler", name: "DBHandler" },
-          { value: "SOAPHandler", name: "SOAPHandler" },
-          { value: "RestHandler", name: "RestHandler"}
-        ]
-      },
-      {
-        key: "url",
-        title: "URL",
-        validationMessage: "The URL is required and should be started with http"
-      },
-      {
-        key: "username",
-        title: "User Name"
-      },
-      {
-        key: "password",
-        title: "Password",
-        type: "password"
+          {value: "DBHandler", name: "DBHandler"},
+          {value: "SOAPHandler", name: "SOAPHandler"},
+          {value: "MQHandler", name: "MQHandler"}
+        ],
+        onChange: function (modelValue, form) {
+          Endpoints.getProperties({
+            handlerName: modelValue
+          }, function(details) {
+              $scope.endpoint.details = details;
+          });
+        }
       }
     ];
 
@@ -119,7 +113,7 @@ angular.module('service-testing-tool').controller('EndpointsController', ['$scop
           name: 'description', width: 600, minWidth: 300
         },
         {
-          name: 'address', width: 600, minWidth: 300
+          name: 'handler', width: 200, minWidth: 100
         }
       ];
 
@@ -147,6 +141,19 @@ angular.module('service-testing-tool').controller('EndpointsController', ['$scop
     };
 
     $scope.findOne = function() {
+      $scope.columnDefs = [
+        {
+          name: 'name', displayName: 'Property Name', enableCellEdit: false, width: 200, minWidth: 100,
+          sort: {
+            direction: uiGridConstants.ASC,
+            priority: 1
+          }
+        },
+        {
+          name: 'value', displayName: 'Property Value', width: 600, minWidth: 300
+        }
+      ];
+
       $scope.context = PageNavigation.contexts.pop();
 
       if ($stateParams.endpointId) {
