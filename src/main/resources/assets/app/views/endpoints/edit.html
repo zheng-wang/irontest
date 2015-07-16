@@ -15,6 +15,10 @@
             <p><medium ng-show="endpoint.updated">Last updated at {{endpoint.updated | date:'dd-MM-yyyy HH:mm:ss'}}</medium></p>
             <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
             <div sf-schema="schema" sf-form="form" sf-model="endpoint" ></div>
+            <div class="form-group">
+                <div ui-grid="{paginationPageSizes: [10,20,50,100], paginationPageSize: 10, enableFiltering: true, data: endpoint.details, columnDefs: columnDefs}"
+                     ui-grid-pagination ui-grid-resize-columns ui-grid-move-columns ui-grid-edit class="ui-grid"></div>
+            </div>
             <div class="col-md-offset-2 col-md-2">
                 <button type="submit" class="btn btn-success btn-block">Save</button>
             </div>

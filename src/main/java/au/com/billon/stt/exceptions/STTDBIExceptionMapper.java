@@ -1,4 +1,4 @@
-package au.com.billon.stt.exception;
+package au.com.billon.stt.exceptions;
 
 import io.dropwizard.jdbi.jersey.LoggingDBIExceptionMapper;
 import org.skife.jdbi.v2.exceptions.DBIException;

@@ -14,11 +14,9 @@ import java.util.List;
 @Path("/environments") @Produces({ MediaType.APPLICATION_JSON })
 public class EnvironmentResource {
     private final EnvironmentDAO dao;
-    private final EnvEntryDAO entryDao;
 
-    public EnvironmentResource(EnvironmentDAO dao, EnvEntryDAO entryDao) {
+    public EnvironmentResource(EnvironmentDAO dao) {
         this.dao = dao;
-        this.entryDao = entryDao;
     }
 
     @POST
@@ -36,7 +34,6 @@ public class EnvironmentResource {
 
     @DELETE @Path("{environmentId}")
     public void delete(@PathParam("environmentId") long environmentId) {
-        entryDao.deleteByEnv(environmentId);
         dao.deleteById(environmentId);
     }
 

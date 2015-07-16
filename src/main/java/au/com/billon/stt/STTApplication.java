@@ -1,7 +1,7 @@
 package au.com.billon.stt;
 
 import au.com.billon.stt.db.*;
-import au.com.billon.stt.exception.STTDBIExceptionMapper;
+import au.com.billon.stt.exceptions.STTDBIExceptionMapper;
 import au.com.billon.stt.resources.*;
 import au.com.billon.stt.ws.ArticleSOAP;
 import com.roskart.dropwizard.jaxws.EndpointBuilder;
@@ -50,6 +50,7 @@ public class STTApplication extends Application<STTConfiguration> {
         final IntfaceDAO intfaceDAO = jdbi.onDemand(IntfaceDAO.class);
         final EnvironmentDAO environmentDAO = jdbi.onDemand(EnvironmentDAO.class);
         final EnvEntryDAO enventryDAO = jdbi.onDemand(EnvEntryDAO.class);
+        final EndpointDetailDAO endpointdtlDAO = jdbi.onDemand(EndpointDetailDAO.class);
 
         //  create database tables        
         articleDAO.createTableIfNotExists();
@@ -60,15 +61,16 @@ public class STTApplication extends Application<STTConfiguration> {
         intfaceDAO.createTableIfNotExists();
         environmentDAO.createTableIfNotExists();
         enventryDAO.createTableIfNotExists();
+        endpointdtlDAO.createTableIfNotExists();
 
         //  register REST resources
         environment.jersey().register(new ArticleResource(articleDAO));
-        environment.jersey().register(new EndpointResource(endpointDAO));
+        environment.jersey().register(new EndpointResource(endpointDAO, endpointdtlDAO));
         environment.jersey().register(new TestcaseResource(testcaseDAO, teststepDAO));
         environment.jersey().register(new TeststepResource(teststepDAO, teststepPropertyDAO));
         environment.jersey().register(new WSDLResource());
         environment.jersey().register(new IntfaceResource(intfaceDAO));
-        environment.jersey().register(new EnvironmentResource(environmentDAO, enventryDAO));
+        environment.jersey().register(new EnvironmentResource(environmentDAO));
         environment.jersey().register(new EnvEntryResource(enventryDAO));
 
         //  register exception mappers

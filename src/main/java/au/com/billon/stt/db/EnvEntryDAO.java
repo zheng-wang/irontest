@@ -13,8 +13,8 @@ import java.util.List;
 public interface EnvEntryDAO {
     @SqlUpdate("create table IF NOT EXISTS enventry (id INT PRIMARY KEY auto_increment, environmentId int, intfaceId int, endpointId int, " +
             "created timestamp DEFAULT CURRENT_TIMESTAMP, updated timestamp DEFAULT CURRENT_TIMESTAMP, " +
-            "CONSTRAINT cons_enventry_1 unique (environmentId, intfaceId, endpointId), " +
-            "FOREIGN KEY (environmentId) REFERENCES environment(id), " +
+            "CONSTRAINT cons_enventry_1 unique (environmentId, intfaceId), " +
+            "FOREIGN KEY (environmentId) REFERENCES environment(id) ON DELETE CASCADE, " +
             "FOREIGN KEY (intfaceId) REFERENCES intface(id), " +
             "FOREIGN KEY (endpointId) REFERENCES endpoint(id))")
     void createTableIfNotExists();
@@ -28,19 +28,6 @@ public interface EnvEntryDAO {
 
     @SqlUpdate("delete from enventry where id = :id")
     void deleteById(@Bind("id") long id);
-
-    @SqlUpdate("delete from enventry where environmentId = :environmentId")
-    void deleteByEnv(@Bind("environmentId") long environmentId);
-
-    @SqlQuery("select ENVENTRY.*, " +
-            "ENVIRONMENT.NAME as environmentname, ENVIRONMENT.description as environmentdesc, " +
-            "intface.name as intfacename, intface.description as intfacedesc, " +
-            "endpoint.name as endpointname, endpoint.description as endpointdesc " +
-            "from ENVENTRY " +
-            "left outer join ENVIRONMENT on ENVENTRY.ENVIRONMENTID = ENVIRONMENT.ID " +
-            "left outer join intface on ENVENTRY.intfaceid = intface.id " +
-            "left outer join endpoint on ENVENTRY.endpointid = endpoint.id")
-    List<EnvEntry> findAll();
 
     @SqlQuery("select ENVENTRY.*, " +
             "ENVIRONMENT.NAME as environmentname, ENVIRONMENT.description as environmentdesc, " +

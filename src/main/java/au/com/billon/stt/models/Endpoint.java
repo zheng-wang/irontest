@@ -1,6 +1,7 @@
 package au.com.billon.stt.models;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Trevor Li on 6/30/15.
@@ -9,22 +10,19 @@ public class Endpoint {
     private long id;
     private String name;
     private String description;
-    private String url;
-    private String username;
-    private String password;
+    private String handler;
+    private List<EndpointDetail> details;
     private Date created;
     private Date updated;
 
     public Endpoint() {
     }
 
-    public Endpoint(long id, String name, String description, String url, String username, String password, Date created, Date updated) {
+    public Endpoint(long id, String name, String description, String handler, Date created, Date updated) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.url = url;
-        this.username = username;
-        this.password = password;
+        this.handler = handler;
         this.created = created;
         this.updated = updated;
     }
@@ -51,28 +49,20 @@ public class Endpoint {
         this.description = description;
     }
 
-    public String getUrl() {
-        return url;
+    public String getHandler() {
+        return handler;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setHandler(String handler) {
+        this.handler = handler;
     }
 
-    public String getUsername() {
-        return username;
+    public List<EndpointDetail> getDetails() {
+        return details;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public void setDetails(List<EndpointDetail> details) {
+        this.details = details;
     }
 
     public Date getCreated() {
@@ -90,8 +80,4 @@ public class Endpoint {
     public void setUpdated(Date updated) {
         this.updated = updated;
     }
-
-    public String getAddress() { return url; }
-
-    public void setAddress(String address) { }
 }

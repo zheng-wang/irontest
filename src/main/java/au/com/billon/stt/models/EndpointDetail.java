@@ -3,24 +3,23 @@ package au.com.billon.stt.models;
 import java.util.Date;
 
 /**
- * Created by Trevor Li on 7/4/15.
+ * Created by Trevor Li on 7/07/2015.
  */
-public class Intface {
+public class EndpointDetail {
     private long id;
+    private long endpointId;
     private String name;
-    private String description;
-    private String defurl;
+    private String value;
     private Date created;
     private Date updated;
 
-    public Intface() {
-    }
+    public EndpointDetail() {}
 
-    public Intface(long id, String name, String description, String defurl, Date created, Date updated) {
+    public EndpointDetail(long id, long endpointId, String name, String value, Date created, Date updated) {
         this.id = id;
+        this.endpointId = endpointId;
         this.name = name;
-        this.description = description;
-        this.defurl = defurl;
+        this.value = value;
         this.created = created;
         this.updated = updated;
     }
@@ -33,6 +32,14 @@ public class Intface {
         this.id = id;
     }
 
+    public long getEndpointId() {
+        return endpointId;
+    }
+
+    public void setEndpointId(long endpointId) {
+        this.endpointId = endpointId;
+    }
+
     public String getName() {
         return name;
     }
@@ -41,20 +48,12 @@ public class Intface {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
+    public String getValue() {
+        return value;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getDefurl() {
-        return defurl;
-    }
-
-    public void setDefurl(String defurl) {
-        this.defurl = defurl;
+    public void setValue(String value) {
+        this.value = value;
     }
 
     public Date getCreated() {

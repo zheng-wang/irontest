@@ -11,15 +11,15 @@ import java.util.List;
  */
 @RegisterMapper(EndpointMapper.class)
 public interface EndpointDAO {
-    @SqlUpdate("create table IF NOT EXISTS endpoint (id INT PRIMARY KEY auto_increment, name varchar(50) UNIQUE not null, description varchar(500), url varchar(200), username varchar(20), password varchar(20)," +
+    @SqlUpdate("create table IF NOT EXISTS endpoint (id INT PRIMARY KEY auto_increment, name varchar(50) UNIQUE not null, description varchar(500), handler varchar(50), " +
             "created timestamp DEFAULT CURRENT_TIMESTAMP, updated timestamp DEFAULT CURRENT_TIMESTAMP)")
     void createTableIfNotExists();
 
-    @SqlUpdate("insert into endpoint (name, description, url, username, password) values (:name, :description, :url, :username, :password)")
+    @SqlUpdate("insert into endpoint (name, description, handler) values (:name, :description, :handler)")
     @GetGeneratedKeys
     long insert(@BindBean Endpoint endpoint);
 
-    @SqlUpdate("update endpoint set name = :name, description = :description, url = :url, username = :username, password = :password, updated = CURRENT_TIMESTAMP where id = :id")
+    @SqlUpdate("update endpoint set name = :name, description = :description, handler = :handler, updated = CURRENT_TIMESTAMP where id = :id")
     int update(@BindBean Endpoint endpoint);
 
     @SqlUpdate("delete from endpoint where id = :id")

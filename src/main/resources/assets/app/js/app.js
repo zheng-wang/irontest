@@ -6,7 +6,7 @@ angular.module('underscore', [])
 
 // Declare app level module dependencies
 angular.module('service-testing-tool', ['ngResource', 'ui.router', 'schemaForm', 'ui.grid', 'ui.grid.resizeColumns',
-        'ui.grid.moveColumns', 'ui.grid.pagination', 'ui.bootstrap', 'underscore'])
+        'ui.grid.moveColumns', 'ui.grid.pagination', 'ui.grid.edit', 'ui.bootstrap', 'underscore'])
     .config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
         // set default(home) view
         // $urlRouterProvider.otherwise('/');

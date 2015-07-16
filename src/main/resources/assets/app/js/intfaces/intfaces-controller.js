@@ -8,11 +8,11 @@ angular.module('service-testing-tool').controller('IntfacesController', ['$scope
         id: { type: "integer" },
         name: { type: "string", maxLength: 50 },
         description: { type: "string", maxLength: 500 },
-        relpath: {
+        /*relpath: {
           type: "string",
           maxLength: 50,
           pattern: "^(\/([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-\.]*[A-Za-z0-9])+)*$"
-        },
+        },*/
         defurl: {
           type: "string",
           maxLength: 200,
@@ -33,11 +33,6 @@ angular.module('service-testing-tool').controller('IntfacesController', ['$scope
         title: "Description",
         type: "textarea",
         validationMessage: "The Description is required and should be less than 500 characters"
-      },
-      {
-        key: "relpath",
-        title: "Relative Path",
-        validationMessage: "The Relative Path should start with /"
       },
       {
         key: "defurl",
@@ -95,9 +90,6 @@ angular.module('service-testing-tool').controller('IntfacesController', ['$scope
         },
         {
           name: 'description', width: 600, minWidth: 300
-        },
-        {
-          name: 'relpath', displayName: 'Relative Path', width: 600, minWidth: 300
         }
       ];
 
