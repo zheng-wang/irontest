@@ -9,9 +9,12 @@ angular.module('service-testing-tool').controller('TestcasesController', ['$scop
           direction: uiGridConstants.ASC,
           priority: 1
         },
-        cellTemplate: 'testcaseGridCellTemplate.html'
+        cellTemplate: 'testcaseGridNameCellTemplate.html'
       },
-      {name: 'description', width: 585, minWidth: 300}
+      {name: 'description', width: 585, minWidth: 300},
+      {name: 'delete', width: 80, minWidth: 80,
+        cellTemplate: 'testcaseGridDeleteCellTemplate.html'
+      }
     ];
 
     $scope.teststepsColumnDefs = [
@@ -69,14 +72,15 @@ angular.module('service-testing-tool').controller('TestcasesController', ['$scop
     };
 
     $scope.remove = function(testcase) {
-      testcase.$remove(function(response) {
-        $state.go('testcase_all');
+      var testcaseService = new Testcases(testcase);
+      testcaseService.$remove(function(response) {
+        $state.go($state.current, {}, {reload: true});
       });
     };
 
     $scope.removeTeststep = function(teststep) {
-      var step = new Teststeps(teststep);
-      step.$remove(function(response) {
+      var teststepService = new Teststeps(teststep);
+      teststepService.$remove(function(response) {
         $state.go($state.current, {}, {reload: true});
       }, function(error) {
         alert('Error');

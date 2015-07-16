@@ -10,11 +10,6 @@
   </div>
   <div class="row">
     <form name="testcaseForm" class="form-horizontal col-md-6" role="form" novalidate>
-      <div class="form-group">
-        <div class="col-md-offset-2 col-md-3">
-          <button type="button" class="btn btn-info" ng-click="remove(testcase)">Delete</button>
-        </div>
-      </div>
       <div class="form-group" ng-class="{ 'has-error' : submitted && testcaseForm.name.$invalid }">
         <label for="name" class="col-md-2 control-label">Name</label>
         <div class="col-md-10">
