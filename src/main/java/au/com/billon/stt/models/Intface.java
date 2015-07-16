@@ -9,7 +9,6 @@ public class Intface {
     private long id;
     private String name;
     private String description;
-    private String relpath;
     private String defurl;
     private Date created;
     private Date updated;
@@ -17,11 +16,10 @@ public class Intface {
     public Intface() {
     }
 
-    public Intface(long id, String name, String description, String relpath, String defurl, Date created, Date updated) {
+    public Intface(long id, String name, String description, String defurl, Date created, Date updated) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.relpath = relpath;
         this.defurl = defurl;
         this.created = created;
         this.updated = updated;
@@ -49,14 +47,6 @@ public class Intface {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getRelpath() {
-        return relpath;
-    }
-
-    public void setRelpath(String relpath) {
-        this.relpath = relpath;
     }
 
     public String getDefurl() {
