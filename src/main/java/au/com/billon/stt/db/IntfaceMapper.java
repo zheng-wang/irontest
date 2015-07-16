@@ -12,7 +12,7 @@ import java.sql.SQLException;
  */
 public class IntfaceMapper implements ResultSetMapper<Intface> {
     public Intface map(int index, ResultSet rs, StatementContext ctx) throws SQLException {
-        return new Intface(rs.getLong("id"), rs.getString("name"), rs.getString("description"), rs.getString("defurl"),
+        return new Intface(rs.getLong("id"), rs.getString("name"), rs.getString("description"), rs.getString("deftype"), rs.getString("defurl"),
                 rs.getTimestamp("created"), rs.getTimestamp("updated"));
     }
 }

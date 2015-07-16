@@ -10,24 +10,34 @@ import java.util.List;
  * Created by Trevor Li on 7/4/15.
  */
 @RegisterMapper(IntfaceMapper.class)
-public interface IntfaceDAO {
-    @SqlUpdate("create table IF NOT EXISTS intface (id INT PRIMARY KEY auto_increment, name varchar(50) UNIQUE not null, description varchar(500), defurl varchar(200)," +
+public abstract class IntfaceDAO {
+    @SqlUpdate("create table IF NOT EXISTS intface (id INT PRIMARY KEY auto_increment, name varchar(50) UNIQUE not null, description varchar(500), deftype varchar(50), defurl varchar(200)," +
             "created timestamp DEFAULT CURRENT_TIMESTAMP, updated timestamp DEFAULT CURRENT_TIMESTAMP)")
-    void createTableIfNotExists();
+    public abstract void createTableIfNotExists();
 
-    @SqlUpdate("insert into intface (name, description, defurl) values (:name, :description, :defurl)")
+    @SqlUpdate("insert into intface (name, description, deftype, defurl) values (:name, :description, :deftype, :defurl)")
     @GetGeneratedKeys
-    long insert(@BindBean Intface intface);
+    public abstract long insert(@BindBean Intface intface);
 
-    @SqlUpdate("update intface set name = :name, description = :description, defurl = :defurl, updated = CURRENT_TIMESTAMP where id = :id")
-    int update(@BindBean Intface intface);
+    @SqlUpdate("update intface set name = :name, description = :description, deftype = :deftype, defurl = :defurl, updated = CURRENT_TIMESTAMP where id = :id")
+    public abstract int update(@BindBean Intface intface);
 
     @SqlUpdate("delete from intface where id = :id")
-    void deleteById(@Bind("id") long id);
+    public abstract void deleteById(@Bind("id") long id);
 
     @SqlQuery("select * from intface")
-    List<Intface> findAll();
+    public abstract List<Intface> findAll();
 
     @SqlQuery("select * from intface where id = :id")
-    Intface findById(@Bind("id") long id);
+    public abstract Intface findById(@Bind("id") long id);
+
+    @SqlQuery("select * from intface where name = :name")
+    public abstract Intface findByName(@Bind("name") String name);
+
+    public void initSystemData() {
+        if (findByName("SPD_DBService") == null) {
+            Intface intface = new Intface(0, "SPD_DBService", "System pre-defined interface for DB service", "SYSTEM PRE DEFINED", "NA", null, null);
+            insert(intface);
+        }
+    }
 }
