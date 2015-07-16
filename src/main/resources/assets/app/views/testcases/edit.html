@@ -48,9 +48,14 @@
         <div ui-grid="{enableFiltering: true, data: testcase.teststeps, columnDefs: teststepsColumnDefs}"
              ui-grid-resize-columns ui-grid-move-columns class="ui-grid"></div>
       </div>
-      <script type="text/ng-template" id="teststepGridCellTemplate.html">
+      <script type="text/ng-template" id="teststepGridNameCellTemplate.html">
         <div class="ui-grid-cell-contents">
           <div><a ui-sref="teststep_edit({ testcaseId: row.entity.testcaseId, teststepId: row.entity.id })">{{COL_FIELD}}</a></div>
+        </div>
+      </script>
+      <script type="text/ng-template" id="teststepGridDeleteCellTemplate.html">
+        <div class="ui-grid-cell-contents">
+          <div><a ng-click="grid.appScope.removeTeststep(row.entity)" href="">Delete</a></div>
         </div>
       </script>
     </div>

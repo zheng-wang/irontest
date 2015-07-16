@@ -72,14 +72,6 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
       }
     };
 
-    $scope.remove = function(teststep) {
-      teststep.$remove(function(response) {
-        $state.go('testcase_edit', {testcaseId: $stateParams.testcaseId});
-      }, function(error) {
-        alert('Error');
-      });
-    };
-
     $scope.find = function() {
       $scope.columnDefs = [
         {

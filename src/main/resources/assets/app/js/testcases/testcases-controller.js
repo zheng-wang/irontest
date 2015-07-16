@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('service-testing-tool').controller('TestcasesController', ['$scope', 'Testcases', '$stateParams', '$state', 'uiGridConstants', '$timeout',
-  function($scope, Testcases, $stateParams, $state, uiGridConstants, $timeout) {
+angular.module('service-testing-tool').controller('TestcasesController', ['$scope', 'Testcases', 'Teststeps', '$stateParams', '$state', 'uiGridConstants', '$timeout',
+  function($scope, Testcases, Teststeps, $stateParams, $state, uiGridConstants, $timeout) {
     $scope.columnDefs = [
       {
         name: 'name', width: 200, minWidth: 100,
@@ -21,10 +21,13 @@ angular.module('service-testing-tool').controller('TestcasesController', ['$scop
           direction: uiGridConstants.ASC,
           priority: 1
         },
-        cellTemplate: 'teststepGridCellTemplate.html'
+        cellTemplate: 'teststepGridNameCellTemplate.html'
       },
       {name: 'type', width: 80, minWidth: 80},
-      {name: 'description', width: 485, minWidth: 300}
+      {name: 'description', width: 485, minWidth: 300},
+      {name: 'delete', width: 80, minWidth: 80,
+        cellTemplate: 'teststepGridDeleteCellTemplate.html'
+      }
     ];
 
     $scope.saveSuccessful = null;
@@ -68,6 +71,15 @@ angular.module('service-testing-tool').controller('TestcasesController', ['$scop
     $scope.remove = function(testcase) {
       testcase.$remove(function(response) {
         $state.go('testcase_all');
+      });
+    };
+
+    $scope.removeTeststep = function(teststep) {
+      var step = new Teststeps(teststep);
+      step.$remove(function(response) {
+        $state.go($state.current, {}, {reload: true});
+      }, function(error) {
+        alert('Error');
       });
     };
 
