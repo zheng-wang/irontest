@@ -22,10 +22,10 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
     };
 
     var timer;
-    $scope.autoSave = function() {
+    $scope.autoSave = function(isValid) {
       if (timer) $timeout.cancel(timer);
       timer = $timeout(function() {
-        $scope.update($scope.teststepForm.$valid);
+        $scope.update(isValid);
       }, 2500);
     }
 

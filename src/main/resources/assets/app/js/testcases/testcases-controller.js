@@ -50,10 +50,10 @@ angular.module('service-testing-tool').controller('TestcasesController', ['$scop
     };
 
     var timer;
-    $scope.autoSave = function() {
+    $scope.autoSave = function(isValid) {
       if (timer) $timeout.cancel(timer);
       timer = $timeout(function() {
-        $scope.update($scope.testcaseForm.$valid);
+        $scope.update(isValid);
       }, 2500);
     }
 
