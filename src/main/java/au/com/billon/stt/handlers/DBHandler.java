@@ -1,6 +1,5 @@
 package au.com.billon.stt.handlers;
 
-import au.com.billon.stt.models.Endpoint;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.skife.jdbi.v2.DBI;
 import org.skife.jdbi.v2.Handle;
@@ -17,8 +16,8 @@ import java.util.Map;
 public class DBHandler implements STTHandler {
     public DBHandler() { }
 
-    public String invoke(String request, Endpoint endpoint) throws Exception {
-        DBI jdbi = new DBI(endpoint.getUrl(), endpoint.getUsername(), endpoint.getPassword());
+    public String invoke(String request, Map<String, String> details) throws Exception {
+        DBI jdbi = new DBI(details.get("url"), details.get("username"), details.get("password"));
         Handle handle = jdbi.open();
 
         Query<Map<String, Object>> query = handle.createQuery(request);
