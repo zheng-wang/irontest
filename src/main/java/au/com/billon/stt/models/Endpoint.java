@@ -1,6 +1,7 @@
 package au.com.billon.stt.models;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Trevor Li on 6/30/15.
@@ -10,6 +11,7 @@ public class Endpoint {
     private String name;
     private String description;
     private String handler;
+    private List<EndpointDetail> details;
     private Date created;
     private Date updated;
 
@@ -53,6 +55,14 @@ public class Endpoint {
 
     public void setHandler(String handler) {
         this.handler = handler;
+    }
+
+    public List<EndpointDetail> getDetails() {
+        return details;
+    }
+
+    public void setDetails(List<EndpointDetail> details) {
+        this.details = details;
     }
 
     public Date getCreated() {
