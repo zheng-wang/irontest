@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('service-testing-tool').controller('TestcasesController', ['$scope', 'Testcases', '$stateParams', '$state', 'uiGridConstants',
-  function($scope, Testcases, $stateParams, $state, uiGridConstants) {
+angular.module('service-testing-tool').controller('TestcasesController', ['$scope', 'Testcases', '$stateParams', '$state', 'uiGridConstants', '$timeout',
+  function($scope, Testcases, $stateParams, $state, uiGridConstants, $timeout) {
     $scope.columnDefs = [
       {
         name: 'name', width: 200, minWidth: 100,
@@ -42,6 +42,14 @@ angular.module('service-testing-tool').controller('TestcasesController', ['$scop
         $scope.submitted = true;
       }
     };
+
+    var timer;
+    $scope.autoSave = function() {
+      if (timer) $timeout.cancel(timer);
+      timer = $timeout(function() {
+        $scope.update($scope.testcaseForm.$valid);
+      }, 2500);
+    }
 
     $scope.create = function(isValid) {
       if (isValid) {

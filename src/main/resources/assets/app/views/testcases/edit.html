@@ -9,11 +9,8 @@
     </div>
   </div>
   <div class="row">
-    <form name="testcaseForm" class="form-horizontal col-md-6" role="form" ng-submit="update(testcaseForm.$valid)" novalidate>
+    <form name="testcaseForm" class="form-horizontal col-md-6" role="form" novalidate>
       <div class="form-group">
-        <div class="col-md-offset-3 col-md-3">
-          <button type="submit" class="btn btn-info">Update</button>
-        </div>
         <div class="col-md-offset-2 col-md-3">
           <button type="button" class="btn btn-info" ng-click="remove(testcase)">Delete</button>
         </div>
@@ -21,7 +18,7 @@
       <div class="form-group" ng-class="{ 'has-error' : submitted && testcaseForm.name.$invalid }">
         <label for="name" class="col-md-2 control-label">Name</label>
         <div class="col-md-10">
-          <input name="name" type="text" class="form-control" ng-model="testcase.name" id="name" placeholder="Name" maxlength="200" required>
+          <input name="name" type="text" class="form-control" ng-model="testcase.name" ng-change="autoSave()" id="name" placeholder="Name" maxlength="200" required>
           <div ng-show="submitted && testcaseForm.name.$invalid" class="help-block">
             <p ng-show="testcaseForm.name.$error.required">Name is required</p>
           </div>
@@ -30,7 +27,7 @@
       <div class="form-group">
         <label for="description" class="col-md-2 control-label">Description</label>
         <div class="col-md-10">
-          <textarea name="description" ng-model="testcase.description" id="description" cols="30" rows="10" placeholder="Description" class="form-control"></textarea>
+          <textarea name="description" ng-model="testcase.description" ng-change="autoSave()" id="description" cols="30" rows="10" placeholder="Description" class="form-control"></textarea>
         </div>
       </div>
     </form>
