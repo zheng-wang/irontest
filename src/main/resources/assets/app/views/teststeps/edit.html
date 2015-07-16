@@ -1,10 +1,11 @@
 <div ng-controller="TeststepsController" ng-init="findOne()">
   <div class="row">
     <div>
-      <h3 class="page-header">Test Step Details
+      <h3 class="page-header">Test Step - {{teststep.name}}
         <label class="col-md-offset-1 failure-message" ng-show="saveSuccessful !== null && !saveSuccessful">Failed to update: {{savingErrorMessage}}</label>
         <label class="col-md-offset-1" successful-message ng-class="{ 'successful-message-animation' : saveSuccessful }">Successfully updated</label>
-        <small ng-show="teststep.updated">Last edit at {{teststep.updated | date:'medium'}}</small>
+        <small>Last edit at {{teststep.updated | date:'medium'}}</small>
+        <label class="back-link"><a ui-sref="testcase_edit({testcaseId: teststep.testcaseId})">Back</a>                    </label>
       </h3>
     </div>
   </div>
