@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('service-testing-tool').controller('TestcasesController', ['$scope', 'Testcases', '$stateParams', '$state', 'uiGridConstants',
-  function($scope, Testcases, $stateParams, $state, uiGridConstants) {
+angular.module('service-testing-tool').controller('TestcasesController', ['$scope', 'Testcases', 'Teststeps', '$stateParams', '$state', 'uiGridConstants', '$timeout',
+  function($scope, Testcases, Teststeps, $stateParams, $state, uiGridConstants, $timeout) {
     $scope.columnDefs = [
       {
         name: 'name', width: 200, minWidth: 100,
@@ -9,9 +9,12 @@ angular.module('service-testing-tool').controller('TestcasesController', ['$scop
           direction: uiGridConstants.ASC,
           priority: 1
         },
-        cellTemplate: 'testcaseGridCellTemplate.html'
+        cellTemplate: 'testcaseGridNameCellTemplate.html'
       },
-      {name: 'description', width: 585, minWidth: 300}
+      {name: 'description', width: 585, minWidth: 300},
+      {name: 'delete', width: 80, minWidth: 80,
+        cellTemplate: 'testcaseGridDeleteCellTemplate.html'
+      }
     ];
 
     $scope.teststepsColumnDefs = [
@@ -21,10 +24,13 @@ angular.module('service-testing-tool').controller('TestcasesController', ['$scop
           direction: uiGridConstants.ASC,
           priority: 1
         },
-        cellTemplate: 'teststepGridCellTemplate.html'
+        cellTemplate: 'teststepGridNameCellTemplate.html'
       },
       {name: 'type', width: 80, minWidth: 80},
-      {name: 'description', width: 485, minWidth: 300}
+      {name: 'description', width: 485, minWidth: 300},
+      {name: 'delete', width: 80, minWidth: 80,
+        cellTemplate: 'teststepGridDeleteCellTemplate.html'
+      }
     ];
 
     $scope.saveSuccessful = null;
@@ -43,6 +49,14 @@ angular.module('service-testing-tool').controller('TestcasesController', ['$scop
       }
     };
 
+    var timer;
+    $scope.autoSave = function(isValid) {
+      if (timer) $timeout.cancel(timer);
+      timer = $timeout(function() {
+        $scope.update(isValid);
+      }, 2500);
+    }
+
     $scope.create = function(isValid) {
       if (isValid) {
         var testcase = new Testcases({
@@ -58,8 +72,18 @@ angular.module('service-testing-tool').controller('TestcasesController', ['$scop
     };
 
     $scope.remove = function(testcase) {
-      testcase.$remove(function(response) {
-        $state.go('testcase_all');
+      var testcaseService = new Testcases(testcase);
+      testcaseService.$remove(function(response) {
+        $state.go($state.current, {}, {reload: true});
+      });
+    };
+
+    $scope.removeTeststep = function(teststep) {
+      var teststepService = new Teststeps(teststep);
+      teststepService.$remove(function(response) {
+        $state.go($state.current, {}, {reload: true});
+      }, function(error) {
+        alert('Error');
       });
     };
 

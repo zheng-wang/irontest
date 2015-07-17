@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('service-testing-tool').controller('TeststepsController', ['$scope', 'Teststeps', '$stateParams',
-  '$state', 'uiGridConstants', '$http', '_',
-  function($scope, Teststeps, $stateParams, $state, uiGridConstants, $http, _) {
+  '$state', 'uiGridConstants', '$http', '_', '$timeout',
+  function($scope, Teststeps, $stateParams, $state, uiGridConstants, $http, _, $timeout) {
     $scope.saveSuccessful = null;
 
     $scope.tempData = {}
@@ -20,6 +20,14 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
         $scope.submitted = true;
       }
     };
+
+    var timer;
+    $scope.autoSave = function(isValid) {
+      if (timer) $timeout.cancel(timer);
+      timer = $timeout(function() {
+        $scope.update(isValid);
+      }, 2500);
+    }
 
     $scope.loadWsdl = function() {
       $http
@@ -62,14 +70,6 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
       } else {
         $scope.submitted = true;
       }
-    };
-
-    $scope.remove = function(teststep) {
-      teststep.$remove(function(response) {
-        $state.go('testcase_edit', {testcaseId: $stateParams.testcaseId});
-      }, function(error) {
-        alert('Error');
-      });
     };
 
     $scope.find = function() {

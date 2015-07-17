@@ -1,63 +1,66 @@
 <div ng-controller="TestcasesController" ng-init="findOne()">
   <div class="row">
     <div>
-      <h3 class="page-header">Test Case Details
+      <h3 class="page-header">Test Case - {{testcase.name}}
         <label class="col-md-offset-1 failure-message" ng-show="saveSuccessful !== null && !saveSuccessful">Failed to update: {{savingErrorMessage}}</label>
         <label class="col-md-offset-1" successful-message ng-class="{ 'successful-message-animation' : saveSuccessful }">Successfully updated</label>
-        <small ng-show="testcase.updated">Last edit at {{testcase.updated | date:'medium'}}</small>
+        <small>Last edit at {{testcase.updated | date:'medium'}}</small>
+        <label class="back-link"><a ui-sref="testcase_all">Back</a>                    </label>
       </h3>
     </div>
   </div>
-  <div class="row">
-    <form name="testcaseForm" class="form-horizontal col-md-6" role="form" ng-submit="update(testcaseForm.$valid)" novalidate>
-      <div class="form-group">
-        <div class="col-md-offset-3 col-md-3">
-          <button type="submit" class="btn btn-info">Update</button>
-        </div>
-        <div class="col-md-offset-2 col-md-3">
-          <button type="button" class="btn btn-info" ng-click="remove(testcase)">Delete</button>
-        </div>
-      </div>
-      <div class="form-group" ng-class="{ 'has-error' : submitted && testcaseForm.name.$invalid }">
-        <label for="name" class="col-md-2 control-label">Name</label>
-        <div class="col-md-10">
-          <input name="name" type="text" class="form-control" ng-model="testcase.name" id="name" placeholder="Name" maxlength="200" required>
-          <div ng-show="submitted && testcaseForm.name.$invalid" class="help-block">
-            <p ng-show="testcaseForm.name.$error.required">Name is required</p>
+  <tabset>
+    <tab heading="Test Steps">
+      <div class="row">&nbsp;</div> <!-- spacer -->
+      <div class="col-md-8">
+        <div class="row">
+          <div class="btn-group" dropdown is-open="status.isopen">
+            <button type="button" class="btn btn-info dropdown-toggle" dropdown-toggle ng-disabled="disabled">
+              Create <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+              <li><a ui-sref="teststep_create({testcaseId: testcase.id})">SOAP</a></li>
+              <li><a href="#">Database</a></li>
+            </ul>
           </div>
         </div>
-      </div>
-      <div class="form-group">
-        <label for="description" class="col-md-2 control-label">Description</label>
-        <div class="col-md-10">
-          <textarea name="description" ng-model="testcase.description" id="description" cols="30" rows="10" placeholder="Description" class="form-control"></textarea>
+        <div class="row">&nbsp;</div> <!-- spacer -->
+        <div class="row">
+          <div ui-grid="{enableFiltering: true, data: testcase.teststeps, columnDefs: teststepsColumnDefs}"
+               ui-grid-resize-columns ui-grid-move-columns class="ui-grid"></div>
         </div>
       </div>
-    </form>
-    <div class="col-md-6">
-      <div class="row">
-        <div class="btn-group pull-right" dropdown is-open="status.isopen">
-          <button type="button" class="btn btn-info dropdown-toggle" dropdown-toggle ng-disabled="disabled">
-            Create Test Step <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu" role="menu">
-            <li><a ui-sref="teststep_create({testcaseId: testcase.id})">SOAP</a></li>
-            <li><a href="#">Database</a></li>
-          </ul>
+    </tab>
+    <tab heading="Basics">
+      <form name="testcaseForm" class="form-horizontal col-md-6" role="form" novalidate>
+        <div class="form-group">&nbsp;</div> <!-- spacer -->
+        <div class="form-group" ng-class="{ 'has-error' : submitted && testcaseForm.name.$invalid }">
+          <label for="name" class="col-md-2 control-label">Name</label>
+          <div class="col-md-10">
+            <input name="name" type="text" class="form-control" ng-model="testcase.name" ng-change="autoSave(testcaseForm.$valid)" id="name" placeholder="Name" maxlength="200" required>
+            <div ng-show="submitted && testcaseForm.name.$invalid" class="help-block">
+              <p ng-show="testcaseForm.name.$error.required">Name is required</p>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="row">&nbsp;</div> <!-- spacer -->
-      <div class="row">
-        <div ui-grid="{paginationPageSizes: [10,20,50,100], paginationPageSize: 10, enableFiltering: true, data: testcase.teststeps, columnDefs: teststepsColumnDefs}"
-             ui-grid-pagination ui-grid-resize-columns ui-grid-move-columns class="ui-grid"></div>
-      </div>
-      <script type="text/ng-template" id="teststepGridCellTemplate.html">
-        <div class="ui-grid-cell-contents">
-          <div><a ui-sref="teststep_edit({ testcaseId: row.entity.testcaseId, teststepId: row.entity.id })">{{COL_FIELD}}</a></div>
+        <div class="form-group">
+          <label for="description" class="col-md-2 control-label">Description</label>
+          <div class="col-md-10">
+            <textarea name="description" ng-model="testcase.description" ng-change="autoSave(testcaseForm.$valid)" id="description" cols="30" rows="10" placeholder="Description" class="form-control"></textarea>
+          </div>
         </div>
-      </script>
+      </form>
+    </tab>
+  </tabset>
+
+  <script type="text/ng-template" id="teststepGridNameCellTemplate.html">
+    <div class="ui-grid-cell-contents">
+      <div><a ui-sref="teststep_edit({ testcaseId: row.entity.testcaseId, teststepId: row.entity.id })">{{COL_FIELD}}</a></div>
     </div>
-  </div>
-
-
+  </script>
+  <script type="text/ng-template" id="teststepGridDeleteCellTemplate.html">
+    <div class="ui-grid-cell-contents">
+      <div><a ng-click="grid.appScope.removeTeststep(row.entity)" href="">Delete</a></div>
+    </div>
+  </script>
 </div>

@@ -1,33 +1,24 @@
 <div ng-controller="TeststepsController" ng-init="findOne()">
   <div class="row">
     <div>
-      <h3 class="page-header">Test Step Details
+      <h3 class="page-header">Test Step - {{teststep.name}}
         <label class="col-md-offset-1 failure-message" ng-show="saveSuccessful !== null && !saveSuccessful">Failed to update: {{savingErrorMessage}}</label>
         <label class="col-md-offset-1" successful-message ng-class="{ 'successful-message-animation' : saveSuccessful }">Successfully updated</label>
-        <small ng-show="teststep.updated">Last edit at {{teststep.updated | date:'medium'}}</small>
+        <small>Last edit at {{teststep.updated | date:'medium'}}</small>
+        <label class="back-link"><a ui-sref="testcase_edit({testcaseId: teststep.testcaseId})">Back</a>                    </label>
       </h3>
     </div>
   </div>
-  <form name="teststepForm" class="form-horizontal" role="form" ng-submit="update(teststepForm.$valid)" novalidate>
-    <div class="form-group">
-      <div class="col-md-6">
-        <div class="col-md-offset-1 col-md-2">
-          <button type="submit" class="btn btn-info">Update</button>
-        </div>
-        <div class="col-md-offset-2 col-md-2">
-          <button type="button" class="btn btn-info" ng-click="remove(teststep)">Delete</button>
-        </div>
-      </div>
-    </div>
+  <form name="teststepForm" class="form-horizontal" role="form" novalidate>
     <div>
       <tabset>
         <tab heading="Request Response">
           <div class="form-group">&nbsp;</div> <!-- spacer -->
           <div class="form-group">
-            <div class="col-md-8">
+            <div class="col-md-10">
               <label for="soapAddress" class="col-md-2 control-label">SOAP Address</label>
               <div class="col-md-8">
-                <input name="soapAddress" type="text" class="form-control" ng-model="teststep.soapAddress" id="soapAddress" placeholder="SOAP Address">
+                <input name="soapAddress" type="text" class="form-control" ng-model="teststep.soapAddress" ng-change="autoSave(teststepForm.$valid)" id="soapAddress" placeholder="SOAP Address">
               </div>
               <div class="col-md-2">
                 <button type="button" class="btn btn-info" ng-click="invoke(teststep)">Invoke</button>
@@ -36,7 +27,7 @@
           </div>
           <div class="form-group">
             <div class="col-md-6">
-              <textarea name="request" ng-model="teststep.request" id="request" rows="30" placeholder="Request" class="form-control"></textarea>
+              <textarea name="request" ng-model="teststep.request" ng-change="autoSave(teststepForm.$valid)" id="request" rows="30" placeholder="Request" class="form-control"></textarea>
             </div>
             <div class="col-md-6">
               <textarea name="response" ng-model="tempData.response" id="response" rows="30" placeholder="Response" class="form-control"></textarea>
@@ -49,7 +40,7 @@
             <div class="col-md-6">
               <label for="name" class="col-md-2 control-label">Name</label>
               <div class="col-md-10">
-                <input name="name" type="text" class="form-control" ng-model="teststep.name" id="name" placeholder="Name" maxlength="200" required>
+                <input name="name" type="text" class="form-control" ng-model="teststep.name" ng-change="autoSave(teststepForm.$valid)" id="name" placeholder="Name" maxlength="200" required>
                 <div ng-show="submitted && teststepForm.name.$invalid" class="help-block">
                   <p ng-show="teststepForm.name.$error.required">Name is required</p>
                 </div>
@@ -60,7 +51,7 @@
             <div class="col-md-6">
               <label for="description" class="col-md-2 control-label">Description</label>
               <div class="col-md-10">
-                <textarea name="description" ng-model="teststep.description" id="description" cols="30" rows="10" placeholder="Description" class="form-control"></textarea>
+                <textarea name="description" ng-model="teststep.description" ng-change="autoSave(teststepForm.$valid)" id="description" cols="30" rows="10" placeholder="Description" class="form-control"></textarea>
               </div>
             </div>
           </div>

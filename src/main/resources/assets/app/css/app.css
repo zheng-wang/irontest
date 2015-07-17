@@ -3,6 +3,13 @@
     float: right;
 }
 
+.page-header .back-link {
+    white-space: pre;
+    float: right;
+    font-size: 80%;
+    font-weight: normal;
+}
+
 .successful-message {
     opacity: 0;
     color: green;
