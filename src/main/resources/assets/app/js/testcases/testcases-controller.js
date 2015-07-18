@@ -27,7 +27,7 @@ angular.module('service-testing-tool').controller('TestcasesController', ['$scop
         cellTemplate: 'teststepGridNameCellTemplate.html'
       },
       {name: 'description', width: 485, minWidth: 300},
-      {name: 'intfaceName', width: 200, minWidth: 100},
+      {name: 'intface.name', displayName: 'Interface', width: 200, minWidth: 100},
       {name: 'delete', width: 80, minWidth: 80,
         cellTemplate: 'teststepGridDeleteCellTemplate.html'
       }
