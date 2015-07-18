@@ -28,9 +28,11 @@ public interface TeststepDAO {
     @SqlUpdate("delete from teststep where id = :id")
     void deleteById(@Bind("id") long id);
 
-    @SqlQuery("select * from teststep where id = :id")
+    @SqlQuery("select teststep.*, intface.name as intfaceName from teststep left outer join intface on teststep.intfaceId = intface.id " +
+            "where teststep.id = :id")
     Teststep findById(@Bind("id") long id);
 
-    @SqlQuery("select * from teststep where testcase_id = :testcaseId")
+    @SqlQuery("select teststep.*, intface.name as intfaceName from teststep left outer join intface on teststep.intfaceId = intface.id " +
+            "where teststep.testcase_id = :testcaseId")
     List<Teststep> findByTestcaseId(@Bind("testcaseId") long testcaseId);
 }

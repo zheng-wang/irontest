@@ -16,6 +16,7 @@ public class Teststep {
     private String description;
     private String request;
     private long intfaceId;
+    private String intfaceName;
     private Date created;
     private Date updated;
 
@@ -25,7 +26,7 @@ public class Teststep {
         this.type = type;
     }
 
-    public Teststep(long id, long testcaseId, String name, String type, String description, Date created, Date updated, String request, long intfaceId) {
+    public Teststep(long id, long testcaseId, String name, String type, String description, Date created, Date updated, String request, long intfaceId, String intfaceName) {
         this.id = id;
         this.testcaseId = testcaseId;
         this.name = name;
@@ -35,6 +36,7 @@ public class Teststep {
         this.updated = updated;
         this.request = request;
         this.intfaceId = intfaceId;
+        this.intfaceName = intfaceName;
     }
 
     public long getId() {
@@ -83,6 +85,14 @@ public class Teststep {
 
     public void setIntfaceId(long intfaceId) {
         this.intfaceId = intfaceId;
+    }
+
+    public String getIntfaceName() {
+        return intfaceName;
+    }
+
+    public void setIntfaceName(String intfaceName) {
+        this.intfaceName = intfaceName;
     }
 
     public Date getCreated() {
