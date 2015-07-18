@@ -58,7 +58,7 @@ public class STTApplication extends Application<STTConfiguration> {
         testcaseDAO.createTableIfNotExists();
         teststepDAO.createTableIfNotExists();
         teststepPropertyDAO.createTableIfNotExists();
-        //intfaceDAO.createTableIfNotExists();
+        intfaceDAO.createTableIfNotExists();
         environmentDAO.createTableIfNotExists();
         enventryDAO.createTableIfNotExists();
         endpointdtlDAO.createTableIfNotExists();
