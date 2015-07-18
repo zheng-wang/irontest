@@ -66,3 +66,15 @@
 .tab-top-spacer {
     height: 5px;
 }
+
+.tab-main-content {
+    height: 600px;
+}
+
+.full-height {
+    height: 100%;
+}
+
+.full-height-important {
+    height: 100% !important;
+}

@@ -12,26 +12,7 @@
   <form name="teststepForm" class="form-horizontal" role="form" novalidate>
     <tabset>
       <tab heading="Request Response">
-        <div class="form-group tab-top-spacer"></div>
-        <div class="form-group">
-          <div class="col-md-10">
-            <label for="soapAddress" class="col-md-2 control-label">SOAP Address</label>
-            <div class="col-md-8">
-              <input name="soapAddress" type="text" class="form-control" ng-model="teststep.soapAddress" ng-change="autoSave(teststepForm.$valid)" id="soapAddress" placeholder="SOAP Address">
-            </div>
-            <div class="col-md-2">
-              <button type="button" class="btn btn-info" ng-click="invoke(teststep)">Invoke</button>
-            </div>
-          </div>
-        </div>
-        <div class="form-group">
-          <div class="col-md-6">
-            <textarea name="request" ng-model="teststep.request" ng-change="autoSave(teststepForm.$valid)" id="request" rows="30" placeholder="Request" class="form-control"></textarea>
-          </div>
-          <div class="col-md-6">
-            <textarea name="response" ng-model="tempData.response" id="response" rows="30" placeholder="Response" class="form-control"></textarea>
-          </div>
-        </div>
+        <div ng-include="'/ui/views/teststeps/edit-request-response.html'"></div>
       </tab>
       <tab heading="Basics">
         <div class="form-group tab-top-spacer"></div>
