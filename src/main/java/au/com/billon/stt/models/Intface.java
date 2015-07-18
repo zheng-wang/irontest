@@ -9,6 +9,7 @@ public class Intface {
     private long id;
     private String name;
     private String description;
+    private String deftype;
     private String defurl;
     private Date created;
     private Date updated;
@@ -16,10 +17,11 @@ public class Intface {
     public Intface() {
     }
 
-    public Intface(long id, String name, String description, String defurl, Date created, Date updated) {
+    public Intface(long id, String name, String description, String deftype, String defurl, Date created, Date updated) {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.deftype = deftype;
         this.defurl = defurl;
         this.created = created;
         this.updated = updated;
@@ -47,6 +49,14 @@ public class Intface {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getDeftype() {
+        return deftype;
+    }
+
+    public void setDeftype(String deftype) {
+        this.deftype = deftype;
     }
 
     public String getDefurl() {

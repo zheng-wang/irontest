@@ -53,7 +53,8 @@ angular.module('service-testing-tool').controller('EndpointsController', ['$scop
         titleMap: [
           {value: "DBHandler", name: "DBHandler"},
           {value: "SOAPHandler", name: "SOAPHandler"},
-          {value: "MQHandler", name: "MQHandler"}
+          {value: "MQHandler", name: "MQHandler"},
+          {value: "", name: ""}
         ],
         onChange: function (modelValue, form) {
           Endpoints.getProperties({
@@ -146,11 +147,7 @@ angular.module('service-testing-tool').controller('EndpointsController', ['$scop
     $scope.findOne = function() {
       $scope.columnDefs = [
         {
-          name: 'name', displayName: 'Property Name', enableCellEdit: false, width: 200, minWidth: 100,
-          sort: {
-            direction: uiGridConstants.ASC,
-            priority: 1
-          }
+          name: 'name', displayName: 'Property Name', enableCellEdit: false, width: 200, minWidth: 100
         },
         {
           name: 'value', displayName: 'Property Value', width: 600, minWidth: 300

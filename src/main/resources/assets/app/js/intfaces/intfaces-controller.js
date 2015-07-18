@@ -13,13 +13,17 @@ angular.module('service-testing-tool').controller('IntfacesController', ['$scope
           maxLength: 50,
           pattern: "^(\/([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-\.]*[A-Za-z0-9])+)*$"
         },*/
+        deftype: {
+          type: "string",
+          maxLength: 50
+        },
         defurl: {
           type: "string",
           maxLength: 200,
           pattern: "^http:\/{2}(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])(\/([a-z0-9_\.-])+)*\/?[A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-\.]*[A-Za-z0-9]$"
         }
       },
-      "required": ["name", "description", "defurl"]
+      "required": ["name", "description", "deftype", "defurl"]
     };
 
     $scope.form = [
@@ -33,6 +37,17 @@ angular.module('service-testing-tool').controller('IntfacesController', ['$scope
         title: "Description",
         type: "textarea",
         validationMessage: "The Description is required and should be less than 500 characters"
+      },
+      {
+        key: "deftype",
+        title: "Definition Type",
+        type: "select",
+        titleMap: [
+          { value: "WSDL", name: "WSDL"},
+          { value: "WADL", name: "WADL"},
+          { value: "SYSTEM PRE DEFINED", name: "SYSTEM PRE DEFINED"},
+          { value: "", name: ""}
+        ]
       },
       {
         key: "defurl",
@@ -90,6 +105,9 @@ angular.module('service-testing-tool').controller('IntfacesController', ['$scope
         },
         {
           name: 'description', width: 600, minWidth: 300
+        },
+        {
+          name: 'deftype', displayName: "Definition Type", width: 200, minWidth: 100
         }
       ];
 
