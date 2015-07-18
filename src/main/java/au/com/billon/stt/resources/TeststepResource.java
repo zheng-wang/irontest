@@ -3,10 +3,7 @@ package au.com.billon.stt.resources;
 import au.com.billon.stt.Utils;
 import au.com.billon.stt.db.TeststepDAO;
 import au.com.billon.stt.db.TeststepPropertyDAO;
-import au.com.billon.stt.models.TeststepInvocation;
-import au.com.billon.stt.models.SOAPTeststep;
-import au.com.billon.stt.models.Teststep;
-import au.com.billon.stt.models.TeststepProperty;
+import au.com.billon.stt.models.*;
 import org.reficio.ws.builder.SoapBuilder;
 import org.reficio.ws.builder.SoapOperation;
 import org.reficio.ws.builder.core.Wsdl;
@@ -80,9 +77,10 @@ public class TeststepResource {
     // This is not a REST service. It is actually an RPC through JSON.
     // It is implemented for simplicity for now.
     @POST @Path("{teststepId}/invoke")
-    public String invoke(TeststepInvocation invocation) throws TransformerException {
+    public SOAPInvocationResponse invoke(TeststepInvocation invocation) throws TransformerException {
         SoapClient client = SoapClient.builder().endpointUri(invocation.getSoapAddress()).build();
         String response = client.post(invocation.getRequest());
-        return Utils.prettyPrintXML(response);
+        SOAPInvocationResponse result = new SOAPInvocationResponse(Utils.prettyPrintXML(response));
+        return result;
     }
 }

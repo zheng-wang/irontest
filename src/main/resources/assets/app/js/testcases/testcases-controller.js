@@ -54,7 +54,7 @@ angular.module('service-testing-tool').controller('TestcasesController', ['$scop
       if (timer) $timeout.cancel(timer);
       timer = $timeout(function() {
         $scope.update(isValid);
-      }, 2500);
+      }, 2000);
     }
 
     $scope.create = function(isValid) {

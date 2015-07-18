@@ -26,7 +26,7 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
       if (timer) $timeout.cancel(timer);
       timer = $timeout(function() {
         $scope.update(isValid);
-      }, 2500);
+      }, 2000);
     }
 
     $scope.loadWsdl = function() {
@@ -107,7 +107,7 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
           request: $scope.teststep.request
         })
         .success(function(data, status) {
-          $scope.tempData.response = data;
+          $scope.tempData.response = data.response;
         })
         .error(function(data, status) {
           alert('Error');
