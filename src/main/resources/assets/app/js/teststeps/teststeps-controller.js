@@ -1,11 +1,13 @@
 'use strict';
 
-angular.module('service-testing-tool').controller('TeststepsController', ['$scope', 'Teststeps', '$stateParams',
-  '$state', 'uiGridConstants', '$http', '_', '$timeout',
-  function($scope, Teststeps, $stateParams, $state, uiGridConstants, $http, _, $timeout) {
+angular.module('service-testing-tool').controller('TeststepsController', ['$scope', 'Teststeps', '$location', '$stateParams',
+  '$state', 'uiGridConstants', '$http', '_', '$timeout', 'PageNavigation',
+  function($scope, Teststeps, $location, $stateParams, $state, uiGridConstants, $http, _, $timeout, PageNavigation) {
     $scope.saveSuccessful = null;
 
     $scope.tempData = {}
+
+    $scope.teststep = {}
 
     $scope.update = function(isValid) {
       if (isValid) {
@@ -70,6 +72,18 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
       } else {
         $scope.submitted = true;
       }
+    };
+
+    $scope.goto = function(state, params, expect) {
+      var context = {
+        model: $scope.teststep,
+        url: $location.path(),
+        expect: expect
+      };
+
+      PageNavigation.contexts.push(context);
+
+      $state.go(state, params);
     };
 
     $scope.find = function() {
