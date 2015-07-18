@@ -12,16 +12,10 @@
   <tabset>
     <tab heading="Test Steps">
       <div class="form-group tab-top-spacer"></div>
-      <div class="col-md-8">
+      <div>
         <div class="row">
-          <div class="btn-group" dropdown is-open="status.isopen">
-            <button type="button" class="btn btn-info dropdown-toggle" dropdown-toggle ng-disabled="disabled">
-              Create <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu">
-              <li><a ui-sref="teststep_create({testcaseId: testcase.id})">SOAP</a></li>
-              <li><a href="#">Database</a></li>
-            </ul>
+          <div class="col-md-2">
+            <button class="btn btn-info btn-block" ui-sref="teststep_create({testcaseId: testcase.id})">Create</button>
           </div>
         </div>
         <div class="row">&nbsp;</div> <!-- spacer -->

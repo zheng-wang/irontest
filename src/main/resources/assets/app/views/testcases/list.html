@@ -5,13 +5,13 @@
     </div>
   </div>
   <div class="row">
-    <div>
-      <button class="btn btn-info" style="margin-bottom: 20px" ui-sref="testcase_create">Create</button>
+    <div class="col-md-2">
+      <button class="btn btn-info btn-block" style="margin-bottom: 20px" ui-sref="testcase_create">Create</button>
     </div>
   </div>
   <div class="row">
     <div ui-grid="{paginationPageSizes: [10,20,50,100], paginationPageSize: 20, enableFiltering: true, data: testcases, columnDefs: columnDefs}"
-         ui-grid-pagination ui-grid-resize-columns ui-grid-move-columns class="ui-grid col-md-7 testcase-grid"></div>
+         ui-grid-pagination ui-grid-resize-columns ui-grid-move-columns class="ui-grid testcase-grid"></div>
   </div>
 
   <script type="text/ng-template" id="testcaseGridNameCellTemplate.html">
