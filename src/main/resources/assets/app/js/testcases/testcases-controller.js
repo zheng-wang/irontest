@@ -12,7 +12,7 @@ angular.module('service-testing-tool').controller('TestcasesController', ['$scop
         cellTemplate: 'testcaseGridNameCellTemplate.html'
       },
       {name: 'description', width: 585, minWidth: 300},
-      {name: 'delete', width: 80, minWidth: 80,
+      {name: 'delete', width: 100, minWidth: 80, enableSorting: false,
         cellTemplate: 'testcaseGridDeleteCellTemplate.html'
       }
     ];
@@ -28,7 +28,7 @@ angular.module('service-testing-tool').controller('TestcasesController', ['$scop
       },
       {name: 'description', width: 485, minWidth: 300},
       {name: 'intface.name', displayName: 'Interface', width: 200, minWidth: 100},
-      {name: 'delete', width: 80, minWidth: 80,
+      {name: 'delete', width: 100, minWidth: 80, enableSorting: false,
         cellTemplate: 'teststepGridDeleteCellTemplate.html'
       }
     ];
