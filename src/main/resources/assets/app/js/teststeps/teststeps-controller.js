@@ -48,14 +48,14 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
       $http
         .get('api/wsdls/anywsdl/operations', {
           params: {
-            wsdlUrl: $scope.wsdlUrl
+            wsdlUrl: $scope.teststep.wsdlUrl
           }
         })
         .success(function(data, status) {
-          $scope.wsdlBindings = data;
-          $scope.wsdlBinding = $scope.wsdlBindings[0];
-          $scope.wsdlOperations = $scope.wsdlBindings[0].operations;
-          $scope.wsdlOperation = $scope.wsdlOperations[0];
+          $scope.teststep.wsdlBindings = data;
+          $scope.teststep.wsdlBinding = $scope.teststep.wsdlBindings[0];
+          $scope.teststep.wsdlOperations = $scope.teststep.wsdlBindings[0].operations;
+          $scope.teststep.wsdlOperation = $scope.teststep.wsdlOperations[0];
         })
         .error(function(data, status) {
           alert('Error');
@@ -69,13 +69,14 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
 
     $scope.create = function(isValid) {
       if (isValid) {
+        this.teststep.testcaseId = $stateParams.testcaseId;
         var teststep = new Teststeps({
-          testcaseId: $stateParams.testcaseId,
-          name: this.name,
-          description: this.description,
-          wsdlUrl: this.wsdlUrl,
-          wsdlBindingName: this.wsdlBinding.name,
-          wsdlOperationName: this.wsdlOperation
+          testcaseId: this.teststep.testcaseId,
+          name: this.teststep.name,
+          description: this.teststep.description,
+          wsdlUrl: this.teststep.wsdlUrl,
+          wsdlBindingName: this.teststep.wsdlBinding.name,
+          wsdlOperationName: this.teststep.wsdlOperation
         });
         teststep.$save(function(response) {
           $state.go('teststep_edit', {testcaseId: response.testcaseId, teststepId: response.id});
