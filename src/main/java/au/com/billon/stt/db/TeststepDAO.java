@@ -14,7 +14,7 @@ public interface TeststepDAO {
     @SqlUpdate("create table IF NOT EXISTS teststep (" +
             "id INT PRIMARY KEY auto_increment, testcase_id INT, name varchar(200), description clob, " +
             "created timestamp DEFAULT CURRENT_TIMESTAMP, updated timestamp DEFAULT CURRENT_TIMESTAMP, " +
-            "type varchar(20), request clob, intfaceId int, " +
+            "type varchar(20), request clob, intfaceId int, FOREIGN KEY (intfaceId) REFERENCES intface(id), " +
             "FOREIGN KEY (testcase_id) REFERENCES testcase(id) ON DELETE CASCADE)")
     void createTableIfNotExists();
 

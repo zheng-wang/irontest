@@ -1,3 +1,10 @@
+/* custom bootstrap class */
+.page-header {
+  padding-bottom: 8px;
+  margin: 25px 0 13px;
+  border-bottom: 1px solid #eee;
+}
+
 .page-header small {
     font-size: 55%;
     float: right;
@@ -6,8 +13,15 @@
 .page-header .back-link {
     white-space: pre;
     float: right;
-    font-size: 80%;
+    font-size: 75%;
     font-weight: normal;
+}
+
+/* custom bootstrap class (for tabs) */
+.nav>li>a {
+  position: relative;
+  display: block;
+  padding: 7px 12px;
 }
 
 .successful-message {
@@ -64,11 +78,11 @@
 }
 
 .tab-top-spacer {
-    height: 5px;
+    height: 3px;
 }
 
-.tab-main-content {
-    height: 600px;
+#request-response-textareas {
+    height: 650px;
 }
 
 .full-height {

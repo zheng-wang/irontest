@@ -2,8 +2,8 @@
   <div class="row">
     <div>
       <h3 class="page-header">Test Step - {{teststep.name}}
-        <label class="col-md-offset-1 failure-message" ng-show="saveSuccessful !== null && !saveSuccessful">Failed to update: {{savingErrorMessage}}</label>
-        <label class="col-md-offset-1" successful-message ng-class="{ 'successful-message-animation' : saveSuccessful }">Successfully updated</label>
+        <label class="col-md-offset-1 failure-message" ng-show="saveSuccessful !== null && !saveSuccessful">Failed to save. {{savingErrorMessage}}</label>
+        <label class="col-md-offset-1" successful-message ng-class="{ 'successful-message-animation' : saveSuccessful }">Successfully saved</label>
         <small>Last edit at {{teststep.updated | date:'medium'}}</small>
         <label class="back-link"><a ui-sref="testcase_edit({testcaseId: teststep.testcaseId})">Back</a>                    </label>
       </h3>
