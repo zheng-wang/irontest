@@ -3,8 +3,9 @@
 angular.module('service-testing-tool').controller('TeststepsController', ['$scope', 'Teststeps', '$location', '$stateParams',
   '$state', 'uiGridConstants', '$http', '_', '$timeout', 'PageNavigation',
   function($scope, Teststeps, $location, $stateParams, $state, uiGridConstants, $http, _, $timeout, PageNavigation) {
+    $scope.teststep = {};
     $scope.saveSuccessful = null;
-    $scope.tempData = {}
+    $scope.tempData = {};
     $scope.showAssertionsArea = false;
 
     $scope.toggleAssertionsArea = function() {
@@ -12,15 +13,13 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
         (document.getElementById('request-response-textareas').offsetHeight +
         document.getElementById('assertionsArea').offsetHeight) + 'px';
       $scope.showAssertionsArea = !($scope.showAssertionsArea);
-    }
+    };
 
     $scope.assertionsAreaVisibleCallback = function() {
       document.getElementById('request-response-textareas').style.height =
           (document.getElementById('request-response-textareas').offsetHeight -
           document.getElementById('assertionsArea').offsetHeight) + 'px';
-    }
-
-    $scope.teststep = {}
+    };
 
     $scope.update = function(isValid) {
       if (isValid) {
@@ -42,7 +41,7 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
       timer = $timeout(function() {
         $scope.update(isValid);
       }, 2000);
-    }
+    };
 
     $scope.loadWsdl = function() {
       $http
@@ -60,12 +59,12 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
         .error(function(data, status) {
           alert('Error');
         });
-    }
+    };
 
     $scope.refreshOperations = function() {
       $scope.wsdlOperations = _.findWhere($scope.wsdlBindings, { name: $scope.wsdlBinding.name }).operations;
       $scope.wsdlOperation = $scope.wsdlOperations[0];
-    }
+    };
 
     $scope.create = function(isValid) {
       if (isValid) {
@@ -123,6 +122,7 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
         teststepId: $stateParams.teststepId
       }, function(response) {
         $scope.teststep = response;
+        $scope.teststep.assertions = [];
       });
     };
 
@@ -140,5 +140,20 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
           alert('Error');
         });
     };
+
+    $scope.assertionColumnDefs = [
+      {
+        name: 'name', width: 180, minWidth: 180,
+        sort: {
+          direction: uiGridConstants.ASC,
+          priority: 1
+        },
+        cellTemplate: 'assertionGridNameCellTemplate.html'
+      },
+      {name: 'type', width: 80, minWidth: 80},
+      {name: 'delete', width: 100, minWidth: 100, enableSorting: false,
+        cellTemplate: 'assertionGridDeleteCellTemplate.html'
+      }
+    ];
   }
 ]);
