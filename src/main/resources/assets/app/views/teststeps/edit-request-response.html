@@ -49,7 +49,7 @@
         <div class="form-group" ng-class="{ 'has-error' : submitted && teststepForm.assertion-contains.$invalid }">
           <label for="assertion-contains" class="col-lg-3 control-label">Contains</label>
           <div class="col-lg-9">
-            <textarea name="assertion-contains" ng-model="assertion.contains" id="assertion-contains"
+            <textarea name="assertion-contains" ng-model="assertion.properties.contains" id="assertion-contains"
                 cols="10" rows="5" ng-change="autoSaveAssertion(teststepForm.$valid)" placeholder="Value"
                 class="form-control" required></textarea>
             <div ng-show="submitted && teststepForm.assertion-contains.$invalid" class="help-block">

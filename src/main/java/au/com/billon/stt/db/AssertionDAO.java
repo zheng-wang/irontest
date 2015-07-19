@@ -19,12 +19,13 @@ public interface AssertionDAO {
     void createTableIfNotExists();
 
     @SqlUpdate("insert into assertion (teststep_id, name, type, properties) values " +
-            "(:teststepId, :name, :type, :propertiesString)")
+            "(:teststepId, :name, :type, :properties)")
     @GetGeneratedKeys
-    long insert(@BindBean Assertion assertion);
+    long insert(@Bind("teststepId") long teststepId, @Bind("name") String name,
+                @Bind("type") String type, @Bind("properties") String properties);
 
-    @SqlUpdate("update assertion set name = :name, properties = :propertiesString, updated = CURRENT_TIMESTAMP where id = :id")
-    int update(@BindBean Assertion assertion);
+    @SqlUpdate("update assertion set name = :name, properties = :properties, updated = CURRENT_TIMESTAMP where id = :id")
+    int update(@Bind("name") String name, @Bind("properties") String properties, @Bind("id") long id);
 
     @SqlQuery("select * from assertion")
     List<Assertion> findAll();

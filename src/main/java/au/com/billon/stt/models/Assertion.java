@@ -1,31 +1,32 @@
 package au.com.billon.stt.models;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by Zheng on 19/07/2015.
  */
+@JsonDeserialize(using=AssertionDeserializer.class)
 public class Assertion {
+    public static final String ASSERTION_TYPE_CONTAINS = "Contains";
     private long id;
     private long teststepId;
     private String name;
     private String type;
-    private String propertiesString;
-    private List<Property> properties;
+    private Properties properties;
     private Date created;
     private Date updated;
 
     public Assertion() {}
 
-    public Assertion(long id, long teststepId, String name, String type, Date created, Date updated) {
+    public Assertion(long id, long teststepId, String name, String type, Properties properties, Date created, Date updated) {
         this.id = id;
         this.teststepId = teststepId;
         this.name = name;
         this.type = type;
+        this.properties = properties;
         this.created = created;
         this.updated = updated;
     }
@@ -78,23 +79,11 @@ public class Assertion {
         this.updated = updated;
     }
 
-    public String getPropertiesString() {
-        return propertiesString;
-    }
-
-    public void setPropertiesString(String propertiesString) {
-        this.propertiesString = propertiesString;
-    }
-
-    public List<Property> getProperties() {
+    public Properties getProperties() throws JsonProcessingException {
         return properties;
     }
 
-    public void setProperties(List<Property> properties) {
+    public void setProperties(Properties properties) {
         this.properties = properties;
-    }
-
-    public void serializeProperties() throws JsonProcessingException {
-        this.propertiesString = new ObjectMapper().writeValueAsString(properties);
     }
 }
