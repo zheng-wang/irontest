@@ -4,6 +4,8 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
   '$location', '$stateParams', '$state', 'uiGridConstants', '$http', '_', '$timeout', 'PageNavigation',
   function($scope, Teststeps, Assertions, $location, $stateParams, $state, uiGridConstants, $http, _,
         $timeout, PageNavigation) {
+    var teststepAutoSaveTimer;
+    var assertionAutoSaveTimer;
     $scope.teststep = {};
     $scope.saveSuccessful = null;
     $scope.tempData = {};
@@ -24,10 +26,9 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
       }
     };
 
-    var timer;
     $scope.autoSave = function(isValid) {
-      if (timer) $timeout.cancel(timer);
-      timer = $timeout(function() {
+      if (teststepAutoSaveTimer) $timeout.cancel(teststepAutoSaveTimer);
+      teststepAutoSaveTimer = $timeout(function() {
         $scope.update(isValid);
       }, 2000);
     };
@@ -169,17 +170,50 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
         testcaseId: $stateParams.testcaseId,
         teststepId: $stateParams.teststepId
       }, function(response) {
-        $scope.assertion = response;
-
-        //  bind the assertion properties to UI
-        $scope.assertion.contains = _.findWhere($scope.assertion.properties, { name: 'contains' }).value;
-
-        $scope.findAssertions();
+        renderAssertion(response);
       }, function(error) {
         alert('Error');
       });
 
       $scope.showAssertionDetails = true;
-    }
+    };
+
+    var renderAssertion = function(assertion) {
+      $scope.assertion = assertion;
+
+      //  bind the assertion properties to UI
+      $scope.assertion.contains = _.findWhere($scope.assertion.properties, { name: 'contains' }).value;
+
+      $scope.findAssertions();
+    };
+
+    $scope.updateAssertion = function(isValid) {
+      if (isValid) {
+        //  transfer UI values to properties and delete properties for binding with UI
+        $scope.assertion.properties = [];
+        $scope.assertion.properties.push( { name: 'contains', value: $scope.assertion.contains });
+        delete $scope.assertion.contains;
+
+        $scope.assertion.$update({
+          testcaseId: $stateParams.testcaseId,
+          teststepId: $stateParams.teststepId
+        }, function(response) {
+          $scope.saveSuccessful = true;
+          renderAssertion(response);
+        }, function(error) {
+          $scope.savingErrorMessage = error.data.message;
+          $scope.saveSuccessful = false;
+        });
+      } else {
+        $scope.submitted = true;
+      }
+    };
+
+    $scope.autoSaveAssertion = function(isValid) {
+      if (assertionAutoSaveTimer) $timeout.cancel(assertionAutoSaveTimer);
+      assertionAutoSaveTimer = $timeout(function() {
+        $scope.updateAssertion(isValid);
+      }, 2000);
+    };
   }
 ]);

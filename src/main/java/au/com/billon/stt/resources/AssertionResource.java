@@ -30,6 +30,13 @@ public class AssertionResource {
         return assertion;
     }
 
+    @PUT @Path("{assertionId}")
+    public Assertion update(Assertion assertion) throws JsonProcessingException {
+        assertion.serializeProperties();
+        dao.update(assertion);
+        return dao.findById(assertion.getId());
+    }
+
     @GET
     public List<Assertion> findAll() {
         return dao.findAll();
