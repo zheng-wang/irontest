@@ -171,16 +171,15 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
       var assertion = new Assertions({
         name: 'Response contains value',
         type: 'Contains',
-        properties: [
-          { name: 'contains', value: 'value' }
-        ]
+        properties: { contains: 'value' }
       });
 
       assertion.$save({
         testcaseId: $stateParams.testcaseId,
         teststepId: $stateParams.teststepId
       }, function(response) {
-        renderAssertion(response);
+        $scope.assertion = response;
+        $scope.findAssertions();
       }, function(error) {
         alert('Error');
       });
@@ -188,28 +187,15 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
       $scope.showAssertionDetails = true;
     };
 
-    var renderAssertion = function(assertion) {
-      $scope.assertion = assertion;
-
-      //  bind the assertion properties to UI
-      $scope.assertion.contains = _.findWhere($scope.assertion.properties, { name: 'contains' }).value;
-
-      $scope.findAssertions();
-    };
-
     $scope.updateAssertion = function(isValid) {
       if (isValid) {
-        //  transfer UI values to properties and delete properties for binding with UI
-        $scope.assertion.properties = [];
-        $scope.assertion.properties.push( { name: 'contains', value: $scope.assertion.contains });
-        delete $scope.assertion.contains;
-
         $scope.assertion.$update({
           testcaseId: $stateParams.testcaseId,
           teststepId: $stateParams.teststepId
         }, function(response) {
           $scope.saveSuccessful = true;
-          renderAssertion(response);
+           $scope.assertion = response;
+           $scope.findAssertions();
         }, function(error) {
           $scope.savingErrorMessage = error.data.message;
           $scope.saveSuccessful = false;
