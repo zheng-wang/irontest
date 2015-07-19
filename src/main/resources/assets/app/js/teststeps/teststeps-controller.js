@@ -69,7 +69,6 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
 
     $scope.create = function(isValid) {
       if (isValid) {
-        this.teststep.testcaseId = $stateParams.testcaseId;
         var teststep = new Teststeps({
           testcaseId: this.teststep.testcaseId,
           name: this.teststep.name,
@@ -119,12 +118,24 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
     };
 
     $scope.findOne = function() {
-      Teststeps.get({
-        testcaseId: $stateParams.testcaseId,
-        teststepId: $stateParams.teststepId
-      }, function(response) {
-        $scope.teststep = response;
-      });
+      // entry returned from other pages
+      var model = PageNavigation.returns.pop();
+      if (model) {
+        $scope.teststep = model;
+      } else {
+        if ($stateParams.teststepId) {
+          // edit an existing entry
+          Teststeps.get({
+            testcaseId: $stateParams.testcaseId,
+            teststepId: $stateParams.teststepId
+          }, function (response) {
+            $scope.teststep = response;
+          });
+        } else {
+          // create a new enventry
+          $scope.teststep.testcaseId = $stateParams.testcaseId;
+        }
+      }
     };
 
     $scope.invoke = function(teststep) {
