@@ -3,8 +3,11 @@ package au.com.billon.stt.db;
 import au.com.billon.stt.models.Assertion;
 import org.skife.jdbi.v2.sqlobject.BindBean;
 import org.skife.jdbi.v2.sqlobject.GetGeneratedKeys;
+import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
+
+import java.util.List;
 
 /**
  * Created by Zheng on 19/07/2015.
@@ -22,4 +25,7 @@ public interface AssertionDAO {
             "(:teststepId, :name, :type, :propertiesString)")
     @GetGeneratedKeys
     long insert(@BindBean Assertion assertion);
+
+    @SqlQuery("select * from assertion")
+    List<Assertion> findAll();
 }

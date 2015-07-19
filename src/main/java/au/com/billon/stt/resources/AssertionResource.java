@@ -2,13 +2,12 @@ package au.com.billon.stt.resources;
 
 import au.com.billon.stt.db.AssertionDAO;
 import au.com.billon.stt.models.Assertion;
+import au.com.billon.stt.models.Testcase;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.List;
 
 /**
  * Created by Zheng on 19/07/2015.
@@ -28,5 +27,10 @@ public class AssertionResource {
         long id = dao.insert(assertion);
         assertion.setId(id);
         return assertion;
+    }
+
+    @GET
+    public List<Assertion> findAll() {
+        return dao.findAll();
     }
 }

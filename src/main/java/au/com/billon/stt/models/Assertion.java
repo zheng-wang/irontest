@@ -21,12 +21,11 @@ public class Assertion {
 
     public Assertion() {}
 
-    public Assertion(long id, long teststepId, String name, String type, String propertiesString, Date created, Date updated) {
+    public Assertion(long id, long teststepId, String name, String type, Date created, Date updated) {
         this.id = id;
         this.teststepId = teststepId;
         this.name = name;
         this.type = type;
-        this.propertiesString = propertiesString;
         this.created = created;
         this.updated = updated;
     }
