@@ -1,30 +1,82 @@
 <div class="form-group tab-top-spacer"></div>
 <div class="form-group">
-    <div class="col-md-10">
-        <label for="soapAddress" class="col-md-2 control-label">SOAP Address</label>
-        <div class="col-md-8">
-            <input name="soapAddress" type="text" class="form-control" ng-model="teststep.soapAddress" ng-change="autoSave(teststepForm.$valid)" id="soapAddress" placeholder="SOAP Address">
-        </div>
-        <div class="col-md-2">
-            <button type="button" class="btn btn-info" ng-click="invoke(teststep)">Invoke</button>
-        </div>
+  <div class="col-lg-10">
+    <label for="soapAddress" class="col-lg-2 control-label">SOAP Address</label>
+    <div class="col-lg-8">
+      <input name="soapAddress" type="text" class="form-control" ng-model="teststep.soapAddress"
+          ng-change="autoSave(teststepForm.$valid)" id="soapAddress" placeholder="SOAP Address">
     </div>
+    <div class="col-lg-2">
+      <button type="button" class="btn btn-info" ng-click="invoke(teststep)">Invoke</button>
+    </div>
+  </div>
 </div>
 <div class="form-group" id="request-response-textareas">
-    <div class="col-md-6 full-height">
-        <textarea name="request" ng-model="teststep.request" ng-change="autoSave(teststepForm.$valid)" id="request" placeholder="Request" class="form-control full-height-important"></textarea>
-    </div>
-    <div class="col-md-6 full-height">
-        <textarea name="response" ng-model="tempData.response" id="response" placeholder="Response" class="form-control full-height-important"></textarea>
-    </div>
+  <div class="col-lg-6 full-height">
+    <textarea name="request" ng-model="teststep.request" ng-change="autoSave(teststepForm.$valid)"
+        id="request" placeholder="Request" class="form-control full-height-important"></textarea>
+  </div>
+  <div class="col-lg-6 full-height">
+    <textarea name="response" ng-model="tempData.response" id="response" placeholder="Response"
+        class="form-control full-height-important"></textarea>
+  </div>
 </div>
 <div class="form-group" id="assertionsArea">
-    <div class="col-md-12" style="background: green;" ng-if="showAssertionsArea" ng-init="assertionsAreaVisibleCallback()">
-        <h1>Assertions Area</h1>
+  <div class="col-lg-12 assertions-area-content" ng-if="showAssertionsArea">
+    <div class="row">
+      <div class="btn-group col-lg-1" dropdown is-open="status.isopen">
+        <button type="button" class="btn btn-info dropdown-toggle" dropdown-toggle ng-disabled="disabled">
+          Create <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+          <li><a ng-click="createContainsAssertion()" href="">Contains</a></li>
+          <li><a href="">XPath</a></li>
+        </ul>
+      </div>
+      <div ui-grid="{data: assertions, columnDefs: assertionColumnDefs}"
+          ui-grid-resize-columns ui-grid-move-columns class="ui-grid col-lg-4 assertions-grid"></div>
+      <div class="col-lg-6" ng-if="showAssertionDetails">
+        <div class="form-group" ng-class="{ 'has-error' : submitted && teststepForm.assertion-name.$invalid }">
+          <label for="assertion-name" class="col-lg-3 control-label">Assertion Name</label>
+          <div class="col-lg-9">
+            <input name="assertion-name" type="text" class="form-control" ng-model="assertion.name"
+                ng-change="autoSaveAssertion(teststepForm.$valid)" id="assertion-name" placeholder="Name" maxlength="200" required>
+            <div ng-show="submitted && teststepForm.assertion-name.$invalid" class="help-block">
+              <p ng-show="teststepForm.assertion-name.$error.required">Assertion Name is required</p>
+            </div>
+          </div>
+        </div>
+        <div class="form-group" ng-class="{ 'has-error' : submitted && teststepForm.assertion-contains.$invalid }">
+          <label for="assertion-contains" class="col-lg-3 control-label">Contains</label>
+          <div class="col-lg-9">
+            <textarea name="assertion-contains" ng-model="assertion.contains" id="assertion-contains"
+                cols="10" rows="5" ng-change="autoSaveAssertion(teststepForm.$valid)" placeholder="Value"
+                class="form-control" required></textarea>
+            <div ng-show="submitted && teststepForm.assertion-contains.$invalid" class="help-block">
+              <p ng-show="teststepForm.assertion-contains.$error.required">Contains is required</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+    <div ng-init="assertionsAreaVisibleCallback()"></div>
+  </div>
 </div>
 <div class="form-group">
-    <div class="col-md-2">
-        <button type="button" class="btn btn-info" ng-click="toggleAssertionsArea()">Assertions</button>
-    </div>
+  <div class="col-lg-2">
+    <button type="button" class="btn btn-info" ng-click="toggleAssertionsArea()">Assertions</button>
+  </div>
 </div>
+
+<script type="text/ng-template" id="assertionGridNameCellTemplate.html">
+    <div class="ui-grid-cell-contents">
+        <div><a href="#">{{COL_FIELD}}</a>
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="assertionGridDeleteCellTemplate.html">
+    <div class="ui-grid-cell-contents">
+        <div><a ng-click="grid.appScope.removeAssertion(row.entity)" href=""><i
+                class="glyphicon glyphicon-trash center-block text-center"></i></a></div>
+    </div>
+</script>

@@ -92,3 +92,16 @@
 .full-height-important {
     height: 100% !important;
 }
+
+.assertions-area-content {
+    width: 98%;
+    margin-left: 15px;
+    padding: 15px;
+    border: 1px solid #ccc
+}
+
+.assertions-grid {
+    height: 200px;
+    padding-left: 0px;
+    padding-right: 0px;
+}

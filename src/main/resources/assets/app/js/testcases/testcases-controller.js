@@ -17,7 +17,7 @@ angular.module('service-testing-tool').controller('TestcasesController', ['$scop
       }
     ];
 
-    $scope.teststepsColumnDefs = [
+    $scope.teststepColumnDefs = [
       {
         name: 'name', width: 200, minWidth: 100,
         sort: {
