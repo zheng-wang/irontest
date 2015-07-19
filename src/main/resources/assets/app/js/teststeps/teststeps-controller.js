@@ -7,6 +7,7 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
     $scope.saveSuccessful = null;
     $scope.tempData = {};
     $scope.showAssertionsArea = false;
+    $scope.showAssertionDetails = false;
 
     $scope.toggleAssertionsArea = function() {
       document.getElementById('request-response-textareas').style.height =
@@ -144,17 +145,25 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
 
     $scope.assertionColumnDefs = [
       {
-        name: 'name', width: 180, minWidth: 180,
+        name: 'name', width: 200, minWidth: 200,
         sort: {
           direction: uiGridConstants.ASC,
           priority: 1
         },
         cellTemplate: 'assertionGridNameCellTemplate.html'
       },
-      {name: 'type', width: 80, minWidth: 80},
+      {name: 'type', width: 100, minWidth: 100},
       {name: 'delete', width: 100, minWidth: 100, enableSorting: false,
         cellTemplate: 'assertionGridDeleteCellTemplate.html'
       }
     ];
+
+    $scope.createContainsAssertion = function() {
+      $scope.assertion = {
+        name: 'Response contains value',
+        contains: 'title'
+      };
+      $scope.showAssertionDetails = true;
+    }
   }
 ]);
