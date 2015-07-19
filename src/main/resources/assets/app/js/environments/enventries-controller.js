@@ -142,15 +142,15 @@ angular.module('service-testing-tool').controller('EnvEntriesController', ['$sco
       if (model) {
         $scope.enventry = model;
       } else {
-        // edit an existing entry
         if ($stateParams.enventryId) {
+          // edit an existing entry
           EnvEntries.get({
             enventryId: $stateParams.enventryId
           }, function(enventry) {
             $scope.enventry = enventry;
           });
-          // create a new enventry
         } else if ($stateParams.environmentId) {
+          // create a new enventry
           $scope.enventry.environmentId = Number($stateParams.environmentId);
 
           Environments.get({

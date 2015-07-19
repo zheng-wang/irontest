@@ -58,9 +58,8 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
 
     $scope.create = function(isValid) {
       if (isValid) {
-        this.teststep.testcaseId = $stateParams.testcaseId;
         var teststep = new Teststeps({
-          testcaseId: this.teststep.testcaseId,
+          testcaseId: $stateParams.testcaseId,
           name: this.teststep.name,
           description: this.teststep.description,
           wsdlUrl: this.teststep.wsdlUrl,
@@ -90,13 +89,24 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
     };
 
     $scope.findOne = function() {
-      Teststeps.get({
-        testcaseId: $stateParams.testcaseId,
-        teststepId: $stateParams.teststepId
-      }, function(response) {
-        $scope.teststep = response;
-        $scope.teststep.assertions = [];
-      });
+      // entry returned from other pages
+      var model = PageNavigation.returns.pop();
+      if (model) {
+        $scope.teststep = model;
+      } else {
+        if ($stateParams.teststepId) {
+          // edit an existing entry
+          Teststeps.get({
+            testcaseId: $stateParams.testcaseId,
+            teststepId: $stateParams.teststepId
+          }, function (response) {
+            $scope.teststep = response;
+          });
+        } else {
+          // create a new enventry
+          $scope.teststep.testcaseId = $stateParams.testcaseId;
+        }
+      }
     };
 
     $scope.invoke = function(teststep) {
@@ -161,15 +171,16 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
       var assertion = new Assertions({
         name: 'Response contains value',
         type: 'Contains',
-        properties: { contains: 'value' }
+        properties: [
+          { name: 'contains', value: 'value' }
+        ]
       });
 
       assertion.$save({
         testcaseId: $stateParams.testcaseId,
         teststepId: $stateParams.teststepId
       }, function(response) {
-        $scope.assertion = response;
-        $scope.findAssertions();
+        renderAssertion(response);
       }, function(error) {
         alert('Error');
       });
@@ -177,15 +188,28 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
       $scope.showAssertionDetails = true;
     };
 
+    var renderAssertion = function(assertion) {
+      $scope.assertion = assertion;
+
+      //  bind the assertion properties to UI
+      $scope.assertion.contains = _.findWhere($scope.assertion.properties, { name: 'contains' }).value;
+
+      $scope.findAssertions();
+    };
+
     $scope.updateAssertion = function(isValid) {
       if (isValid) {
+        //  transfer UI values to properties and delete properties for binding with UI
+        $scope.assertion.properties = [];
+        $scope.assertion.properties.push( { name: 'contains', value: $scope.assertion.contains });
+        delete $scope.assertion.contains;
+
         $scope.assertion.$update({
           testcaseId: $stateParams.testcaseId,
           teststepId: $stateParams.teststepId
         }, function(response) {
           $scope.saveSuccessful = true;
-          $scope.assertion = response;
-          $scope.findAssertions();
+          renderAssertion(response);
         }, function(error) {
           $scope.savingErrorMessage = error.data.message;
           $scope.saveSuccessful = false;
