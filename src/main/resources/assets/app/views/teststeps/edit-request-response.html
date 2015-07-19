@@ -1,30 +1,30 @@
 <div class="form-group tab-top-spacer"></div>
 <div class="form-group">
-  <div class="col-md-10">
-    <label for="soapAddress" class="col-md-2 control-label">SOAP Address</label>
-    <div class="col-md-8">
+  <div class="col-lg-10">
+    <label for="soapAddress" class="col-lg-2 control-label">SOAP Address</label>
+    <div class="col-lg-8">
       <input name="soapAddress" type="text" class="form-control" ng-model="teststep.soapAddress"
           ng-change="autoSave(teststepForm.$valid)" id="soapAddress" placeholder="SOAP Address">
     </div>
-    <div class="col-md-2">
+    <div class="col-lg-2">
       <button type="button" class="btn btn-info" ng-click="invoke(teststep)">Invoke</button>
     </div>
   </div>
 </div>
 <div class="form-group" id="request-response-textareas">
-  <div class="col-md-6 full-height">
+  <div class="col-lg-6 full-height">
     <textarea name="request" ng-model="teststep.request" ng-change="autoSave(teststepForm.$valid)"
         id="request" placeholder="Request" class="form-control full-height-important"></textarea>
   </div>
-  <div class="col-md-6 full-height">
+  <div class="col-lg-6 full-height">
     <textarea name="response" ng-model="tempData.response" id="response" placeholder="Response"
         class="form-control full-height-important"></textarea>
   </div>
 </div>
 <div class="form-group" id="assertionsArea">
-  <div class="col-md-12 assertions-area-content" ng-if="showAssertionsArea">
+  <div class="col-lg-12 assertions-area-content" ng-if="showAssertionsArea">
     <div class="row">
-      <div class="btn-group col-md-1" dropdown is-open="status.isopen">
+      <div class="btn-group col-lg-1" dropdown is-open="status.isopen">
         <button type="button" class="btn btn-info dropdown-toggle" dropdown-toggle ng-disabled="disabled">
           Create <span class="caret"></span>
         </button>
@@ -34,14 +34,14 @@
         </ul>
       </div>
       <div ui-grid="{data: teststep.assertions, columnDefs: assertionColumnDefs}"
-          ui-grid-resize-columns ui-grid-move-columns class="ui-grid col-md-3 assertions-grid"></div>
-      <div class="col-md-7">Assertion Details</div>
+          ui-grid-resize-columns ui-grid-move-columns class="ui-grid col-lg-3 assertions-grid"></div>
+      <div class="col-lg-7">Assertion Details</div>
     </div>
     <div ng-init="assertionsAreaVisibleCallback()"></div>
   </div>
 </div>
 <div class="form-group">
-  <div class="col-md-2">
+  <div class="col-lg-2">
     <button type="button" class="btn btn-info" ng-click="toggleAssertionsArea()">Assertions</button>
   </div>
 </div>
