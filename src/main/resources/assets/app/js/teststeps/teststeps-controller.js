@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('service-testing-tool').controller('TeststepsController', ['$scope', 'Teststeps', '$location', '$stateParams',
-  '$state', 'uiGridConstants', '$http', '_', '$timeout', 'PageNavigation',
+angular.module('service-testing-tool').controller('TeststepsController', ['$scope', 'Teststeps', '$location',
+  '$stateParams', '$state', 'uiGridConstants', '$http', '_', '$timeout', 'PageNavigation',
   function($scope, Teststeps, $location, $stateParams, $state, uiGridConstants, $http, _, $timeout, PageNavigation) {
     $scope.teststep = {};
     $scope.saveSuccessful = null;

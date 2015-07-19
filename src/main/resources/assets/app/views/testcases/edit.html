@@ -2,8 +2,12 @@
   <div class="row">
     <div>
       <h3 class="page-header">Test Case - {{testcase.name}}
-        <label class="col-md-offset-1 failure-message" ng-show="saveSuccessful !== null && !saveSuccessful">Failed to save. {{savingErrorMessage}}</label>
-        <label class="col-md-offset-1" successful-message ng-class="{ 'successful-message-animation' : saveSuccessful }">Successfully saved</label>
+        <label class="col-md-offset-1 failure-message" ng-show="saveSuccessful !== null && !saveSuccessful">
+          Failed to save. {{savingErrorMessage}}
+        </label>
+        <label class="col-md-offset-1" successful-message ng-class="{ 'successful-message-animation' : saveSuccessful }">
+          Successfully saved
+        </label>
         <small>Last edit at {{testcase.updated | date:'medium'}}</small>
         <label class="back-link"><a ui-sref="testcase_all">Back</a>                    </label>
       </h3>
@@ -20,7 +24,7 @@
         </div>
         <div class="row">&nbsp;</div> <!-- spacer -->
         <div class="row">
-          <div ui-grid="{enableFiltering: true, data: testcase.teststeps, columnDefs: teststepsColumnDefs}"
+          <div ui-grid="{enableFiltering: true, data: testcase.teststeps, columnDefs: teststepColumnDefs}"
                ui-grid-resize-columns ui-grid-move-columns class="ui-grid"></div>
         </div>
       </div>
@@ -31,7 +35,8 @@
         <div class="form-group" ng-class="{ 'has-error' : submitted && testcaseForm.name.$invalid }">
           <label for="name" class="col-md-2 control-label">Name</label>
           <div class="col-md-10">
-            <input name="name" type="text" class="form-control" ng-model="testcase.name" ng-change="autoSave(testcaseForm.$valid)" id="name" placeholder="Name" maxlength="200" required>
+            <input name="name" type="text" class="form-control" ng-model="testcase.name"
+                ng-change="autoSave(testcaseForm.$valid)" id="name" placeholder="Name" maxlength="200" required>
             <div ng-show="submitted && testcaseForm.name.$invalid" class="help-block">
               <p ng-show="testcaseForm.name.$error.required">Name is required</p>
             </div>
@@ -40,7 +45,8 @@
         <div class="form-group">
           <label for="description" class="col-md-2 control-label">Description</label>
           <div class="col-md-10">
-            <textarea name="description" ng-model="testcase.description" ng-change="autoSave(testcaseForm.$valid)" id="description" cols="30" rows="10" placeholder="Description" class="form-control"></textarea>
+            <textarea name="description" ng-model="testcase.description" ng-change="autoSave(testcaseForm.$valid)"
+                id="description" cols="30" rows="10" placeholder="Description" class="form-control"></textarea>
           </div>
         </div>
       </form>
@@ -49,18 +55,26 @@
 
   <script type="text/ng-template" id="teststepGridNameCellTemplate.html">
     <div class="ui-grid-cell-contents">
-      <div><a ui-sref="teststep_edit({ testcaseId: row.entity.testcaseId, teststepId: row.entity.id })">{{COL_FIELD}}</a></div>
+      <div>
+        <a ui-sref="teststep_edit({ testcaseId: row.entity.testcaseId, teststepId: row.entity.id })">{{COL_FIELD}}</a>
+      </div>
     </div>
   </script>
   <script type="text/ng-template" id="teststepGridIntfaceCellTemplate.html">
     <div class="ui-grid-cell-contents">
-      <div ng-if="row.entity.intfaceId"><a ng-click="grid.appScope.goto('intface_edit', {intfaceId: row.entity.intfaceId})" href="">{{COL_FIELD}}</a></div>
+      <div ng-if="row.entity.intfaceId">
+        <a ng-click="grid.appScope.goto('intface_edit', {intfaceId: row.entity.intfaceId})" href="">{{COL_FIELD}}</a>
+      </div>
       <div ng-if="! row.entity.intfaceId">Quick SOAP Test</div>
     </div>
   </script>
   <script type="text/ng-template" id="teststepGridDeleteCellTemplate.html">
     <div class="ui-grid-cell-contents">
-      <div><a ng-click="grid.appScope.removeTeststep(row.entity)" href=""><i class="glyphicon glyphicon-trash center-block text-center"></i></a></div>
+      <div>
+        <a ng-click="grid.appScope.removeTeststep(row.entity)" href="">
+          <i class="glyphicon glyphicon-trash center-block text-center"></i>
+        </a>
+      </div>
     </div>
   </script>
 </div>
