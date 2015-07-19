@@ -1,26 +1,14 @@
 'use strict';
 
-angular.module('service-testing-tool').controller('TeststepsController', ['$scope', 'Teststeps', '$location',
-  '$stateParams', '$state', 'uiGridConstants', '$http', '_', '$timeout', 'PageNavigation',
-  function($scope, Teststeps, $location, $stateParams, $state, uiGridConstants, $http, _, $timeout, PageNavigation) {
+angular.module('service-testing-tool').controller('TeststepsController', ['$scope', 'Teststeps', 'Assertions',
+  '$location', '$stateParams', '$state', 'uiGridConstants', '$http', '_', '$timeout', 'PageNavigation',
+  function($scope, Teststeps, Assertions, $location, $stateParams, $state, uiGridConstants, $http, _,
+        $timeout, PageNavigation) {
     $scope.teststep = {};
     $scope.saveSuccessful = null;
     $scope.tempData = {};
     $scope.showAssertionsArea = false;
     $scope.showAssertionDetails = false;
-
-    $scope.toggleAssertionsArea = function() {
-      document.getElementById('request-response-textareas').style.height =
-        (document.getElementById('request-response-textareas').offsetHeight +
-        document.getElementById('assertionsArea').offsetHeight) + 'px';
-      $scope.showAssertionsArea = !($scope.showAssertionsArea);
-    };
-
-    $scope.assertionsAreaVisibleCallback = function() {
-      document.getElementById('request-response-textareas').style.height =
-          (document.getElementById('request-response-textareas').offsetHeight -
-          document.getElementById('assertionsArea').offsetHeight) + 'px';
-    };
 
     $scope.update = function(isValid) {
       if (isValid) {
@@ -100,24 +88,6 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
       $state.go(state, params);
     };
 
-    $scope.find = function() {
-      $scope.columnDefs = [
-        {
-          name: 'name', width: 200, minWidth: 100,
-          sort: {
-            direction: uiGridConstants.ASC,
-            priority: 1
-          },
-          cellTemplate: 'gridCellTemplate.html'
-        },
-        {name: 'description', width: 585, minWidth: 300}
-      ];
-
-      Teststeps.query(function(teststeps) {
-        $scope.teststeps = teststeps;
-      });
-    };
-
     $scope.findOne = function() {
       Teststeps.get({
         testcaseId: $stateParams.testcaseId,
@@ -143,9 +113,35 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
         });
     };
 
+    $scope.toggleAssertionsArea = function() {
+      document.getElementById('request-response-textareas').style.height =
+        (document.getElementById('request-response-textareas').offsetHeight +
+        document.getElementById('assertionsArea').offsetHeight) + 'px';
+
+      $scope.showAssertionsArea = !($scope.showAssertionsArea);
+    };
+
+    $scope.assertionsAreaVisibleCallback = function() {
+      document.getElementById('request-response-textareas').style.height =
+          (document.getElementById('request-response-textareas').offsetHeight -
+          document.getElementById('assertionsArea').offsetHeight) + 'px';
+
+      //  load assertion list
+      Assertions.query(
+        {
+          testcaseId: $stateParams.testcaseId,
+          teststepId: $stateParams.teststepId
+        },
+        function(response) {
+          $scope.assertions = response;
+        }, function(error) {
+          alert('Error');
+        });
+    };
+
     $scope.assertionColumnDefs = [
       {
-        name: 'name', width: 200, minWidth: 200,
+        name: 'name', width: 250, minWidth: 250,
         sort: {
           direction: uiGridConstants.ASC,
           priority: 1

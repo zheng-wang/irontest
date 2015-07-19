@@ -33,7 +33,7 @@
           <li><a href="">XPath</a></li>
         </ul>
       </div>
-      <div ui-grid="{data: teststep.assertions, columnDefs: assertionColumnDefs}"
+      <div ui-grid="{data: assertions, columnDefs: assertionColumnDefs}"
           ui-grid-resize-columns ui-grid-move-columns class="ui-grid col-lg-4 assertions-grid"></div>
       <div class="col-lg-6" ng-if="showAssertionDetails">
         <div class="form-group" ng-class="{ 'has-error' : submitted && teststepForm.assertion-name.$invalid }">
