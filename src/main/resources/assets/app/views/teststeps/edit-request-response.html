@@ -1,32 +1,30 @@
 <div class="form-group tab-top-spacer"></div>
-<div class="tab-main-content">
-    <div class="form-group">
-        <div class="col-md-10">
-            <label for="soapAddress" class="col-md-2 control-label">SOAP Address</label>
-            <div class="col-md-8">
-                <input name="soapAddress" type="text" class="form-control" ng-model="teststep.soapAddress" ng-change="autoSave(teststepForm.$valid)" id="soapAddress" placeholder="SOAP Address">
-            </div>
-            <div class="col-md-2">
-                <button type="button" class="btn btn-info" ng-click="invoke(teststep)">Invoke</button>
-            </div>
+<div class="form-group">
+    <div class="col-md-10">
+        <label for="soapAddress" class="col-md-2 control-label">SOAP Address</label>
+        <div class="col-md-8">
+            <input name="soapAddress" type="text" class="form-control" ng-model="teststep.soapAddress" ng-change="autoSave(teststepForm.$valid)" id="soapAddress" placeholder="SOAP Address">
         </div>
-    </div>
-    <div class="form-group full-height" id="request-response-textareas">
-        <div class="col-md-6 full-height">
-            <textarea name="request" ng-model="teststep.request" ng-change="autoSave(teststepForm.$valid)" id="request" placeholder="Request" class="form-control full-height-important"></textarea>
-        </div>
-        <div class="col-md-6 full-height">
-            <textarea name="response" ng-model="tempData.response" id="response" placeholder="Response" class="form-control full-height-important"></textarea>
-        </div>
-    </div>
-    <div class="form-group" id="assertionsArea">
-        <div class="col-md-12" style="background: green;" ng-if="showAssertionsArea" ng-init="assertionsAreaVisibleCallback()">
-            <h1>Assertions Area</h1>
-        </div>
-    </div>
-    <div class="form-group">
         <div class="col-md-2">
-            <button type="button" class="btn btn-info" ng-click="toggleAssertionsArea()">Assertions</button>
+            <button type="button" class="btn btn-info" ng-click="invoke(teststep)">Invoke</button>
         </div>
+    </div>
+</div>
+<div class="form-group" id="request-response-textareas">
+    <div class="col-md-6 full-height">
+        <textarea name="request" ng-model="teststep.request" ng-change="autoSave(teststepForm.$valid)" id="request" placeholder="Request" class="form-control full-height-important"></textarea>
+    </div>
+    <div class="col-md-6 full-height">
+        <textarea name="response" ng-model="tempData.response" id="response" placeholder="Response" class="form-control full-height-important"></textarea>
+    </div>
+</div>
+<div class="form-group" id="assertionsArea">
+    <div class="col-md-12" style="background: green;" ng-if="showAssertionsArea" ng-init="assertionsAreaVisibleCallback()">
+        <h1>Assertions Area</h1>
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-md-2">
+        <button type="button" class="btn btn-info" ng-click="toggleAssertionsArea()">Assertions</button>
     </div>
 </div>
