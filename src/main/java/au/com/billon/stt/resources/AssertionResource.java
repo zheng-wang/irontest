@@ -26,6 +26,7 @@ public class AssertionResource {
         assertion.serializeProperties();
         long id = dao.insert(assertion);
         assertion.setId(id);
+        assertion.setPropertiesString(null);
         return assertion;
     }
 

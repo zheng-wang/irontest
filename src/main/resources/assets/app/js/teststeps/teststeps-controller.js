@@ -126,13 +126,15 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
           (document.getElementById('request-response-textareas').offsetHeight -
           document.getElementById('assertionsArea').offsetHeight) + 'px';
 
-      //  load assertion list
+      $scope.findAssertions();
+    };
+
+    $scope.findAssertions = function() {
       Assertions.query(
         {
           testcaseId: $stateParams.testcaseId,
           teststepId: $stateParams.teststepId
-        },
-        function(response) {
+        }, function(response) {
           $scope.assertions = response;
         }, function(error) {
           alert('Error');
@@ -155,10 +157,28 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
     ];
 
     $scope.createContainsAssertion = function() {
-      $scope.assertion = {
+      var assertion = new Assertions({
         name: 'Response contains value',
-        contains: 'title'
-      };
+        type: 'Contains',
+        properties: [
+          { name: 'contains', value: 'value' }
+        ]
+      });
+
+      assertion.$save({
+        testcaseId: $stateParams.testcaseId,
+        teststepId: $stateParams.teststepId
+      }, function(response) {
+        $scope.assertion = response;
+
+        //  bind the assertion properties to UI
+        $scope.assertion.contains = _.findWhere($scope.assertion.properties, { name: 'contains' }).value;
+
+        $scope.findAssertions();
+      }, function(error) {
+        alert('Error');
+      });
+
       $scope.showAssertionDetails = true;
     }
   }
