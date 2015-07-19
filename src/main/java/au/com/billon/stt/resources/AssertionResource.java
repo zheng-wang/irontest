@@ -2,6 +2,7 @@ package au.com.billon.stt.resources;
 
 import au.com.billon.stt.db.AssertionDAO;
 import au.com.billon.stt.models.Assertion;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -21,8 +22,9 @@ public class AssertionResource {
     }
 
     @POST
-    public Assertion create(@PathParam("teststepId") long teststepId, Assertion assertion) {
+    public Assertion create(@PathParam("teststepId") long teststepId, Assertion assertion) throws JsonProcessingException {
         assertion.setTeststepId(teststepId);
+        assertion.serializeProperties();
         long id = dao.insert(assertion);
         assertion.setId(id);
         return assertion;

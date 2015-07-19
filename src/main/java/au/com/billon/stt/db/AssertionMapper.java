@@ -13,7 +13,8 @@ import java.sql.SQLException;
 public class AssertionMapper implements ResultSetMapper<Assertion> {
     public Assertion map(int index, ResultSet rs, StatementContext ctx) throws SQLException {
         Assertion assertion = new Assertion(rs.getLong("id"), rs.getLong("teststep_id"), rs.getString("name"),
-                rs.getString("type"), rs.getTimestamp("created"), rs.getTimestamp("updated"));
+                rs.getString("type"), rs.getString("properties"),
+                rs.getTimestamp("created"), rs.getTimestamp("updated"));
         return assertion;
     }
 }
