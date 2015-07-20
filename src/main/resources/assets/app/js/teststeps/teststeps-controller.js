@@ -4,21 +4,24 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
   '$location', '$stateParams', '$state', 'uiGridConstants', '$http', '_', '$timeout', 'PageNavigation',
   function($scope, Teststeps, Assertions, $location, $stateParams, $state, uiGridConstants, $http, _,
         $timeout, PageNavigation) {
-    var teststepAutoSaveTimer;
-    var assertionAutoSaveTimer;
+    var timer;
     $scope.teststep = {};
-    $scope.saveSuccessful = null;
+    //  use object instead of primitives, so that child scope can update the values
+    $scope.savingStatus = {
+      saveSuccessful: null,
+      savingErrorMessage: null
+    };
     $scope.tempData = {};
     $scope.showAssertionsArea = false;
 
     $scope.update = function(isValid) {
       if (isValid) {
         $scope.teststep.$update(function(response) {
-          $scope.saveSuccessful = true;
+          $scope.savingStatus.saveSuccessful = true;
           $scope.teststep = response;
         }, function(error) {
-          $scope.savingErrorMessage = error.data.message;
-          $scope.saveSuccessful = false;
+          $scope.savingStatus.savingErrorMessage = error.data.message;
+          $scope.savingStatus.saveSuccessful = false;
         });
       } else {
         $scope.submitted = true;
@@ -26,8 +29,8 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
     };
 
     $scope.autoSave = function(isValid) {
-      if (teststepAutoSaveTimer) $timeout.cancel(teststepAutoSaveTimer);
-      teststepAutoSaveTimer = $timeout(function() {
+      if (timer) $timeout.cancel(timer);
+      timer = $timeout(function() {
         $scope.update(isValid);
       }, 2000);
     };
@@ -135,32 +138,6 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
       document.getElementById('request-response-textareas').style.height =
           (document.getElementById('request-response-textareas').offsetHeight -
           document.getElementById('assertionsArea').offsetHeight) + 'px';
-    };
-
-    $scope.updateAssertion = function(isValid) {
-      if (isValid) {
-        $scope.assertion.$update({
-          testcaseId: $stateParams.testcaseId,
-          teststepId: $stateParams.teststepId
-        }, function(response) {
-          $scope.saveSuccessful = true;
-          $scope.assertion = response;
-          //  re-sort the rows
-          $scope.gridApi.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
-        }, function(error) {
-          $scope.savingErrorMessage = error.data.message;
-          $scope.saveSuccessful = false;
-        });
-      } else {
-        $scope.submitted = true;
-      }
-    };
-
-    $scope.autoSaveAssertion = function(isValid) {
-      if (assertionAutoSaveTimer) $timeout.cancel(assertionAutoSaveTimer);
-      assertionAutoSaveTimer = $timeout(function() {
-        $scope.updateAssertion(isValid);
-      }, 2000);
     };
 
     $scope.editAssertion = function(assertion) {

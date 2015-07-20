@@ -1,12 +1,14 @@
 'use strict';
 
 angular.module('service-testing-tool').controller('AssertionsController', ['$scope', 'Assertions',
-  '$stateParams', 'uiGridConstants',
-  function($scope, Assertions, $stateParams, uiGridConstants) {
+  '$stateParams', 'uiGridConstants', '$timeout',
+  function($scope, Assertions, $stateParams, uiGridConstants, $timeout) {
     //  use this to avoid conflict with parent scope
     $scope.assertionsModelObj = {
       showAssertionDetails: false
     };
+
+    var timer;
 
     $scope.assertionsModelObj.gridOptions = {
       columnDefs: [
@@ -59,6 +61,32 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
       });
 
       $scope.assertionsModelObj.showAssertionDetails = true;
+    };
+
+    $scope.assertionsModelObj.update = function(isValid) {
+      if (isValid) {
+        $scope.assertionsModelObj.assertion.$update({
+          testcaseId: $stateParams.testcaseId,
+          teststepId: $stateParams.teststepId
+        }, function(response) {
+          $scope.$parent.savingStatus.saveSuccessful = true;
+          $scope.assertionsModelObj.assertion = response;
+          //  re-sort the rows
+          $scope.assertionsModelObj.gridApi.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
+        }, function(error) {
+          $scope.$parent.savingStatus.savingErrorMessage = error.data.message;
+          $scope.$parent.savingStatus.saveSuccessful = false;
+        });
+      } else {
+        $scope.$parent.savingStatus.submitted = true;
+      }
+    };
+
+    $scope.assertionsModelObj.autoSave = function(isValid) {
+      if (timer) $timeout.cancel(timer);
+      timer = $timeout(function() {
+        $scope.assertionsModelObj.update(isValid);
+      }, 2000);
     };
   }
 ]);

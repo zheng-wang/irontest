@@ -15,7 +15,7 @@
       <label for="assertion-name" class="col-lg-3 control-label">Assertion Name</label>
       <div class="col-lg-9">
         <input name="assertion-name" type="text" class="form-control" ng-model="assertionsModelObj.assertion.name"
-               ng-change="assertionsModelObj.autoSaveAssertion(teststepForm.$valid)" id="assertion-name" placeholder="Name" maxlength="200" required>
+               ng-change="assertionsModelObj.autoSave(teststepForm.$valid)" id="assertion-name" placeholder="Name" maxlength="200" required>
         <div ng-show="submitted && teststepForm.assertion-name.$invalid" class="help-block">
           <p ng-show="teststepForm.assertion-name.$error.required">Assertion Name is required</p>
         </div>
@@ -25,7 +25,7 @@
       <label for="assertion-contains" class="col-lg-3 control-label">Contains</label>
       <div class="col-lg-9">
             <textarea name="assertion-contains" ng-model="assertionsModelObj.assertion.properties.contains" id="assertion-contains"
-                      cols="10" rows="5" ng-change="assertionsModelObj.autoSaveAssertion(teststepForm.$valid)" placeholder="Value"
+                      cols="10" rows="5" ng-change="assertionsModelObj.autoSave(teststepForm.$valid)" placeholder="Value"
                       class="form-control" required></textarea>
         <div ng-show="submitted && teststepForm.assertion-contains.$invalid" class="help-block">
           <p ng-show="teststepForm.assertion-contains.$error.required">Contains is required</p>
