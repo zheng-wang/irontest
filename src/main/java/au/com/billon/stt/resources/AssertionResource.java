@@ -32,7 +32,7 @@ public class AssertionResource {
     }
 
     @GET
-    public List<Assertion> findAll() {
-        return dao.findAll();
+    public List<Assertion> findAll(@PathParam("teststepId") long teststepId) {
+        return dao.findByTeststepId(teststepId);
     }
 }

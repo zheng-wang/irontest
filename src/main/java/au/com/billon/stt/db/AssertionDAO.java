@@ -40,8 +40,8 @@ public abstract class AssertionDAO {
                 assertion.getId());
     }
 
-    @SqlQuery("select * from assertion")
-    public abstract List<Assertion> findAll();
+    @SqlQuery("select * from assertion where teststep_id = :teststepId")
+    public abstract List<Assertion> findByTeststepId(@Bind("teststepId") long teststepId);
 
     @SqlQuery("select * from assertion where id = :id")
     public abstract Assertion findById(@Bind("id") long id);
