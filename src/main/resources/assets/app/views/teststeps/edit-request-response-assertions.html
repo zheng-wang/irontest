@@ -1,0 +1,49 @@
+<div class="row" ng-controller="AssertionsController" ng-init="assertionsModelObj.findAll()">
+  <div class="btn-group col-lg-1" dropdown is-open="status.isopen">
+    <button type="button" class="btn btn-info dropdown-toggle" dropdown-toggle ng-disabled="disabled">
+      Create <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+      <li><a ng-click="createContainsAssertion()" href="">Contains</a></li>
+      <li><a href="">XPath</a></li>
+    </ul>
+  </div>
+  <div ui-grid="assertionsModelObj.gridOptions" ui-grid-resize-columns ui-grid-move-columns
+       class="ui-grid col-lg-4 assertions-grid"></div>
+  <div class="col-lg-6" ng-if="showAssertionDetails">
+    <div class="form-group" ng-class="{ 'has-error' : submitted && teststepForm.assertion-name.$invalid }">
+      <label for="assertion-name" class="col-lg-3 control-label">Assertion Name</label>
+      <div class="col-lg-9">
+        <input name="assertion-name" type="text" class="form-control" ng-model="assertion.name"
+               ng-change="autoSaveAssertion(teststepForm.$valid)" id="assertion-name" placeholder="Name" maxlength="200" required>
+        <div ng-show="submitted && teststepForm.assertion-name.$invalid" class="help-block">
+          <p ng-show="teststepForm.assertion-name.$error.required">Assertion Name is required</p>
+        </div>
+      </div>
+    </div>
+    <div class="form-group" ng-class="{ 'has-error' : submitted && teststepForm.assertion-contains.$invalid }">
+      <label for="assertion-contains" class="col-lg-3 control-label">Contains</label>
+      <div class="col-lg-9">
+            <textarea name="assertion-contains" ng-model="assertion.properties.contains" id="assertion-contains"
+                      cols="10" rows="5" ng-change="autoSaveAssertion(teststepForm.$valid)" placeholder="Value"
+                      class="form-control" required></textarea>
+        <div ng-show="submitted && teststepForm.assertion-contains.$invalid" class="help-block">
+          <p ng-show="teststepForm.assertion-contains.$error.required">Contains is required</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/ng-template" id="assertionGridNameCellTemplate.html">
+  <div class="ui-grid-cell-contents">
+    <div><a ng-click="grid.appScope.editAssertion(row.entity)" href="">{{COL_FIELD}}</a>
+    </div>
+  </div>
+</script>
+<script type="text/ng-template" id="assertionGridDeleteCellTemplate.html">
+  <div class="ui-grid-cell-contents">
+    <div><a ng-click="grid.appScope.removeAssertion(row.entity)" href="">
+      <i class="glyphicon glyphicon-trash center-block text-center"></i></a></div>
+  </div>
+</script>
+<div ng-init="assertionsAreaVisibleCallback()"></div>

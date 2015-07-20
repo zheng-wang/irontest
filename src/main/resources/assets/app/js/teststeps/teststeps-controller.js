@@ -136,40 +136,6 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
       document.getElementById('request-response-textareas').style.height =
           (document.getElementById('request-response-textareas').offsetHeight -
           document.getElementById('assertionsArea').offsetHeight) + 'px';
-
-      $scope.findAssertions();
-    };
-
-    $scope.findAssertions = function() {
-      Assertions.query(
-        {
-          testcaseId: $stateParams.testcaseId,
-          teststepId: $stateParams.teststepId
-        }, function(response) {
-          $scope.assertionGridOptions.data = response;
-        }, function(error) {
-          alert('Error');
-        });
-    };
-
-    $scope.assertionGridOptions = {
-      columnDefs: [
-        {
-          name: 'name', width: 250, minWidth: 250,
-          sort: {
-            direction: uiGridConstants.ASC,
-            priority: 1
-          },
-          cellTemplate: 'assertionGridNameCellTemplate.html'
-        },
-        {name: 'type', width: 100, minWidth: 100},
-        {name: 'delete', width: 100, minWidth: 100, enableSorting: false,
-          cellTemplate: 'assertionGridDeleteCellTemplate.html'
-        }
-      ],
-      onRegisterApi: function (gridApi) {
-        $scope.gridApi = gridApi;
-      }
     };
 
     $scope.createContainsAssertion = function() {
