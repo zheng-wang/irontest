@@ -169,6 +169,7 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
 
     $scope.createContainsAssertion = function() {
       var assertion = new Assertions({
+        teststepId: $stateParams.teststepId,
         name: 'Response contains value',
         type: 'Contains',
         properties: { contains: 'value' }

@@ -20,8 +20,8 @@ public class AssertionDeserializer extends JsonDeserializer<Assertion> {
                                  DeserializationContext deserializationContext) throws IOException {
 
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
-        long id = node.get("id") == null ? 0 : node.get("id").longValue();
-        long teststepId = node.get("teststepId") == null ? 0 : node.get("teststepId").longValue();
+        long id = node.get("id") == null ? 0 : node.get("id").asLong();
+        long teststepId = node.get("teststepId") == null ? 0 : node.get("teststepId").asLong();
         String name = node.get("name") == null ? null : node.get("name").textValue();
         String type = node.get("type") == null ? null : node.get("type").textValue();
         Properties properties = null;
@@ -30,8 +30,8 @@ public class AssertionDeserializer extends JsonDeserializer<Assertion> {
                 properties =  new ObjectMapper().treeToValue(node.get("properties"), ContainsAssertionProperties.class);
             }
         }
-        Date created = node.get("created") == null ? null : new Date(node.get("created").longValue());
-        Date updated = node.get("updated") == null ? null : new Date(node.get("updated").longValue());
+        Date created = node.get("created") == null ? null : new Date(node.get("created").asLong());
+        Date updated = node.get("updated") == null ? null : new Date(node.get("updated").asLong());
 
         return new Assertion(id, teststepId, name, type, properties, created, updated);
     }
