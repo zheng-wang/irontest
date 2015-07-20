@@ -4,7 +4,9 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
   '$stateParams', 'uiGridConstants',
   function($scope, Assertions, $stateParams, uiGridConstants) {
     //  use this to avoid conflict with parent scope
-    $scope.assertionsModelObj = {};
+    $scope.assertionsModelObj = {
+      showAssertionDetails: false
+    };
 
     $scope.assertionsModelObj.gridOptions = {
       columnDefs: [
@@ -38,6 +40,25 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
         });
     };
 
+    $scope.assertionsModelObj.createContainsAssertion = function() {
+      var assertion = new Assertions({
+        teststepId: $stateParams.teststepId,
+        name: 'Response contains value',
+        type: 'Contains',
+        properties: { contains: 'value' }
+      });
 
+      assertion.$save({
+        testcaseId: $stateParams.testcaseId,
+        teststepId: $stateParams.teststepId
+      }, function(response) {
+        $scope.assertionsModelObj.assertion = response;
+        $scope.assertionsModelObj.gridOptions.data.push($scope.assertionsModelObj.assertion);
+      }, function(error) {
+        alert('Error');
+      });
+
+      $scope.assertionsModelObj.showAssertionDetails = true;
+    };
   }
 ]);

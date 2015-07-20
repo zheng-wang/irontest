@@ -10,7 +10,6 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
     $scope.saveSuccessful = null;
     $scope.tempData = {};
     $scope.showAssertionsArea = false;
-    $scope.showAssertionDetails = false;
 
     $scope.update = function(isValid) {
       if (isValid) {
@@ -136,27 +135,6 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
       document.getElementById('request-response-textareas').style.height =
           (document.getElementById('request-response-textareas').offsetHeight -
           document.getElementById('assertionsArea').offsetHeight) + 'px';
-    };
-
-    $scope.createContainsAssertion = function() {
-      var assertion = new Assertions({
-        teststepId: $stateParams.teststepId,
-        name: 'Response contains value',
-        type: 'Contains',
-        properties: { contains: 'value' }
-      });
-
-      assertion.$save({
-        testcaseId: $stateParams.testcaseId,
-        teststepId: $stateParams.teststepId
-      }, function(response) {
-        $scope.assertion = response;
-        $scope.assertionGridOptions.data.push($scope.assertion);
-      }, function(error) {
-        alert('Error');
-      });
-
-      $scope.showAssertionDetails = true;
     };
 
     $scope.updateAssertion = function(isValid) {
