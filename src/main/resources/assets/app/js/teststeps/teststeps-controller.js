@@ -23,7 +23,7 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
           $scope.savingStatus.saveSuccessful = false;
         });
       } else {
-        $scope.submitted = true;
+        $scope.savingStatus.submitted = true;
       }
     };
 

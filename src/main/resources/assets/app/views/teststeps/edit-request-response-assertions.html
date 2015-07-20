@@ -11,24 +11,24 @@
   <div ui-grid="assertionsModelObj.gridOptions" ui-grid-resize-columns ui-grid-move-columns
        class="ui-grid col-lg-4 assertions-grid"></div>
   <div class="col-lg-6" ng-if="assertionsModelObj.showAssertionDetails">
-    <div class="form-group" ng-class="{ 'has-error' : submitted && teststepForm.assertion-name.$invalid }">
-      <label for="assertion-name" class="col-lg-3 control-label">Assertion Name</label>
+    <div class="form-group" ng-class="{ 'has-error' : $parent.savingStatus.submitted && teststepForm.assertionName.$invalid }">
+      <label for="assertionName" class="col-lg-3 control-label">Assertion Name</label>
       <div class="col-lg-9">
-        <input name="assertion-name" type="text" class="form-control" ng-model="assertionsModelObj.assertion.name"
-               ng-change="assertionsModelObj.autoSave(teststepForm.$valid)" id="assertion-name" placeholder="Name" maxlength="200" required>
-        <div ng-show="submitted && teststepForm.assertion-name.$invalid" class="help-block">
-          <p ng-show="teststepForm.assertion-name.$error.required">Assertion Name is required</p>
+        <input name="assertionName" type="text" class="form-control" ng-model="assertionsModelObj.assertion.name"
+               ng-change="assertionsModelObj.autoSave(teststepForm.$valid)" id="assertionName" placeholder="Name" maxlength="200" required>
+        <div ng-show="$parent.savingStatus.submitted && teststepForm.assertionName.$invalid" class="help-block">
+          <p ng-show="teststepForm.assertionName.$error.required">Assertion Name is required</p>
         </div>
       </div>
     </div>
-    <div class="form-group" ng-class="{ 'has-error' : submitted && teststepForm.assertion-contains.$invalid }">
-      <label for="assertion-contains" class="col-lg-3 control-label">Contains</label>
+    <div class="form-group" ng-class="{ 'has-error' : $parent.savingStatus.submitted && teststepForm.assertionContains.$invalid }">
+      <label for="assertionContains" class="col-lg-3 control-label">Contains</label>
       <div class="col-lg-9">
-            <textarea name="assertion-contains" ng-model="assertionsModelObj.assertion.properties.contains" id="assertion-contains"
+            <textarea name="assertionContains" ng-model="assertionsModelObj.assertion.properties.contains" id="assertionContains"
                       cols="10" rows="5" ng-change="assertionsModelObj.autoSave(teststepForm.$valid)" placeholder="Value"
                       class="form-control" required></textarea>
-        <div ng-show="submitted && teststepForm.assertion-contains.$invalid" class="help-block">
-          <p ng-show="teststepForm.assertion-contains.$error.required">Contains is required</p>
+        <div ng-show="$parent.savingStatus.submitted && teststepForm.assertionContains.$invalid" class="help-block">
+          <p ng-show="teststepForm.assertionContains.$error.required">Contains is required</p>
         </div>
       </div>
     </div>
