@@ -36,13 +36,13 @@
 </div>
 <script type="text/ng-template" id="assertionGridNameCellTemplate.html">
   <div class="ui-grid-cell-contents">
-    <div><a ng-click="grid.appScope.editAssertion(row.entity)" href="">{{COL_FIELD}}</a>
+    <div><a ng-click="grid.appScope.assertionsModelObj.edit(row.entity)" href="">{{COL_FIELD}}</a>
     </div>
   </div>
 </script>
 <script type="text/ng-template" id="assertionGridDeleteCellTemplate.html">
   <div class="ui-grid-cell-contents">
-    <div><a ng-click="grid.appScope.removeAssertion(row.entity)" href="">
+    <div><a ng-click="grid.appScope.assertionsModelObj.remove(row.entity)" href="">
       <i class="glyphicon glyphicon-trash center-block text-center"></i></a></div>
   </div>
 </script>

@@ -88,5 +88,10 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
         $scope.assertionsModelObj.update(isValid);
       }, 2000);
     };
+
+    $scope.assertionsModelObj.edit = function(assertion) {
+      $scope.assertionsModelObj.assertion = assertion;
+      $scope.assertionsModelObj.showAssertionDetails = true;
+    };
   }
 ]);

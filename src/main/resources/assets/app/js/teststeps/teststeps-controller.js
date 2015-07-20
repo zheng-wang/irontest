@@ -1,9 +1,8 @@
 'use strict';
 
-angular.module('service-testing-tool').controller('TeststepsController', ['$scope', 'Teststeps', 'Assertions',
-  '$location', '$stateParams', '$state', 'uiGridConstants', '$http', '_', '$timeout', 'PageNavigation',
-  function($scope, Teststeps, Assertions, $location, $stateParams, $state, uiGridConstants, $http, _,
-        $timeout, PageNavigation) {
+angular.module('service-testing-tool').controller('TeststepsController', ['$scope', 'Teststeps',
+  '$location', '$stateParams', '$state', '$http', '_', '$timeout', 'PageNavigation',
+  function($scope, Teststeps, $location, $stateParams, $state, $http, _, $timeout, PageNavigation) {
     var timer;
     $scope.teststep = {};
     //  use object instead of primitives, so that child scope can update the values
@@ -138,11 +137,6 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
       document.getElementById('request-response-textareas').style.height =
           (document.getElementById('request-response-textareas').offsetHeight -
           document.getElementById('assertionsArea').offsetHeight) + 'px';
-    };
-
-    $scope.editAssertion = function(assertion) {
-      $scope.assertion = assertion;
-      $scope.showAssertionDetails = true;
     };
   }
 ]);
