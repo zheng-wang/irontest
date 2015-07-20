@@ -146,26 +146,31 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
           testcaseId: $stateParams.testcaseId,
           teststepId: $stateParams.teststepId
         }, function(response) {
-          $scope.assertions = response;
+          $scope.assertionGridOptions.data = response;
         }, function(error) {
           alert('Error');
         });
     };
 
-    $scope.assertionColumnDefs = [
-      {
-        name: 'name', width: 250, minWidth: 250,
-        sort: {
-          direction: uiGridConstants.ASC,
-          priority: 1
+    $scope.assertionGridOptions = {
+      columnDefs: [
+        {
+          name: 'name', width: 250, minWidth: 250,
+          sort: {
+            direction: uiGridConstants.ASC,
+            priority: 1
+          },
+          cellTemplate: 'assertionGridNameCellTemplate.html'
         },
-        cellTemplate: 'assertionGridNameCellTemplate.html'
-      },
-      {name: 'type', width: 100, minWidth: 100},
-      {name: 'delete', width: 100, minWidth: 100, enableSorting: false,
-        cellTemplate: 'assertionGridDeleteCellTemplate.html'
+        {name: 'type', width: 100, minWidth: 100},
+        {name: 'delete', width: 100, minWidth: 100, enableSorting: false,
+          cellTemplate: 'assertionGridDeleteCellTemplate.html'
+        }
+      ],
+      onRegisterApi: function (gridApi) {
+        $scope.gridApi = gridApi;
       }
-    ];
+    };
 
     $scope.createContainsAssertion = function() {
       var assertion = new Assertions({
@@ -180,7 +185,7 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
         teststepId: $stateParams.teststepId
       }, function(response) {
         $scope.assertion = response;
-        $scope.findAssertions();
+        $scope.assertionGridOptions.data.push($scope.assertion);
       }, function(error) {
         alert('Error');
       });
@@ -195,8 +200,9 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
           teststepId: $stateParams.teststepId
         }, function(response) {
           $scope.saveSuccessful = true;
-           $scope.assertion = response;
-           $scope.findAssertions();
+          $scope.assertion = response;
+          //  re-sort the rows
+          $scope.gridApi.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
         }, function(error) {
           $scope.savingErrorMessage = error.data.message;
           $scope.saveSuccessful = false;
@@ -211,6 +217,11 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
       assertionAutoSaveTimer = $timeout(function() {
         $scope.updateAssertion(isValid);
       }, 2000);
+    };
+
+    $scope.editAssertion = function(assertion) {
+      $scope.assertion = assertion;
+      $scope.showAssertionDetails = true;
     };
   }
 ]);

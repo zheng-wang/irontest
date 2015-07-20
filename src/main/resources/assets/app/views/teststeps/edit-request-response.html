@@ -33,8 +33,8 @@
           <li><a href="">XPath</a></li>
         </ul>
       </div>
-      <div ui-grid="{data: assertions, columnDefs: assertionColumnDefs}"
-          ui-grid-resize-columns ui-grid-move-columns class="ui-grid col-lg-4 assertions-grid"></div>
+      <div ui-grid="assertionGridOptions" ui-grid-resize-columns ui-grid-move-columns
+          class="ui-grid col-lg-4 assertions-grid"></div>
       <div class="col-lg-6" ng-if="showAssertionDetails">
         <div class="form-group" ng-class="{ 'has-error' : submitted && teststepForm.assertion-name.$invalid }">
           <label for="assertion-name" class="col-lg-3 control-label">Assertion Name</label>
@@ -70,13 +70,13 @@
 
 <script type="text/ng-template" id="assertionGridNameCellTemplate.html">
     <div class="ui-grid-cell-contents">
-        <div><a href="#">{{COL_FIELD}}</a>
+        <div><a ng-click="grid.appScope.editAssertion(row.entity)" href="">{{COL_FIELD}}</a>
         </div>
     </div>
 </script>
 <script type="text/ng-template" id="assertionGridDeleteCellTemplate.html">
     <div class="ui-grid-cell-contents">
-        <div><a ng-click="grid.appScope.removeAssertion(row.entity)" href=""><i
-                class="glyphicon glyphicon-trash center-block text-center"></i></a></div>
+        <div><a ng-click="grid.appScope.removeAssertion(row.entity)" href="">
+          <i class="glyphicon glyphicon-trash center-block text-center"></i></a></div>
     </div>
 </script>
