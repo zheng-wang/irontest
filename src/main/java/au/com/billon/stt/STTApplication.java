@@ -46,7 +46,6 @@ public class STTApplication extends Application<STTConfiguration> {
         final EndpointDAO endpointDAO = jdbi.onDemand(EndpointDAO.class);
         final TestcaseDAO testcaseDAO = jdbi.onDemand(TestcaseDAO.class);
         final TeststepDAO teststepDAO = jdbi.onDemand(TeststepDAO.class);
-        final TeststepPropertyDAO teststepPropertyDAO = jdbi.onDemand(TeststepPropertyDAO.class);
         final AssertionDAO assertionDAO = jdbi.onDemand(AssertionDAO.class);
         final IntfaceDAO intfaceDAO = jdbi.onDemand(IntfaceDAO.class);
         final EnvironmentDAO environmentDAO = jdbi.onDemand(EnvironmentDAO.class);
@@ -58,7 +57,6 @@ public class STTApplication extends Application<STTConfiguration> {
         endpointDAO.createTableIfNotExists();
         testcaseDAO.createTableIfNotExists();
         teststepDAO.createTableIfNotExists();
-        teststepPropertyDAO.createTableIfNotExists();
         assertionDAO.createTableIfNotExists();
         intfaceDAO.createTableIfNotExists();
         intfaceDAO.initSystemData();
@@ -70,7 +68,7 @@ public class STTApplication extends Application<STTConfiguration> {
         environment.jersey().register(new ArticleResource(articleDAO));
         environment.jersey().register(new EndpointResource(endpointDAO, endpointdtlDAO));
         environment.jersey().register(new TestcaseResource(testcaseDAO, teststepDAO));
-        environment.jersey().register(new TeststepResource(teststepDAO, teststepPropertyDAO));
+        environment.jersey().register(new TeststepResource(teststepDAO));
         environment.jersey().register(new AssertionResource(assertionDAO));
         environment.jersey().register(new WSDLResource());
         environment.jersey().register(new IntfaceResource(intfaceDAO));

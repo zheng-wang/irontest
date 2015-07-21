@@ -2,7 +2,6 @@ package au.com.billon.stt.resources;
 
 import au.com.billon.stt.Utils;
 import au.com.billon.stt.db.TeststepDAO;
-import au.com.billon.stt.db.TeststepPropertyDAO;
 import au.com.billon.stt.models.SOAPTeststepInvocationRequestProperties;
 import au.com.billon.stt.models.Teststep;
 import au.com.billon.stt.models.TeststepInvocationRequest;
@@ -19,17 +18,15 @@ import javax.xml.transform.TransformerException;
  */
 @Path("/testcases/{testcaseId}/teststeps") @Produces({ MediaType.APPLICATION_JSON })
 public class TeststepResource {
-    private final TeststepDAO stepDAO;
-    private final TeststepPropertyDAO propertyDAO;
+    private final TeststepDAO dao;
 
-    public TeststepResource(TeststepDAO stepDAO, TeststepPropertyDAO propertyDAO) {
-        this.stepDAO = stepDAO;
-        this.propertyDAO = propertyDAO;
+    public TeststepResource(TeststepDAO dao) {
+        this.dao = dao;
     }
 
     @POST
     public Teststep create(Teststep teststep) throws JsonProcessingException {
-        long id = stepDAO.insert(teststep);
+        long id = dao.insert(teststep);
         teststep.setId(id);
         teststep.setRequest(null);  //  no need to bring request to client at this point
         return teststep;
@@ -38,18 +35,18 @@ public class TeststepResource {
     @GET
     @Path("{teststepId}")
     public Teststep findById(@PathParam("teststepId") long teststepId) {
-        return stepDAO.findById(teststepId);
+        return dao.findById(teststepId);
     }
 
     @PUT @Path("{teststepId}")
     public Teststep update(Teststep teststep) throws JsonProcessingException {
-        stepDAO.update(teststep);
+        dao.update(teststep);
         return findById(teststep.getId());
     }
 
     @DELETE @Path("{teststepId}")
     public void delete(@PathParam("teststepId") long teststepId) {
-        stepDAO.deleteById(teststepId);
+        dao.deleteById(teststepId);
     }
 
     // This is not a REST service. It is actually an RPC through JSON.
