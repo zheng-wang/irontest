@@ -50,7 +50,9 @@ public class TestcaseResource {
         Testcase result = testcaseDAO.findById(testcaseId);
         List<Teststep> teststeps = teststepDAO.findByTestcaseId(testcaseId);
         for(Teststep teststep: teststeps) {
-            teststep.setRequest(null);     //  no need to bring request to client at this point
+            //  remove unneeded data to save bandwidth
+            teststep.setRequest(null);
+            teststep.setProperties(null);
         }
         result.setTeststeps(teststeps);
         return result;
