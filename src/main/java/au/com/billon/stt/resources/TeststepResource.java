@@ -3,7 +3,10 @@ package au.com.billon.stt.resources;
 import au.com.billon.stt.Utils;
 import au.com.billon.stt.db.TeststepDAO;
 import au.com.billon.stt.db.TeststepPropertyDAO;
-import au.com.billon.stt.models.*;
+import au.com.billon.stt.models.SOAPTeststepInvocationRequestProperties;
+import au.com.billon.stt.models.Teststep;
+import au.com.billon.stt.models.TeststepInvocationRequest;
+import au.com.billon.stt.models.TeststepInvocationResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.reficio.ws.client.core.SoapClient;
 
@@ -39,15 +42,9 @@ public class TeststepResource {
     }
 
     @PUT @Path("{teststepId}")
-    public SOAPTeststep update(SOAPTeststep teststep) {
+    public Teststep update(Teststep teststep) throws JsonProcessingException {
         stepDAO.update(teststep);
-        TeststepProperty soapAddressProperty = new TeststepProperty(
-                teststep.getId(),
-                TeststepProperty.PROPERTY_NAME_SOAP_ADDRESS,
-                teststep.getSoapAddress());
-        propertyDAO.updateByTeststepIdAndPropertyName(soapAddressProperty);
-        //return findById(teststep.getId());
-        return null;
+        return findById(teststep.getId());
     }
 
     @DELETE @Path("{teststepId}")

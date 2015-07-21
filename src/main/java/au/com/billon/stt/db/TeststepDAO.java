@@ -7,7 +7,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.reficio.ws.builder.SoapBuilder;
 import org.reficio.ws.builder.SoapOperation;
 import org.reficio.ws.builder.core.Wsdl;
-import org.skife.jdbi.v2.sqlobject.*;
+import org.skife.jdbi.v2.sqlobject.Bind;
+import org.skife.jdbi.v2.sqlobject.GetGeneratedKeys;
+import org.skife.jdbi.v2.sqlobject.SqlQuery;
+import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
 import java.util.List;
@@ -51,8 +54,17 @@ public abstract class TeststepDAO {
                 teststep.getIntfaceId() == 0 ? null : teststep.getIntfaceId());
     }
 
-    @SqlUpdate("update teststep set name = :name, description = :description, request = :request, intfaceId = :intfaceId, updated = CURRENT_TIMESTAMP where id = :id")
-    public abstract int update(@BindBean Teststep teststep);
+    @SqlUpdate("update teststep set name = :name, description = :description, request = :request, " +
+            "properties = :properties, intfaceId = :intfaceId, updated = CURRENT_TIMESTAMP where id = :id")
+    public abstract int update(@Bind("name") String name, @Bind("description") String description,
+                               @Bind("request") String request, @Bind("properties") String properties,
+                               @Bind("intfaceId") Long intfaceId, @Bind("id") long id);
+
+    public int update(Teststep teststep) throws JsonProcessingException {
+        return update(teststep.getName(), teststep.getDescription(), teststep.getRequest(),
+                new ObjectMapper().writeValueAsString(teststep.getProperties()),
+                teststep.getIntfaceId() == 0 ? null : teststep.getIntfaceId(), teststep.getId());
+    }
 
     @SqlUpdate("delete from teststep where id = :id")
     public abstract void deleteById(@Bind("id") long id);
