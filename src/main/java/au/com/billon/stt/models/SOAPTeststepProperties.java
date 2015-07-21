@@ -1,30 +1,13 @@
 package au.com.billon.stt.models;
 
-import java.util.Date;
-import java.util.List;
-
 /**
- * Created by Zheng on 12/07/2015.
+ * Created by Zheng on 21/07/2015.
  */
-public class SOAPTeststep extends Teststep {
+public class SOAPTeststepProperties extends Properties {
     private String wsdlUrl;
     private String wsdlBindingName;
     private String wsdlOperationName;
     private String soapAddress;
-
-    public SOAPTeststep() {
-//        super(TEST_STEP_TYPE_SOAP);
-    }
-
-    public SOAPTeststep(Teststep teststep) {
-//        super(teststep.getId(), teststep.getTestcaseId(), teststep.getName(), TEST_STEP_TYPE_SOAP,
-//                teststep.getDescription(), teststep.getCreated(), teststep.getUpdated(), teststep.getRequest(), teststep.getIntfaceId());
-    }
-
-    public SOAPTeststep(long id, long testcaseId, String name, String description,
-                        Date created, Date updated, String request, long intfaceId) {
-//        super(id, testcaseId, name, TEST_STEP_TYPE_SOAP, description, created, updated, request, intfaceId);
-    }
 
     public String getWsdlUrl() {
         return wsdlUrl;

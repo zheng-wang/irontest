@@ -1,12 +1,13 @@
 package au.com.billon.stt.models;
 
-import java.sql.Timestamp;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by Zheng on 7/07/2015.
  */
+@JsonDeserialize(using=TeststepDeserializer.class)
 public class Teststep {
     public static final String TEST_STEP_TYPE_SOAP = "SOAP";
     private long id;
@@ -17,21 +18,20 @@ public class Teststep {
     private String request;
     private long intfaceId;
     private Intface intface;
+    private Properties properties;
     private Date created;
     private Date updated;
 
     public Teststep() {}
 
-    public Teststep(String type) {
-        this.type = type;
-    }
-
-    public Teststep(long id, long testcaseId, String name, String type, String description, Date created, Date updated, String request, long intfaceId) {
+    public Teststep(long id, long testcaseId, String name, String type, String description, Properties properties,
+                    Date created, Date updated, String request, long intfaceId) {
         this.id = id;
         this.testcaseId = testcaseId;
         this.name = name;
         this.type = type;
         this.description = description;
+        this.properties = properties;
         this.created = created;
         this.updated = updated;
         this.request = request;
@@ -115,5 +115,13 @@ public class Teststep {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public Properties getProperties() {
+        return properties;
+    }
+
+    public void setProperties(Properties properties) {
+        this.properties = properties;
     }
 }

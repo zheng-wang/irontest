@@ -27,7 +27,6 @@ public abstract class AssertionDAO {
                 @Bind("type") String type, @Bind("properties") String properties);
 
     public long insert(Assertion assertion) throws JsonProcessingException {
-        System.out.println(assertion.getTeststepId());
         return insert(assertion.getTeststepId(), assertion.getName(), assertion.getType(),
                 new ObjectMapper().writeValueAsString(assertion.getProperties()));
     }

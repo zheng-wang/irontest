@@ -4,6 +4,7 @@ import au.com.billon.stt.Utils;
 import au.com.billon.stt.db.TeststepDAO;
 import au.com.billon.stt.db.TeststepPropertyDAO;
 import au.com.billon.stt.models.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.reficio.ws.builder.SoapBuilder;
 import org.reficio.ws.builder.SoapOperation;
 import org.reficio.ws.builder.core.Wsdl;
@@ -27,23 +28,10 @@ public class TeststepResource {
     }
 
     @POST
-    public Teststep create(SOAPTeststep teststep) {
-        //  create sample soap request
-        Wsdl wsdl = Wsdl.parse(teststep.getWsdlUrl());
-        SoapBuilder builder = wsdl.binding().localPart(teststep.getWsdlBindingName()).find();
-        SoapOperation operation = builder.operation().name(teststep.getWsdlOperationName()).find();
-        teststep.setRequest(builder.buildInputMessage(operation));
-
-        //  create test step
+    public Teststep create(Teststep teststep) throws JsonProcessingException {
         long id = stepDAO.insert(teststep);
         teststep.setId(id);
         teststep.setRequest(null);  //  no need to bring request to client at this point
-
-        //  create test step properties
-        TeststepProperty property = new TeststepProperty(teststep.getId(),
-                TeststepProperty.PROPERTY_NAME_SOAP_ADDRESS, builder.getServiceUrls().get(0));
-        propertyDAO.insert(property);
-
         return teststep;
     }
 
