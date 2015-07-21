@@ -3,13 +3,13 @@ package au.com.billon.stt.models;
 /**
  * Created by Zheng on 18/07/2015.
  */
-public class SOAPInvocationResponse {
+public class TeststepInvocationResponse {
     private String response;
 
 
-    public SOAPInvocationResponse() {}
+    public TeststepInvocationResponse() {}
 
-    public SOAPInvocationResponse(String response) {
+    public TeststepInvocationResponse(String response) {
         this.response = response;
     }
 

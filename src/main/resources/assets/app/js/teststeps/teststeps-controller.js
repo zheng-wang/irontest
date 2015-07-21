@@ -117,8 +117,11 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
        var url = 'api/testcases/' + $stateParams.testcaseId + '/teststeps/' + $stateParams.teststepId + '/invoke';
        $http
         .post(url, {
-          soapAddress: $scope.teststep.soapAddress,
-          request: $scope.teststep.request
+          type: 'SOAP',
+          request: $scope.teststep.request,
+          properties: {
+            soapAddress: $scope.teststep.properties.soapAddress
+          }
         })
         .success(function(data, status) {
           $scope.tempData.response = data.response;

@@ -58,10 +58,17 @@ public class TeststepResource {
     // This is not a REST service. It is actually an RPC through JSON.
     // It is implemented for simplicity for now.
     @POST @Path("{teststepId}/invoke")
-    public SOAPInvocationResponse invoke(TeststepInvocation invocation) throws TransformerException {
-        SoapClient client = SoapClient.builder().endpointUri(invocation.getSoapAddress()).build();
-        String response = client.post(invocation.getRequest());
-        SOAPInvocationResponse result = new SOAPInvocationResponse(Utils.prettyPrintXML(response));
-        return result;
+    public TeststepInvocationResponse invoke(TeststepInvocationRequest invocationRequest) throws TransformerException {
+        TeststepInvocationResponse invocationResponse = null;
+
+        if (TeststepInvocationRequest.TESTSTEP_INVOCATION_TYPE_SOAP.equals(invocationRequest.getType())) {
+            SOAPTeststepInvocationRequestProperties properties =
+                    (SOAPTeststepInvocationRequestProperties) invocationRequest.getProperties();
+            SoapClient client = SoapClient.builder().endpointUri(properties.getSoapAddress()).build();
+            String response = client.post(invocationRequest.getRequest());
+            invocationResponse = new TeststepInvocationResponse(Utils.prettyPrintXML(response));
+        }
+
+        return invocationResponse;
     }
 }
