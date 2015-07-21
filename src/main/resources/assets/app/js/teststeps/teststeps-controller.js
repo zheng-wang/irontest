@@ -63,9 +63,12 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
           testcaseId: $stateParams.testcaseId,
           name: this.teststep.name,
           description: this.teststep.description,
-          wsdlUrl: this.teststep.wsdlUrl,
-          wsdlBindingName: this.teststep.wsdlBinding.name,
-          wsdlOperationName: this.teststep.wsdlOperation
+          type: 'SOAP',
+          properties: {
+            wsdlUrl: this.teststep.wsdlUrl,
+            wsdlBindingName: this.teststep.wsdlBinding.name,
+            wsdlOperationName: this.teststep.wsdlOperation
+          }
         });
         teststep.$save(function(response) {
           $state.go('teststep_edit', {testcaseId: response.testcaseId, teststepId: response.id});
