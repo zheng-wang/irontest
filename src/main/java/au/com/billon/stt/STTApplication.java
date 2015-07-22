@@ -55,14 +55,14 @@ public class STTApplication extends Application<STTConfiguration> {
         //  create database tables        
         articleDAO.createTableIfNotExists();
         endpointDAO.createTableIfNotExists();
-        testcaseDAO.createTableIfNotExists();
-        teststepDAO.createTableIfNotExists();
-        assertionDAO.createTableIfNotExists();
+        endpointdtlDAO.createTableIfNotExists();
         intfaceDAO.createTableIfNotExists();
         intfaceDAO.initSystemData();
         environmentDAO.createTableIfNotExists();
         enventryDAO.createTableIfNotExists();
-        endpointdtlDAO.createTableIfNotExists();
+        testcaseDAO.createTableIfNotExists();
+        teststepDAO.createTableIfNotExists();
+        assertionDAO.createTableIfNotExists();
 
         //  register REST resources
         environment.jersey().register(new ArticleResource(articleDAO));
