@@ -1,8 +1,9 @@
 package au.com.billon.stt.db;
 
 import au.com.billon.stt.models.Assertion;
+import au.com.billon.stt.models.AssertionProperties;
 import au.com.billon.stt.models.ContainsAssertionProperties;
-import au.com.billon.stt.models.Properties;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.skife.jdbi.v2.StatementContext;
 import org.skife.jdbi.v2.tweak.ResultSetMapper;
@@ -17,7 +18,7 @@ import java.sql.SQLException;
 public class AssertionMapper implements ResultSetMapper<Assertion> {
     public Assertion map(int index, ResultSet rs, StatementContext ctx) throws SQLException {
         String type = rs.getString("type");
-        Properties properties = null;
+        AssertionProperties properties = null;
         try {
             if (Assertion.ASSERTION_TYPE_CONTAINS.equals(type)) {
                 properties = new ObjectMapper().readValue(

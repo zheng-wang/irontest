@@ -1,6 +1,5 @@
 package au.com.billon.stt.models;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import java.util.Date;
@@ -8,20 +7,19 @@ import java.util.Date;
 /**
  * Created by Zheng on 19/07/2015.
  */
-@JsonDeserialize(using=AssertionDeserializer.class)
 public class Assertion {
     public static final String ASSERTION_TYPE_CONTAINS = "Contains";
     private long id;
     private long teststepId;
     private String name;
     private String type;
-    private Properties properties;
+    private AssertionProperties properties;
     private Date created;
     private Date updated;
 
     public Assertion() {}
 
-    public Assertion(long id, long teststepId, String name, String type, Properties properties, Date created, Date updated) {
+    public Assertion(long id, long teststepId, String name, String type, AssertionProperties properties, Date created, Date updated) {
         this.id = id;
         this.teststepId = teststepId;
         this.name = name;
@@ -79,11 +77,12 @@ public class Assertion {
         this.updated = updated;
     }
 
-    public Properties getProperties() throws JsonProcessingException {
+    public AssertionProperties getProperties() {
         return properties;
     }
 
-    public void setProperties(Properties properties) {
+    @JsonDeserialize(using=AssertionPropertiesDeserializer.class)
+    public void setProperties(AssertionProperties properties) {
         this.properties = properties;
     }
 }

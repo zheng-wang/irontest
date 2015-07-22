@@ -1,12 +1,9 @@
 package au.com.billon.stt.models;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 /**
  * Created by Zheng on 19/07/2015.
  */
-public class ContainsAssertionProperties extends Properties {
+public class ContainsAssertionProperties extends AssertionProperties {
     private String contains;
 
     public String getContains() {
