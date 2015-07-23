@@ -35,4 +35,9 @@ public class AssertionResource {
     public List<Assertion> findAll(@PathParam("teststepId") long teststepId) {
         return dao.findByTeststepId(teststepId);
     }
+
+    @DELETE @Path("{assertionId}")
+    public void delete(@PathParam("assertionId") long assertionId) {
+        dao.deleteById(assertionId);
+    }
 }

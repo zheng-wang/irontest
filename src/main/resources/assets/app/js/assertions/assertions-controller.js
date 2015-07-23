@@ -93,5 +93,16 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
       $scope.assertionsModelObj.assertion = assertion;
       $scope.assertionsModelObj.showAssertionDetails = true;
     };
+
+    $scope.assertionsModelObj.remove = function(assertion) {
+      assertion.$remove({
+        testcaseId: $stateParams.testcaseId,
+        teststepId: $stateParams.teststepId
+      }, function(response) {
+        $scope.assertionsModelObj.findAll();
+      }, function(error) {
+        alert('Error');
+      });
+    };
   }
 ]);
