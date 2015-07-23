@@ -5,14 +5,15 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 /**
  * Created by Zheng on 12/07/2015.
  */
-@JsonDeserialize(using=TeststepInvocationRequestDeserializer.class)
 public class TeststepInvocationRequest {
     public static final String TESTSTEP_INVOCATION_TYPE_SOAP = "SOAP";
     private String type;
     private String request;
-    private Properties properties;
+    private TeststepInvocationRequestProperties properties;
 
-    public TeststepInvocationRequest(String type, String request, Properties properties) {
+    public TeststepInvocationRequest() {}
+
+    public TeststepInvocationRequest(String type, String request, TeststepInvocationRequestProperties properties) {
         this.type = type;
         this.request = request;
         this.properties = properties;
@@ -34,11 +35,12 @@ public class TeststepInvocationRequest {
         this.type = type;
     }
 
-    public Properties getProperties() {
+    public TeststepInvocationRequestProperties getProperties() {
         return properties;
     }
 
-    public void setProperties(Properties properties) {
+    @JsonDeserialize(using=TeststepInvocationRequestPropertiesDeserializer.class)
+    public void setProperties(TeststepInvocationRequestProperties properties) {
         this.properties = properties;
     }
 }

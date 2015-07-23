@@ -3,7 +3,6 @@ package au.com.billon.stt.db;
 import au.com.billon.stt.models.Assertion;
 import au.com.billon.stt.models.AssertionProperties;
 import au.com.billon.stt.models.ContainsAssertionProperties;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.skife.jdbi.v2.StatementContext;
 import org.skife.jdbi.v2.tweak.ResultSetMapper;

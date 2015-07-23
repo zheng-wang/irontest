@@ -1,6 +1,9 @@
 package au.com.billon.stt.db;
 
-import au.com.billon.stt.models.*;
+import au.com.billon.stt.models.Intface;
+import au.com.billon.stt.models.SOAPTeststepProperties;
+import au.com.billon.stt.models.Teststep;
+import au.com.billon.stt.models.TeststepProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.skife.jdbi.v2.StatementContext;
 import org.skife.jdbi.v2.tweak.ResultSetMapper;
