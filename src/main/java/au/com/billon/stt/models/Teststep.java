@@ -17,14 +17,16 @@ public class Teststep {
     private String request;
     private long intfaceId;
     private Intface intface;
+    private long endpointId;
+    private Endpoint endpoint;
     private TeststepProperties properties;
     private Date created;
     private Date updated;
 
     public Teststep() {}
 
-    public Teststep(long id, long testcaseId, String name, String type, String description,
-                    TeststepProperties properties, Date created, Date updated, String request, long intfaceId) {
+    public Teststep(long id, long testcaseId, String name, String type, String description, TeststepProperties properties,
+                    Date created, Date updated, String request, long intfaceId, long endpointId) {
         this.id = id;
         this.testcaseId = testcaseId;
         this.name = name;
@@ -35,7 +37,7 @@ public class Teststep {
         this.updated = updated;
         this.request = request;
         this.intfaceId = intfaceId;
-        this.intface = intface;
+        this.endpointId = endpointId;
     }
 
     public long getId() {
@@ -84,6 +86,22 @@ public class Teststep {
 
     public void setIntfaceId(long intfaceId) {
         this.intfaceId = intfaceId;
+    }
+
+    public long getEndpointId() {
+        return endpointId;
+    }
+
+    public void setEndpointId(long endpointId) {
+        this.endpointId = endpointId;
+    }
+
+    public Endpoint getEndpoint() {
+        return endpoint;
+    }
+
+    public void setEndpoint(Endpoint endpoint) {
+        this.endpoint = endpoint;
     }
 
     public Intface getIntface() {

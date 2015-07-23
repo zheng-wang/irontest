@@ -1,9 +1,6 @@
 package au.com.billon.stt.db;
 
-import au.com.billon.stt.models.Intface;
-import au.com.billon.stt.models.SOAPTeststepProperties;
-import au.com.billon.stt.models.Teststep;
-import au.com.billon.stt.models.TeststepProperties;
+import au.com.billon.stt.models.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.skife.jdbi.v2.StatementContext;
 import org.skife.jdbi.v2.tweak.ResultSetMapper;
@@ -29,12 +26,17 @@ public class TeststepMapper implements ResultSetMapper<Teststep> {
 
         Teststep teststep = new Teststep(rs.getLong("id"), rs.getLong("testcase_id"), rs.getString("name"),
                 rs.getString("type"), rs.getString("description"), properties, rs.getTimestamp("created"),
-                rs.getTimestamp("updated"), rs.getString("request"), rs.getLong("intfaceId"));
+                rs.getTimestamp("updated"), rs.getString("request"), rs.getLong("intfaceId"), rs.getLong("endpointId"));
 
         Intface intface = new Intface();
         intface.setName(rs.getString("intfaceName"));
 
         teststep.setIntface(intface);
+
+        Endpoint endpoint = new Endpoint();
+        endpoint.setName(rs.getString("endpointName"));
+
+        teststep.setEndpoint(endpoint);
 
         return teststep;
     }
