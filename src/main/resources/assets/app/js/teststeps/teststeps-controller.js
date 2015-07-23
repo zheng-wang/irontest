@@ -35,6 +35,9 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
     };
 
     $scope.loadWsdl = function() {
+      if ($scope.teststep.intfaceId && $scope.teststep.intface.deftype==='WSDL') {
+        $scope.teststep.wsdlUrl = $scope.teststep.intface.defurl;
+      }
       $http
         .get('api/wsdls/anywsdl/operations', {
           params: {
@@ -64,6 +67,7 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
           name: this.teststep.name,
           description: this.teststep.description,
           type: 'SOAP',
+          intfaceId: this.teststep.intfaceId,
           properties: {
             wsdlUrl: this.teststep.wsdlUrl,
             wsdlBindingName: this.teststep.wsdlBinding.name,
