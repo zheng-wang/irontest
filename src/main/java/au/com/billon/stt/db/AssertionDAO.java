@@ -3,7 +3,10 @@ package au.com.billon.stt.db;
 import au.com.billon.stt.models.Assertion;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.skife.jdbi.v2.sqlobject.*;
+import org.skife.jdbi.v2.sqlobject.Bind;
+import org.skife.jdbi.v2.sqlobject.GetGeneratedKeys;
+import org.skife.jdbi.v2.sqlobject.SqlQuery;
+import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
 import java.util.List;
@@ -44,4 +47,7 @@ public abstract class AssertionDAO {
 
     @SqlQuery("select * from assertion where id = :id")
     public abstract Assertion findById(@Bind("id") long id);
+
+    @SqlUpdate("delete from assertion where id = :id")
+    public abstract void deleteById(@Bind("id") long id);
 }
