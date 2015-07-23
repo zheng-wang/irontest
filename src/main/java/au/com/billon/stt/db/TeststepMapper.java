@@ -15,7 +15,7 @@ import java.sql.SQLException;
 public class TeststepMapper implements ResultSetMapper<Teststep> {
     public Teststep map(int index, ResultSet rs, StatementContext ctx) throws SQLException {
         String type = rs.getString("type");
-        Properties properties = null;
+        TeststepProperties properties = null;
         try {
             if (Teststep.TEST_STEP_TYPE_SOAP.equals(type)) {
                 properties = new ObjectMapper().readValue(rs.getString("properties"), SOAPTeststepProperties.class);

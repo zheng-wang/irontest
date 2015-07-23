@@ -7,7 +7,6 @@ import java.util.Date;
 /**
  * Created by Zheng on 7/07/2015.
  */
-@JsonDeserialize(using=TeststepDeserializer.class)
 public class Teststep {
     public static final String TEST_STEP_TYPE_SOAP = "SOAP";
     private long id;
@@ -18,14 +17,14 @@ public class Teststep {
     private String request;
     private long intfaceId;
     private Intface intface;
-    private Properties properties;
+    private TeststepProperties properties;
     private Date created;
     private Date updated;
 
     public Teststep() {}
 
-    public Teststep(long id, long testcaseId, String name, String type, String description, Properties properties,
-                    Date created, Date updated, String request, long intfaceId) {
+    public Teststep(long id, long testcaseId, String name, String type, String description,
+                    TeststepProperties properties, Date created, Date updated, String request, long intfaceId) {
         this.id = id;
         this.testcaseId = testcaseId;
         this.name = name;
@@ -117,11 +116,12 @@ public class Teststep {
         this.type = type;
     }
 
-    public Properties getProperties() {
+    public TeststepProperties getProperties() {
         return properties;
     }
 
-    public void setProperties(Properties properties) {
+    @JsonDeserialize(using=TeststepPropertiesDeserializer.class)
+    public void setProperties(TeststepProperties properties) {
         this.properties = properties;
     }
 }
