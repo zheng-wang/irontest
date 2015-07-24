@@ -29,11 +29,13 @@ public class TeststepMapper implements ResultSetMapper<Teststep> {
                 rs.getTimestamp("updated"), rs.getString("request"), rs.getLong("intfaceId"), rs.getLong("endpointId"));
 
         Intface intface = new Intface();
+        intface.setId(rs.getLong("intfaceId"));
         intface.setName(rs.getString("intfaceName"));
 
         teststep.setIntface(intface);
 
         Endpoint endpoint = new Endpoint();
+        endpoint.setId(rs.getLong("endpointId"));
         endpoint.setName(rs.getString("endpointName"));
 
         teststep.setEndpoint(endpoint);

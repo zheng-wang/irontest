@@ -1,5 +1,8 @@
 package au.com.billon.stt.handlers;
 
+import au.com.billon.stt.Utils;
+import org.reficio.ws.client.core.SoapClient;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +14,9 @@ public class SOAPHandler implements STTHandler {
     public SOAPHandler() { }
 
     public String invoke(String request, Map<String, String> details) throws Exception {
-        return null;
+        SoapClient client = SoapClient.builder().endpointUri(details.get("url")).build();
+        String response = client.post(request);
+        return Utils.prettyPrintXML(response);
     }
 
     public List<String> getProperties() {

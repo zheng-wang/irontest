@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('service-testing-tool').controller('TeststepsController', ['$scope', 'Teststeps',
+angular.module('service-testing-tool').controller('TeststepsController', ['$scope', 'Teststeps', 'Testruns',
   '$location', '$stateParams', '$state', '$http', '_', '$timeout', 'PageNavigation',
-  function($scope, Teststeps, $location, $stateParams, $state, $http, _, $timeout, PageNavigation) {
+  function($scope, Teststeps, Testruns, $location, $stateParams, $state, $http, _, $timeout, PageNavigation) {
     var timer;
     $scope.teststep = {};
     //  use object instead of primitives, so that child scope can update the values
@@ -118,24 +118,25 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
     };
 
     $scope.invoke = function(teststep) {
-      var url = 'api/testcases/' + $stateParams.testcaseId + '/teststeps/' + $stateParams.teststepId + '/invoke';
-      if ($scope.teststep.endpointId && $scope.teststep.endpoint.handler==='SOAPHandler') {
-        $scope.teststep.properties.soapAddress = $scope.teststep.endpoint.details[0].value;
-      }
-      $http
-        .post(url, {
-          type: 'SOAP',
+      var testrun;
+      if ($scope.teststep.endpointId) {
+        testrun = {
           request: $scope.teststep.request,
-          properties: {
-            soapAddress: $scope.teststep.properties.soapAddress
-          }
-        })
-        .success(function(data, status) {
-          $scope.tempData.response = data.response;
-        })
-        .error(function(data, status) {
-          alert('Error');
-        });
+          endpoint: $scope.teststep.endpoint
+        };
+      } else {
+        testrun = {
+          request: $scope.teststep.request,
+          details: $scope.teststep.properties
+        };
+      }
+
+      var testrunRes = new Testruns(testrun);
+      testrunRes.$save(function(response) {
+        $scope.tempData.response = response.response;
+      }, function(error) {
+        alert('Error');
+      });
     };
 
     $scope.toggleAssertionsArea = function() {
