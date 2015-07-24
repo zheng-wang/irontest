@@ -118,8 +118,11 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
     };
 
     $scope.invoke = function(teststep) {
-       var url = 'api/testcases/' + $stateParams.testcaseId + '/teststeps/' + $stateParams.teststepId + '/invoke';
-       $http
+      var url = 'api/testcases/' + $stateParams.testcaseId + '/teststeps/' + $stateParams.teststepId + '/invoke';
+      if ($scope.teststep.endpointId && $scope.teststep.endpoint.handler==='SOAPHandler') {
+        $scope.teststep.properties.soapAddress = $scope.teststep.endpoint.details[0].value;
+      }
+      $http
         .post(url, {
           type: 'SOAP',
           request: $scope.teststep.request,
