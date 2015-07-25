@@ -53,8 +53,7 @@ angular.module('service-testing-tool').controller('EndpointsController', ['$scop
         titleMap: [
           {value: "DBHandler", name: "DBHandler"},
           {value: "SOAPHandler", name: "SOAPHandler"},
-          {value: "MQHandler", name: "MQHandler"},
-          {value: "", name: ""}
+          {value: "MQHandler", name: "MQHandler"}
         ],
         onChange: function (modelValue, form) {
           Endpoints.getProperties({
