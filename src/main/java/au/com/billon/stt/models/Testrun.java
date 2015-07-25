@@ -8,32 +8,24 @@ import java.util.Map;
  * Created by Trevor Li on 7/24/15.
  */
 public class Testrun {
+    private List<Long> testcaseIds;
     private List<Testcase> testcases;
+    private long testcaseId;
     private Testcase testcase;
+    private List<Long> teststepIds;
     private List<Teststep> teststeps;
+    private long teststepId;
     private Teststep teststep;
     private String request;
     private String response;
+    private long environmentId;
     private Environment environment;
+    private long endpointId;
     private Endpoint endpoint;
     private Map<String, String> details;
     private Date created;
 
     public Testrun() {
-    }
-
-    public Testrun(List<Testcase> testcases, Testcase testcase, List<Teststep> teststeps, Teststep teststep, String request, String response,
-                   Environment environment, Endpoint endpoint, Map<String, String> details, Date created) {
-        this.testcases = testcases;
-        this.testcase = testcase;
-        this.teststeps = teststeps;
-        this.teststep = teststep;
-        this.request = request;
-        this.response = response;
-        this.environment = environment;
-        this.endpoint = endpoint;
-        this.details = details;
-        this.created = created;
     }
 
     public List<Testcase> getTestcases() {
@@ -106,6 +98,54 @@ public class Testrun {
 
     public void setDetails(Map<String, String> details) {
         this.details = details;
+    }
+
+    public List<Long> getTestcaseIds() {
+        return testcaseIds;
+    }
+
+    public void setTestcaseIds(List<Long> testcaseIds) {
+        this.testcaseIds = testcaseIds;
+    }
+
+    public long getTestcaseId() {
+        return testcaseId;
+    }
+
+    public void setTestcaseId(long testcaseId) {
+        this.testcaseId = testcaseId;
+    }
+
+    public List<Long> getTeststepIds() {
+        return teststepIds;
+    }
+
+    public void setTeststepIds(List<Long> teststepIds) {
+        this.teststepIds = teststepIds;
+    }
+
+    public long getTeststepId() {
+        return teststepId;
+    }
+
+    public void setTeststepId(long teststepId) {
+        this.teststepId = teststepId;
+    }
+
+    public long getEnvironmentId() {
+        return environmentId;
+    }
+
+    public void setEnvironmentId(long environmentId) {
+        this.environmentId = environmentId;
+    }
+
+    public long getEndpointId() {
+        return endpointId;
+    }
+
+    public void setEndpointId(long endpointId) {
+        this.endpointId = endpointId;
     }
 
     public Date getCreated() {
