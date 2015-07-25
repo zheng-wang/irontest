@@ -45,7 +45,7 @@
             <li><a href="" ng-click="goto('intface_create', null, 'intface')">A New Interface</a></li>
           </ul>
         </div>
-        <div class="col-lg-1">
+        <div ng-if="! teststep.intfaceId || teststep.intface.deftype==='WSDL'" class="col-lg-1">
           <button type="button" class="btn btn-info" ng-click="loadWsdl()">Load</button>
         </div>
       </div>

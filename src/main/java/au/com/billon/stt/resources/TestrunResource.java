@@ -1,5 +1,6 @@
 package au.com.billon.stt.resources;
 
+import au.com.billon.stt.db.EndpointDAO;
 import au.com.billon.stt.db.EndpointDetailDAO;
 import au.com.billon.stt.handlers.HandlerFactory;
 import au.com.billon.stt.models.Endpoint;
@@ -17,10 +18,12 @@ import java.util.Map;
  */
 @Path("/testruns") @Produces({ MediaType.APPLICATION_JSON })
 public class TestrunResource {
-    private final EndpointDetailDAO detailDao;
+    private final EndpointDAO endpointDao;
+    private final EndpointDetailDAO endpointdtlDao;
 
-    public TestrunResource(EndpointDetailDAO detailDao) {
-        this.detailDao = detailDao;
+    public TestrunResource(EndpointDAO endpointDao, EndpointDetailDAO endpointdtlDao) {
+        this.endpointDao = endpointDao;
+        this.endpointdtlDao = endpointdtlDao;
     }
 
     @POST
@@ -31,8 +34,11 @@ public class TestrunResource {
             String response = HandlerFactory.getInstance().getHandler("SOAPHandler").invoke(testrun.getRequest(), testrun.getDetails());
             testrun.setResponse(response);
         } else if (testrun.getEndpoint() != null) {
-            Endpoint endpoint = testrun.getEndpoint();
-            List<EndpointDetail> detailsArray = detailDao.findByEndpoint(endpoint.getId());
+            long endpointId = testrun.getEndpoint().getId();
+            Endpoint endpoint = endpointDao.findById(endpointId);
+            testrun.setEndpoint(endpoint);
+
+            List<EndpointDetail> detailsArray = endpointdtlDao.findByEndpoint(endpointId);
             endpoint.setDetails(detailsArray);
 
             Map<String, String> details = new HashMap<String, String>();
@@ -40,7 +46,7 @@ public class TestrunResource {
                 details.put(detail.getName(), detail.getValue());
             }
 
-            String response = HandlerFactory.getInstance().getHandler("SOAPHandler").invoke(testrun.getRequest(), details);
+            String response = HandlerFactory.getInstance().getHandler(endpoint.getHandler()).invoke(testrun.getRequest(), details);
             testrun.setResponse(response);
         }
 

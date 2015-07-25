@@ -63,17 +63,28 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
     $scope.create = function(isValid) {
       if (isValid) {
         var teststep = new Teststeps({
-          testcaseId: $stateParams.testcaseId,
+          testcaseId: this.teststep.testcaseId,
           name: this.teststep.name,
-          description: this.teststep.description,
-          type: 'SOAP',
-          intfaceId: this.teststep.intfaceId,
-          properties: {
+          description: this.teststep.description
+        });
+        if (this.teststep.intfaceId) {
+          teststep.intfaceId = this.teststep.intfaceId;
+          if (this.teststep.intface.deftype === "WSDL") {
+            teststep.type = 'SOAP';
+            teststep.properties = {
+              wsdlUrl: this.teststep.wsdlUrl,
+              wsdlBindingName: this.teststep.wsdlBinding.name,
+              wsdlOperationName: this.teststep.wsdlOperation
+            };
+          }
+        } else {
+          teststep.type = 'SOAP';
+          teststep.properties = {
             wsdlUrl: this.teststep.wsdlUrl,
             wsdlBindingName: this.teststep.wsdlBinding.name,
             wsdlOperationName: this.teststep.wsdlOperation
-          }
-        });
+          };
+        }
         teststep.$save(function(response) {
           $state.go('teststep_edit', {testcaseId: response.testcaseId, teststepId: response.id});
         }, function(error) {
@@ -111,7 +122,7 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
             $scope.teststep = response;
           });
         } else {
-          // create a new enventry
+          // create a new entry
           $scope.teststep.testcaseId = $stateParams.testcaseId;
         }
       }
