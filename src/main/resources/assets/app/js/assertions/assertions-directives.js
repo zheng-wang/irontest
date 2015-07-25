@@ -18,6 +18,11 @@ angular.module('service-testing-tool').directive('requestResponseTextareas', fun
         scope.showAssertionsArea = !(scope.showAssertionsArea);
         scope.$apply();
       });
+
+      scope.$on('assertionsAreaLoaded', function () {
+        var newHeight = element.height() - document.getElementById('assertionsArea').offsetHeight;
+        element.height(newHeight);
+      })
     }
   };
 });
