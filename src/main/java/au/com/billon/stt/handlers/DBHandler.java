@@ -1,6 +1,7 @@
 package au.com.billon.stt.handlers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.skife.jdbi.v2.DBI;
 import org.skife.jdbi.v2.Handle;
 import org.skife.jdbi.v2.Query;
@@ -24,6 +25,8 @@ public class DBHandler implements STTHandler {
         List<Map<String, Object>> results = query.list();
 
         ObjectMapper mapper = new ObjectMapper();
+
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
 
         StringWriter responseWriter = new StringWriter();
 
