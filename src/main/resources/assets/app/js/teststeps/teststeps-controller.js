@@ -139,14 +139,6 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
       });
     };
 
-    $scope.toggleAssertionsArea = function() {
-      document.getElementById('request-response-textareas').style.height =
-        (document.getElementById('request-response-textareas').offsetHeight +
-        document.getElementById('assertionsArea').offsetHeight) + 'px';
-
-      $scope.showAssertionsArea = !($scope.showAssertionsArea);
-    };
-
     $scope.assertionsAreaVisibleCallback = function() {
       document.getElementById('request-response-textareas').style.height =
           (document.getElementById('request-response-textareas').offsetHeight -

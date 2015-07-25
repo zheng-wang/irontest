@@ -10,6 +10,14 @@ angular.module('service-testing-tool').directive('requestResponseTextareas', fun
       var topOffset = 51 + 76 + 36;     // navbar 51px, page-header 76px, tab heading 36px;
       var tabContentsHeight = window.innerHeight - topOffset;
       element.height(tabContentsHeight * 0.75);
+
+      var toggleButton = angular.element(document.getElementById('assertionAreaToggleButton'));
+      toggleButton.bind('click', function() {
+        var newHeight = element.height() + document.getElementById('assertionsArea').offsetHeight;
+        element.height(newHeight);
+        scope.showAssertionsArea = !(scope.showAssertionsArea);
+        scope.$apply();
+      });
     }
   };
 });
