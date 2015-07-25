@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('service-testing-tool').controller('AssertionsController', ['$scope', 'Assertions',
-  '$stateParams', 'uiGridConstants', '$timeout',
-  function($scope, Assertions, $stateParams, uiGridConstants, $timeout) {
+    '$stateParams', 'uiGridConstants', 'uiGridEditConstants', '$timeout',
+  function($scope, Assertions, $stateParams, uiGridConstants, uiGridEditConstants, $timeout) {
     //  use this to avoid conflict with parent scope
     $scope.assertionsModelObj = {
       showAssertionDetails: false
@@ -18,10 +18,12 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
             direction: uiGridConstants.ASC,
             priority: 1
           },
-          cellTemplate: 'assertionGridNameCellTemplate.html'
+          enableCellEdit: true,
+          cellTemplate: 'assertionGridNameCellTemplate.html',
+          editableCellTemplate: 'assertionGridNameEditableCellTemplate.html'
         },
-        {name: 'type', width: 100, minWidth: 100},
-        {name: 'delete', width: 100, minWidth: 100, enableSorting: false,
+        {name: 'type', width: 100, minWidth: 100, enableCellEdit: false},
+        {name: 'delete', width: 100, minWidth: 100, enableSorting: false, enableCellEdit: false,
           cellTemplate: 'assertionGridDeleteCellTemplate.html'
         }
       ],
@@ -71,8 +73,6 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
         }, function(response) {
           $scope.$parent.savingStatus.saveSuccessful = true;
           $scope.assertionsModelObj.assertion = response;
-          //  re-sort the rows
-          $scope.assertionsModelObj.gridApi.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
         }, function(error) {
           $scope.$parent.savingStatus.savingErrorMessage = error.data.message;
           $scope.$parent.savingStatus.saveSuccessful = false;
@@ -88,6 +88,13 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
         $scope.assertionsModelObj.update(isValid);
       }, 2000);
     };
+
+    $scope.$on(uiGridEditConstants.events.END_CELL_EDIT,
+      function () {
+        //  re-sort the assertion grid rows
+        $scope.assertionsModelObj.gridApi.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
+      }
+    );
 
     $scope.assertionsModelObj.edit = function(assertion) {
       $scope.assertionsModelObj.assertion = assertion;
