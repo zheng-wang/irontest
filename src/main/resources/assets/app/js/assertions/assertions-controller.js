@@ -13,7 +13,7 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
     $scope.assertionsModelObj.gridOptions = {
       columnDefs: [
         {
-          name: 'name', width: 250, minWidth: 250,
+          name: 'name', displayName: 'Name (double click to edit)', width: 250, minWidth: 250,
           sort: {
             direction: uiGridConstants.ASC,
             priority: 1
