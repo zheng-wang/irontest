@@ -24,7 +24,7 @@
     </div>
   </div>
 </div>
-<div class="form-group" id="request-response-textareas">
+<div class="form-group" id="request-response-textareas" ng-init="initReqResTextareasHeight()">
   <div class="col-lg-6 full-height">
     <textarea name="request" ng-model="teststep.request" ng-change="autoSave(teststepForm.$valid)"
         id="request" placeholder="Request" class="form-control full-height-important"></textarea>

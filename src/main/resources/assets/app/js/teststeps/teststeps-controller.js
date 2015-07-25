@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('service-testing-tool').controller('TeststepsController', ['$scope', 'Teststeps', 'Testruns',
-  '$location', '$stateParams', '$state', '$http', '_', '$timeout', 'PageNavigation',
+    '$location', '$stateParams', '$state', '$http', '_', '$timeout', 'PageNavigation',
   function($scope, Teststeps, Testruns, $location, $stateParams, $state, $http, _, $timeout, PageNavigation) {
     var timer;
     $scope.teststep = {};
@@ -152,5 +152,16 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
           (document.getElementById('request-response-textareas').offsetHeight -
           document.getElementById('assertionsArea').offsetHeight) + 'px';
     };
+
+    $scope.initReqResTextareasHeight = function() {
+      var node =  document.getElementById('request-response-textareas');
+      //  Use nearest absolute height node to determine reqResTextareas height.
+      //  Chose window object.
+      //  Not able to use page-wrapper node as it's height is dynamically changed by
+      //  startbootstrap-sb-admin-2 javascript on window resize.
+      var topOffset = 51 + 76 + 36; // navbar 51px, page-header 76px, tab heading 36px;
+      var tabContentsHeight = window.innerHeight - topOffset;
+      node.style.height = (tabContentsHeight * 0.75) + 'px';
+    }
   }
 ]);
