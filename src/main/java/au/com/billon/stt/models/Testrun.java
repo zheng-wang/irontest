@@ -17,7 +17,7 @@ public class Testrun {
     private long teststepId;
     private Teststep teststep;
     private String request;
-    private String response;
+    private Object response;
     private long environmentId;
     private Environment environment;
     private long endpointId;
@@ -68,11 +68,11 @@ public class Testrun {
         this.request = request;
     }
 
-    public String getResponse() {
+    public Object getResponse() {
         return response;
     }
 
-    public void setResponse(String response) {
+    public void setResponse(Object response) {
         this.response = response;
     }
 

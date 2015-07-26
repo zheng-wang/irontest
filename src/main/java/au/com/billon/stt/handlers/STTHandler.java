@@ -9,6 +9,6 @@ import java.util.Map;
  * Created by Trevor Li on 7/14/15.
  */
 public interface STTHandler {
-    public String invoke(String request, Map<String, String> details) throws Exception;
+    public Object invoke(String request, Map<String, String> details) throws Exception;
     public List<String> getProperties();
 }

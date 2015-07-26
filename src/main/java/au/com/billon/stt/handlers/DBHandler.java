@@ -17,24 +17,21 @@ import java.util.Map;
 public class DBHandler implements STTHandler {
     public DBHandler() { }
 
-    public String invoke(String request, Map<String, String> details) throws Exception {
+    public Object invoke(String request, Map<String, String> details) throws Exception {
         DBI jdbi = new DBI(details.get("url"), details.get("username"), details.get("password"));
         Handle handle = jdbi.open();
 
         Query<Map<String, Object>> query = handle.createQuery(request);
         List<Map<String, Object>> results = query.list();
 
-        ObjectMapper mapper = new ObjectMapper();
-
-        mapper.enable(SerializationFeature.INDENT_OUTPUT);
-
-        StringWriter responseWriter = new StringWriter();
-
-        mapper.writeValue(responseWriter, results);
+        // ObjectMapper mapper = new ObjectMapper();
+        // mapper.enable(SerializationFeature.INDENT_OUTPUT);
+        // StringWriter responseWriter = new StringWriter();
+        // mapper.writeValue(responseWriter, results);
 
         handle.close();
 
-        return responseWriter.toString();
+        return results;
     }
 
     public List<String> getProperties() {

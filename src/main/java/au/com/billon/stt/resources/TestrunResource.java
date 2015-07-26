@@ -31,7 +31,7 @@ public class TestrunResource {
         if (testrun.getDetails() != null) {
             Map<String, String> details = testrun.getDetails();
             details.put("url", details.get("wsdlUrl"));
-            String response = HandlerFactory.getInstance().getHandler("SOAPHandler").invoke(testrun.getRequest(), testrun.getDetails());
+            Object response = HandlerFactory.getInstance().getHandler("SOAPHandler").invoke(testrun.getRequest(), testrun.getDetails());
             testrun.setResponse(response);
         } else if (testrun.getEndpointId() > 0) {
             long endpointId = testrun.getEndpointId();
@@ -45,7 +45,7 @@ public class TestrunResource {
                 details.put(detail.getName(), detail.getValue());
             }
 
-            String response = HandlerFactory.getInstance().getHandler(endpoint.getHandler()).invoke(testrun.getRequest(), details);
+            Object response = HandlerFactory.getInstance().getHandler(endpoint.getHandler()).invoke(testrun.getRequest(), details);
             testrun.setResponse(response);
         }
 
