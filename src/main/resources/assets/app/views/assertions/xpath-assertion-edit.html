@@ -2,7 +2,7 @@
      ng-class="{ 'has-error' : $parent.savingStatus.submitted && teststepForm.assertionContains.$invalid }">
   <label for="assertionXPath" class="col-lg-2 control-label">XPath</label>
   <div class="col-lg-8">
-    <textarea name="assertionXPath" ng-model="assertionsModelObj.assertion.properties.xpath"
+    <textarea name="assertionXPath" ng-model="assertionsModelObj.assertion.properties.xPath"
               id="assertionXPath" rows="3" class="form-control" placeholder="XPath" required>
     </textarea>
     <div ng-show="$parent.savingStatus.submitted && teststepForm.assertionXPath.$invalid" class="help-block">

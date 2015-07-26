@@ -9,6 +9,7 @@ import java.util.Date;
  */
 public class Assertion {
     public static final String ASSERTION_TYPE_CONTAINS = "Contains";
+    public static final String ASSERTION_TYPE_XPATH = "XPath";
     private long id;
     private long teststepId;
     private String name;

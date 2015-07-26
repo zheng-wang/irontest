@@ -99,14 +99,12 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
         name: 'XPath evaluates to value',
         type: 'XPath',
         properties: {
-         xpath: 'true',
+         xPath: 'true',
          expectedValue: 'true'
         }
       });
 
-      $scope.assertionsModelObj.assertion = assertion;
-      $scope.assertionsModelObj.gridOptions.data.push(assertion);
-      selectCurrentAssertionInGrid();
+      createAssertion(assertion);
     };
 
     $scope.assertionsModelObj.update = function(isValid) {

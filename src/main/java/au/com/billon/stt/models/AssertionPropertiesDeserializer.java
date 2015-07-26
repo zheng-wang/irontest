@@ -21,6 +21,10 @@ public class AssertionPropertiesDeserializer extends JsonDeserializer<AssertionP
         Assertion assertion = (Assertion) jsonParser.getCurrentValue();
         if (Assertion.ASSERTION_TYPE_CONTAINS.equals(assertion.getType())) {
             properties = new ObjectMapper().treeToValue(node, ContainsAssertionProperties.class);
+        } else if (Assertion.ASSERTION_TYPE_XPATH.equals(assertion.getType())) {
+            properties = new ObjectMapper().treeToValue(node, XPathAssertionProperties.class);
+        } else {
+            throw new IOException("Unrecognized assertion type " + assertion.getType());
         }
 
         return properties;
