@@ -1,3 +1,33 @@
-<div>
-  XPath Assertion Edit
+<div class="form-group"
+     ng-class="{ 'has-error' : $parent.savingStatus.submitted && teststepForm.assertionContains.$invalid }">
+  <label for="assertionXPath" class="col-lg-2 control-label">XPath</label>
+  <div class="col-lg-8">
+    <textarea name="assertionXPath" ng-model="assertionsModelObj.assertion.properties.xpath"
+              id="assertionXPath" rows="3" class="form-control" placeholder="XPath" required>
+    </textarea>
+    <div ng-show="$parent.savingStatus.submitted && teststepForm.assertionXPath.$invalid" class="help-block">
+      <p ng-show="teststepForm.assertionXPath.$error.required">XPath is required</p>
+    </div>
+  </div>
+  <div class="col-lg-2">
+    <button type="button" class="btn btn-info">Evaluate</button>
+  </div>
+</div>
+<div class="form-group no-bottom-margin"
+     ng-class="{ 'has-error' : $parent.savingStatus.submitted && teststepForm.assertionContains.$invalid }">
+  <label for="assertionXPathExpectedValue" class="col-lg-2 control-label">Expected Value</label>
+  <div class="col-lg-4">
+    <textarea name="assertionXPathExpectedValue" ng-model="assertionsModelObj.assertion.properties.expectedValue"
+              id="assertionXPathExpectedValue" rows="7" class="form-control" placeholder="Expected value" required>
+    </textarea>
+    <div ng-show="$parent.savingStatus.submitted && teststepForm.assertionXPathExpectedValue.$invalid" class="help-block">
+      <p ng-show="teststepForm.assertionXPathExpectedValue.$error.required">Expected Value is required</p>
+    </div>
+  </div>
+  <label for="assertionXPathActualValue" class="col-lg-2 control-label">Actual Value</label>
+  <div class="col-lg-4">
+    <textarea name="assertionXPathActualValue" ng-model="assertionsModelObj.assertion.properties.actualValue"
+              id="assertionXPathActualValue" rows="7" class="form-control" readonly>
+    </textarea>
+  </div>
 </div>

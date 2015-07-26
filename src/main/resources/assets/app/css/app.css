@@ -106,3 +106,7 @@
 .dbresponse-grid {
     height: 200px;
 }
+
+.no-bottom-margin {
+    margin-bottom: 0px;
+}

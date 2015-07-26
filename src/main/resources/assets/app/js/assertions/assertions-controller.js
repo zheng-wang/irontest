@@ -98,7 +98,10 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
         teststepId: $stateParams.teststepId,
         name: 'XPath evaluates to value',
         type: 'XPath',
-        properties: { }
+        properties: {
+         xpath: 'true',
+         expectedValue: 'true'
+        }
       });
 
       $scope.assertionsModelObj.assertion = assertion;
