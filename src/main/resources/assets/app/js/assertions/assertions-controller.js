@@ -11,6 +11,7 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
     $scope.assertionsModelObj.gridOptions = {
       enableRowHeaderSelection: false,
       multiSelect: false,
+      noUnselect: true,
       columnDefs: [
         {
           name: 'name', displayName: 'Name (double click to edit)', width: 250, minWidth: 250,
