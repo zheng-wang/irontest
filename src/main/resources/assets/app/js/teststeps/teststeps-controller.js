@@ -133,7 +133,7 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
       if ($scope.teststep.endpointId) {
         testrun = {
           request: $scope.teststep.request,
-          endpoint: $scope.teststep.endpoint
+          endpointId: $scope.teststep.endpointId
         };
       } else {
         testrun = {

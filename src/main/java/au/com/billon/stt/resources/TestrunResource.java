@@ -33,13 +33,12 @@ public class TestrunResource {
             details.put("url", details.get("wsdlUrl"));
             String response = HandlerFactory.getInstance().getHandler("SOAPHandler").invoke(testrun.getRequest(), testrun.getDetails());
             testrun.setResponse(response);
-        } else if (testrun.getEndpoint() != null) {
-            long endpointId = testrun.getEndpoint().getId();
+        } else if (testrun.getEndpointId() > 0) {
+            long endpointId = testrun.getEndpointId();
             Endpoint endpoint = endpointDao.findById(endpointId);
             testrun.setEndpoint(endpoint);
 
             List<EndpointDetail> detailsArray = endpointdtlDao.findByEndpoint(endpointId);
-            endpoint.setDetails(detailsArray);
 
             Map<String, String> details = new HashMap<String, String>();
             for (EndpointDetail detail : detailsArray) {
