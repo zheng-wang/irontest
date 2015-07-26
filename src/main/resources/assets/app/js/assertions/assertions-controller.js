@@ -37,6 +37,13 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
       }
     };
 
+    $scope.$on(uiGridEditConstants.events.END_CELL_EDIT,
+      function () {
+        //  re-sort the assertion grid rows
+        $scope.assertionsModelObj.gridApi.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
+      }
+    );
+
     $scope.assertionsModelObj.findAll = function() {
       Assertions.query(
         {
@@ -62,7 +69,12 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
         teststepId: $stateParams.teststepId
       }, function(response) {
         $scope.assertionsModelObj.assertion = response;
-        $scope.assertionsModelObj.gridOptions.data.push($scope.assertionsModelObj.assertion);
+
+        var gridData = $scope.assertionsModelObj.gridOptions.data;
+        gridData.push($scope.assertionsModelObj.assertion);
+        $timeout(function() {    //  a trick for newly loaded grid data
+          $scope.assertionsModelObj.gridApi.selection.selectRow(gridData[gridData.length - 1]);
+        });
       }, function(error) {
         alert('Error');
       });
@@ -93,13 +105,6 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
         $scope.assertionsModelObj.update(isValid);
       }, 2000);
     };
-
-    $scope.$on(uiGridEditConstants.events.END_CELL_EDIT,
-      function () {
-        //  re-sort the assertion grid rows
-        $scope.assertionsModelObj.gridApi.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
-      }
-    );
 
     $scope.assertionsModelObj.remove = function(assertion) {
       assertion.$remove({
