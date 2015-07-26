@@ -125,6 +125,12 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
           }
         }
         $scope.assertionsModelObj.gridOptions.data.splice(indexOfRowToBeDeleted, 1);
+
+        //  if deleted assertion is the one currently selected, remove it from scope and remove assertion details area
+        if ($scope.assertionsModelObj.assertion.id === assertionId) {
+          $scope.assertionsModelObj.assertion = null;
+          $scope.assertionsModelObj.showAssertionDetails = false;
+        }
       }, function(error) {
         alert('Error');
       });

@@ -20,13 +20,14 @@
     </div>
   </div>
   <div class="col-lg-8" ng-if="assertionsModelObj.showAssertionDetails">
-    <div class="form-group" ng-class="{ 'has-error' : $parent.savingStatus.submitted && teststepForm.assertionContains.$invalid }">
+    <div class="form-group"
+         ng-class="{ 'has-error' : $parent.savingStatus.submitted && teststepForm.assertionContains.$invalid }">
       <label for="assertionContains" class="col-lg-2 control-label">Contains</label>
       <div class="col-lg-10">
-            <textarea name="assertionContains" ng-model="assertionsModelObj.assertion.properties.contains"
-                      id="assertionContains" cols="10" rows="5" class="form-control"
-                      ng-change="assertionsModelObj.autoSave(teststepForm.$valid)" placeholder="Value" required>
-            </textarea>
+        <textarea name="assertionContains" ng-model="assertionsModelObj.assertion.properties.contains"
+                  id="assertionContains" cols="10" rows="5" class="form-control" placeholder="Value"
+                  ng-change="assertionsModelObj.autoSave(teststepForm.$valid)" required>
+        </textarea>
         <div ng-show="$parent.savingStatus.submitted && teststepForm.assertionContains.$invalid" class="help-block">
           <p ng-show="teststepForm.assertionContains.$error.required">Contains is required</p>
         </div>
