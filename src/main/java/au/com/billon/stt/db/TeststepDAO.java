@@ -1,12 +1,8 @@
 package au.com.billon.stt.db;
 
-import au.com.billon.stt.models.SOAPTeststepProperties;
 import au.com.billon.stt.models.Teststep;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.reficio.ws.builder.SoapBuilder;
-import org.reficio.ws.builder.SoapOperation;
-import org.reficio.ws.builder.core.Wsdl;
 import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.GetGeneratedKeys;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
