@@ -67,14 +67,7 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
         });
     };
 
-    $scope.assertionsModelObj.createContainsAssertion = function() {
-      var assertion = new Assertions({
-        teststepId: $stateParams.teststepId,
-        name: 'Response contains value',
-        type: 'Contains',
-        properties: { contains: 'value' }
-      });
-
+    var createAssertion = function(assertion) {
       assertion.$save({
         testcaseId: $stateParams.testcaseId,
         teststepId: $stateParams.teststepId
@@ -88,6 +81,29 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
       }, function(error) {
         alert('Error');
       });
+    };
+
+    $scope.assertionsModelObj.createContainsAssertion = function() {
+      var assertion = new Assertions({
+        teststepId: $stateParams.teststepId,
+        name: 'Response contains value',
+        type: 'Contains',
+        properties: { contains: 'value' }
+      });
+      createAssertion(assertion);
+    };
+
+    $scope.assertionsModelObj.createXPathAssertion = function() {
+      var assertion = new Assertions({
+        teststepId: $stateParams.teststepId,
+        name: 'XPath evaluates to value',
+        type: 'XPath',
+        properties: { }
+      });
+
+      $scope.assertionsModelObj.assertion = assertion;
+      $scope.assertionsModelObj.gridOptions.data.push(assertion);
+      selectCurrentAssertionInGrid();
     };
 
     $scope.assertionsModelObj.update = function(isValid) {
