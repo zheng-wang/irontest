@@ -25,13 +25,20 @@
   </div>
 </div>
 <div class="form-group" request-response-textareas>
-  <div class="col-lg-6 full-height">
+  <div ng-if="teststep.type==='SOAP'" class="col-lg-6 full-height">
     <textarea name="request" ng-model="teststep.request" ng-change="autoSave(teststepForm.$valid)"
         id="request" placeholder="Request" class="form-control full-height-important"></textarea>
   </div>
-  <div class="col-lg-6 full-height">
+  <div ng-if="teststep.type==='SOAP'" class="col-lg-6 full-height">
     <textarea name="response" ng-model="tempData.response" id="response" placeholder="Response"
         class="form-control full-height-important"></textarea>
+  </div>
+  <div ng-if="teststep.type!=='SOAP'" class="col-lg-12">
+    <textarea name="request" ng-model="teststep.request" ng-change="autoSave(teststepForm.$valid)"
+        id="request_db" placeholder="Request" class="form-control"></textarea>
+  </div>
+  <div ng-if="teststep.type!=='SOAP'" class="col-lg-12">
+    <div ui-grid="response_dbOptions" ui-grid-resize-columns ui-grid-move-columns class="ui-grid dbresponse-grid"></div>
   </div>
 </div>
 <div class="form-group" id="assertionsArea">
