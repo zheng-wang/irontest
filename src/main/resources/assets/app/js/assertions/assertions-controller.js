@@ -11,6 +11,8 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
     var timer;
 
     $scope.assertionsModelObj.gridOptions = {
+      enableRowHeaderSelection: false,
+      multiSelect: false,
       columnDefs: [
         {
           name: 'name', displayName: 'Name (double click to edit)', width: 250, minWidth: 250,
@@ -19,7 +21,6 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
             priority: 1
           },
           enableCellEdit: true,
-          cellTemplate: 'assertionGridNameCellTemplate.html',
           editableCellTemplate: 'assertionGridNameEditableCellTemplate.html'
         },
         {name: 'type', width: 100, minWidth: 100, enableCellEdit: false},
@@ -29,6 +30,10 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
       ],
       onRegisterApi: function (gridApi) {
         $scope.assertionsModelObj.gridApi = gridApi;
+        gridApi.selection.on.rowSelectionChanged($scope, function(row){
+          $scope.assertionsModelObj.assertion = row.entity;
+          $scope.assertionsModelObj.showAssertionDetails = true;
+        });
       }
     };
 
@@ -95,11 +100,6 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
         $scope.assertionsModelObj.gridApi.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
       }
     );
-
-    $scope.assertionsModelObj.edit = function(assertion) {
-      $scope.assertionsModelObj.assertion = assertion;
-      $scope.assertionsModelObj.showAssertionDetails = true;
-    };
 
     $scope.assertionsModelObj.remove = function(assertion) {
       assertion.$remove({
