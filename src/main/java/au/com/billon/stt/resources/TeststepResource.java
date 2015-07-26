@@ -1,7 +1,10 @@
 package au.com.billon.stt.resources;
 
 import au.com.billon.stt.db.TeststepDAO;
+import au.com.billon.stt.models.SOAPTeststepProperties;
 import au.com.billon.stt.models.Teststep;
+import au.com.billon.stt.models.TeststepProperties;
+import au.com.billon.stt.parsers.ParserFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import javax.ws.rs.*;
@@ -20,6 +23,18 @@ public class TeststepResource {
 
     @POST
     public Teststep create(Teststep teststep) throws JsonProcessingException {
+        TeststepProperties properties = teststep.getProperties();
+
+        String parserName = "SPD_DBService";
+        if (Teststep.TEST_STEP_TYPE_SOAP.equals(teststep.getType())) {
+            parserName = "WSDL";
+            String adhocAddress = ParserFactory.getInstance().getParser(parserName).getAdhocAddress(properties);
+            ((SOAPTeststepProperties) properties).setSoapAddress(adhocAddress);
+        }
+
+        String sampleRequest = ParserFactory.getInstance().getParser(parserName).getSampleRequest(properties);
+        teststep.setRequest(sampleRequest);
+
         long id = dao.insert(teststep);
         teststep.setId(id);
         teststep.setRequest(null);  //  no need to bring request to client at this point

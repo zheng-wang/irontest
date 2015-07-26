@@ -1,12 +1,8 @@
 package au.com.billon.stt.db;
 
-import au.com.billon.stt.models.SOAPTeststepProperties;
 import au.com.billon.stt.models.Teststep;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.reficio.ws.builder.SoapBuilder;
-import org.reficio.ws.builder.SoapOperation;
-import org.reficio.ws.builder.core.Wsdl;
 import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.GetGeneratedKeys;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
@@ -38,18 +34,6 @@ public abstract class TeststepDAO {
                                 @Bind("intfaceId") Long intfaceId, @Bind("endpointId") Long endpointId);
 
     public long insert(Teststep teststep) throws JsonProcessingException {
-        if (Teststep.TEST_STEP_TYPE_SOAP.equals(teststep.getType())) {
-            SOAPTeststepProperties properties = (SOAPTeststepProperties) teststep.getProperties();
-
-            //  create sample soap request
-            Wsdl wsdl = Wsdl.parse(properties.getWsdlUrl());
-            SoapBuilder builder = wsdl.binding().localPart(properties.getWsdlBindingName()).find();
-            SoapOperation operation = builder.operation().name(properties.getWsdlOperationName()).find();
-            teststep.setRequest(builder.buildInputMessage(operation));
-
-            properties.setSoapAddress(builder.getServiceUrls().get(0));
-        }
-
         return insert(teststep.getTestcaseId(), teststep.getName(), teststep.getType(), teststep.getDescription(),
                 teststep.getRequest(), new ObjectMapper().writeValueAsString(teststep.getProperties()),
                 teststep.getIntfaceId() == 0 ? null : teststep.getIntfaceId(),
