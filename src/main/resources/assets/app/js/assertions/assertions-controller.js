@@ -34,10 +34,35 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
       }
     };
 
+    var indexOfGridDataRowById = function(id) {
+      var result;
+      var gridData = $scope.assertionsModelObj.gridOptions.data;
+      for (var i = 0; i < gridData.length; i += 1) {
+        if (gridData[i].id === id) {
+          result = i;
+          break;
+        }
+      }
+      return result;
+    };
+
+    //  highlight the current assertion in the grid
+    var selectCurrentAssertionInGrid = function() {
+      var gridData = $scope.assertionsModelObj.gridOptions.data;
+      var indexOfGridDataRow = indexOfGridDataRowById($scope.assertionsModelObj.assertion.id);
+      //  make the new assertion selected
+      $timeout(function() {    //  a trick for newly loaded grid data
+        $scope.assertionsModelObj.gridApi.selection.selectRow(gridData[indexOfGridDataRow]);
+      });
+    };
+
     $scope.$on(uiGridEditConstants.events.END_CELL_EDIT,
       function () {
         //  re-sort the assertion grid rows
         $scope.assertionsModelObj.gridApi.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
+
+        //  ensure the selection (highlight) is not lost
+        selectCurrentAssertionInGrid();
       }
     );
 
