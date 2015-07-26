@@ -12,6 +12,9 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
     };
     $scope.tempData = {};
     $scope.showAssertionsArea = false;
+    $scope.response_dbOptions = {
+      enableFiltering: true
+    };
 
     $scope.update = function(isValid) {
       if (isValid) {
@@ -112,6 +115,7 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
       var model = PageNavigation.returns.pop();
       if (model) {
         $scope.teststep = model;
+        $scope.autoSave(true);
       } else {
         if ($stateParams.teststepId) {
           // edit an existing entry
@@ -145,6 +149,7 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
       var testrunRes = new Testruns(testrun);
       testrunRes.$save(function(response) {
         $scope.tempData.response = response.response;
+        $scope.response_dbOptions.data = response.response;
       }, function(error) {
         alert('Error');
       });
