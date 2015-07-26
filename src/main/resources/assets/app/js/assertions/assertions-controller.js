@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('service-testing-tool').controller('AssertionsController', ['$scope', 'Assertions',
-    '$stateParams', 'uiGridConstants', 'uiGridEditConstants', '$timeout',
-  function($scope, Assertions, $stateParams, uiGridConstants, uiGridEditConstants, $timeout) {
+    '$stateParams', 'uiGridConstants', 'uiGridEditConstants', '$timeout', 'STTUtils',
+  function($scope, Assertions, $stateParams, uiGridConstants, uiGridEditConstants, $timeout, STTUtils) {
     //  use assertionsModelObj for all variables in the scope, to avoid conflict with parent scope
     $scope.assertionsModelObj = {};
 
@@ -34,23 +34,11 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
       }
     };
 
-    var indexOfGridDataRowById = function(id) {
-      var result;
-      var gridData = $scope.assertionsModelObj.gridOptions.data;
-      for (var i = 0; i < gridData.length; i += 1) {
-        if (gridData[i].id === id) {
-          result = i;
-          break;
-        }
-      }
-      return result;
-    };
-
     //  highlight the current assertion in the grid
     var selectCurrentAssertionInGrid = function() {
       var gridData = $scope.assertionsModelObj.gridOptions.data;
-      var indexOfGridDataRow = indexOfGridDataRowById($scope.assertionsModelObj.assertion.id);
-      //  make the new assertion selected
+      var indexOfGridDataRow = STTUtils.indexOfArrayElementByProperty(
+        gridData, 'id', $scope.assertionsModelObj.assertion.id);
       $timeout(function() {    //  a trick for newly loaded grid data
         $scope.assertionsModelObj.gridApi.selection.selectRow(gridData[indexOfGridDataRow]);
       });
@@ -136,17 +124,11 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
         teststepId: $stateParams.teststepId
       }, function(response) {
         //  delete the assertion row from the grid
-        var indexOfRowToBeDeleted;
         var gridData = $scope.assertionsModelObj.gridOptions.data;
-        for (var i = 0; i < gridData.length; i += 1) {
-          if (gridData[i].id === assertionId) {
-            indexOfRowToBeDeleted = i;
-            break;
-          }
-        }
-        $scope.assertionsModelObj.gridOptions.data.splice(indexOfRowToBeDeleted, 1);
+        var indexOfRowToBeDeleted = STTUtils.indexOfArrayElementByProperty(gridData, 'id', assertionId);
+        gridData.splice(indexOfRowToBeDeleted, 1);
 
-        //  if deleted assertion is the one currently selected, remove it from scope and remove assertion details area
+        //  if deleted assertion is the one currently selected, set the current assertion to null
         if ($scope.assertionsModelObj.assertion.id === assertionId) {
           $scope.assertionsModelObj.assertion = null;
         }
