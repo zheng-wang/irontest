@@ -129,7 +129,7 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
         gridData.splice(indexOfRowToBeDeleted, 1);
 
         //  if deleted assertion is the one currently selected, set the current assertion to null
-        if ($scope.assertionsModelObj.assertion.id === assertionId) {
+        if ($scope.assertionsModelObj.assertion && $scope.assertionsModelObj.assertion.id === assertionId) {
           $scope.assertionsModelObj.assertion = null;
         }
       }, function(error) {
