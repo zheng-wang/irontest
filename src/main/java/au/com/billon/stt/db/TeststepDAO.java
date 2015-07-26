@@ -38,18 +38,6 @@ public abstract class TeststepDAO {
                                 @Bind("intfaceId") Long intfaceId, @Bind("endpointId") Long endpointId);
 
     public long insert(Teststep teststep) throws JsonProcessingException {
-        if (Teststep.TEST_STEP_TYPE_SOAP.equals(teststep.getType())) {
-            SOAPTeststepProperties properties = (SOAPTeststepProperties) teststep.getProperties();
-
-            //  create sample soap request
-            Wsdl wsdl = Wsdl.parse(properties.getWsdlUrl());
-            SoapBuilder builder = wsdl.binding().localPart(properties.getWsdlBindingName()).find();
-            SoapOperation operation = builder.operation().name(properties.getWsdlOperationName()).find();
-            teststep.setRequest(builder.buildInputMessage(operation));
-
-            properties.setSoapAddress(builder.getServiceUrls().get(0));
-        }
-
         return insert(teststep.getTestcaseId(), teststep.getName(), teststep.getType(), teststep.getDescription(),
                 teststep.getRequest(), new ObjectMapper().writeValueAsString(teststep.getProperties()),
                 teststep.getIntfaceId() == 0 ? null : teststep.getIntfaceId(),
