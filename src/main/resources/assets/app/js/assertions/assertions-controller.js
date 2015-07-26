@@ -4,9 +4,7 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
     '$stateParams', 'uiGridConstants', 'uiGridEditConstants', '$timeout',
   function($scope, Assertions, $stateParams, uiGridConstants, uiGridEditConstants, $timeout) {
     //  use assertionsModelObj for all variables in the scope, to avoid conflict with parent scope
-    $scope.assertionsModelObj = {
-      showAssertionDetails: false
-    };
+    $scope.assertionsModelObj = {};
 
     var timer;
 
@@ -32,7 +30,6 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
         $scope.assertionsModelObj.gridApi = gridApi;
         gridApi.selection.on.rowSelectionChanged($scope, function(row) {
           $scope.assertionsModelObj.assertion = row.entity;
-          $scope.assertionsModelObj.showAssertionDetails = true;
         });
       }
     };
@@ -81,8 +78,6 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
       }, function(error) {
         alert('Error');
       });
-
-      $scope.assertionsModelObj.showAssertionDetails = true;
     };
 
     $scope.assertionsModelObj.update = function(isValid) {
@@ -129,7 +124,6 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
         //  if deleted assertion is the one currently selected, remove it from scope and remove assertion details area
         if ($scope.assertionsModelObj.assertion.id === assertionId) {
           $scope.assertionsModelObj.assertion = null;
-          $scope.assertionsModelObj.showAssertionDetails = false;
         }
       }, function(error) {
         alert('Error');

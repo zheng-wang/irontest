@@ -19,7 +19,7 @@
            ui-grid-edit class="ui-grid col-lg-12 assertions-grid"></div>
     </div>
   </div>
-  <div class="col-lg-8" ng-if="assertionsModelObj.showAssertionDetails">
+  <div class="col-lg-8" ng-if="assertionsModelObj.assertion">
     <div class="form-group"
          ng-class="{ 'has-error' : $parent.savingStatus.submitted && teststepForm.assertionContains.$invalid }">
       <label for="assertionContains" class="col-lg-2 control-label">Contains</label>
