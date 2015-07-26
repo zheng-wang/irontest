@@ -81,13 +81,9 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
         $scope.assertionsModelObj.assertion = response;
 
         //  add the new assertion to the grid data
-        var gridData = $scope.assertionsModelObj.gridOptions.data;
-        gridData.push($scope.assertionsModelObj.assertion);
+        $scope.assertionsModelObj.gridOptions.data.push(response);
 
-        //  make the new assertion selected
-        $timeout(function() {    //  a trick for newly loaded grid data
-          $scope.assertionsModelObj.gridApi.selection.selectRow(gridData[gridData.length - 1]);
-        });
+        selectCurrentAssertionInGrid();
       }, function(error) {
         alert('Error');
       });
