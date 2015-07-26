@@ -13,6 +13,7 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
     $scope.tempData = {};
     $scope.showAssertionsArea = false;
     $scope.response_dbOptions = {
+      headerTemplate: 'dbResponseHeaderTemplate.html',
       enableFiltering: true
     };
 
