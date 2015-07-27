@@ -18,7 +18,8 @@
   <form name="teststepForm" class="form-horizontal" role="form" novalidate>
     <tabset>
       <tab heading="Request Response">
-        <div ng-include="'/ui/views/teststeps/edit-request-response.html'"></div>
+        <div ng-if="teststep.type==='SOAP'" ng-include="'/ui/views/teststeps/edit-soap-request-response.html'"></div>
+        <div ng-if="teststep.type!=='SOAP'" ng-include="'/ui/views/teststeps/edit-db-request-response.html'"></div>
       </tab>
       <tab heading="Basics">
         <div class="form-group tab-top-spacer"></div>
