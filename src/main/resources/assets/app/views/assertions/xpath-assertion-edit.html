@@ -1,5 +1,5 @@
 <div class="form-group"
-     ng-class="{ 'has-error' : $parent.savingStatus.submitted && teststepForm.assertionContains.$invalid }">
+     ng-class="{ 'has-error' : $parent.savingStatus.submitted && teststepForm.assertionXPath.$invalid }">
   <label for="assertionXPath" class="col-lg-2 control-label">XPath</label>
   <div class="col-lg-8">
     <textarea name="assertionXPath" ng-model="assertionsModelObj.assertion.properties.xPath"
@@ -11,7 +11,12 @@
     </div>
   </div>
   <div class="col-lg-2">
-    <button type="button" class="btn btn-info">Evaluate</button>
+    <button type="button" class="btn btn-info"
+            ng-click="assertionsModelObj.evaluateXPath(
+                assertionsModelObj.assertion.properties.xPath, $parent.tempData.response)"
+            ng-disabled="!assertionsModelObj.assertion.properties.xPath || !$parent.tempData.response">
+      Evaluate
+    </button>
   </div>
 </div>
 <div class="form-group no-bottom-margin"

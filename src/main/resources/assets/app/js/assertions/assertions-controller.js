@@ -150,5 +150,22 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
         alert('Error');
       });
     };
+
+    //  evaluate xpath against the target xml
+    $scope.assertionsModelObj.evaluateXPath = function(xpath, target) {
+      var url = 'api/evaluator';
+      $http
+        .post(url, {
+          type: 'xPath',
+          expression: xpath,
+          target: target
+        })
+        .success(function(data, status) {
+          $scope.assertionsModelObj.assertion.properties.actualValue = data.value;
+        })
+        .error(function(data, status) {
+          alert('Error');
+        });
+    };
   }
 ]);
