@@ -7,7 +7,7 @@ public class EvaluationRequest {
     public static final String EVALUATION_TYPE_XPATH = "XPath";
     private String type;
     private String expression;
-    private String target;
+    private String input;
 
     public String getType() {
         return type;
@@ -25,11 +25,11 @@ public class EvaluationRequest {
         this.expression = expression;
     }
 
-    public String getTarget() {
-        return target;
+    public String getInput() {
+        return input;
     }
 
-    public void setTarget(String target) {
-        this.target = target;
+    public void setInput(String input) {
+        this.input = input;
     }
 }
