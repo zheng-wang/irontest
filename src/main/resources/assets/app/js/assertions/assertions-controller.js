@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('service-testing-tool').controller('AssertionsController', ['$scope', 'Assertions',
-    '$stateParams', 'uiGridConstants', 'uiGridEditConstants', '$timeout', 'STTUtils',
-  function($scope, Assertions, $stateParams, uiGridConstants, uiGridEditConstants, $timeout, STTUtils) {
+    '$stateParams', 'uiGridConstants', 'uiGridEditConstants', '$timeout', 'STTUtils', '$http',
+  function($scope, Assertions, $stateParams, uiGridConstants, uiGridEditConstants, $timeout, STTUtils, $http) {
     //  use assertionsModelObj for all variables in the scope, to avoid conflict with parent scope
     $scope.assertionsModelObj = {};
 
@@ -156,7 +156,7 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
       var url = 'api/evaluator';
       $http
         .post(url, {
-          type: 'xPath',
+          type: 'XPath',
           expression: xpath,
           target: target
         })
