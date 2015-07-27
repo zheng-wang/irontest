@@ -12,9 +12,9 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
     };
     $scope.tempData = {};
     $scope.showAssertionsArea = false;
-    $scope.response_dbOptions = {
-      headerTemplate: 'dbResponseHeaderTemplate.html',
-      enableFiltering: true
+    $scope.responseOptions = {
+      enableFiltering: true,
+      columnDefs: [ ]
     };
 
     $scope.update = function(isValid) {
@@ -133,6 +133,10 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
       }
     };
 
+    $scope.refreshDBAssertions = function(fieldName) {
+      $scope.$broadcast('refreshDBAssertions', fieldName);
+    };
+
     $scope.invoke = function(teststep) {
       var testrun;
       if ($scope.teststep.endpointId) {
@@ -150,7 +154,26 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
       var testrunRes = new Testruns(testrun);
       testrunRes.$save(function(response) {
         $scope.tempData.response = response.response;
-        $scope.response_dbOptions.data = response.response;
+        $scope.responseOptions.data = response.response;
+        $scope.responseOptions.columnDefs = [ ];
+        if (response.response.length > 0) {
+          var row = response.response[0];
+          for (var key in row) {
+            $scope.responseOptions.columnDefs.push({
+              field: key,
+              menuItems: [
+                {
+                  title: 'Create An Assertion',
+                  icon: 'ui-grid-icon-info-circled',
+                  context: $scope,
+                  action: function() {
+                    this.context.refreshDBAssertions(this.context.col.colDef.field);
+                  }
+                }
+              ]
+            });
+          }
+        }
       }, function(error) {
         alert('Error');
       });
