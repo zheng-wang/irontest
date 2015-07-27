@@ -152,16 +152,16 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
     };
 
     //  evaluate xpath against the target xml
-    $scope.assertionsModelObj.evaluateXPath = function(xpath, target) {
+    $scope.assertionsModelObj.evaluateXPath = function(xpath, input) {
       var url = 'api/evaluator';
       $http
         .post(url, {
           type: 'XPath',
           expression: xpath,
-          target: target
+          input: input
         })
         .success(function(data, status) {
-          $scope.assertionsModelObj.assertion.properties.actualValue = data.value;
+          $scope.assertionsModelObj.assertion.properties.actualValue = data.result;
         })
         .error(function(data, status) {
           alert('Error');

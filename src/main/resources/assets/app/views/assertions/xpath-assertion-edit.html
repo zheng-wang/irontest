@@ -22,7 +22,7 @@
 <div class="form-group no-bottom-margin"
      ng-class="{ 'has-error' : $parent.savingStatus.submitted && teststepForm.assertionContains.$invalid }">
   <label for="assertionXPathExpectedValue" class="col-lg-2 control-label">Expected Value</label>
-  <div class="col-lg-4">
+  <div class="col-lg-3">
     <textarea name="assertionXPathExpectedValue" ng-model="assertionsModelObj.assertion.properties.expectedValue"
               id="assertionXPathExpectedValue" rows="7" class="form-control" placeholder="Expected value"
               ng-change="assertionsModelObj.autoSave(teststepForm.$valid)" required>
@@ -31,8 +31,8 @@
       <p ng-show="teststepForm.assertionXPathExpectedValue.$error.required">Expected Value is required</p>
     </div>
   </div>
-  <label for="assertionXPathActualValue" class="col-lg-2 control-label">Actual Value</label>
-  <div class="col-lg-4">
+  <label for="assertionXPathActualValue" class="col-lg-1 control-label">Actual Value</label>
+  <div class="col-lg-6">
     <textarea name="assertionXPathActualValue" ng-model="assertionsModelObj.assertion.properties.actualValue"
               id="assertionXPathActualValue" rows="7" class="form-control" readonly>
     </textarea>

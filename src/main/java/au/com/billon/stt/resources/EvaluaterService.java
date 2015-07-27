@@ -1,5 +1,6 @@
 package au.com.billon.stt.resources;
 
+import au.com.billon.stt.Evaluator;
 import au.com.billon.stt.models.EvaluationRequest;
 import au.com.billon.stt.models.EvaluationResponse;
 import au.com.billon.stt.models.WSDLBinding;
@@ -19,16 +20,14 @@ import java.util.List;
  */
 @Path("/evaluator") @Produces({ MediaType.APPLICATION_JSON })
 public class EvaluaterService {
-    public EvaluaterService() {}
+    private Evaluator evaluator;
+
+    public EvaluaterService(Evaluator evaluator) {
+        this.evaluator = evaluator;
+    }
 
     @POST
-    public EvaluationResponse evaluate(EvaluationRequest request) {
-        EvaluationResponse response = new EvaluationResponse();
-        if (EvaluationRequest.EVALUATION_TYPE_XPATH.equals(request.getType())) {
-            //  TODO evaluate XPath
-            response.setValue("value");
-        }
-
-        return response;
+    public EvaluationResponse evaluate(EvaluationRequest request) throws Exception {
+        return evaluator.evaluate(request);
     }
 }
