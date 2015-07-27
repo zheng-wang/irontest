@@ -1,9 +1,8 @@
 package au.com.billon.stt.db;
 
+import au.com.billon.stt.STTUtils;
 import au.com.billon.stt.models.Assertion;
 import au.com.billon.stt.models.AssertionProperties;
-import au.com.billon.stt.models.ContainsAssertionProperties;
-import au.com.billon.stt.models.XPathAssertionProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.skife.jdbi.v2.StatementContext;
 import org.skife.jdbi.v2.tweak.ResultSetMapper;
@@ -20,15 +19,8 @@ public class AssertionMapper implements ResultSetMapper<Assertion> {
         String type = rs.getString("type");
         AssertionProperties properties = null;
         try {
-            if (Assertion.ASSERTION_TYPE_CONTAINS.equals(type)) {
-                properties = new ObjectMapper().readValue(
-                        rs.getString("properties"), ContainsAssertionProperties.class);
-            } else if (Assertion.ASSERTION_TYPE_XPATH.equals(type)) {
-                properties = new ObjectMapper().readValue(
-                        rs.getString("properties"), XPathAssertionProperties.class);
-            } else {
-                throw new IOException("Unrecognized assertion type " + type);
-            }
+            properties = (AssertionProperties) new ObjectMapper().readValue(
+                    rs.getString("properties"), STTUtils.getAssertionPropertiesClassByType(type));
         } catch (IOException e) {
             throw new SQLException("Failed to deserialize properties JSON.", e);
         }

@@ -1,5 +1,6 @@
 package au.com.billon.stt.models;
 
+import au.com.billon.stt.STTUtils;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
@@ -17,16 +18,9 @@ public class AssertionPropertiesDeserializer extends JsonDeserializer<AssertionP
     public AssertionProperties deserialize(JsonParser jsonParser,
                                  DeserializationContext deserializationContext) throws IOException {
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
-        AssertionProperties properties = null;
         Assertion assertion = (Assertion) jsonParser.getCurrentValue();
-        if (Assertion.ASSERTION_TYPE_CONTAINS.equals(assertion.getType())) {
-            properties = new ObjectMapper().treeToValue(node, ContainsAssertionProperties.class);
-        } else if (Assertion.ASSERTION_TYPE_XPATH.equals(assertion.getType())) {
-            properties = new ObjectMapper().treeToValue(node, XPathAssertionProperties.class);
-        } else {
-            throw new IOException("Unrecognized assertion type " + assertion.getType());
-        }
-
+        AssertionProperties properties = (AssertionProperties) new ObjectMapper().treeToValue(
+                node, STTUtils.getAssertionPropertiesClassByType(assertion.getType()));
         return properties;
     }
 }
