@@ -6,6 +6,8 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
     //  use assertionsModelObj for all variables in the scope, to avoid conflict with parent scope
     $scope.assertionsModelObj = {};
 
+    $scope.assertionsModelObj.tempData = {};
+
     var timer;
 
     $scope.assertionsModelObj.gridOptions = {
@@ -151,7 +153,7 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
       });
     };
 
-    //  evaluate xpath against the target xml
+    //  evaluate xpath against the input xml
     $scope.assertionsModelObj.evaluateXPath = function(xpath, input) {
       var url = 'api/evaluator';
       $http
@@ -161,7 +163,7 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
           input: input
         })
         .success(function(data, status) {
-          $scope.assertionsModelObj.assertion.properties.actualValue = data.result;
+          $scope.assertionsModelObj.tempData.actualValue = data.result;
         })
         .error(function(data, status) {
           alert('Error');
