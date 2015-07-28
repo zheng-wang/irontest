@@ -11,15 +11,19 @@ angular.module('service-testing-tool').controller('DSAssertionsController', ['$s
     $scope.assertionsModelObj.gridOptions = {
       columnDefs: [
         {
-          name: 'name', displayName: 'Name (double click to edit)', width: 250, minWidth: 250,
+          name: 'name', displayName: 'Name', width: 250, minWidth: 250,
           sort: {
             direction: uiGridConstants.ASC,
             priority: 1
           },
-          enableCellEdit: true,
-          editableCellTemplate: 'assertionGridEditableCellTemplate.html'
+          editableCellTemplate: 'assertionGridNameEditableCellTemplate.html'
         },
-        {name: 'type', width: 100, minWidth: 100, enableCellEdit: false},
+        {name: 'properties.field', displayName: 'Field', width: 100, minWidth: 100, enableCellEdit: false},
+        {name: 'properties.operator', displayName: 'Operator', width: 100, minWidth: 100, enableCellEdit: false},
+        {
+          name: 'properties.value', displayName: 'Value', width: 200, minWidth: 200,
+          editableCellTemplate: 'assertionGridValueEditableCellTemplate.html'
+        },
         {name: 'delete', width: 100, minWidth: 100, enableSorting: false, enableCellEdit: false,
           cellTemplate: 'assertionGridDeleteCellTemplate.html'
         }
@@ -44,37 +48,24 @@ angular.module('service-testing-tool').controller('DSAssertionsController', ['$s
         teststepId: $stateParams.teststepId
       }, function(response) {
         $scope.assertionsModelObj.assertion = response;
-
         //  add the new assertion to the grid data
         $scope.assertionsModelObj.gridOptions.data.push(response);
-
-        selectCurrentAssertionInGrid();
       }, function(error) {
         alert('Error');
       });
     };
 
-    $scope.assertionsModelObj.createContainsAssertion = function() {
+    $scope.assertionsModelObj.createDSFieldContainAssertion = function(field) {
       var assertion = new Assertions({
         teststepId: $stateParams.teststepId,
-        name: 'Response contains value',
-        type: 'Contains',
-        properties: { contains: 'value' }
-      });
-      createAssertion(assertion);
-    };
-
-    $scope.assertionsModelObj.createXPathAssertion = function() {
-      var assertion = new Assertions({
-        teststepId: $stateParams.teststepId,
-        name: 'XPath evaluates to value',
-        type: 'XPath',
+        name: 'Field contains value',
+        type: 'DSField',
         properties: {
-          xPath: 'true',
-          expectedValue: 'true'
+          field: field,
+          operator: 'Contains',
+          value: ''
         }
       });
-
       createAssertion(assertion);
     };
 
@@ -122,25 +113,8 @@ angular.module('service-testing-tool').controller('DSAssertionsController', ['$s
       });
     };
 
-    $scope.$on('refreshDBAssertions', function (event, data) {
-      $scope.assertionsModelObj.createContainsAssertion();
+    $scope.$on('createDSFieldContainAssertion', function (event, data) {
+      $scope.assertionsModelObj.createDSFieldContainAssertion(data);
     });
-
-    //  evaluate xpath against the target xml
-    $scope.assertionsModelObj.evaluateXPath = function(xpath, target) {
-      var url = 'api/evaluator';
-      $http
-          .post(url, {
-            type: 'XPath',
-            expression: xpath,
-            target: target
-          })
-          .success(function(data, status) {
-            $scope.assertionsModelObj.assertion.properties.actualValue = data.value;
-          })
-          .error(function(data, status) {
-            alert('Error');
-          });
-    };
   }
 ]);

@@ -133,8 +133,8 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
       }
     };
 
-    $scope.refreshDBAssertions = function(fieldName) {
-      $scope.$broadcast('refreshDBAssertions', fieldName);
+    $scope.createDSFieldContainAssertion = function(fieldName) {
+      $scope.$broadcast('createDSFieldContainAssertion', fieldName);
     };
 
     $scope.invoke = function(teststep) {
@@ -167,7 +167,7 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
                   icon: 'ui-grid-icon-info-circled',
                   context: $scope,
                   action: function() {
-                    this.context.refreshDBAssertions(this.context.col.colDef.field);
+                    this.context.createDSFieldContainAssertion(this.context.col.colDef.field);
                   }
                 }
               ]

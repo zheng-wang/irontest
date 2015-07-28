@@ -2,6 +2,7 @@ package au.com.billon.stt;
 
 import au.com.billon.stt.models.Assertion;
 import au.com.billon.stt.models.ContainsAssertionProperties;
+import au.com.billon.stt.models.DSFieldAssertionProperties;
 import au.com.billon.stt.models.XPathAssertionProperties;
 
 import javax.xml.transform.OutputKeys;
@@ -31,6 +32,8 @@ public class STTUtils {
             return ContainsAssertionProperties.class;
         } else if (Assertion.ASSERTION_TYPE_XPATH.equals(assertionType)) {
             return XPathAssertionProperties.class;
+        } else if (Assertion.ASSERTION_TYPE_DSFIELD.equals(assertionType)) {
+            return DSFieldAssertionProperties.class;
         } else {
             throw new RuntimeException("Unrecognized assertion type " + assertionType);
         }

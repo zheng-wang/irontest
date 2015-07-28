@@ -39,10 +39,19 @@
       <div ui-grid="assertionsModelObj.gridOptions" ui-grid-resize-columns ui-grid-move-columns ui-grid-edit class="ui-grid assertions-grid"></div>
     </div>
   </div>
-  <script type="text/ng-template" id="assertionGridEditableCellTemplate.html">
+  <script type="text/ng-template" id="assertionGridNameEditableCellTemplate.html">
     <div class="ui-grid-cell-contents">
       <div>
         <input type="text" class="form-control" maxlength="200" ui-grid-editor ng-model="row.entity.name"
+               ng-change="grid.appScope.assertionsModelObj.autoSave(true)"
+               ng-init="grid.appScope.assertionsModelObj.assertion = row.entity">
+      </div>
+    </div>
+  </script>
+  <script type="text/ng-template" id="assertionGridValueEditableCellTemplate.html">
+    <div class="ui-grid-cell-contents">
+      <div>
+        <input type="text" class="form-control" maxlength="200" ui-grid-editor ng-model="row.entity.properties.value"
                ng-change="grid.appScope.assertionsModelObj.autoSave(true)"
                ng-init="grid.appScope.assertionsModelObj.assertion = row.entity">
       </div>
