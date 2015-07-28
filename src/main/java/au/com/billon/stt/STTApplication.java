@@ -1,5 +1,6 @@
 package au.com.billon.stt;
 
+import au.com.billon.stt.core.Evaluator;
 import au.com.billon.stt.db.*;
 import au.com.billon.stt.exceptions.STTDBIExceptionMapper;
 import au.com.billon.stt.resources.*;

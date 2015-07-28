@@ -1,6 +1,6 @@
 package au.com.billon.stt.db;
 
-import au.com.billon.stt.STTUtils;
+import au.com.billon.stt.utils.STTUtils;
 import au.com.billon.stt.models.Assertion;
 import au.com.billon.stt.models.AssertionProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;

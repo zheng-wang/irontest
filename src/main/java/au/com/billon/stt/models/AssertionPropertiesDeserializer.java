@@ -1,6 +1,6 @@
 package au.com.billon.stt.models;
 
-import au.com.billon.stt.STTUtils;
+import au.com.billon.stt.utils.STTUtils;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
