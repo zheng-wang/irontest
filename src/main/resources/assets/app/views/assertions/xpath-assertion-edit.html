@@ -1,7 +1,7 @@
-<div class="form-group"
+<div class="form-group no-left-margin"
      ng-class="{ 'has-error' : $parent.savingStatus.submitted && teststepForm.assertionXPath.$invalid }">
-  <label for="assertionXPath" class="col-lg-2 control-label">XPath</label>
-  <div class="col-lg-8">
+  <label for="assertionXPath" class="col-lg-1 control-label">XPath</label>
+  <div class="col-lg-9">
     <textarea name="assertionXPath" ng-model="assertionsModelObj.assertion.properties.xPath"
               id="assertionXPath" rows="3" class="form-control" placeholder="XPath"
               ng-change="assertionsModelObj.autoSave(teststepForm.$valid)" required>

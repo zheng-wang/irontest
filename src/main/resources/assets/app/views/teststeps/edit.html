@@ -22,7 +22,7 @@
         <div ng-if="teststep.type!=='SOAP'" ng-include="'/ui/views/teststeps/edit-db-request-response.html'"></div>
       </tab>
       <tab heading="Basics">
-        <div class="form-group tab-top-spacer"></div>
+        <div class="form-group"></div>
         <div class="form-group" ng-class="{ 'has-error' : savingStatus.submitted && teststepForm.name.$invalid }">
           <div class="col-lg-6">
             <label for="name" class="col-lg-2 control-label">Name</label>
