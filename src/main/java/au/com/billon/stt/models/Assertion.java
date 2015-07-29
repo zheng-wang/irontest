@@ -16,6 +16,7 @@ public class Assertion {
     private String name;
     private String type;
     private AssertionProperties properties;
+    private String result;
     private Date created;
     private Date updated;
 
@@ -61,6 +62,14 @@ public class Assertion {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getResult() {
+        return result;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
     }
 
     public Date getCreated() {

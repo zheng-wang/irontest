@@ -26,7 +26,8 @@ angular.module('service-testing-tool').controller('DSAssertionsController', ['$s
         },
         {name: 'delete', width: 100, minWidth: 100, enableSorting: false, enableCellEdit: false,
           cellTemplate: 'assertionGridDeleteCellTemplate.html'
-        }
+        },
+        {name: 'result', displayName: 'Result', width: 100, minWidth: 100, enableCellEdit: false}
       ]
     };
 
@@ -115,6 +116,17 @@ angular.module('service-testing-tool').controller('DSAssertionsController', ['$s
 
     $scope.$on('createDSFieldContainAssertion', function (event, data) {
       $scope.assertionsModelObj.createDSFieldContainAssertion(data);
+    });
+
+    $scope.$on('evaluateDataSet', function (event, data) {
+      var assertions = $scope.assertionsModelObj.gridOptions.data;
+      for (var i = 0; i < assertions.length; i ++) {
+        var assertion = assertions[i];
+        var values = _.pluck(data, assertion.properties.field);
+        if (_.contains(values, assertion.properties.value)) {
+          assertion.result = true;
+        };
+      }
     });
   }
 ]);
