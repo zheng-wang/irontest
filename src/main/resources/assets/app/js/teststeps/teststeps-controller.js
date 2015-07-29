@@ -137,6 +137,10 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
       $scope.$broadcast('createDSFieldContainAssertion', fieldName);
     };
 
+    $scope.evaluateDataSet = function() {
+      $scope.$broadcast('evaluateDataSet', $scope.responseOptions.data);
+    };
+
     $scope.invoke = function(teststep) {
       var testrun;
       if ($scope.teststep.endpointId) {
