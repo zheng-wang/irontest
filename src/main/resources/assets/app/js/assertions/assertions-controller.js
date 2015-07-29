@@ -26,7 +26,7 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
           editableCellTemplate: 'assertionGridNameEditableCellTemplate.html'
         },
         {name: 'type', width: 80, minWidth: 80, enableCellEdit: false},
-        {name: 'delete', width: 80, minWidth: 80, enableSorting: false, enableCellEdit: false,
+        {name: 'delete', width: 60, minWidth: 60, enableSorting: false, enableCellEdit: false,
           cellTemplate: 'assertionGridDeleteCellTemplate.html'
         }
       ],
@@ -182,8 +182,8 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
           enableCellEdit: true,
           //editableCellTemplate: 'assertionGridNameEditableCellTemplate.html'
         },
-        {name: 'namespace', width: 250, minWidth: 250, enableCellEdit: true},
-        {name: 'delete', width: 80, minWidth: 80, enableSorting: false, enableCellEdit: false,
+        {name: 'namespace', width: 240, minWidth: 240, enableCellEdit: true},
+        {name: 'delete', width: 60, minWidth: 60, enableSorting: false, enableCellEdit: false,
           //cellTemplate: 'assertionGridDeleteCellTemplate.html'
         }
       ]
