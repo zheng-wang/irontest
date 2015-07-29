@@ -35,8 +35,8 @@ public abstract class IntfaceDAO {
     public abstract Intface findByName(@Bind("name") String name);
 
     public void initSystemData() {
-        if (findByName("SPD_DBService") == null) {
-            Intface intface = new Intface(0, "SPD_DBService", "System pre-defined interface for DB service", "SYSTEM PRE DEFINED", "NA", null, null);
+        if (findByName("SampleDBInterface") == null) {
+            Intface intface = new Intface(0, "SampleDBInterface", "System pre-defined sample interface to access a database", "DBInterface", "NA", null, null);
             insert(intface);
         }
     }

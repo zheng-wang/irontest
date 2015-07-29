@@ -27,7 +27,7 @@ public class ParserFactory {
             if (parser == null) {
                 try {
                     String classname = "au.com.billon.stt.parsers.";
-                    if (parserName.equals("SPD_DBService")) {
+                    if (parserName.equals("DBInterface")) {
                         classname = classname + "SPDDBParser";
                     } else {
                         classname = classname + parserName + "Parser";

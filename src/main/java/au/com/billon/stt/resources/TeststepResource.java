@@ -25,7 +25,7 @@ public class TeststepResource {
     public Teststep create(Teststep teststep) throws JsonProcessingException {
         TeststepProperties properties = teststep.getProperties();
 
-        String parserName = "SPD_DBService";
+        String parserName = "DBInterface";
         if (Teststep.TEST_STEP_TYPE_SOAP.equals(teststep.getType())) {
             parserName = "WSDL";
             String adhocAddress = ParserFactory.getInstance().getParser(parserName).getAdhocAddress(properties);
