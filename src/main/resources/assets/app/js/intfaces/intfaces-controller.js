@@ -45,7 +45,7 @@ angular.module('service-testing-tool').controller('IntfacesController', ['$scope
         titleMap: [
           { value: "WSDL", name: "WSDL"},
           { value: "WADL", name: "WADL"},
-          { value: "SYSTEM PRE DEFINED", name: "SYSTEM PRE DEFINED"}
+          { value: "DBInterface", name: "DBInterface"}
         ]
       },
       {
