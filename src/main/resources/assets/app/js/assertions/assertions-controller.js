@@ -1,5 +1,6 @@
 'use strict';
 
+//  if unspecified, all grid config is for the assertions grid
 angular.module('service-testing-tool').controller('AssertionsController', ['$scope', 'Assertions',
     '$stateParams', 'uiGridConstants', 'uiGridEditConstants', '$timeout', 'STTUtils', '$http',
   function($scope, Assertions, $stateParams, uiGridConstants, uiGridEditConstants, $timeout, STTUtils, $http) {
@@ -168,6 +169,24 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
         .error(function(data, status) {
           alert('Error');
         });
+    };
+
+    $scope.assertionsModelObj.xPathNamespacePrefixesGridOptions = {
+      columnDefs: [
+        {
+          name: 'prefix', width: 80, minWidth: 80,
+          sort: {
+            direction: uiGridConstants.ASC,
+            priority: 1
+          },
+          enableCellEdit: true,
+          //editableCellTemplate: 'assertionGridNameEditableCellTemplate.html'
+        },
+        {name: 'namespace', width: 250, minWidth: 250, enableCellEdit: true},
+        {name: 'delete', width: 80, minWidth: 80, enableSorting: false, enableCellEdit: false,
+          //cellTemplate: 'assertionGridDeleteCellTemplate.html'
+        }
+      ]
     };
   }
 ]);

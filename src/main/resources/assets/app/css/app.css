@@ -110,3 +110,15 @@
 .no-left-margin {
     margin-left: 0px !important;
 }
+
+.no-left-padding {
+    padding-left: 0px;
+}
+
+.no-right-padding {
+    padding-right: 0px;
+}
+
+.xpath-assertion-namespace-prefixes-grid {
+    height: 95px;
+}
