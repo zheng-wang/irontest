@@ -47,6 +47,8 @@ public class TestrunResource {
 
             Object response = HandlerFactory.getInstance().getHandler(endpoint.getHandler()).invoke(testrun.getRequest(), details);
             testrun.setResponse(response);
+        } else if (testrun.getTestcaseId() > 0) {
+
         }
 
         return testrun;

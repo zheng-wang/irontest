@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('service-testing-tool').controller('TestcasesController', ['$scope', 'Testcases', 'Teststeps', '$stateParams', '$state', 'uiGridConstants', '$timeout', '$location', 'PageNavigation',
-  function($scope, Testcases, Teststeps, $stateParams, $state, uiGridConstants, $timeout, $location, PageNavigation) {
+angular.module('service-testing-tool').controller('TestcasesController', ['$scope', 'Testcases', 'Teststeps', 'Testruns', '$stateParams', '$state', 'uiGridConstants', '$timeout', '$location', 'PageNavigation',
+  function($scope, Testcases, Teststeps, Testruns, $stateParams, $state, uiGridConstants, $timeout, $location, PageNavigation) {
     $scope.columnDefs = [
       {
         name: 'name', width: 200, minWidth: 100,
@@ -57,7 +57,7 @@ angular.module('service-testing-tool').controller('TestcasesController', ['$scop
       timer = $timeout(function() {
         $scope.update(isValid);
       }, 2000);
-    }
+    };
 
     $scope.create = function(isValid) {
       if (isValid) {
@@ -82,7 +82,7 @@ angular.module('service-testing-tool').controller('TestcasesController', ['$scop
 
     $scope.goto = function(state, params, expect) {
       var context = {
-        model: null,
+        model: $scope.testcase,
         url: $location.path(),
         expect: expect
       };
@@ -90,6 +90,17 @@ angular.module('service-testing-tool').controller('TestcasesController', ['$scop
       PageNavigation.contexts.push(context);
 
       $state.go(state, params);
+    };
+
+    $scope.run = function() {
+      var testrun = new Testruns({
+        testcaseId: $scope.testcase.id
+      });
+      testrun.$save(function(response) {
+
+      },function(error) {
+        alert('Error');
+      });
     };
 
     $scope.removeTeststep = function(teststep) {
@@ -108,11 +119,16 @@ angular.module('service-testing-tool').controller('TestcasesController', ['$scop
     };
 
     $scope.findOne = function() {
-      Testcases.get({
-        testcaseId: $stateParams.testcaseId
-      }, function(testcase) {
-        $scope.testcase = testcase;
-      });
-    }
+      var model = PageNavigation.returns.pop();
+      if (model) {
+        $scope.testcase = model;
+      } else {
+        Testcases.get({
+          testcaseId: $stateParams.testcaseId
+        }, function(testcase) {
+          $scope.testcase = testcase;
+        });
+      }
+    };
   }
 ]);
