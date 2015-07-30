@@ -123,9 +123,7 @@ angular.module('service-testing-tool').controller('DSAssertionsController', ['$s
       for (var i = 0; i < assertions.length; i ++) {
         var assertion = assertions[i];
         var values = _.pluck(data, assertion.properties.field);
-        if (_.contains(values, assertion.properties.value)) {
-          assertion.result = true;
-        };
+        assertion.result = _.contains(values, assertion.properties.value);
       }
     });
   }

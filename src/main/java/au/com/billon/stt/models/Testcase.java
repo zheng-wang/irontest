@@ -10,6 +10,7 @@ public class Testcase {
     private long id;
     private String name;
     private String description;
+    private String result;
     private Date created;
     private Date updated;
     private List<Teststep> teststeps;
@@ -46,6 +47,14 @@ public class Testcase {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getResult() {
+        return result;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
     }
 
     public Date getCreated() {
