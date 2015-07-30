@@ -172,6 +172,7 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
     };
 
     $scope.assertionsModelObj.xPathNamespacePrefixesGridOptions = {
+      enableGridMenu: true,
       columnDefs: [
         {
           name: 'prefix', width: 80, minWidth: 80,
@@ -182,9 +183,20 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
           enableCellEdit: true,
           //editableCellTemplate: 'assertionGridNameEditableCellTemplate.html'
         },
-        {name: 'namespace', width: 240, minWidth: 240, enableCellEdit: true},
-        {name: 'delete', width: 60, minWidth: 60, enableSorting: false, enableCellEdit: false,
-          //cellTemplate: 'assertionGridDeleteCellTemplate.html'
+        {name: 'namespace', width: 300, minWidth: 300, enableCellEdit: true}
+      ],
+      gridMenuCustomItems: [
+        {
+          title: 'Create', order: 210,
+          action: function ($event) {
+            console.log($event);
+          }
+        },
+        {
+          title: 'Delete', order: 220,
+          action: function ($event) {
+            console.log($event);
+          }
         }
       ]
     };

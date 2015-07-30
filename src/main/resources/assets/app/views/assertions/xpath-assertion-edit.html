@@ -22,9 +22,10 @@
       <p ng-show="teststepForm.assertionXPath.$error.required">XPath is required</p>
     </div>
   </div>
-  <div class="col-lg-5 no-left-padding">
+  <!-- use z-index here to avoid grid menu to be partially hidden -->
+  <div class="col-lg-5 no-left-padding" style="z-index: 1">
     <div ui-grid="assertionsModelObj.xPathNamespacePrefixesGridOptions" ui-grid-resize-columns ui-grid-move-columns
-         ui-grid-edit class="ui-grid xpath-assertion-namespace-prefixes-grid"></div>
+         class="ui-grid xpath-assertion-namespace-prefixes-grid"></div>
   </div>
 </div>
 <div class="form-group no-bottom-margin no-left-margin"
