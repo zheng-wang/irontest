@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('service-testing-tool').controller('EnvironmentsController', ['$scope', 'Environments', 'EnvEntries', '$stateParams', '$state', 'uiGridConstants',
-  function($scope, Environments, EnvEntries, $stateParams, $state, uiGridConstants) {
+angular.module('service-testing-tool').controller('EnvironmentsController', ['$scope', 'Environments', 'EnvEntries', 'PageNavigation', '$location', '$stateParams', '$state', 'uiGridConstants',
+  function($scope, Environments, EnvEntries, PageNavigation, $location, $stateParams, $state, uiGridConstants) {
     $scope.schema = {
       type: "object",
       properties: {
@@ -45,6 +45,7 @@ angular.module('service-testing-tool').controller('EnvironmentsController', ['$s
         } else {
           var environment = new Environments(this.environment);
           environment.$save(function(response) {
+            PageNavigation.contexts.push($scope.context);
             $state.go('environment_edit', {environmentId: response.id});
           }, function(exception) {
             $scope.alerts.push({type: 'warning', msg: exception.data});
@@ -83,7 +84,27 @@ angular.module('service-testing-tool').controller('EnvironmentsController', ['$s
       });
     };
 
+    $scope.return = function() {
+      PageNavigation.returns.push($scope.context.model);
+      $location.path($scope.context.url);
+    };
+
+    $scope.select = function() {
+      $scope.context.model.environmentId = $scope.environment.id;
+
+      Environments.get({
+        environmentId: $scope.context.model.environmentId
+      }, function(environment) {
+        $scope.context.model.environment = environment;
+
+        PageNavigation.returns.push($scope.context.model);
+        $location.path($scope.context.url);
+      });
+    };
+
     $scope.findOne = function() {
+      $scope.context = PageNavigation.contexts.pop();
+
       if ($stateParams.environmentId) {
         Environments.get({
           environmentId: $stateParams.environmentId

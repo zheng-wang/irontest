@@ -82,7 +82,7 @@ angular.module('service-testing-tool').controller('TestcasesController', ['$scop
 
     $scope.goto = function(state, params, expect) {
       var context = {
-        model: null,
+        model: $scope.testcase,
         url: $location.path(),
         expect: expect
       };
@@ -119,11 +119,16 @@ angular.module('service-testing-tool').controller('TestcasesController', ['$scop
     };
 
     $scope.findOne = function() {
-      Testcases.get({
-        testcaseId: $stateParams.testcaseId
-      }, function(testcase) {
-        $scope.testcase = testcase;
-      });
+      var model = PageNavigation.returns.pop();
+      if (model) {
+        $scope.testcase = model;
+      } else {
+        Testcases.get({
+          testcaseId: $stateParams.testcaseId
+        }, function(testcase) {
+          $scope.testcase = testcase;
+        });
+      }
     };
   }
 ]);

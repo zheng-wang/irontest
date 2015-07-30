@@ -9,6 +9,14 @@
     </div>
     <div class="row">
         <form name="environmentForm" class="form-horizontal" ng-submit="create_update(environmentForm)">
+            <div class="form-group">
+                <div class="col-md-2" ng-show="context && context.url">
+                    <button type="button" class="btn btn-info btn-block" ng-click="return()">Return</button>
+                </div>
+                <div class="col-md-2" ng-show="context && context.expect && environment.id">
+                    <button type="button" class="btn btn-info btn-block" ng-click="select()">Select</button>
+                </div>
+            </div>
             <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
             <label class="control-label{ text-align: left } col-md-2">Name</label>
             <div sf-schema="schema" sf-form="form.name" sf-model="environment" class="col-md-10"></div>
