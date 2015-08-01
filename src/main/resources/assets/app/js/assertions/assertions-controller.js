@@ -19,10 +19,10 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
           testcaseId: $stateParams.testcaseId,
           teststepId: $stateParams.teststepId
         }, function(response) {
-          //  delete the assertion row from the grid
-          var gridData = $scope.assertionsModelObj.gridOptions.data;
-          var indexOfRowToBeDeleted = STTUtils.indexOfArrayElementByProperty(gridData, 'id', currentAssertion.id);
-          gridData.splice(indexOfRowToBeDeleted, 1);
+          //  delete the assertion from the grid
+          var indexOfRowToBeDeleted = STTUtils.indexOfArrayElementByProperty(
+            $scope.assertionsModelObj.assertions, 'id', currentAssertion.id);
+          $scope.assertionsModelObj.assertions.splice(indexOfRowToBeDeleted, 1);
 
           //  set current assertion to null
           $scope.assertionsModelObj.assertion = null;
@@ -33,6 +33,7 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
     };
 
     $scope.assertionsModelObj.gridOptions = {
+      data: 'assertionsModelObj.assertions',
       enableRowHeaderSelection: false, multiSelect: false, noUnselect: true, enableGridMenu: true,
       enableColumnMenus: false,
       columnDefs: [
@@ -60,7 +61,7 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
           testcaseId: $stateParams.testcaseId,
           teststepId: $stateParams.teststepId
         }, function(response) {
-          $scope.assertionsModelObj.gridOptions.data = response;
+          $scope.assertionsModelObj.assertions = response;
         }, function(error) {
           alert('Error');
         });
@@ -72,16 +73,11 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
         teststepId: $stateParams.teststepId
       }, function(response) {
         $scope.assertionsModelObj.assertion = response;
-        var gridData = $scope.assertionsModelObj.gridOptions.data;
-
-        //  add the new assertion to the grid data
-        gridData.push(response);
+        $scope.assertionsModelObj.assertions.push(response);
 
         //  select the new assertion in the grid
-        var indexOfNewRow = STTUtils.indexOfArrayElementByProperty(
-          gridData, 'id', $scope.assertionsModelObj.assertion.id);
         $timeout(function() {    //  a trick for newly loaded grid data
-          $scope.assertionsModelObj.gridApi.selection.selectRow(gridData[indexOfNewRow]);
+          $scope.assertionsModelObj.gridApi.selection.selectRow(response);
         });
       }, function(error) {
         alert('Error');
