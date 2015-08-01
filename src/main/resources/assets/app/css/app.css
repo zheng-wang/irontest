@@ -107,12 +107,12 @@
     margin-bottom: 0px;
 }
 
-.form-group-reduced-bottom-margin {
-    margin-bottom: 10px;
-}
-
 .no-left-margin {
     margin-left: 0px !important;
+}
+
+.no-right-margin {
+    margin-right: 0px !important;
 }
 
 .no-left-padding {
@@ -121,6 +121,10 @@
 
 .no-right-padding {
     padding-right: 0px;
+}
+
+.form-group-reduced-bottom-margin {
+    margin-bottom: 10px;
 }
 
 .xpath-assertion-namespace-prefixes-grid {

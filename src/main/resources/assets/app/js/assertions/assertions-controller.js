@@ -34,13 +34,14 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
 
     $scope.assertionsModelObj.gridOptions = {
       enableRowHeaderSelection: false, multiSelect: false, noUnselect: true, enableGridMenu: true,
+      enableColumnMenus: false,
       columnDefs: [
         {
-          name: 'name', width: 250, minWidth: 250, headerTooltip: 'Double click to edit',
+          name: 'name', width: 260, minWidth: 260, headerTooltip: 'Double click to edit',
           sort: { direction: uiGridConstants.ASC, priority: 1 },
           enableCellEdit: true, editableCellTemplate: 'assertionGridNameEditableCellTemplate.html'
         },
-        {name: 'type', width: 80, minWidth: 80, enableCellEdit: false}
+        { name: 'type', width: 80, minWidth: 80, enableCellEdit: false }
       ],
       gridMenuCustomItems: [
         { title: 'Delete', order: 210, action: removeCurrentAssertion }
