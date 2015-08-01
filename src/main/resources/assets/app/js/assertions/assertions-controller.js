@@ -15,7 +15,7 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
       enableRowHeaderSelection: false, multiSelect: false, noUnselect: true,
       columnDefs: [
         {
-          name: 'name', displayName: 'Name (double click to edit)', width: 250, minWidth: 250,
+          name: 'name', width: 250, minWidth: 250, headerTooltip: 'Double click to edit',
           sort: { direction: uiGridConstants.ASC, priority: 1 },
           enableCellEdit: true,
           editableCellTemplate: 'assertionGridNameEditableCellTemplate.html'
@@ -185,13 +185,13 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
       enableGridMenu: true,
       columnDefs: [
         {
-          name: 'prefix', width: 80, minWidth: 80,
+          name: 'prefix', width: 80, minWidth: 80, headerTooltip: 'Double click to edit',
           sort: { direction: uiGridConstants.ASC, priority: 1 }, enableCellEdit: true,
           editableCellTemplate: 'namespacePrefixGridPrefixEditableCellTemplate.html'
         },
         {
-          name: 'namespace', width: 300, minWidth: 300, enableCellEdit: true,
-          editableCellTemplate: 'namespacePrefixGridNamespaceEditableCellTemplate.html'
+          name: 'namespace', width: 300, minWidth: 300, headerTooltip: 'Double click to edit',
+          enableCellEdit: true, editableCellTemplate: 'namespacePrefixGridNamespaceEditableCellTemplate.html'
         }
       ],
       gridMenuCustomItems: [
