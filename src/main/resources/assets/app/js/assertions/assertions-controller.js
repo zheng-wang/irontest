@@ -33,26 +33,6 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
       }
     };
 
-    //  highlight the current assertion in the grid
-    var selectCurrentAssertionInGrid = function() {
-      var gridData = $scope.assertionsModelObj.gridOptions.data;
-      var indexOfGridDataRow = STTUtils.indexOfArrayElementByProperty(
-        gridData, 'id', $scope.assertionsModelObj.assertion.id);
-      $timeout(function() {    //  a trick for newly loaded grid data
-        $scope.assertionsModelObj.gridApi.selection.selectRow(gridData[indexOfGridDataRow]);
-      });
-    };
-
-    $scope.$on(uiGridEditConstants.events.END_CELL_EDIT,
-      function () {
-        //  re-sort the assertion grid rows
-        $scope.assertionsModelObj.gridApi.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
-
-        //  ensure the selection (highlight) is not lost
-        //selectCurrentAssertionInGrid();
-      }
-    );
-
     $scope.assertionsModelObj.findAll = function() {
       Assertions.query(
         {
@@ -71,11 +51,17 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
         teststepId: $stateParams.teststepId
       }, function(response) {
         $scope.assertionsModelObj.assertion = response;
+        var gridData = $scope.assertionsModelObj.gridOptions.data;
 
         //  add the new assertion to the grid data
-        $scope.assertionsModelObj.gridOptions.data.push(response);
+        gridData.push(response);
 
-        selectCurrentAssertionInGrid();
+        //  select the new assertion in the grid
+        var indexOfNewRow = STTUtils.indexOfArrayElementByProperty(
+          gridData, 'id', $scope.assertionsModelObj.assertion.id);
+        $timeout(function() {    //  a trick for newly loaded grid data
+          $scope.assertionsModelObj.gridApi.selection.selectRow(gridData[indexOfNewRow]);
+        });
       }, function(error) {
         alert('Error');
       });
@@ -182,15 +168,15 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
     $scope.assertionsModelObj.xPathNamespacePrefixesGridOptions = {
       data: 'assertionsModelObj.assertion.properties.namespacePrefixes',
       enableRowHeaderSelection: false, multiSelect: false,
-      enableGridMenu: true,
+      enableGridMenu: true, enableColumnMenus: false,
       columnDefs: [
         {
-          name: 'prefix', width: 80, minWidth: 80, headerTooltip: 'Double click to edit',
+          name: 'prefix', width: 70, minWidth: 70, headerTooltip: 'Double click to edit',
           sort: { direction: uiGridConstants.ASC, priority: 1 }, enableCellEdit: true,
           editableCellTemplate: 'namespacePrefixGridPrefixEditableCellTemplate.html'
         },
         {
-          name: 'namespace', width: 300, minWidth: 300, headerTooltip: 'Double click to edit',
+          name: 'namespace', width: 310, minWidth: 310, headerTooltip: 'Double click to edit',
           enableCellEdit: true, editableCellTemplate: 'namespacePrefixGridNamespaceEditableCellTemplate.html'
         }
       ],
