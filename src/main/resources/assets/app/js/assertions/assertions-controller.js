@@ -187,18 +187,20 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
       columnDefs: [
         {
           name: 'prefix', width: 80, minWidth: 80,
-          sort: { direction: uiGridConstants.ASC, priority: 1 },
-          enableCellEdit: true,
-          //editableCellTemplate: 'assertionGridNameEditableCellTemplate.html'
+          sort: { direction: uiGridConstants.ASC, priority: 1 }, enableCellEdit: true,
+          editableCellTemplate: 'namespacePrefixGridPrefixEditableCellTemplate.html'
         },
-        {name: 'namespace', width: 300, minWidth: 300, enableCellEdit: true}
+        {
+          name: 'namespace', width: 300, minWidth: 300, enableCellEdit: true,
+          editableCellTemplate: 'namespacePrefixGridNamespaceEditableCellTemplate.html'
+        }
       ],
       gridMenuCustomItems: [
         {
           title: 'Create', order: 210,
           action: function ($event) {
             $scope.assertionsModelObj.assertion.properties.namespacePrefixes.push(
-              { prefix: 'ns1', namespace: 'http://com.mycompany/namespace1' }
+              { prefix: 'ns1', namespace: 'http://com.mycompany/service1' }
             );
             assertionUpdateInBackground();
           }
