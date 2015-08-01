@@ -26,4 +26,12 @@ public class STTUtils {
             return null;
         }
     }
+
+    public static Class getEvaluationRequestPropertiesClassByType(String evaluationRequestType) {
+        if (EvaluationRequest.EVALUATION_TYPE_XPATH.equals(evaluationRequestType)) {
+            return XPathEvaluationRequestProperties.class;
+        } else {
+            throw new RuntimeException("Unrecognized evaluation request type " + evaluationRequestType);
+        }
+    }
 }

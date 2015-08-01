@@ -1,5 +1,7 @@
 package au.com.billon.stt.models;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 /**
  * Created by Zheng on 27/07/2015.
  */
@@ -8,6 +10,7 @@ public class EvaluationRequest {
     private String type;
     private String expression;
     private String input;
+    private Properties properties;
 
     public String getType() {
         return type;
@@ -31,5 +34,14 @@ public class EvaluationRequest {
 
     public void setInput(String input) {
         this.input = input;
+    }
+
+    public Properties getProperties() {
+        return properties;
+    }
+
+    @JsonDeserialize(using=EvaluationRequestPropertiesDeserializer.class)
+    public void setProperties(Properties properties) {
+        this.properties = properties;
     }
 }

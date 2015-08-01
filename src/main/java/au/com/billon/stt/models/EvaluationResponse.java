@@ -5,6 +5,7 @@ package au.com.billon.stt.models;
  */
 public class EvaluationResponse {
     private String result;
+    private String errorMessage;
 
     public String getResult() {
         return result;
@@ -12,5 +13,13 @@ public class EvaluationResponse {
 
     public void setResult(String result) {
         this.result = result;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
 }

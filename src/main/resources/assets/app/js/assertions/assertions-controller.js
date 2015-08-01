@@ -150,10 +150,13 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
         .post(url, {
           type: 'XPath',
           expression: xpath,
-          input: input
+          input: input,
+          properties: {
+            namespacePrefixes: $scope.assertionsModelObj.assertion.properties.namespacePrefixes
+          }
         })
-        .success(function(data, status) {
-          $scope.assertionsModelObj.tempData.actualValue = data.result;
+        .success(function(response, status) {
+          $scope.assertionsModelObj.tempData.actualValue = response.result ? response.result : response.errorMessage;
         })
         .error(function(data, status) {
           alert('Error');

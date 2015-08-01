@@ -20,7 +20,7 @@ public class EvaluaterService {
     }
 
     @POST
-    public EvaluationResponse evaluate(EvaluationRequest request) throws Exception {
+    public EvaluationResponse evaluate(EvaluationRequest request) {
         return evaluator.evaluate(request);
     }
 }
