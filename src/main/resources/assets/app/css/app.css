@@ -126,3 +126,12 @@
 .xpath-assertion-namespace-prefixes-grid {
     height: 110px;
 }
+
+.xpath-assertion-namespace-prefixes-grid .ui-grid-cell-contents {
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+.xpath-assertion-namespace-prefixes-grid .ui-grid-menu-button {
+    height: 20px;
+}

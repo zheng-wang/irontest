@@ -167,17 +167,17 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
 
     $scope.assertionsModelObj.xPathNamespacePrefixesGridOptions = {
       data: 'assertionsModelObj.assertion.properties.namespacePrefixes',
-      enableRowHeaderSelection: false, multiSelect: false,
-      enableGridMenu: true, enableColumnMenus: false,
+      enableRowHeaderSelection: false, multiSelect: false, enableGridMenu: true, enableColumnMenus: false,
+      rowHeight: 20, enableHorizontalScrollbar: uiGridConstants.scrollbars.NEVER,
       columnDefs: [
         {
-          name: 'prefix', width: 70, minWidth: 70, headerTooltip: 'Double click to edit',
+          name: 'prefix', width: 65, minWidth: 65, headerTooltip: 'Double click to edit',
           sort: { direction: uiGridConstants.ASC, priority: 1 }, enableCellEdit: true,
           editableCellTemplate: 'namespacePrefixGridPrefixEditableCellTemplate.html'
         },
         {
-          name: 'namespace', width: 310, minWidth: 310, headerTooltip: 'Double click to edit',
-          enableCellEdit: true, editableCellTemplate: 'namespacePrefixGridNamespaceEditableCellTemplate.html'
+          name: 'namespace', headerTooltip: 'Double click to edit', enableCellEdit: true,
+          editableCellTemplate: 'namespacePrefixGridNamespaceEditableCellTemplate.html'
         }
       ],
       gridMenuCustomItems: [
