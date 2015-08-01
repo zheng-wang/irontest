@@ -102,8 +102,9 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
         name: 'XPath evaluates to value',
         type: 'XPath',
         properties: {
-         xPath: 'true',
-         expectedValue: 'true'
+         xPath: 'true()',
+         expectedValue: 'true',
+         namespacePrefixes: []
         }
       });
 
@@ -172,6 +173,7 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
     };
 
     $scope.assertionsModelObj.xPathNamespacePrefixesGridOptions = {
+      data: 'assertionsModelObj.assertion.properties.namespacePrefixes',
       enableGridMenu: true,
       columnDefs: [
         {
@@ -190,6 +192,9 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
           title: 'Create', order: 210,
           action: function ($event) {
             console.log($event);
+            $scope.assertionsModelObj.assertion.properties.namespacePrefixes.push(
+              { prefix: 'ns1', namespace: 'http://com.mycompany/namespace1' }
+            );
           }
         },
         {
