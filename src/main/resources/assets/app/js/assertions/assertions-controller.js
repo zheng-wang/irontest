@@ -11,19 +11,39 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
 
     var timer;
 
+    //  remove currently selected assertion
+    var removeCurrentAssertion = function(gridMenuEvent) {
+      var currentAssertion = $scope.assertionsModelObj.assertion;
+      if (currentAssertion) {
+        currentAssertion.$remove({
+          testcaseId: $stateParams.testcaseId,
+          teststepId: $stateParams.teststepId
+        }, function(response) {
+          //  delete the assertion row from the grid
+          var gridData = $scope.assertionsModelObj.gridOptions.data;
+          var indexOfRowToBeDeleted = STTUtils.indexOfArrayElementByProperty(gridData, 'id', currentAssertion.id);
+          gridData.splice(indexOfRowToBeDeleted, 1);
+
+          //  set current assertion to null
+          $scope.assertionsModelObj.assertion = null;
+        }, function(error) {
+          alert('Error');
+        });
+      }
+    };
+
     $scope.assertionsModelObj.gridOptions = {
-      enableRowHeaderSelection: false, multiSelect: false, noUnselect: true,
+      enableRowHeaderSelection: false, multiSelect: false, noUnselect: true, enableGridMenu: true,
       columnDefs: [
         {
           name: 'name', width: 250, minWidth: 250, headerTooltip: 'Double click to edit',
           sort: { direction: uiGridConstants.ASC, priority: 1 },
-          enableCellEdit: true,
-          editableCellTemplate: 'assertionGridNameEditableCellTemplate.html'
+          enableCellEdit: true, editableCellTemplate: 'assertionGridNameEditableCellTemplate.html'
         },
-        {name: 'type', width: 80, minWidth: 80, enableCellEdit: false},
-        {name: 'delete', width: 60, minWidth: 60, enableSorting: false, enableCellEdit: false,
-          cellTemplate: 'assertionGridDeleteCellTemplate.html'
-        }
+        {name: 'type', width: 80, minWidth: 80, enableCellEdit: false}
+      ],
+      gridMenuCustomItems: [
+        { title: 'Delete', order: 210, action: removeCurrentAssertion }
       ],
       onRegisterApi: function (gridApi) {
         $scope.assertionsModelObj.gridApi = gridApi;
@@ -126,26 +146,6 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
       timer = $timeout(function() {
         $scope.assertionsModelObj.update(isValid);
       }, 2000);
-    };
-
-    $scope.assertionsModelObj.remove = function(assertion) {
-      var assertionId = assertion.id;
-      assertion.$remove({
-        testcaseId: $stateParams.testcaseId,
-        teststepId: $stateParams.teststepId
-      }, function(response) {
-        //  delete the assertion row from the grid
-        var gridData = $scope.assertionsModelObj.gridOptions.data;
-        var indexOfRowToBeDeleted = STTUtils.indexOfArrayElementByProperty(gridData, 'id', assertionId);
-        gridData.splice(indexOfRowToBeDeleted, 1);
-
-        //  if deleted assertion is the one currently selected, set the current assertion to null
-        if ($scope.assertionsModelObj.assertion && $scope.assertionsModelObj.assertion.id === assertionId) {
-          $scope.assertionsModelObj.assertion = null;
-        }
-      }, function(error) {
-        alert('Error');
-      });
     };
 
     //  evaluate xpath against the input xml
