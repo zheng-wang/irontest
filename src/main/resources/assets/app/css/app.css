@@ -1,7 +1,7 @@
 /* custom bootstrap class */
 .page-header {
   padding-bottom: 8px;
-  margin: 25px 0 13px;
+  margin: 20px 0 10px;
   border-bottom: 1px solid #eee;
 }
 
@@ -88,12 +88,12 @@
 .assertions-area-content {
     width: 98%;
     margin-left: 15px;
-    padding: 15px;
+    padding: 10px;
     border: 1px solid #ccc
 }
 
 .assertions-grid {
-    height: 200px;
+    height: 210px;
     margin-left: 15px;
     padding-left: 0px;
     padding-right: 0px;
@@ -105,6 +105,10 @@
 
 .no-bottom-margin {
     margin-bottom: 0px;
+}
+
+.form-group-reduced-bottom-margin {
+    margin-bottom: 10px;
 }
 
 .no-left-margin {
@@ -120,5 +124,5 @@
 }
 
 .xpath-assertion-namespace-prefixes-grid {
-    height: 95px;
+    height: 110px;
 }
