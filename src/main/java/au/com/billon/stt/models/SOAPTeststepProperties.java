@@ -3,7 +3,7 @@ package au.com.billon.stt.models;
 /**
  * Created by Zheng on 21/07/2015.
  */
-public class SOAPTeststepProperties extends TeststepProperties {
+public class SOAPTeststepProperties extends Properties {
     private String wsdlUrl;
     private String wsdlBindingName;
     private String wsdlOperationName;

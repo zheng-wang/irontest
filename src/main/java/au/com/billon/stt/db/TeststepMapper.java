@@ -1,6 +1,7 @@
 package au.com.billon.stt.db;
 
 import au.com.billon.stt.models.*;
+import au.com.billon.stt.utils.STTUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.skife.jdbi.v2.StatementContext;
 import org.skife.jdbi.v2.tweak.ResultSetMapper;
@@ -15,10 +16,11 @@ import java.sql.SQLException;
 public class TeststepMapper implements ResultSetMapper<Teststep> {
     public Teststep map(int index, ResultSet rs, StatementContext ctx) throws SQLException {
         String type = rs.getString("type");
-        TeststepProperties properties = null;
+        Properties properties = null;
+        Class propertiesClass = STTUtils.getTeststepPropertiesClassByType(type);
         try {
-            if (Teststep.TEST_STEP_TYPE_SOAP.equals(type)) {
-                properties = new ObjectMapper().readValue(rs.getString("properties"), SOAPTeststepProperties.class);
+            if (propertiesClass != null) {
+                properties = (Properties) new ObjectMapper().readValue(rs.getString("properties"), propertiesClass);
             }
         } catch (IOException e) {
             throw new SQLException("Failed to deserialize properties JSON.", e);

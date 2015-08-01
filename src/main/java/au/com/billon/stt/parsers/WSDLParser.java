@@ -1,20 +1,19 @@
 package au.com.billon.stt.parsers;
 
+import au.com.billon.stt.models.Properties;
 import au.com.billon.stt.models.SOAPTeststepProperties;
-import au.com.billon.stt.models.TeststepProperties;
 import org.reficio.ws.builder.SoapBuilder;
 import org.reficio.ws.builder.SoapOperation;
 import org.reficio.ws.builder.core.Wsdl;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Trevor Li on 7/25/15.
  */
 public class WSDLParser implements STTParser {
-    public String getSampleRequest(TeststepProperties details) {
+    public String getSampleRequest(Properties details) {
         SOAPTeststepProperties soapDetails = (SOAPTeststepProperties) details;
 
         Wsdl wsdl = Wsdl.parse(soapDetails.getWsdlUrl());
@@ -24,7 +23,7 @@ public class WSDLParser implements STTParser {
         return builder.buildInputMessage(operation);
     }
 
-    public String getAdhocAddress(TeststepProperties details) {
+    public String getAdhocAddress(Properties details) {
         SOAPTeststepProperties soapDetails = (SOAPTeststepProperties) details;
 
         Wsdl wsdl = Wsdl.parse(soapDetails.getWsdlUrl());

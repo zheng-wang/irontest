@@ -19,13 +19,13 @@ public class Teststep {
     private Intface intface;
     private long endpointId;
     private Endpoint endpoint;
-    private TeststepProperties properties;
+    private Properties properties;
     private Date created;
     private Date updated;
 
     public Teststep() {}
 
-    public Teststep(long id, long testcaseId, String name, String type, String description, TeststepProperties properties,
+    public Teststep(long id, long testcaseId, String name, String type, String description, Properties properties,
                     Date created, Date updated, String request, long intfaceId, long endpointId) {
         this.id = id;
         this.testcaseId = testcaseId;
@@ -134,12 +134,12 @@ public class Teststep {
         this.type = type;
     }
 
-    public TeststepProperties getProperties() {
+    public Properties getProperties() {
         return properties;
     }
 
     @JsonDeserialize(using=TeststepPropertiesDeserializer.class)
-    public void setProperties(TeststepProperties properties) {
+    public void setProperties(Properties properties) {
         this.properties = properties;
     }
 }
