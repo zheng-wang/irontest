@@ -12,9 +12,7 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
     var timer;
 
     $scope.assertionsModelObj.gridOptions = {
-      enableRowHeaderSelection: false,
-      multiSelect: false,
-      noUnselect: true,
+      enableRowHeaderSelection: false, multiSelect: false, noUnselect: true,
       columnDefs: [
         {
           name: 'name', displayName: 'Name (double click to edit)', width: 250, minWidth: 250,
@@ -183,6 +181,7 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
 
     $scope.assertionsModelObj.xPathNamespacePrefixesGridOptions = {
       data: 'assertionsModelObj.assertion.properties.namespacePrefixes',
+      enableRowHeaderSelection: false, multiSelect: false,
       enableGridMenu: true,
       columnDefs: [
         {
@@ -208,10 +207,20 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
         {
           title: 'Delete', order: 220,
           action: function ($event) {
-            console.log($event);
+            var selectedRows = $scope.assertionsModelObj.xPathNamespacePrefixGridApi.selection.getSelectedRows();
+            var namespacePrefixes = $scope.assertionsModelObj.assertion.properties.namespacePrefixes;
+            for (var i = 0; i < selectedRows.length; i += 1) {
+              var indexOfRowToBeDeleted = STTUtils.indexOfArrayElementByProperty(
+                namespacePrefixes, '$$hashKey', selectedRows[i].$$hashKey);
+              namespacePrefixes.splice(indexOfRowToBeDeleted, 1);
+            }
+            assertionUpdateInBackground();
           }
         }
-      ]
+      ],
+      onRegisterApi: function (gridApi) {
+        $scope.assertionsModelObj.xPathNamespacePrefixGridApi = gridApi;
+      }
     };
   }
 ]);
