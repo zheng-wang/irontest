@@ -15,14 +15,14 @@ public class Assertion {
     private long teststepId;
     private String name;
     private String type;
-    private AssertionProperties properties;
+    private Properties properties;
     private String result;
     private Date created;
     private Date updated;
 
     public Assertion() {}
 
-    public Assertion(long id, long teststepId, String name, String type, AssertionProperties properties, Date created, Date updated) {
+    public Assertion(long id, long teststepId, String name, String type, Properties properties, Date created, Date updated) {
         this.id = id;
         this.teststepId = teststepId;
         this.name = name;
@@ -88,12 +88,12 @@ public class Assertion {
         this.updated = updated;
     }
 
-    public AssertionProperties getProperties() {
+    public Properties getProperties() {
         return properties;
     }
 
     @JsonDeserialize(using=AssertionPropertiesDeserializer.class)
-    public void setProperties(AssertionProperties properties) {
+    public void setProperties(Properties properties) {
         this.properties = properties;
     }
 }

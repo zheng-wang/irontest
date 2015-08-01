@@ -12,14 +12,14 @@ import java.io.IOException;
 /**
  * Created by Zheng on 19/07/2015.
  */
-public class AssertionPropertiesDeserializer extends JsonDeserializer<AssertionProperties> {
+public class AssertionPropertiesDeserializer extends JsonDeserializer<Properties> {
 
     @Override
-    public AssertionProperties deserialize(JsonParser jsonParser,
+    public Properties deserialize(JsonParser jsonParser,
                                  DeserializationContext deserializationContext) throws IOException {
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
         Assertion assertion = (Assertion) jsonParser.getCurrentValue();
-        AssertionProperties properties = (AssertionProperties) new ObjectMapper().treeToValue(
+        Properties properties = (Properties) new ObjectMapper().treeToValue(
                 node, STTUtils.getAssertionPropertiesClassByType(assertion.getType()));
         return properties;
     }

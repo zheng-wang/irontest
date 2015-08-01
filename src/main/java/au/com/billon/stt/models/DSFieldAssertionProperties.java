@@ -3,7 +3,7 @@ package au.com.billon.stt.models;
 /**
  * Created by Zheng on 19/07/2015.
  */
-public class DSFieldAssertionProperties extends AssertionProperties {
+public class DSFieldAssertionProperties extends Properties {
     private String field;
     private String operator;
     private String value;

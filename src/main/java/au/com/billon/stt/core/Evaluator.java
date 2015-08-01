@@ -20,7 +20,14 @@ public class Evaluator {
         if (EvaluationRequest.EVALUATION_TYPE_XPATH.equals(request.getType())) {
             XPath xpath = XPathFactory.newInstance().newXPath();
             InputSource inputSource = new InputSource(new StringReader(request.getInput()));
+            InputSource inputSource2 = new InputSource(new StringReader(request.getInput()));
+            System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaa");
+            System.out.println(request.getExpression());
+            String stringResult = xpath.evaluate(request.getExpression(), inputSource2);
+            System.out.println(stringResult);
             NodeList nodeList = (NodeList) xpath.evaluate(request.getExpression(), inputSource, XPathConstants.NODESET);
+            System.out.println(nodeList);
+            System.out.println(nodeList.getLength());
             String result = XMLUtils.domNodeListToString(nodeList);
             response.setResult(result);
         }

@@ -2,7 +2,7 @@ package au.com.billon.stt.db;
 
 import au.com.billon.stt.utils.STTUtils;
 import au.com.billon.stt.models.Assertion;
-import au.com.billon.stt.models.AssertionProperties;
+import au.com.billon.stt.models.Properties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.skife.jdbi.v2.StatementContext;
 import org.skife.jdbi.v2.tweak.ResultSetMapper;
@@ -17,9 +17,9 @@ import java.sql.SQLException;
 public class AssertionMapper implements ResultSetMapper<Assertion> {
     public Assertion map(int index, ResultSet rs, StatementContext ctx) throws SQLException {
         String type = rs.getString("type");
-        AssertionProperties properties = null;
+        Properties properties = null;
         try {
-            properties = (AssertionProperties) new ObjectMapper().readValue(
+            properties = (Properties) new ObjectMapper().readValue(
                     rs.getString("properties"), STTUtils.getAssertionPropertiesClassByType(type));
         } catch (IOException e) {
             throw new SQLException("Failed to deserialize properties JSON.", e);
