@@ -165,6 +165,24 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
         });
     };
 
+    var createNamespacePrefix = function(gridMenuEvent) {
+      $scope.assertionsModelObj.assertion.properties.namespacePrefixes.push(
+        { prefix: 'ns1', namespace: 'http://com.mycompany/service1' }
+      );
+      assertionUpdateInBackground();
+    };
+
+    var removeNamespacePrefix = function(gridMenuEvent) {
+      var selectedRows = $scope.assertionsModelObj.xPathNamespacePrefixGridApi.selection.getSelectedRows();
+      var namespacePrefixes = $scope.assertionsModelObj.assertion.properties.namespacePrefixes;
+      for (var i = 0; i < selectedRows.length; i += 1) {
+        var indexOfRowToBeDeleted = STTUtils.indexOfArrayElementByProperty(
+          namespacePrefixes, '$$hashKey', selectedRows[i].$$hashKey);
+        namespacePrefixes.splice(indexOfRowToBeDeleted, 1);
+      }
+      assertionUpdateInBackground();
+    };
+
     $scope.assertionsModelObj.xPathNamespacePrefixesGridOptions = {
       data: 'assertionsModelObj.assertion.properties.namespacePrefixes',
       enableRowHeaderSelection: false, multiSelect: false, enableGridMenu: true, enableColumnMenus: false,
@@ -181,28 +199,8 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
         }
       ],
       gridMenuCustomItems: [
-        {
-          title: 'Create', order: 210,
-          action: function ($event) {
-            $scope.assertionsModelObj.assertion.properties.namespacePrefixes.push(
-              { prefix: 'ns1', namespace: 'http://com.mycompany/service1' }
-            );
-            assertionUpdateInBackground();
-          }
-        },
-        {
-          title: 'Delete', order: 220,
-          action: function ($event) {
-            var selectedRows = $scope.assertionsModelObj.xPathNamespacePrefixGridApi.selection.getSelectedRows();
-            var namespacePrefixes = $scope.assertionsModelObj.assertion.properties.namespacePrefixes;
-            for (var i = 0; i < selectedRows.length; i += 1) {
-              var indexOfRowToBeDeleted = STTUtils.indexOfArrayElementByProperty(
-                namespacePrefixes, '$$hashKey', selectedRows[i].$$hashKey);
-              namespacePrefixes.splice(indexOfRowToBeDeleted, 1);
-            }
-            assertionUpdateInBackground();
-          }
-        }
+        { title: 'Create', order: 210, action: createNamespacePrefix },
+        { title: 'Delete', order: 220, action: removeNamespacePrefix }
       ],
       onRegisterApi: function (gridApi) {
         $scope.assertionsModelObj.xPathNamespacePrefixGridApi = gridApi;
