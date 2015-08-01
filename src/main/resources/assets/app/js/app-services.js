@@ -14,6 +14,12 @@ angular.module('service-testing-tool')
           }
         }
         return result;
+      },
+
+      //  Search elements in the array using property, and delete the first element that has the property
+      //  with the property value. The elements must be objects, and the property must be of primitive type.
+      deleteArrayElementByProperty: function(array, propertyName, propertyValue) {
+        array.splice(this.indexOfArrayElementByProperty(array, propertyName, propertyValue), 1);
       }
     };
   }

@@ -20,9 +20,7 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
           teststepId: $stateParams.teststepId
         }, function(response) {
           //  delete the assertion from the grid
-          var indexOfRowToBeDeleted = STTUtils.indexOfArrayElementByProperty(
-            $scope.assertionsModelObj.assertions, 'id', currentAssertion.id);
-          $scope.assertionsModelObj.assertions.splice(indexOfRowToBeDeleted, 1);
+          STTUtils.deleteArrayElementByProperty($scope.assertionsModelObj.assertions, 'id', currentAssertion.id);
 
           //  set current assertion to null
           $scope.assertionsModelObj.assertion = null;
@@ -173,9 +171,7 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
       var selectedRows = $scope.assertionsModelObj.xPathNamespacePrefixGridApi.selection.getSelectedRows();
       var namespacePrefixes = $scope.assertionsModelObj.assertion.properties.namespacePrefixes;
       for (var i = 0; i < selectedRows.length; i += 1) {
-        var indexOfRowToBeDeleted = STTUtils.indexOfArrayElementByProperty(
-          namespacePrefixes, '$$hashKey', selectedRows[i].$$hashKey);
-        namespacePrefixes.splice(indexOfRowToBeDeleted, 1);
+        STTUtils.deleteArrayElementByProperty(namespacePrefixes, '$$hashKey', selectedRows[i].$$hashKey);
       }
       assertionUpdateInBackground();
     };
