@@ -18,10 +18,7 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
       columnDefs: [
         {
           name: 'name', displayName: 'Name (double click to edit)', width: 250, minWidth: 250,
-          sort: {
-            direction: uiGridConstants.ASC,
-            priority: 1
-          },
+          sort: { direction: uiGridConstants.ASC, priority: 1 },
           enableCellEdit: true,
           editableCellTemplate: 'assertionGridNameEditableCellTemplate.html'
         },
@@ -54,7 +51,7 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
         $scope.assertionsModelObj.gridApi.core.notifyDataChange(uiGridConstants.dataChange.EDIT);
 
         //  ensure the selection (highlight) is not lost
-        selectCurrentAssertionInGrid();
+        //selectCurrentAssertionInGrid();
       }
     );
 
@@ -128,6 +125,18 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
       }
     };
 
+    //  update assertion without validating whole form and displaying saving successful message
+    var assertionUpdateInBackground = function() {
+      $scope.assertionsModelObj.assertion.$update({
+        testcaseId: $stateParams.testcaseId,
+        teststepId: $stateParams.teststepId
+      }, function(response) {
+        $scope.assertionsModelObj.assertion = response;
+      }, function(error) {
+        alert('Error');
+      });
+    };
+
     $scope.assertionsModelObj.autoSave = function(isValid) {
       if (timer) $timeout.cancel(timer);
       timer = $timeout(function() {
@@ -178,10 +187,7 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
       columnDefs: [
         {
           name: 'prefix', width: 80, minWidth: 80,
-          sort: {
-            direction: uiGridConstants.ASC,
-            priority: 1
-          },
+          sort: { direction: uiGridConstants.ASC, priority: 1 },
           enableCellEdit: true,
           //editableCellTemplate: 'assertionGridNameEditableCellTemplate.html'
         },
@@ -191,10 +197,10 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
         {
           title: 'Create', order: 210,
           action: function ($event) {
-            console.log($event);
             $scope.assertionsModelObj.assertion.properties.namespacePrefixes.push(
               { prefix: 'ns1', namespace: 'http://com.mycompany/namespace1' }
             );
+            assertionUpdateInBackground();
           }
         },
         {
