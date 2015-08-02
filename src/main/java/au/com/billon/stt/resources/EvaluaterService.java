@@ -4,7 +4,9 @@ import au.com.billon.stt.core.Evaluator;
 import au.com.billon.stt.models.EvaluationRequest;
 import au.com.billon.stt.models.EvaluationResponse;
 
-import javax.ws.rs.*;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 /**

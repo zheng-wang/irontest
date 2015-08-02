@@ -139,3 +139,11 @@
 .xpath-assertion-namespace-prefixes-grid .ui-grid-menu-button {
     height: 20px;
 }
+
+.xpath-evaluation-actual-value-textarea {
+    background-color: inherit !important;
+}
+
+.text-red {
+    color: red;
+}

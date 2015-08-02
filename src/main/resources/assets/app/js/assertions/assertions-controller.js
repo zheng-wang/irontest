@@ -156,7 +156,7 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
           }
         })
         .success(function(response, status) {
-          $scope.assertionsModelObj.tempData.actualValue = response.result ? response.result : response.errorMessage;
+          $scope.assertionsModelObj.tempData.xPathEvaluationResponse = response;
         })
         .error(function(data, status) {
           alert('Error');

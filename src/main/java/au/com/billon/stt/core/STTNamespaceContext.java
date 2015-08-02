@@ -2,7 +2,6 @@ package au.com.billon.stt.core;
 
 import au.com.billon.stt.models.NamespacePrefix;
 
-import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
 import java.util.Iterator;
 import java.util.List;

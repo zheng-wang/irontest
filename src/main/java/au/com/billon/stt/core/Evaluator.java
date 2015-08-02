@@ -4,17 +4,13 @@ import au.com.billon.stt.models.EvaluationRequest;
 import au.com.billon.stt.models.EvaluationResponse;
 import au.com.billon.stt.models.XPathEvaluationRequestProperties;
 import au.com.billon.stt.utils.XMLUtils;
-import org.glassfish.jersey.internal.util.SimpleNamespaceResolver;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-import javax.xml.namespace.NamespaceContext;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.io.StringReader;
-import java.util.Iterator;
 
 /**
  * Created by Zheng on 27/07/2015.
@@ -34,7 +30,8 @@ public class Evaluator {
                 result = XMLUtils.domNodeListToString(nodeList);
             } catch (Exception e) {
                 e.printStackTrace();
-                response.setErrorMessage(e.getMessage());
+                result = e.getMessage();
+                response.setError(true);
             }
 
             response.setResult(result);
