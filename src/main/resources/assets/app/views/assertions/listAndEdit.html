@@ -13,9 +13,10 @@
       </div>
       <div class="col-lg-4">
         <button type="button" class="btn btn-info"
-                ng-disabled="!assertionsModelObj.assertion.properties.xPath || !$parent.tempData.response ||
+                ng-disabled="!assertionsModelObj.assertion.properties.xPath || !$parent.tempData.soapResponse ||
                 !assertionsModelObj.assertion.properties.expectedValue"
-                title="Verify assertion against current response">Verify</button>
+                title="Verify assertion against current response"
+                ng-click="assertionsModelObj.verifyCurrentAssertion()">Verify</button>
       </div>
     </div>
     <div class="form-group no-bottom-margin">

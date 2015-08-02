@@ -144,13 +144,13 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
     };
 
     //  evaluate xpath against the input xml
-    $scope.assertionsModelObj.evaluateXPath = function(xpath, input) {
+    $scope.assertionsModelObj.evaluateXPath = function() {
       var url = 'api/jsonservice/evaluate';
       $http
         .post(url, {
           type: 'XPath',
-          expression: xpath,
-          input: input,
+          expression: $scope.assertionsModelObj.assertion.properties.xPath,
+          input: $scope.$parent.tempData.soapResponse,
           properties: {
             namespacePrefixes: $scope.assertionsModelObj.assertion.properties.namespacePrefixes
           }
@@ -158,7 +158,7 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
         .success(function(response, status) {
           $scope.assertionsModelObj.tempData.xPathEvaluationResponse = response;
         })
-        .error(function(data, status) {
+        .error(function(response, status) {
           alert('Error');
         });
     };
@@ -201,6 +201,21 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
       onRegisterApi: function (gridApi) {
         $scope.assertionsModelObj.xPathNamespacePrefixGridApi = gridApi;
       }
+    };
+
+    $scope.assertionsModelObj.verifyCurrentAssertion = function() {
+      var url = 'api/jsonservice/verifyassertion';
+      $http
+        .post(url, {
+          assertionId: $scope.assertionsModelObj.assertion,
+          input: $scope.$parent.tempData.soapResponse
+        })
+        .success(function(response, status) {
+          $scope.assertionsModelObj.tempData.assertionVerificationResponse = response;
+        })
+        .error(function(response, status) {
+          alert('Error');
+        });
     };
   }
 ]);

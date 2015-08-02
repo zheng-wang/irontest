@@ -157,7 +157,7 @@ angular.module('service-testing-tool').controller('TeststepsController', ['$scop
 
       var testrunRes = new Testruns(testrun);
       testrunRes.$save(function(response) {
-        $scope.tempData.response = response.response;
+        $scope.tempData.soapResponse = response.response;
         $scope.responseOptions.data = response.response;
         $scope.responseOptions.columnDefs = [ ];
         if (response.response.length > 0) {
