@@ -94,7 +94,8 @@ angular.module('service-testing-tool').controller('TestcasesController', ['$scop
 
     $scope.run = function() {
       var testrun = new Testruns({
-        testcaseId: $scope.testcase.id
+        testcaseId: $scope.testcase.id,
+        environmentId: $scope.testcase.environment.id
       });
       testrun.$save(function(response) {
 

@@ -75,7 +75,7 @@ public class STTApplication extends Application<STTConfiguration> {
         environment.jersey().register(new IntfaceResource(intfaceDAO));
         environment.jersey().register(new EnvironmentResource(environmentDAO));
         environment.jersey().register(new EnvEntryResource(enventryDAO));
-        environment.jersey().register(new TestrunResource(endpointDAO, endpointdtlDAO));
+        environment.jersey().register(new TestrunResource(endpointDAO, endpointdtlDAO, testcaseDAO, teststepDAO, environmentDAO, enventryDAO));
 
         //  register JSON services
         environment.jersey().register(new JSONService(new EvaluatorFactory()));
