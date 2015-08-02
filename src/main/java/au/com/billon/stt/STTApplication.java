@@ -1,6 +1,6 @@
 package au.com.billon.stt;
 
-import au.com.billon.stt.core.Evaluator;
+import au.com.billon.stt.core.EvaluatorFactory;
 import au.com.billon.stt.db.*;
 import au.com.billon.stt.exceptions.STTDBIExceptionMapper;
 import au.com.billon.stt.resources.*;
@@ -78,7 +78,7 @@ public class STTApplication extends Application<STTConfiguration> {
         environment.jersey().register(new TestrunResource(endpointDAO, endpointdtlDAO));
 
         //  register JSON services
-        environment.jersey().register(new EvaluaterService(new Evaluator()));
+        environment.jersey().register(new EvaluatorService(new EvaluatorFactory()));
 
         //  register exception mappers
         environment.jersey().register(new STTDBIExceptionMapper());
