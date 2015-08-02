@@ -145,7 +145,7 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
 
     //  evaluate xpath against the input xml
     $scope.assertionsModelObj.evaluateXPath = function(xpath, input) {
-      var url = 'api/evaluator';
+      var url = 'api/jsonservice/evaluate';
       $http
         .post(url, {
           type: 'XPath',
