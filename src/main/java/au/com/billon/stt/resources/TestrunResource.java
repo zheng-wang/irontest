@@ -1,5 +1,7 @@
 package au.com.billon.stt.resources;
 
+import au.com.billon.stt.core.Evaluator;
+import au.com.billon.stt.core.EvaluatorFactory;
 import au.com.billon.stt.db.*;
 import au.com.billon.stt.handlers.HandlerFactory;
 import au.com.billon.stt.models.*;
@@ -19,23 +21,31 @@ public class TestrunResource {
     private final EndpointDetailDAO endpointdtlDao;
     private final TestcaseDAO testcaseDao;
     private final TeststepDAO teststepDao;
-    private final EnvironmentDAO environmentDAO;
-    private final EnvEntryDAO enventryDAO;
+    private final EnvironmentDAO environmentDao;
+    private final EnvEntryDAO enventryDao;
+    private final IntfaceDAO intfaceDao;
+    private final AssertionDAO assertionDao;
+    private final EvaluatorFactory evaluatorFactory;
 
-    public TestrunResource(EndpointDAO endpointDao, EndpointDetailDAO endpointdtlDao, TestcaseDAO testcaseDao, TeststepDAO teststepDao, EnvironmentDAO environmentDAO, EnvEntryDAO enventryDAO) {
+    public TestrunResource(EndpointDAO endpointDao, EndpointDetailDAO endpointdtlDao, TestcaseDAO testcaseDao,
+                           TeststepDAO teststepDao, EnvironmentDAO environmentDao, EnvEntryDAO enventryDao,
+                           IntfaceDAO intfaceDao, AssertionDAO assertionDao, EvaluatorFactory evaluatorFactory) {
         this.endpointDao = endpointDao;
         this.endpointdtlDao = endpointdtlDao;
         this.testcaseDao = testcaseDao;
         this.teststepDao = teststepDao;
-        this.environmentDAO = environmentDAO;
-        this.enventryDAO = enventryDAO;
+        this.environmentDao = environmentDao;
+        this.enventryDao = enventryDao;
+        this.intfaceDao = intfaceDao;
+        this.assertionDao = assertionDao;
+        this.evaluatorFactory = evaluatorFactory;
     }
 
     @POST
     public Testrun create(Testrun testrun) throws Exception {
         if (testrun.getDetails() != null) {
             Map<String, String> details = testrun.getDetails();
-            details.put("url", details.get("wsdlUrl"));
+            details.put("url", details.get("soapAddress"));
             Object response = HandlerFactory.getInstance().getHandler("SOAPHandler").invoke(testrun.getRequest(), testrun.getDetails());
             testrun.setResponse(response);
         } else if (testrun.getEndpointId() > 0) {
@@ -53,8 +63,8 @@ public class TestrunResource {
             List<Teststep> teststeps = teststepDao.findByTestcaseId(testcaseId);
 
             long environmentId = testrun.getEnvironmentId();
-            Environment environment = environmentDAO.findById(environmentId);
-            List<EnvEntry> enventries = enventryDAO.findByEnv(environmentId);
+            Environment environment = environmentDao.findById(environmentId);
+            List<EnvEntry> enventries = enventryDao.findByEnv(environmentId);
             Map<Long, EnvEntry> enventriesMap = new HashMap<Long, EnvEntry>();
             for (EnvEntry enventry : enventries) {
                 enventriesMap.put(enventry.getIntfaceId(), enventry);
@@ -74,7 +84,15 @@ public class TestrunResource {
                     Endpoint endpoint = endpointDao.findById(endpointId);
                     Map<String, String> details = convertDetails(endpointdtlDao.findByEndpoint(endpointId));
                     Object response = HandlerFactory.getInstance().getHandler(endpoint.getHandler()).invoke(teststep.getRequest(), details);
+
                     System.out.println(response);
+
+                    Intface intface = intfaceDao.findById(intfaceId);
+                    List<Assertion> assertions = assertionDao.findByTeststepId(teststep.getId());
+                    for (Assertion assertion : assertions) {
+                        Evaluator evaluator = evaluatorFactory.createEvaluator(intface.getDeftype(), assertion.getType());
+                        evaluator.evaluate(response, assertion.getProperties());
+                    }
                 }
             }
         }

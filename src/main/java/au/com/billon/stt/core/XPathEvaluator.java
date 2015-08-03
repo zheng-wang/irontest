@@ -1,6 +1,7 @@
 package au.com.billon.stt.core;
 
 import au.com.billon.stt.models.EvaluationResponse;
+import au.com.billon.stt.models.Properties;
 import au.com.billon.stt.models.XPathEvaluationRequestProperties;
 import au.com.billon.stt.utils.XMLUtils;
 import com.sun.org.apache.xpath.internal.XPathException;
@@ -25,6 +26,10 @@ public class XPathEvaluator implements Evaluator {
         this.xmlInput = xmlInput;
         this.xPathExpression = xPathExpression;
         this.properties = properties;
+    }
+
+    public EvaluationResponse evaluate(Object response, Properties properties) {
+        return null;
     }
 
     public EvaluationResponse evaluate() {

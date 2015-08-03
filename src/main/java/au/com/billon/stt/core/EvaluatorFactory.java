@@ -17,4 +17,16 @@ public class EvaluatorFactory {
         }
         return result;
     }
+
+    public Evaluator createEvaluator(String intfaceType, String assertionType) {
+        Evaluator result = null;
+
+        if (intfaceType.equals("DBInterface")) {
+            if (assertionType.equals("DSField")) {
+                result = new DSFieldEvaluator();
+            }
+        }
+
+        return result;
+    }
 }
