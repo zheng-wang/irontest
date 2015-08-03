@@ -12,7 +12,8 @@ angular.module('service-testing-tool').controller('TestcasesController', ['$scop
         cellTemplate: 'testcaseGridNameCellTemplate.html'
       },
       {name: 'description', width: 585, minWidth: 300},
-      {name: 'delete', width: 100, minWidth: 80, enableSorting: false, enableFiltering: false,
+      {
+        name: 'delete', width: 100, minWidth: 80, enableSorting: false, enableFiltering: false,
         cellTemplate: 'testcaseGridDeleteCellTemplate.html'
       }
     ];
@@ -27,11 +28,17 @@ angular.module('service-testing-tool').controller('TestcasesController', ['$scop
         cellTemplate: 'teststepGridNameCellTemplate.html'
       },
       {name: 'description', width: 485, minWidth: 300},
-      {name: 'intface.name', displayName: 'Interface', width: 200, minWidth: 100,
+      {
+        name: 'intface.name', displayName: 'Interface', width: 200, minWidth: 100,
         cellTemplate: 'teststepGridIntfaceCellTemplate.html'
       },
-      {name: 'delete', width: 100, minWidth: 80, enableSorting: false, enableFiltering: false,
+      {
+        name: 'delete', width: 100, minWidth: 80, enableSorting: false, enableFiltering: false,
         cellTemplate: 'teststepGridDeleteCellTemplate.html'
+      },
+      {
+        name: 'result.error', displayName: 'Result', width: 100, minWidth: 80,
+        cellTemplate: 'teststepGridResultCellTemplate.html'
       }
     ];
 
@@ -95,10 +102,10 @@ angular.module('service-testing-tool').controller('TestcasesController', ['$scop
     $scope.run = function() {
       var testrun = new Testruns({
         testcaseId: $scope.testcase.id,
-        environmentId: $scope.testcase.environment.id
+        environmentId: $scope.testcase.environmentId
       });
       testrun.$save(function(response) {
-
+        $scope.testcase = response.testcase;
       },function(error) {
         alert('Error');
       });

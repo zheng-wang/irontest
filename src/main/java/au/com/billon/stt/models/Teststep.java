@@ -20,6 +20,7 @@ public class Teststep {
     private long endpointId;
     private Endpoint endpoint;
     private Properties properties;
+    private EvaluationResponse result;
     private Date created;
     private Date updated;
 
@@ -136,6 +137,14 @@ public class Teststep {
 
     public Properties getProperties() {
         return properties;
+    }
+
+    public EvaluationResponse getResult() {
+        return result;
+    }
+
+    public void setResult(EvaluationResponse result) {
+        this.result = result;
     }
 
     @JsonDeserialize(using=TeststepPropertiesDeserializer.class)

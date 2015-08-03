@@ -51,11 +51,12 @@ public class TestrunResource {
         } else if (testrun.getEndpointId() > 0) {
             long endpointId = testrun.getEndpointId();
             Endpoint endpoint = endpointDao.findById(endpointId);
-            testrun.setEndpoint(endpoint);
 
             Map<String, String> details = convertDetails(endpointdtlDao.findByEndpoint(endpointId));
 
             Object response = HandlerFactory.getInstance().getHandler(endpoint.getHandler()).invoke(testrun.getRequest(), details);
+
+            testrun.setEndpoint(endpoint);
             testrun.setResponse(response);
         } else if (testrun.getTestcaseId() > 0) {
             long testcaseId = testrun.getTestcaseId();
@@ -89,12 +90,23 @@ public class TestrunResource {
 
                     Intface intface = intfaceDao.findById(intfaceId);
                     List<Assertion> assertions = assertionDao.findByTeststepId(teststep.getId());
+
+                    EvaluationResponse result = new EvaluationResponse();
                     for (Assertion assertion : assertions) {
                         Evaluator evaluator = evaluatorFactory.createEvaluator(intface.getDeftype(), assertion.getType());
-                        evaluator.evaluate(response, assertion.getProperties());
+                        result = evaluator.evaluate(response, assertion.getProperties());
+                        if (result.isError()) {
+                            break;
+                        }
                     }
+
+                    teststep.setResult(result);
                 }
             }
+
+            testrun.setEnvironment(environment);
+            testcase.setTeststeps(teststeps);
+            testrun.setTestcase(testcase);
         }
 
         return testrun;

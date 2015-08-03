@@ -93,4 +93,14 @@
       </div>
     </div>
   </script>
+  <script type="text/ng-template" id="teststepGridResultCellTemplate.html">
+    <div class="ui-grid-cell-contents">
+      <div>
+        <div ng-if="row.entity.result">
+          <div ng-if="row.entity.result.error">Failed</div>
+          <div ng-if="! row.entity.result.error">Successful</div>
+        </div>
+      </div>
+    </div>
+  </script>
 </div>
