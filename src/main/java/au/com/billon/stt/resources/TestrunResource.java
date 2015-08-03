@@ -60,6 +60,10 @@ public class TestrunResource {
                 enventriesMap.put(enventry.getIntfaceId(), enventry);
             }
 
+            // set the default environment for the test case
+            testcase.setEnvironmentId(environmentId);
+            testcaseDao.update(testcase);
+
             for (Teststep teststep : teststeps) {
                 long intfaceId = teststep.getIntfaceId();
                 EnvEntry enventry = enventriesMap.get(intfaceId);
