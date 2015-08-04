@@ -27,4 +27,10 @@
             </div>
         </form>
     </div>
+    <script type="text/ng-template" id="propertyGridCellTemplate.html">
+        <div class="ui-grid-cell-contents">
+            <div ng-if="row.entity.name==='password'"><input type="password" ui-grid-editor ng-model="row.entity.value"></div>
+            <div ng-if="row.entity.name!=='password'"><input type="text" ui-grid-editor ng-model="row.entity.value"></div>
+        </div>
+    </script>
 </div>

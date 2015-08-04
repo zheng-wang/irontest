@@ -32,7 +32,11 @@ public class EndpointResource {
         List<EndpointDetail> details = endpoint.getDetails();
         for (EndpointDetail detail : details) {
             detail.setEndpointId(endpoint.getId());
-            detailDao.insert(detail);
+            if (EndpointDetail.PASSWORD_PROPERTY.equals(detail.getName())) {
+                detailDao.insertPassword(detail);
+            } else {
+                detailDao.insert(detail);
+            }
         }
 
         return endpoint;
@@ -44,7 +48,11 @@ public class EndpointResource {
 
         List<EndpointDetail> details = endpoint.getDetails();
         for (EndpointDetail detail : details) {
-            detailDao.update(detail);
+            if (EndpointDetail.PASSWORD_PROPERTY.equals(detail.getName())) {
+                detailDao.updatePassword(detail);
+            } else {
+                detailDao.update(detail);
+            }
         }
 
         return dao.findById(endpoint.getId());

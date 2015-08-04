@@ -52,7 +52,7 @@ public class TestrunResource {
             long endpointId = testrun.getEndpointId();
             Endpoint endpoint = endpointDao.findById(endpointId);
 
-            Map<String, String> details = convertDetails(endpointdtlDao.findByEndpoint(endpointId));
+            Map<String, String> details = getEndpointDetails(endpointId);
 
             Object response = HandlerFactory.getInstance().getHandler(endpoint.getHandler()).invoke(testrun.getRequest(), details);
 
@@ -83,7 +83,9 @@ public class TestrunResource {
                 } else {
                     long endpointId = enventry.getEndpointId();
                     Endpoint endpoint = endpointDao.findById(endpointId);
-                    Map<String, String> details = convertDetails(endpointdtlDao.findByEndpoint(endpointId));
+
+                    Map<String, String> details = getEndpointDetails(endpointId);
+
                     Object response = HandlerFactory.getInstance().getHandler(endpoint.getHandler()).invoke(teststep.getRequest(), details);
 
                     System.out.println(response);
@@ -110,6 +112,16 @@ public class TestrunResource {
         }
 
         return testrun;
+    }
+
+    private Map<String, String> getEndpointDetails(long endpointId) {
+        Map<String, String> details = convertDetails(endpointdtlDao.findByEndpoint(endpointId));
+        EndpointDetail detailPassword = endpointdtlDao.findByEndpointPassword(endpointId);
+        if (detailPassword != null) {
+            details.put(detailPassword.getName(), detailPassword.getValue());
+        }
+
+        return details;
     }
 
     private Map<String, String> convertDetails(List<EndpointDetail> detailsArray) {

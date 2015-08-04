@@ -149,7 +149,8 @@ angular.module('service-testing-tool').controller('EndpointsController', ['$scop
           name: 'name', displayName: 'Property Name', enableCellEdit: false, width: 200, minWidth: 100
         },
         {
-          name: 'value', displayName: 'Property Value', width: 600, minWidth: 300
+          name: 'value', displayName: 'Property Value', width: 600, minWidth: 300,
+          cellTemplate:'propertyGridCellTemplate.html'
         }
       ];
 

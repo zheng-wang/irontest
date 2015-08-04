@@ -21,9 +21,20 @@ public interface EndpointDetailDAO {
     @GetGeneratedKeys
     long insert(@BindBean EndpointDetail endpontdtl);
 
+    @SqlUpdate("insert into endpointdtl (endpointId, name, value) values (:endpointId, :name, ENCRYPT('AES', '8888', STRINGTOUTF8(:value)))")
+    @GetGeneratedKeys
+    long insertPassword(@BindBean EndpointDetail endpontdtl);
+
     @SqlUpdate("update endpointdtl set name = :name, value = :value, updated = CURRENT_TIMESTAMP where id = :id")
     int update(@BindBean EndpointDetail endpontdtl);
 
+    @SqlUpdate("update endpointdtl set name = :name, value = ENCRYPT('AES', '8888', STRINGTOUTF8(:value)), updated = CURRENT_TIMESTAMP where id = :id")
+    int updatePassword(@BindBean EndpointDetail endpontdtl);
+
     @SqlQuery("select * from endpointdtl where endpointId = :endpointId")
     List<EndpointDetail> findByEndpoint(@Bind("endpointId") long endpointId);
+
+    @SqlQuery("select id, endpointId, name, TRIM(CHAR(0) FROM UTF8TOSTRING(DECRYPT('AES', '8888', value))) as value, created, updated from endpointdtl " +
+            "where endpointId = :endpointId and name = 'password'")
+    EndpointDetail findByEndpointPassword(@Bind("endpointId") long endpointId);
 }

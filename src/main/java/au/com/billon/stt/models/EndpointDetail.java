@@ -6,6 +6,8 @@ import java.util.Date;
  * Created by Trevor Li on 7/07/2015.
  */
 public class EndpointDetail {
+    public static final String PASSWORD_PROPERTY = "password";
+
     private long id;
     private long endpointId;
     private String name;
