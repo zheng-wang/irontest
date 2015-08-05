@@ -4,26 +4,36 @@ package au.com.billon.stt.models;
  * Created by Zheng on 2/08/2015.
  */
 public class AssertionVerificationResponse {
-    private boolean successful;
+    private boolean passed;
 
-    //  If the verification is successful, result might contain actualValue such as for xpath assertion verification.
-    //  If the verification fails, result might contain error messages such as for xpath assertion verification
-    //  May need to refactor to be Properties when new type of assertion needs to be verified.
-    private String result;
+    //  message of error occurred during verification
+    private String error;
 
-    public boolean isSuccessful() {
-        return successful;
+    //  actualValue is currently used for xpath assertion only.
+    //  Might need to refactor to be Properties when new type of assertion needs to be verified.
+    private String actualValue;
+
+    public boolean isPassed() {
+        return passed;
     }
 
-    public void setSuccessful(boolean successful) {
-        this.successful = successful;
+    public void setPassed(boolean passed) {
+        this.passed = passed;
     }
 
-    public String getResult() {
-        return result;
+    public String getError() {
+        return error;
     }
 
-    public void setResult(String result) {
-        this.result = result;
+    public void setError(String error) {
+        this.error = error;
+    }
+
+    public String getActualValue() {
+        return actualValue;
+    }
+
+    public void setActualValue(String actualValue) {
+        this.actualValue = actualValue;
     }
 }

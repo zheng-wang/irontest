@@ -37,7 +37,7 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
       columnDefs: [
         {
           name: 'name', width: 260, minWidth: 260, headerTooltip: 'Double click to edit',
-          sort: { direction: uiGridConstants.ASC, priority: 1 },
+          sort: { direction: uiGridConstants.ASC, priority: 1 }, cellTemplate: 'assertionGridNameCellTemplate.html',
           enableCellEdit: true, editableCellTemplate: 'assertionGridNameEditableCellTemplate.html'
         },
         { name: 'type', width: 80, minWidth: 80, enableCellEdit: false }
@@ -214,9 +214,11 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
           input: $scope.$parent.tempData.soapResponse
         })
         .success(function(response, status) {
-          console.log(response);
+          $scope.assertionsModelObj.assertion.verificationPassed = response.passed;
           if (assertion.type === 'XPath') {
-            $scope.assertionsModelObj.tempData.xPathEvaluationResult.result = response.result;
+            $scope.assertionsModelObj.tempData.assertionXPathActualValue =
+              response.error ? response.error : response.actualValue;
+            $scope.assertionsModelObj.tempData.assertionXPathActualValueError = response.error;
           }
         })
         .error(function(response, status) {

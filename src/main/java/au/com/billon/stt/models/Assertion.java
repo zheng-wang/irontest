@@ -17,6 +17,7 @@ public class Assertion {
     private String type;
     private Properties properties;
     private String result;
+    private Boolean verificationPassed; //  true if pass, false otherwise, null if not verified
     private Date created;
     private Date updated;
 
@@ -95,5 +96,13 @@ public class Assertion {
     @JsonDeserialize(using=AssertionPropertiesDeserializer.class)
     public void setProperties(Properties properties) {
         this.properties = properties;
+    }
+
+    public Boolean isVerificationPassed() {
+        return verificationPassed;
+    }
+
+    public void setVerificationPassed(Boolean verificationPassed) {
+        this.verificationPassed = verificationPassed;
     }
 }
