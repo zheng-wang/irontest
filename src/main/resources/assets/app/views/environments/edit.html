@@ -1,47 +1,48 @@
 <div ng-controller="EnvironmentsController" data-ng-init="findOne()">
     <div class="row">
-        <div class="col-md-8">
-            <h3 class="page-header">Environment Interfaces</h3>
-        </div>
-        <div ng-show="environment.updated" class="updated-date">
-            <label class="control-label">Last updated at {{environment.updated | date:'dd-MM-yyyy HH:mm:ss'}}</label>
-        </div>
+        <h3 class="page-header">Environment - {{environment.name}}</h3>
     </div>
     <div class="row">
-        <form name="environmentForm" class="form-horizontal" ng-submit="create_update(environmentForm)">
-            <div class="form-group">
-                <div class="col-md-2" ng-show="context && context.url">
-                    <button type="button" class="btn btn-info btn-block" ng-click="return()">Return</button>
-                </div>
-                <div class="col-md-2" ng-show="context && context.expect && environment.id">
-                    <button type="button" class="btn btn-info btn-block" ng-click="select()">Select</button>
-                </div>
+        <div class="form-group">
+            <div class="col-md-2" ng-show="context && context.url">
+                <button type="button" class="btn btn-info btn-block" ng-click="return()">Return</button>
             </div>
-            <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
-            <label class="control-label{ text-align: left } col-md-2">Name</label>
-            <div sf-schema="schema" sf-form="form.name" sf-model="environment" class="col-md-10"></div>
-            <label class="control-label{ text-align: left } col-md-2">Description</label>
-            <div sf-schema="schema" sf-form="form.description" sf-model="environment" class="col-md-10"></div>
-            <div class="col-md-2">
-                <button type="button" class="btn btn-default btn-block" ui-sref="environment_all">Back</button>
+            <div class="col-md-2" ng-show="context && context.expect && environment.id">
+                <button type="button" class="btn btn-info btn-block" ng-click="select()">Select</button>
             </div>
-            <div class="col-md-offset-2 col-md-2">
-                <button type="submit" class="btn btn-success btn-block">Save</button>
-            </div>
-            <div class="col-md-offset-2 col-md-2">
-                <button type="button" class="btn btn-warning btn-block" ng-click="remove(environment)">Delete</button>
-            </div>
-        </form>
-    </div>
-    <div class="row spacer-top-40 form-group">
-        <div ui-grid="{paginationPageSizes: [10,20,50,100], paginationPageSize: 10, enableFiltering: true, data: enventries, columnDefs: columnDefs}"
-             ui-grid-pagination ui-grid-resize-columns ui-grid-move-columns class="ui-grid"></div>
-    </div>
-    <div class="row">
-        <div class="col-md-2">
-            <p><button class="btn btn-primary btn-block" ui-sref="enventry_create({environmentId: environment.id})">Create</button></p>
         </div>
     </div>
+    <form name="environmentForm" class="form-horizontal col-md-10" ng-submit="create_update(environmentForm)">
+        <tabset justified="true">
+            <tab heading="Basic Info">
+                <p></p>
+                <p><medium ng-show="environment.updated">Last updated at {{environment.updated | date:'dd-MM-yyyy HH:mm:ss'}}</medium></p>
+                <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+                <div sf-schema="schema" sf-form="form" sf-model="environment" ></div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-default btn-block" ui-sref="environment_all">Back</button>
+                </div>
+                <div class="col-md-offset-2 col-md-2">
+                    <button type="submit" class="btn btn-success btn-block">Save</button>
+                </div>
+                <div class="col-md-offset-2 col-md-2">
+                    <button type="button" class="btn btn-warning btn-block" ng-click="remove(environment)">Delete</button>
+                </div>
+            </tab>
+            <tab heading="Interfaces">
+                <p></p>
+                <div class="row">
+                    <div class="col-md-2">
+                        <p><button class="btn btn-primary btn-block" ui-sref="enventry_create({environmentId: environment.id})">Create</button></p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div ui-grid="{paginationPageSizes: [10,20,50,100], paginationPageSize: 10, enableFiltering: true, data: enventries, columnDefs: columnDefs}"
+                         ui-grid-pagination ui-grid-resize-columns ui-grid-move-columns class="ui-grid"></div>
+                </div>
+            </tab>
+        </tabset>
+    </form>
     <script type="text/ng-template" id="gridCellTemplate.html">
         <div class="ui-grid-cell-contents">
             <div><a ui-sref="enventry_edit({ enventryId: row.entity.id })">{{COL_FIELD}}</a></div>
