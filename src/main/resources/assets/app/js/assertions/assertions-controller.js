@@ -156,7 +156,9 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
           }
         })
         .success(function(response, status) {
-          $scope.assertionsModelObj.tempData.xPathEvaluationResponse = response;
+          $scope.assertionsModelObj.tempData.assertionXPathActualValue =
+            response.error ? response.error : response.actualValue;
+          $scope.assertionsModelObj.tempData.assertionXPathActualValueError = response.error;
         })
         .error(function(response, status) {
           alert('Error');
@@ -204,15 +206,18 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
     };
 
     $scope.assertionsModelObj.verifyCurrentAssertion = function() {
+      var assertion = $scope.assertionsModelObj.assertion;
       var url = 'api/jsonservice/verifyassertion';
       $http
         .post(url, {
-          assertion: $scope.assertionsModelObj.assertion,
+          assertion: assertion,
           input: $scope.$parent.tempData.soapResponse
         })
         .success(function(response, status) {
           console.log(response);
-          $scope.assertionsModelObj.tempData.assertionVerificationResponse = response;
+          if (assertion.type === 'XPath') {
+            $scope.assertionsModelObj.tempData.xPathEvaluationResult.result = response.result;
+          }
         })
         .error(function(response, status) {
           alert('Error');

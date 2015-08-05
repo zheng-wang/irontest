@@ -39,9 +39,9 @@ public class JSONService {
                     assertion.getType(), assertionProperties.getxPath(), request.getInput(),
                     new XPathEvaluationRequestProperties(assertionProperties.getNamespacePrefixes()));
             EvaluationResponse evaluationResponse = evaluatorFactory.createEvaluator(evaluationRequest).evaluate();
-            response.setSuccessful(!evaluationResponse.isError() &&
-                    assertionProperties.getExpectedValue().equals(evaluationResponse.getResult()));
-            response.setResult(evaluationResponse.getResult());
+            response.setSuccessful(evaluationResponse.getError() == null &&
+                    assertionProperties.getExpectedValue().equals(evaluationResponse.getActualValue()));
+            response.setResult(evaluationResponse.getActualValue());
         }
         return response;
     }

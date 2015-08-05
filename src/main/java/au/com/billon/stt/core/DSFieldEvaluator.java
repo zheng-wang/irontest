@@ -19,7 +19,7 @@ public class DSFieldEvaluator implements Evaluator {
 
     public EvaluationResponse evaluate(Object response, Properties properties) {
         EvaluationResponse result = new EvaluationResponse();
-        result.setError(true);
+        result.setError("true");
 
         DSFieldAssertionProperties assertionProperties = (DSFieldAssertionProperties) properties;
 
@@ -28,7 +28,7 @@ public class DSFieldEvaluator implements Evaluator {
 
             for (Map<String, Object> responseMap : responseList) {
                 if (assertionProperties.getValue().equals(responseMap.get(assertionProperties.getField()))) {
-                    result.setError(false);
+                    result.setError("false");
                     break;
                 }
             }

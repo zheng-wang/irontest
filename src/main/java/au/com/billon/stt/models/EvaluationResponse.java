@@ -4,27 +4,25 @@ package au.com.billon.stt.models;
  * Created by Zheng on 27/07/2015.
  */
 public class EvaluationResponse {
-    //  whether any error occurs during the evaluation
-    private boolean error;
+    //  message of error that occurred during the evaluation
+    private String error;
 
-    //  if error, then the result is the error message,
-    //  otherwise the result is the actual value of the expression evaluated against the input (see EvaluationRequest)
-    private String result;
+    //  actual value of the expression evaluated against the input (see EvaluationRequest)
+    private String actualValue;
 
-
-    public String getResult() {
-        return result;
-    }
-
-    public void setResult(String result) {
-        this.result = result;
-    }
-
-    public boolean isError() {
+    public String getError() {
         return error;
     }
 
-    public void setError(boolean error) {
+    public void setError(String error) {
         this.error = error;
+    }
+
+    public String getActualValue() {
+        return actualValue;
+    }
+
+    public void setActualValue(String actualValue) {
+        this.actualValue = actualValue;
     }
 }

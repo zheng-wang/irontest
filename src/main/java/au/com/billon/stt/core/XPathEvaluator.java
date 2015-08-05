@@ -37,12 +37,12 @@ public class XPathEvaluator implements Evaluator {
         XPath xpath = XPathFactory.newInstance().newXPath();
         xpath.setNamespaceContext(new STTNamespaceContext(properties.getNamespacePrefixes()));
 
-        String result = null;
-        boolean error = false;
+        String actualValue = null;
+        String errorMessage = null;
         try {
             InputSource inputSource = new InputSource(new StringReader(xmlInput));
             Object value = xpath.evaluate(xPathExpression, inputSource, XPathConstants.NODESET);
-            result = XMLUtils.domNodeListToString((NodeList) value);
+            actualValue = XMLUtils.domNodeListToString((NodeList) value);
         } catch (XPathExpressionException e) {
             Throwable cause = e.getCause();
             if (cause instanceof XPathException &&
@@ -50,25 +50,22 @@ public class XPathEvaluator implements Evaluator {
                 //  The value is not of type NODESET. Swallow the exception and try STRING.
                 InputSource inputSource2 = new InputSource(new StringReader(xmlInput));
                 try {
-                    result = (String) xpath.evaluate(xPathExpression, inputSource2, XPathConstants.STRING);
+                    actualValue = (String) xpath.evaluate(xPathExpression, inputSource2, XPathConstants.STRING);
                 } catch (XPathExpressionException e1) {
                     e.printStackTrace();
-                    result = e.getMessage();
-                    error = true;
+                    errorMessage = e.getMessage();
                 }
             } else {
                 e.printStackTrace();
-                result = e.getMessage();
-                error = true;
+                errorMessage = e.getMessage();
             }
         } catch (Exception e) {
             e.printStackTrace();
-            result = e.getMessage();
-            error = true;
+            errorMessage = e.getMessage();
         }
 
-        response.setResult(result);
-        response.setError(error);
+        response.setError(errorMessage);
+        response.setActualValue(actualValue);
 
         return response;
     }
