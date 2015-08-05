@@ -13,11 +13,11 @@
         </div>
     </div>
     <form name="environmentForm" class="form-horizontal col-md-10" ng-submit="create_update(environmentForm)">
-        <p><medium ng-show="environment.updated">Last updated at {{environment.updated | date:'dd-MM-yyyy HH:mm:ss'}}</medium></p>
-        <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
         <tabset justified="true">
             <tab heading="Basic Info">
                 <p></p>
+                <p><medium ng-show="environment.updated">Last updated at {{environment.updated | date:'dd-MM-yyyy HH:mm:ss'}}</medium></p>
+                <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
                 <div sf-schema="schema" sf-form="form" sf-model="environment" ></div>
                 <div class="col-md-2">
                     <button type="button" class="btn btn-default btn-block" ui-sref="environment_all">Back</button>
