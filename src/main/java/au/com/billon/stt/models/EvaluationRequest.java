@@ -12,6 +12,15 @@ public class EvaluationRequest {
     private String input;
     private Properties properties;
 
+    public EvaluationRequest() {}
+
+    public EvaluationRequest(String type, String expression, String input, Properties properties) {
+        this.type = type;
+        this.expression = expression;
+        this.input = input;
+        this.properties = properties;
+    }
+
     public String getType() {
         return type;
     }
