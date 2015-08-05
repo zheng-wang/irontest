@@ -1,10 +1,8 @@
 package au.com.billon.stt.resources;
 
 import au.com.billon.stt.core.EvaluatorFactory;
-import au.com.billon.stt.models.AssertionVerificationRequest;
-import au.com.billon.stt.models.AssertionVerificationResponse;
-import au.com.billon.stt.models.EvaluationRequest;
-import au.com.billon.stt.models.EvaluationResponse;
+import au.com.billon.stt.db.AssertionDAO;
+import au.com.billon.stt.models.*;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -18,19 +16,33 @@ import javax.ws.rs.core.MediaType;
  */
 @Path("/jsonservice") @Produces({ MediaType.APPLICATION_JSON })
 public class JSONService {
-    private EvaluatorFactory factory;
+    private EvaluatorFactory evaluatorFactory;
+    private AssertionDAO assertionDAO;
 
-    public JSONService(EvaluatorFactory factory) {
-        this.factory = factory;
+    public JSONService(EvaluatorFactory evaluatorFactory, AssertionDAO assertionDAO) {
+        this.evaluatorFactory = evaluatorFactory;
+        this.assertionDAO = assertionDAO;
     }
 
     @POST @Path("evaluate")
     public EvaluationResponse evaluate(EvaluationRequest request) {
-        return factory.createEvaluator(request).evaluate();
+        return evaluatorFactory.createEvaluator(request).evaluate();
     }
 
     @POST @Path("verifyassertion")
     public AssertionVerificationResponse verifyAssertion(AssertionVerificationRequest request) {
-        return null;
+        AssertionVerificationResponse response = new AssertionVerificationResponse();
+        Assertion assertion = request.getAssertion();
+        if (Assertion.ASSERTION_TYPE_XPATH.equals(assertion.getType())) {
+            XPathAssertionProperties assertionProperties = (XPathAssertionProperties) assertion.getProperties();
+            EvaluationRequest evaluationRequest = new EvaluationRequest(
+                    assertion.getType(), assertionProperties.getxPath(), request.getInput(),
+                    new XPathEvaluationRequestProperties(assertionProperties.getNamespacePrefixes()));
+            EvaluationResponse evaluationResponse = evaluatorFactory.createEvaluator(evaluationRequest).evaluate();
+            response.setSuccessful(!evaluationResponse.isError() &&
+                    assertionProperties.getExpectedValue().equals(evaluationResponse.getResult()));
+            response.setResult(evaluationResponse.getResult());
+        }
+        return response;
     }
 }

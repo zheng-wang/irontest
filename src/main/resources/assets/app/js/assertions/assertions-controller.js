@@ -207,10 +207,11 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
       var url = 'api/jsonservice/verifyassertion';
       $http
         .post(url, {
-          assertionId: $scope.assertionsModelObj.assertion,
+          assertion: $scope.assertionsModelObj.assertion,
           input: $scope.$parent.tempData.soapResponse
         })
         .success(function(response, status) {
+          console.log(response);
           $scope.assertionsModelObj.tempData.assertionVerificationResponse = response;
         })
         .error(function(response, status) {
