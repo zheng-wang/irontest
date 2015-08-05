@@ -17,7 +17,7 @@ public class Assertion {
     private String type;
     private Properties properties;
     private String result;
-    private Boolean verificationPassed; //  true if pass, false otherwise, null if not verified
+    private AssertionVerification verification;
     private Date created;
     private Date updated;
 
@@ -98,11 +98,11 @@ public class Assertion {
         this.properties = properties;
     }
 
-    public Boolean isVerificationPassed() {
-        return verificationPassed;
+    public AssertionVerification getVerification() {
+        return verification;
     }
 
-    public void setVerificationPassed(Boolean verificationPassed) {
-        this.verificationPassed = verificationPassed;
+    public void setVerification(AssertionVerification verification) {
+        this.verification = verification;
     }
 }

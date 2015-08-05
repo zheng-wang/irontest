@@ -34,7 +34,7 @@
 </div>
 <script type="text/ng-template" id="assertionGridNameCellTemplate.html">
   <div class="ui-grid-cell-contents">
-    <div ng-class="{ 'background-red' : row.entity.verificationPassed === false }">{{COL_FIELD}}</div>
+    <div ng-class="{ 'background-red' : row.entity.verification.passed === false }">{{COL_FIELD}}</div>
   </div>
 </script>
 <script type="text/ng-template" id="assertionGridNameEditableCellTemplate.html">

@@ -1,7 +1,6 @@
 package au.com.billon.stt.resources;
 
 import au.com.billon.stt.core.EvaluatorFactory;
-import au.com.billon.stt.db.AssertionDAO;
 import au.com.billon.stt.models.*;
 
 import javax.ws.rs.POST;
@@ -17,11 +16,9 @@ import javax.ws.rs.core.MediaType;
 @Path("/jsonservice") @Produces({ MediaType.APPLICATION_JSON })
 public class JSONService {
     private EvaluatorFactory evaluatorFactory;
-    private AssertionDAO assertionDAO;
 
-    public JSONService(EvaluatorFactory evaluatorFactory, AssertionDAO assertionDAO) {
+    public JSONService(EvaluatorFactory evaluatorFactory) {
         this.evaluatorFactory = evaluatorFactory;
-        this.assertionDAO = assertionDAO;
     }
 
     @POST @Path("evaluate")
@@ -30,20 +27,19 @@ public class JSONService {
     }
 
     @POST @Path("verifyassertion")
-    public AssertionVerificationResponse verifyAssertion(AssertionVerificationRequest request) {
-        AssertionVerificationResponse response = new AssertionVerificationResponse();
-        Assertion assertion = request.getAssertion();
+    public Assertion verifyAssertion(Assertion assertion) {
         if (Assertion.ASSERTION_TYPE_XPATH.equals(assertion.getType())) {
+            AssertionVerification verification = assertion.getVerification();
             XPathAssertionProperties assertionProperties = (XPathAssertionProperties) assertion.getProperties();
             EvaluationRequest evaluationRequest = new EvaluationRequest(
-                    assertion.getType(), assertionProperties.getxPath(), request.getInput(),
+                    assertion.getType(), assertionProperties.getxPath(), verification.getInput(),
                     new XPathEvaluationRequestProperties(assertionProperties.getNamespacePrefixes()));
             EvaluationResponse evaluationResponse = evaluatorFactory.createEvaluator(evaluationRequest).evaluate();
-            response.setPassed(evaluationResponse.getError() == null &&
+            verification.setPassed(evaluationResponse.getError() == null &&
                     assertionProperties.getExpectedValue().equals(evaluationResponse.getActualValue()));
-            response.setError(evaluationResponse.getError());
-            response.setActualValue(evaluationResponse.getActualValue());
+            verification.setError(evaluationResponse.getError());
+            verification.setActualValue(evaluationResponse.getActualValue());
         }
-        return response;
+        return assertion;
     }
 }

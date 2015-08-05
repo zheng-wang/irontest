@@ -1,23 +1,30 @@
 package au.com.billon.stt.models;
 
 /**
- * Created by Zheng on 2/08/2015.
+ * Created by Zheng on 5/08/2015.
  */
-public class AssertionVerificationResponse {
-    private boolean passed;
-
-    //  message of error occurred during verification
-    private String error;
+public class AssertionVerification {
+    private String input;            //  the string that the assertion is verified against
+    private Boolean passed;          //  true if assertion verification passed, false otherwise, null if not verified
+    private String error;            //  message of error occurred during verification
 
     //  actualValue is currently used for xpath assertion only.
     //  Might need to refactor to be Properties when new type of assertion needs to be verified.
     private String actualValue;
 
-    public boolean isPassed() {
+    public String getInput() {
+        return input;
+    }
+
+    public void setInput(String input) {
+        this.input = input;
+    }
+
+    public Boolean getPassed() {
         return passed;
     }
 
-    public void setPassed(boolean passed) {
+    public void setPassed(Boolean passed) {
         this.passed = passed;
     }
 

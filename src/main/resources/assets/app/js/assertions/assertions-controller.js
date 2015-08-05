@@ -208,17 +208,18 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
     $scope.assertionsModelObj.verifyCurrentAssertion = function() {
       var assertion = $scope.assertionsModelObj.assertion;
       var url = 'api/jsonservice/verifyassertion';
+      assertion.verification = {
+        input: $scope.$parent.tempData.soapResponse
+      };
       $http
-        .post(url, {
-          assertion: assertion,
-          input: $scope.$parent.tempData.soapResponse
-        })
+        .post(url, assertion)
         .success(function(response, status) {
-          $scope.assertionsModelObj.assertion.verificationPassed = response.passed;
+          //  Only verification object is changed. Do not update the whole assertion object, to avoid side effect.
+          $scope.assertionsModelObj.assertion.verification = response.verification;
           if (assertion.type === 'XPath') {
             $scope.assertionsModelObj.tempData.assertionXPathActualValue =
-              response.error ? response.error : response.actualValue;
-            $scope.assertionsModelObj.tempData.assertionXPathActualValueError = response.error;
+              response.verification.error ? response.verification.error : response.verification.actualValue;
+            $scope.assertionsModelObj.tempData.assertionXPathActualValueError = response.verification.error;
           }
         })
         .error(function(response, status) {
