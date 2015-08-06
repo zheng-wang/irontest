@@ -1,7 +1,5 @@
 package au.com.billon.stt.models;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
 /**
  * Created by Zheng on 27/07/2015.
  */
@@ -49,7 +47,6 @@ public class EvaluationRequest {
         return properties;
     }
 
-    @JsonDeserialize(using=EvaluationRequestPropertiesDeserializer.class)
     public void setProperties(Properties properties) {
         this.properties = properties;
     }

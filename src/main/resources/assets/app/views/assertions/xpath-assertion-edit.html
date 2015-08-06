@@ -1,15 +1,10 @@
 <div class="form-group no-left-margin"
      ng-class="{ 'has-error' : $parent.savingStatus.submitted && teststepForm.assertionXPath.$invalid }">
   <div class="col-lg-1 text-right">
+    <div class="form-group"></div>
+    <div class="form-group"></div>
     <div class="form-group">
       <label for="assertionXPath" class="control-label">XPath</label>
-    </div>
-    <div class="form-group no-bottom-margin">
-      <button type="button" class="btn btn-info btn-sm fa fa-flash"
-              ng-click="assertionsModelObj.evaluateXPath()"
-              ng-disabled="!assertionsModelObj.assertion.properties.xPath || !$parent.tempData.soapResponse"
-              title="Evaluate XPath against current response">
-      </button>
     </div>
   </div>
   <div class="col-lg-6">

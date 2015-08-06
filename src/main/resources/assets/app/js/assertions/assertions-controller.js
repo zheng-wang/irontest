@@ -143,28 +143,6 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
       }, 2000);
     };
 
-    //  evaluate xpath against the input xml
-    $scope.assertionsModelObj.evaluateXPath = function() {
-      var url = 'api/jsonservice/evaluate';
-      $http
-        .post(url, {
-          type: 'XPath',
-          expression: $scope.assertionsModelObj.assertion.properties.xPath,
-          input: $scope.$parent.tempData.soapResponse,
-          properties: {
-            namespacePrefixes: $scope.assertionsModelObj.assertion.properties.namespacePrefixes
-          }
-        })
-        .success(function(response, status) {
-          $scope.assertionsModelObj.tempData.assertionXPathActualValue =
-            response.error ? response.error : response.actualValue;
-          $scope.assertionsModelObj.tempData.assertionXPathActualValueError = response.error;
-        })
-        .error(function(response, status) {
-          alert('Error');
-        });
-    };
-
     var createNamespacePrefix = function(gridMenuEvent) {
       $scope.assertionsModelObj.assertion.properties.namespacePrefixes.push(
         { prefix: 'ns1', namespace: 'http://com.mycompany/service1' }
