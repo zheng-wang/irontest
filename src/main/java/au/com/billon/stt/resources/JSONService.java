@@ -21,11 +21,6 @@ public class JSONService {
         this.assertionVerifierFactory = assertionVerifierFactory;
     }
 
-//    @POST @Path("evaluate")
-//    public EvaluationResponse evaluate(EvaluationRequest request) {
-//        return evaluatorFactory.createEvaluator(request).evaluate();
-//    }
-
     @POST @Path("verifyassertion")
     public Assertion verifyAssertion(Assertion assertion) {
         return assertionVerifierFactory.create(assertion.getType()).verify(assertion);
