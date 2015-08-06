@@ -41,7 +41,7 @@ public class EnvironmentResource {
                 entryDao.insert(entry);
             }
         }
-        return dao.findById(environment.getId());
+        return findById(environment.getId());
     }
 
     @DELETE @Path("{environmentId}")

@@ -32,15 +32,15 @@ angular.module('service-testing-tool').controller('EnvironmentsController', ['$s
       $scope.$broadcast('schemaFormValidate');
 
       if (form.$valid) {
-        if (this.environment.id) {
-          var environment = this.environment;
-          environment.$update(function() {
+        if ($scope.environment.id) {
+          $scope.environment.$update(function(response) {
+            $scope.environment = response;
             $scope.alerts.push({type: 'success', msg: 'The Environment has been updated successfully'});
           }, function(exception) {
             $scope.alerts.push({type: 'warning', msg: exception.data});
           });
         } else {
-          var environment = new Environments(this.environment);
+          var environment = new Environments($scope.environment);
           environment.$save(function(response) {
             PageNavigation.contexts.push($scope.context);
             $state.go('environment_edit', {environmentId: response.id});
