@@ -1,6 +1,7 @@
 package au.com.billon.stt.models;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Trevor Li on 7/5/15.
@@ -9,6 +10,7 @@ public class Environment {
     private long id;
     private String name;
     private String description;
+    private List<EnvEntry> entries;
     private Date created;
     private Date updated;
 
@@ -45,6 +47,14 @@ public class Environment {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public List<EnvEntry> getEntries() {
+        return entries;
+    }
+
+    public void setEntries(List<EnvEntry> entries) {
+        this.entries = entries;
     }
 
     public Date getCreated() {

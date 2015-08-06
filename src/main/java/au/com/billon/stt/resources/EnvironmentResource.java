@@ -2,6 +2,7 @@ package au.com.billon.stt.resources;
 
 import au.com.billon.stt.db.EnvEntryDAO;
 import au.com.billon.stt.db.EnvironmentDAO;
+import au.com.billon.stt.models.EnvEntry;
 import au.com.billon.stt.models.Environment;
 
 import javax.ws.rs.*;
@@ -14,9 +15,11 @@ import java.util.List;
 @Path("/environments") @Produces({ MediaType.APPLICATION_JSON })
 public class EnvironmentResource {
     private final EnvironmentDAO dao;
+    private final EnvEntryDAO entryDao;
 
-    public EnvironmentResource(EnvironmentDAO dao) {
+    public EnvironmentResource(EnvironmentDAO dao, EnvEntryDAO entryDao) {
         this.dao = dao;
+        this.entryDao = entryDao;
     }
 
     @POST
@@ -29,6 +32,15 @@ public class EnvironmentResource {
     @PUT @Path("{environmentId}")
     public Environment update(Environment environment) {
         dao.update(environment);
+        List<EnvEntry> entries = environment.getEntries();
+        for (EnvEntry entry: entries) {
+            if (entry.getId() > 0) {
+                entryDao.update(entry);
+            } else {
+                entry.setEnvironmentId(environment.getId());
+                entryDao.insert(entry);
+            }
+        }
         return dao.findById(environment.getId());
     }
 
@@ -44,6 +56,9 @@ public class EnvironmentResource {
 
     @GET @Path("{environmentId}")
     public Environment findById(@PathParam("environmentId") long environmentId) {
-        return dao.findById(environmentId);
+        Environment environment = dao.findById(environmentId);
+        List<EnvEntry> entries = entryDao.findByEnv(environmentId);
+        environment.setEntries(entries);
+        return environment;
     }
 }
