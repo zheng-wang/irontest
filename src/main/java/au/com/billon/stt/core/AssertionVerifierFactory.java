@@ -10,6 +10,8 @@ public class AssertionVerifierFactory {
         AssertionVerifier result = null;
         if (Assertion.ASSERTION_TYPE_XPATH.equals(assertionType)) {
             result = new XPathAssertionVerifier();
+        } else if (Assertion.ASSERTION_TYPE_CONTAINS.equals(assertionType)) {
+            result = new ContainsAssertionVerifier();
         } else {
             throw new RuntimeException("Unrecognized assertion type " + assertionType);
         }
