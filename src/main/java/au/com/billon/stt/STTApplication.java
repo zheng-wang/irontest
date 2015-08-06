@@ -1,5 +1,6 @@
 package au.com.billon.stt;
 
+import au.com.billon.stt.core.AssertionVerifierFactory;
 import au.com.billon.stt.core.EvaluatorFactory;
 import au.com.billon.stt.db.*;
 import au.com.billon.stt.exceptions.STTDBIExceptionMapper;
@@ -81,7 +82,7 @@ public class STTApplication extends Application<STTConfiguration> {
                 environmentDAO, enventryDAO, intfaceDAO, assertionDAO, evaluatorFactory));
 
         //  register JSON services
-        environment.jersey().register(new JSONService(evaluatorFactory));
+        environment.jersey().register(new JSONService(new AssertionVerifierFactory()));
 
         //  register exception mappers
         environment.jersey().register(new STTDBIExceptionMapper());
