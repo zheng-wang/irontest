@@ -81,6 +81,18 @@ angular.module('service-testing-tool').controller('EnvironmentsController', ['$s
       });
     };
 
+    $scope.goto = function(state, params, expect) {
+      var context = {
+        model: $scope.environment,
+        url: $location.path(),
+        expect: expect
+      };
+
+      PageNavigation.contexts.push(context);
+
+      $state.go(state, params);
+    };
+
     $scope.return = function() {
       PageNavigation.returns.push($scope.context.model);
       $location.path($scope.context.url);
