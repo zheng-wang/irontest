@@ -1,24 +1,20 @@
 <div ng-controller="EnvironmentsController" data-ng-init="findOne()">
     <div class="row">
-        <h3 class="page-header">Environment - {{environment.name}}</h3>
-    </div>
-    <div class="row">
-        <div class="form-group">
-            <div class="col-md-2" ng-show="context && context.url">
-                <button type="button" class="btn btn-info btn-block" ng-click="return()">Return</button>
-            </div>
-            <div class="col-md-2" ng-show="context && context.expect && environment.id">
-                <button type="button" class="btn btn-info btn-block" ng-click="select()">Select</button>
-            </div>
+        <h3 class="page-header col-md-8">Environment - {{environment.name}}</h3>
+        <div class="col-md-1" ng-show="context && context.url">
+            <button type="button" class="btn btn-info" ng-click="return()">Return</button>
+        </div>
+        <div class="col-md-1" ng-show="context && context.expect && environment.id">
+            <button type="button" class="btn btn-info" ng-click="select()">Select</button>
         </div>
     </div>
     <form name="environmentForm" class="form-horizontal col-md-10" ng-submit="create_update(environmentForm)">
         <p><medium ng-show="environment.updated">Last updated at {{environment.updated | date:'dd-MM-yyyy HH:mm:ss'}}</medium></p>
         <div class="row">
-            <div class="col-md-offset-2 col-md-2">
+            <div class="col-md-offset-1 col-md-2">
                 <button type="submit" class="btn btn-success btn-block">Save</button>
             </div>
-            <div class="col-md-offset-4 col-md-2">
+            <div class="col-md-offset-1 col-md-2">
                 <button type="button" class="btn btn-warning btn-block" ng-click="remove(environment)">Delete</button>
             </div>
         </div>
