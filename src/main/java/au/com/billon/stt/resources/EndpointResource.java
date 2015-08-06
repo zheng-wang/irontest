@@ -55,7 +55,7 @@ public class EndpointResource {
             }
         }
 
-        return dao.findById(endpoint.getId());
+        return findById(endpoint.getId());
     }
 
     @DELETE @Path("{endpointId}")
