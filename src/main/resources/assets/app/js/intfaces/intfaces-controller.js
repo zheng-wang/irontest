@@ -59,6 +59,27 @@ angular.module('service-testing-tool').controller('IntfacesController', ['$scope
 
     $scope.alerts = [];
 
+    $scope.gridOptions = {
+      paginationPageSizes: [10,20,50,100], paginationPageSize: 10, enableFiltering: true,
+      data: $scope.intfaces,
+      columnDefs: [
+        {
+          name: 'name', width: 200, minWidth: 100,
+          sort: {
+            direction: uiGridConstants.ASC,
+            priority: 1
+          },
+          cellTemplate:'gridCellTemplate.html'
+        },
+        {
+          name: 'description', width: 600, minWidth: 300
+        },
+        {
+          name: 'deftype', displayName: "Definition Type", width: 200, minWidth: 100
+        }
+      ]
+    };
+
     $scope.create_update = function(form) {
       $scope.$broadcast('schemaFormValidate');
 
@@ -93,25 +114,9 @@ angular.module('service-testing-tool').controller('IntfacesController', ['$scope
     };
 
     $scope.find = function() {
-      $scope.columnDefs = [
-        {
-          name: 'name', width: 200, minWidth: 100,
-          sort: {
-            direction: uiGridConstants.ASC,
-            priority: 1
-          },
-          cellTemplate:'gridCellTemplate.html'
-        },
-        {
-          name: 'description', width: 600, minWidth: 300
-        },
-        {
-          name: 'deftype', displayName: "Definition Type", width: 200, minWidth: 100
-        }
-      ];
-
       Intfaces.query(function(intfaces) {
         $scope.intfaces = intfaces;
+        $scope.gridOptions.data = intfaces;
       });
     };
 
