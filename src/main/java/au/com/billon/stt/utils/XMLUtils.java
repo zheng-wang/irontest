@@ -30,7 +30,10 @@ public class XMLUtils {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
-            sb.append(domNodeToString(node)).append(System.getProperty("line.separator"));
+            sb.append(domNodeToString(node));
+            // Below formatting will cause xpath assertion verification failure when
+            // xpath evaluation result is of type NODESET.
+            //sb.append(System.getProperty("line.separator"));
         }
         return sb.toString();
     }
