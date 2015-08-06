@@ -97,7 +97,7 @@ public class TestrunResource {
                     for (Assertion assertion : assertions) {
                         Evaluator evaluator = evaluatorFactory.createEvaluator(intface.getDeftype(), assertion.getType());
                         result = evaluator.evaluate(response, assertion.getProperties());
-                        if (result.isError()) {
+                        if (result.getError().equals("true")) {
                             break;
                         }
                     }
