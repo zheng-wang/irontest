@@ -62,7 +62,7 @@ angular.module('service-testing-tool').controller('EnvironmentsController', ['$s
     };
 
     $scope.find = function() {
-      $scope.columnDefs = [
+      $scope.envGridColumnDefs = [
         {
           name: 'name', width: 200, minWidth: 100,
           sort: {
@@ -102,7 +102,7 @@ angular.module('service-testing-tool').controller('EnvironmentsController', ['$s
     $scope.findOne = function() {
       $scope.context = PageNavigation.contexts.pop();
 
-      $scope.columnDefs = [
+      $scope.enventryGridColumnDefs = [
         {
           field: 'intface.name', displayName: 'Interface', width: 200, minWidth: 100,
           sort: {

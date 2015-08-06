@@ -23,6 +23,12 @@
         </div>
         <p></p>
         <tabset>
+            <tab heading="Basic Info">
+                <p></p>
+                <p><medium ng-show="environment.updated">Last updated at {{environment.updated | date:'dd-MM-yyyy HH:mm:ss'}}</medium></p>
+                <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+                <div sf-schema="schema" sf-form="form" sf-model="environment" ></div>
+            </tab>
             <tab ng-if="environment.id" heading="Interfaces">
                 <p></p>
                 <div class="row">
@@ -31,15 +37,9 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div ui-grid="{paginationPageSizes: [10,20,50,100], paginationPageSize: 10, enableFiltering: true, data: environment.entries, columnDefs: columnDefs}"
+                    <div ui-grid="{paginationPageSizes: [10,20,50,100], paginationPageSize: 10, enableFiltering: true, data: environment.entries, columnDefs: enventryGridColumnDefs}"
                          ui-grid-pagination ui-grid-resize-columns ui-grid-move-columns class="ui-grid"></div>
                 </div>
-            </tab>
-            <tab heading="Basic Info">
-                <p></p>
-                <p><medium ng-show="environment.updated">Last updated at {{environment.updated | date:'dd-MM-yyyy HH:mm:ss'}}</medium></p>
-                <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
-                <div sf-schema="schema" sf-form="form" sf-model="environment" ></div>
             </tab>
         </tabset>
     </form>
