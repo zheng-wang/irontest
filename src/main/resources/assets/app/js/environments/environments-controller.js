@@ -106,25 +106,24 @@ angular.module('service-testing-tool').controller('EnvironmentsController', ['$s
         Environments.get({
           environmentId: $stateParams.environmentId
         }, function(environment) {
-          $scope.environment = environment;
-
-          $scope.columnDefs = [
-            {
-              field: 'intface.name', displayName: 'Interface', width: 200, minWidth: 100,
-              sort: {
-                direction: uiGridConstants.ASC,
-                priority: 1
-              },
-              cellTemplate:'gridCellTemplate.html'
-            },
-            {
-              field: 'endpoint.name', displayName: 'Endpoint',width: 600, minWidth: 300
-            }
-          ];
-
           EnvEntries.queryByEnv({
-            environmentId: $scope.environment.id
+            environmentId: environment.id
           },function(enventries) {
+            $scope.columnDefs = [
+              {
+                field: 'intface.name', displayName: 'Interface', width: 200, minWidth: 100,
+                sort: {
+                  direction: uiGridConstants.ASC,
+                  priority: 1
+                },
+                cellTemplate:'gridCellTemplate.html'
+              },
+              {
+                field: 'endpoint.name', displayName: 'Endpoint',width: 600, minWidth: 300
+              }
+            ];
+
+            $scope.environment = environment;
             $scope.enventries = enventries;
           });
         });

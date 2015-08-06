@@ -13,23 +13,17 @@
         </div>
     </div>
     <form name="environmentForm" class="form-horizontal col-md-10" ng-submit="create_update(environmentForm)">
-        <tabset justified="true">
-            <tab heading="Basic Info">
-                <p></p>
-                <p><medium ng-show="environment.updated">Last updated at {{environment.updated | date:'dd-MM-yyyy HH:mm:ss'}}</medium></p>
-                <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
-                <div sf-schema="schema" sf-form="form" sf-model="environment" ></div>
-                <div class="col-md-2">
-                    <button type="button" class="btn btn-default btn-block" ui-sref="environment_all">Back</button>
-                </div>
-                <div class="col-md-offset-2 col-md-2">
-                    <button type="submit" class="btn btn-success btn-block">Save</button>
-                </div>
-                <div class="col-md-offset-2 col-md-2">
-                    <button type="button" class="btn btn-warning btn-block" ng-click="remove(environment)">Delete</button>
-                </div>
-            </tab>
-            <tab heading="Interfaces">
+        <div class="row">
+            <div class="col-md-offset-2 col-md-2">
+                <button type="submit" class="btn btn-success btn-block">Save</button>
+            </div>
+            <div class="col-md-offset-4 col-md-2">
+                <button type="button" class="btn btn-warning btn-block" ng-click="remove(environment)">Delete</button>
+            </div>
+        </div>
+        <p></p>
+        <tabset>
+            <tab ng-if="environment.id" heading="Interfaces">
                 <p></p>
                 <div class="row">
                     <div class="col-md-2">
@@ -40,6 +34,12 @@
                     <div ui-grid="{paginationPageSizes: [10,20,50,100], paginationPageSize: 10, enableFiltering: true, data: enventries, columnDefs: columnDefs}"
                          ui-grid-pagination ui-grid-resize-columns ui-grid-move-columns class="ui-grid"></div>
                 </div>
+            </tab>
+            <tab heading="Basic Info">
+                <p></p>
+                <p><medium ng-show="environment.updated">Last updated at {{environment.updated | date:'dd-MM-yyyy HH:mm:ss'}}</medium></p>
+                <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+                <div sf-schema="schema" sf-form="form" sf-model="environment" ></div>
             </tab>
         </tabset>
     </form>
