@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('service-testing-tool').controller('TeststepsController', ['$scope', 'Teststeps', 'Testruns',
+angular.module('iron-test').controller('TeststepsController', ['$scope', 'Teststeps', 'Testruns',
     '$location', '$stateParams', '$state', '$http', '_', '$timeout', 'PageNavigation',
   function($scope, Teststeps, Testruns, $location, $stateParams, $state, $http, _, $timeout, PageNavigation) {
     var timer;

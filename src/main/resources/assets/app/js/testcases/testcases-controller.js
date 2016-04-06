@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('service-testing-tool').controller('TestcasesController', ['$scope', 'Testcases', 'Teststeps', 'Testruns', '$stateParams', '$state', 'uiGridConstants', '$timeout', '$location', 'PageNavigation',
+angular.module('iron-test').controller('TestcasesController', ['$scope', 'Testcases', 'Teststeps', 'Testruns', '$stateParams', '$state', 'uiGridConstants', '$timeout', '$location', 'PageNavigation',
   function($scope, Testcases, Teststeps, Testruns, $stateParams, $state, uiGridConstants, $timeout, $location, PageNavigation) {
     $scope.columnDefs = [
       {

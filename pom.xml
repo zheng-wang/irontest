@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>au.com.billon</groupId>
-    <artifactId>service-testing-tool</artifactId>
+    <groupId>io.irontest</groupId>
+    <artifactId>iron-test</artifactId>
     <version>0.1.0</version>
 
     <properties>
@@ -92,7 +92,7 @@
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>au.com.billon.stt.STTApplication</mainClass>
+                                    <mainClass>io.irontest.IronTestApplication</mainClass>
                                 </transformer>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
                                     <resource>META-INF/cxf/bus-extensions.txt</resource>

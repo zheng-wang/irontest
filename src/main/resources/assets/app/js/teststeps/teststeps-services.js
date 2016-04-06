@@ -1,7 +1,7 @@
 'use strict';
 
 //Teststeps service used for teststeps REST endpoint
-angular.module('service-testing-tool').factory('Teststeps', ['$resource',
+angular.module('iron-test').factory('Teststeps', ['$resource',
   function($resource) {
     return $resource('api/testcases/:testcaseId/teststeps/:teststepId', {
       testcaseId: '@testcaseId', teststepId: '@id'

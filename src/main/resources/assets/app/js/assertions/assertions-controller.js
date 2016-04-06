@@ -1,9 +1,9 @@
 'use strict';
 
 //  if unspecified, all grid config is for the assertions grid
-angular.module('service-testing-tool').controller('AssertionsController', ['$scope', 'Assertions',
-    '$stateParams', 'uiGridConstants', 'uiGridEditConstants', '$timeout', 'STTUtils', '$http',
-  function($scope, Assertions, $stateParams, uiGridConstants, uiGridEditConstants, $timeout, STTUtils, $http) {
+angular.module('iron-test').controller('AssertionsController', ['$scope', 'Assertions',
+    '$stateParams', 'uiGridConstants', 'uiGridEditConstants', '$timeout', 'IronTestUtils', '$http',
+  function($scope, Assertions, $stateParams, uiGridConstants, uiGridEditConstants, $timeout, IronTestUtils, $http) {
     //  use assertionsModelObj for all variables in the scope, to avoid conflict with parent scope
     $scope.assertionsModelObj = {};
 
@@ -20,7 +20,7 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
           teststepId: $stateParams.teststepId
         }, function(response) {
           //  delete the assertion from the grid
-          STTUtils.deleteArrayElementByProperty($scope.assertionsModelObj.assertions, 'id', currentAssertion.id);
+          IronTestUtils.deleteArrayElementByProperty($scope.assertionsModelObj.assertions, 'id', currentAssertion.id);
 
           //  set current assertion to null
           $scope.assertionsModelObj.assertion = null;
@@ -154,7 +154,7 @@ angular.module('service-testing-tool').controller('AssertionsController', ['$sco
       var selectedRows = $scope.assertionsModelObj.xPathNamespacePrefixGridApi.selection.getSelectedRows();
       var namespacePrefixes = $scope.assertionsModelObj.assertion.properties.namespacePrefixes;
       for (var i = 0; i < selectedRows.length; i += 1) {
-        STTUtils.deleteArrayElementByProperty(namespacePrefixes, '$$hashKey', selectedRows[i].$$hashKey);
+        IronTestUtils.deleteArrayElementByProperty(namespacePrefixes, '$$hashKey', selectedRows[i].$$hashKey);
       }
       assertionUpdateInBackground();
     };

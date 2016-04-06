@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('service-testing-tool').directive('requestResponseTextareas', function () {
+angular.module('iron-test').directive('requestResponseTextareas', function () {
   return {
     link: function(scope, element, attrs) {
       //  Use nearest absolute height node to determine reqResTextareas height.

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('service-testing-tool').controller('IntfacesController', ['$scope', 'Intfaces', 'PageNavigation', '$location', '$stateParams', '$state', 'uiGridConstants',
+angular.module('iron-test').controller('IntfacesController', ['$scope', 'Intfaces', 'PageNavigation', '$location', '$stateParams', '$state', 'uiGridConstants',
   function($scope, Intfaces, PageNavigation, $location, $stateParams, $state, uiGridConstants) {
     $scope.schema = {
       type: "object",

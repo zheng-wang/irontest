@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('service-testing-tool').controller('DSAssertionsController', ['$scope', 'Assertions',
-  '$stateParams', 'uiGridConstants', 'uiGridEditConstants', '$timeout', 'STTUtils', '$http',
-  function($scope, Assertions, $stateParams, uiGridConstants, uiGridEditConstants, $timeout, STTUtils, $http) {
+angular.module('iron-test').controller('DSAssertionsController', ['$scope', 'Assertions',
+  '$stateParams', 'uiGridConstants', 'uiGridEditConstants', '$timeout', 'IronTestUtils', '$http',
+  function($scope, Assertions, $stateParams, uiGridConstants, uiGridEditConstants, $timeout, IronTestUtils, $http) {
     //  use assertionsModelObj for all variables in the scope, to avoid conflict with parent scope
     $scope.assertionsModelObj = {};
 
@@ -102,7 +102,7 @@ angular.module('service-testing-tool').controller('DSAssertionsController', ['$s
       }, function(response) {
         //  delete the assertion row from the grid
         var gridData = $scope.assertionsModelObj.gridOptions.data;
-        var indexOfRowToBeDeleted = STTUtils.indexOfArrayElementByProperty(gridData, 'id', assertionId);
+        var indexOfRowToBeDeleted = IronTestUtils.indexOfArrayElementByProperty(gridData, 'id', assertionId);
         gridData.splice(indexOfRowToBeDeleted, 1);
 
         //  if deleted assertion is the one currently selected, set the current assertion to null

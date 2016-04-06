@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('service-testing-tool').directive('successfulMessage', function () {
+angular.module('iron-test').directive('successfulMessage', function () {
   return {
     link: function(scope, element, attrs) {
       var el = element[0];

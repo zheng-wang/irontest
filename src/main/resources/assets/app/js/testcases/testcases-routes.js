@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('service-testing-tool').config(['$stateProvider', function ($stateProvider) {
+angular.module('iron-test').config(['$stateProvider', function ($stateProvider) {
     $stateProvider
         .state('testcase_all', {
             url: '/testcases',

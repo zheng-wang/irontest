@@ -1,5 +1,5 @@
 {
-  "name": "service-testing-tool",
+  "name": "iron-test",
   "version": "0.1.0",
   "dependencies": {
     "angular-ui-grid": "3.0.1",

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('service-testing-tool').controller('EndpointsController', ['$scope', 'Endpoints', 'PageNavigation', '$location', '$stateParams', '$state', 'uiGridConstants',
+angular.module('iron-test').controller('EndpointsController', ['$scope', 'Endpoints', 'PageNavigation', '$location', '$stateParams', '$state', 'uiGridConstants',
   function($scope, Endpoints, PageNavigation, $location, $stateParams, $state, uiGridConstants) {
     $scope.schema = {
       type: "object",
