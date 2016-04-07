@@ -18,20 +18,13 @@
       <div class="form-group"></div>
       <div class="row">
         <div class="form-group">
-          <div class="col-lg-1">
-            <button class="btn btn-info" ui-sref="teststep_create({testcaseId: testcase.id})">Create</button>
-          </div>
-          <div class="col-lg-offset-2 col-lg-6">
-            <input name="environment" type="text" class="form-control" ng-model="testcase.environment.name" id="environment" placeholder="Go to and select an environment" maxlength="200" readonly required>
-          </div>
-          <div class="btn-group col-lg-2" dropdown>
-            <button type="button" class="btn btn-info" dropdown-toggle>
-              Go to <span class="caret"></span>
+          <div class="btn-group col-lg-2" dropdown is-open="status.isopen">
+            <button type="button" class="btn btn-info dropdown-toggle" dropdown-toggle ng-disabled="disabled">
+              Create <span class="caret"></span>
             </button>
-            <ul class="dropdown-menu">
-              <li ng-show="testcase.environmentId"><a href="" ng-click="goto('environment_edit', {environmentId: testcase.environmentId})">Environment Details</a></li>
-              <li><a href="" ng-click="goto('environment_all', null, 'environment')">Environment List</a></li>
-              <li><a href="" ng-click="goto('environment_create', null, 'environment')">A New Environment</a></li>
+            <ul class="dropdown-menu" role="menu">
+              <li><a ui-sref="teststep_create({testcaseId: testcase.id})">SOAP Test Step</a></li>
+              <li><a href="#">Database Test Step</a></li>
             </ul>
           </div>
           <div class="col-lg-1">
