@@ -1,0 +1,78 @@
+<div ng-controller="SOAPTeststepsController">
+  <div class="row">
+    <div>
+      <h3 class="page-header">Create Test Step</h3>
+    </div>
+  </div>
+  <div class="row">
+    <form name="teststepForm" class="form-horizontal col-lg-7" role="form" ng-submit="create(teststepForm.$valid)" novalidate>
+      <div class="form-group" ng-class="{ 'has-error' : submitted && teststepForm.name.$invalid }">
+        <label for="name" class="col-lg-2 control-label">Name</label>
+        <div class="col-lg-10">
+          <input name="name" type="text" class="form-control" ng-model="teststep.name" id="name"
+              placeholder="Invoke and verify SOAP service" maxlength="200" required>
+          <div ng-show="submitted && teststepForm.name.$invalid" class="help-block">
+            <p ng-show="teststepForm.name.$error.required">Name is required</p>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="description" class="col-lg-2 control-label">Description</label>
+        <div class="col-lg-10">
+          <textarea name="description" ng-model="teststep.description" id="description" cols="30" rows="10"
+              placeholder="Description" class="form-control"></textarea>
+        </div>
+      </div>
+      <div class="form-group" ng-class="{ 'has-error' : submitted && teststepForm.wsdlUrl.$invalid }">
+        <label for="wsdlUrl" class="col-lg-2 control-label">Interface</label>
+        <div class="col-lg-7">
+          <input name="intface" type="text" class="form-control" ng-if ="teststep.intfaceId" ng-model="teststep.intface.name" id="intface" readonly>
+          <input name="wsdlUrl" type="text" class="form-control" ng-if ="! teststep.intfaceId" ng-model="teststep.wsdlUrl" id="wsdlUrl"
+                 placeholder="http://localhost:8080/soap/article?wsdl" required>
+          <div ng-show="submitted && teststepForm.wsdlUrl.$invalid" class="help-block">
+            <p ng-show="teststepForm.wsdlUrl.$error.required">WSDL URL is required</p>
+          </div>
+        </div>
+        <div class="btn-group col-lg-2" dropdown>
+          <button type="button" class="btn btn-info" dropdown-toggle>
+            Go to <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li ng-show="teststep.intfaceId">
+              <a href="" ng-click="goto('intface_edit', {intfaceId: teststep.intfaceId})">Interface Details</a>
+            </li>
+            <li><a href="" ng-click="goto('intface_all', null, 'intface')">Interface List</a></li>
+            <li><a href="" ng-click="goto('intface_create', null, 'intface')">A New Interface</a></li>
+          </ul>
+        </div>
+        <div ng-if="! teststep.intfaceId || teststep.intface.deftype==='WSDL'" class="col-lg-1">
+          <button type="button" class="btn btn-info" ng-click="loadWsdl()">Load</button>
+        </div>
+      </div>
+      <div ng-if="teststep.intfaceId && teststep.intface.deftype==='WSDL'" class="form-group">
+        <div class="col-lg-offset-2 col-lg-10">
+          <input name="intWsdlUrl" type="text" class="form-control" ng-model="teststep.intface.defurl" id="intWsdlUrl" readonly>
+        </div>
+      </div>
+      <div ng-if="! teststep.intfaceId || teststep.intface.deftype==='WSDL'" class="form-group">
+        <label for="wsdlBinding" class="col-lg-2 control-label">WSDL Binding</label>
+        <div class="col-lg-10">
+          <select name="wsdlBinding" id="wsdlBinding" class="form-control" ng-model="teststep.wsdlBinding"
+              ng-options="item.name for item in teststep.wsdlBindings" ng-change="refreshOperations()"></select>
+        </div>
+      </div>
+      <div ng-if="! teststep.intfaceId || teststep.intface.deftype==='WSDL'" class="form-group">
+        <label for="wsdlOperation" class="col-lg-2 control-label">WSDL Operation</label>
+        <div class="col-lg-10">
+          <select name="wsdlOperation" id="wsdlOperation" class="form-control" ng-model="teststep.wsdlOperation"
+              ng-options="item for item in teststep.wsdlOperations"></select>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-lg-offset-5">
+          <button type="submit" class="btn btn-info">Submit</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

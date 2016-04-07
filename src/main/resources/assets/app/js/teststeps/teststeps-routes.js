@@ -3,7 +3,7 @@
 angular.module('iron-test').config(['$stateProvider', function ($stateProvider) {
     $stateProvider
         .state('teststep_create', {
-            url: '/testcases/:testcaseId/teststeps/create',
+            url: '/testcases/:testcaseId/teststeps/create?stepType',
             templateUrl: '/ui/views/teststeps/create.html'
         })
         .state('teststep_edit', {
