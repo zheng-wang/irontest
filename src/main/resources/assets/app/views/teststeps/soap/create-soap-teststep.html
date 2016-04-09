@@ -1,7 +1,7 @@
 <div ng-controller="SOAPTeststepCreationController">
   <div class="row">
     <div>
-      <h3 class="page-header">Create Test Step</h3>
+      <h3 class="page-header">Create SOAP Test Step</h3>
     </div>
   </div>
   <div class="row">
@@ -24,7 +24,7 @@
         </div>
       </div>
       <div class="form-group" ng-class="{ 'has-error' : submitted && teststepForm.wsdlUrl.$invalid }">
-        <label for="wsdlUrl" class="col-lg-2 control-label">Interface</label>
+        <label for="wsdlUrl" class="col-lg-2 control-label">WSDL URL</label>
         <div class="col-lg-7">
           <input name="wsdlUrl" type="text" class="form-control" ng-model="wsdlUrl" id="wsdlUrl"
                  placeholder="http://localhost:8080/soap/article?wsdl" required>

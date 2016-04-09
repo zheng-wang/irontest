@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('iron-test').controller('SOAPTeststepEditController', ['$scope', 'Testruns',
+angular.module('iron-test').controller('DBTeststepEditController', ['$scope', 'Testruns',
     '$location', '$state', '$timeout', 'PageNavigation',
   function($scope, Testruns, $location, $state, $timeout, PageNavigation) {
     var timer;
@@ -49,17 +49,34 @@ angular.module('iron-test').controller('SOAPTeststepEditController', ['$scope', 
       $state.go(state, params);
     };
 
+    $scope.findOne = function() {
+      // entry returned from other pages
+      var model = PageNavigation.returns.pop();
+      if (model) {
+        $scope.$parent.teststep = model;
+        $scope.autoSave(true);
+      }
+    };
+
+    $scope.createDSFieldContainAssertion = function(fieldName) {
+      $scope.$broadcast('createDSFieldContainAssertion', fieldName);
+    };
+
+    $scope.evaluateDataSet = function() {
+      $scope.$broadcast('evaluateDataSet', $scope.responseOptions.data);
+    };
+
     $scope.invoke = function(teststep) {
       var testrun;
       if ($scope.$parent.teststep.endpointId) {
         testrun = {
           request: $scope.$parent.teststep.request,
-          endpointId: $scope.teststep.endpointId
+          endpointId: $scope.$parent.teststep.endpointId
         };
       } else {
         testrun = {
-          request: $scope.teststep.request,
-          details: $scope.teststep.properties
+          request: $scope.$parent.teststep.request,
+          details: $scope.$parent.teststep.properties
         };
       }
 
@@ -89,10 +106,6 @@ angular.module('iron-test').controller('SOAPTeststepEditController', ['$scope', 
       }, function(error) {
         alert('Error');
       });
-    };
-
-    $scope.assertionsAreaLoadedCallback = function() {
-      $scope.$broadcast('assertionsAreaLoaded');
     };
   }
 ]);

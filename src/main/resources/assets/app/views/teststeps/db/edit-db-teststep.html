@@ -1,7 +1,7 @@
-<div ng-controller="DBTeststepsController" ng-init="findOne()">
+<div ng-controller="DBTeststepEditController" ng-init="findOne()">
   <div class="row" id="page-header">
     <div>
-      <h3 class="page-header">Test Step - {{teststep.name}}
+      <h3 class="page-header">Test Step - {{$parent.teststep.name}}
         <label class="col-lg-offset-1 failure-message"
                ng-show="savingStatus.saveSuccessful !== null && !savingStatus.saveSuccessful">
           Failed to save. {{savingStatus.savingErrorMessage}}
@@ -10,16 +10,15 @@
                ng-class="{ 'successful-message-animation' : savingStatus.saveSuccessful }">
           Successfully saved
         </label>
-        <small>Last edit at {{teststep.updated | date:'medium'}}</small>
-        <label class="back-link"><a ui-sref="testcase_edit({testcaseId: teststep.testcaseId})">Back</a>                    </label>
+        <small>Last edit at {{$parent.teststep.updated | date:'medium'}}</small>
+        <label class="back-link"><a ui-sref="testcase_edit({testcaseId: $parent.teststep.testcaseId})">Back</a>                    </label>
       </h3>
     </div>
   </div>
   <form name="teststepForm" class="form-horizontal" role="form" novalidate>
     <tabset>
       <tab heading="Request Response">
-        <div ng-if="teststep.type==='SOAP'" ng-include="'/ui/views/teststeps/soap/edit-soap-teststep-request-response.html'"></div>
-        <div ng-if="teststep.type!=='SOAP'" ng-include="'/ui/views/teststeps/db/edit-db-teststep-request-response.html'"></div>
+        <div ng-include="'/ui/views/teststeps/db/edit-db-teststep-request-response.html'"></div>
       </tab>
       <tab heading="Basic Info">
         <div class="form-group"></div>
@@ -27,7 +26,7 @@
           <div class="col-lg-6">
             <label for="name" class="col-lg-2 control-label">Name</label>
             <div class="col-lg-10">
-              <input name="name" type="text" class="form-control" ng-model="teststep.name"
+              <input name="name" type="text" class="form-control" ng-model="$parent.$parent.teststep.name"
                      ng-change="autoSave(teststepForm.$valid)" id="name" placeholder="Name" maxlength="200" required>
               <div ng-show="savingStatus.submitted && teststepForm.name.$invalid" class="help-block">
                 <p ng-show="teststepForm.name.$error.required">Name is required</p>
@@ -39,7 +38,7 @@
           <div class="col-lg-6">
             <label for="description" class="col-lg-2 control-label">Description</label>
             <div class="col-lg-10">
-              <textarea name="description" ng-model="teststep.description" ng-change="autoSave(teststepForm.$valid)"
+              <textarea name="description" ng-model="$parent.$parent.teststep.description" ng-change="autoSave(teststepForm.$valid)"
                         id="description" cols="30" rows="10" placeholder="Description" class="form-control"></textarea>
             </div>
           </div>
@@ -48,7 +47,7 @@
           <div class="col-lg-6">
             <label for="intface" class="col-lg-2 control-label">Interface</label>
             <div class="col-lg-10">
-              <input name="intface" type="text" class="form-control" ng-model="teststep.intface.name" id="intface" readonly>
+              <input name="intface" type="text" class="form-control" ng-model="$parent.$parent.teststep.intface.name" id="intface" readonly>
             </div>
           </div>
         </div>
