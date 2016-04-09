@@ -2,9 +2,9 @@
 
 angular.module('iron-test').config(['$stateProvider', function ($stateProvider) {
     $stateProvider
-        .state('teststep_create', {
-            url: '/testcases/:testcaseId/teststeps/create?stepType',
-            templateUrl: '/ui/views/teststeps/create.html'
+        .state('teststep_create_soap', {
+            url: '/testcases/:testcaseId/teststeps/createSOAPTestStep',
+            templateUrl: '/ui/views/teststeps/soap/create-soap-teststep.html'
         })
         .state('teststep_edit', {
             url: '/testcases/:testcaseId/teststeps/:teststepId/edit',

@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('iron-test').controller('SOAPTeststepsController', ['$scope', 'Teststeps', 'Testruns',
-    '$location', '$stateParams', '$state', '$http', '_', '$timeout', 'PageNavigation',
-  function($scope, Teststeps, Testruns, $location, $stateParams, $state, $http, _, $timeout, PageNavigation) {
+angular.module('iron-test').controller('SOAPTeststepEditController', ['$scope', 'Testruns',
+    '$location', '$state', '$timeout', 'PageNavigation',
+  function($scope, Testruns, $location, $state, $timeout, PageNavigation) {
     var timer;
     //  use object instead of primitives, so that child scope can update the values
     $scope.savingStatus = {
@@ -35,67 +35,6 @@ angular.module('iron-test').controller('SOAPTeststepsController', ['$scope', 'Te
       timer = $timeout(function() {
         $scope.update(isValid);
       }, 2000);
-    };
-
-    $scope.loadWsdl = function() {
-      if ($scope.$parent.teststep.intfaceId && $scope.$parent.teststep.intface.deftype==='WSDL') {
-        $scope.$parent.teststep.wsdlUrl = $scope.$parent.teststep.intface.defurl;
-      }
-      $http
-        .get('api/wsdls/anywsdl/operations', {
-          params: {
-            wsdlUrl: $scope.$parent.teststep.wsdlUrl
-          }
-        })
-        .success(function(data, status) {
-          $scope.$parent.teststep.wsdlBindings = data;
-          $scope.$parent.teststep.wsdlBinding = $scope.$parent.teststep.wsdlBindings[0];
-          $scope.$parent.teststep.wsdlOperations = $scope.$parent.teststep.wsdlBindings[0].operations;
-          $scope.$parent.teststep.wsdlOperation = $scope.$parent.teststep.wsdlOperations[0];
-        })
-        .error(function(data, status) {
-          alert('Error');
-        });
-    };
-
-    $scope.refreshOperations = function() {
-      $scope.wsdlOperations = _.findWhere($scope.wsdlBindings, { name: $scope.wsdlBinding.name }).operations;
-      $scope.wsdlOperation = $scope.wsdlOperations[0];
-    };
-
-    $scope.create = function(isValid) {
-      if (isValid) {
-        var teststep = new Teststeps({
-          testcaseId: this.teststep.testcaseId,
-          name: this.teststep.name,
-          description: this.teststep.description
-        });
-        if (this.teststep.intfaceId) {
-          teststep.intfaceId = this.teststep.intfaceId;
-          if (this.teststep.intface.deftype === "WSDL") {
-            teststep.type = 'SOAP';
-            teststep.properties = {
-              wsdlUrl: this.teststep.wsdlUrl,
-              wsdlBindingName: this.teststep.wsdlBinding.name,
-              wsdlOperationName: this.teststep.wsdlOperation
-            };
-          }
-        } else {
-          teststep.type = 'SOAP';
-          teststep.properties = {
-            wsdlUrl: this.teststep.wsdlUrl,
-            wsdlBindingName: this.teststep.wsdlBinding.name,
-            wsdlOperationName: this.teststep.wsdlOperation
-          };
-        }
-        teststep.$save(function(response) {
-          $state.go('teststep_edit', {testcaseId: response.testcaseId, teststepId: response.id});
-        }, function(error) {
-          alert('Error');
-        });
-      } else {
-        $scope.submitted = true;
-      }
     };
 
     $scope.goto = function(state, params, expect) {

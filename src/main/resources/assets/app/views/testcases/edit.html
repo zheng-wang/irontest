@@ -23,8 +23,10 @@
               Create <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu">
-              <li><a ui-sref="teststep_create({testcaseId: testcase.id, stepType: 'SOAP'})">SOAP Test Step</a></li>
+              <li><a ui-sref="teststep_create_soap({testcaseId: testcase.id})">SOAP Test Step</a></li>
               <li><a href="#">Database Test Step</a></li>
+              <li><a href="#">HTTP Test Step</a></li>
+              <li><a href="#">MQ Queue Test Step</a></li>
             </ul>
           </div>
           <div class="col-lg-1">
@@ -38,7 +40,7 @@
              ui-grid-resize-columns ui-grid-move-columns class="ui-grid"></div>
       </div>
     </tab>
-    <tab heading="Basics">
+    <tab heading="Basic Info">
       <form name="testcaseForm" class="form-horizontal col-lg-6" role="form" novalidate>
         <div class="form-group"></div>
         <div class="form-group" ng-class="{ 'has-error' : submitted && testcaseForm.name.$invalid }">
