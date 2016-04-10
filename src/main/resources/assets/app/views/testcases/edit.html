@@ -71,14 +71,6 @@
       </div>
     </div>
   </script>
-  <script type="text/ng-template" id="teststepGridIntfaceCellTemplate.html">
-    <div class="ui-grid-cell-contents">
-      <div ng-if="row.entity.intfaceId">
-        <a ng-click="grid.appScope.goto('intface_edit', {intfaceId: row.entity.intfaceId})" href="">{{COL_FIELD}}</a>
-      </div>
-      <div ng-if="! row.entity.intfaceId">Quick SOAP Test</div>
-    </div>
-  </script>
   <script type="text/ng-template" id="teststepGridDeleteCellTemplate.html">
     <div class="ui-grid-cell-contents">
       <div>
