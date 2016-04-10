@@ -27,6 +27,7 @@ angular.module('iron-test').controller('TestcasesController', ['$scope', 'Testca
         },
         cellTemplate: 'teststepGridNameCellTemplate.html'
       },
+      {name: 'type', width: 80, minWidth: 80},
       {name: 'description', width: 485, minWidth: 300},
       {
         name: 'delete', width: 100, minWidth: 80, enableSorting: false, enableFiltering: false,
