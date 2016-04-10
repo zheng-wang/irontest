@@ -17,13 +17,4 @@ public class EvaluatorFactory {
         }
         return result;
     }
-
-    public Evaluator createEvaluator(String assertionType) {
-        Evaluator result = null;
-        if (assertionType.equals("DSField")) {
-            result = new DSFieldEvaluator();
-        }
-
-        return result;
-    }
 }

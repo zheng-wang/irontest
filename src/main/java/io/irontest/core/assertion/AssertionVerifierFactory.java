@@ -12,6 +12,8 @@ public class AssertionVerifierFactory {
             result = new XPathAssertionVerifier();
         } else if (Assertion.ASSERTION_TYPE_CONTAINS.equals(assertionType)) {
             result = new ContainsAssertionVerifier();
+        } else if (Assertion.ASSERTION_TYPE_DSFIELD.equals(assertionType)) {
+            result = new DSFieldAssertionVerifier();
         } else {
             throw new RuntimeException("Unrecognized assertion type " + assertionType);
         }

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('iron-test').controller('DSAssertionsController', ['$scope', 'Assertions',
-  '$stateParams', 'uiGridConstants', 'uiGridEditConstants', '$timeout', 'IronTestUtils', '$http',
-  function($scope, Assertions, $stateParams, uiGridConstants, uiGridEditConstants, $timeout, IronTestUtils, $http) {
+  '$stateParams', 'uiGridConstants', 'uiGridEditConstants', '$timeout', 'IronTestUtils', '$http', '_',
+  function($scope, Assertions, $stateParams, uiGridConstants, uiGridEditConstants, $timeout, IronTestUtils, $http, _) {
     //  use assertionsModelObj for all variables in the scope, to avoid conflict with parent scope
     $scope.assertionsModelObj = {};
 
@@ -72,7 +72,9 @@ angular.module('iron-test').controller('DSAssertionsController', ['$scope', 'Ass
 
     $scope.assertionsModelObj.update = function(isValid) {
       if (isValid) {
-        $scope.assertionsModelObj.assertion.$update({
+        //  exclude the result property from the assertion, as the property does not exist in server side Assertion class
+        var assertionCopy = _.omit($scope.assertionsModelObj.assertion, 'result');
+        assertionCopy.$update({
           testcaseId: $stateParams.testcaseId,
           teststepId: $stateParams.teststepId
         }, function(response) {

@@ -45,6 +45,15 @@ angular.module('iron-test').controller('SOAPTeststepEditController', ['$scope', 
       $state.go(state, params);
     };
 
+    $scope.findOne = function() {
+      // entry returned from other pages
+      var model = PageNavigation.returns.pop();
+      if (model) {
+        $scope.$parent.teststep = model;
+        $scope.autoSave(true);
+      }
+    };
+
     $scope.invoke = function(teststep) {
       var testrun;
       if ($scope.$parent.teststep.endpointId) {
