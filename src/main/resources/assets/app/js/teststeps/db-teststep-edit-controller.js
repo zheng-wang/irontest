@@ -3,14 +3,15 @@
 angular.module('iron-test').controller('DBTeststepEditController', ['$scope', 'Testruns',
     '$location', '$state', '$timeout', 'PageNavigation',
   function($scope, Testruns, $location, $state, $timeout, PageNavigation) {
+    //  -1 when the request is a SQL select statement; > -1 when request is a SQL insert/update/delete statement.
+    $scope.numberOfRowsModified = -1;
+
     var timer;
     //  use object instead of primitives, so that child scope can update the values
     $scope.savingStatus = {
       saveSuccessful: null,
       savingErrorMessage: null
     };
-    $scope.tempData = {};
-    $scope.showAssertionsArea = false;
     $scope.responseOptions = {
       enableFiltering: true,
       columnDefs: [ ]
@@ -81,26 +82,29 @@ angular.module('iron-test').controller('DBTeststepEditController', ['$scope', 'T
       }
 
       var testrunRes = new Testruns(testrun);
-      testrunRes.$save(function(response) {
-        $scope.tempData.soapResponse = response.response;
-        $scope.responseOptions.data = response.response;
-        $scope.responseOptions.columnDefs = [ ];
-        if (response.response.length > 0) {
-          var row = response.response[0];
-          for (var key in row) {
-            $scope.responseOptions.columnDefs.push({
-              field: key,
-              menuItems: [
-                {
-                  title: 'Create An Assertion',
-                  icon: 'ui-grid-icon-info-circled',
-                  context: $scope,
-                  action: function() {
-                    this.context.createDSFieldContainAssertion(this.context.col.colDef.field);
+      testrunRes.$save(function(returnTestrun) {
+        var response = returnTestrun.response;
+        $scope.numberOfRowsModified = response.numberOfRowsModified;
+        if (response.numberOfRowsModified === -1) {
+          $scope.responseOptions.data = response.resultSet;
+          $scope.responseOptions.columnDefs = [ ];
+          if (response.resultSet.length > 0) {
+            var row = response.resultSet[0];
+            for (var key in row) {
+              $scope.responseOptions.columnDefs.push({
+                field: key,
+                menuItems: [
+                  {
+                    title: 'Create An Assertion',
+                    icon: 'ui-grid-icon-info-circled',
+                    context: $scope,
+                    action: function() {
+                      this.context.createDSFieldContainAssertion(this.context.col.colDef.field);
+                    }
                   }
-                }
-              ]
-            });
+                ]
+              });
+            }
           }
         }
       }, function(error) {
