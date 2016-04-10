@@ -1,6 +1,6 @@
 package io.irontest.db;
 
-import io.irontest.models.Assertion;
+import io.irontest.models.assertion.Assertion;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.skife.jdbi.v2.sqlobject.Bind;

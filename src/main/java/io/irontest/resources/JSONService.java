@@ -1,7 +1,7 @@
 package io.irontest.resources;
 
 import io.irontest.core.AssertionVerifierFactory;
-import io.irontest.models.Assertion;
+import io.irontest.models.assertion.Assertion;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;

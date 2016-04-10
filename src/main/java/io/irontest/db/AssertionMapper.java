@@ -1,7 +1,7 @@
 package io.irontest.db;
 
 import io.irontest.utils.IronTestUtils;
-import io.irontest.models.Assertion;
+import io.irontest.models.assertion.Assertion;
 import io.irontest.models.Properties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.skife.jdbi.v2.StatementContext;

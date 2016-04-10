@@ -1,8 +1,8 @@
 package io.irontest.core;
 
-import io.irontest.models.EvaluationResult;
+import io.irontest.models.assertion.EvaluationResult;
 import io.irontest.models.Properties;
-import io.irontest.models.XPathEvaluationRequestProperties;
+import io.irontest.models.assertion.XPathEvaluationRequestProperties;
 import io.irontest.utils.XMLUtils;
 import com.sun.org.apache.xpath.internal.XPathException;
 import org.w3c.dom.NodeList;

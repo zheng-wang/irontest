@@ -1,7 +1,7 @@
 package io.irontest.resources;
 
 import io.irontest.db.AssertionDAO;
-import io.irontest.models.Assertion;
+import io.irontest.models.assertion.Assertion;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import javax.ws.rs.*;

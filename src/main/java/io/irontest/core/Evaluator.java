@@ -1,6 +1,6 @@
 package io.irontest.core;
 
-import io.irontest.models.EvaluationResult;
+import io.irontest.models.assertion.EvaluationResult;
 import io.irontest.models.Properties;
 
 /**

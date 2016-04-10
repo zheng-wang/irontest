@@ -1,4 +1,6 @@
-package io.irontest.models;
+package io.irontest.models.assertion;
+
+import io.irontest.models.Properties;
 
 /**
  * Created by Zheng on 19/07/2015.

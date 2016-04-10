@@ -1,7 +1,7 @@
 package io.irontest.core;
 
-import io.irontest.models.EvaluationRequest;
-import io.irontest.models.XPathEvaluationRequestProperties;
+import io.irontest.models.assertion.EvaluationRequest;
+import io.irontest.models.assertion.XPathEvaluationRequestProperties;
 
 /**
  * Created by Zheng on 2/08/2015.

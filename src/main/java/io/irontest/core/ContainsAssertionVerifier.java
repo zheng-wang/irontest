@@ -1,8 +1,8 @@
 package io.irontest.core;
 
-import io.irontest.models.Assertion;
-import io.irontest.models.AssertionVerification;
-import io.irontest.models.ContainsAssertionProperties;
+import io.irontest.models.assertion.Assertion;
+import io.irontest.models.assertion.AssertionVerification;
+import io.irontest.models.assertion.ContainsAssertionProperties;
 
 /**
  * Created by Zheng on 6/08/2015.

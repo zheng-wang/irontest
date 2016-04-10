@@ -1,5 +1,6 @@
-package io.irontest.models;
+package io.irontest.models.assertion;
 
+import io.irontest.models.Properties;
 import io.irontest.utils.IronTestUtils;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;

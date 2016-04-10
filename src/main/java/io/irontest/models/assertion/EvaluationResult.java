@@ -1,4 +1,4 @@
-package io.irontest.models;
+package io.irontest.models.assertion;
 
 /**
  * The result of an expression's evaluation.

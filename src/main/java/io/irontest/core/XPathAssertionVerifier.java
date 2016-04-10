@@ -1,6 +1,6 @@
 package io.irontest.core;
 
-import io.irontest.models.*;
+import io.irontest.models.assertion.*;
 
 /**
  * Created by Zheng on 6/08/2015.

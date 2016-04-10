@@ -1,6 +1,7 @@
 package io.irontest.models;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.irontest.models.assertion.EvaluationResult;
 
 import java.util.Date;
 

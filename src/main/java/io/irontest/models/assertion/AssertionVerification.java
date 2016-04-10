@@ -1,4 +1,4 @@
-package io.irontest.models;
+package io.irontest.models.assertion;
 
 /**
  * Created by Zheng on 5/08/2015.

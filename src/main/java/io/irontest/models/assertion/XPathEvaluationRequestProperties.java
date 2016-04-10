@@ -1,4 +1,7 @@
-package io.irontest.models;
+package io.irontest.models.assertion;
+
+import io.irontest.models.NamespacePrefix;
+import io.irontest.models.Properties;
 
 import java.util.List;
 

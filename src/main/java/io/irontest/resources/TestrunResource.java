@@ -6,6 +6,8 @@ import io.irontest.db.*;
 import io.irontest.handlers.HandlerFactory;
 import io.irontest.handlers.SOAPHandler;
 import io.irontest.models.*;
+import io.irontest.models.assertion.Assertion;
+import io.irontest.models.assertion.EvaluationResult;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

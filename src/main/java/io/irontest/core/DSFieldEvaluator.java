@@ -1,7 +1,7 @@
 package io.irontest.core;
 
-import io.irontest.models.DSFieldAssertionProperties;
-import io.irontest.models.EvaluationResult;
+import io.irontest.models.assertion.DSFieldAssertionProperties;
+import io.irontest.models.assertion.EvaluationResult;
 import io.irontest.models.Properties;
 
 import java.util.List;

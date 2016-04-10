@@ -1,6 +1,10 @@
 package io.irontest.utils;
 
 import io.irontest.models.*;
+import io.irontest.models.assertion.Assertion;
+import io.irontest.models.assertion.ContainsAssertionProperties;
+import io.irontest.models.assertion.DSFieldAssertionProperties;
+import io.irontest.models.assertion.XPathAssertionProperties;
 
 /**
  * Created by Zheng on 12/07/2015.
