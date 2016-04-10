@@ -2,8 +2,9 @@ package io.irontest.resources;
 
 import io.irontest.core.Evaluator;
 import io.irontest.core.EvaluatorFactory;
-import io.irontest.handlers.HandlerFactory;
 import io.irontest.db.*;
+import io.irontest.handlers.HandlerFactory;
+import io.irontest.handlers.SOAPHandler;
 import io.irontest.models.*;
 
 import javax.ws.rs.*;
@@ -63,50 +64,38 @@ public class TestrunResource {
             Testcase testcase = testcaseDao.findById(testcaseId);
             List<Teststep> teststeps = teststepDao.findByTestcaseId(testcaseId);
 
-            long environmentId = testrun.getEnvironmentId();
-            Environment environment = environmentDao.findById(environmentId);
-            List<EnvEntry> enventries = enventryDao.findByEnv(environmentId);
-            Map<Long, EnvEntry> enventriesMap = new HashMap<Long, EnvEntry>();
-            for (EnvEntry enventry : enventries) {
-                enventriesMap.put(enventry.getIntfaceId(), enventry);
-            }
-
-            // set the default environment for the test case
-            testcase.setEnvironmentId(environmentId);
-            testcaseDao.update(testcase);
-
             for (Teststep teststep : teststeps) {
-                long intfaceId = teststep.getIntfaceId();
-                EnvEntry enventry = enventriesMap.get(intfaceId);
-                if (enventry == null) {
-                    throw new Exception("No interface entry for the test step " + teststep.getName() + " in the environment " + environment.getName());
-                } else {
-                    long endpointId = enventry.getEndpointId();
-                    Endpoint endpoint = endpointDao.findById(endpointId);
+                Object response = null;
 
-                    Map<String, String> details = getEndpointDetails(endpointId);
+                //  invoke and get response
+                if (teststep.getEndpointId() == 0) {  //  there is no endpoint associated with the test step
+                    if (Teststep.TEST_STEP_TYPE_SOAP.equals(teststep.getType())) {
+                        SOAPTeststepProperties properties = (SOAPTeststepProperties) teststep.getProperties();
+                        SOAPHandler handler = (SOAPHandler) HandlerFactory.getInstance().getHandler("SOAPHandler");
+                        response = handler.invoke(teststep.getRequest(), properties);
+                    }
+                } else {              //  use the endpoint to invoke
+                    Endpoint endpoint = endpointDao.findById(teststep.getEndpointId());
+                    Map<String, String> details = getEndpointDetails(teststep.getEndpointId());
+                    response = HandlerFactory.getInstance().getHandler(endpoint.getHandler()).invoke(teststep.getRequest(), details);
+                }
 
-                    Object response = HandlerFactory.getInstance().getHandler(endpoint.getHandler()).invoke(teststep.getRequest(), details);
+                System.out.println(response);
 
-                    System.out.println(response);
-
-                    Intface intface = intfaceDao.findById(intfaceId);
-                    List<Assertion> assertions = assertionDao.findByTeststepId(teststep.getId());
-
-                    EvaluationResponse result = new EvaluationResponse();
-                    for (Assertion assertion : assertions) {
-                        Evaluator evaluator = evaluatorFactory.createEvaluator(intface.getDeftype(), assertion.getType());
-                        result = evaluator.evaluate(response, assertion.getProperties());
-                        if (result.getError().equals("true")) {
-                            break;
-                        }
+                //  evaluate assertions against the invocation response
+                List<Assertion> assertions = assertionDao.findByTeststepId(teststep.getId());
+                EvaluationResult result = new EvaluationResult();
+                for (Assertion assertion : assertions) {
+                    Evaluator evaluator = evaluatorFactory.createEvaluator(assertion.getType());
+                    result = evaluator.evaluate(response, assertion.getProperties());
+                    if (result.getError().equals("true")) {
+                        break;
                     }
 
                     teststep.setResult(result);
                 }
             }
 
-            testrun.setEnvironment(environment);
             testcase.setTeststeps(teststeps);
             testrun.setTestcase(testcase);
         }

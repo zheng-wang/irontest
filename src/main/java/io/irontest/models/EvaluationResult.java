@@ -1,9 +1,10 @@
 package io.irontest.models;
 
 /**
+ * The result of an expression's evaluation.
  * Created by Zheng on 27/07/2015.
  */
-public class EvaluationResponse {
+public class EvaluationResult {
     //  message of error that occurred during the evaluation
     private String error;
 

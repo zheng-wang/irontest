@@ -11,10 +11,6 @@ angular.module('iron-test').controller('SOAPTeststepEditController', ['$scope', 
     };
     $scope.tempData = {};
     $scope.showAssertionsArea = false;
-    $scope.responseOptions = {
-      enableFiltering: true,
-      columnDefs: [ ]
-    };
 
     $scope.update = function(isValid) {
       if (isValid) {
@@ -66,26 +62,6 @@ angular.module('iron-test').controller('SOAPTeststepEditController', ['$scope', 
       var testrunRes = new Testruns(testrun);
       testrunRes.$save(function(response) {
         $scope.tempData.soapResponse = response.response;
-        $scope.responseOptions.data = response.response;
-        $scope.responseOptions.columnDefs = [ ];
-        if (response.response.length > 0) {
-          var row = response.response[0];
-          for (var key in row) {
-            $scope.responseOptions.columnDefs.push({
-              field: key,
-              menuItems: [
-                {
-                  title: 'Create An Assertion',
-                  icon: 'ui-grid-icon-info-circled',
-                  context: $scope,
-                  action: function() {
-                    this.context.createDSFieldContainAssertion(this.context.col.colDef.field);
-                  }
-                }
-              ]
-            });
-          }
-        }
       }, function(error) {
         alert('Error');
       });

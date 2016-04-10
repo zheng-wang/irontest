@@ -1,7 +1,7 @@
 package io.irontest.core;
 
 import io.irontest.models.DSFieldAssertionProperties;
-import io.irontest.models.EvaluationResponse;
+import io.irontest.models.EvaluationResult;
 import io.irontest.models.Properties;
 
 import java.util.List;
@@ -13,12 +13,12 @@ import java.util.Map;
 public class DSFieldEvaluator implements Evaluator {
     public static final String CONTAINS_OPERATOR = "Contains";
 
-    public EvaluationResponse evaluate() {
+    public EvaluationResult evaluate() {
         return null;
     }
 
-    public EvaluationResponse evaluate(Object response, Properties properties) {
-        EvaluationResponse result = new EvaluationResponse();
+    public EvaluationResult evaluate(Object response, Properties properties) {
+        EvaluationResult result = new EvaluationResult();
         result.setError("true");
 
         DSFieldAssertionProperties assertionProperties = (DSFieldAssertionProperties) properties;

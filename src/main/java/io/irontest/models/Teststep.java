@@ -20,7 +20,7 @@ public class Teststep {
     private long endpointId;
     private Endpoint endpoint;
     private Properties properties;
-    private EvaluationResponse result;
+    private EvaluationResult result;
     private Date created;
     private Date updated;
 
@@ -139,11 +139,11 @@ public class Teststep {
         return properties;
     }
 
-    public EvaluationResponse getResult() {
+    public EvaluationResult getResult() {
         return result;
     }
 
-    public void setResult(EvaluationResponse result) {
+    public void setResult(EvaluationResult result) {
         this.result = result;
     }
 

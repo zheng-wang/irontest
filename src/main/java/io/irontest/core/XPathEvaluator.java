@@ -1,6 +1,6 @@
 package io.irontest.core;
 
-import io.irontest.models.EvaluationResponse;
+import io.irontest.models.EvaluationResult;
 import io.irontest.models.Properties;
 import io.irontest.models.XPathEvaluationRequestProperties;
 import io.irontest.utils.XMLUtils;
@@ -28,12 +28,12 @@ public class XPathEvaluator implements Evaluator {
         this.properties = properties;
     }
 
-    public EvaluationResponse evaluate(Object response, Properties properties) {
+    public EvaluationResult evaluate(Object response, Properties properties) {
         return null;
     }
 
-    public EvaluationResponse evaluate() {
-        EvaluationResponse response = new EvaluationResponse();
+    public EvaluationResult evaluate() {
+        EvaluationResult response = new EvaluationResult();
         XPath xpath = XPathFactory.newInstance().newXPath();
         xpath.setNamespaceContext(new IronTestNamespaceContext(properties.getNamespacePrefixes()));
 

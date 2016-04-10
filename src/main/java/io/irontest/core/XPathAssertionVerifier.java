@@ -14,11 +14,11 @@ public class XPathAssertionVerifier implements AssertionVerifier {
         EvaluationRequest evaluationRequest = new EvaluationRequest(
                 assertion.getType(), assertionProperties.getxPath(), verification.getInput(),
                 new XPathEvaluationRequestProperties(assertionProperties.getNamespacePrefixes()));
-        EvaluationResponse evaluationResponse = new EvaluatorFactory().createEvaluator(evaluationRequest).evaluate();
-        verification.setPassed(evaluationResponse.getError() == null &&
-                assertionProperties.getExpectedValue().equals(evaluationResponse.getActualValue()));
-        verification.setError(evaluationResponse.getError());
-        verification.setActualValue(evaluationResponse.getActualValue());
+        EvaluationResult evaluationResult = new EvaluatorFactory().createEvaluator(evaluationRequest).evaluate();
+        verification.setPassed(evaluationResult.getError() == null &&
+                assertionProperties.getExpectedValue().equals(evaluationResult.getActualValue()));
+        verification.setError(evaluationResult.getError());
+        verification.setActualValue(evaluationResult.getActualValue());
         return assertion;
     }
 }
