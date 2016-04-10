@@ -1,46 +1,22 @@
 package io.irontest.models.assertion;
 
 /**
+ * Input to assertion verifier.
  * Created by Zheng on 5/08/2015.
  */
 public class AssertionVerification {
-    private String input;            //  the string that the assertion is verified against
-    private Boolean passed;          //  true if assertion verification passed, false otherwise, null if not verified
-    private String error;            //  message of error occurred during verification
+    private Assertion assertion;     //  the assertion to be verified (against the input)
+    private Object input;            //  the object that the assertion is verified against
 
-    //  actualValue is currently used for xpath assertion only.
-    //  Might need to refactor to be Properties when new type of assertion needs to be verified.
-    private String actualValue;
-
-    public String getInput() {
+    public Object getInput() {
         return input;
     }
 
-    public void setInput(String input) {
+    public void setInput(Object input) {
         this.input = input;
     }
 
-    public Boolean getPassed() {
-        return passed;
-    }
+    public void setAssertion(Assertion assertion) { this.assertion = assertion; }
 
-    public void setPassed(Boolean passed) {
-        this.passed = passed;
-    }
-
-    public String getError() {
-        return error;
-    }
-
-    public void setError(String error) {
-        this.error = error;
-    }
-
-    public String getActualValue() {
-        return actualValue;
-    }
-
-    public void setActualValue(String actualValue) {
-        this.actualValue = actualValue;
-    }
+    public Assertion getAssertion() { return assertion; }
 }

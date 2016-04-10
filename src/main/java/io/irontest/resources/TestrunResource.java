@@ -1,7 +1,7 @@
 package io.irontest.resources;
 
-import io.irontest.core.Evaluator;
-import io.irontest.core.EvaluatorFactory;
+import io.irontest.core.assertion.Evaluator;
+import io.irontest.core.assertion.EvaluatorFactory;
 import io.irontest.db.*;
 import io.irontest.handlers.HandlerFactory;
 import io.irontest.handlers.SOAPHandler;

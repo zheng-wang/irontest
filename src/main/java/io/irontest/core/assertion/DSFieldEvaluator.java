@@ -1,4 +1,4 @@
-package io.irontest.core;
+package io.irontest.core.assertion;
 
 import io.irontest.models.assertion.DSFieldAssertionProperties;
 import io.irontest.models.assertion.EvaluationResult;

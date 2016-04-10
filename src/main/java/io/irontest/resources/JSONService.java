@@ -1,7 +1,10 @@
 package io.irontest.resources;
 
-import io.irontest.core.AssertionVerifierFactory;
+import io.irontest.core.assertion.AssertionVerifier;
+import io.irontest.core.assertion.AssertionVerifierFactory;
 import io.irontest.models.assertion.Assertion;
+import io.irontest.models.assertion.AssertionVerification;
+import io.irontest.models.assertion.AssertionVerificationResult;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -22,7 +25,12 @@ public class JSONService {
     }
 
     @POST @Path("verifyassertion")
-    public Assertion verifyAssertion(Assertion assertion) {
-        return assertionVerifierFactory.create(assertion.getType()).verify(assertion);
+    public AssertionVerificationResult verifyAssertion(AssertionVerification assertionVerification) {
+        Assertion assertion = assertionVerification.getAssertion();
+        String assertionType = assertionVerification.getAssertion().getType();
+        AssertionVerifier assertionVerifier = assertionVerifierFactory.create(assertionType);
+        AssertionVerificationResult result = assertionVerifier.verify(assertionVerification);
+        result.setAssertionId(assertion.getId());
+        return result;
     }
 }

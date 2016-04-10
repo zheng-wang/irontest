@@ -1,7 +1,7 @@
 package io.irontest;
 
-import io.irontest.core.AssertionVerifierFactory;
-import io.irontest.core.EvaluatorFactory;
+import io.irontest.core.assertion.AssertionVerifierFactory;
+import io.irontest.core.assertion.EvaluatorFactory;
 import io.irontest.db.*;
 import io.irontest.exceptions.IronTestDBIExceptionMapper;
 import io.irontest.resources.*;

@@ -186,14 +186,15 @@ angular.module('iron-test').controller('AssertionsController', ['$scope', 'Asser
     $scope.assertionsModelObj.verifyCurrentAssertion = function() {
       var assertion = $scope.assertionsModelObj.assertion;
       var url = 'api/jsonservice/verifyassertion';
-      assertion.verification = {
-        input: $scope.$parent.tempData.soapResponse
+      var assertionVerification = {
+        input: $scope.$parent.tempData.soapResponse,
+        assertion: assertion
       };
       $http
-        .post(url, assertion)
+        .post(url, assertionVerification)
         .success(function(response, status) {
-          //  Only verification object is changed. Do not update the whole assertion object, to avoid side effect.
-          $scope.assertionsModelObj.assertion.verification = response.verification;
+          $scope.assertionsModelObj.assertionVerificationResult = response;
+
           if (assertion.type === 'XPath') {
             $scope.assertionsModelObj.tempData.assertionXPathActualValue =
               response.verification.error ? response.verification.error : response.verification.actualValue;

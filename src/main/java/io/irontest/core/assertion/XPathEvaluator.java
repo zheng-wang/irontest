@@ -1,5 +1,6 @@
-package io.irontest.core;
+package io.irontest.core.assertion;
 
+import io.irontest.core.IronTestNamespaceContext;
 import io.irontest.models.assertion.EvaluationResult;
 import io.irontest.models.Properties;
 import io.irontest.models.assertion.XPathEvaluationRequestProperties;

@@ -17,8 +17,6 @@ public class Assertion {
     private String name;
     private String type;
     private Properties properties;
-    private String result;
-    private AssertionVerification verification;
     private Date created;
     private Date updated;
 
@@ -66,14 +64,6 @@ public class Assertion {
         this.type = type;
     }
 
-    public String getResult() {
-        return result;
-    }
-
-    public void setResult(String result) {
-        this.result = result;
-    }
-
     public Date getCreated() {
         return created;
     }
@@ -97,13 +87,5 @@ public class Assertion {
     @JsonDeserialize(using=AssertionPropertiesDeserializer.class)
     public void setProperties(Properties properties) {
         this.properties = properties;
-    }
-
-    public AssertionVerification getVerification() {
-        return verification;
-    }
-
-    public void setVerification(AssertionVerification verification) {
-        this.verification = verification;
     }
 }

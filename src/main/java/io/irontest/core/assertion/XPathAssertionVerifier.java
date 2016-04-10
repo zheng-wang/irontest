@@ -1,4 +1,4 @@
-package io.irontest.core;
+package io.irontest.core.assertion;
 
 import io.irontest.models.assertion.*;
 
@@ -8,17 +8,18 @@ import io.irontest.models.assertion.*;
 public class XPathAssertionVerifier implements AssertionVerifier {
     public XPathAssertionVerifier() {}
 
-    public Assertion verify(Assertion assertion) {
-        AssertionVerification verification = assertion.getVerification();
+    public AssertionVerificationResult verify(AssertionVerification assertionVerification) {
+        AssertionVerificationResult result = new AssertionVerificationResult();
+        Assertion assertion = assertionVerification.getAssertion();
         XPathAssertionProperties assertionProperties = (XPathAssertionProperties) assertion.getProperties();
         EvaluationRequest evaluationRequest = new EvaluationRequest(
-                assertion.getType(), assertionProperties.getxPath(), verification.getInput(),
+                assertion.getType(), assertionProperties.getxPath(), (String) assertionVerification.getInput(),
                 new XPathEvaluationRequestProperties(assertionProperties.getNamespacePrefixes()));
         EvaluationResult evaluationResult = new EvaluatorFactory().createEvaluator(evaluationRequest).evaluate();
-        verification.setPassed(evaluationResult.getError() == null &&
+        result.setPassed(evaluationResult.getError() == null &&
                 assertionProperties.getExpectedValue().equals(evaluationResult.getActualValue()));
-        verification.setError(evaluationResult.getError());
-        verification.setActualValue(evaluationResult.getActualValue());
-        return assertion;
+        result.setError(evaluationResult.getError());
+        result.setActualValue(evaluationResult.getActualValue());
+        return result;
     }
 }
