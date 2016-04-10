@@ -197,8 +197,8 @@ angular.module('iron-test').controller('AssertionsController', ['$scope', 'Asser
 
           if (assertion.type === 'XPath') {
             $scope.assertionsModelObj.tempData.assertionXPathActualValue =
-              response.verification.error ? response.verification.error : response.verification.actualValue;
-            $scope.assertionsModelObj.tempData.assertionXPathActualValueError = response.verification.error;
+              response.error ? response.error : response.actualValue;
+            $scope.assertionsModelObj.tempData.assertionXPathActualValueError = response.error;
           }
         })
         .error(function(response, status) {
