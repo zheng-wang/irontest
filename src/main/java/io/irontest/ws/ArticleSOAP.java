@@ -30,4 +30,10 @@ public class ArticleSOAP {
                                             @WebParam(name = "endTime") Date endTime) {
         return dao.findByCreationTime(startTime, endTime);
     }
+
+    @WebMethod
+    public void createArticle(@WebParam(name = "title") String title, @WebParam(name = "content") String content) {
+        Article article = new Article(0, title, content, null, null);
+        dao.insert(article);
+    }
 }
