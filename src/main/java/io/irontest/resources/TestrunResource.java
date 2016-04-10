@@ -1,12 +1,15 @@
 package io.irontest.resources;
 
-import io.irontest.core.assertion.Evaluator;
+import io.irontest.core.assertion.AssertionVerifier;
+import io.irontest.core.assertion.AssertionVerifierFactory;
 import io.irontest.core.assertion.EvaluatorFactory;
 import io.irontest.db.*;
 import io.irontest.handlers.HandlerFactory;
 import io.irontest.handlers.SOAPHandler;
 import io.irontest.models.*;
 import io.irontest.models.assertion.Assertion;
+import io.irontest.models.assertion.AssertionVerification;
+import io.irontest.models.assertion.AssertionVerificationResult;
 import io.irontest.models.assertion.EvaluationResult;
 
 import javax.ws.rs.*;
@@ -88,14 +91,17 @@ public class TestrunResource {
                 List<Assertion> assertions = assertionDao.findByTeststepId(teststep.getId());
                 EvaluationResult result = new EvaluationResult();
                 for (Assertion assertion : assertions) {
-                    Evaluator evaluator = evaluatorFactory.createEvaluator(assertion.getType());
-                    result = evaluator.evaluate(response, assertion.getProperties());
-                    if (result.getError().equals("true")) {
+                    AssertionVerification verification = new AssertionVerification();
+                    verification.setAssertion(assertion);
+                    verification.setInput(response);
+                    AssertionVerifier verifier = new AssertionVerifierFactory().create(assertion.getType());
+                    AssertionVerificationResult verificationResult = verifier.verify(verification);
+                    if (Boolean.FALSE == verificationResult.getPassed()) {
+                        result.setError("true");
                         break;
                     }
-
-                    teststep.setResult(result);
                 }
+                teststep.setResult(result);
             }
 
             testcase.setTeststeps(teststeps);
