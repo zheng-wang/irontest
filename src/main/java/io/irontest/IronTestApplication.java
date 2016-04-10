@@ -1,11 +1,5 @@
 package io.irontest;
 
-import io.irontest.core.assertion.AssertionVerifierFactory;
-import io.irontest.core.assertion.EvaluatorFactory;
-import io.irontest.db.*;
-import io.irontest.exceptions.IronTestDBIExceptionMapper;
-import io.irontest.resources.*;
-import io.irontest.ws.ArticleSOAP;
 import com.roskart.dropwizard.jaxws.EndpointBuilder;
 import com.roskart.dropwizard.jaxws.JAXWSBundle;
 import io.dropwizard.Application;
@@ -14,6 +8,12 @@ import io.dropwizard.jdbi.DBIFactory;
 import io.dropwizard.jdbi.bundles.DBIExceptionsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import io.irontest.core.assertion.AssertionVerifierFactory;
+import io.irontest.core.assertion.EvaluatorFactory;
+import io.irontest.db.*;
+import io.irontest.exceptions.IronTestDBIExceptionMapper;
+import io.irontest.resources.*;
+import io.irontest.ws.ArticleSOAP;
 import org.skife.jdbi.v2.DBI;
 
 /**
@@ -79,7 +79,7 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         environment.jersey().register(new EnvironmentResource(environmentDAO, enventryDAO));
         environment.jersey().register(new EnvEntryResource(enventryDAO));
         environment.jersey().register(new TestrunResource(endpointDAO, endpointdtlDAO, testcaseDAO, teststepDAO,
-                environmentDAO, enventryDAO, intfaceDAO, assertionDAO, evaluatorFactory));
+                assertionDAO));
 
         //  register JSON services
         environment.jersey().register(new JSONService(new AssertionVerifierFactory()));

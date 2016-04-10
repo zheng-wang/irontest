@@ -20,7 +20,7 @@ public interface TestcaseDAO {
     @GetGeneratedKeys
     long insert(@BindBean Testcase testcase);
 
-    @SqlUpdate("update testcase set name = :name, description = :description, environmentId = :environmentId, updated = CURRENT_TIMESTAMP where id = :id")
+    @SqlUpdate("update testcase set name = :name, description = :description, updated = CURRENT_TIMESTAMP where id = :id")
     int update(@BindBean Testcase testcase);
 
     @SqlUpdate("delete from testcase where id = :id")

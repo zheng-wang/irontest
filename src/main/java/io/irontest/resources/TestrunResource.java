@@ -2,7 +2,6 @@ package io.irontest.resources;
 
 import io.irontest.core.assertion.AssertionVerifier;
 import io.irontest.core.assertion.AssertionVerifierFactory;
-import io.irontest.core.assertion.EvaluatorFactory;
 import io.irontest.db.*;
 import io.irontest.handlers.HandlerFactory;
 import io.irontest.handlers.SOAPHandler;
@@ -27,24 +26,15 @@ public class TestrunResource {
     private final EndpointDetailDAO endpointdtlDao;
     private final TestcaseDAO testcaseDao;
     private final TeststepDAO teststepDao;
-    private final EnvironmentDAO environmentDao;
-    private final EnvEntryDAO enventryDao;
-    private final IntfaceDAO intfaceDao;
     private final AssertionDAO assertionDao;
-    private final EvaluatorFactory evaluatorFactory;
 
     public TestrunResource(EndpointDAO endpointDao, EndpointDetailDAO endpointdtlDao, TestcaseDAO testcaseDao,
-                           TeststepDAO teststepDao, EnvironmentDAO environmentDao, EnvEntryDAO enventryDao,
-                           IntfaceDAO intfaceDao, AssertionDAO assertionDao, EvaluatorFactory evaluatorFactory) {
+                           TeststepDAO teststepDao, AssertionDAO assertionDao) {
         this.endpointDao = endpointDao;
         this.endpointdtlDao = endpointdtlDao;
         this.testcaseDao = testcaseDao;
         this.teststepDao = teststepDao;
-        this.environmentDao = environmentDao;
-        this.enventryDao = enventryDao;
-        this.intfaceDao = intfaceDao;
         this.assertionDao = assertionDao;
-        this.evaluatorFactory = evaluatorFactory;
     }
 
     @POST
