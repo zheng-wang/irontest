@@ -15,10 +15,12 @@ angular.module('iron-test').controller('EnvironmentsController', ['$scope', 'Env
     $scope.form = [
       {
         key: "name",
+        title: "Name",
         validationMessage: "The Name is required and should be less than 50 characters"
       },
       {
         key: "description",
+        title: "Description",
         type: "textarea",
         validationMessage: "The Description is required and should be less than 500 characters"
       }

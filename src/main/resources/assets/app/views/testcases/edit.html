@@ -13,8 +13,8 @@
       </h3>
     </div>
   </div>
-  <tabset>
-    <tab heading="Test Steps">
+  <uib-tabset>
+    <uib-tab heading="Test Steps">
       <div class="form-group"></div>
       <div class="row">
         <div class="form-group">
@@ -39,8 +39,8 @@
         <div ui-grid="{enableFiltering: true, data: testcase.teststeps, columnDefs: teststepColumnDefs}"
              ui-grid-resize-columns ui-grid-move-columns class="ui-grid"></div>
       </div>
-    </tab>
-    <tab heading="Basic Info">
+    </uib-tab>
+    <uib-tab heading="Basic Info">
       <form name="testcaseForm" class="form-horizontal col-lg-6" role="form" novalidate>
         <div class="form-group"></div>
         <div class="form-group" ng-class="{ 'has-error' : submitted && testcaseForm.name.$invalid }">
@@ -61,8 +61,8 @@
           </div>
         </div>
       </form>
-    </tab>
-  </tabset>
+    </uib-tab>
+  </uib-tabset>
 
   <script type="text/ng-template" id="teststepGridNameCellTemplate.html">
     <div class="ui-grid-cell-contents">

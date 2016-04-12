@@ -16,11 +16,11 @@
     </div>
   </div>
   <form name="teststepForm" class="form-horizontal" role="form" novalidate>
-    <tabset>
-      <tab heading="Request Response">
+    <uib-tabset>
+      <uib-tab heading="Request Response">
         <div ng-include="'/ui/views/teststeps/soap/edit-soap-teststep-request-response.html'"></div>
-      </tab>
-      <tab heading="Basic Info">
+      </uib-tab>
+      <uib-tab heading="Basic Info">
         <div class="form-group"></div>
         <div class="form-group" ng-class="{ 'has-error' : savingStatus.submitted && teststepForm.name.$invalid }">
           <div class="col-lg-6">
@@ -43,7 +43,7 @@
             </div>
           </div>
         </div>
-      </tab>
-    </tabset>
+      </uib-tab>
+    </uib-tabset>
   </form>
 </div>

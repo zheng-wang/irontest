@@ -20,12 +20,12 @@
         </div>
         <p></p>
         <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
-        <tabset>
-            <tab heading="Basic Info">
+        <uib-tabset>
+            <uib-tab heading="Basic Info">
                 <p></p>
                 <div sf-schema="schema" sf-form="form" sf-model="environment" ></div>
-            </tab>
-            <tab ng-if="environment.id" heading="Interfaces">
+            </uib-tab>
+            <uib-tab ng-if="environment.id" heading="Interfaces">
                 <p></p>
                 <div class="row">
                     <div class="col-md-2">
@@ -40,8 +40,8 @@
                     <div ui-grid="{paginationPageSizes: [10,20,50,100], paginationPageSize: 10, enableFiltering: true, data: environment.entries, columnDefs: enventryGridColumnDefs}"
                          ui-grid-pagination ui-grid-resize-columns ui-grid-move-columns class="ui-grid"></div>
                 </div>
-            </tab>
-        </tabset>
+            </uib-tab>
+        </uib-tabset>
     </form>
     <script type="text/ng-template" id="gridCellTemplate.html">
         <div class="ui-grid-cell-contents">
