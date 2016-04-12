@@ -3,6 +3,12 @@ server:
   # (Do not modify) Root URI for REST resources
   rootPath: '/api/*'
   registerDefaultExceptionMappers: false
+  applicationConnectors:
+    - type: http
+      port: 8081
+  adminConnectors:
+    - type: http
+      port: 8082
 
 # Database settings.
 database:
