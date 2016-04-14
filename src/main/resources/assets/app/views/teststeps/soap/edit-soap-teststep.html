@@ -23,7 +23,7 @@
       <uib-tab heading="Basic Info">
         <div class="form-group"></div>
         <div class="form-group" ng-class="{ 'has-error' : savingStatus.submitted && teststepForm.name.$invalid }">
-          <div class="col-lg-6">
+          <div class="col-lg-9">
             <label for="name" class="col-lg-2 control-label">Name</label>
             <div class="col-lg-10">
               <input name="name" type="text" class="form-control" ng-model="$parent.$parent.teststep.name"
@@ -35,7 +35,7 @@
           </div>
         </div>
         <div class="form-group">
-          <div class="col-lg-6">
+          <div class="col-lg-9">
             <label for="description" class="col-lg-2 control-label">Description</label>
             <div class="col-lg-10">
               <textarea name="description" ng-model="$parent.$parent.teststep.description" ng-change="autoSave(teststepForm.$valid)"

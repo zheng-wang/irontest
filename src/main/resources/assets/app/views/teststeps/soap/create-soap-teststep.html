@@ -5,7 +5,7 @@
     </div>
   </div>
   <div class="row">
-    <form name="teststepForm" class="form-horizontal col-lg-7" role="form" ng-submit="create(teststepForm.$valid)" novalidate>
+    <form name="teststepForm" class="form-horizontal col-lg-9" role="form" ng-submit="create(teststepForm.$valid)" novalidate>
       <div class="form-group" ng-class="{ 'has-error' : submitted && teststepForm.name.$invalid }">
         <label for="name" class="col-lg-2 control-label">Name</label>
         <div class="col-lg-10">
@@ -25,9 +25,9 @@
       </div>
       <div class="form-group" ng-class="{ 'has-error' : submitted && teststepForm.wsdlUrl.$invalid }">
         <label for="wsdlUrl" class="col-lg-2 control-label">WSDL URL</label>
-        <div class="col-lg-7">
+        <div class="col-lg-8">
           <input name="wsdlUrl" type="text" class="form-control" ng-model="wsdlUrl" id="wsdlUrl"
-                 placeholder="http://localhost:8080/soap/article?wsdl" required>
+                 placeholder="http://localhost:8081/soap/article?wsdl" required>
           <div ng-show="submitted && teststepForm.wsdlUrl.$invalid" class="help-block">
             <p ng-show="teststepForm.wsdlUrl.$error.required">WSDL URL is required</p>
           </div>
@@ -51,7 +51,7 @@
         </div>
       </div>
       <div class="form-group">
-        <div class="col-lg-offset-5">
+        <div class="col-lg-offset-6">
           <button type="submit" class="btn btn-info">Submit</button>
         </div>
       </div>
