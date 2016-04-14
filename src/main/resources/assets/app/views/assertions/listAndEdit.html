@@ -2,13 +2,13 @@
   <!-- use z-index here to avoid assertion grid menu to be partially overridden -->
   <div class="col-lg-3" style="z-index: 1">
     <div class="form-group">
-      <div class="btn-group col-lg-4" dropdown is-open="status.isopen">
-        <button type="button" class="btn btn-info dropdown-toggle" dropdown-toggle ng-disabled="disabled">
+      <div class="btn-group col-lg-4" uib-dropdown keyboard-nav>
+        <button type="button" class="btn btn-info dropdown-toggle" uib-dropdown-toggle ng-disabled="disabled">
           Create <span class="caret"></span>
         </button>
-        <ul class="dropdown-menu" role="menu">
-          <li><a ng-click="assertionsModelObj.createContainsAssertion()" href="">Contains Assertion</a></li>
-          <li><a ng-click="assertionsModelObj.createXPathAssertion()" href="">XPath Assertion</a></li>
+        <ul class="dropdown-menu" uib-dropdown-menu role="menu">
+          <li role="menuitem"><a ng-click="assertionsModelObj.createContainsAssertion()" href="">Contains Assertion</a></li>
+          <li role="menuitem"><a ng-click="assertionsModelObj.createXPathAssertion()" href="">XPath Assertion</a></li>
         </ul>
       </div>
       <div class="col-lg-8">
