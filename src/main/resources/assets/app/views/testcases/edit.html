@@ -18,15 +18,15 @@
       <div class="form-group"></div>
       <div class="row">
         <div class="form-group">
-          <div class="btn-group col-lg-2" dropdown is-open="status.isopen">
-            <button type="button" class="btn btn-info dropdown-toggle" dropdown-toggle ng-disabled="disabled">
+          <div class="btn-group col-lg-2" uib-dropdown keyboard-nav>
+            <button type="button" class="btn btn-info dropdown-toggle" uib-dropdown-toggle ng-disabled="disabled">
               Create <span class="caret"></span>
             </button>
-            <ul class="dropdown-menu" role="menu">
-              <li><a ui-sref="teststep_create_soap({testcaseId: testcase.id})">SOAP Test Step</a></li>
-              <li><a ui-sref="teststep_create_db({testcaseId: testcase.id})">Database Test Step</a></li>
-              <li><a href="#">HTTP Test Step</a></li>
-              <li><a href="#">MQ Queue Test Step</a></li>
+            <ul class="dropdown-menu" uib-dropdown-menu role="menu">
+              <li role="menuitem"><a ui-sref="teststep_create_soap({testcaseId: testcase.id})">SOAP Test Step</a></li>
+              <li role="menuitem"><a ui-sref="teststep_create_db({testcaseId: testcase.id})">Database Test Step</a></li>
+              <li role="menuitem"><a href="#">HTTP Test Step</a></li>
+              <li role="menuitem"><a href="#">MQ Queue Test Step</a></li>
             </ul>
           </div>
           <div class="col-lg-1">
