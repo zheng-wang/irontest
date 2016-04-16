@@ -13,13 +13,5 @@ angular.module('iron-test').config(['$stateProvider', function ($stateProvider) 
         .state('environment_edit', {
             url: '/environments/:environmentId/edit',
             templateUrl: '/ui/views/environments/edit.html'
-        })
-        .state('enventry_create', {
-            url: '/enventries/:environmentId/create',
-            templateUrl: '/ui/views/environments/entryedit.html'
-        })
-        .state('enventry_edit', {
-            url: '/enventries/:enventryId/edit',
-            templateUrl: '/ui/views/environments/entryedit.html'
         });
 }]);
