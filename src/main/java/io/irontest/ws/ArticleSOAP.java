@@ -32,8 +32,9 @@ public class ArticleSOAP {
     }
 
     @WebMethod
-    public void createArticle(@WebParam(name = "title") String title, @WebParam(name = "content") String content) {
+    public Article createArticle(@WebParam(name = "title") String title, @WebParam(name = "content") String content) {
         Article article = new Article(0, title, content, null, null);
-        dao.insert(article);
+        long id = dao.insert(article);
+        return dao.findById(id);
     }
 }
