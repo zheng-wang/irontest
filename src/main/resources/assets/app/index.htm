@@ -2,92 +2,92 @@
 <html lang="en" ng-app="iron-test">
 
 <head>
-
-    <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Iron Test</title>
-    <link href="/ui/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/ui/lib/angular-ui-grid/ui-grid.css" rel="stylesheet">
-    <link href="/ui/lib/metisMenu/dist/metisMenu.min.css" rel="stylesheet">
-    <link href="/ui/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <link href="/ui/lib/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css" rel="stylesheet">
-    <link href="/ui/css/app.css" rel="stylesheet">
-    <link href="data:;base64,iVBORw0KGgo=" rel="icon"> <!-- this is to avoid favicon.ico 404 error -->
+  <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Iron Test</title>
+  <link href="/ui/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/ui/lib/angular-ui-grid/ui-grid.css" rel="stylesheet">
+  <link href="/ui/lib/metisMenu/dist/metisMenu.min.css" rel="stylesheet">
+  <link href="/ui/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link href="/ui/lib/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css" rel="stylesheet">
+  <link href="/ui/css/app.css" rel="stylesheet">
+  <link href="data:;base64,iVBORw0KGgo=" rel="icon"> <!-- this is to avoid favicon.ico 404 error -->
 </head>
 
 <body>
-    <div id="wrapper">
-        <!-- Navigation -->
-        <nav class="navbar navbar-default navbar-static-top" id="page-top-navbar" role="navigation" style="margin-bottom: 0">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" ui-sref="testcase_all">Iron Test</a>
-            </div>
-            <!-- /.navbar-header -->
+  <div id="wrapper">
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-static-top" id="page-top-navbar" role="navigation" style="margin-bottom: 0">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" ui-sref="testcase_all">Iron Test</a>
+      </div>
+      <!-- /.navbar-header -->
 
-            <div ng-include="'/ui/sidebar.html'"></div>
-        </nav>
+      <div ng-include="'/ui/sidebar.html'"></div>
+    </nav>
 
-        <div id="page-wrapper" class="ws-uiview" ui-view></div>
+    <div id="page-wrapper" class="ws-uiview" ui-view></div>
 
-    </div>
-    <!-- /#wrapper -->
+  </div>
+  <!-- /#wrapper -->
 
-    <script src="/ui/lib/underscore/underscore-min.js"></script>
-    <script src="/ui/lib/jquery/dist/jquery.min.js"></script>
-    <script src="/ui/lib/angular/angular.js"></script>
-    <script src="/ui/lib/angular-resource/angular-resource.js"></script>
-    <script src="/ui/lib/angular-ui-grid/ui-grid.js"></script>
-    <script src="/ui/lib/angular-ui-router/release/angular-ui-router.js"></script>
-    <script src="/ui/lib/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="/ui/lib/metisMenu/dist/metisMenu.min.js"></script>
-    <script src="/ui/lib/tv4/tv4.js"></script>
-    <script src="/ui/lib/angular-sanitize/angular-sanitize.js"></script>
-    <script src="/ui/lib/objectpath/lib/ObjectPath.js"></script>
-    <script src="/ui/lib/angular-schema-form/dist/schema-form.js"></script>
-    <script src="/ui/lib/angular-schema-form/dist/bootstrap-decorator.js"></script>
-    <script src="/ui/lib/angular-bootstrap/ui-bootstrap.js"></script>
-    <script src="/ui/lib/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-    <!-- use ng-src here to make the sidebar init script run after the sidebar ng-include (actually all ng-includes) in this html -->
-    <script ng-src="/ui/lib/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js"></script>
+  <script src="/ui/lib/underscore/underscore-min.js"></script>
+  <script src="/ui/lib/jquery/dist/jquery.min.js"></script>
+  <script src="/ui/lib/angular/angular.js"></script>
+  <script src="/ui/lib/angular-resource/angular-resource.js"></script>
+  <script src="/ui/lib/angular-ui-grid/ui-grid.js"></script>
+  <script src="/ui/lib/angular-ui-router/release/angular-ui-router.js"></script>
+  <script src="/ui/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="/ui/lib/metisMenu/dist/metisMenu.min.js"></script>
+  <script src="/ui/lib/tv4/tv4.js"></script>
+  <script src="/ui/lib/angular-sanitize/angular-sanitize.js"></script>
+  <script src="/ui/lib/objectpath/lib/ObjectPath.js"></script>
+  <script src="/ui/lib/angular-schema-form/dist/schema-form.js"></script>
+  <script src="/ui/lib/angular-schema-form/dist/bootstrap-decorator.js"></script>
+  <script src="/ui/lib/angular-bootstrap/ui-bootstrap.js"></script>
+  <script src="/ui/lib/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+  <!-- use ng-src here to make the sidebar init script run after the sidebar ng-include (actually all ng-includes) in this html -->
+  <script ng-src="/ui/lib/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js"></script>
 
-    <script src="/ui/js/app.js"></script>
-    <script src="/ui/js/app-services.js"></script>
-    <script src="/ui/js/app-directives.js"></script>
-    <script src="/ui/js/articles/articles-routes.js"></script>
-    <script src="/ui/js/articles/articles-services.js"></script>
-    <script src="/ui/js/articles/articles-controller.js"></script>
-    <script src="/ui/js/articles/articles-controller2.js"></script>
-    <script src="/ui/js/endpoints/endpoints-routes.js"></script>
-    <script src="/ui/js/endpoints/endpoints-services.js"></script>
-    <script src="/ui/js/endpoints/endpoints-controller.js"></script>
-    <script src="/ui/js/testcases/testcases-routes.js"></script>
-    <script src="/ui/js/testcases/testcases-services.js"></script>
-    <script src="/ui/js/testcases/testcases-controller.js"></script>
-    <script src="/ui/js/teststeps/teststeps-routes.js"></script>
-    <script src="/ui/js/teststeps/teststeps-services.js"></script>
-    <script src="/ui/js/teststeps/teststeps-controller.js"></script>
-    <script src="/ui/js/teststeps/soap-teststep-creation-controller.js"></script>
-    <script src="/ui/js/teststeps/soap-teststep-edit-controller.js"></script>
-    <script src="/ui/js/teststeps/db-teststep-creation-controller.js"></script>
-    <script src="/ui/js/teststeps/db-teststep-edit-controller.js"></script>
-    <script src="/ui/js/assertions/assertions-services.js"></script>
-    <script src="/ui/js/assertions/assertions-directives.js"></script>
-    <script src="/ui/js/assertions/assertions-controller.js"></script>
-    <script src="/ui/js/assertions/ds-assertions-controller.js"></script>
-    <script src="/ui/js/intfaces/intfaces-routes.js"></script>
-    <script src="/ui/js/intfaces/intfaces-services.js"></script>
-    <script src="/ui/js/intfaces/intfaces-controller.js"></script>
-    <script src="/ui/js/environments/environments-routes.js"></script>
-    <script src="/ui/js/environments/environments-services.js"></script>
-    <script src="/ui/js/environments/environments-controller.js"></script>
-    <script src="/ui/js/testruns/testruns-services.js"></script>
+  <script src="/ui/js/app.js"></script>
+  <script src="/ui/js/app-services.js"></script>
+  <script src="/ui/js/app-directives.js"></script>
+  <script src="/ui/js/articles/articles-routes.js"></script>
+  <script src="/ui/js/articles/articles-services.js"></script>
+  <script src="/ui/js/articles/articles-controller.js"></script>
+  <script src="/ui/js/articles/articles-controller2.js"></script>
+  <script src="/ui/js/endpoints/endpoints-routes.js"></script>
+  <script src="/ui/js/endpoints/endpoints-services.js"></script>
+  <script src="/ui/js/endpoints/endpoints-controller.js"></script>
+  <script src="/ui/js/endpoints/soap-endpoints-controller.js"></script>
+  <script src="/ui/js/testcases/testcases-routes.js"></script>
+  <script src="/ui/js/testcases/testcases-services.js"></script>
+  <script src="/ui/js/testcases/testcases-controller.js"></script>
+  <script src="/ui/js/teststeps/teststeps-routes.js"></script>
+  <script src="/ui/js/teststeps/teststeps-services.js"></script>
+  <script src="/ui/js/teststeps/teststeps-controller.js"></script>
+  <script src="/ui/js/teststeps/soap-teststep-creation-controller.js"></script>
+  <script src="/ui/js/teststeps/soap-teststep-edit-controller.js"></script>
+  <script src="/ui/js/teststeps/db-teststep-creation-controller.js"></script>
+  <script src="/ui/js/teststeps/db-teststep-edit-controller.js"></script>
+  <script src="/ui/js/assertions/assertions-services.js"></script>
+  <script src="/ui/js/assertions/assertions-directives.js"></script>
+  <script src="/ui/js/assertions/assertions-controller.js"></script>
+  <script src="/ui/js/assertions/ds-assertions-controller.js"></script>
+  <script src="/ui/js/intfaces/intfaces-routes.js"></script>
+  <script src="/ui/js/intfaces/intfaces-services.js"></script>
+  <script src="/ui/js/intfaces/intfaces-controller.js"></script>
+  <script src="/ui/js/environments/environments-routes.js"></script>
+  <script src="/ui/js/environments/environments-services.js"></script>
+  <script src="/ui/js/environments/environments-controller.js"></script>
+  <script src="/ui/js/testruns/testruns-services.js"></script>
 
 </body>
 

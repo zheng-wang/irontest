@@ -2,13 +2,9 @@
 
 angular.module('iron-test').config(['$stateProvider', function ($stateProvider) {
     $stateProvider
-        .state('endpoint_all', {
-            url: '/endpoints',
-            templateUrl: '/ui/views/endpoints/list.html'
-        })
-        .state('endpoint_create', {
-            url: '/endpoints/create',
-            templateUrl: '/ui/views/endpoints/edit.html'
+        .state('endpoint_create_soap', {
+            url: '/environments/:environmentId/endpoints/createSOAPEndpoint',
+            templateUrl: '/ui/views/endpoints/soap/create-soap-endpoint.html'
         })
         .state('endpoint_edit', {
             url: '/endpoints/:endpointId/edit',

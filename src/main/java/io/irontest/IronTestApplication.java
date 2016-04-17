@@ -56,11 +56,11 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
 
         //  create database tables        
         articleDAO.createTableIfNotExists();
+        environmentDAO.createTableIfNotExists();
         endpointDAO.createTableIfNotExists();
         endpointdtlDAO.createTableIfNotExists();
         intfaceDAO.createTableIfNotExists();
         intfaceDAO.initSystemData();
-        environmentDAO.createTableIfNotExists();
         enventryDAO.createTableIfNotExists();
         testcaseDAO.createTableIfNotExists();
         teststepDAO.createTableIfNotExists();
@@ -70,7 +70,7 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
 
         //  register REST resources
         environment.jersey().register(new ArticleResource(articleDAO));
-        environment.jersey().register(new EndpointResource(endpointDAO, endpointdtlDAO));
+        environment.jersey().register(new EndpointResource(endpointDAO));
         environment.jersey().register(new TestcaseResource(testcaseDAO, teststepDAO));
         environment.jersey().register(new TeststepResource(teststepDAO));
         environment.jersey().register(new AssertionResource(assertionDAO));

@@ -11,7 +11,7 @@ import java.util.List;
  */
 @RegisterMapper(EnvironmentMapper.class)
 public interface EnvironmentDAO {
-    @SqlUpdate("create table IF NOT EXISTS environment (id INT PRIMARY KEY auto_increment, name varchar(50) UNIQUE not null, description varchar(500)," +
+    @SqlUpdate("create table IF NOT EXISTS environment (id INT PRIMARY KEY auto_increment, name varchar(200) UNIQUE not null, description varchar(500)," +
             "created timestamp DEFAULT CURRENT_TIMESTAMP, updated timestamp DEFAULT CURRENT_TIMESTAMP)")
     void createTableIfNotExists();
 

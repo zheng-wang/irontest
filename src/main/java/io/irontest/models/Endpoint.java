@@ -8,29 +8,46 @@ import java.util.List;
  */
 public class Endpoint {
     private long id;
+    private long environmentId;
     private String name;
+    private String type;
     private String description;
-    private String handler;
-    private List<EndpointDetail> details;
+    private String url;
+    private String username;
+    private String password;
     private Date created;
     private Date updated;
 
-    public Endpoint() {
-    }
+    public Endpoint() {}
 
-    public Endpoint(long id, String name, String description, String handler, Date created, Date updated) {
+    public Endpoint(long id, long environmentId, String name, String type, String description, String url,
+                    String username, String password, Date created, Date updated) {
         this.id = id;
+        this.environmentId = environmentId;
         this.name = name;
+        this.type = type;
         this.description = description;
-        this.handler = handler;
+        this.url = url;
+        this.username = username;
+        this.password = password;
         this.created = created;
         this.updated = updated;
     }
 
-    public long getId() { return id; }
+    public long getId() {
+        return id;
+    }
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public long getEnvironmentId() {
+        return environmentId;
+    }
+
+    public void setEnvironmentId(long environmentId) {
+        this.environmentId = environmentId;
     }
 
     public String getName() {
@@ -41,6 +58,14 @@ public class Endpoint {
         this.name = name;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -49,20 +74,28 @@ public class Endpoint {
         this.description = description;
     }
 
-    public String getHandler() {
-        return handler;
+    public String getUrl() {
+        return url;
     }
 
-    public void setHandler(String handler) {
-        this.handler = handler;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
-    public List<EndpointDetail> getDetails() {
-        return details;
+    public String getUsername() {
+        return username;
     }
 
-    public void setDetails(List<EndpointDetail> details) {
-        this.details = details;
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Date getCreated() {

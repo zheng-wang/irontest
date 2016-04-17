@@ -12,7 +12,8 @@ import java.sql.SQLException;
  */
 public class EndpointMapper implements ResultSetMapper<Endpoint> {
     public Endpoint map(int index, ResultSet rs, StatementContext ctx) throws SQLException {
-        return new Endpoint(rs.getLong("id"), rs.getString("name"), rs.getString("description"), rs.getString("handler"),
-            rs.getTimestamp("created"), rs.getTimestamp("updated"));
+        return new Endpoint(rs.getLong("id"), rs.getLong("environmentId"), rs.getString("name"), rs.getString("type"),
+                rs.getString("description"), rs.getString("url"), rs.getString("username"), rs.getString("password"),
+                rs.getTimestamp("created"), rs.getTimestamp("updated"));
     }
 }
