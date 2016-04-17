@@ -1,6 +1,6 @@
 <div ng-controller="SOAPTeststepEditController" ng-init="findOne()">
   <div class="row" id="page-header">
-    <h3 class="page-header">Test Step - {{$parent.teststep.name}} {{$parent.teststep.type}}
+    <h3 class="page-header">SOAP Test Step - {{$parent.teststep.name}}
       <label class="col-lg-offset-1 failure-message"
              ng-show="savingStatus.saveSuccessful !== null && !savingStatus.saveSuccessful">
         Failed to save. {{savingStatus.savingErrorMessage}}
