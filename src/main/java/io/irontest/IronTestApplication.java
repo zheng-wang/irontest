@@ -81,7 +81,7 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
                 assertionDAO));
 
         //  register JSON services
-        environment.jersey().register(new JSONService(new AssertionVerifierFactory()));
+        environment.jersey().register(new JSONService(new AssertionVerifierFactory(), endpointDAO));
 
         //  register exception mappers
         environment.jersey().register(new IronTestDBIExceptionMapper());

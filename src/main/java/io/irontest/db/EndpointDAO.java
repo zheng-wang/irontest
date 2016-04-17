@@ -34,7 +34,10 @@ public interface EndpointDAO {
     @SqlUpdate("delete from endpoint where id = :id")
     void deleteById(@Bind("id") long id);
 
-    @SqlQuery("select * from endpoint where id = :id")
+    @SqlQuery(
+            "select ep.*, ev.name as environment_name " +
+            "from endpoint ep left outer join environment ev on ep.environment_id = ev.id " +
+            "where ep.id = :id")
     Endpoint findById(@Bind("id") long id);
 
     @SqlQuery("select * from endpoint where name = :name")
@@ -42,4 +45,10 @@ public interface EndpointDAO {
 
     @SqlQuery("select id, environment_id, name, type, description from endpoint where environment_id = :environmentId")
     List<Endpoint> findByEnvironmentId_PrimaryProperties(@Bind("environmentId") long environmentId);
+
+    @SqlQuery(
+            "select ep.id, ep.environment_id, ev.name as environment_name, ep.name, ep.description " +
+            "from endpoint ep left outer join environment ev on ep.environment_id = ev.id " +
+            "where ep.type = :endpointType and ep.environment_id is not null")
+    List<Endpoint> findManagedEndpointsByType(@Bind("endpointType") String endpointType);
 }

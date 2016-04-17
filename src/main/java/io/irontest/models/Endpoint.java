@@ -9,6 +9,7 @@ public class Endpoint {
     public static final String ENDPOINT_TYPE_SOAP = "SOAP";
     private long id;
     private Long environmentId;
+    private String environmentName; //  used sometimes for the convenience of UI
     private String name;
     private String type;
     private String description;
@@ -112,5 +113,13 @@ public class Endpoint {
 
     public void setUpdated(Date updated) {
         this.updated = updated;
+    }
+
+    public String getEnvironmentName() {
+        return environmentName;
+    }
+
+    public void setEnvironmentName(String environmentName) {
+        this.environmentName = environmentName;
     }
 }

@@ -1,14 +1,10 @@
 package io.irontest.resources;
 
 import io.irontest.db.EndpointDAO;
-import io.irontest.handlers.HandlerFactory;
 import io.irontest.models.Endpoint;
-import io.irontest.models.EndpointDetail;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Trevor Li on 6/30/15.
@@ -37,21 +33,6 @@ public class EndpointResource {
     @DELETE @Path("{endpointId}")
     public void delete(@PathParam("endpointId") long endpointId) {
         endpointDAO.deleteById(endpointId);
-    }
-
-    @GET @Path("/handler/{handlerName}")
-    public List<EndpointDetail> getProperties(@PathParam("handlerName") String handlerName) {
-        List<String> properties = HandlerFactory.getInstance().getHandler(handlerName).getProperties();
-        List<EndpointDetail> details = new ArrayList<EndpointDetail>();
-
-        for (String property : properties) {
-            EndpointDetail detail = new EndpointDetail();
-            detail.setName(property);
-
-            details.add(detail);
-        }
-
-        return details;
     }
 
     @GET @Path("{endpointId}")

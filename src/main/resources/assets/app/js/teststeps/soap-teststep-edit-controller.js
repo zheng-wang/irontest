@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('iron-test').controller('SOAPTeststepEditController', ['$scope', 'Testruns', '$state', '$timeout',
-  function($scope, Testruns, $state, $timeout) {
+    '$uibModal',
+  function($scope, Testruns, $state, $timeout, $uibModal) {
     var timer;
     //  use object instead of primitives, so that child scope can update the values
     $scope.savingStatus = {
@@ -30,6 +31,26 @@ angular.module('iron-test').controller('SOAPTeststepEditController', ['$scope', 
       timer = $timeout(function() {
         $scope.update(isValid);
       }, 2000);
+    };
+
+    $scope.selectManagedEndpoint = function() {
+      var modalInstance = $uibModal.open({
+        templateUrl: '/ui/views/endpoints/list-modal.html',
+        controller: 'EndpointsModalController',
+        size: 'lg',
+        resolve: {
+          endpointType: function () {
+            return 'SOAP';
+          }
+        }
+      });
+
+      modalInstance.result.then(function (selectedEndpoint) {
+        $scope.$parent.teststep.endpoint = selectedEndpoint;
+        $scope.autoSave(true);
+      }, function () {
+        //  Modal dismissed
+      });
     };
 
     $scope.invoke = function() {

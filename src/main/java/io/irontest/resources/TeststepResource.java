@@ -54,8 +54,6 @@ public class TeststepResource {
         teststep.setId(id);
         teststep.setRequest(null);  //  no need to bring request to client at this point
 
-
-
         return teststep;
     }
 
@@ -71,7 +69,10 @@ public class TeststepResource {
     @PUT @Path("{teststepId}")
     public Teststep update(Teststep teststep) throws JsonProcessingException {
         teststepDAO.update(teststep);
-        endpointDAO.update(teststep.getEndpoint());
+        if (teststep.getEndpoint().getEnvironmentId() == null) {    //  this is an unmanaged endpoint, so update it
+            endpointDAO.update(teststep.getEndpoint());
+        }
+
         return findById(teststep.getId());
     }
 

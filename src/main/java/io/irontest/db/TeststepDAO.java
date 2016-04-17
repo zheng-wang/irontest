@@ -39,15 +39,17 @@ public abstract class TeststepDAO {
                 teststep.getEndpoint().getId());
     }
 
-    @SqlUpdate("update teststep set name = :name, description = :description, request = :request, properties = :properties, " +
+    @SqlUpdate("update teststep set name = :name, description = :description, request = :request, " +
+            "properties = :properties, endpoint_id = :endpointId, " +
             "updated = CURRENT_TIMESTAMP where id = :id")
     public abstract int update(@Bind("name") String name, @Bind("description") String description,
                                @Bind("request") String request, @Bind("properties") String properties,
-                               @Bind("id") long id);
+                               @Bind("id") long id, @Bind("endpointId") long endpointId);
 
     public int update(Teststep teststep) throws JsonProcessingException {
         return update(teststep.getName(), teststep.getDescription(), teststep.getRequest(),
-                new ObjectMapper().writeValueAsString(teststep.getProperties()), teststep.getId());
+                new ObjectMapper().writeValueAsString(teststep.getProperties()), teststep.getId(),
+                teststep.getEndpoint().getId());
     }
 
     @SqlUpdate("delete from teststep where id = :id")

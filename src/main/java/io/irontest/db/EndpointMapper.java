@@ -15,14 +15,22 @@ import java.util.List;
 public class EndpointMapper implements ResultSetMapper<Endpoint> {
     public Endpoint map(int index, ResultSet rs, StatementContext ctx) throws SQLException {
         List<String> fields = IronTestUtils.getFieldsPresentInResultSet(rs);
-        return new Endpoint(rs.getLong("id"),
+        Endpoint endpoint = new Endpoint(rs.getLong("id"),
                 fields.contains("environment_id") && rs.getObject("environment_id") != null ?
                         new Long(rs.getLong("environment_id")) : null,
-                rs.getString("name"), rs.getString("type"), rs.getString("description"),
+                rs.getString("name"),
+                fields.contains("type") ? rs.getString("type") : null,
+                rs.getString("description"),
                 fields.contains("url") ? rs.getString("url") : null,
                 fields.contains("username") ? rs.getString("username") : null,
                 fields.contains("password") ? rs.getString("password") : null,
                 fields.contains("created") ? rs.getTimestamp("created") : null,
                 fields.contains("updated") ? rs.getTimestamp("updated") : null);
+
+        if (fields.contains("environment_name")) {
+            endpoint.setEnvironmentName(rs.getString("environment_name"));
+        }
+
+        return endpoint;
     }
 }
