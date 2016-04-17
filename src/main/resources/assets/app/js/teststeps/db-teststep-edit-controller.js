@@ -68,18 +68,10 @@ angular.module('iron-test').controller('DBTeststepEditController', ['$scope', 'T
     };
 
     $scope.invoke = function(teststep) {
-      var testrun;
-      if ($scope.$parent.teststep.endpointId) {
-        testrun = {
-          request: $scope.$parent.teststep.request,
-          endpointId: $scope.$parent.teststep.endpointId
-        };
-      } else {
-        testrun = {
-          request: $scope.$parent.teststep.request,
-          details: $scope.$parent.teststep.properties
-        };
-      }
+      var testrun = {
+        teststepId: $scope.$parent.teststep.id,
+        request: $scope.$parent.teststep.request
+      };
 
       var testrunRes = new Testruns(testrun);
       testrunRes.$save(function(returnTestrun) {

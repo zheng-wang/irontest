@@ -27,14 +27,16 @@ public class TestrunResource {
     private final TestcaseDAO testcaseDao;
     private final TeststepDAO teststepDao;
     private final AssertionDAO assertionDao;
+    private final UtilsDAO utilsDAO;
 
     public TestrunResource(EndpointDAO endpointDao, EndpointDetailDAO endpointdtlDao, TestcaseDAO testcaseDao,
-                           TeststepDAO teststepDao, AssertionDAO assertionDao) {
+                           TeststepDAO teststepDao, AssertionDAO assertionDao, UtilsDAO utilsDAO) {
         this.endpointDao = endpointDao;
         this.endpointdtlDao = endpointdtlDao;
         this.testcaseDao = testcaseDao;
         this.teststepDao = teststepDao;
         this.assertionDao = assertionDao;
+        this.utilsDAO = utilsDAO;
     }
 
     @POST
@@ -42,7 +44,7 @@ public class TestrunResource {
         if (testrun.getTeststepId() > 0) {  //  run a test step
             Teststep teststep = teststepDao.findById(testrun.getTeststepId());
             Endpoint endpoint = endpointDao.findById(teststep.getEndpoint().getId());
-
+            endpoint.setPassword(utilsDAO.decryptPassword(endpoint.getPassword()));
             Object response = HandlerFactory.getInstance().getHandler(endpoint.getType() + "Handler")
                     .invoke(testrun.getRequest(), endpoint);
             testrun.setResponse(response);

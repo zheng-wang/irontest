@@ -1,12 +1,11 @@
 package io.irontest.handlers;
 
+import io.irontest.models.Endpoint;
 import org.skife.jdbi.v2.DBI;
 import org.skife.jdbi.v2.Handle;
 import org.skife.jdbi.v2.Query;
 import org.skife.jdbi.v2.Update;
-import org.skife.jdbi.v2.exceptions.NoResultsException;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -16,9 +15,9 @@ import java.util.Map;
 public class DBHandler implements IronTestHandler {
     public DBHandler() { }
 
-    public Object invoke(String request, Map<String, String> details) throws Exception {
+    public Object invoke(String request, Endpoint endpoint) throws Exception {
         DBHandlerResponse response = new DBHandlerResponse();
-        DBI jdbi = new DBI(details.get("url"), details.get("username"), details.get("password"));
+        DBI jdbi = new DBI(endpoint.getUrl(), endpoint.getUsername(), endpoint.getPassword());
         Handle handle = jdbi.open();
 
         //  assume the request SQL is an insert/update/delete statement first
@@ -34,16 +33,6 @@ public class DBHandler implements IronTestHandler {
 
         handle.close();
 
-        // ObjectMapper mapper = new ObjectMapper();
-        // mapper.enable(SerializationFeature.INDENT_OUTPUT);
-        // StringWriter responseWriter = new StringWriter();
-        // mapper.writeValue(responseWriter, results);
-
         return response;
-    }
-
-    public List<String> getProperties() {
-        String[] properties = {"url", "username", "password"};
-        return Arrays.asList(properties);
     }
 }
