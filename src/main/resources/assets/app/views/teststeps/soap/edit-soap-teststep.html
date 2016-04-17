@@ -18,8 +18,51 @@
       <uib-tab heading="Request Response">
         <div ng-include="'/ui/views/teststeps/soap/edit-soap-teststep-request-response.html'"></div>
       </uib-tab>
+      <uib-tab heading="Endpoint Details">
+        <div class="form-group"></div> <!-- spacer -->
+        <div class="form-group">
+          <div class="col-lg-9">
+            <label for="endpointDescription" class="col-lg-2 control-label">Description</label>
+            <div class="col-lg-10">
+              <textarea name="endpointDescription" ng-model="$parent.$parent.teststep.endpoint.description"
+                        ng-change="autoSave(teststepForm.$valid)" id="endpointDescription" cols="30" rows="6"
+                        placeholder="Description" class="form-control"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-lg-9">
+            <label for="endpointSOAPAddress" class="col-lg-2 control-label">SOAP Address</label>
+            <div class="col-lg-10">
+              <input name="endpointSOAPAddress" type="text" class="form-control"
+                     ng-model="$parent.$parent.teststep.endpoint.url" ng-change="autoSave(teststepForm.$valid)"
+                     id="endpointSOAPAddress" placeholder="http://localhost:8081/soap/article" maxlength="500">
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-lg-9">
+            <label for="endpointUsername" class="col-lg-2 control-label">Username</label>
+            <div class="col-lg-10">
+              <input name="endpointUsername" type="text" class="form-control"
+                     ng-model="$parent.$parent.teststep.endpoint.username"
+                     ng-change="autoSave(teststepForm.$valid)"  id="endpointUsername" maxlength="200">
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-lg-9">
+            <label for="endpointPassword" class="col-lg-2 control-label">Password</label>
+            <div class="col-lg-10">
+              <input name="endpointPassword" type="password" class="form-control"
+                     ng-model="$parent.$parent.teststep.endpoint.password"
+                     ng-change="autoSave(teststepForm.$valid)"  id="endpointPassword" maxlength="200">
+            </div>
+          </div>
+        </div>
+      </uib-tab>
       <uib-tab heading="Basic Info">
-        <div class="form-group"></div>
+        <div class="form-group"></div> <!-- spacer -->
         <div class="form-group" ng-class="{ 'has-error' : savingStatus.submitted && teststepForm.name.$invalid }">
           <div class="col-lg-9">
             <label for="name" class="col-lg-2 control-label">Name</label>

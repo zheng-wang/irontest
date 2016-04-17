@@ -21,47 +21,42 @@ public abstract class TeststepDAO {
             "created timestamp DEFAULT CURRENT_TIMESTAMP, updated timestamp DEFAULT CURRENT_TIMESTAMP, " +
             "type varchar(20), request clob, properties clob, " +
             "intfaceId int, FOREIGN KEY (intfaceId) REFERENCES intface(id), " +
-            "endpointId int, FOREIGN KEY (endpointId) REFERENCES endpoint(id), " +
             "FOREIGN KEY (testcase_id) REFERENCES testcase(id) ON DELETE CASCADE)")
     public abstract void createTableIfNotExists();
 
-    @SqlUpdate("insert into teststep (testcase_id, name, type, description, request, properties, endpointId) values " +
-            "(:testcaseId, :name, :type, :description, :request, :properties, :endpointId)")
+    @SqlUpdate("insert into teststep (testcase_id, name, type, description, request, properties) values " +
+            "(:testcaseId, :name, :type, :description, :request, :properties)")
     @GetGeneratedKeys
     public abstract long insert(@Bind("testcaseId") long testcaseId, @Bind("name") String name,
                                 @Bind("type") String type, @Bind("description") String description,
-                                @Bind("request") String request, @Bind("properties") String properties,
-                                @Bind("endpointId") Long endpointId);
+                                @Bind("request") String request, @Bind("properties") String properties);
 
     public long insert(Teststep teststep) throws JsonProcessingException {
         return insert(teststep.getTestcaseId(), teststep.getName(), teststep.getType(), teststep.getDescription(),
-                teststep.getRequest(), new ObjectMapper().writeValueAsString(teststep.getProperties()),
-                teststep.getEndpointId() < 1 ? null : teststep.getEndpointId());
+                teststep.getRequest(), new ObjectMapper().writeValueAsString(teststep.getProperties()));
     }
 
     @SqlUpdate("update teststep set name = :name, description = :description, request = :request, properties = :properties, " +
-            "endpointId = :endpointId, updated = CURRENT_TIMESTAMP where id = :id")
+            "updated = CURRENT_TIMESTAMP where id = :id")
     public abstract int update(@Bind("name") String name, @Bind("description") String description,
                                @Bind("request") String request, @Bind("properties") String properties,
-                               @Bind("endpointId") Long endpointId, @Bind("id") long id);
+                               @Bind("id") long id);
 
     public int update(Teststep teststep) throws JsonProcessingException {
         return update(teststep.getName(), teststep.getDescription(), teststep.getRequest(),
-                new ObjectMapper().writeValueAsString(teststep.getProperties()),
-                teststep.getEndpointId() < 1 ? null : teststep.getEndpointId(),
-                teststep.getId());
+                new ObjectMapper().writeValueAsString(teststep.getProperties()), teststep.getId());
     }
 
     @SqlUpdate("delete from teststep where id = :id")
     public abstract void deleteById(@Bind("id") long id);
 
-    @SqlQuery("select teststep.*, intface.name as intfaceName, endpoint.name as endpointName from teststep " +
-            "left outer join intface on teststep.intfaceId = intface.id left outer join endpoint on teststep.endpointId = endpoint.id " +
+    @SqlQuery("select teststep.*, intface.name as intfaceName from teststep " +
+            "left outer join intface on teststep.intfaceId = intface.id " +
             "where teststep.id = :id")
     public abstract Teststep findById(@Bind("id") long id);
 
     @SqlQuery("select teststep.*, intface.name as intfaceName, endpoint.name as endpointName from teststep " +
-            "left outer join intface on teststep.intfaceId = intface.id left outer join endpoint on teststep.endpointId = endpoint.id " +
+            "left outer join intface on teststep.intfaceId = intface.id " +
             "where teststep.testcase_id = :testcaseId")
     public abstract List<Teststep> findByTestcaseId(@Bind("testcaseId") long testcaseId);
 

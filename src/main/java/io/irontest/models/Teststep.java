@@ -16,7 +16,6 @@ public class Teststep {
     private String type;
     private String description;
     private String request;
-    private long endpointId;
     private Endpoint endpoint;
     private Properties properties;
     private EvaluationResult result;
@@ -26,7 +25,7 @@ public class Teststep {
     public Teststep() {}
 
     public Teststep(long id, long testcaseId, String name, String type, String description, Properties properties,
-                    Date created, Date updated, String request, long endpointId) {
+                    Date created, Date updated, String request) {
         this.id = id;
         this.testcaseId = testcaseId;
         this.name = name;
@@ -36,7 +35,6 @@ public class Teststep {
         this.created = created;
         this.updated = updated;
         this.request = request;
-        this.endpointId = endpointId;
     }
 
     public long getId() {
@@ -77,14 +75,6 @@ public class Teststep {
 
     public void setRequest(String request) {
         this.request = request;
-    }
-
-    public long getEndpointId() {
-        return endpointId;
-    }
-
-    public void setEndpointId(long endpointId) {
-        this.endpointId = endpointId;
     }
 
     public Endpoint getEndpoint() {

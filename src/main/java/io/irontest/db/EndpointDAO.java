@@ -12,7 +12,7 @@ import java.util.List;
 @RegisterMapper(EndpointMapper.class)
 public interface EndpointDAO {
     @SqlUpdate("create table IF NOT EXISTS endpoint (id INT PRIMARY KEY auto_increment, " +
-            "environment_id int, teststep_id int, " +
+            "environment_id int, teststep_id int UNIQUE, " +
             "name varchar(200) UNIQUE, type varchar(20), description varchar(500), " +
             "url varchar(500), username varchar(200), password varchar(200), " +
             "created timestamp DEFAULT CURRENT_TIMESTAMP, updated timestamp DEFAULT CURRENT_TIMESTAMP, " +
@@ -37,6 +37,10 @@ public interface EndpointDAO {
 
     @SqlQuery("select * from endpoint where id = :id")
     Endpoint findById(@Bind("id") long id);
+
+    //  This is for retrieving unmanaged endpoint
+    @SqlQuery("select * from endpoint where teststep_id = :teststepId")
+    Endpoint findByTeststepId(@Bind("teststepId") long teststepId);
 
     @SqlQuery("select * from endpoint where name = :name")
     Endpoint findByName(@Bind("name") String name);
