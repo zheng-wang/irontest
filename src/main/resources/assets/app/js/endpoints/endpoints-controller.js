@@ -1,72 +1,39 @@
 'use strict';
 
-angular.module('iron-test').controller('EndpointsController', ['$scope', 'Endpoints', 'PageNavigation', '$location', '$stateParams', '$state', 'uiGridConstants',
-  function($scope, Endpoints, PageNavigation, $location, $stateParams, $state, uiGridConstants) {
-    $scope.create_update = function(form) {
-      $scope.$broadcast('schemaFormValidate');
+angular.module('iron-test').controller('EndpointsController', ['$scope', 'Endpoints', '$stateParams', '$state',
+    'uiGridConstants', '$timeout',
+  function($scope, Endpoints, $stateParams, $state, uiGridConstants, $timeout) {
+    var timer;
+    //  use object instead of primitives, so that child scope can update the values
+    $scope.savingStatus = {
+      saveSuccessful: null,
+      savingErrorMessage: null
+    };
 
-      if (form.$valid) {
-        if (this.endpoint.id) {
-          var endpoint = this.endpoint;
-          endpoint.$update(function() {
-          }, function(exception) {
-          });
-        } else {
-          var endpoint = new Endpoints(this.endpoint);
-          endpoint.$save(function(response) {
-            PageNavigation.contexts.push($scope.context);
-            $state.go('endpoint_edit', {endpointId: response.id});
-          }, function(exception) {
-            $scope.alerts.push({type: 'warning', msg: exception.data});
-          });
-        }
+    $scope.autoSave = function(isValid) {
+      if (timer) $timeout.cancel(timer);
+      timer = $timeout(function() {
+        $scope.update(isValid);
+      }, 2000);
+    };
+
+    $scope.update = function(isValid) {
+      if (isValid) {
+        $scope.endpoint.$update(function(response) {
+          $scope.savingStatus.saveSuccessful = true;
+          $scope.endpoint = response;
+        }, function(error) {
+          $scope.savingStatus.savingErrorMessage = error.data.message;
+          $scope.savingStatus.saveSuccessful = false;
+        });
+      } else {
+        $scope.savingStatus.submitted = true;
       }
     };
 
     $scope.remove = function(endpoint) {
       endpoint.$remove(function(response) {
           $state.go('endpoint_all');
-      });
-    };
-
-    $scope.find = function() {
-      $scope.columnDefs = [
-        {
-          name: 'name', width: 200, minWidth: 100,
-          sort: {
-            direction: uiGridConstants.ASC,
-            priority: 1
-          },
-          cellTemplate:'gridCellTemplate.html'
-        },
-        {
-          name: 'description', width: 600, minWidth: 300
-        },
-        {
-          name: 'handler', width: 200, minWidth: 100
-        }
-      ];
-
-      Endpoints.query(function(endpoints) {
-        $scope.endpoints = endpoints;
-      });
-    };
-
-    $scope.return = function() {
-      PageNavigation.returns.push($scope.context.model);
-      $location.path($scope.context.url);
-    };
-
-    $scope.select = function() {
-      $scope.context.model.endpointId = $scope.endpoint.id;
-
-      Endpoints.get({
-        endpointId: $scope.context.model.endpointId
-      }, function(endpoint) {
-        $scope.context.model.endpoint = endpoint;
-
-        PageNavigation.returns.push($scope.context.model);
-        $location.path($scope.context.url);
       });
     };
 
