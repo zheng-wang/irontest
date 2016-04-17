@@ -1,8 +1,8 @@
 package io.irontest.db;
 
-import io.irontest.models.Teststep;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.irontest.models.Teststep;
 import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.GetGeneratedKeys;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
@@ -25,32 +25,30 @@ public abstract class TeststepDAO {
             "FOREIGN KEY (testcase_id) REFERENCES testcase(id) ON DELETE CASCADE)")
     public abstract void createTableIfNotExists();
 
-    @SqlUpdate("insert into teststep (testcase_id, name, type, description, request, properties, intfaceId, endpointId) values " +
-            "(:testcaseId, :name, :type, :description, :request, :properties, :intfaceId, :endpointId)")
+    @SqlUpdate("insert into teststep (testcase_id, name, type, description, request, properties, endpointId) values " +
+            "(:testcaseId, :name, :type, :description, :request, :properties, :endpointId)")
     @GetGeneratedKeys
     public abstract long insert(@Bind("testcaseId") long testcaseId, @Bind("name") String name,
                                 @Bind("type") String type, @Bind("description") String description,
                                 @Bind("request") String request, @Bind("properties") String properties,
-                                @Bind("intfaceId") Long intfaceId, @Bind("endpointId") Long endpointId);
+                                @Bind("endpointId") Long endpointId);
 
     public long insert(Teststep teststep) throws JsonProcessingException {
         return insert(teststep.getTestcaseId(), teststep.getName(), teststep.getType(), teststep.getDescription(),
                 teststep.getRequest(), new ObjectMapper().writeValueAsString(teststep.getProperties()),
-                teststep.getIntfaceId() == 0 ? null : teststep.getIntfaceId(),
-                teststep.getEndpointId() == 0 ? null : teststep.getEndpointId());
+                teststep.getEndpointId() < 1 ? null : teststep.getEndpointId());
     }
 
     @SqlUpdate("update teststep set name = :name, description = :description, request = :request, properties = :properties, " +
-            "intfaceId = :intfaceId, endpointId = :endpointId, updated = CURRENT_TIMESTAMP where id = :id")
+            "endpointId = :endpointId, updated = CURRENT_TIMESTAMP where id = :id")
     public abstract int update(@Bind("name") String name, @Bind("description") String description,
                                @Bind("request") String request, @Bind("properties") String properties,
-                               @Bind("intfaceId") Long intfaceId, @Bind("endpointId") Long endpointId, @Bind("id") long id);
+                               @Bind("endpointId") Long endpointId, @Bind("id") long id);
 
     public int update(Teststep teststep) throws JsonProcessingException {
         return update(teststep.getName(), teststep.getDescription(), teststep.getRequest(),
                 new ObjectMapper().writeValueAsString(teststep.getProperties()),
-                teststep.getIntfaceId() == 0 ? null : teststep.getIntfaceId(),
-                teststep.getEndpointId() == 0 ? null : teststep.getEndpointId(),
+                teststep.getEndpointId() < 1 ? null : teststep.getEndpointId(),
                 teststep.getId());
     }
 
@@ -66,4 +64,7 @@ public abstract class TeststepDAO {
             "left outer join intface on teststep.intfaceId = intface.id left outer join endpoint on teststep.endpointId = endpoint.id " +
             "where teststep.testcase_id = :testcaseId")
     public abstract List<Teststep> findByTestcaseId(@Bind("testcaseId") long testcaseId);
+
+    @SqlQuery("select id, testcase_id, name, type, description from teststep where testcase_id = :testcaseId")
+    public abstract List<Teststep> findByTestcaseId_PrimaryProperties(@Bind("testcaseId") long testcaseId);
 }

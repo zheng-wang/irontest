@@ -3,8 +3,8 @@
   <div class="col-lg-10">
     <label for="soapAddress" class="col-lg-2 control-label">Endpoint</label>
     <div class="col-lg-7">
-      <input name="endpoint" type="text" class="form-control" ng-if ="$parent.teststep.endpointId" ng-model="$parent.teststep.endpoint.name" id="endpoint" readonly>
-      <input name="soapAddress" type="text" class="form-control" ng-if ="!$parent.teststep.endpointId" ng-model="$parent.teststep.properties.soapAddress"
+      <input name="endpoint" type="text" class="form-control" ng-if ="$parent.teststep.endpoint" ng-model="$parent.teststep.endpoint.name" id="endpoint" readonly>
+      <input name="soapAddress" type="text" class="form-control" ng-if ="!$parent.teststep.endpoint" ng-model="$parent.teststep.properties.soapAddress"
           ng-change="autoSave(teststepForm.$valid)" id="soapAddress" placeholder="SOAP Address">
     </div>
     <div class="btn-group col-lg-2" uib-dropdown keyboard-nav>

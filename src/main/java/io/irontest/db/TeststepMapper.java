@@ -1,28 +1,29 @@
 package io.irontest.db;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.irontest.models.Endpoint;
-import io.irontest.models.Intface;
 import io.irontest.models.Properties;
 import io.irontest.models.Teststep;
 import io.irontest.utils.IronTestUtils;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.skife.jdbi.v2.StatementContext;
 import org.skife.jdbi.v2.tweak.ResultSetMapper;
 
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * Created by Zheng on 11/07/2015.
  */
 public class TeststepMapper implements ResultSetMapper<Teststep> {
     public Teststep map(int index, ResultSet rs, StatementContext ctx) throws SQLException {
+        List<String> fields = IronTestUtils.getFieldsPresentInResultSet(rs);
         String type = rs.getString("type");
         Properties properties = null;
         Class propertiesClass = IronTestUtils.getTeststepPropertiesClassByType(type);
         try {
-            if (propertiesClass != null) {
+            if (propertiesClass != null && fields.contains("properties")) {
                 properties = (Properties) new ObjectMapper().readValue(rs.getString("properties"), propertiesClass);
             }
         } catch (IOException e) {
@@ -30,20 +31,18 @@ public class TeststepMapper implements ResultSetMapper<Teststep> {
         }
 
         Teststep teststep = new Teststep(rs.getLong("id"), rs.getLong("testcase_id"), rs.getString("name"),
-                rs.getString("type"), rs.getString("description"), properties, rs.getTimestamp("created"),
-                rs.getTimestamp("updated"), rs.getString("request"), rs.getLong("intfaceId"), rs.getLong("endpointId"));
+                rs.getString("type"), rs.getString("description"), properties,
+                fields.contains("created") ? rs.getTimestamp("created") : null,
+                fields.contains("updated") ? rs.getTimestamp("updated") : null,
+                fields.contains("request") ? rs.getString("request") : null,
+                fields.contains("endpointId") ? rs.getLong("endpointId") : -1);
 
-        Intface intface = new Intface();
-        intface.setId(rs.getLong("intfaceId"));
-        intface.setName(rs.getString("intfaceName"));
-
-        teststep.setIntface(intface);
-
-        Endpoint endpoint = new Endpoint();
-        endpoint.setId(rs.getLong("endpointId"));
-        endpoint.setName(rs.getString("endpointName"));
-
-        teststep.setEndpoint(endpoint);
+        if (fields.contains("endpointId")) {
+            Endpoint endpoint = new Endpoint();
+            endpoint.setId(rs.getLong("endpointId"));
+            endpoint.setName(rs.getString("endpointName"));
+            teststep.setEndpoint(endpoint);
+        }
 
         return teststep;
     }

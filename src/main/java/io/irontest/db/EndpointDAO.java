@@ -37,4 +37,7 @@ public interface EndpointDAO {
 
     @SqlQuery("select * from endpoint where name = :name")
     Endpoint findByName(@Bind("name") String name);
+
+    @SqlQuery("select id, environment_id, name, type, description from endpoint where environment_id = :environmentId")
+    List<Endpoint> findByEnvironmentId_PrimaryProperties(@Bind("environmentId") long environmentId);
 }

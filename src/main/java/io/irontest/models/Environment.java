@@ -10,17 +10,17 @@ public class Environment {
     private long id;
     private String name;
     private String description;
-    private List<EnvEntry> entries;
+    private List<Endpoint> endpoints;
     private Date created;
     private Date updated;
 
-    public Environment() {
-    }
+    public Environment() {}
 
-    public Environment(long id, String name, String description, Date created, Date updated) {
+    public Environment(long id, String name, String description, List<Endpoint> endpoints, Date created, Date updated) {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.endpoints = endpoints;
         this.created = created;
         this.updated = updated;
     }
@@ -49,12 +49,12 @@ public class Environment {
         this.description = description;
     }
 
-    public List<EnvEntry> getEntries() {
-        return entries;
+    public List<Endpoint> getEndpoints() {
+        return endpoints;
     }
 
-    public void setEntries(List<EnvEntry> entries) {
-        this.entries = entries;
+    public void setEndpoints(List<Endpoint> endpoints) {
+        this.endpoints = endpoints;
     }
 
     public Date getCreated() {

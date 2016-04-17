@@ -1,8 +1,8 @@
 package io.irontest.resources;
 
-import io.irontest.db.EnvEntryDAO;
+import io.irontest.db.EndpointDAO;
 import io.irontest.db.EnvironmentDAO;
-import io.irontest.models.EnvEntry;
+import io.irontest.models.Endpoint;
 import io.irontest.models.Environment;
 
 import javax.ws.rs.*;
@@ -15,11 +15,11 @@ import java.util.List;
 @Path("/environments") @Produces({ MediaType.APPLICATION_JSON })
 public class EnvironmentResource {
     private final EnvironmentDAO environmentDAO;
-    private final EnvEntryDAO entryDao;
+    private final EndpointDAO endpointDao;
 
-    public EnvironmentResource(EnvironmentDAO environmentDAO, EnvEntryDAO entryDao) {
+    public EnvironmentResource(EnvironmentDAO environmentDAO, EndpointDAO endpointDao) {
         this.environmentDAO = environmentDAO;
-        this.entryDao = entryDao;
+        this.endpointDao = endpointDao;
     }
 
     @POST
@@ -48,8 +48,8 @@ public class EnvironmentResource {
     @GET @Path("{environmentId}")
     public Environment findById(@PathParam("environmentId") long environmentId) {
         Environment environment = environmentDAO.findById(environmentId);
-        List<EnvEntry> entries = entryDao.findByEnv(environmentId);
-        environment.setEntries(entries);
+        List<Endpoint> endpoints = endpointDao.findByEnvironmentId_PrimaryProperties(environmentId);
+        environment.setEndpoints(endpoints);
         return environment;
     }
 }

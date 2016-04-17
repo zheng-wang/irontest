@@ -10,6 +10,8 @@ angular.module('iron-test').controller('TeststepsController', ['$scope', 'Testst
         teststepId: $stateParams.teststepId
       }, function (response) {
         $scope.teststep = response;
+      }, function(error) {
+        alert('Error');
       });
     };
   }

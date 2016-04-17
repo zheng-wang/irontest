@@ -50,7 +50,8 @@ public class TestrunResource {
 
             Map<String, String> details = getEndpointDetails(endpointId);
 
-            Object response = HandlerFactory.getInstance().getHandler(endpoint.getHandler()).invoke(testrun.getRequest(), details);
+            Object response = null;
+            //HandlerFactory.getInstance().getHandler(endpoint.getHandler()).invoke(testrun.getRequest(), details);
 
             testrun.setEndpoint(endpoint);
             testrun.setResponse(response);
@@ -63,7 +64,7 @@ public class TestrunResource {
                 Object response = null;
 
                 //  invoke and get response
-                if (teststep.getEndpointId() == 0) {  //  there is no endpoint associated with the test step
+                if (teststep.getEndpointId() < 1) {  //  there is no endpoint associated with the test step
                     if (Teststep.TEST_STEP_TYPE_SOAP.equals(teststep.getType())) {
                         SOAPTeststepProperties properties = (SOAPTeststepProperties) teststep.getProperties();
                         SOAPHandler handler = (SOAPHandler) HandlerFactory.getInstance().getHandler("SOAPHandler");
@@ -72,7 +73,7 @@ public class TestrunResource {
                 } else {              //  use the endpoint to invoke
                     Endpoint endpoint = endpointDao.findById(teststep.getEndpointId());
                     Map<String, String> details = getEndpointDetails(teststep.getEndpointId());
-                    response = HandlerFactory.getInstance().getHandler(endpoint.getHandler()).invoke(teststep.getRequest(), details);
+                    response = null; //HandlerFactory.getInstance().getHandler(endpoint.getHandler()).invoke(teststep.getRequest(), details);
                 }
 
                 System.out.println(response);

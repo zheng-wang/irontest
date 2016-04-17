@@ -56,7 +56,7 @@ angular.module('iron-test').controller('SOAPTeststepEditController', ['$scope', 
 
     $scope.invoke = function(teststep) {
       var testrun;
-      if ($scope.$parent.teststep.endpointId) {
+      if ($scope.$parent.teststep.endpoint) {
         testrun = {
           request: $scope.$parent.teststep.request,
           endpointId: $scope.teststep.endpointId
