@@ -71,6 +71,8 @@ angular.module('iron-test').controller('TestcasesController', ['$scope', 'Testca
         });
         testcase.$save(function(response) {
           $state.go('testcase_edit', {testcaseId: response.id});
+        }, function(error) {
+          alert('Error');
         });
       } else {
         $scope.submitted = true;
@@ -80,6 +82,8 @@ angular.module('iron-test').controller('TestcasesController', ['$scope', 'Testca
     $scope.remove = function(testcase) {
       testcase.$remove(function(response) {
         $state.go($state.current, {}, {reload: true});
+      }, function(error) {
+        alert('Error');
       });
     };
 

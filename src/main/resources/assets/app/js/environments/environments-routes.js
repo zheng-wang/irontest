@@ -8,7 +8,7 @@ angular.module('iron-test').config(['$stateProvider', function ($stateProvider) 
         })
         .state('environment_create', {
             url: '/environments/create',
-            templateUrl: '/ui/views/environments/edit.html'
+            templateUrl: '/ui/views/environments/create.html'
         })
         .state('environment_edit', {
             url: '/environments/:environmentId/edit',

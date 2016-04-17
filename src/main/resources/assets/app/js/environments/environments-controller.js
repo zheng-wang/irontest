@@ -44,9 +44,21 @@ angular.module('iron-test').controller('EnvironmentsController', ['$scope', 'Env
       }
     ];
 
-    $scope.environment = {};
-
-    $scope.alerts = [];
+    $scope.create = function(isValid) {
+      if (isValid) {
+        var environment = new Environments({
+          name: this.name,
+          description: this.description
+        });
+        environment.$save(function(response) {
+          $state.go('environment_edit', {environmentId: response.id});
+        }, function(error) {
+          alert('Error');
+        });
+      } else {
+        $scope.submitted = true;
+      }
+    };
 
     $scope.create_update = function(form) {
       $scope.$broadcast('schemaFormValidate');
@@ -71,13 +83,11 @@ angular.module('iron-test').controller('EnvironmentsController', ['$scope', 'Env
       }
     };
 
-    $scope.closeAlert = function(index) {
-      $scope.alerts.splice(index, 1);
-    };
-
     $scope.remove = function(environment) {
       environment.$remove(function(response) {
         $state.go($state.current, {}, {reload: true});
+      }, function(error) {
+        alert('Error');
       });
     };
 
