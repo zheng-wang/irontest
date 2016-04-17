@@ -3,6 +3,20 @@
 angular.module('iron-test').controller('SOAPEndpointsController', ['$scope', 'Endpoints',
     '$location', '$stateParams', '$state', 'uiGridConstants',
   function($scope, Endpoints, $location, $stateParams, $state, uiGridConstants) {
+    var timer;
+    //  use object instead of primitives, so that child scope can update the values
+    $scope.savingStatus = {
+      saveSuccessful: null,
+      savingErrorMessage: null
+    };
+
+    $scope.autoSave = function(isValid) {
+      if (timer) $timeout.cancel(timer);
+      timer = $timeout(function() {
+        $scope.update(isValid);
+      }, 2000);
+    };
+
     $scope.create = function(isValid) {
       if (isValid) {
         var endpoint = new Endpoints({
@@ -45,16 +59,6 @@ angular.module('iron-test').controller('SOAPEndpointsController', ['$scope', 'En
           });
         }
       }
-    };
-
-    $scope.findOne = function() {
-      Endpoints.get({
-        endpointId: $stateParams.endpointId
-      }, function(endpoint) {
-        $scope.endpoint = endpoint;
-      }, function(error) {
-        alert('Error');
-      });
     };
   }
 ]);

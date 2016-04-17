@@ -7,7 +7,7 @@ angular.module('iron-test').config(['$stateProvider', function ($stateProvider) 
             templateUrl: '/ui/views/endpoints/soap/create-soap-endpoint.html'
         })
         .state('endpoint_edit', {
-            url: '/endpoints/:endpointId/edit',
+            url: '/environments/:environmentId/endpoints/:endpointId/edit',
             templateUrl: '/ui/views/endpoints/edit.html'
         });
 }]);
