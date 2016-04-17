@@ -56,6 +56,7 @@ public class TestrunResource {
             for (Teststep teststep : teststeps) {
                 //  invoke and get response
                 Endpoint endpoint = endpointDao.findById(teststep.getEndpoint().getId());
+                endpoint.setPassword(utilsDAO.decryptPassword(endpoint.getPassword()));
                 Object response = HandlerFactory.getInstance().getHandler(endpoint.getType() + "Handler")
                         .invoke(teststep.getRequest(), endpoint);
 
