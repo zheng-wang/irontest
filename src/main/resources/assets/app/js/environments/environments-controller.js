@@ -2,6 +2,24 @@
 
 angular.module('iron-test').controller('EnvironmentsController', ['$scope', 'Environments', 'EnvEntries', 'PageNavigation', '$location', '$stateParams', '$state', 'uiGridConstants',
   function($scope, Environments, EnvEntries, PageNavigation, $location, $stateParams, $state, uiGridConstants) {
+    $scope.envGridColumnDefs = [
+      {
+        name: 'name', width: 200, minWidth: 100,
+        sort: {
+          direction: uiGridConstants.ASC,
+          priority: 1
+        },
+        cellTemplate:'envGridNameCellTemplate.html'
+      },
+      {
+        name: 'description', width: 600, minWidth: 300
+      },
+      {
+        name: 'delete', width: 100, minWidth: 80, enableSorting: false, enableFiltering: false,
+        cellTemplate: 'envGridDeleteCellTemplate.html'
+      }
+    ];
+
     $scope.schema = {
       type: "object",
       properties: {
@@ -59,27 +77,15 @@ angular.module('iron-test').controller('EnvironmentsController', ['$scope', 'Env
 
     $scope.remove = function(environment) {
       environment.$remove(function(response) {
-          $state.go('environment_all');
+        $state.go($state.current, {}, {reload: true});
       });
     };
 
     $scope.find = function() {
-      $scope.envGridColumnDefs = [
-        {
-          name: 'name', width: 200, minWidth: 100,
-          sort: {
-            direction: uiGridConstants.ASC,
-            priority: 1
-          },
-          cellTemplate:'gridCellTemplate.html'
-        },
-        {
-          name: 'description', width: 600, minWidth: 300
-        }
-      ];
-
       Environments.query(function(environments) {
         $scope.environments = environments;
+      }, function(error) {
+        alert('Error');
       });
     };
 
