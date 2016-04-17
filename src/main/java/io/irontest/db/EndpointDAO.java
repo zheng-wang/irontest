@@ -12,7 +12,7 @@ import java.util.List;
 @RegisterMapper(EndpointMapper.class)
 public interface EndpointDAO {
     @SqlUpdate("create table IF NOT EXISTS endpoint (id INT PRIMARY KEY auto_increment, environment_id int, " +
-            "name varchar(200) UNIQUE, type varchar(20), description varchar(500), " +
+            "name varchar(200) UNIQUE, type varchar(20) not null, description varchar(500), " +
             "url varchar(500), username varchar(200), password varchar(200), " +
             "created timestamp DEFAULT CURRENT_TIMESTAMP, updated timestamp DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (environment_id) REFERENCES environment(id) ON DELETE CASCADE)")

@@ -10,6 +10,7 @@ import java.util.Date;
  */
 public class Teststep {
     public static final String TEST_STEP_TYPE_SOAP = "SOAP";
+    public static final String TEST_STEP_TYPE_DB = "DB";
     private long id;
     private long testcaseId;
     private String name;

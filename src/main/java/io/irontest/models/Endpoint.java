@@ -7,6 +7,7 @@ import java.util.Date;
  */
 public class Endpoint {
     public static final String ENDPOINT_TYPE_SOAP = "SOAP";
+    public static final String TEST_STEP_TYPE_DB = "DB";
     private long id;
     private Long environmentId;
     private String environmentName; //  used sometimes for the convenience of UI

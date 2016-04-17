@@ -44,6 +44,8 @@ public class TeststepResource {
             String adhocAddress = ParserFactory.getInstance().getParser(parserName).getAdhocAddress(properties);
             endpoint.setType(Endpoint.ENDPOINT_TYPE_SOAP);
             endpoint.setUrl(adhocAddress);
+        } else if (Teststep.TEST_STEP_TYPE_DB.equals(teststep.getType())) {
+            endpoint.setType(Endpoint.TEST_STEP_TYPE_DB);
         }
         long endpointId = endpointDAO.insertUnmanagedEndpoint(endpoint);
         endpoint.setId(endpointId);
