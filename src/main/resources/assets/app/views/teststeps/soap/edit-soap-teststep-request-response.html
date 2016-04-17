@@ -1,23 +1,9 @@
 <div class="form-group form-group-reduced-bottom-margin"></div>
 <div class="form-group form-group-reduced-bottom-margin">
   <div class="col-lg-10">
-    <label for="soapAddress" class="col-lg-2 control-label">Endpoint</label>
-    <div class="col-lg-7">
-      <input name="endpoint" type="text" class="form-control" ng-if ="$parent.teststep.endpoint" ng-model="$parent.teststep.endpoint.name" id="endpoint" readonly>
-      <input name="soapAddress" type="text" class="form-control" ng-if ="!$parent.teststep.endpoint" ng-model="$parent.teststep.properties.soapAddress"
-          ng-change="autoSave(teststepForm.$valid)" id="soapAddress" placeholder="SOAP Address">
-    </div>
-    <div class="btn-group col-lg-2" uib-dropdown keyboard-nav>
-      <button type="button" class="btn btn-info" uib-dropdown-toggle>
-        Go to <span class="caret"></span>
-      </button>
-      <ul class="dropdown-menu" uib-dropdown-menu role="menu">
-        <li role="menuitem" ng-show="$parent.teststep.endpointId">
-          <a href="" ng-click="goto('endpoint_edit', {endpointId: $parent.teststep.endpointId})">Endpoint Details</a>
-        </li>
-        <li role="menuitem"><a href="" ng-click="goto('endpoint_all', null, 'endpoint')">Endpoint List</a></li>
-        <li role="menuitem"><a href="" ng-click="goto('endpoint_create', null, 'endpoint')">A New Endpoint</a></li>
-      </ul>
+    <label for="soapAddress" class="col-lg-2 control-label">SOAP Address</label>
+    <div class="col-lg-8">
+      <input name="soapAddress" type="text" class="form-control" ng-model="$parent.teststep.endpoint.url" id="soapAddress" readonly>
     </div>
     <div class="col-lg-1">
       <button type="button" class="btn btn-info" ng-click="invoke($parent.teststep)">Invoke</button>
