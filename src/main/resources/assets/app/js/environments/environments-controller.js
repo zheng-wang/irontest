@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('iron-test').controller('EnvironmentsController', ['$scope', 'Environments',
-    'PageNavigation', '$location', '$stateParams', '$state', 'uiGridConstants',
-  function($scope, Environments, PageNavigation, $location, $stateParams, $state, uiGridConstants) {
+    'PageNavigation', '$location', '$stateParams', '$state', 'uiGridConstants', '$timeout',
+  function($scope, Environments, PageNavigation, $location, $stateParams, $state, uiGridConstants, $timeout) {
 
     $scope.saveSuccessful = null;
     var timer;
@@ -64,26 +64,17 @@ angular.module('iron-test').controller('EnvironmentsController', ['$scope', 'Env
       }
     };
 
-    $scope.create_update = function(form) {
-      $scope.$broadcast('schemaFormValidate');
-
-      if (form.$valid) {
-        if ($scope.environment.id) {
-          $scope.environment.$update(function(response) {
-            $scope.environment = response;
-            $scope.alerts.push({type: 'success', msg: 'The Environment has been updated successfully'});
-          }, function(exception) {
-            $scope.alerts.push({type: 'warning', msg: exception.data});
-          });
-        } else {
-          var environment = new Environments($scope.environment);
-          environment.$save(function(response) {
-            PageNavigation.contexts.push($scope.context);
-            $state.go('environment_edit', {environmentId: response.id});
-          }, function(exception) {
-            $scope.alerts.push({type: 'warning', msg: exception.data});
-          });
-        }
+    $scope.update = function(isValid) {
+      if (isValid) {
+        $scope.environment.$update(function(response) {
+          $scope.saveSuccessful = true;
+          $scope.environment = response;
+        }, function(error) {
+          $scope.savingErrorMessage = error.data.message;
+          $scope.saveSuccessful = false;
+        });
+      } else {
+        $scope.submitted = true;
       }
     };
 
