@@ -7,7 +7,6 @@ public class SOAPTeststepProperties extends Properties {
     private String wsdlUrl;
     private String wsdlBindingName;
     private String wsdlOperationName;
-    private String soapAddress;
 
     public String getWsdlUrl() {
         return wsdlUrl;
@@ -31,13 +30,5 @@ public class SOAPTeststepProperties extends Properties {
 
     public void setWsdlOperationName(String wsdlOperationName) {
         this.wsdlOperationName = wsdlOperationName;
-    }
-
-    public String getSoapAddress() {
-        return soapAddress;
-    }
-
-    public void setSoapAddress(String soapAddress) {
-        this.soapAddress = soapAddress;
     }
 }

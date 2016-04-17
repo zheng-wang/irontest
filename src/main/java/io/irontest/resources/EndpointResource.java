@@ -23,7 +23,7 @@ public class EndpointResource {
 
     @POST
     public Endpoint create(Endpoint endpoint) {
-        long id = endpointDAO.insert(endpoint);
+        long id = endpointDAO.insertManagedEndpoint(endpoint);
         endpoint.setId(id);
         return endpoint;
     }
@@ -37,11 +37,6 @@ public class EndpointResource {
     @DELETE @Path("{endpointId}")
     public void delete(@PathParam("endpointId") long endpointId) {
         endpointDAO.deleteById(endpointId);
-    }
-
-    @GET
-    public List<Endpoint> findAll() {
-        return endpointDAO.findAll();
     }
 
     @GET @Path("/handler/{handlerName}")

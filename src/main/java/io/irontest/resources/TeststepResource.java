@@ -1,11 +1,13 @@
 package io.irontest.resources;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import io.irontest.db.EndpointDAO;
 import io.irontest.db.TeststepDAO;
+import io.irontest.models.Endpoint;
 import io.irontest.models.Properties;
 import io.irontest.models.SOAPTeststepProperties;
 import io.irontest.models.Teststep;
 import io.irontest.parsers.ParserFactory;
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -15,10 +17,12 @@ import javax.ws.rs.core.MediaType;
  */
 @Path("/testcases/{testcaseId}/teststeps") @Produces({ MediaType.APPLICATION_JSON })
 public class TeststepResource {
-    private final TeststepDAO dao;
+    private final TeststepDAO teststepDAO;
+    private final EndpointDAO endpointDAO;
 
-    public TeststepResource(TeststepDAO dao) {
-        this.dao = dao;
+    public TeststepResource(TeststepDAO teststepDAO, EndpointDAO endpointDAO) {
+        this.teststepDAO = teststepDAO;
+        this.endpointDAO = endpointDAO;
     }
 
     @POST
@@ -28,33 +32,43 @@ public class TeststepResource {
         String parserName = "DBInterface";
         if (Teststep.TEST_STEP_TYPE_SOAP.equals(teststep.getType())) {
             parserName = "WSDL";
-            String adhocAddress = ParserFactory.getInstance().getParser(parserName).getAdhocAddress(properties);
-            ((SOAPTeststepProperties) properties).setSoapAddress(adhocAddress);
         }
 
         String sampleRequest = ParserFactory.getInstance().getParser(parserName).getSampleRequest(properties);
         teststep.setRequest(sampleRequest);
 
-        long id = dao.insert(teststep);
+        long id = teststepDAO.insert(teststep);
         teststep.setId(id);
         teststep.setRequest(null);  //  no need to bring request to client at this point
+
+        //  create unmanaged endpoint
+        Endpoint endpoint = new Endpoint();
+        endpoint.setTeststepId(new Long(id));
+        endpoint.setDescription("Unmanaged Endpoint");
+        if (Teststep.TEST_STEP_TYPE_SOAP.equals(teststep.getType())) {
+            String adhocAddress = ParserFactory.getInstance().getParser(parserName).getAdhocAddress(properties);
+            endpoint.setType(Endpoint.ENDPOINT_TYPE_SOAP);
+            endpoint.setUrl(adhocAddress);
+        }
+        endpointDAO.insertUnmanagedEndpoint(endpoint);
+
         return teststep;
     }
 
     @GET
     @Path("{teststepId}")
     public Teststep findById(@PathParam("teststepId") long teststepId) {
-        return dao.findById(teststepId);
+        return teststepDAO.findById(teststepId);
     }
 
     @PUT @Path("{teststepId}")
     public Teststep update(Teststep teststep) throws JsonProcessingException {
-        dao.update(teststep);
+        teststepDAO.update(teststep);
         return findById(teststep.getId());
     }
 
     @DELETE @Path("{teststepId}")
     public void delete(@PathParam("teststepId") long teststepId) {
-        dao.deleteById(teststepId);
+        teststepDAO.deleteById(teststepId);
     }
 }

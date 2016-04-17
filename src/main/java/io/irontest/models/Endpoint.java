@@ -1,14 +1,15 @@
 package io.irontest.models;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by Trevor Li on 6/30/15.
  */
 public class Endpoint {
+    public static final String ENDPOINT_TYPE_SOAP = "SOAP";
     private long id;
     private long environmentId;
+    private Long teststepId;
     private String name;
     private String type;
     private String description;
@@ -20,10 +21,11 @@ public class Endpoint {
 
     public Endpoint() {}
 
-    public Endpoint(long id, long environmentId, String name, String type, String description, String url,
+    public Endpoint(long id, long environmentId, Long testcaseId, String name, String type, String description, String url,
                     String username, String password, Date created, Date updated) {
         this.id = id;
         this.environmentId = environmentId;
+        this.teststepId = testcaseId;
         this.name = name;
         this.type = type;
         this.description = description;
@@ -112,5 +114,13 @@ public class Endpoint {
 
     public void setUpdated(Date updated) {
         this.updated = updated;
+    }
+
+    public Long getTeststepId() {
+        return teststepId;
+    }
+
+    public void setTeststepId(Long teststepId) {
+        this.teststepId = teststepId;
     }
 }
