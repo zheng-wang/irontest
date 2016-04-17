@@ -1,8 +1,7 @@
 'use strict';
 
-angular.module('iron-test').controller('SOAPTeststepEditController', ['$scope', 'Testruns',
-    '$location', '$state', '$timeout', 'PageNavigation',
-  function($scope, Testruns, $location, $state, $timeout, PageNavigation) {
+angular.module('iron-test').controller('SOAPTeststepEditController', ['$scope', 'Testruns', '$state', '$timeout',
+  function($scope, Testruns, $state, $timeout) {
     var timer;
     //  use object instead of primitives, so that child scope can update the values
     $scope.savingStatus = {
@@ -33,41 +32,11 @@ angular.module('iron-test').controller('SOAPTeststepEditController', ['$scope', 
       }, 2000);
     };
 
-    $scope.goto = function(state, params, expect) {
-      var context = {
-        model: $scope.$parent.teststep,
-        url: $location.path(),
-        expect: expect
+    $scope.invoke = function() {
+      var testrun = {
+        teststepId: $scope.$parent.teststep.id,
+        request: $scope.$parent.teststep.request
       };
-
-      PageNavigation.contexts.push(context);
-
-      $state.go(state, params);
-    };
-
-    $scope.findOne = function() {
-      // entry returned from other pages
-      var model = PageNavigation.returns.pop();
-      if (model) {
-        $scope.$parent.teststep = model;
-        $scope.autoSave(true);
-      }
-    };
-
-    $scope.invoke = function(teststep) {
-      var testrun;
-      if ($scope.$parent.teststep.endpoint) {
-        testrun = {
-          request: $scope.$parent.teststep.request,
-          endpointId: $scope.teststep.endpointId
-        };
-      } else {
-        testrun = {
-          request: $scope.teststep.request,
-          details: $scope.teststep.properties
-        };
-      }
-
       var testrunRes = new Testruns(testrun);
       testrunRes.$save(function(response) {
         $scope.tempData.soapResponse = response.response;

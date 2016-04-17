@@ -1,12 +1,10 @@
 package io.irontest.handlers;
 
-import java.util.List;
-import java.util.Map;
+import io.irontest.models.Endpoint;
 
 /**
  * Created by Trevor Li on 7/14/15.
  */
 public interface IronTestHandler {
-    public Object invoke(String request, Map<String, String> details) throws Exception;
-    public List<String> getProperties();
+    Object invoke(String request, Endpoint endpoint) throws Exception;
 }

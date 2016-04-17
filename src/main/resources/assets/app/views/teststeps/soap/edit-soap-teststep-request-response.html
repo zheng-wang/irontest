@@ -3,10 +3,11 @@
   <div class="col-lg-10">
     <label for="soapAddress" class="col-lg-2 control-label">SOAP Address</label>
     <div class="col-lg-8">
-      <input name="soapAddress" type="text" class="form-control" ng-model="$parent.teststep.endpoint.url" id="soapAddress" readonly>
+      <input name="soapAddress" type="text" class="form-control background-color-inherit"
+             ng-model="$parent.teststep.endpoint.url" id="soapAddress" readonly>
     </div>
     <div class="col-lg-1">
-      <button type="button" class="btn btn-info" ng-click="invoke($parent.teststep)">Invoke</button>
+      <button type="button" class="btn btn-info" ng-click="invoke()">Invoke</button>
     </div>
   </div>
 </div>

@@ -2,7 +2,6 @@ package io.irontest.models;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Trevor Li on 7/24/15.
@@ -20,13 +19,9 @@ public class Testrun {
     private Object response;
     private long environmentId;
     private Environment environment;
-    private long endpointId;
-    private Endpoint endpoint;
-    private Map<String, String> details;
     private Date created;
 
-    public Testrun() {
-    }
+    public Testrun() {}
 
     public List<Testcase> getTestcases() {
         return testcases;
@@ -84,22 +79,6 @@ public class Testrun {
         this.environment = environment;
     }
 
-    public Endpoint getEndpoint() {
-        return endpoint;
-    }
-
-    public void setEndpoint(Endpoint endpoint) {
-        this.endpoint = endpoint;
-    }
-
-    public Map<String, String> getDetails() {
-        return details;
-    }
-
-    public void setDetails(Map<String, String> details) {
-        this.details = details;
-    }
-
     public List<Long> getTestcaseIds() {
         return testcaseIds;
     }
@@ -138,14 +117,6 @@ public class Testrun {
 
     public void setEnvironmentId(long environmentId) {
         this.environmentId = environmentId;
-    }
-
-    public long getEndpointId() {
-        return endpointId;
-    }
-
-    public void setEndpointId(long endpointId) {
-        this.endpointId = endpointId;
     }
 
     public Date getCreated() {

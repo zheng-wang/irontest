@@ -4,8 +4,10 @@ import io.irontest.core.assertion.AssertionVerifier;
 import io.irontest.core.assertion.AssertionVerifierFactory;
 import io.irontest.db.*;
 import io.irontest.handlers.HandlerFactory;
-import io.irontest.handlers.SOAPHandler;
-import io.irontest.models.*;
+import io.irontest.models.Endpoint;
+import io.irontest.models.Testcase;
+import io.irontest.models.Testrun;
+import io.irontest.models.Teststep;
 import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.AssertionVerification;
 import io.irontest.models.assertion.AssertionVerificationResult;
@@ -13,9 +15,7 @@ import io.irontest.models.assertion.EvaluationResult;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Trevor Li on 24/07/2015.
@@ -39,42 +39,23 @@ public class TestrunResource {
 
     @POST
     public Testrun create(Testrun testrun) throws Exception {
-        if (testrun.getDetails() != null) {
-            Map<String, String> details = testrun.getDetails();
-            details.put("url", details.get("soapAddress"));
-            Object response = HandlerFactory.getInstance().getHandler("SOAPHandler").invoke(testrun.getRequest(), testrun.getDetails());
+        if (testrun.getTeststepId() > 0) {  //  run a test step
+            Teststep teststep = teststepDao.findById(testrun.getTeststepId());
+            Endpoint endpoint = endpointDao.findById(teststep.getEndpoint().getId());
+
+            Object response = HandlerFactory.getInstance().getHandler(endpoint.getType() + "Handler")
+                    .invoke(testrun.getRequest(), endpoint);
             testrun.setResponse(response);
-        } else if (testrun.getEndpointId() > 0) {
-            long endpointId = testrun.getEndpointId();
-            Endpoint endpoint = endpointDao.findById(endpointId);
-
-            Map<String, String> details = getEndpointDetails(endpointId);
-
-            Object response = null;
-            //HandlerFactory.getInstance().getHandler(endpoint.getHandler()).invoke(testrun.getRequest(), details);
-
-            testrun.setEndpoint(endpoint);
-            testrun.setResponse(response);
-        } else if (testrun.getTestcaseId() > 0) {
+        } else if (testrun.getTestcaseId() > 0) {    //  run a test case
             long testcaseId = testrun.getTestcaseId();
             Testcase testcase = testcaseDao.findById(testcaseId);
             List<Teststep> teststeps = teststepDao.findByTestcaseId(testcaseId);
 
             for (Teststep teststep : teststeps) {
-                Object response = null;
-
                 //  invoke and get response
-                if (teststep.getEndpointId() < 1) {  //  there is no endpoint associated with the test step
-                    if (Teststep.TEST_STEP_TYPE_SOAP.equals(teststep.getType())) {
-                        SOAPTeststepProperties properties = (SOAPTeststepProperties) teststep.getProperties();
-                        SOAPHandler handler = (SOAPHandler) HandlerFactory.getInstance().getHandler("SOAPHandler");
-                        response = handler.invoke(teststep.getRequest(), properties);
-                    }
-                } else {              //  use the endpoint to invoke
-                    Endpoint endpoint = endpointDao.findById(teststep.getEndpointId());
-                    Map<String, String> details = getEndpointDetails(teststep.getEndpointId());
-                    response = null; //HandlerFactory.getInstance().getHandler(endpoint.getHandler()).invoke(teststep.getRequest(), details);
-                }
+                Endpoint endpoint = endpointDao.findById(teststep.getEndpoint().getId());
+                Object response = HandlerFactory.getInstance().getHandler(endpoint.getType() + "Handler")
+                        .invoke(teststep.getRequest(), endpoint);
 
                 System.out.println(response);
 
@@ -100,25 +81,6 @@ public class TestrunResource {
         }
 
         return testrun;
-    }
-
-    private Map<String, String> getEndpointDetails(long endpointId) {
-        Map<String, String> details = convertDetails(endpointdtlDao.findByEndpoint(endpointId));
-        EndpointDetail detailPassword = endpointdtlDao.findByEndpointPassword(endpointId);
-        if (detailPassword != null) {
-            details.put(detailPassword.getName(), detailPassword.getValue());
-        }
-
-        return details;
-    }
-
-    private Map<String, String> convertDetails(List<EndpointDetail> detailsArray) {
-        Map<String, String> details = new HashMap<String, String>();
-        for (EndpointDetail detail : detailsArray) {
-            details.put(detail.getName(), detail.getValue());
-        }
-
-        return details;
     }
 
     @DELETE @Path("{testrunId}")
