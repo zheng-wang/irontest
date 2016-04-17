@@ -8,7 +8,7 @@ import java.util.Date;
 public class Endpoint {
     public static final String ENDPOINT_TYPE_SOAP = "SOAP";
     private long id;
-    private long environmentId;
+    private Long environmentId;
     private Long teststepId;
     private String name;
     private String type;
@@ -21,7 +21,7 @@ public class Endpoint {
 
     public Endpoint() {}
 
-    public Endpoint(long id, long environmentId, Long testcaseId, String name, String type, String description, String url,
+    public Endpoint(long id, Long environmentId, Long testcaseId, String name, String type, String description, String url,
                     String username, String password, Date created, Date updated) {
         this.id = id;
         this.environmentId = environmentId;
@@ -44,11 +44,11 @@ public class Endpoint {
         this.id = id;
     }
 
-    public long getEnvironmentId() {
+    public Long getEnvironmentId() {
         return environmentId;
     }
 
-    public void setEnvironmentId(long environmentId) {
+    public void setEnvironmentId(Long environmentId) {
         this.environmentId = environmentId;
     }
 
