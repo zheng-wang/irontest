@@ -31,12 +31,6 @@ angular.module('iron-test').controller('EndpointsController', ['$scope', 'Endpoi
       }
     };
 
-    $scope.remove = function(endpoint) {
-      endpoint.$remove(function(response) {
-          $state.go('endpoint_all');
-      });
-    };
-
     $scope.findOne = function() {
       Endpoints.get({
         environmentId: $stateParams.environmentId,

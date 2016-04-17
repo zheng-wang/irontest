@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('iron-test').controller('EnvironmentsController', ['$scope', 'Environments',
-    'PageNavigation', '$location', '$stateParams', '$state', 'uiGridConstants', '$timeout',
-  function($scope, Environments, PageNavigation, $location, $stateParams, $state, uiGridConstants, $timeout) {
+    'PageNavigation', '$location', '$stateParams', '$state', 'uiGridConstants', '$timeout', 'Endpoints',
+  function($scope, Environments, PageNavigation, $location, $stateParams, $state, uiGridConstants, $timeout, Endpoints) {
 
     $scope.saveSuccessful = null;
     var timer;
@@ -94,23 +94,20 @@ angular.module('iron-test').controller('EnvironmentsController', ['$scope', 'Env
       });
     };
 
-    $scope.goto = function(state, params, expect) {
-      var context = {
-        model: $scope.environment,
-        url: $location.path(),
-        expect: expect
-      };
-
-      PageNavigation.contexts.push(context);
-
-      $state.go(state, params);
-    };
-
     $scope.findOne = function() {
       Environments.get({
         environmentId: $stateParams.environmentId
       }, function(environment) {
         $scope.environment = environment;
+      }, function(error) {
+        alert('Error');
+      });
+    };
+
+    $scope.removeEndpoint = function(endpoint) {
+      var endpointService = new Endpoints(endpoint);
+      endpointService.$remove(function(response) {
+        $state.go($state.current, {}, {reload: true});
       }, function(error) {
         alert('Error');
       });
