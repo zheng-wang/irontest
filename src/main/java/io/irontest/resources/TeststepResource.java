@@ -39,7 +39,6 @@ public class TeststepResource {
 
         //  create unmanaged endpoint
         Endpoint endpoint = new Endpoint();
-        endpoint.setDescription("Unmanaged Endpoint");
         if (Teststep.TEST_STEP_TYPE_SOAP.equals(teststep.getType())) {
             String adhocAddress = ParserFactory.getInstance().getParser(parserName).getAdhocAddress(properties);
             endpoint.setType(Endpoint.ENDPOINT_TYPE_SOAP);
@@ -47,6 +46,7 @@ public class TeststepResource {
         } else if (Teststep.TEST_STEP_TYPE_DB.equals(teststep.getType())) {
             endpoint.setType(Endpoint.TEST_STEP_TYPE_DB);
         }
+        endpoint.setDescription("Unmanaged " + endpoint.getType() + " Endpoint");
         long endpointId = endpointDAO.insertUnmanagedEndpoint(endpoint);
         endpoint.setId(endpointId);
         teststep.setEndpoint(endpoint);
