@@ -1,0 +1,58 @@
+<div class="row" id="page-header">
+  <h3 class="page-header">Database Endpoint - {{$parent.endpoint.name}}
+    <label class="col-lg-offset-1 failure-message"
+           ng-show="savingStatus.saveSuccessful !== null && !savingStatus.saveSuccessful">
+      Failed to save. {{savingStatus.savingErrorMessage}}
+    </label>
+    <label class="col-lg-offset-1" successful-message
+           ng-class="{ 'successful-message-animation' : savingStatus.saveSuccessful }">
+      Successfully saved
+    </label>
+    <small>Last edit at {{$parent.endpoint.updated | date:'medium'}}</small>
+    <label class="back-link"><a ui-sref="environment_edit({environmentId: $parent.endpoint.environmentId})">Back</a>                    </label>
+  </h3>
+</div>
+<div class="row">
+  <form name="endpointForm" class="form-horizontal col-lg-9" role="form" novalidate>
+    <div class="form-group" ng-class="{ 'has-error' : submitted && endpointForm.name.$invalid }">
+      <label for="name" class="col-lg-2 control-label">Name</label>
+      <div class="col-lg-10">
+        <input name="name" type="text" class="form-control" ng-model="$parent.endpoint.name" id="name"
+               ng-change="$parent.autoSave(endpointForm.$valid)" placeholder="H2 Database Endpoint"
+               maxlength="200" required>
+        <div ng-show="submitted && endpointForm.name.$invalid" class="help-block">
+          <p ng-show="endpointForm.name.$error.required">Name is required</p>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="description" class="col-lg-2 control-label">Description</label>
+      <div class="col-lg-10">
+        <textarea name="description" ng-model="$parent.endpoint.description" id="description" cols="30" rows="8"
+                  ng-change="$parent.autoSave(endpointForm.$valid)" class="form-control"></textarea>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="jdbcURL" class="col-lg-2 control-label">JDBC URL</label>
+      <div class="col-lg-10">
+        <input name="jdbcURL" type="text" class="form-control" ng-model="$parent.endpoint.url" id="jdbcURL"
+               ng-change="$parent.autoSave(endpointForm.$valid)" placeholder="jdbc:h2:~/test;AUTO_SERVER=TRUE"
+               maxlength="500">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="username" class="col-lg-2 control-label">Username</label>
+      <div class="col-lg-10">
+        <input name="username" type="text" class="form-control" ng-model="$parent.endpoint.username" id="username"
+               ng-change="$parent.autoSave(endpointForm.$valid)" maxlength="200">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="password" class="col-lg-2 control-label">Password</label>
+      <div class="col-lg-10">
+        <input name="password" type="password" class="form-control" ng-model="$parent.endpoint.password" id="password"
+               ng-change="$parent.autoSave(endpointForm.$valid)" maxlength="200">
+      </div>
+    </div>
+  </form>
+</div>
