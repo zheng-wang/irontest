@@ -1,7 +1,18 @@
 'use strict';
 
-angular.module('iron-test').controller('EnvironmentsController', ['$scope', 'Environments', 'EnvEntries', 'PageNavigation', '$location', '$stateParams', '$state', 'uiGridConstants',
-  function($scope, Environments, EnvEntries, PageNavigation, $location, $stateParams, $state, uiGridConstants) {
+angular.module('iron-test').controller('EnvironmentsController', ['$scope', 'Environments',
+    'PageNavigation', '$location', '$stateParams', '$state', 'uiGridConstants',
+  function($scope, Environments, PageNavigation, $location, $stateParams, $state, uiGridConstants) {
+
+    $scope.saveSuccessful = null;
+    var timer;
+    $scope.autoSave = function(isValid) {
+      if (timer) $timeout.cancel(timer);
+      timer = $timeout(function() {
+        $scope.update(isValid);
+      }, 2000);
+    };
+
     $scope.envGridColumnDefs = [
       {
         name: 'name', width: 200, minWidth: 100,
@@ -20,27 +31,20 @@ angular.module('iron-test').controller('EnvironmentsController', ['$scope', 'Env
       }
     ];
 
-    $scope.schema = {
-      type: "object",
-      properties: {
-        id: { type: "integer" },
-        name: { type: "string", maxLength: 50 },
-        description: { type: "string", maxLength: 500 }
-      },
-      "required": ["name", "description"]
-    };
-
-    $scope.form = [
+    $scope.endpointGridColumnDefs = [
       {
-        key: "name",
-        title: "Name",
-        validationMessage: "The Name is required and should be less than 50 characters"
+        field: 'name', width: 200, minWidth: 100,
+        sort: {
+          direction: uiGridConstants.ASC,
+          priority: 1
+        },
+        cellTemplate:'endpointGridNameCellTemplate.html'
       },
+      {name: 'type', width: 80, minWidth: 80},
+      {name: 'description', width: 500, minWidth: 300},
       {
-        key: "description",
-        title: "Description",
-        type: "textarea",
-        validationMessage: "The Description is required and should be less than 500 characters"
+        name: 'delete', width: 100, minWidth: 80, enableSorting: false, enableFiltering: false,
+        cellTemplate: 'endpointGridDeleteCellTemplate.html'
       }
     ];
 
@@ -111,48 +115,14 @@ angular.module('iron-test').controller('EnvironmentsController', ['$scope', 'Env
       $state.go(state, params);
     };
 
-    $scope.return = function() {
-      PageNavigation.returns.push($scope.context.model);
-      $location.path($scope.context.url);
-    };
-
-    $scope.select = function() {
-      $scope.context.model.environmentId = $scope.environment.id;
-
-      Environments.get({
-        environmentId: $scope.context.model.environmentId
-      }, function(environment) {
-        $scope.context.model.environment = environment;
-
-        PageNavigation.returns.push($scope.context.model);
-        $location.path($scope.context.url);
-      });
-    };
-
     $scope.findOne = function() {
-      $scope.context = PageNavigation.contexts.pop();
-
-      $scope.enventryGridColumnDefs = [
-        {
-          field: 'intface.name', displayName: 'Interface', width: 200, minWidth: 100,
-          sort: {
-            direction: uiGridConstants.ASC,
-            priority: 1
-          },
-          cellTemplate:'gridCellTemplate.html'
-        },
-        {
-          field: 'endpoint.name', displayName: 'Endpoint',width: 600, minWidth: 300
-        }
-      ];
-
-      if ($stateParams.environmentId) {
-        Environments.get({
-          environmentId: $stateParams.environmentId
-        }, function(environment) {
-          $scope.environment = environment;
-        });
-      }
+      Environments.get({
+        environmentId: $stateParams.environmentId
+      }, function(environment) {
+        $scope.environment = environment;
+      }, function(error) {
+        alert('Error');
+      });
     };
   }
 ]);

@@ -1,7 +1,19 @@
 'use strict';
 
-angular.module('iron-test').controller('TestcasesController', ['$scope', 'Testcases', 'Teststeps', 'Testruns', '$stateParams', '$state', 'uiGridConstants', '$timeout', '$location', 'PageNavigation',
-  function($scope, Testcases, Teststeps, Testruns, $stateParams, $state, uiGridConstants, $timeout, $location, PageNavigation) {
+angular.module('iron-test').controller('TestcasesController', ['$scope', 'Testcases', 'Teststeps', 'Testruns',
+    '$stateParams', '$state', 'uiGridConstants', '$timeout', '$location', 'PageNavigation',
+  function($scope, Testcases, Teststeps, Testruns, $stateParams, $state, uiGridConstants, $timeout, $location,
+      PageNavigation) {
+
+    $scope.saveSuccessful = null;
+    var timer;
+    $scope.autoSave = function(isValid) {
+      if (timer) $timeout.cancel(timer);
+      timer = $timeout(function() {
+        $scope.update(isValid);
+      }, 2000);
+    };
+
     $scope.testcaseGridColumnDefs = [
       {
         name: 'name', width: 200, minWidth: 100,
@@ -28,7 +40,7 @@ angular.module('iron-test').controller('TestcasesController', ['$scope', 'Testca
         cellTemplate: 'teststepGridNameCellTemplate.html'
       },
       {name: 'type', width: 80, minWidth: 80},
-      {name: 'description', width: 485, minWidth: 300},
+      {name: 'description', width: 500, minWidth: 300},
       {
         name: 'delete', width: 100, minWidth: 80, enableSorting: false, enableFiltering: false,
         cellTemplate: 'teststepGridDeleteCellTemplate.html'
@@ -38,8 +50,6 @@ angular.module('iron-test').controller('TestcasesController', ['$scope', 'Testca
         cellTemplate: 'teststepGridResultCellTemplate.html'
       }
     ];
-
-    $scope.saveSuccessful = null;
 
     $scope.update = function(isValid) {
       if (isValid) {
@@ -53,14 +63,6 @@ angular.module('iron-test').controller('TestcasesController', ['$scope', 'Testca
       } else {
         $scope.submitted = true;
       }
-    };
-
-    var timer;
-    $scope.autoSave = function(isValid) {
-      if (timer) $timeout.cancel(timer);
-      timer = $timeout(function() {
-        $scope.update(isValid);
-      }, 2000);
     };
 
     $scope.create = function(isValid) {
@@ -129,16 +131,13 @@ angular.module('iron-test').controller('TestcasesController', ['$scope', 'Testca
     };
 
     $scope.findOne = function() {
-      var model = PageNavigation.returns.pop();
-      if (model) {
-        $scope.testcase = model;
-      } else {
-        Testcases.get({
-          testcaseId: $stateParams.testcaseId
-        }, function(testcase) {
-          $scope.testcase = testcase;
-        });
-      }
+      Testcases.get({
+        testcaseId: $stateParams.testcaseId
+      }, function(testcase) {
+        $scope.testcase = testcase;
+      }, function(error) {
+        alert('Error');
+      });
     };
   }
 ]);

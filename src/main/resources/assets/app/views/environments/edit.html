@@ -1,51 +1,76 @@
-<div ng-controller="EnvironmentsController" data-ng-init="findOne()">
-    <div class="row">
-        <h3 class="page-header col-md-8">Environment - {{environment.name}}</h3>
-        <div class="col-md-1" ng-show="context && context.url">
-            <button type="button" class="btn btn-info" ng-click="return()">Return</button>
+<div ng-controller="EnvironmentsController" ng-init="findOne()">
+  <div class="row">
+    <h3 class="page-header">Environment - {{environment.name}}
+      <label class="col-lg-offset-1 failure-message" ng-show="saveSuccessful !== null && !saveSuccessful">
+        Failed to save. {{savingErrorMessage}}
+      </label>
+      <label class="col-lg-offset-1" successful-message ng-class="{ 'successful-message-animation' : saveSuccessful }">
+        Successfully saved
+      </label>
+      <small>Last edit at {{environment.updated | date:'medium'}}</small>
+      <label class="back-link"><a ui-sref="environment_all">Back</a>                    </label>
+    </h3>
+  </div>
+  <uib-tabset>
+    <uib-tab heading="Endpoints">
+      <div class="form-group"></div> <!-- spacer -->
+      <div class="row">
+        <div class="btn-group col-lg-2" uib-dropdown keyboard-nav>
+          <button type="button" class="btn btn-info dropdown-toggle" uib-dropdown-toggle ng-disabled="disabled">
+            Create <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" uib-dropdown-menu role="menu">
+            <li role="menuitem"><a ui-sref="endpoint_create_soap({environmentId: environment.id})">SOAP Endpoint</a></li>
+            <li role="menuitem"><a ui-sref="endpoint_create_db({environmentId: environment.id})">Database Endpoint</a></li>
+            <li role="menuitem"><a href="#">HTTP Endpoint</a></li>
+            <li role="menuitem"><a href="#">MQ Queue Manager Endpoint</a></li>
+          </ul>
         </div>
-        <div class="col-md-1" ng-show="context && context.expect && environment.id">
-            <button type="button" class="btn btn-info" ng-click="select()">Select</button>
+      </div>
+      <div class="form-group"></div> <!-- spacer -->
+      <div class="row">
+        <div ui-grid="{paginationPageSizes: [10,20,50,100], paginationPageSize: 10, enableFiltering: true, data: environment.endpoints, columnDefs: endpointGridColumnDefs}"
+             ui-grid-pagination ui-grid-resize-columns ui-grid-move-columns class="ui-grid"></div>
+      </div>
+    </uib-tab>
+    <uib-tab heading="Basic Info">
+      <form name="environmentForm" class="form-horizontal col-lg-9" role="form" novalidate>
+        <div class="form-group"></div> <!-- spacer -->
+        <div class="form-group" ng-class="{ 'has-error' : submitted && environmentForm.name.$invalid }">
+          <label for="name" class="col-lg-2 control-label">Name</label>
+          <div class="col-lg-10">
+            <input name="name" type="text" class="form-control" ng-model="environment.name"
+                   ng-change="autoSave(environmentForm.$valid)" id="name" placeholder="Name" maxlength="200" required>
+            <div ng-show="submitted && environmentForm.name.$invalid" class="help-block">
+              <p ng-show="environmentForm.name.$error.required">Name is required</p>
+            </div>
+          </div>
         </div>
+        <div class="form-group">
+          <label for="description" class="col-lg-2 control-label">Description</label>
+          <div class="col-lg-10">
+            <textarea name="description" ng-model="environment.description" ng-change="autoSave(environmentForm.$valid)"
+                      id="description" cols="30" rows="10" placeholder="Description" class="form-control"></textarea>
+          </div>
+        </div>
+      </form>
+    </uib-tab>
+  </uib-tabset>
+
+  <script type="text/ng-template" id="endpointGridNameCellTemplate.html">
+    <div class="ui-grid-cell-contents">
+      <div>
+        <a ui-sref="endpoint_edit({ environmentId: row.entity.environmentId, endpointId: row.entity.id })">{{COL_FIELD}}</a>
+      </div>
     </div>
-    <form name="environmentForm" class="form-horizontal col-md-10" ng-submit="create_update(environmentForm)">
-        <p><medium ng-show="environment.updated">Last updated at {{environment.updated | date:'dd-MM-yyyy HH:mm:ss'}}</medium></p>
-        <div class="row">
-            <div class="col-md-offset-4 col-md-2">
-                <button type="submit" class="btn btn-success btn-block">Save</button>
-            </div>
-            <div class="col-md-2">
-                <button type="button" class="btn btn-warning btn-block" ng-click="remove(environment)">Delete</button>
-            </div>
-        </div>
-        <p></p>
-        <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
-        <uib-tabset>
-            <uib-tab heading="Basic Info">
-                <p></p>
-                <div sf-schema="schema" sf-form="form" sf-model="environment" ></div>
-            </uib-tab>
-            <uib-tab ng-if="environment.id" heading="Interfaces">
-                <p></p>
-                <div class="row">
-                    <div class="col-md-2">
-                        <button class="btn btn-primary btn-block" ng-click="goto('intface_all', null, 'intfaces')">Add Interfaces</button>
-                    </div>
-                    <div class="col-md-2">
-                        <button class="btn btn-primary btn-block" ng-click="removeIntfaces()">Remove Interfaces</button>
-                    </div>
-                </div>
-                <p></p>
-                <div class="row">
-                    <div ui-grid="{paginationPageSizes: [10,20,50,100], paginationPageSize: 10, enableFiltering: true, data: environment.entries, columnDefs: enventryGridColumnDefs}"
-                         ui-grid-pagination ui-grid-resize-columns ui-grid-move-columns class="ui-grid"></div>
-                </div>
-            </uib-tab>
-        </uib-tabset>
-    </form>
-    <script type="text/ng-template" id="gridCellTemplate.html">
-        <div class="ui-grid-cell-contents">
-            <div><a ui-sref="enventry_edit({ enventryId: row.entity.id })">{{COL_FIELD}}</a></div>
-        </div>
-    </script>
+  </script>
+  <script type="text/ng-template" id="endpointGridDeleteCellTemplate.html">
+    <div class="ui-grid-cell-contents">
+      <div>
+        <a ng-click="grid.appScope.removeEndpoint(row.entity)" href="">
+          <i class="glyphicon glyphicon-trash center-block text-center"></i>
+        </a>
+      </div>
+    </div>
+  </script>
 </div>
