@@ -67,6 +67,7 @@ public class TeststepResource {
     @PUT @Path("{teststepId}")
     public Teststep update(Teststep teststep) throws JsonProcessingException {
         teststepDAO.update(teststep);
+        endpointDAO.update(teststep.getEndpoint());
         return findById(teststep.getId());
     }
 
