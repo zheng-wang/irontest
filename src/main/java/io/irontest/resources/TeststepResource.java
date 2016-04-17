@@ -37,20 +37,24 @@ public class TeststepResource {
         String sampleRequest = ParserFactory.getInstance().getParser(parserName).getSampleRequest(properties);
         teststep.setRequest(sampleRequest);
 
-        long id = teststepDAO.insert(teststep);
-        teststep.setId(id);
-        teststep.setRequest(null);  //  no need to bring request to client at this point
-
         //  create unmanaged endpoint
         Endpoint endpoint = new Endpoint();
-        endpoint.setTeststepId(new Long(id));
         endpoint.setDescription("Unmanaged Endpoint");
         if (Teststep.TEST_STEP_TYPE_SOAP.equals(teststep.getType())) {
             String adhocAddress = ParserFactory.getInstance().getParser(parserName).getAdhocAddress(properties);
             endpoint.setType(Endpoint.ENDPOINT_TYPE_SOAP);
             endpoint.setUrl(adhocAddress);
         }
-        endpointDAO.insertUnmanagedEndpoint(endpoint);
+        long endpointId = endpointDAO.insertUnmanagedEndpoint(endpoint);
+        endpoint.setId(endpointId);
+        teststep.setEndpoint(endpoint);
+
+        //  create test step
+        long id = teststepDAO.insert(teststep);
+        teststep.setId(id);
+        teststep.setRequest(null);  //  no need to bring request to client at this point
+
+
 
         return teststep;
     }
@@ -59,7 +63,7 @@ public class TeststepResource {
     @Path("{teststepId}")
     public Teststep findById(@PathParam("teststepId") long teststepId) {
         Teststep teststep = teststepDAO.findById(teststepId);
-        Endpoint endpoint = endpointDAO.findByTeststepId(teststepId);
+        Endpoint endpoint = endpointDAO.findById(teststep.getEndpoint().getId());
         teststep.setEndpoint(endpoint);
         return teststep;
     }

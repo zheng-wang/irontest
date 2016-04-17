@@ -9,11 +9,10 @@ public class Endpoint {
     public static final String ENDPOINT_TYPE_SOAP = "SOAP";
     private long id;
     private Long environmentId;
-    private Long teststepId;
     private String name;
     private String type;
     private String description;
-    private String url;
+    private String url;    //  can be SOAP address, JDBC URL, etc.
     private String username;
     private String password;
     private Date created;
@@ -21,11 +20,10 @@ public class Endpoint {
 
     public Endpoint() {}
 
-    public Endpoint(long id, Long environmentId, Long testcaseId, String name, String type, String description, String url,
+    public Endpoint(long id, Long environmentId, String name, String type, String description, String url,
                     String username, String password, Date created, Date updated) {
         this.id = id;
         this.environmentId = environmentId;
-        this.teststepId = testcaseId;
         this.name = name;
         this.type = type;
         this.description = description;
@@ -114,13 +112,5 @@ public class Endpoint {
 
     public void setUpdated(Date updated) {
         this.updated = updated;
-    }
-
-    public Long getTeststepId() {
-        return teststepId;
-    }
-
-    public void setTeststepId(Long teststepId) {
-        this.teststepId = teststepId;
     }
 }

@@ -1,6 +1,7 @@
 package io.irontest.db;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.irontest.models.Endpoint;
 import io.irontest.models.Properties;
 import io.irontest.models.Teststep;
 import io.irontest.utils.IronTestUtils;
@@ -34,6 +35,12 @@ public class TeststepMapper implements ResultSetMapper<Teststep> {
                 fields.contains("created") ? rs.getTimestamp("created") : null,
                 fields.contains("updated") ? rs.getTimestamp("updated") : null,
                 fields.contains("request") ? rs.getString("request") : null);
+
+        if (fields.contains("endpoint_id")) {
+            Endpoint endpoint = new Endpoint();
+            endpoint.setId(rs.getLong("endpoint_id"));
+            teststep.setEndpoint(endpoint);
+        }
 
         return teststep;
     }
