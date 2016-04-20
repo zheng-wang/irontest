@@ -1,37 +1,12 @@
 'use strict';
 
-angular.module('iron-test').controller('SOAPTeststepEditController', ['$scope', 'Testruns', '$state', '$timeout',
-    '$uibModal',
-  function($scope, Testruns, $state, $timeout, $uibModal) {
-    var timer;
-    //  use object instead of primitives, so that child scope can update the values
-    $scope.savingStatus = {
-      saveSuccessful: null,
-      savingErrorMessage: null
-    };
+//  NOTICE:
+//    The $scope here prototypically inherits from the $scope of teststeps-controller.js.
+//    ng-include also creates a scope.
+angular.module('iron-test').controller('SOAPTeststepEditController', ['$scope', 'Testruns', '$state', '$uibModal',
+  function($scope, Testruns, $state, $uibModal) {
     $scope.tempData = {};
     $scope.showAssertionsArea = false;
-
-    $scope.update = function(isValid) {
-      if (isValid) {
-        $scope.$parent.teststep.$update(function(response) {
-          $scope.savingStatus.saveSuccessful = true;
-          $scope.$parent.teststep = response;
-        }, function(error) {
-          $scope.savingStatus.savingErrorMessage = error.data.message;
-          $scope.savingStatus.saveSuccessful = false;
-        });
-      } else {
-        $scope.savingStatus.submitted = true;
-      }
-    };
-
-    $scope.autoSave = function(isValid) {
-      if (timer) $timeout.cancel(timer);
-      timer = $timeout(function() {
-        $scope.update(isValid);
-      }, 2000);
-    };
 
     $scope.selectManagedEndpoint = function() {
       var modalInstance = $uibModal.open({
@@ -46,7 +21,7 @@ angular.module('iron-test').controller('SOAPTeststepEditController', ['$scope', 
       });
 
       modalInstance.result.then(function (selectedEndpoint) {
-        $scope.$parent.teststep.endpoint = selectedEndpoint;
+        $scope.teststep.endpoint = selectedEndpoint;
         $scope.autoSave(true);
       }, function () {
         //  Modal dismissed
@@ -55,8 +30,8 @@ angular.module('iron-test').controller('SOAPTeststepEditController', ['$scope', 
 
     $scope.invoke = function() {
       var testrun = {
-        teststepId: $scope.$parent.teststep.id,
-        request: $scope.$parent.teststep.request
+        teststepId: $scope.teststep.id,
+        request: $scope.teststep.request
       };
       var testrunRes = new Testruns(testrun);
       testrunRes.$save(function(response) {

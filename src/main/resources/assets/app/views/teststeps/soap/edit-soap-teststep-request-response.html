@@ -4,7 +4,7 @@
     <label for="soapAddress" class="col-lg-2 control-label">SOAP Address</label>
     <div class="col-lg-8">
       <input name="soapAddress" type="text" class="form-control background-color-inherit"
-             ng-model="$parent.teststep.endpoint.url" id="soapAddress" readonly>
+             ng-model="teststep.endpoint.url" id="soapAddress" readonly>
     </div>
     <div class="col-lg-1">
       <button type="button" class="btn btn-info" ng-click="invoke()">Invoke</button>
@@ -13,7 +13,7 @@
 </div>
 <div class="form-group form-group-reduced-bottom-margin" request-response-textareas>
   <div class="col-lg-6 full-height">
-    <textarea name="request" ng-model="$parent.teststep.request" ng-change="autoSave(teststepForm.$valid)"
+    <textarea name="request" ng-model="teststep.request" ng-change="autoSave(teststepForm.$valid)"
         id="request" placeholder="Request" class="form-control full-height-important"></textarea>
   </div>
   <div class="col-lg-6 full-height">

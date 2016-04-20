@@ -10,6 +10,29 @@ angular.module('iron-test').controller('AssertionsController', ['$scope', 'Asser
     $scope.assertionsModelObj.tempData = {};
 
     var timer;
+    $scope.assertionsModelObj.autoSave = function(isValid) {
+      if (timer) $timeout.cancel(timer);
+      timer = $timeout(function() {
+        $scope.assertionsModelObj.update(isValid);
+      }, 2000);
+    };
+
+    $scope.assertionsModelObj.update = function(isValid) {
+      if (isValid) {
+        $scope.assertionsModelObj.assertion.$update({
+          testcaseId: $stateParams.testcaseId,
+          teststepId: $stateParams.teststepId
+        }, function(response) {
+          $scope.$parent.savingStatus.saveSuccessful = true;
+          $scope.assertionsModelObj.assertion = response;
+        }, function(error) {
+          $scope.$parent.savingStatus.savingErrorMessage = error.data.message;
+          $scope.$parent.savingStatus.saveSuccessful = false;
+        });
+      } else {
+        $scope.$parent.savingStatus.submitted = true;
+      }
+    };
 
     //  remove currently selected assertion
     var removeCurrentAssertion = function(gridMenuEvent) {
@@ -107,23 +130,6 @@ angular.module('iron-test').controller('AssertionsController', ['$scope', 'Asser
       createAssertion(assertion);
     };
 
-    $scope.assertionsModelObj.update = function(isValid) {
-      if (isValid) {
-        $scope.assertionsModelObj.assertion.$update({
-          testcaseId: $stateParams.testcaseId,
-          teststepId: $stateParams.teststepId
-        }, function(response) {
-          $scope.$parent.savingStatus.saveSuccessful = true;
-          $scope.assertionsModelObj.assertion = response;
-        }, function(error) {
-          $scope.$parent.savingStatus.savingErrorMessage = error.data.message;
-          $scope.$parent.savingStatus.saveSuccessful = false;
-        });
-      } else {
-        $scope.$parent.savingStatus.submitted = true;
-      }
-    };
-
     //  update assertion without validating whole form and displaying saving successful message
     var assertionUpdateInBackground = function() {
       $scope.assertionsModelObj.assertion.$update({
@@ -134,13 +140,6 @@ angular.module('iron-test').controller('AssertionsController', ['$scope', 'Asser
       }, function(error) {
         alert('Error');
       });
-    };
-
-    $scope.assertionsModelObj.autoSave = function(isValid) {
-      if (timer) $timeout.cancel(timer);
-      timer = $timeout(function() {
-        $scope.assertionsModelObj.update(isValid);
-      }, 2000);
     };
 
     var createNamespacePrefix = function(gridMenuEvent) {
