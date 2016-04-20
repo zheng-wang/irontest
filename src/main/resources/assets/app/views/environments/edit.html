@@ -11,28 +11,7 @@
       <label class="back-link"><a ui-sref="environment_all">Back</a>                    </label>
     </h3>
   </div>
-  <uib-tabset>
-    <uib-tab heading="Endpoints">
-      <div class="form-group"></div> <!-- spacer -->
-      <div class="row">
-        <div class="btn-group col-lg-2" uib-dropdown keyboard-nav>
-          <button type="button" class="btn btn-info dropdown-toggle" uib-dropdown-toggle ng-disabled="disabled">
-            Create <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu" uib-dropdown-menu role="menu">
-            <li role="menuitem"><a ui-sref="endpoint_create_soap({environmentId: environment.id})">SOAP Endpoint</a></li>
-            <li role="menuitem"><a ui-sref="endpoint_create_db({environmentId: environment.id})">Database Endpoint</a></li>
-            <li role="menuitem"><a href="#">HTTP Endpoint</a></li>
-            <li role="menuitem"><a href="#">MQ Queue Manager Endpoint</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="form-group"></div> <!-- spacer -->
-      <div class="row">
-        <div ui-grid="{paginationPageSizes: [10,20,50,100], paginationPageSize: 10, enableFiltering: true, data: environment.endpoints, columnDefs: endpointGridColumnDefs}"
-             ui-grid-pagination ui-grid-resize-columns ui-grid-move-columns class="ui-grid"></div>
-      </div>
-    </uib-tab>
+  <uib-tabset active="1">
     <uib-tab heading="Basic Info">
       <form name="environmentForm" class="form-horizontal col-lg-9" role="form" novalidate>
         <div class="form-group"></div> <!-- spacer -->
@@ -54,6 +33,27 @@
           </div>
         </div>
       </form>
+    </uib-tab>
+    <uib-tab heading="Endpoints">
+      <div class="form-group"></div> <!-- spacer -->
+      <div class="row">
+        <div class="btn-group col-lg-2" uib-dropdown keyboard-nav>
+          <button type="button" class="btn btn-info dropdown-toggle" uib-dropdown-toggle ng-disabled="disabled">
+            Create <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" uib-dropdown-menu role="menu">
+            <li role="menuitem"><a ui-sref="endpoint_create_soap({environmentId: environment.id})">SOAP Endpoint</a></li>
+            <li role="menuitem"><a ui-sref="endpoint_create_db({environmentId: environment.id})">Database Endpoint</a></li>
+            <li role="menuitem"><a href="#">HTTP Endpoint</a></li>
+            <li role="menuitem"><a href="#">MQ Queue Manager Endpoint</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="form-group"></div> <!-- spacer -->
+      <div class="row">
+        <div ui-grid="{paginationPageSizes: [10,20,50,100], paginationPageSize: 10, enableFiltering: true, data: environment.endpoints, columnDefs: endpointGridColumnDefs}"
+             ui-grid-pagination ui-grid-resize-columns ui-grid-move-columns class="ui-grid"></div>
+      </div>
     </uib-tab>
   </uib-tabset>
 
