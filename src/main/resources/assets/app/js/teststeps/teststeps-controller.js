@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('iron-test').controller('TeststepsController', ['$scope', 'Teststeps', '$stateParams', '$timeout',
-  function($scope, Teststeps, $stateParams, $timeout) {
+    '$uibModal',
+  function($scope, Teststeps, $stateParams, $timeout, $uibModal) {
     $scope.teststep = {};
 
     var timer;
@@ -40,6 +41,26 @@ angular.module('iron-test').controller('TeststepsController', ['$scope', 'Testst
         $scope.teststep = response;
       }, function(error) {
         alert('Error');
+      });
+    };
+
+    $scope.selectManagedEndpoint = function(endpointType) {
+      var modalInstance = $uibModal.open({
+        templateUrl: '/ui/views/endpoints/list-modal.html',
+        controller: 'EndpointsModalController',
+        size: 'lg',
+        resolve: {
+          endpointType: function () {
+            return endpointType;
+          }
+        }
+      });
+
+      modalInstance.result.then(function (selectedEndpoint) {
+        $scope.teststep.endpoint = selectedEndpoint;
+        $scope.autoSave(true);
+      }, function () {
+        //  Modal dismissed
       });
     };
   }

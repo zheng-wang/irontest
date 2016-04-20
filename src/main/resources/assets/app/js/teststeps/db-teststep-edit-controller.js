@@ -3,8 +3,8 @@
 //  NOTICE:
 //    The $scope here prototypically inherits from the $scope of teststeps-controller.js.
 //    ng-include also creates a scope.
-angular.module('iron-test').controller('DBTeststepEditController', ['$scope', 'Testruns', '$state', '$uibModal',
-  function($scope, Testruns, $state, $uibModal) {
+angular.module('iron-test').controller('DBTeststepEditController', ['$scope', 'Testruns', '$state',
+  function($scope, Testruns, $state) {
     //  -1 when the request is a SQL select statement; > -1 when request is a SQL insert/update/delete statement.
     $scope.numberOfRowsModified = -1;
 
@@ -19,26 +19,6 @@ angular.module('iron-test').controller('DBTeststepEditController', ['$scope', 'T
 
     $scope.evaluateDataSet = function() {
       $scope.$broadcast('evaluateDataSet', $scope.responseOptions.data);
-    };
-
-    $scope.selectManagedEndpoint = function() {
-      var modalInstance = $uibModal.open({
-        templateUrl: '/ui/views/endpoints/list-modal.html',
-        controller: 'EndpointsModalController',
-        size: 'lg',
-        resolve: {
-          endpointType: function () {
-            return 'DB';
-          }
-        }
-      });
-
-      modalInstance.result.then(function (selectedEndpoint) {
-        $scope.$parent.teststep.endpoint = selectedEndpoint;
-        $scope.autoSave(true);
-      }, function () {
-        //  Modal dismissed
-      });
     };
 
     $scope.invoke = function(teststep) {
