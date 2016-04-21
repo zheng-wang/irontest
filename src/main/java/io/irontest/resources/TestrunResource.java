@@ -2,16 +2,17 @@ package io.irontest.resources;
 
 import io.irontest.core.assertion.AssertionVerifier;
 import io.irontest.core.assertion.AssertionVerifierFactory;
-import io.irontest.db.*;
+import io.irontest.db.AssertionDAO;
+import io.irontest.db.EndpointDAO;
+import io.irontest.db.TeststepDAO;
+import io.irontest.db.UtilsDAO;
 import io.irontest.handlers.HandlerFactory;
 import io.irontest.models.Endpoint;
-import io.irontest.models.Testcase;
 import io.irontest.models.Testrun;
 import io.irontest.models.Teststep;
 import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.AssertionVerification;
 import io.irontest.models.assertion.AssertionVerificationResult;
-import io.irontest.models.assertion.EvaluationResult;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -23,17 +24,13 @@ import java.util.List;
 @Path("/testruns") @Produces({ MediaType.APPLICATION_JSON })
 public class TestrunResource {
     private final EndpointDAO endpointDao;
-    private final EndpointDetailDAO endpointdtlDao;
-    private final TestcaseDAO testcaseDao;
     private final TeststepDAO teststepDao;
     private final AssertionDAO assertionDao;
     private final UtilsDAO utilsDAO;
 
-    public TestrunResource(EndpointDAO endpointDao, EndpointDetailDAO endpointdtlDao, TestcaseDAO testcaseDao,
-                           TeststepDAO teststepDao, AssertionDAO assertionDao, UtilsDAO utilsDAO) {
+    public TestrunResource(EndpointDAO endpointDao, TeststepDAO teststepDao, AssertionDAO assertionDao,
+                           UtilsDAO utilsDAO) {
         this.endpointDao = endpointDao;
-        this.endpointdtlDao = endpointdtlDao;
-        this.testcaseDao = testcaseDao;
         this.teststepDao = teststepDao;
         this.assertionDao = assertionDao;
         this.utilsDAO = utilsDAO;
@@ -41,16 +38,15 @@ public class TestrunResource {
 
     @POST
     public Testrun create(Testrun testrun) throws Exception {
-        if (testrun.getTeststepId() > 0) {  //  run a test step
+        if (testrun.getTeststepId() != null) {  //  run a test step (passing invocation response back to client)
             Teststep teststep = teststepDao.findById(testrun.getTeststepId());
             Endpoint endpoint = endpointDao.findById(teststep.getEndpoint().getId());
             endpoint.setPassword(utilsDAO.decryptPassword(endpoint.getPassword()));
             Object response = HandlerFactory.getInstance().getHandler(endpoint.getType() + "Handler")
                     .invoke(testrun.getRequest(), endpoint);
             testrun.setResponse(response);
-        } else if (testrun.getTestcaseId() > 0) {    //  run a test case
+        } else if (testrun.getTestcaseId() != null) {  //  run a test case (not passing invocation responses back to client)
             long testcaseId = testrun.getTestcaseId();
-            Testcase testcase = testcaseDao.findById(testcaseId);
             List<Teststep> teststeps = teststepDao.findByTestcaseId(testcaseId);
 
             for (Teststep teststep : teststeps) {
@@ -62,9 +58,8 @@ public class TestrunResource {
 
                 System.out.println(response);
 
-                //  evaluate assertions against the invocation response
+                //  verify assertions against the invocation response
                 List<Assertion> assertions = assertionDao.findByTeststepId(teststep.getId());
-                EvaluationResult result = new EvaluationResult();
                 for (Assertion assertion : assertions) {
                     AssertionVerification verification = new AssertionVerification();
                     verification.setAssertion(assertion);
@@ -72,15 +67,11 @@ public class TestrunResource {
                     AssertionVerifier verifier = new AssertionVerifierFactory().create(assertion.getType());
                     AssertionVerificationResult verificationResult = verifier.verify(verification);
                     if (Boolean.FALSE == verificationResult.getPassed()) {
-                        result.setError("true");
+                        testrun.getFailedTeststepIds().add(teststep.getId());
                         break;
                     }
                 }
-                teststep.setResult(result);
             }
-
-            testcase.setTeststeps(teststeps);
-            testrun.setTestcase(testcase);
         }
 
         return testrun;

@@ -10,20 +10,16 @@ public class Testcase {
     private long id;
     private String name;
     private String description;
-    private Long environmentId;
-    private Environment environment;
-    private String result;
     private Date created;
     private Date updated;
     private List<Teststep> teststeps;
 
     public Testcase() {}
 
-    public Testcase(long id, String name, String description, Long environmentId, Date created, Date updated) {
+    public Testcase(long id, String name, String description, Date created, Date updated) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.environmentId = environmentId;
         this.created = created;
         this.updated = updated;
     }
@@ -50,30 +46,6 @@ public class Testcase {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Long getEnvironmentId() {
-        return environmentId;
-    }
-
-    public void setEnvironmentId(Long environmentId) {
-        this.environmentId = environmentId;
-    }
-
-    public Environment getEnvironment() {
-        return environment;
-    }
-
-    public void setEnvironment(Environment environment) {
-        this.environment = environment;
-    }
-
-    public String getResult() {
-        return result;
-    }
-
-    public void setResult(String result) {
-        this.result = result;
     }
 
     public Date getCreated() {

@@ -1,7 +1,6 @@
 package io.irontest.models;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import io.irontest.models.assertion.EvaluationResult;
 
 import java.util.Date;
 
@@ -19,7 +18,6 @@ public class Teststep {
     private String request;
     private Endpoint endpoint;
     private Properties properties;
-    private EvaluationResult result;
     private Date created;
     private Date updated;
 
@@ -112,14 +110,6 @@ public class Teststep {
 
     public Properties getProperties() {
         return properties;
-    }
-
-    public EvaluationResult getResult() {
-        return result;
-    }
-
-    public void setResult(EvaluationResult result) {
-        this.result = result;
     }
 
     @JsonDeserialize(using=TeststepPropertiesDeserializer.class)

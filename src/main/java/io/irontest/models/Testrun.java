@@ -1,59 +1,22 @@
 package io.irontest.models;
 
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Trevor Li on 7/24/15.
  */
 public class Testrun {
-    private List<Long> testcaseIds;
-    private List<Testcase> testcases;
-    private long testcaseId;
-    private Testcase testcase;
-    private List<Long> teststepIds;
-    private List<Teststep> teststeps;
-    private long teststepId;
-    private Teststep teststep;
+    //  for test step run
+    private Long teststepId;
     private String request;
     private Object response;
-    private long environmentId;
-    private Environment environment;
-    private Date created;
+
+    //  for test case run
+    private Long testcaseId;
+    private List<Long> failedTeststepIds = new ArrayList<Long>();
 
     public Testrun() {}
-
-    public List<Testcase> getTestcases() {
-        return testcases;
-    }
-
-    public void setTestcases(List<Testcase> testcases) {
-        this.testcases = testcases;
-    }
-
-    public Testcase getTestcase() {
-        return testcase;
-    }
-
-    public void setTestcase(Testcase testcase) {
-        this.testcase = testcase;
-    }
-
-    public List<Teststep> getTeststeps() {
-        return teststeps;
-    }
-
-    public void setTeststeps(List<Teststep> teststeps) {
-        this.teststeps = teststeps;
-    }
-
-    public Teststep getTeststep() {
-        return teststep;
-    }
-
-    public void setTeststep(Teststep teststep) {
-        this.teststep = teststep;
-    }
 
     public String getRequest() {
         return request;
@@ -71,59 +34,27 @@ public class Testrun {
         this.response = response;
     }
 
-    public Environment getEnvironment() {
-        return environment;
-    }
-
-    public void setEnvironment(Environment environment) {
-        this.environment = environment;
-    }
-
-    public List<Long> getTestcaseIds() {
-        return testcaseIds;
-    }
-
-    public void setTestcaseIds(List<Long> testcaseIds) {
-        this.testcaseIds = testcaseIds;
-    }
-
-    public long getTestcaseId() {
+    public Long getTestcaseId() {
         return testcaseId;
     }
 
-    public void setTestcaseId(long testcaseId) {
+    public void setTestcaseId(Long testcaseId) {
         this.testcaseId = testcaseId;
     }
 
-    public List<Long> getTeststepIds() {
-        return teststepIds;
-    }
-
-    public void setTeststepIds(List<Long> teststepIds) {
-        this.teststepIds = teststepIds;
-    }
-
-    public long getTeststepId() {
+    public Long getTeststepId() {
         return teststepId;
     }
 
-    public void setTeststepId(long teststepId) {
+    public void setTeststepId(Long teststepId) {
         this.teststepId = teststepId;
     }
 
-    public long getEnvironmentId() {
-        return environmentId;
+    public List<Long> getFailedTeststepIds() {
+        return failedTeststepIds;
     }
 
-    public void setEnvironmentId(long environmentId) {
-        this.environmentId = environmentId;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
+    public void setFailedTeststepIds(List<Long> failedTeststepIds) {
+        this.failedTeststepIds = failedTeststepIds;
     }
 }

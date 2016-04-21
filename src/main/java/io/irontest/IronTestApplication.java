@@ -9,7 +9,6 @@ import io.dropwizard.jdbi.bundles.DBIExceptionsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.irontest.core.assertion.AssertionVerifierFactory;
-import io.irontest.core.assertion.EvaluatorFactory;
 import io.irontest.db.*;
 import io.irontest.exceptions.IronTestDBIExceptionMapper;
 import io.irontest.resources.*;
@@ -52,22 +51,18 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         final IntfaceDAO intfaceDAO = jdbi.onDemand(IntfaceDAO.class);
         final EnvironmentDAO environmentDAO = jdbi.onDemand(EnvironmentDAO.class);
         final EnvEntryDAO enventryDAO = jdbi.onDemand(EnvEntryDAO.class);
-        final EndpointDetailDAO endpointdtlDAO = jdbi.onDemand(EndpointDetailDAO.class);
         final UtilsDAO utilsDAO = jdbi.onDemand(UtilsDAO.class);
 
         //  create database tables        
         articleDAO.createTableIfNotExists();
         environmentDAO.createTableIfNotExists();
         endpointDAO.createTableIfNotExists();
-        endpointdtlDAO.createTableIfNotExists();
         intfaceDAO.createTableIfNotExists();
         intfaceDAO.initSystemData();
         enventryDAO.createTableIfNotExists();
         testcaseDAO.createTableIfNotExists();
         teststepDAO.createTableIfNotExists();
         assertionDAO.createTableIfNotExists();
-
-        final EvaluatorFactory evaluatorFactory = new EvaluatorFactory();
 
         //  register REST resources
         environment.jersey().register(new ArticleResource(articleDAO));
@@ -78,8 +73,7 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         environment.jersey().register(new WSDLResource());
         environment.jersey().register(new IntfaceResource(intfaceDAO));
         environment.jersey().register(new EnvironmentResource(environmentDAO, endpointDAO));
-        environment.jersey().register(new TestrunResource(endpointDAO, endpointdtlDAO, testcaseDAO, teststepDAO,
-                assertionDAO, utilsDAO));
+        environment.jersey().register(new TestrunResource(endpointDAO, teststepDAO, assertionDAO, utilsDAO));
 
         //  register JSON services
         environment.jersey().register(new JSONService(new AssertionVerifierFactory(), endpointDAO));

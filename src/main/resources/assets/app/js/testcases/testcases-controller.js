@@ -1,10 +1,8 @@
 'use strict';
 
 angular.module('iron-test').controller('TestcasesController', ['$scope', 'Testcases', 'Teststeps', 'Testruns',
-    '$stateParams', '$state', 'uiGridConstants', '$timeout', '$location', 'PageNavigation',
-  function($scope, Testcases, Teststeps, Testruns, $stateParams, $state, uiGridConstants, $timeout, $location,
-      PageNavigation) {
-
+    '$stateParams', '$state', 'uiGridConstants', '$timeout',
+  function($scope, Testcases, Teststeps, Testruns, $stateParams, $state, uiGridConstants, $timeout) {
     $scope.saveSuccessful = null;
     var timer;
     $scope.autoSave = function(isValid) {
@@ -46,7 +44,7 @@ angular.module('iron-test').controller('TestcasesController', ['$scope', 'Testca
         cellTemplate: 'teststepGridDeleteCellTemplate.html'
       },
       {
-        name: 'result.error', displayName: 'Result', width: 100, minWidth: 80,
+        name: 'result', width: 100, minWidth: 80,
         cellTemplate: 'teststepGridResultCellTemplate.html'
       }
     ];
@@ -89,25 +87,12 @@ angular.module('iron-test').controller('TestcasesController', ['$scope', 'Testca
       });
     };
 
-    $scope.goto = function(state, params, expect) {
-      var context = {
-        model: $scope.testcase,
-        url: $location.path(),
-        expect: expect
-      };
-
-      PageNavigation.contexts.push(context);
-
-      $state.go(state, params);
-    };
-
     $scope.run = function() {
       var testrun = new Testruns({
-        testcaseId: $scope.testcase.id,
-        environmentId: $scope.testcase.environmentId
+        testcaseId: $scope.testcase.id
       });
       testrun.$save(function(response) {
-        $scope.testcase = response.testcase;
+        $scope.failedTeststepIds = response.failedTeststepIds;
       },function(error) {
         alert('Error');
       });
