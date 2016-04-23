@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('iron-test').controller('EnvironmentsController', ['$scope', 'Environments',
-    'PageNavigation', '$location', '$stateParams', '$state', 'uiGridConstants', '$timeout', 'Endpoints',
-  function($scope, Environments, PageNavigation, $location, $stateParams, $state, uiGridConstants, $timeout, Endpoints) {
+    '$stateParams', '$state', 'uiGridConstants', '$timeout', 'Endpoints',
+  function($scope, Environments, $stateParams, $state, uiGridConstants, $timeout, Endpoints) {
 
     $scope.saveSuccessful = null;
     var timer;

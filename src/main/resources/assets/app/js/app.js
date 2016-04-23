@@ -30,16 +30,3 @@ angular.module('iron-test', ['ngResource', 'ui.router', 'schemaForm', 'ui.grid',
             }).removeClass('active');
         });
     });
-
-angular.module('iron-test').factory('PageNavigation', [
-    function() {
-        var navigation = {
-            contexts: [],
-            returns: []
-        };
-        
-        this.navigation = navigation;
-
-        return navigation;
-    }
-]);
