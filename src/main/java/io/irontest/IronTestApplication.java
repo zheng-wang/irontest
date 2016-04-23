@@ -48,18 +48,13 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         final TestcaseDAO testcaseDAO = jdbi.onDemand(TestcaseDAO.class);
         final TeststepDAO teststepDAO = jdbi.onDemand(TeststepDAO.class);
         final AssertionDAO assertionDAO = jdbi.onDemand(AssertionDAO.class);
-        final IntfaceDAO intfaceDAO = jdbi.onDemand(IntfaceDAO.class);
         final EnvironmentDAO environmentDAO = jdbi.onDemand(EnvironmentDAO.class);
-        final EnvEntryDAO enventryDAO = jdbi.onDemand(EnvEntryDAO.class);
         final UtilsDAO utilsDAO = jdbi.onDemand(UtilsDAO.class);
 
         //  create database tables        
         articleDAO.createTableIfNotExists();
         environmentDAO.createTableIfNotExists();
         endpointDAO.createTableIfNotExists();
-        intfaceDAO.createTableIfNotExists();
-        intfaceDAO.initSystemData();
-        enventryDAO.createTableIfNotExists();
         testcaseDAO.createTableIfNotExists();
         teststepDAO.createTableIfNotExists();
         assertionDAO.createTableIfNotExists();
@@ -71,7 +66,6 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         environment.jersey().register(new TeststepResource(teststepDAO, endpointDAO));
         environment.jersey().register(new AssertionResource(assertionDAO));
         environment.jersey().register(new WSDLResource());
-        environment.jersey().register(new IntfaceResource(intfaceDAO));
         environment.jersey().register(new EnvironmentResource(environmentDAO, endpointDAO));
         environment.jersey().register(new TestrunResource(endpointDAO, teststepDAO, assertionDAO, utilsDAO));
 

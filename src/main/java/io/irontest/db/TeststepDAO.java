@@ -20,7 +20,6 @@ public abstract class TeststepDAO {
             "id INT PRIMARY KEY auto_increment, testcase_id INT, name varchar(200), description clob, " +
             "created timestamp DEFAULT CURRENT_TIMESTAMP, updated timestamp DEFAULT CURRENT_TIMESTAMP, " +
             "type varchar(20), request clob, properties clob, " +
-            "intfaceId int, FOREIGN KEY (intfaceId) REFERENCES intface(id), " +
             "endpoint_id int, FOREIGN KEY (endpoint_id) REFERENCES endpoint(id), " +
             "FOREIGN KEY (testcase_id) REFERENCES testcase(id) ON DELETE CASCADE)")
     public abstract void createTableIfNotExists();
@@ -55,14 +54,10 @@ public abstract class TeststepDAO {
     @SqlUpdate("delete from teststep where id = :id")
     public abstract void deleteById(@Bind("id") long id);
 
-    @SqlQuery("select teststep.*, intface.name as intfaceName from teststep " +
-            "left outer join intface on teststep.intfaceId = intface.id " +
-            "where teststep.id = :id")
+    @SqlQuery("select * from teststep where id = :id")
     public abstract Teststep findById(@Bind("id") long id);
 
-    @SqlQuery("select teststep.*, intface.name as intfaceName from teststep " +
-            "left outer join intface on teststep.intfaceId = intface.id " +
-            "where teststep.testcase_id = :testcaseId")
+    @SqlQuery("select * from teststep where testcase_id = :testcaseId")
     public abstract List<Teststep> findByTestcaseId(@Bind("testcaseId") long testcaseId);
 
     @SqlQuery("select id, testcase_id, name, type, description from teststep where testcase_id = :testcaseId")
