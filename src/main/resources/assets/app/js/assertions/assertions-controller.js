@@ -191,16 +191,16 @@ angular.module('iron-test').controller('AssertionsController', ['$scope', 'Asser
       };
       $http
         .post(url, assertionVerification)
-        .success(function(response, status) {
-          $scope.assertionsModelObj.assertionVerificationResult = response;
+        .then(function successCallback(response) {
+          var data = response.data;
+          $scope.assertionsModelObj.assertionVerificationResult = data;
 
           if (assertion.type === 'XPath') {
             $scope.assertionsModelObj.tempData.assertionXPathActualValue =
-              response.error ? response.error : response.actualValue;
-            $scope.assertionsModelObj.tempData.assertionXPathActualValueError = response.error;
+              data.error ? data.error : data.actualValue;
+            $scope.assertionsModelObj.tempData.assertionXPathActualValueError = data.error;
           }
-        })
-        .error(function(response, status) {
+        }, function errorCallback(response) {
           alert('Error');
         });
     };

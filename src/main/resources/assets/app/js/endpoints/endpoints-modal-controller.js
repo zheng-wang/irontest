@@ -26,10 +26,9 @@ angular.module('iron-test').controller('EndpointsModalController', ['$scope', '$
       var url = 'api/jsonservice/findManagedEndpointsByType?type=' + $scope.endpointType;
       $http
         .get(url)
-        .success(function(response, status) {
-          $scope.endpoints = response;
-        })
-        .error(function(response, status) {
+        .then(function successCallback(response) {
+          $scope.endpoints = response.data;
+        }, function errorCallback(response) {
           alert('Error');
         });
     };

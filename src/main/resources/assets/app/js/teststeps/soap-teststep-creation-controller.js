@@ -10,13 +10,12 @@ angular.module('iron-test').controller('SOAPTeststepCreationController', ['$scop
             wsdlUrl: $scope.wsdlUrl
           }
         })
-        .success(function(data, status) {
-          $scope.wsdlBindings = data;
+        .then(function successCallback(response) {
+          $scope.wsdlBindings = response.data;
           $scope.wsdlBinding = $scope.wsdlBindings[0];
           $scope.wsdlOperations = $scope.wsdlBindings[0].operations;
           $scope.wsdlOperation = $scope.wsdlOperations[0];
-        })
-        .error(function(data, status) {
+        }, function errorCallback(response) {
           alert('Error');
         });
     };

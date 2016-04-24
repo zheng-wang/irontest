@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('iron-test').controller('DSAssertionsController', ['$scope', 'Assertions',
-  '$stateParams', 'uiGridConstants', 'uiGridEditConstants', '$timeout', 'IronTestUtils', '$http', '_',
-  function($scope, Assertions, $stateParams, uiGridConstants, uiGridEditConstants, $timeout, IronTestUtils, $http, _) {
+  '$stateParams', 'uiGridConstants', '$timeout', 'IronTestUtils', '_',
+  function($scope, Assertions, $stateParams, uiGridConstants, $timeout, IronTestUtils, _) {
     //  use assertionsModelObj for all variables in the scope, to avoid conflict with parent scope
     $scope.assertionsModelObj = {};
 
