@@ -5,7 +5,7 @@ angular.module('underscore', [])
     }]);
 
 // Declare app level module dependencies
-angular.module('iron-test', ['ngResource', 'ui.router', 'schemaForm', 'ui.grid', 'ui.grid.resizeColumns',
+angular.module('iron-test', ['ngResource', 'ui.router', 'ui.grid', 'ui.grid.resizeColumns',
         'ui.grid.moveColumns', 'ui.grid.pagination', 'ui.grid.edit', 'ui.grid.selection', 'ui.bootstrap', 'underscore'])
     .config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
         // set default(home) view
