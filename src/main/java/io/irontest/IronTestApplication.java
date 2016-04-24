@@ -13,7 +13,10 @@ import io.irontest.db.*;
 import io.irontest.exceptions.IronTestDBIExceptionMapper;
 import io.irontest.resources.*;
 import io.irontest.ws.ArticleSOAP;
+import org.glassfish.jersey.filter.LoggingFilter;
 import org.skife.jdbi.v2.DBI;
+
+import java.util.logging.Logger;
 
 /**
  * Created by Zheng on 20/06/2015.
@@ -72,10 +75,13 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         //  register JSON services
         environment.jersey().register(new JSONService(new AssertionVerifierFactory(), endpointDAO));
 
-        //  register exception mappers
-        environment.jersey().register(new IronTestDBIExceptionMapper());
-
         //  register SOAP web services
         jaxWsBundle.publishEndpoint(new EndpointBuilder("/article", new ArticleSOAP(articleDAO)));
+
+        //  register jersey LoggingFilter
+        environment.jersey().register(new LoggingFilter(Logger.getLogger(LoggingFilter.class.getName()), true));
+
+        //  register exception mappers
+        environment.jersey().register(new IronTestDBIExceptionMapper());
     }
 }

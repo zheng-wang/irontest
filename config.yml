@@ -9,6 +9,29 @@ server:
   adminConnectors:
     - type: http
       port: 8082
+  requestLog:
+    appenders:
+      - type: console
+      - type: file
+        currentLogFilename: ./logs/request.log
+        archivedLogFilenamePattern: ./logs/request-%d.log.gz
+        archivedFileCount: 10
+
+logging:
+  loggers:
+    org.glassfish.jersey.filter.LoggingFilter:
+      additive: false
+      appenders:
+        - type: file
+          currentLogFilename: ./logs/api.log
+          archivedLogFilenamePattern: ./logs/api-%d.log.gz
+          archivedFileCount: 10
+  appenders:
+    - type: console
+    - type: file
+      currentLogFilename: ./logs/main.log
+      archivedLogFilenamePattern: ./logs/main-%d.log.gz
+      archivedFileCount: 10
 
 # Database settings.
 database:

@@ -13,6 +13,8 @@ import io.irontest.models.Teststep;
 import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.AssertionVerification;
 import io.irontest.models.assertion.AssertionVerificationResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -23,6 +25,7 @@ import java.util.List;
  */
 @Path("/testruns") @Produces({ MediaType.APPLICATION_JSON })
 public class TestrunResource {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TestrunResource.class);
     private final EndpointDAO endpointDao;
     private final TeststepDAO teststepDao;
     private final AssertionDAO assertionDao;
@@ -39,6 +42,7 @@ public class TestrunResource {
     @POST
     public Testrun create(Testrun testrun) throws Exception {
         if (testrun.getTeststepId() != null) {  //  run a test step (passing invocation response back to client)
+            LOGGER.info("Running an individual test step.");
             Teststep teststep = teststepDao.findById(testrun.getTeststepId());
             Endpoint endpoint = endpointDao.findById(teststep.getEndpoint().getId());
             endpoint.setPassword(utilsDAO.decryptPassword(endpoint.getPassword()));
@@ -46,6 +50,7 @@ public class TestrunResource {
                     .invoke(testrun.getRequest(), endpoint);
             testrun.setResponse(response);
         } else if (testrun.getTestcaseId() != null) {  //  run a test case (not passing invocation responses back to client)
+            LOGGER.info("Running a test case.");
             long testcaseId = testrun.getTestcaseId();
             List<Teststep> teststeps = teststepDao.findByTestcaseId(testcaseId);
 
@@ -56,7 +61,7 @@ public class TestrunResource {
                 Object response = HandlerFactory.getInstance().getHandler(endpoint.getType() + "Handler")
                         .invoke(teststep.getRequest(), endpoint);
 
-                System.out.println(response);
+                LOGGER.info(response.toString());
 
                 //  verify assertions against the invocation response
                 List<Assertion> assertions = assertionDao.findByTeststepId(teststep.getId());
