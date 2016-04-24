@@ -28,10 +28,7 @@ public class AssertionResource {
     @PUT @Path("{assertionId}")
     public Assertion update(Assertion assertion) throws JsonProcessingException {
         dao.update(assertion);
-        //  don't return dao.findById(assertion.getId()),
-        //  so that some temp state from the client such as the verificationPassed can be returned to the client,
-        //  hence not losing state on UI
-        return assertion;
+        return dao.findById(assertion.getId());
     }
 
     @GET
