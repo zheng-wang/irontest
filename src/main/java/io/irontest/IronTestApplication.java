@@ -5,12 +5,10 @@ import com.roskart.dropwizard.jaxws.JAXWSBundle;
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.jdbi.DBIFactory;
-import io.dropwizard.jdbi.bundles.DBIExceptionsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.irontest.core.assertion.AssertionVerifierFactory;
 import io.irontest.db.*;
-import io.irontest.exceptions.IronTestDBIExceptionMapper;
 import io.irontest.resources.*;
 import io.irontest.ws.ArticleSOAP;
 import org.glassfish.jersey.filter.LoggingFilter;
@@ -36,7 +34,6 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
     @Override
     public void initialize(Bootstrap<IronTestConfiguration> bootstrap) {
         bootstrap.addBundle(new AssetsBundle("/assets/app", "/ui"));
-        bootstrap.addBundle(new DBIExceptionsBundle());
         bootstrap.addBundle(jaxWsBundle);
     }
 
@@ -82,6 +79,6 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         environment.jersey().register(new LoggingFilter(Logger.getLogger(LoggingFilter.class.getName()), true));
 
         //  register exception mappers
-        environment.jersey().register(new IronTestDBIExceptionMapper());
+        environment.jersey().register(new IronTestLoggingExceptionMapper());
     }
 }
