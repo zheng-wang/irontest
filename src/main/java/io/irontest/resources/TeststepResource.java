@@ -7,7 +7,7 @@ import io.irontest.models.Endpoint;
 import io.irontest.models.Properties;
 import io.irontest.models.SOAPTeststepProperties;
 import io.irontest.models.Teststep;
-import io.irontest.parsers.ParserFactory;
+import io.irontest.utils.WSDLParser;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -27,29 +27,7 @@ public class TeststepResource {
 
     @POST
     public Teststep create(Teststep teststep) throws JsonProcessingException {
-        Properties properties = teststep.getProperties();
-
-        String parserName = "DBInterface";
-        if (Teststep.TEST_STEP_TYPE_SOAP.equals(teststep.getType())) {
-            parserName = "WSDL";
-        }
-
-        String sampleRequest = ParserFactory.getInstance().getParser(parserName).getSampleRequest(properties);
-        teststep.setRequest(sampleRequest);
-
-        //  create unmanaged endpoint
-        Endpoint endpoint = new Endpoint();
-        if (Teststep.TEST_STEP_TYPE_SOAP.equals(teststep.getType())) {
-            String adhocAddress = ParserFactory.getInstance().getParser(parserName).getAdhocAddress(properties);
-            endpoint.setType(Endpoint.ENDPOINT_TYPE_SOAP);
-            endpoint.setUrl(adhocAddress);
-        } else if (Teststep.TEST_STEP_TYPE_DB.equals(teststep.getType())) {
-            endpoint.setType(Endpoint.TEST_STEP_TYPE_DB);
-        }
-        endpoint.setDescription("Unmanaged " + endpoint.getType() + " Endpoint");
-        long endpointId = endpointDAO.insertUnmanagedEndpoint(endpoint);
-        endpoint.setId(endpointId);
-        teststep.setEndpoint(endpoint);
+        preCreationProcess(teststep);
 
         //  create test step
         long id = teststepDAO.insert(teststep);
@@ -57,6 +35,33 @@ public class TeststepResource {
         teststep.setRequest(null);  //  no need to bring request to client at this point
 
         return teststep;
+    }
+
+    //  adding more info to the teststep object
+    private void preCreationProcess(Teststep teststep) {
+        Properties properties = teststep.getProperties();
+
+        //  create sample request
+        String sampleRequest = null;
+        if (Teststep.TEST_STEP_TYPE_SOAP.equals(teststep.getType())) {
+            sampleRequest = WSDLParser.getSampleRequest((SOAPTeststepProperties) properties);
+        } else if (Teststep.TEST_STEP_TYPE_DB.equals(teststep.getType())){
+            sampleRequest = "select * from ? where ?";
+        }
+        teststep.setRequest(sampleRequest);
+
+        //  create unmanaged endpoint
+        Endpoint endpoint = new Endpoint();
+        if (Teststep.TEST_STEP_TYPE_SOAP.equals(teststep.getType())) {
+            endpoint.setType(Endpoint.ENDPOINT_TYPE_SOAP);
+            endpoint.setUrl(WSDLParser.getAdhocAddress((SOAPTeststepProperties) properties));
+        } else if (Teststep.TEST_STEP_TYPE_DB.equals(teststep.getType())) {
+            endpoint.setType(Endpoint.TEST_STEP_TYPE_DB);
+        }
+        endpoint.setDescription("Unmanaged " + endpoint.getType() + " Endpoint");
+        long endpointId = endpointDAO.insertUnmanagedEndpoint(endpoint);
+        endpoint.setId(endpointId);
+        teststep.setEndpoint(endpoint);
     }
 
     @GET
