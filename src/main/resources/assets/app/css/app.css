@@ -6,15 +6,15 @@
 }
 
 .page-header small {
-    font-size: 55%;
-    float: right;
+  font-size: 55%;
+  float: right;
 }
 
 .page-header .back-link {
-    white-space: pre;
-    float: right;
-    font-size: 75%;
-    font-weight: normal;
+  white-space: pre;
+  float: right;
+  font-size: 75%;
+  font-weight: normal;
 }
 
 /* custom bootstrap class (for tabs) */
@@ -25,137 +25,141 @@
 }
 
 .successful-message {
-    opacity: 0;
-    color: green;
-    font-size: 60%;
+  opacity: 0;
+  color: green;
+  font-size: 60%;
 }
 
 .failure-message {
-    color: red;
-    font-size: 60%;
+  color: red;
+  font-size: 60%;
 }
 
 .successful-message-animation {
-    animation-name: successful-message-show, successful-message-hide;
-    animation-duration: 2s, 2s;
-    animation-timing-function: ease, ease;
-    animation-delay: 0s, 2s;
+  animation-name: successful-message-show, successful-message-hide;
+  animation-duration: 2s, 2s;
+  animation-timing-function: ease, ease;
+  animation-delay: 0s, 2s;
 }
 
 @keyframes successful-message-show {
-    from {opacity: 0;}
-    to {opacity: 1;}
+  from {opacity: 0;}
+  to {opacity: 1;}
 }
 
 @keyframes successful-message-hide {
-    from {opacity: 1;}
-    to {opacity: 0;}
+  from {opacity: 1;}
+  to {opacity: 0;}
 }
 
 .testcase-grid {
-    height: 500px;
+  height: 500px;
 }
 
 .environment-grid {
-    height: 500px;
+  height: 500px;
 }
 
 .ws-uiview {
-    height: 800px;
+  height: 800px;
 }
 
 .spacer-top-40 {
-    margin-top: 40px; /* define margin as you see fit */
+  margin-top: 40px; /* define margin as you see fit */
 }
 
 .spacer-top-20 {
-    margin-top: 20px; /* define margin as you see fit */
+  margin-top: 20px; /* define margin as you see fit */
 }
 
 .spacer-bottom-0 {
-    margin-bottom: 0px; /* define margin as you see fit */
+  margin-bottom: 0px; /* define margin as you see fit */
 }
 
 .updated-date {
-    padding-bottom: 0px;
-    margin: 50px 0 20px;
+  padding-bottom: 0px;
+  margin: 50px 0 20px;
 }
 
 .full-height {
-    height: 100%;
+  height: 100%;
 }
 
 .full-height-important {
-    height: 100% !important;
+  height: 100% !important;
 }
 
 .assertions-area-content {
-    width: 98%;
-    margin-left: 15px;
-    padding: 10px;
-    border: 1px solid #ccc
+  width: 98%;
+  margin-left: 15px;
+  padding: 10px;
+  border: 1px solid #ccc
 }
 
 .assertions-grid {
-    height: 210px;
-    margin-left: 15px;
-    padding-left: 0px;
-    padding-right: 0px;
+  height: 210px;
+  margin-left: 15px;
+  padding-left: 0px;
+  padding-right: 0px;
 }
 
 .dbresponse-grid {
-    height: 200px;
+  height: 200px;
 }
 
 .no-bottom-margin {
-    margin-bottom: 0px;
+  margin-bottom: 0px;
 }
 
 .no-left-margin {
-    margin-left: 0px !important;
+  margin-left: 0px !important;
 }
 
 .no-right-margin {
-    margin-right: 0px !important;
+  margin-right: 0px !important;
 }
 
 .no-left-padding {
-    padding-left: 0px;
+  padding-left: 0px;
 }
 
 .no-right-padding {
-    padding-right: 0px;
+  padding-right: 0px;
 }
 
 .form-group-reduced-bottom-margin {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 .xpath-assertion-namespace-prefixes-grid {
-    height: 110px;
+  height: 110px;
 }
 
 .xpath-assertion-namespace-prefixes-grid .ui-grid-cell-contents {
-    padding-top: 0px;
-    padding-bottom: 0px;
+  padding-top: 0px;
+  padding-bottom: 0px;
 }
 
 .xpath-assertion-namespace-prefixes-grid .ui-grid-menu-button {
-    height: 20px;
+  height: 20px;
 }
 
 .background-color-inherit {
-    background-color: inherit !important;
+  background-color: inherit !important;
 }
 
 .text-red {
-    color: red;
+  color: red;
 }
 
 .background-red {
-    background-color: red;
+  background-color: red;
 }
 
 .background-green {
-    background-color: lime;
+  background-color: lime;
+}
+
+.error-message-modal {
+  top: 20%;
 }
