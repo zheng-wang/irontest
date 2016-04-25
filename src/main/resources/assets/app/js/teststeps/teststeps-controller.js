@@ -9,7 +9,6 @@ angular.module('iron-test').controller('TeststepsController', ['$scope', 'Testst
     //  use object instead of primitives, so that child scope can update the values
     $scope.savingStatus = {
       saveSuccessful: null,
-      savingErrorMessage: null
     };
 
     $scope.autoSave = function(isValid) {
@@ -24,9 +23,8 @@ angular.module('iron-test').controller('TeststepsController', ['$scope', 'Testst
         $scope.teststep.$update(function(response) {
           $scope.savingStatus.saveSuccessful = true;
           $scope.teststep = response;
-        }, function(error) {
-          $scope.savingStatus.savingErrorMessage = error.data.message;
-          $scope.savingStatus.saveSuccessful = false;
+        }, function(response) {
+          IronTestUtils.openErrorMessageModal(response);
         });
       } else {
         $scope.savingStatus.submitted = true;

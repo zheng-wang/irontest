@@ -1,9 +1,6 @@
 <div ng-controller="TestcasesController" ng-init="findOne()">
   <div class="row">
     <h3 class="page-header">Test Case - {{testcase.name}}
-      <label class="col-lg-offset-1 failure-message" ng-show="saveSuccessful !== null && !saveSuccessful">
-        Failed to save. {{savingErrorMessage}}
-      </label>
       <label class="col-lg-offset-1" successful-message ng-class="{ 'successful-message-animation' : saveSuccessful }">
         Successfully saved
       </label>

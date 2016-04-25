@@ -80,9 +80,8 @@ angular.module('iron-test').controller('DSAssertionsController', ['$scope', 'Ass
         }, function(response) {
           $scope.$parent.savingStatus.saveSuccessful = true;
           $scope.assertionsModelObj.assertion = response;
-        }, function(error) {
-          $scope.$parent.savingStatus.savingErrorMessage = error.data.message;
-          $scope.$parent.savingStatus.saveSuccessful = false;
+        }, function(response) {
+          IronTestUtils.openErrorMessageModal(response);
         });
       } else {
         $scope.$parent.savingStatus.submitted = true;

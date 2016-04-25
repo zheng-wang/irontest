@@ -69,9 +69,8 @@ angular.module('iron-test').controller('EnvironmentsController', ['$scope', 'Env
         $scope.environment.$update(function(response) {
           $scope.saveSuccessful = true;
           $scope.environment = response;
-        }, function(error) {
-          $scope.savingErrorMessage = error.data.message;
-          $scope.saveSuccessful = false;
+        }, function(response) {
+          IronTestUtils.openErrorMessageModal(response);
         });
       } else {
         $scope.submitted = true;

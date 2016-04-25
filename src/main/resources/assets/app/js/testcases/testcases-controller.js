@@ -54,9 +54,8 @@ angular.module('iron-test').controller('TestcasesController', ['$scope', 'Testca
         $scope.testcase.$update(function(response) {
           $scope.saveSuccessful = true;
           $scope.testcase = response;
-        }, function(error) {
-          $scope.savingErrorMessage = error.data.message;
-          $scope.saveSuccessful = false;
+        }, function(response) {
+          IronTestUtils.openErrorMessageModal(response);
         });
       } else {
         $scope.submitted = true;

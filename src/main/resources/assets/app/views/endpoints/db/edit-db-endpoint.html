@@ -1,9 +1,5 @@
 <div class="row" id="page-header">
   <h3 class="page-header">Database Endpoint - {{$parent.endpoint.name}}
-    <label class="col-lg-offset-1 failure-message"
-           ng-show="savingStatus.saveSuccessful !== null && !savingStatus.saveSuccessful">
-      Failed to save. {{savingStatus.savingErrorMessage}}
-    </label>
     <label class="col-lg-offset-1" successful-message
            ng-class="{ 'successful-message-animation' : savingStatus.saveSuccessful }">
       Successfully saved
