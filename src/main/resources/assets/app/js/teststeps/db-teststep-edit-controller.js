@@ -53,6 +53,17 @@ angular.module('iron-test').controller('DBTeststepEditController', ['$scope', 'T
           }
         }
       }, function(response) {
+        var errorMessage = null;
+        var errorDetails = null;
+
+        if (!response.data) {
+          errorMessage = 'Connection refused.';
+          errorDetails = 'Unable to talk to the server. Please contact the system administrator.';
+        } else {
+          errorMessage = response.data.message;
+          errorDetails = response.data.details;
+        }
+
         var modalInstance = $uibModal.open({
           templateUrl: '/ui/views/common/error-message-modal.html',
           controller: 'ErrorMessageModalController',
@@ -61,10 +72,10 @@ angular.module('iron-test').controller('DBTeststepEditController', ['$scope', 'T
           windowClass: 'error-message-modal',
           resolve: {
             errorMessage: function () {
-              return response.data.message;
+              return errorMessage;
             },
             errorDetails: function () {
-              return response.data.details;
+              return errorDetails;
             }
           }
         });
