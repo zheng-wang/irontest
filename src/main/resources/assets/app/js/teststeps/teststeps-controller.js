@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('iron-test').controller('TeststepsController', ['$scope', 'Teststeps', '$stateParams', '$timeout',
-    '$uibModal',
-  function($scope, Teststeps, $stateParams, $timeout, $uibModal) {
+    '$uibModal', 'IronTestUtils',
+  function($scope, Teststeps, $stateParams, $timeout, $uibModal, IronTestUtils) {
     $scope.teststep = {};
 
     var timer;
@@ -39,8 +39,8 @@ angular.module('iron-test').controller('TeststepsController', ['$scope', 'Testst
         teststepId: $stateParams.teststepId
       }, function (response) {
         $scope.teststep = response;
-      }, function(error) {
-        alert('Error');
+      }, function(response) {
+        IronTestUtils.openErrorMessageModal(response);
       });
     };
 

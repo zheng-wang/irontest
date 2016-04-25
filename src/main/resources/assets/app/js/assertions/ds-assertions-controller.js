@@ -38,8 +38,8 @@ angular.module('iron-test').controller('DSAssertionsController', ['$scope', 'Ass
             teststepId: $stateParams.teststepId
           }, function(response) {
             $scope.assertionsModelObj.gridOptions.data = response;
-          }, function(error) {
-            alert('Error');
+          }, function(response) {
+            IronTestUtils.openErrorMessageModal(response);
           });
     };
 
@@ -51,8 +51,8 @@ angular.module('iron-test').controller('DSAssertionsController', ['$scope', 'Ass
         $scope.assertionsModelObj.assertion = response;
         //  add the new assertion to the grid data
         $scope.assertionsModelObj.gridOptions.data.push(response);
-      }, function(error) {
-        alert('Error');
+      }, function(response) {
+        IronTestUtils.openErrorMessageModal(response);
       });
     };
 
@@ -111,8 +111,8 @@ angular.module('iron-test').controller('DSAssertionsController', ['$scope', 'Ass
         if ($scope.assertionsModelObj.assertion && $scope.assertionsModelObj.assertion.id === assertionId) {
           $scope.assertionsModelObj.assertion = null;
         }
-      }, function(error) {
-        alert('Error');
+      }, function(response) {
+        IronTestUtils.openErrorMessageModal(response);
       });
     };
 

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('iron-test').controller('EndpointsModalController', ['$scope', '$http',
-    'uiGridConstants', '$uibModalInstance', 'endpointType',
-  function($scope, $http, uiGridConstants, $uibModalInstance, endpointType) {
+    'uiGridConstants', '$uibModalInstance', 'endpointType', 'IronTestUtils',
+  function($scope, $http, uiGridConstants, $uibModalInstance, endpointType, IronTestUtils) {
     $scope.endpointType = endpointType;
 
     $scope.endpointModalGridColumnDefs = [
@@ -29,7 +29,7 @@ angular.module('iron-test').controller('EndpointsModalController', ['$scope', '$
         .then(function successCallback(response) {
           $scope.endpoints = response.data;
         }, function errorCallback(response) {
-          alert('Error');
+          IronTestUtils.openErrorMessageModal(response);
         });
     };
 

@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('iron-test').controller('DBTeststepCreationController', ['$scope', 'Teststeps', '$state', '$stateParams',
-  function($scope, Teststeps, $state, $stateParams) {
+    'IronTestUtils',
+  function($scope, Teststeps, $state, $stateParams, IronTestUtils) {
     $scope.create = function(isValid) {
       if (isValid) {
         var teststep = new Teststeps({
@@ -12,8 +13,8 @@ angular.module('iron-test').controller('DBTeststepCreationController', ['$scope'
         });
         teststep.$save(function(response) {
           $state.go('teststep_edit', {testcaseId: response.testcaseId, teststepId: response.id});
-        }, function(error) {
-          alert('Error');
+        }, function(response) {
+          IronTestUtils.openErrorMessageModal(response);
         });
       } else {
         $scope.submitted = true;

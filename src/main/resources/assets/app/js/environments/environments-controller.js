@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('iron-test').controller('EnvironmentsController', ['$scope', 'Environments',
-    '$stateParams', '$state', 'uiGridConstants', '$timeout', 'Endpoints',
-  function($scope, Environments, $stateParams, $state, uiGridConstants, $timeout, Endpoints) {
+    '$stateParams', '$state', 'uiGridConstants', '$timeout', 'Endpoints', 'IronTestUtils',
+  function($scope, Environments, $stateParams, $state, uiGridConstants, $timeout, Endpoints, IronTestUtils) {
 
     $scope.saveSuccessful = null;
     var timer;
@@ -56,8 +56,8 @@ angular.module('iron-test').controller('EnvironmentsController', ['$scope', 'Env
         });
         environment.$save(function(response) {
           $state.go('environment_edit', {environmentId: response.id});
-        }, function(error) {
-          alert('Error');
+        }, function(response) {
+          IronTestUtils.openErrorMessageModal(response);
         });
       } else {
         $scope.submitted = true;
@@ -81,16 +81,16 @@ angular.module('iron-test').controller('EnvironmentsController', ['$scope', 'Env
     $scope.remove = function(environment) {
       environment.$remove(function(response) {
         $state.go($state.current, {}, {reload: true});
-      }, function(error) {
-        alert('Error');
+      }, function(response) {
+        IronTestUtils.openErrorMessageModal(response);
       });
     };
 
     $scope.find = function() {
       Environments.query(function(environments) {
         $scope.environments = environments;
-      }, function(error) {
-        alert('Error');
+      }, function(response) {
+        IronTestUtils.openErrorMessageModal(response);
       });
     };
 
@@ -99,8 +99,8 @@ angular.module('iron-test').controller('EnvironmentsController', ['$scope', 'Env
         environmentId: $stateParams.environmentId
       }, function(environment) {
         $scope.environment = environment;
-      }, function(error) {
-        alert('Error');
+      }, function(response) {
+        IronTestUtils.openErrorMessageModal(response);
       });
     };
 
@@ -108,8 +108,8 @@ angular.module('iron-test').controller('EnvironmentsController', ['$scope', 'Env
       var endpointService = new Endpoints(endpoint);
       endpointService.$remove(function(response) {
         $state.go($state.current, {}, {reload: true});
-      }, function(error) {
-        alert('Error');
+      }, function(response) {
+        IronTestUtils.openErrorMessageModal(response);
       });
     };
   }

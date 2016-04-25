@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('iron-test').controller('SOAPEndpointsController', ['$scope', 'Endpoints', '$stateParams', '$state',
-  function($scope, Endpoints, $stateParams, $state) {
+    'IronTestUtils',
+  function($scope, Endpoints, $stateParams, $state, IronTestUtils) {
     $scope.create = function(isValid) {
       if (isValid) {
         var endpoint = new Endpoints({
@@ -15,8 +16,8 @@ angular.module('iron-test').controller('SOAPEndpointsController', ['$scope', 'En
         });
         endpoint.$save(function(response) {
           $state.go('environment_edit', {environmentId: response.environmentId});
-        }, function(error) {
-          alert('Error');
+        }, function(response) {
+          IronTestUtils.openErrorMessageModal(response);
         });
       } else {
         $scope.submitted = true;

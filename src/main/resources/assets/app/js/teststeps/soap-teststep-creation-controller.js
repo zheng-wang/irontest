@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('iron-test').controller('SOAPTeststepCreationController', ['$scope', 'Teststeps', '$stateParams',
-    '$state', '$http', '_',
-  function($scope, Teststeps, $stateParams, $state, $http, _) {
+    '$state', '$http', '_', 'IronTestUtils',
+  function($scope, Teststeps, $stateParams, $state, $http, _, IronTestUtils) {
     $scope.loadWsdl = function() {
       $http
         .get('api/wsdls/anywsdl/operations', {
@@ -16,7 +16,7 @@ angular.module('iron-test').controller('SOAPTeststepCreationController', ['$scop
           $scope.wsdlOperations = $scope.wsdlBindings[0].operations;
           $scope.wsdlOperation = $scope.wsdlOperations[0];
         }, function errorCallback(response) {
-          alert('Error');
+          IronTestUtils.openErrorMessageModal(response);
         });
     };
 
@@ -42,8 +42,8 @@ angular.module('iron-test').controller('SOAPTeststepCreationController', ['$scop
 
         teststep.$save(function(response) {
           $state.go('teststep_edit', {testcaseId: response.testcaseId, teststepId: response.id});
-        }, function(error) {
-          alert('Error');
+        }, function(response) {
+          IronTestUtils.openErrorMessageModal(response);
         });
       } else {
         $scope.submitted = true;

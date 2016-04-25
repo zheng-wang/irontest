@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('iron-test').controller('EndpointsController', ['$scope', 'Endpoints', '$stateParams', '$state',
-    'uiGridConstants', '$timeout',
-  function($scope, Endpoints, $stateParams, $state, uiGridConstants, $timeout) {
+    'uiGridConstants', '$timeout', 'IronTestUtils',
+  function($scope, Endpoints, $stateParams, $state, uiGridConstants, $timeout, IronTestUtils) {
     var timer;
     //  use object instead of primitives, so that child scope can update the values
     $scope.savingStatus = {
@@ -37,8 +37,8 @@ angular.module('iron-test').controller('EndpointsController', ['$scope', 'Endpoi
         endpointId: $stateParams.endpointId
       }, function(endpoint) {
         $scope.endpoint = endpoint;
-      }, function(error) {
-        alert('Error');
+      }, function(response) {
+        IronTestUtils.openErrorMessageModal(response);
       });
     };
   }

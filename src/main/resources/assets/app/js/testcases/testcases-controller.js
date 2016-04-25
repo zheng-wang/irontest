@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('iron-test').controller('TestcasesController', ['$scope', 'Testcases', 'Teststeps', 'Testruns',
-    '$stateParams', '$state', 'uiGridConstants', '$timeout',
-  function($scope, Testcases, Teststeps, Testruns, $stateParams, $state, uiGridConstants, $timeout) {
+    '$stateParams', '$state', 'uiGridConstants', '$timeout', 'IronTestUtils',
+  function($scope, Testcases, Teststeps, Testruns, $stateParams, $state, uiGridConstants, $timeout, IronTestUtils) {
     $scope.saveSuccessful = null;
     var timer;
     $scope.autoSave = function(isValid) {
@@ -71,8 +71,8 @@ angular.module('iron-test').controller('TestcasesController', ['$scope', 'Testca
         });
         testcase.$save(function(response) {
           $state.go('testcase_edit', {testcaseId: response.id});
-        }, function(error) {
-          alert('Error');
+        }, function(response) {
+          IronTestUtils.openErrorMessageModal(response);
         });
       } else {
         $scope.submitted = true;
@@ -82,8 +82,8 @@ angular.module('iron-test').controller('TestcasesController', ['$scope', 'Testca
     $scope.remove = function(testcase) {
       testcase.$remove(function(response) {
         $state.go($state.current, {}, {reload: true});
-      }, function(error) {
-        alert('Error');
+      }, function(response) {
+        IronTestUtils.openErrorMessageModal(response);
       });
     };
 
@@ -93,8 +93,8 @@ angular.module('iron-test').controller('TestcasesController', ['$scope', 'Testca
       });
       testrun.$save(function(response) {
         $scope.failedTeststepIds = response.failedTeststepIds;
-      },function(error) {
-        alert('Error');
+      },function(response) {
+        IronTestUtils.openErrorMessageModal(response);
       });
     };
 
@@ -102,16 +102,16 @@ angular.module('iron-test').controller('TestcasesController', ['$scope', 'Testca
       var teststepService = new Teststeps(teststep);
       teststepService.$remove(function(response) {
         $state.go($state.current, {}, {reload: true});
-      }, function(error) {
-        alert('Error');
+      }, function(response) {
+        IronTestUtils.openErrorMessageModal(response);
       });
     };
 
     $scope.find = function() {
       Testcases.query(function(testcases) {
         $scope.testcases = testcases;
-      }, function(error) {
-        alert('Error');
+      }, function(response) {
+        IronTestUtils.openErrorMessageModal(response);
       });
     };
 
@@ -120,8 +120,8 @@ angular.module('iron-test').controller('TestcasesController', ['$scope', 'Testca
         testcaseId: $stateParams.testcaseId
       }, function(testcase) {
         $scope.testcase = testcase;
-      }, function(error) {
-        alert('Error');
+      }, function(response) {
+        IronTestUtils.openErrorMessageModal(response);
       });
     };
   }

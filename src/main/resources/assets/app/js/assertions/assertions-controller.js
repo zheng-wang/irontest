@@ -47,8 +47,8 @@ angular.module('iron-test').controller('AssertionsController', ['$scope', 'Asser
 
           //  set current assertion to null
           $scope.assertionsModelObj.assertion = null;
-        }, function(error) {
-          alert('Error');
+        }, function(response) {
+          IronTestUtils.openErrorMessageModal(response);
         });
       }
     };
@@ -83,8 +83,8 @@ angular.module('iron-test').controller('AssertionsController', ['$scope', 'Asser
           teststepId: $stateParams.teststepId
         }, function(response) {
           $scope.assertionsModelObj.assertions = response;
-        }, function(error) {
-          alert('Error');
+        }, function(response) {
+          IronTestUtils.openErrorMessageModal(response);
         });
     };
 
@@ -100,8 +100,8 @@ angular.module('iron-test').controller('AssertionsController', ['$scope', 'Asser
         $timeout(function() {    //  a trick for newly loaded grid data
           $scope.assertionsModelObj.gridApi.selection.selectRow(response);
         });
-      }, function(error) {
-        alert('Error');
+      }, function(response) {
+        IronTestUtils.openErrorMessageModal(response);
       });
     };
 
@@ -137,8 +137,8 @@ angular.module('iron-test').controller('AssertionsController', ['$scope', 'Asser
         teststepId: $stateParams.teststepId
       }, function(response) {
         $scope.assertionsModelObj.assertion = response;
-      }, function(error) {
-        alert('Error');
+      }, function(response) {
+        IronTestUtils.openErrorMessageModal(response);
       });
     };
 
@@ -201,7 +201,7 @@ angular.module('iron-test').controller('AssertionsController', ['$scope', 'Asser
             $scope.assertionsModelObj.tempData.assertionXPathActualValueError = data.error;
           }
         }, function errorCallback(response) {
-          alert('Error');
+          IronTestUtils.openErrorMessageModal(response);
         });
     };
   }

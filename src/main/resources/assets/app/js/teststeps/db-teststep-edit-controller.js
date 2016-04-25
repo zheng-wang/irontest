@@ -29,7 +29,7 @@ angular.module('iron-test').controller('DBTeststepEditController', ['$scope', 'T
 
       var testrunRes = new Testruns(testrun);
       testrunRes.$save(function(response) {
-        var data = response.data;
+        var data = response.response;
         $scope.numberOfRowsModified = data.numberOfRowsModified;
         if (data.numberOfRowsModified === -1) {
           $scope.responseOptions.data = data.resultSet;
