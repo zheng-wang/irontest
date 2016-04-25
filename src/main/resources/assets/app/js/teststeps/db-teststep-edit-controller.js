@@ -3,8 +3,8 @@
 //  NOTICE:
 //    The $scope here prototypically inherits from the $scope of teststeps-controller.js.
 //    ng-include also creates a scope.
-angular.module('iron-test').controller('DBTeststepEditController', ['$scope', 'Testruns', '$state', '$uibModal',
-  function($scope, Testruns, $state, $uibModal) {
+angular.module('iron-test').controller('DBTeststepEditController', ['$scope', 'Testruns', 'IronTestUtils',
+  function($scope, Testruns, IronTestUtils) {
     //  -1 when the request is a SQL select statement; > -1 when request is a SQL insert/update/delete statement.
     $scope.numberOfRowsModified = -1;
 
@@ -53,32 +53,7 @@ angular.module('iron-test').controller('DBTeststepEditController', ['$scope', 'T
           }
         }
       }, function(response) {
-        var errorMessage = null;
-        var errorDetails = null;
-
-        if (!response.data) {
-          errorMessage = 'Connection refused.';
-          errorDetails = 'Unable to talk to the server. Please contact the system administrator.';
-        } else {
-          errorMessage = response.data.message;
-          errorDetails = response.data.details;
-        }
-
-        var modalInstance = $uibModal.open({
-          templateUrl: '/ui/views/common/error-message-modal.html',
-          controller: 'ErrorMessageModalController',
-          size: 'md',
-          backdrop: 'static',
-          windowClass: 'error-message-modal',
-          resolve: {
-            errorMessage: function () {
-              return errorMessage;
-            },
-            errorDetails: function () {
-              return errorDetails;
-            }
-          }
-        });
+        IronTestUtils.openErrorMessageModal(response);
       });
     };
   }
