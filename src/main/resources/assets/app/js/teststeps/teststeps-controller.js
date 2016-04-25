@@ -55,6 +55,7 @@ angular.module('iron-test').controller('TeststepsController', ['$scope', 'Testst
             templateUrl: '/ui/views/endpoints/list-modal.html',
             controller: 'EndpointsModalController',
             size: 'lg',
+            windowClass: 'select-managed-endpoint-modal',
             resolve: {
               endpoints: function () {
                 return response.data;

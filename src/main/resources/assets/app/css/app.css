@@ -163,3 +163,7 @@
 .error-message-modal {
   top: 20%;
 }
+
+.select-managed-endpoint-modal {
+  top: 15%;
+}
