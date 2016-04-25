@@ -3,8 +3,9 @@
   <div class="col-lg-10">
     <label for="soapAddress" class="col-lg-2 control-label">SOAP Address</label>
     <div class="col-lg-8">
-      <input name="soapAddress" type="text" class="form-control background-color-inherit"
-             ng-model="teststep.endpoint.url" id="soapAddress" readonly>
+      <input name="soapAddress" type="text" class="form-control" ng-change="autoSave(teststepForm.$valid)"
+             ng-model="teststep.endpoint.url" id="soapAddress"
+             ng-readonly="teststep.endpoint.environmentId">  <!-- readonly when it is a managed endpoint -->
     </div>
     <div class="col-lg-1">
       <button type="button" class="btn btn-info" ng-click="invoke()">Invoke</button>

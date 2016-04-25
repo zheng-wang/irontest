@@ -3,8 +3,9 @@
   <div class="col-lg-10">
     <label for="jdbcURL" class="col-lg-2 control-label">JDBC URL</label>
     <div class="col-lg-7">
-      <input name="jdbcURL" type="text" class="form-control background-color-inherit"
-             ng-model="teststep.endpoint.url" id="jdbcURL" readonly>
+      <input name="jdbcURL" type="text" class="form-control" ng-change="autoSave(teststepForm.$valid)"
+             ng-model="teststep.endpoint.url" id="jdbcURL"
+             ng-readonly="teststep.endpoint.environmentId">  <!-- readonly when it is a managed endpoint -->
     </div>
     <div class="col-lg-1">
       <button type="button" class="btn btn-info" ng-click="invoke(teststep)">Invoke</button>
