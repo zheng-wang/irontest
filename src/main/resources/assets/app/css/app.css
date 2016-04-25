@@ -30,11 +30,6 @@
   font-size: 60%;
 }
 
-.failure-message {
-  color: red;
-  font-size: 60%;
-}
-
 .successful-message-animation {
   animation-name: successful-message-show, successful-message-hide;
   animation-duration: 2s, 2s;
