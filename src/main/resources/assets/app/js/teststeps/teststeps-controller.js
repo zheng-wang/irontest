@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('iron-test').controller('TeststepsController', ['$scope', 'Teststeps', '$stateParams', '$timeout',
-    '$uibModal', 'IronTestUtils',
-  function($scope, Teststeps, $stateParams, $timeout, $uibModal, IronTestUtils) {
+    '$uibModal', 'IronTestUtils', '$http',
+  function($scope, Teststeps, $stateParams, $timeout, $uibModal, IronTestUtils, $http) {
     $scope.teststep = {};
 
     var timer;
@@ -45,23 +45,33 @@ angular.module('iron-test').controller('TeststepsController', ['$scope', 'Testst
     };
 
     $scope.selectManagedEndpoint = function(endpointType) {
-      var modalInstance = $uibModal.open({
-        templateUrl: '/ui/views/endpoints/list-modal.html',
-        controller: 'EndpointsModalController',
-        size: 'lg',
-        resolve: {
-          endpointType: function () {
-            return endpointType;
-          }
-        }
-      });
+      //  find managed endpoints by type
+      var url = 'api/jsonservice/findManagedEndpointsByType?type=' + endpointType;
+      $http
+        .get(url)
+        .then(function successCallback(response) {
+          //  open modal dialog
+          var modalInstance = $uibModal.open({
+            templateUrl: '/ui/views/endpoints/list-modal.html',
+            controller: 'EndpointsModalController',
+            size: 'lg',
+            resolve: {
+              endpoints: function () {
+                return response.data;
+              }
+            }
+          });
 
-      modalInstance.result.then(function (selectedEndpoint) {
-        $scope.teststep.endpoint = selectedEndpoint;
-        $scope.autoSave(true);
-      }, function () {
-        //  Modal dismissed
-      });
+          //  handle result from modal dialog
+          modalInstance.result.then(function (selectedEndpoint) {
+            $scope.teststep.endpoint = selectedEndpoint;
+            $scope.update(true);  //  save immediately (no timeout)
+          }, function () {
+            //  Modal dismissed
+          });
+        }, function errorCallback(response) {
+          IronTestUtils.openErrorMessageModal(response);
+        });
     };
   }
 ]);

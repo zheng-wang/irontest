@@ -84,6 +84,18 @@
   <script src="/ui/js/environments/environments-controller.js"></script>
   <script src="/ui/js/testruns/testruns-services.js"></script>
 
+  <!-- Always load the error message modal template, in case Iron Test server is down during using
+    and browser is unable to alert user of the error. -->
+  <script type="text/ng-template" id="errorMessageModalTemplate.html">
+    <div class="modal-header">
+      <button type="button" class="close" ng-click="close()">&times;</button>
+      <h3 class="modal-title">Error</h3>
+    </div>
+    <div class="modal-body">
+      <p>{{ errorMessage }}</p>
+      <p>Details: {{ errorDetails }}</p>
+    </div>
+  </script>
 </body>
 
 </html>

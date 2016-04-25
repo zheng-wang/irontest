@@ -35,7 +35,7 @@ angular.module('iron-test')
         }
 
         var modalInstance = $uibModal.open({
-          templateUrl: '/ui/views/common/error-message-modal.html',
+          templateUrl: 'errorMessageModalTemplate.html',
           controller: 'ErrorMessageModalController',
           size: 'md',
           backdrop: 'static',
