@@ -64,6 +64,7 @@ public class TeststepResource {
         teststep.setEndpoint(endpoint);
     }
 
+    //  Find the teststep and its associated endpoint
     @GET
     @Path("{teststepId}")
     public Teststep findById(@PathParam("teststepId") long teststepId) {
@@ -75,7 +76,7 @@ public class TeststepResource {
 
     @PUT @Path("{teststepId}")
     public Teststep update(Teststep teststep) throws JsonProcessingException {
-        Teststep oldTeststep = teststepDAO.findById(teststep.getId());
+        Teststep oldTeststep = findById(teststep.getId());
 
         teststepDAO.update(teststep);
         if (teststep.getEndpoint().getEnvironmentId() == null) {    //  this is an unmanaged endpoint, so update it
@@ -90,6 +91,10 @@ public class TeststepResource {
 
     @DELETE @Path("{teststepId}")
     public void delete(@PathParam("teststepId") long teststepId) {
+        Teststep teststep = findById(teststepId);
         teststepDAO.deleteById(teststepId);
+        if (teststep.getEndpoint().getEnvironmentId() == null) {  //  delete the teststep's endpoint if it is unmanaged
+            endpointDAO.deleteById(teststep.getEndpoint().getId());
+        }
     }
 }
