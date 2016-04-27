@@ -2,6 +2,7 @@ package io.irontest.resources;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.irontest.db.EndpointDAO;
+import io.irontest.db.TeststepAndEndpointDAO;
 import io.irontest.db.TeststepDAO;
 import io.irontest.models.Endpoint;
 import io.irontest.models.Properties;
@@ -19,19 +20,20 @@ import javax.ws.rs.core.MediaType;
 public class TeststepResource {
     private final TeststepDAO teststepDAO;
     private final EndpointDAO endpointDAO;
+    private final TeststepAndEndpointDAO teststepAndEndpointDAO;
 
-    public TeststepResource(TeststepDAO teststepDAO, EndpointDAO endpointDAO) {
+    public TeststepResource(TeststepDAO teststepDAO, EndpointDAO endpointDAO,
+                            TeststepAndEndpointDAO teststepAndEndpointDAO) {
         this.teststepDAO = teststepDAO;
         this.endpointDAO = endpointDAO;
+        this.teststepAndEndpointDAO = teststepAndEndpointDAO;
     }
 
     @POST
     public Teststep create(Teststep teststep) throws JsonProcessingException {
         preCreationProcess(teststep);
 
-        //  create test step
-        long id = teststepDAO.insert(teststep);
-        teststep.setId(id);
+        teststepAndEndpointDAO.createTeststep(teststep);
         teststep.setRequest(null);  //  no need to bring request to client at this point
 
         return teststep;
@@ -58,9 +60,6 @@ public class TeststepResource {
         } else if (Teststep.TEST_STEP_TYPE_DB.equals(teststep.getType())) {
             endpoint.setType(Endpoint.TEST_STEP_TYPE_DB);
         }
-        endpoint.setDescription("Unmanaged " + endpoint.getType() + " Endpoint");
-        long endpointId = endpointDAO.insertUnmanagedEndpoint(endpoint);
-        endpoint.setId(endpointId);
         teststep.setEndpoint(endpoint);
     }
 

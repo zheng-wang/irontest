@@ -49,6 +49,7 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         final TeststepDAO teststepDAO = jdbi.onDemand(TeststepDAO.class);
         final AssertionDAO assertionDAO = jdbi.onDemand(AssertionDAO.class);
         final EnvironmentDAO environmentDAO = jdbi.onDemand(EnvironmentDAO.class);
+        final TeststepAndEndpointDAO teststepAndEndpointDAO = jdbi.onDemand(TeststepAndEndpointDAO.class);
         final UtilsDAO utilsDAO = jdbi.onDemand(UtilsDAO.class);
 
         //  create database tables        
@@ -63,7 +64,7 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         environment.jersey().register(new ArticleResource(articleDAO));
         environment.jersey().register(new EndpointResource(endpointDAO));
         environment.jersey().register(new TestcaseResource(testcaseDAO, teststepDAO));
-        environment.jersey().register(new TeststepResource(teststepDAO, endpointDAO));
+        environment.jersey().register(new TeststepResource(teststepDAO, endpointDAO, teststepAndEndpointDAO));
         environment.jersey().register(new AssertionResource(assertionDAO));
         environment.jersey().register(new WSDLResource());
         environment.jersey().register(new EnvironmentResource(environmentDAO, endpointDAO));
