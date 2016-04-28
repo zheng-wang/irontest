@@ -1,6 +1,7 @@
 package io.irontest.db;
 
 import io.irontest.models.Testcase;
+import io.irontest.models.Teststep;
 import org.skife.jdbi.v2.sqlobject.*;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
@@ -10,26 +11,37 @@ import java.util.List;
  * Created by Zheng on 1/07/2015.
  */
 @RegisterMapper(TestcaseMapper.class)
-public interface TestcaseDAO {
+public abstract class TestcaseDAO {
     @SqlUpdate("create table IF NOT EXISTS testcase (id INT PRIMARY KEY auto_increment, name varchar(200), " +
             "description clob, created timestamp DEFAULT CURRENT_TIMESTAMP, " +
             "updated timestamp DEFAULT CURRENT_TIMESTAMP)")
-    void createTableIfNotExists();
+    public abstract void createTableIfNotExists();
+
+    @CreateSqlObject
+    protected abstract TeststepDAO teststepDAO();
 
     @SqlUpdate("insert into testcase (name, description) values (:name, :description)")
     @GetGeneratedKeys
-    long insert(@BindBean Testcase testcase);
+    public abstract long insert(@BindBean Testcase testcase);
 
     @SqlUpdate("update testcase set name = :name, description = :description, " +
             "updated = CURRENT_TIMESTAMP where id = :id")
-    int update(@BindBean Testcase testcase);
+    public abstract int update(@BindBean Testcase testcase);
 
     @SqlUpdate("delete from testcase where id = :id")
-    void deleteById(@Bind("id") long id);
+    public abstract void deleteById(@Bind("id") long id);
 
     @SqlQuery("select * from testcase")
-    List<Testcase> findAll();
+    public abstract List<Testcase> findAll();
 
     @SqlQuery("select * from testcase where testcase.id = :id")
-    Testcase findById(@Bind("id") long id);
+    protected abstract Testcase _findById(@Bind("id") long id);
+
+    @Transaction
+    public Testcase findById(long id) {
+        Testcase result = _findById(id);
+        List<Teststep> teststeps = teststepDAO().findByTestcaseId_PrimaryProperties(id);
+        result.setTeststeps(teststeps);
+        return result;
+    }
 }
