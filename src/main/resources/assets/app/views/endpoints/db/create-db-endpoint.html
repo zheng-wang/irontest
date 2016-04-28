@@ -4,7 +4,7 @@
   </div>
   <div class="row">
     <form name="endpointForm" class="form-horizontal col-lg-9" role="form" ng-submit="create(endpointForm.$valid)" novalidate>
-      <div class="form-group" ng-class="{ 'has-error' : submitted && endpointForm.name.$invalid }">
+      <div class="form-group required" ng-class="{ 'has-error' : submitted && endpointForm.name.$invalid }">
         <label for="name" class="col-lg-2 control-label">Name</label>
         <div class="col-lg-10">
           <input name="name" type="text" class="form-control" ng-model="name" id="name"

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('iron-test').controller('TeststepsController', ['$scope', 'Teststeps', '$stateParams', '$timeout',
-    '$uibModal', 'IronTestUtils', '$http',
-  function($scope, Teststeps, $stateParams, $timeout, $uibModal, IronTestUtils, $http) {
+    '$uibModal', 'IronTestUtils', '$http', 'Environments',
+  function($scope, Teststeps, $stateParams, $timeout, $uibModal, IronTestUtils, $http, Environments) {
     $scope.teststep = {};
 
     var timer;
@@ -51,7 +51,7 @@ angular.module('iron-test').controller('TeststepsController', ['$scope', 'Testst
           //  open modal dialog
           var modalInstance = $uibModal.open({
             templateUrl: '/ui/views/endpoints/list-modal.html',
-            controller: 'EndpointsModalController',
+            controller: 'SelectManagedEndpointModalController',
             size: 'lg',
             windowClass: 'select-managed-endpoint-modal',
             resolve: {
@@ -71,6 +71,15 @@ angular.module('iron-test').controller('TeststepsController', ['$scope', 'Testst
         }, function errorCallback(response) {
           IronTestUtils.openErrorMessageModal(response);
         });
+    };
+
+    $scope.shareEndpoint = function() {
+      //  find all environments
+      Environments.query(function(environments) {
+        $scope.environments = environments;
+      }, function(response) {
+        IronTestUtils.openErrorMessageModal(response);
+      });
     };
   }
 ]);

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('iron-test').controller('EndpointsModalController', ['$scope', 'uiGridConstants', '$uibModalInstance',
+angular.module('iron-test').controller('SelectManagedEndpointModalController', ['$scope', 'uiGridConstants', '$uibModalInstance',
     'endpoints',
   function($scope, uiGridConstants, $uibModalInstance, endpoints) {
     $scope.endpoints = endpoints;

@@ -162,3 +162,8 @@
 .select-managed-endpoint-modal {
   top: 15%;
 }
+
+.form-group.required .control-label:after {
+    content:"*";
+    color:red;
+}

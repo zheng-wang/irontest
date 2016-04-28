@@ -4,7 +4,7 @@
     <label for="soapAddress" class="col-lg-2 control-label">SOAP Address</label>
     <div class="col-lg-8">
       <input name="soapAddress" type="text" class="form-control" ng-change="autoSave(teststepForm.$valid)"
-             ng-model="teststep.endpoint.url" id="soapAddress"
+             ng-model="teststep.endpoint.url" id="soapAddress" spellcheck="false"
              ng-readonly="teststep.endpoint.environmentId">  <!-- readonly when it is a managed endpoint -->
     </div>
     <div class="col-lg-1">
@@ -15,11 +15,11 @@
 <div class="form-group form-group-reduced-bottom-margin" request-response-textareas>
   <div class="col-lg-6 full-height">
     <textarea name="request" ng-model="teststep.request" ng-change="autoSave(teststepForm.$valid)"
-        id="request" placeholder="Request" class="form-control full-height-important"></textarea>
+        id="request" placeholder="Request" class="form-control full-height-important" spellcheck="false"></textarea>
   </div>
   <div class="col-lg-6 full-height">
     <textarea name="response" ng-model="tempData.soapResponse" id="response" placeholder="SOAP Response"
-        class="form-control full-height-important"></textarea>
+        class="form-control full-height-important" spellcheck="false"></textarea>
   </div>
 </div>
 <div class="form-group form-group-reduced-bottom-margin" id="assertionsArea">
