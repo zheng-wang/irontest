@@ -71,17 +71,7 @@ public class TeststepResource {
 
     @PUT @Path("{teststepId}")
     public Teststep update(Teststep teststep) throws JsonProcessingException {
-        Teststep oldTeststep = findById(teststep.getId());
-
-        teststepDAO.update(teststep);
-        if (teststep.getEndpoint().getEnvironmentId() == null) {    //  this is an unmanaged endpoint, so update it
-            endpointDAO.update(teststep.getEndpoint());
-        } else if (oldTeststep.getEndpoint().getEnvironmentId() == null) {
-            //  delete the old unmanaged endpoint when a managed endpoint is associated with the test step
-            endpointDAO.deleteById(oldTeststep.getEndpoint().getId());
-        }
-
-        return findById(teststep.getId());
+        return teststepAndEndpointDAO.updateTeststep(teststep);
     }
 
     @DELETE @Path("{teststepId}")

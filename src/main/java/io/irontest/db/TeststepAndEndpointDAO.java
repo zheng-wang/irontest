@@ -38,4 +38,18 @@ public abstract class TeststepAndEndpointDAO {
         teststep.setEndpoint(endpoint);
         return teststep;
     }
+
+    @Transaction
+    public Teststep updateTeststep(Teststep teststep) throws JsonProcessingException {
+        Endpoint oldEndpoint = findTeststepById(teststep.getId()).getEndpoint();
+        teststepDAO().update(teststep);
+        if (teststep.getEndpoint().getEnvironmentId() == null) {    //  this is an unmanaged endpoint, so update it
+            endpointDAO().update(teststep.getEndpoint());
+        } else if (oldEndpoint.getEnvironmentId() == null) {
+            //  delete the old unmanaged endpoint when a managed endpoint is associated with the test step
+            endpointDAO().deleteById(oldEndpoint.getId());
+        }
+
+        return findTeststepById(teststep.getId());
+    }
 }
