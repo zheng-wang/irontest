@@ -1,9 +1,7 @@
 package io.irontest.resources;
 
 import io.irontest.db.TestcaseDAO;
-import io.irontest.db.TeststepDAO;
 import io.irontest.models.Testcase;
-import io.irontest.models.Teststep;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -15,11 +13,9 @@ import java.util.List;
 @Path("/testcases") @Produces({ MediaType.APPLICATION_JSON })
 public class TestcaseResource {
     private final TestcaseDAO testcaseDAO;
-    private final TeststepDAO teststepDAO;
 
-    public TestcaseResource(TestcaseDAO testcaseDAO, TeststepDAO teststepDAO) {
+    public TestcaseResource(TestcaseDAO testcaseDAO) {
         this.testcaseDAO = testcaseDAO;
-        this.teststepDAO = teststepDAO;
     }
 
     @POST
