@@ -1,8 +1,8 @@
 package io.irontest.resources;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.irontest.db.AssertionDAO;
 import io.irontest.models.assertion.Assertion;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -21,12 +21,14 @@ public class AssertionResource {
 
     @POST
     public Assertion create(Assertion assertion) throws JsonProcessingException {
-        return dao.insert(assertion);
+        long id = dao.insert(assertion);
+        return dao.findById(id);
     }
 
     @PUT @Path("{assertionId}")
     public Assertion update(Assertion assertion) throws JsonProcessingException {
-        return dao.update(assertion);
+        dao.update(assertion);
+        return dao.findById(assertion.getId());
     }
 
     @GET
