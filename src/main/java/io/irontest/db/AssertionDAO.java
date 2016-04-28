@@ -3,10 +3,7 @@ package io.irontest.db;
 import io.irontest.models.assertion.Assertion;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.skife.jdbi.v2.sqlobject.Bind;
-import org.skife.jdbi.v2.sqlobject.GetGeneratedKeys;
-import org.skife.jdbi.v2.sqlobject.SqlQuery;
-import org.skife.jdbi.v2.sqlobject.SqlUpdate;
+import org.skife.jdbi.v2.sqlobject.*;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
 import java.util.List;
@@ -29,17 +26,20 @@ public abstract class AssertionDAO {
     public abstract long insert(@Bind("teststepId") long teststepId, @Bind("name") String name,
                 @Bind("type") String type, @Bind("properties") String properties);
 
-    public long insert(Assertion assertion) throws JsonProcessingException {
-        return insert(assertion.getTeststepId(), assertion.getName(), assertion.getType(),
+    @Transaction
+    public Assertion insert(Assertion assertion) throws JsonProcessingException {
+        long id = insert(assertion.getTeststepId(), assertion.getName(), assertion.getType(),
                 new ObjectMapper().writeValueAsString(assertion.getProperties()));
+        return findById(id);
     }
 
     @SqlUpdate("update assertion set name = :name, properties = :properties, updated = CURRENT_TIMESTAMP where id = :id")
     public abstract int update(@Bind("name") String name, @Bind("properties") String properties, @Bind("id") long id);
 
-    public int update(Assertion assertion) throws JsonProcessingException {
-        return update(assertion.getName(), new ObjectMapper().writeValueAsString(assertion.getProperties()),
-                assertion.getId());
+    @Transaction
+    public Assertion update(Assertion assertion) throws JsonProcessingException {
+        update(assertion.getName(), new ObjectMapper().writeValueAsString(assertion.getProperties()), assertion.getId());
+        return findById(assertion.getId());
     }
 
     @SqlQuery("select * from assertion where teststep_id = :teststepId")
