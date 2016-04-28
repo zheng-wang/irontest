@@ -35,6 +35,11 @@ public abstract class EnvironmentDAO {
     @CreateSqlObject
     protected abstract EndpointDAO endpointDAO();
 
+    /**
+     *
+     * @param id
+     * @return environment with all endpoints in it
+     */
     @Transaction
     public Environment findById(long id) {
         Environment environment = _findById(id);

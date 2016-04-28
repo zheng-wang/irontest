@@ -1,7 +1,7 @@
 package io.irontest.resources;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import io.irontest.db.TeststepAndEndpointDAO;
+import io.irontest.db.TeststepDAO;
 import io.irontest.models.Endpoint;
 import io.irontest.models.Properties;
 import io.irontest.models.SOAPTeststepProperties;
@@ -16,17 +16,17 @@ import javax.ws.rs.core.MediaType;
  */
 @Path("/testcases/{testcaseId}/teststeps") @Produces({ MediaType.APPLICATION_JSON })
 public class TeststepResource {
-    private final TeststepAndEndpointDAO teststepAndEndpointDAO;
+    private final TeststepDAO teststepDAO;
 
-    public TeststepResource(TeststepAndEndpointDAO teststepAndEndpointDAO) {
-        this.teststepAndEndpointDAO = teststepAndEndpointDAO;
+    public TeststepResource(TeststepDAO teststepDAO) {
+        this.teststepDAO = teststepDAO;
     }
 
     @POST
     public Teststep create(Teststep teststep) throws JsonProcessingException {
         preCreationProcess(teststep);
 
-        teststepAndEndpointDAO.createTeststep(teststep);
+        teststepDAO.insert(teststep);
         teststep.setRequest(null);  //  no need to bring request to client at this point
 
         return teststep;
@@ -59,16 +59,16 @@ public class TeststepResource {
     @GET
     @Path("{teststepId}")
     public Teststep findById(@PathParam("teststepId") long teststepId) {
-        return teststepAndEndpointDAO.findTeststepById(teststepId);
+        return teststepDAO.findById(teststepId);
     }
 
     @PUT @Path("{teststepId}")
     public Teststep update(Teststep teststep) throws JsonProcessingException {
-        return teststepAndEndpointDAO.updateTeststep(teststep);
+        return teststepDAO.update(teststep);
     }
 
     @DELETE @Path("{teststepId}")
     public void delete(@PathParam("teststepId") long teststepId) {
-        teststepAndEndpointDAO.deleteTeststep(teststepId);
+        teststepDAO.deleteById(teststepId);
     }
 }
