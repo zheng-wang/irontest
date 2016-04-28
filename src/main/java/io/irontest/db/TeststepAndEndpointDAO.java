@@ -52,4 +52,13 @@ public abstract class TeststepAndEndpointDAO {
 
         return findTeststepById(teststep.getId());
     }
+
+    @Transaction
+    public void deleteTeststep(long teststepId) {
+        Teststep teststep = findTeststepById(teststepId);
+        teststepDAO().deleteById(teststepId);
+        if (teststep.getEndpoint().getEnvironmentId() == null) {  //  delete the teststep's endpoint if it is unmanaged
+            endpointDAO().deleteById(teststep.getEndpoint().getId());
+        }
+    }
 }

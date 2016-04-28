@@ -1,9 +1,7 @@
 package io.irontest.resources;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import io.irontest.db.EndpointDAO;
 import io.irontest.db.TeststepAndEndpointDAO;
-import io.irontest.db.TeststepDAO;
 import io.irontest.models.Endpoint;
 import io.irontest.models.Properties;
 import io.irontest.models.SOAPTeststepProperties;
@@ -18,14 +16,9 @@ import javax.ws.rs.core.MediaType;
  */
 @Path("/testcases/{testcaseId}/teststeps") @Produces({ MediaType.APPLICATION_JSON })
 public class TeststepResource {
-    private final TeststepDAO teststepDAO;
-    private final EndpointDAO endpointDAO;
     private final TeststepAndEndpointDAO teststepAndEndpointDAO;
 
-    public TeststepResource(TeststepDAO teststepDAO, EndpointDAO endpointDAO,
-                            TeststepAndEndpointDAO teststepAndEndpointDAO) {
-        this.teststepDAO = teststepDAO;
-        this.endpointDAO = endpointDAO;
+    public TeststepResource(TeststepAndEndpointDAO teststepAndEndpointDAO) {
         this.teststepAndEndpointDAO = teststepAndEndpointDAO;
     }
 
@@ -76,10 +69,6 @@ public class TeststepResource {
 
     @DELETE @Path("{teststepId}")
     public void delete(@PathParam("teststepId") long teststepId) {
-        Teststep teststep = findById(teststepId);
-        teststepDAO.deleteById(teststepId);
-        if (teststep.getEndpoint().getEnvironmentId() == null) {  //  delete the teststep's endpoint if it is unmanaged
-            endpointDAO.deleteById(teststep.getEndpoint().getId());
-        }
+        teststepAndEndpointDAO.deleteTeststep(teststepId);
     }
 }
