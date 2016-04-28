@@ -47,9 +47,6 @@ public class EnvironmentResource {
 
     @GET @Path("{environmentId}")
     public Environment findById(@PathParam("environmentId") long environmentId) {
-        Environment environment = environmentDAO.findById(environmentId);
-        List<Endpoint> endpoints = endpointDao.findByEnvironmentId_PrimaryProperties(environmentId);
-        environment.setEndpoints(endpoints);
-        return environment;
+        return environmentDAO.findById(environmentId);
     }
 }
