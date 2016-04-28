@@ -63,14 +63,10 @@ public class TeststepResource {
         teststep.setEndpoint(endpoint);
     }
 
-    //  Find the teststep and its associated endpoint
     @GET
     @Path("{teststepId}")
     public Teststep findById(@PathParam("teststepId") long teststepId) {
-        Teststep teststep = teststepDAO.findById(teststepId);
-        Endpoint endpoint = endpointDAO.findById(teststep.getEndpoint().getId());
-        teststep.setEndpoint(endpoint);
-        return teststep;
+        return teststepAndEndpointDAO.findTeststepById(teststepId);
     }
 
     @PUT @Path("{teststepId}")

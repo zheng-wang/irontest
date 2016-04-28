@@ -1,7 +1,9 @@
 package io.irontest.db;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.irontest.models.Endpoint;
 import io.irontest.models.Teststep;
+import org.skife.jdbi.v2.TransactionIsolationLevel;
 import org.skife.jdbi.v2.sqlobject.CreateSqlObject;
 import org.skife.jdbi.v2.sqlobject.Transaction;
 
@@ -22,5 +24,18 @@ public abstract class TeststepAndEndpointDAO {
         teststep.getEndpoint().setId(endpointId);
         long id = teststepDAO().insert(teststep);
         teststep.setId(id);
+    }
+
+    /**
+     *
+     * @param teststepId
+     * @return the teststep with its associated endpoint
+     */
+    @Transaction(TransactionIsolationLevel.READ_COMMITTED)
+    public Teststep findTeststepById(long teststepId) {
+        Teststep teststep = teststepDAO().findById(teststepId);
+        Endpoint endpoint = endpointDAO().findById(teststep.getEndpoint().getId());
+        teststep.setEndpoint(endpoint);
+        return teststep;
     }
 }
