@@ -46,15 +46,15 @@ public abstract class TeststepDAO {
     @SqlUpdate("update teststep set name = :name, description = :description, request = :request, " +
             "properties = :properties, endpoint_id = :endpointId, " +
             "updated = CURRENT_TIMESTAMP where id = :id")
-    protected abstract int update(@Bind("name") String name, @Bind("description") String description,
+    protected abstract int _update(@Bind("name") String name, @Bind("description") String description,
                                @Bind("request") String request, @Bind("properties") String properties,
                                @Bind("id") long id, @Bind("endpointId") long endpointId);
 
     @Transaction
     public Teststep update(Teststep teststep) throws JsonProcessingException {
-        Endpoint oldEndpoint = findById(teststep.getId()).getEndpoint();
+        Endpoint oldEndpoint = findById_NoTransaction(teststep.getId()).getEndpoint();
 
-        update(teststep.getName(), teststep.getDescription(), teststep.getRequest(),
+        _update(teststep.getName(), teststep.getDescription(), teststep.getRequest(),
                 new ObjectMapper().writeValueAsString(teststep.getProperties()), teststep.getId(),
                 teststep.getEndpoint().getId());
         if (teststep.getEndpoint().getEnvironmentId() == null) {    //  this is an unmanaged endpoint, so update it
@@ -64,7 +64,7 @@ public abstract class TeststepDAO {
             endpointDAO().deleteById(oldEndpoint.getId());
         }
 
-        return findById(teststep.getId());
+        return findById_NoTransaction(teststep.getId());
     }
 
     @SqlUpdate("delete from teststep where id = :id")

@@ -33,10 +33,12 @@ public abstract class TestcaseDAO {
 
     @Transaction
     public void deleteById(long id) {
-        List<Teststep> teststeps = teststepDAO().findByTestcaseId_PrimaryProperties(id);
+        TeststepDAO teststepDAO = teststepDAO();
+        List<Teststep> teststeps = teststepDAO.findByTestcaseId_PrimaryProperties(id);
         for (Teststep teststep: teststeps) {
-            teststepDAO().deleteById_NoTransaction(teststep.getId());
+            teststepDAO.deleteById_NoTransaction(teststep.getId());
         }
+        if (true) throw new RuntimeException("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         _deleteById(id);
     }
 
