@@ -57,7 +57,7 @@ angular.module('iron-test').controller('EnvironmentsController', ['$scope', 'Env
         environment.$save(function(response) {
           $state.go('environment_edit', {environmentId: response.id});
         }, function(response) {
-          IronTestUtils.openErrorMessageModal(response);
+          IronTestUtils.openErrorHTTPResponseModal(response);
         });
       } else {
         $scope.submitted = true;
@@ -70,7 +70,7 @@ angular.module('iron-test').controller('EnvironmentsController', ['$scope', 'Env
           $scope.saveSuccessful = true;
           $scope.environment = response;
         }, function(response) {
-          IronTestUtils.openErrorMessageModal(response);
+          IronTestUtils.openErrorHTTPResponseModal(response);
         });
       } else {
         $scope.submitted = true;
@@ -81,7 +81,7 @@ angular.module('iron-test').controller('EnvironmentsController', ['$scope', 'Env
       environment.$remove(function(response) {
         $state.go($state.current, {}, {reload: true});
       }, function(response) {
-        IronTestUtils.openErrorMessageModal(response);
+        IronTestUtils.openErrorHTTPResponseModal(response);
       });
     };
 
@@ -89,7 +89,7 @@ angular.module('iron-test').controller('EnvironmentsController', ['$scope', 'Env
       Environments.query(function(environments) {
         $scope.environments = environments;
       }, function(response) {
-        IronTestUtils.openErrorMessageModal(response);
+        IronTestUtils.openErrorHTTPResponseModal(response);
       });
     };
 
@@ -99,7 +99,7 @@ angular.module('iron-test').controller('EnvironmentsController', ['$scope', 'Env
       }, function(environment) {
         $scope.environment = environment;
       }, function(response) {
-        IronTestUtils.openErrorMessageModal(response);
+        IronTestUtils.openErrorHTTPResponseModal(response);
       });
     };
 
@@ -108,7 +108,7 @@ angular.module('iron-test').controller('EnvironmentsController', ['$scope', 'Env
       endpointService.$remove(function(response) {
         $state.go($state.current, {}, {reload: true});
       }, function(response) {
-        IronTestUtils.openErrorMessageModal(response);
+        IronTestUtils.openErrorHTTPResponseModal(response);
       });
     };
   }

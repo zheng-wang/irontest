@@ -53,7 +53,7 @@ angular.module('iron-test').controller('DBTeststepEditController', ['$scope', 'T
           }
         }
       }, function(response) {
-        IronTestUtils.openErrorMessageModal(response);
+        IronTestUtils.openErrorHTTPResponseModal(response);
       });
     };
   }

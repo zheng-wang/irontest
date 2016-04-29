@@ -22,7 +22,7 @@ angular.module('iron-test')
         array.splice(this.indexOfArrayElementByProperty(array, propertyName, propertyValue), 1);
       },
 
-      openErrorMessageModal: function(errorHTTPResponse) {
+      openErrorHTTPResponseModal: function(errorHTTPResponse) {
         var errorMessage = null;
         var errorDetails = null;
 
@@ -34,6 +34,10 @@ angular.module('iron-test')
           errorDetails = errorHTTPResponse.data.details;
         }
 
+        this.openErrorMessageModal(errorMessage, errorDetails);
+      },
+
+      openErrorMessageModal: function(errorMessage, errorDetails) {
         var modalInstance = $uibModal.open({
           templateUrl: 'errorMessageModalTemplate.html',
           controller: 'ErrorMessageModalController',

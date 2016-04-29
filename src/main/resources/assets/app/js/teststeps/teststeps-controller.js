@@ -24,7 +24,7 @@ angular.module('iron-test').controller('TeststepsController', ['$scope', 'Testst
           $scope.savingStatus.saveSuccessful = true;
           $scope.teststep = response;
         }, function(response) {
-          IronTestUtils.openErrorMessageModal(response);
+          IronTestUtils.openErrorHTTPResponseModal(response);
         });
       } else {
         $scope.savingStatus.submitted = true;
@@ -38,7 +38,7 @@ angular.module('iron-test').controller('TeststepsController', ['$scope', 'Testst
       }, function (response) {
         $scope.teststep = response;
       }, function(response) {
-        IronTestUtils.openErrorMessageModal(response);
+        IronTestUtils.openErrorHTTPResponseModal(response);
       });
     };
 
@@ -69,16 +69,21 @@ angular.module('iron-test').controller('TeststepsController', ['$scope', 'Testst
             //  Modal dismissed
           });
         }, function errorCallback(response) {
-          IronTestUtils.openErrorMessageModal(response);
+          IronTestUtils.openErrorHTTPResponseModal(response);
         });
     };
 
     $scope.shareEndpoint = function() {
       //  find all environments
       Environments.query(function(environments) {
-        $scope.environments = environments;
+        if (environments && environments.length > 0) {
+          $scope.environments = environments;
+        } else {
+          IronTestUtils.openErrorMessageModal('No environment yet.',
+              'To share the endpoint, please create an environment first.');
+        }
       }, function(response) {
-        IronTestUtils.openErrorMessageModal(response);
+        IronTestUtils.openErrorHTTPResponseModal(response);
       });
     };
   }

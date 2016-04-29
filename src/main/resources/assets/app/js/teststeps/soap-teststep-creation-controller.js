@@ -16,7 +16,7 @@ angular.module('iron-test').controller('SOAPTeststepCreationController', ['$scop
           $scope.wsdlOperations = $scope.wsdlBindings[0].operations;
           $scope.wsdlOperation = $scope.wsdlOperations[0];
         }, function errorCallback(response) {
-          IronTestUtils.openErrorMessageModal(response);
+          IronTestUtils.openErrorHTTPResponseModal(response);
         });
     };
 
@@ -43,7 +43,7 @@ angular.module('iron-test').controller('SOAPTeststepCreationController', ['$scop
         teststep.$save(function(response) {
           $state.go('teststep_edit', {testcaseId: response.testcaseId, teststepId: response.id});
         }, function(response) {
-          IronTestUtils.openErrorMessageModal(response);
+          IronTestUtils.openErrorHTTPResponseModal(response);
         });
       } else {
         $scope.submitted = true;

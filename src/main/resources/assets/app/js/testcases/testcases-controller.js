@@ -55,7 +55,7 @@ angular.module('iron-test').controller('TestcasesController', ['$scope', 'Testca
           $scope.saveSuccessful = true;
           $scope.testcase = response;
         }, function(response) {
-          IronTestUtils.openErrorMessageModal(response);
+          IronTestUtils.openErrorHTTPResponseModal(response);
         });
       } else {
         $scope.submitted = true;
@@ -71,7 +71,7 @@ angular.module('iron-test').controller('TestcasesController', ['$scope', 'Testca
         testcase.$save(function(response) {
           $state.go('testcase_edit', {testcaseId: response.id});
         }, function(response) {
-          IronTestUtils.openErrorMessageModal(response);
+          IronTestUtils.openErrorHTTPResponseModal(response);
         });
       } else {
         $scope.submitted = true;
@@ -82,7 +82,7 @@ angular.module('iron-test').controller('TestcasesController', ['$scope', 'Testca
       testcase.$remove(function(response) {
         $state.go($state.current, {}, {reload: true});
       }, function(response) {
-        IronTestUtils.openErrorMessageModal(response);
+        IronTestUtils.openErrorHTTPResponseModal(response);
       });
     };
 
@@ -93,7 +93,7 @@ angular.module('iron-test').controller('TestcasesController', ['$scope', 'Testca
       testrun.$save(function(response) {
         $scope.failedTeststepIds = response.failedTeststepIds;
       },function(response) {
-        IronTestUtils.openErrorMessageModal(response);
+        IronTestUtils.openErrorHTTPResponseModal(response);
       });
     };
 
@@ -102,7 +102,7 @@ angular.module('iron-test').controller('TestcasesController', ['$scope', 'Testca
       teststepService.$remove(function(response) {
         $state.go($state.current, {}, {reload: true});
       }, function(response) {
-        IronTestUtils.openErrorMessageModal(response);
+        IronTestUtils.openErrorHTTPResponseModal(response);
       });
     };
 
@@ -110,7 +110,7 @@ angular.module('iron-test').controller('TestcasesController', ['$scope', 'Testca
       Testcases.query(function(testcases) {
         $scope.testcases = testcases;
       }, function(response) {
-        IronTestUtils.openErrorMessageModal(response);
+        IronTestUtils.openErrorHTTPResponseModal(response);
       });
     };
 
@@ -120,7 +120,7 @@ angular.module('iron-test').controller('TestcasesController', ['$scope', 'Testca
       }, function(testcase) {
         $scope.testcase = testcase;
       }, function(response) {
-        IronTestUtils.openErrorMessageModal(response);
+        IronTestUtils.openErrorHTTPResponseModal(response);
       });
     };
   }

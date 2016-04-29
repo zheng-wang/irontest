@@ -17,7 +17,7 @@ angular.module('iron-test').controller('SOAPTeststepEditController', ['$scope', 
       testrunRes.$save(function(response) {
         $scope.tempData.soapResponse = response.response;
       }, function(response) {
-        IronTestUtils.openErrorMessageModal(response);
+        IronTestUtils.openErrorHTTPResponseModal(response);
       });
     };
 

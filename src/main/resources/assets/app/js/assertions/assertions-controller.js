@@ -26,7 +26,7 @@ angular.module('iron-test').controller('AssertionsController', ['$scope', 'Asser
           $scope.$parent.savingStatus.saveSuccessful = true;
           $scope.assertionsModelObj.assertion = response;
         }, function(response) {
-          IronTestUtils.openErrorMessageModal(response);
+          IronTestUtils.openErrorHTTPResponseModal(response);
         });
       } else {
         $scope.$parent.savingStatus.submitted = true;
@@ -47,7 +47,7 @@ angular.module('iron-test').controller('AssertionsController', ['$scope', 'Asser
           //  set current assertion to null
           $scope.assertionsModelObj.assertion = null;
         }, function(response) {
-          IronTestUtils.openErrorMessageModal(response);
+          IronTestUtils.openErrorHTTPResponseModal(response);
         });
       }
     };
@@ -83,7 +83,7 @@ angular.module('iron-test').controller('AssertionsController', ['$scope', 'Asser
         }, function(response) {
           $scope.assertionsModelObj.assertions = response;
         }, function(response) {
-          IronTestUtils.openErrorMessageModal(response);
+          IronTestUtils.openErrorHTTPResponseModal(response);
         });
     };
 
@@ -100,7 +100,7 @@ angular.module('iron-test').controller('AssertionsController', ['$scope', 'Asser
           $scope.assertionsModelObj.gridApi.selection.selectRow(response);
         });
       }, function(response) {
-        IronTestUtils.openErrorMessageModal(response);
+        IronTestUtils.openErrorHTTPResponseModal(response);
       });
     };
 
@@ -137,7 +137,7 @@ angular.module('iron-test').controller('AssertionsController', ['$scope', 'Asser
       }, function(response) {
         $scope.assertionsModelObj.assertion = response;
       }, function(response) {
-        IronTestUtils.openErrorMessageModal(response);
+        IronTestUtils.openErrorHTTPResponseModal(response);
       });
     };
 
@@ -200,7 +200,7 @@ angular.module('iron-test').controller('AssertionsController', ['$scope', 'Asser
             $scope.assertionsModelObj.tempData.assertionXPathActualValueError = data.error;
           }
         }, function errorCallback(response) {
-          IronTestUtils.openErrorMessageModal(response);
+          IronTestUtils.openErrorHTTPResponseModal(response);
         });
     };
   }

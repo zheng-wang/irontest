@@ -17,7 +17,7 @@ angular.module('iron-test').controller('DBEndpointsController', ['$scope', 'Endp
         endpoint.$save(function(response) {
           $state.go('environment_edit', {environmentId: response.environmentId});
         }, function(response) {
-          IronTestUtils.openErrorMessageModal(response);
+          IronTestUtils.openErrorHTTPResponseModal(response);
         });
       } else {
         $scope.submitted = true;

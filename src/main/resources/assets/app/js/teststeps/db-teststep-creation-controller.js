@@ -14,7 +14,7 @@ angular.module('iron-test').controller('DBTeststepCreationController', ['$scope'
         teststep.$save(function(response) {
           $state.go('teststep_edit', {testcaseId: response.testcaseId, teststepId: response.id});
         }, function(response) {
-          IronTestUtils.openErrorMessageModal(response);
+          IronTestUtils.openErrorHTTPResponseModal(response);
         });
       } else {
         $scope.submitted = true;

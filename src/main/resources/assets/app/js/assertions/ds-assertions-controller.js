@@ -39,7 +39,7 @@ angular.module('iron-test').controller('DSAssertionsController', ['$scope', 'Ass
           }, function(response) {
             $scope.assertionsModelObj.gridOptions.data = response;
           }, function(response) {
-            IronTestUtils.openErrorMessageModal(response);
+            IronTestUtils.openErrorHTTPResponseModal(response);
           });
     };
 
@@ -52,7 +52,7 @@ angular.module('iron-test').controller('DSAssertionsController', ['$scope', 'Ass
         //  add the new assertion to the grid data
         $scope.assertionsModelObj.gridOptions.data.push(response);
       }, function(response) {
-        IronTestUtils.openErrorMessageModal(response);
+        IronTestUtils.openErrorHTTPResponseModal(response);
       });
     };
 
@@ -81,7 +81,7 @@ angular.module('iron-test').controller('DSAssertionsController', ['$scope', 'Ass
           $scope.$parent.savingStatus.saveSuccessful = true;
           $scope.assertionsModelObj.assertion = response;
         }, function(response) {
-          IronTestUtils.openErrorMessageModal(response);
+          IronTestUtils.openErrorHTTPResponseModal(response);
         });
       } else {
         $scope.$parent.savingStatus.submitted = true;
@@ -111,7 +111,7 @@ angular.module('iron-test').controller('DSAssertionsController', ['$scope', 'Ass
           $scope.assertionsModelObj.assertion = null;
         }
       }, function(response) {
-        IronTestUtils.openErrorMessageModal(response);
+        IronTestUtils.openErrorHTTPResponseModal(response);
       });
     };
 

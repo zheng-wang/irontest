@@ -22,7 +22,7 @@ angular.module('iron-test').controller('EndpointsController', ['$scope', 'Endpoi
           $scope.savingStatus.saveSuccessful = true;
           $scope.endpoint = response;
         }, function(response) {
-          IronTestUtils.openErrorMessageModal(response);
+          IronTestUtils.openErrorHTTPResponseModal(response);
         });
       } else {
         $scope.savingStatus.submitted = true;
@@ -36,7 +36,7 @@ angular.module('iron-test').controller('EndpointsController', ['$scope', 'Endpoi
       }, function(endpoint) {
         $scope.endpoint = endpoint;
       }, function(response) {
-        IronTestUtils.openErrorMessageModal(response);
+        IronTestUtils.openErrorHTTPResponseModal(response);
       });
     };
   }
