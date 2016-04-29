@@ -29,7 +29,16 @@ public abstract class TestcaseDAO {
     public abstract int update(@BindBean Testcase testcase);
 
     @SqlUpdate("delete from testcase where id = :id")
-    public abstract void deleteById(@Bind("id") long id);
+    public abstract void _deleteById(@Bind("id") long id);
+
+    @Transaction
+    public void deleteById(long id) {
+        List<Teststep> teststeps = teststepDAO().findByTestcaseId_PrimaryProperties(id);
+        for (Teststep teststep: teststeps) {
+            teststepDAO().deleteById_NoTransaction(teststep.getId());
+        }
+        _deleteById(id);
+    }
 
     @SqlQuery("select * from testcase")
     public abstract List<Testcase> findAll();

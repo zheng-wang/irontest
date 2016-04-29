@@ -72,7 +72,11 @@ public abstract class TeststepDAO {
 
     @Transaction
     public void deleteById(long id) {
-        Teststep teststep = findById(id);
+        deleteById_NoTransaction(id);
+    }
+
+    public void deleteById_NoTransaction(long id) {
+        Teststep teststep = findById_NoTransaction(id);
         _deleteById(id);
         if (teststep.getEndpoint().getEnvironmentId() == null) {  //  delete the teststep's endpoint if it is unmanaged
             endpointDAO().deleteById(teststep.getEndpoint().getId());
@@ -88,6 +92,10 @@ public abstract class TeststepDAO {
      */
     @Transaction
     public Teststep findById(long id) {
+        return findById_NoTransaction(id);
+    }
+
+    public Teststep findById_NoTransaction(long id) {
         Teststep teststep = _findById(id);
         Endpoint endpoint = endpointDAO().findById(teststep.getEndpoint().getId());
         teststep.setEndpoint(endpoint);
