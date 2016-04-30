@@ -78,6 +78,7 @@ angular.module('iron-test').controller('TeststepsController', ['$scope', 'Testst
       Environments.query(function(environments) {
         if (environments && environments.length > 0) {
           $scope.environments = environments;
+          $scope.teststep.endpoint.environment = environments[0];
         } else {
           IronTestUtils.openErrorMessageModal('No environment yet.',
               'To share the endpoint, please create an environment first.');

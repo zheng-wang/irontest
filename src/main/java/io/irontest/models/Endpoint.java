@@ -9,8 +9,7 @@ public class Endpoint {
     public static final String ENDPOINT_TYPE_SOAP = "SOAP";
     public static final String TEST_STEP_TYPE_DB = "DB";
     private long id;
-    private Long environmentId;
-    private String environmentName; //  used sometimes for the convenience of UI
+    private Environment environment;
     private String name;
     private String type;
     private String description;
@@ -22,10 +21,10 @@ public class Endpoint {
 
     public Endpoint() {}
 
-    public Endpoint(long id, Long environmentId, String name, String type, String description, String url,
+    public Endpoint(long id, Environment environment, String name, String type, String description, String url,
                     String username, String password, Date created, Date updated) {
         this.id = id;
-        this.environmentId = environmentId;
+        this.environment = environment;
         this.name = name;
         this.type = type;
         this.description = description;
@@ -42,14 +41,6 @@ public class Endpoint {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public Long getEnvironmentId() {
-        return environmentId;
-    }
-
-    public void setEnvironmentId(Long environmentId) {
-        this.environmentId = environmentId;
     }
 
     public String getName() {
@@ -116,11 +107,11 @@ public class Endpoint {
         this.updated = updated;
     }
 
-    public String getEnvironmentName() {
-        return environmentName;
+    public Environment getEnvironment() {
+        return environment;
     }
 
-    public void setEnvironmentName(String environmentName) {
-        this.environmentName = environmentName;
+    public void setEnvironment(Environment environment) {
+        this.environment = environment;
     }
 }

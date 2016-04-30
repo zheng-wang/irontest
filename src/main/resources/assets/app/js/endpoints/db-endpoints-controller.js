@@ -6,7 +6,7 @@ angular.module('iron-test').controller('DBEndpointsController', ['$scope', 'Endp
     $scope.create = function(isValid) {
       if (isValid) {
         var endpoint = new Endpoints({
-          environmentId: $stateParams.environmentId,
+          environment: { id: $stateParams.environmentId },
           name: this.name,
           type: 'DB',
           description: this.description,
@@ -15,7 +15,7 @@ angular.module('iron-test').controller('DBEndpointsController', ['$scope', 'Endp
           password: this.password
         });
         endpoint.$save(function(response) {
-          $state.go('environment_edit', {environmentId: response.environmentId});
+          $state.go('environment_edit', {environmentId: response.environment.id});
         }, function(response) {
           IronTestUtils.openErrorHTTPResponseModal(response);
         });

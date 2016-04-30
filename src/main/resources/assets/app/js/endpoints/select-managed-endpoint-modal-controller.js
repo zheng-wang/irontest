@@ -7,7 +7,7 @@ angular.module('iron-test').controller('SelectManagedEndpointModalController', [
 
     $scope.endpointModalGridColumnDefs = [
       {
-        name: 'environmentName', displayName: 'Environment', width: 130, minWidth: 100,
+        name: 'environment.name', displayName: 'Environment', width: 130, minWidth: 100,
         sort: {
           direction: uiGridConstants.ASC,
           priority: 1

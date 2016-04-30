@@ -19,9 +19,10 @@ public interface EndpointDAO {
     void createTableIfNotExists();
 
     @SqlUpdate("insert into endpoint (environment_id, name, type, description, url, username, password) values (" +
-            ":environmentId, :name, :type, :description, :url, :username, ENCRYPT('AES', '8888', STRINGTOUTF8(:password)))")
+            ":evId, :ep.name, :ep.type, :ep.description, :ep.url, " +
+            ":ep.username, ENCRYPT('AES', '8888', STRINGTOUTF8(:ep.password)))")
     @GetGeneratedKeys
-    long insertManagedEndpoint(@BindBean Endpoint endpoint);
+    long insertManagedEndpoint(@BindBean("ep") Endpoint endpoint, @Bind("evId") long environmentId);
 
     @SqlUpdate("insert into endpoint (type, description, url) values (:type, :description, :url)")
     @GetGeneratedKeys

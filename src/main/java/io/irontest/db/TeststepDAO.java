@@ -57,9 +57,9 @@ public abstract class TeststepDAO {
         _update(teststep.getName(), teststep.getDescription(), teststep.getRequest(),
                 new ObjectMapper().writeValueAsString(teststep.getProperties()), teststep.getId(),
                 teststep.getEndpoint().getId());
-        if (teststep.getEndpoint().getEnvironmentId() == null) {    //  this is an unmanaged endpoint, so update it
+        if (teststep.getEndpoint().getEnvironment() == null) {    //  this is an unmanaged endpoint, so update it
             endpointDAO().update(teststep.getEndpoint());
-        } else if (oldEndpoint.getEnvironmentId() == null) {
+        } else if (oldEndpoint.getEnvironment() == null) {
             //  delete the old unmanaged endpoint when a managed endpoint is associated with the test step
             endpointDAO().deleteById(oldEndpoint.getId());
         }
@@ -78,7 +78,7 @@ public abstract class TeststepDAO {
     public void deleteById_NoTransaction(long id) {
         Teststep teststep = findById_NoTransaction(id);
         _deleteById(id);
-        if (teststep.getEndpoint().getEnvironmentId() == null) {  //  delete the teststep's endpoint if it is unmanaged
+        if (teststep.getEndpoint().getEnvironment() == null) {  //  delete the teststep's endpoint if it is unmanaged
             endpointDAO().deleteById(teststep.getEndpoint().getId());
         }
     }

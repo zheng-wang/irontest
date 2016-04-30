@@ -19,7 +19,7 @@ public class EndpointResource {
 
     @POST
     public Endpoint create(Endpoint endpoint) {
-        long id = endpointDAO.insertManagedEndpoint(endpoint);
+        long id = endpointDAO.insertManagedEndpoint(endpoint, endpoint.getEnvironment().getId());
         endpoint.setId(id);
         return endpoint;
     }

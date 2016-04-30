@@ -33,7 +33,7 @@ angular.module('iron-test').controller('EnvironmentsController', ['$scope', 'Env
 
     $scope.endpointGridColumnDefs = [
       {
-        field: 'name', width: 200, minWidth: 100,
+        field: 'name', width: 250, minWidth: 100,
         sort: {
           direction: uiGridConstants.ASC,
           priority: 1

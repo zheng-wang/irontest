@@ -4,7 +4,7 @@
 angular.module('iron-test').factory('Endpoints', ['$resource',
   function($resource) {
     return $resource('api/environments/:environmentId/endpoints/:endpointId', {
-      environmentId: '@environmentId', endpointId: '@id'
+      environmentId: '@environment.id', endpointId: '@id'
     }, {
       update: {
         method: 'PUT'
