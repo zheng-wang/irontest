@@ -16,7 +16,7 @@
       <select ng-if="isInShareEndpointMode()" name="endpointEnvironment" id="endpointEnvironment"
               class="form-control" ng-model="teststep.endpoint.environment"
               ng-options="item.name for item in environments"></select>
-      <input ng-if="!isInShareEndpointMode() && teststep.endpoint.environment" name="endpointEnvironmentName"
+      <input ng-if="!isInShareEndpointMode()" name="endpointEnvironmentName"
              type="text" class="form-control" ng-model="teststep.endpoint.environment.name"
              id="endpointEnvironmentName" maxlength="200" readonly>
     </div>
@@ -27,7 +27,7 @@
     <div class="col-lg-10">
       <input name="endpointName" type="text" class="form-control" ng-model="teststep.endpoint.name"
              id="endpointName" maxlength="200" required
-             ng-readonly="!isInShareEndpointMode() && teststep.endpoint.environment">
+             ng-readonly="!isInShareEndpointMode()">
       <div ng-show="savingStatus.submitted && teststepForm.endpointName.$invalid" class="help-block">
         <p ng-show="teststepForm.endpointName.$error.required">Name is required</p>
       </div>
