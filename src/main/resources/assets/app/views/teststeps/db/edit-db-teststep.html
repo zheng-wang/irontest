@@ -30,10 +30,6 @@
             <div class="col-lg-offset-2 col-lg-2">
               <button type="button" class="btn btn-info" ng-click="selectManagedEndpoint('DB')">Select Managed Endpoint</button>
             </div>
-            <!-- if it is a managed endpoint, display its environment name and name -->
-            <div ng-if="teststep.endpoint.environmentId" class="col-lg-5">
-              <h4>{{teststep.endpoint.environmentName}} - {{teststep.endpoint.name}}</h4>
-            </div>
           </div>
           <div class="form-group">
             <label for="endpointDescription" class="col-lg-2 control-label">Description</label>
@@ -41,7 +37,7 @@
               <textarea name="endpointDescription" ng-model="teststep.endpoint.description"
                         ng-change="autoSave(teststepForm.$valid)" id="endpointDescription" cols="30" rows="6"
                         placeholder="Description" class="form-control"
-                        ng-readonly="teststep.endpoint.environmentId"></textarea>
+                        ng-readonly="teststep.endpoint.environment"></textarea>
             </div>
           </div>
           <div class="form-group">
@@ -50,7 +46,7 @@
               <input name="endpointJdbcURL" type="text" class="form-control"
                      ng-model="teststep.endpoint.url" ng-change="autoSave(teststepForm.$valid)"
                      id="endpointJdbcURL" maxlength="500"
-                     ng-readonly="teststep.endpoint.environmentId">
+                     ng-readonly="teststep.endpoint.environment">
             </div>
           </div>
           <div class="form-group">
@@ -59,7 +55,7 @@
               <input name="endpointUsername" type="text" class="form-control"
                      ng-model="teststep.endpoint.username"
                      ng-change="autoSave(teststepForm.$valid)" id="endpointUsername" maxlength="200"
-                     ng-readonly="teststep.endpoint.environmentId">
+                     ng-readonly="teststep.endpoint.environment">
             </div>
           </div>
           <div class="form-group">
@@ -68,7 +64,7 @@
               <input name="endpointPassword" type="password" class="form-control"
                      ng-model="teststep.endpoint.password"
                      ng-change="autoSave(teststepForm.$valid)"  id="endpointPassword" maxlength="200"
-                     ng-readonly="teststep.endpoint.environmentId">
+                     ng-readonly="teststep.endpoint.environment">
             </div>
           </div>
         </div>

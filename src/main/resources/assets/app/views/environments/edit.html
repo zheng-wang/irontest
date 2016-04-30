@@ -57,7 +57,7 @@
   <script type="text/ng-template" id="endpointGridNameCellTemplate.html">
     <div class="ui-grid-cell-contents">
       <div>
-        <a ui-sref="endpoint_edit({ environmentId: row.entity.environmentId, endpointId: row.entity.id })">{{COL_FIELD}}</a>
+        <a ui-sref="endpoint_edit({ environmentId: row.entity.environment.id, endpointId: row.entity.id })">{{COL_FIELD}}</a>
       </div>
     </div>
   </script>
