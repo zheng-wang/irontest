@@ -17,8 +17,8 @@ import java.util.List;
 @RegisterMapper(AssertionMapper.class)
 public abstract class AssertionDAO {
     @SqlUpdate("create table IF NOT EXISTS assertion (" +
-            "id INT PRIMARY KEY auto_increment, teststep_id INT, name varchar(200), " +
-            "type varchar(20), properties clob," +
+            "id INT PRIMARY KEY auto_increment, teststep_id INT, name varchar(200) NOT NULL UNIQUE, " +
+            "type varchar(20) NOT NULL, properties clob," +
             "created timestamp DEFAULT CURRENT_TIMESTAMP, updated timestamp DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (teststep_id) REFERENCES teststep(id) ON DELETE CASCADE)")
     public abstract void createTableIfNotExists();

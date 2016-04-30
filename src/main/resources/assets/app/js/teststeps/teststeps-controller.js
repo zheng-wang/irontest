@@ -73,7 +73,7 @@ angular.module('iron-test').controller('TeststepsController', ['$scope', 'Testst
         });
     };
 
-    $scope.shareEndpoint = function() {
+    $scope.enterShareEndpointMode = function() {
       //  find all environments
       Environments.query(function(environments) {
         if (environments && environments.length > 0) {
@@ -86,6 +86,26 @@ angular.module('iron-test').controller('TeststepsController', ['$scope', 'Testst
       }, function(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);
       });
+    };
+
+    $scope.isInShareEndpointMode = function() {
+      return typeof $scope.environments !== 'undefined';
+    };
+
+    $scope.shareEndpoint = function(isValid) {
+      //  this will reload the whole test step
+      $scope.update(isValid);
+
+      //  exit share-endpoint mode
+      delete $scope.environments;
+    };
+
+    $scope.cancelShareEndpoint = function() {
+      //  reload the whole test step
+      $scope.findOne();
+
+      //  exit share-endpoint mode
+      delete $scope.environments;
     };
   }
 ]);

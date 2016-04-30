@@ -10,46 +10,55 @@ import java.util.List;
  * Created by Trevor Li on 6/30/15.
  */
 @RegisterMapper(EndpointMapper.class)
-public interface EndpointDAO {
+public abstract class EndpointDAO {
     @SqlUpdate("create table IF NOT EXISTS endpoint (id INT PRIMARY KEY auto_increment, environment_id int, " +
-            "name varchar(200) UNIQUE, type varchar(20) not null, description varchar(500), " +
+            "name varchar(200) NOT NULL UNIQUE, type varchar(20) NOT NULL, description varchar(500), " +
             "url varchar(500), username varchar(200), password varchar(200), " +
             "created timestamp DEFAULT CURRENT_TIMESTAMP, updated timestamp DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (environment_id) REFERENCES environment(id) ON DELETE CASCADE)")
-    void createTableIfNotExists();
+    public abstract void createTableIfNotExists();
 
     @SqlUpdate("insert into endpoint (environment_id, name, type, description, url, username, password) values (" +
             ":evId, :ep.name, :ep.type, :ep.description, :ep.url, " +
             ":ep.username, ENCRYPT('AES', '8888', STRINGTOUTF8(:ep.password)))")
     @GetGeneratedKeys
-    long insertManagedEndpoint(@BindBean("ep") Endpoint endpoint, @Bind("evId") long environmentId);
+    protected abstract long _insertManagedEndpoint(@BindBean("ep") Endpoint endpoint, @Bind("evId") long environmentId);
 
-    @SqlUpdate("insert into endpoint (type, description, url) values (:type, :description, :url)")
+    public long insertManagedEndpoint(Endpoint endpoint) {
+        return _insertManagedEndpoint(endpoint, endpoint.getEnvironment().getId());
+    }
+
+    @SqlUpdate("insert into endpoint (name, type, description, url) values (:name, :type, :description, :url)")
     @GetGeneratedKeys
-    long insertUnmanagedEndpoint(@BindBean Endpoint endpoint);
+    public abstract long insertUnmanagedEndpoint(@BindBean Endpoint endpoint);
 
-    @SqlUpdate("update endpoint set name = :name, description = :description, url = :url, username = :username, " +
-            "password = ENCRYPT('AES', '8888', STRINGTOUTF8(:password)), updated = CURRENT_TIMESTAMP where id = :id")
-    int update(@BindBean Endpoint endpoint);
+    @SqlUpdate("update endpoint set environment_id = :evId, name = :ep.name, description = :ep.description, " +
+            "url = :ep.url, username = :ep.username, password = ENCRYPT('AES', '8888', STRINGTOUTF8(:ep.password)), " +
+            "updated = CURRENT_TIMESTAMP where id = :ep.id")
+    protected abstract int _update(@BindBean("ep") Endpoint endpoint, @Bind("evId") Long environmentId);
+
+    public int update(Endpoint endpoint) {
+        return _update(endpoint, endpoint.getEnvironment() == null ? null : endpoint.getEnvironment().getId());
+    }
 
     @SqlUpdate("delete from endpoint where id = :id")
-    void deleteById(@Bind("id") long id);
+    public abstract void deleteById(@Bind("id") long id);
 
     @SqlQuery(
             "select ep.*, ev.name as environment_name " +
             "from endpoint ep left outer join environment ev on ep.environment_id = ev.id " +
             "where ep.id = :id")
-    Endpoint findById(@Bind("id") long id);
+    public abstract Endpoint findById(@Bind("id") long id);
 
     @SqlQuery("select * from endpoint where name = :name")
-    Endpoint findByName(@Bind("name") String name);
+    public abstract Endpoint findByName(@Bind("name") String name);
 
     @SqlQuery("select id, environment_id, name, type, description from endpoint where environment_id = :environmentId")
-    List<Endpoint> findByEnvironmentId_PrimaryProperties(@Bind("environmentId") long environmentId);
+    public abstract List<Endpoint> findByEnvironmentId_PrimaryProperties(@Bind("environmentId") long environmentId);
 
     @SqlQuery(
             "select ep.id, ep.environment_id, ev.name as environment_name, ep.name, ep.description " +
             "from endpoint ep left outer join environment ev on ep.environment_id = ev.id " +
             "where ep.type = :endpointType and ep.environment_id is not null")
-    List<Endpoint> findManagedEndpointsByType(@Bind("endpointType") String endpointType);
+    public abstract List<Endpoint> findManagedEndpointsByType(@Bind("endpointType") String endpointType);
 }

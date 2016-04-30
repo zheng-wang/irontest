@@ -15,9 +15,9 @@ import java.util.List;
 @RegisterMapper(TeststepMapper.class)
 public abstract class TeststepDAO {
     @SqlUpdate("create table IF NOT EXISTS teststep (" +
-            "id INT PRIMARY KEY auto_increment, testcase_id INT, name varchar(200), description clob, " +
+            "id INT PRIMARY KEY auto_increment, testcase_id INT, name varchar(200) NOT NULL UNIQUE, " +
+            "description clob, type varchar(20) NOT NULL, request clob, properties clob, " +
             "created timestamp DEFAULT CURRENT_TIMESTAMP, updated timestamp DEFAULT CURRENT_TIMESTAMP, " +
-            "type varchar(20), request clob, properties clob, " +
             "endpoint_id int, FOREIGN KEY (endpoint_id) REFERENCES endpoint(id), " +
             "FOREIGN KEY (testcase_id) REFERENCES testcase(id) ON DELETE CASCADE)")
     public abstract void createTableIfNotExists();
@@ -53,15 +53,26 @@ public abstract class TeststepDAO {
     @Transaction
     public Teststep update(Teststep teststep) throws JsonProcessingException {
         Endpoint oldEndpoint = findById_NoTransaction(teststep.getId()).getEndpoint();
+        Endpoint newEndpoint = teststep.getEndpoint();
 
         _update(teststep.getName(), teststep.getDescription(), teststep.getRequest(),
                 new ObjectMapper().writeValueAsString(teststep.getProperties()), teststep.getId(),
-                teststep.getEndpoint().getId());
-        if (teststep.getEndpoint().getEnvironment() == null) {    //  this is an unmanaged endpoint, so update it
-            endpointDAO().update(teststep.getEndpoint());
-        } else if (oldEndpoint.getEnvironment() == null) {
-            //  delete the old unmanaged endpoint when a managed endpoint is associated with the test step
-            endpointDAO().deleteById(oldEndpoint.getId());
+                newEndpoint.getId());
+
+        if (newEndpoint.isManaged()) {
+            if (oldEndpoint.isManaged()) {
+                //  do nothing
+            } else {
+                if (newEndpoint.getId() == oldEndpoint.getId()) {
+                    //  the old unmanaged endpoint is shared by user and becomes managed, so save it
+                    endpointDAO().update(newEndpoint);
+                } else {
+                    //  the old unmanaged endpoint is replaced by an existing managed endpoint, so delete the old one
+                    endpointDAO().deleteById(oldEndpoint.getId());
+                }
+            }
+        } else {  //  new endpoint is still unmanaged, so update it
+            endpointDAO().update(newEndpoint);
         }
 
         return findById_NoTransaction(teststep.getId());
@@ -78,7 +89,7 @@ public abstract class TeststepDAO {
     public void deleteById_NoTransaction(long id) {
         Teststep teststep = findById_NoTransaction(id);
         _deleteById(id);
-        if (teststep.getEndpoint().getEnvironment() == null) {  //  delete the teststep's endpoint if it is unmanaged
+        if (!teststep.getEndpoint().isManaged()) {    //  delete the teststep's endpoint if it is unmanaged
             endpointDAO().deleteById(teststep.getEndpoint().getId());
         }
     }

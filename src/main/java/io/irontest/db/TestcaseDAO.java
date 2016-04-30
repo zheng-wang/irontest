@@ -12,8 +12,8 @@ import java.util.List;
  */
 @RegisterMapper(TestcaseMapper.class)
 public abstract class TestcaseDAO {
-    @SqlUpdate("create table IF NOT EXISTS testcase (id INT PRIMARY KEY auto_increment, name varchar(200), " +
-            "description clob, created timestamp DEFAULT CURRENT_TIMESTAMP, " +
+    @SqlUpdate("create table IF NOT EXISTS testcase (id INT PRIMARY KEY auto_increment, " +
+            "name varchar(200) NOT NULL UNIQUE, description clob, created timestamp DEFAULT CURRENT_TIMESTAMP, " +
             "updated timestamp DEFAULT CURRENT_TIMESTAMP)")
     public abstract void createTableIfNotExists();
 

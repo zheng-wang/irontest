@@ -1,0 +1,80 @@
+<div class="form-group"></div> <!-- spacer -->
+<div class="col-lg-9">
+  <div class="form-group">
+    <div class="col-lg-offset-2 col-lg-2">
+      <button type="button" class="btn btn-info" ng-click="enterShareEndpointMode()"
+              ng-disabled="teststep.endpoint.environment">Share Endpoint</button>
+    </div>
+    <div class="col-lg-2">
+      <button type="button" class="btn btn-info"
+              ng-click="selectManagedEndpoint('SOAP')">Select Managed Endpoint</button>
+    </div>
+  </div>
+  <div class="form-group required" ng-if="teststep.endpoint.environment">
+    <label for="endpointEnvironment" class="col-lg-2 control-label">Environment</label>
+    <div class="col-lg-10">
+      <select ng-if="isInShareEndpointMode()" name="endpointEnvironment" id="endpointEnvironment"
+              class="form-control" ng-model="teststep.endpoint.environment"
+              ng-options="item.name for item in environments"></select>
+      <input ng-if="!isInShareEndpointMode() && teststep.endpoint.environment" name="endpointEnvironmentName"
+             type="text" class="form-control" ng-model="teststep.endpoint.environment.name"
+             id="endpointEnvironmentName" maxlength="200" readonly>
+    </div>
+  </div>
+  <div class="form-group required" ng-if="teststep.endpoint.environment"
+       ng-class="{ 'has-error' : savingStatus.submitted && teststepForm.endpointName.$invalid }">
+    <label for="endpointName" class="col-lg-2 control-label">Name</label>
+    <div class="col-lg-10">
+      <input name="endpointName" type="text" class="form-control" ng-model="teststep.endpoint.name"
+             id="endpointName" maxlength="200" required
+             ng-readonly="!isInShareEndpointMode() && teststep.endpoint.environment">
+      <div ng-show="savingStatus.submitted && teststepForm.endpointName.$invalid" class="help-block">
+        <p ng-show="teststepForm.endpointName.$error.required">Name is required</p>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="endpointDescription" class="col-lg-2 control-label">Description</label>
+    <div class="col-lg-10">
+      <textarea name="endpointDescription" ng-model="teststep.endpoint.description"
+                ng-change="isInShareEndpointMode() ? angular.noop() : autoSave(teststepForm.$valid)"
+                id="endpointDescription" cols="30" rows="6" class="form-control"
+                ng-readonly="!isInShareEndpointMode() && teststep.endpoint.environment"></textarea>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="endpointSOAPAddress" class="col-lg-2 control-label">SOAP Address</label>
+    <div class="col-lg-10">
+      <input name="endpointSOAPAddress" type="text" class="form-control" ng-model="teststep.endpoint.url"
+             ng-change="isInShareEndpointMode() ? angular.noop() : autoSave(teststepForm.$valid)"
+             id="endpointSOAPAddress" maxlength="500"
+             ng-readonly="!isInShareEndpointMode() && teststep.endpoint.environment">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="endpointUsername" class="col-lg-2 control-label">Username</label>
+    <div class="col-lg-10">
+      <input name="endpointUsername" type="text" class="form-control" ng-model="teststep.endpoint.username"
+             ng-change="isInShareEndpointMode() ? angular.noop() : autoSave(teststepForm.$valid)"
+             id="endpointUsername" maxlength="200"
+             ng-readonly="!isInShareEndpointMode() && teststep.endpoint.environment">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="endpointPassword" class="col-lg-2 control-label">Password</label>
+    <div class="col-lg-10">
+      <input name="endpointPassword" type="password" class="form-control" ng-model="teststep.endpoint.password"
+             ng-change="isInShareEndpointMode() ? angular.noop() : autoSave(teststepForm.$valid)"
+             id="endpointPassword" maxlength="200"
+             ng-readonly="!isInShareEndpointMode() && teststep.endpoint.environment">
+    </div>
+  </div>
+  <div class="form-group" ng-if="isInShareEndpointMode()">
+    <div class="col-lg-offset-5 col-lg-2">
+      <button type="button" class="btn btn-info" ng-click="shareEndpoint(teststepForm.$valid)">OK</button>
+    </div>
+    <div>
+      <button type="button" class="btn btn-info" ng-click="cancelShareEndpoint()">Cancel</button>
+    </div>
+  </div>
+</div>

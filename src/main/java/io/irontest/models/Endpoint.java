@@ -1,5 +1,7 @@
 package io.irontest.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Date;
 
 /**
@@ -113,5 +115,10 @@ public class Endpoint {
 
     public void setEnvironment(Environment environment) {
         this.environment = environment;
+    }
+
+    @JsonIgnore
+    public boolean isManaged() {
+        return this.environment != null;
     }
 }
