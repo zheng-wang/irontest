@@ -42,9 +42,9 @@ angular.module('iron-test').controller('TeststepsController', ['$scope', 'Testst
       });
     };
 
-    $scope.selectManagedEndpoint = function(endpointType) {
+    $scope.selectManagedEndpoint = function() {
       //  find managed endpoints by type
-      var url = 'api/jsonservice/findManagedEndpointsByType?type=' + endpointType;
+      var url = 'api/jsonservice/findManagedEndpointsByType?type=' + $scope.teststep.endpoint.type;
       $http
         .get(url)
         .then(function successCallback(response) {

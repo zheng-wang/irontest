@@ -38,7 +38,6 @@ public abstract class TestcaseDAO {
         for (Teststep teststep: teststeps) {
             teststepDAO.deleteById_NoTransaction(teststep.getId());
         }
-        if (true) throw new RuntimeException("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         _deleteById(id);
     }
 

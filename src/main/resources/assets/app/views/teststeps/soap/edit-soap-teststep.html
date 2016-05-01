@@ -2,26 +2,7 @@
   <form name="teststepForm" class="form-horizontal" role="form" novalidate>
     <uib-tabset active="2">
       <uib-tab heading="Basic Info">
-        <div class="form-group"></div> <!-- spacer -->
-        <div class="col-lg-9">
-          <div class="form-group required" ng-class="{ 'has-error' : savingStatus.submitted && teststepForm.name.$invalid }">
-            <label for="name" class="col-lg-2 control-label">Name</label>
-            <div class="col-lg-10">
-              <input name="name" type="text" class="form-control" ng-model="teststep.name"
-                     ng-change="autoSave(teststepForm.$valid)" id="name" placeholder="Name" maxlength="200" required>
-              <div ng-show="savingStatus.submitted && teststepForm.name.$invalid" class="help-block">
-                <p ng-show="teststepForm.name.$error.required">Name is required</p>
-              </div>
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="description" class="col-lg-2 control-label">Description</label>
-            <div class="col-lg-10">
-              <textarea name="description" ng-model="teststep.description" ng-change="autoSave(teststepForm.$valid)"
-                        id="description" cols="30" rows="10" placeholder="Description" class="form-control"></textarea>
-            </div>
-          </div>
-        </div>
+        <div ng-include="'/ui/views/teststeps/edit-basic-info.html'"></div>
       </uib-tab>
       <uib-tab heading="Endpoint Details">
         <div ng-include="'/ui/views/teststeps/soap/edit-soap-teststep-endpoint-details.html'"></div>
