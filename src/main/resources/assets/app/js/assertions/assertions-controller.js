@@ -105,9 +105,10 @@ angular.module('iron-test').controller('AssertionsController', ['$scope', 'Asser
     };
 
     $scope.assertionsModelObj.createContainsAssertion = function() {
+      //  create the assertion
       var assertion = new Assertions({
         teststepId: $stateParams.teststepId,
-        name: 'Response contains value',
+        name: IronTestUtils.getNextNameInSequence($scope.assertionsModelObj.assertions, 'Contains'),
         type: 'Contains',
         properties: { contains: 'value' }
       });
@@ -117,7 +118,7 @@ angular.module('iron-test').controller('AssertionsController', ['$scope', 'Asser
     $scope.assertionsModelObj.createXPathAssertion = function() {
       var assertion = new Assertions({
         teststepId: $stateParams.teststepId,
-        name: 'XPath evaluates to value',
+        name: IronTestUtils.getNextNameInSequence($scope.assertionsModelObj.assertions, 'XPath'),
         type: 'XPath',
         properties: {
          xPath: 'true()',

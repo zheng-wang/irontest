@@ -7,14 +7,17 @@ import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
 import java.util.List;
 
+import static io.irontest.IronTestConstants.DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX;
+
 /**
  * Created by Trevor Li on 7/5/15.
  */
 @RegisterMapper(EnvironmentMapper.class)
 public abstract class EnvironmentDAO {
     @SqlUpdate("create table IF NOT EXISTS environment (id INT PRIMARY KEY auto_increment, " +
-            "name varchar(200) NOT NULL UNIQUE, description varchar(500)," +
-            "created timestamp DEFAULT CURRENT_TIMESTAMP, updated timestamp DEFAULT CURRENT_TIMESTAMP)")
+            "name varchar(200) NOT NULL, description varchar(500)," +
+            "created timestamp DEFAULT CURRENT_TIMESTAMP, updated timestamp DEFAULT CURRENT_TIMESTAMP, " +
+            "CONSTRAINT ENVIRONMENT_" + DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX + " UNIQUE(name))")
     public abstract void createTableIfNotExists();
 
     @SqlUpdate("insert into environment (name, description) values (:name, :description)")

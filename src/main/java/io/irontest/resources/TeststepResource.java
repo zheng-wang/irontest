@@ -47,7 +47,7 @@ public class TeststepResource {
 
         //  create unmanaged endpoint
         Endpoint endpoint = new Endpoint();
-        endpoint.setName("Unmanaged Endpoint " + System.currentTimeMillis());
+        endpoint.setName("Unmanaged Endpoint");
         if (Teststep.TEST_STEP_TYPE_SOAP.equals(teststep.getType())) {
             endpoint.setType(Endpoint.ENDPOINT_TYPE_SOAP);
             endpoint.setUrl(WSDLParser.getAdhocAddress((SOAPTeststepProperties) properties));

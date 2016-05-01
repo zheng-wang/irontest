@@ -59,7 +59,7 @@ angular.module('iron-test').controller('DSAssertionsController', ['$scope', 'Ass
     $scope.assertionsModelObj.createDSFieldContainAssertion = function(field) {
       var assertion = new Assertions({
         teststepId: $stateParams.teststepId,
-        name: 'Field contains value',
+        name: IronTestUtils.getNextNameInSequence($scope.assertionsModelObj.gridOptions.data, 'Field contains value'),
         type: 'DSField',
         properties: {
           field: field,

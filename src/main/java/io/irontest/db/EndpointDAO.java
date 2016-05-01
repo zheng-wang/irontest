@@ -6,16 +6,19 @@ import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
 import java.util.List;
 
+import static io.irontest.IronTestConstants.DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX;
+
 /**
  * Created by Trevor Li on 6/30/15.
  */
 @RegisterMapper(EndpointMapper.class)
 public abstract class EndpointDAO {
     @SqlUpdate("create table IF NOT EXISTS endpoint (id INT PRIMARY KEY auto_increment, environment_id int, " +
-            "name varchar(200) NOT NULL UNIQUE, type varchar(20) NOT NULL, description varchar(500), " +
+            "name varchar(200) NOT NULL, type varchar(20) NOT NULL, description varchar(500), " +
             "url varchar(500), username varchar(200), password varchar(200), " +
             "created timestamp DEFAULT CURRENT_TIMESTAMP, updated timestamp DEFAULT CURRENT_TIMESTAMP, " +
-            "FOREIGN KEY (environment_id) REFERENCES environment(id) ON DELETE CASCADE)")
+            "FOREIGN KEY (environment_id) REFERENCES environment(id) ON DELETE CASCADE, " +
+            "CONSTRAINT ENDPOINT_" + DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX + " UNIQUE(environment_id, name))")
     public abstract void createTableIfNotExists();
 
     @SqlUpdate("insert into endpoint (environment_id, name, type, description, url, username, password) values (" +

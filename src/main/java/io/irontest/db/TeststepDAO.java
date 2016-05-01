@@ -9,17 +9,20 @@ import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
 import java.util.List;
 
+import static io.irontest.IronTestConstants.DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX;
+
 /**
  * Created by Zheng on 7/07/2015.
  */
 @RegisterMapper(TeststepMapper.class)
 public abstract class TeststepDAO {
     @SqlUpdate("create table IF NOT EXISTS teststep (" +
-            "id INT PRIMARY KEY auto_increment, testcase_id INT, name varchar(200) NOT NULL UNIQUE, " +
-            "description clob, type varchar(20) NOT NULL, request clob, properties clob, " +
+            "id INT PRIMARY KEY auto_increment, testcase_id INT, name varchar(200) NOT NULL, " +
+            "description CLOB, type varchar(20) NOT NULL, request CLOB, properties CLOB, " +
             "created timestamp DEFAULT CURRENT_TIMESTAMP, updated timestamp DEFAULT CURRENT_TIMESTAMP, " +
             "endpoint_id int, FOREIGN KEY (endpoint_id) REFERENCES endpoint(id), " +
-            "FOREIGN KEY (testcase_id) REFERENCES testcase(id) ON DELETE CASCADE)")
+            "FOREIGN KEY (testcase_id) REFERENCES testcase(id) ON DELETE CASCADE, " +
+            "CONSTRAINT TESTSTEP_" + DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX + " UNIQUE(testcase_id, name))")
     public abstract void createTableIfNotExists();
 
     @CreateSqlObject

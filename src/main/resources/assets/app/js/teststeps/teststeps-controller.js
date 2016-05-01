@@ -18,11 +18,14 @@ angular.module('iron-test').controller('TeststepsController', ['$scope', 'Testst
       }, 2000);
     };
 
-    $scope.update = function(isValid) {
+    $scope.update = function(isValid, successCallback) {
       if (isValid) {
         $scope.teststep.$update(function(response) {
           $scope.savingStatus.saveSuccessful = true;
           $scope.teststep = response;
+          if (successCallback) {
+            successCallback();
+          }
         }, function(response) {
           IronTestUtils.openErrorHTTPResponseModal(response);
         });
@@ -93,11 +96,11 @@ angular.module('iron-test').controller('TeststepsController', ['$scope', 'Testst
     };
 
     $scope.shareEndpoint = function(isValid) {
-      //  this will reload the whole test step
-      $scope.update(isValid);
-
-      //  exit share-endpoint mode
-      delete $scope.environments;
+      //  if successful, this will reload the whole test step
+      $scope.update(isValid, function successCallback() {
+        //  exit share-endpoint mode
+        delete $scope.environments;
+      });
     };
 
     $scope.cancelShareEndpoint = function() {
