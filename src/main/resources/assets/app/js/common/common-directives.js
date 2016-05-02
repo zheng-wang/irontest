@@ -1,17 +1,36 @@
 'use strict';
 
-angular.module('iron-test').directive('successfulMessage', function () {
+angular.module('iron-test').directive('irtSuccessfulMessage', function () {
   return {
+    template: 'Successfully saved',
     link: function(scope, element, attrs) {
-      var el = element[0];
-      el.addEventListener("animationend", function() {
-        if (scope.savingStatus) {
+      var watchExpression;
+      var animationendCallback;
+
+      if (scope.savingStatus) {
+        watchExpression = 'savingStatus.saveSuccessful';
+
+        animationendCallback = function() {
           scope.savingStatus.saveSuccessful = null;
-        } else {
+        };
+      } else {
+        watchExpression = 'saveSuccessful';
+
+        animationendCallback = function() {
           scope.saveSuccessful = null;
-        }
+        };
+      }
+
+      //  register function for starting animation
+      scope.$watch(watchExpression, function(newVal) {
+        element.toggleClass('successful-message-animation', !!newVal);
       });
-      angular.element(el).addClass('successful-message');
+
+      //  register listener for animation end processing
+      element[0].addEventListener("animationend", animationendCallback);
+
+      //  add class that is always on the element
+      element.addClass('successful-message');
     }
   };
 });

@@ -1,9 +1,6 @@
 <div class="row" id="page-header">
   <h3 class="page-header">SOAP Endpoint - {{endpoint.name}}
-    <label class="col-lg-offset-1" successful-message
-           ng-class="{ 'successful-message-animation' : savingStatus.saveSuccessful }">
-      Successfully saved
-    </label>
+    <label class="col-lg-offset-1" irt-successful-message></label>
     <small>Last edit at {{endpoint.updated | date:'medium'}}</small>
     <label class="back-link"><a ui-sref="environment_edit({environmentId: endpoint.environment.id})">Back</a>                    </label>
   </h3>

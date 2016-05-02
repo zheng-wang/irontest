@@ -1,9 +1,7 @@
 <div ng-controller="TestcasesController" ng-init="findOne()">
   <div class="row">
     <h3 class="page-header">Test Case - {{testcase.name}}
-      <label class="col-lg-offset-1" successful-message ng-class="{ 'successful-message-animation' : saveSuccessful }">
-        Successfully saved
-      </label>
+      <label class="col-lg-offset-1" irt-successful-message></label>
       <small>Last edit at {{testcase.updated | date:'medium'}}</small>
       <label class="back-link"><a ui-sref="testcase_all">Back</a>                    </label>
     </h3>

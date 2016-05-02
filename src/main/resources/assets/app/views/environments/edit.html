@@ -1,9 +1,7 @@
 <div ng-controller="EnvironmentsController" ng-init="findOne()">
   <div class="row">
     <h3 class="page-header">Environment - {{environment.name}}
-      <label class="col-lg-offset-1" successful-message ng-class="{ 'successful-message-animation' : saveSuccessful }">
-        Successfully saved
-      </label>
+      <label class="col-lg-offset-1" irt-successful-message></label>
       <small>Last edit at {{environment.updated | date:'medium'}}</small>
       <label class="back-link"><a ui-sref="environment_all">Back</a>                    </label>
     </h3>

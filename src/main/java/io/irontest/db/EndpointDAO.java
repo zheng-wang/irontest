@@ -7,6 +7,7 @@ import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 import java.util.List;
 
 import static io.irontest.IronTestConstants.DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX;
+import static io.irontest.IronTestConstants.PASSWORD_ENCRYPTION_KEY;
 
 /**
  * Created by Trevor Li on 6/30/15.
@@ -23,7 +24,7 @@ public abstract class EndpointDAO {
 
     @SqlUpdate("insert into endpoint (environment_id, name, type, description, url, username, password) values (" +
             ":evId, :ep.name, :ep.type, :ep.description, :ep.url, " +
-            ":ep.username, ENCRYPT('AES', '8888', STRINGTOUTF8(:ep.password)))")
+            ":ep.username, ENCRYPT('AES', '" + PASSWORD_ENCRYPTION_KEY + "', STRINGTOUTF8(:ep.password)))")
     @GetGeneratedKeys
     protected abstract long _insertManagedEndpoint(@BindBean("ep") Endpoint endpoint, @Bind("evId") long environmentId);
 
@@ -36,7 +37,10 @@ public abstract class EndpointDAO {
     public abstract long insertUnmanagedEndpoint(@BindBean Endpoint endpoint);
 
     @SqlUpdate("update endpoint set environment_id = :evId, name = :ep.name, description = :ep.description, " +
-            "url = :ep.url, username = :ep.username, password = ENCRYPT('AES', '8888', STRINGTOUTF8(:ep.password)), " +
+            "url = :ep.url, username = :ep.username, password = CASE " +
+                "WHEN COALESCE(password, '') <> COALESCE(:ep.password, '') " +
+                    "THEN ENCRYPT('AES', '" + PASSWORD_ENCRYPTION_KEY + "', STRINGTOUTF8(:ep.password)) " +
+                "ELSE password END, " +
             "updated = CURRENT_TIMESTAMP where id = :ep.id")
     protected abstract int _update(@BindBean("ep") Endpoint endpoint, @Bind("evId") Long environmentId);
 

@@ -5,4 +5,5 @@ package io.irontest;
  */
 public interface IronTestConstants {
     public static final String DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX = "UNIQUE_NAME_CONSTRAINT";
+    public static final String PASSWORD_ENCRYPTION_KEY = "8888";
 }
