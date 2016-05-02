@@ -17,19 +17,21 @@ import static io.irontest.IronTestConstants.DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFI
 @RegisterMapper(TeststepMapper.class)
 public abstract class TeststepDAO {
     @SqlUpdate("create table IF NOT EXISTS teststep (" +
-            "id INT PRIMARY KEY auto_increment, testcase_id INT, name varchar(200) NOT NULL, " +
-            "description CLOB, type varchar(20) NOT NULL, request CLOB, properties CLOB, " +
+            "id INT PRIMARY KEY auto_increment, testcase_id INT NOT NULL, sequence SMALLINT NOT NULL, " +
+            "name VARCHAR(200) NOT NULL, description CLOB, type VARCHAR(20) NOT NULL, request CLOB, properties CLOB, " +
             "created timestamp DEFAULT CURRENT_TIMESTAMP, updated timestamp DEFAULT CURRENT_TIMESTAMP, " +
             "endpoint_id int, FOREIGN KEY (endpoint_id) REFERENCES endpoint(id), " +
             "FOREIGN KEY (testcase_id) REFERENCES testcase(id) ON DELETE CASCADE, " +
+            "CONSTRAINT TESTSTEP_UNIQUE_SEQUENCE_CONSTRAINT UNIQUE(testcase_id, sequence), " +
             "CONSTRAINT TESTSTEP_" + DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX + " UNIQUE(testcase_id, name))")
     public abstract void createTableIfNotExists();
 
     @CreateSqlObject
     protected abstract EndpointDAO endpointDAO();
 
-    @SqlUpdate("insert into teststep (testcase_id, name, type, description, request, properties, endpoint_id) values " +
-            "(:testcaseId, :name, :type, :description, :request, :properties, :endpointId)")
+    @SqlUpdate("insert into teststep (testcase_id, sequence, name, type, description, request, properties, endpoint_id) " +
+            "values (:testcaseId, select coalesce(max(sequence), 0) + 1 from teststep where testcase_id = :testcaseId, " +
+            ":name, :type, :description, :request, :properties, :endpointId)")
     @GetGeneratedKeys
     protected abstract long _insert(@Bind("testcaseId") long testcaseId, @Bind("name") String name,
                                 @Bind("type") String type, @Bind("description") String description,
@@ -119,6 +121,6 @@ public abstract class TeststepDAO {
     @SqlQuery("select * from teststep where testcase_id = :testcaseId")
     public abstract List<Teststep> findByTestcaseId(@Bind("testcaseId") long testcaseId);
 
-    @SqlQuery("select id, testcase_id, name, type, description from teststep where testcase_id = :testcaseId")
+    @SqlQuery("select id, testcase_id, sequence, name, type, description from teststep where testcase_id = :testcaseId")
     public abstract List<Teststep> findByTestcaseId_PrimaryProperties(@Bind("testcaseId") long testcaseId);
 }

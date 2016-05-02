@@ -12,6 +12,7 @@ public class Teststep {
     public static final String TEST_STEP_TYPE_DB = "DB";
     private long id;
     private long testcaseId;
+    private short sequence;
     private String name;
     private String type;
     private String description;
@@ -23,10 +24,11 @@ public class Teststep {
 
     public Teststep() {}
 
-    public Teststep(long id, long testcaseId, String name, String type, String description, Properties properties,
-                    Date created, Date updated, String request) {
+    public Teststep(long id, long testcaseId, short sequence, String name, String type, String description,
+                    Properties properties, Date created, Date updated, String request) {
         this.id = id;
         this.testcaseId = testcaseId;
+        this.sequence = sequence;
         this.name = name;
         this.type = type;
         this.description = description;
@@ -50,6 +52,14 @@ public class Teststep {
 
     public void setTestcaseId(long testcaseId) {
         this.testcaseId = testcaseId;
+    }
+
+    public short getSequence() {
+        return sequence;
+    }
+
+    public void setSequence(short sequence) {
+        this.sequence = sequence;
     }
 
     public String getName() {

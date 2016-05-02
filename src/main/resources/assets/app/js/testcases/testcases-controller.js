@@ -30,7 +30,8 @@ angular.module('iron-test').controller('TestcasesController', ['$scope', 'Testca
 
     $scope.teststepGridColumnDefs = [
       {
-        name: 'id', displayName: 'ID', width: 55, minWidth: 55,
+        name: 'sequence', displayName: 'NO.', width: 55, minWidth: 55,
+        cellTemplate: 'teststepGridSequenceCellTemplate.html',
         sort: { direction: uiGridConstants.ASC, priority: 1 }
       },
       {

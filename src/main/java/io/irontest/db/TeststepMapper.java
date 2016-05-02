@@ -30,8 +30,8 @@ public class TeststepMapper implements ResultSetMapper<Teststep> {
             throw new SQLException("Failed to deserialize properties JSON.", e);
         }
 
-        Teststep teststep = new Teststep(rs.getLong("id"), rs.getLong("testcase_id"), rs.getString("name"),
-                rs.getString("type"), rs.getString("description"), properties,
+        Teststep teststep = new Teststep(rs.getLong("id"), rs.getLong("testcase_id"), rs.getShort("sequence"),
+                rs.getString("name"), rs.getString("type"), rs.getString("description"), properties,
                 fields.contains("created") ? rs.getTimestamp("created") : null,
                 fields.contains("updated") ? rs.getTimestamp("updated") : null,
                 fields.contains("request") ? rs.getString("request") : null);
