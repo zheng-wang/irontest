@@ -28,27 +28,31 @@ angular.module('iron-test').controller('TestcasesController', ['$scope', 'Testca
       }
     ];
 
-    $scope.teststepGridColumnDefs = [
-      {
-        name: 'sequence', displayName: 'NO.', width: 55, minWidth: 55,
-        cellTemplate: 'teststepGridSequenceCellTemplate.html',
-        sort: { direction: uiGridConstants.ASC, priority: 1 }
-      },
-      {
-        name: 'name', width: 200, minWidth: 100,
-        cellTemplate: 'teststepGridNameCellTemplate.html'
-      },
-      {name: 'type', width: 80, minWidth: 80},
-      {name: 'description', width: 500, minWidth: 300},
-      {
-        name: 'delete', width: 100, minWidth: 80, enableSorting: false, enableFiltering: false,
-        cellTemplate: 'teststepGridDeleteCellTemplate.html'
-      },
-      {
-        name: 'result', width: 100, minWidth: 80,
-        cellTemplate: 'teststepGridResultCellTemplate.html'
-      }
-    ];
+    $scope.teststepGridOptions = {
+      data: 'testcase.teststeps',
+      enableFiltering: true,
+      rowTemplate: '<div grid="grid" class="ui-grid-draggable-row" draggable="true"><div ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader, \'custom\': true }" ui-grid-cell></div></div>',
+      columnDefs: [
+        {
+          name: 'sequence', displayName: 'NO.', width: 55, minWidth: 55,
+          cellTemplate: 'teststepGridSequenceCellTemplate.html' //, sort: { direction: uiGridConstants.ASC, priority: 1 }
+        },
+        {
+          name: 'name', width: 200, minWidth: 100,
+          cellTemplate: 'teststepGridNameCellTemplate.html'
+        },
+        {name: 'type', width: 80, minWidth: 80},
+        {name: 'description', width: 500, minWidth: 300},
+        {
+          name: 'delete', width: 100, minWidth: 80, enableSorting: false, enableFiltering: false,
+          cellTemplate: 'teststepGridDeleteCellTemplate.html'
+        },
+        {
+          name: 'result', width: 100, minWidth: 80,
+          cellTemplate: 'teststepGridResultCellTemplate.html'
+        }
+      ]
+    };
 
     $scope.update = function(isValid) {
       if (isValid) {
