@@ -94,11 +94,17 @@ public abstract class TeststepDAO {
     public void deleteById_NoTransaction(long id) {
         Teststep teststep = findById_NoTransaction(id);
         _deleteById(id);
+        decrementSequenceNumbersOfNextSteps(teststep.getTestcaseId(), (short) (teststep.getSequence() + 1));
         if (!teststep.getEndpoint().isManaged()) {    //  delete the teststep's endpoint if it is unmanaged
             endpointDAO().deleteById(teststep.getEndpoint().getId());
         }
     }
 
+    //  decrement sequence number of all next test steps
+    @SqlUpdate("update teststep set sequence = sequence - 1 " +
+               "where testcase_id = :testcaseId and sequence >= :startSequenceNumber")
+    protected abstract int decrementSequenceNumbersOfNextSteps(@Bind("testcaseId") long testcaseId,
+                                                               @Bind("startSequenceNumber") short startSequenceNumber);
     @SqlQuery("select * from teststep where id = :id")
     protected abstract Teststep _findById(@Bind("id") long id);
 
