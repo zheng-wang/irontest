@@ -1,7 +1,9 @@
 package io.irontest.resources;
 
 import io.irontest.db.TestcaseDAO;
+import io.irontest.db.TeststepDAO;
 import io.irontest.models.Testcase;
+import io.irontest.models.Teststep;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -13,9 +15,11 @@ import java.util.List;
 @Path("/testcases") @Produces({ MediaType.APPLICATION_JSON })
 public class TestcaseResource {
     private final TestcaseDAO testcaseDAO;
+    private final TeststepDAO teststepDAO;
 
-    public TestcaseResource(TestcaseDAO testcaseDAO) {
+    public TestcaseResource(TestcaseDAO testcaseDAO, TeststepDAO teststepDAO) {
         this.testcaseDAO = testcaseDAO;
+        this.teststepDAO = teststepDAO;
     }
 
     @POST
@@ -26,8 +30,13 @@ public class TestcaseResource {
     }
 
     @PUT @Path("{testcaseId}")
-    public Testcase update(Testcase testcase) {
-        testcaseDAO.update(testcase);
+    public Testcase update(Testcase testcase, @QueryParam("moveStep") boolean moveStep) {
+        if (moveStep) {  //  move teststep in testcase
+            List<Teststep> teststeps = testcase.getTeststeps();
+            teststepDAO.moveInTestcase(testcase.getId(), teststeps.get(0).getSequence(), teststeps.get(1).getSequence());
+        } else {         //  update testcase details
+            testcaseDAO.update(testcase);
+        }
         return testcaseDAO.findById(testcase.getId());
     }
 

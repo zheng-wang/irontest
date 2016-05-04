@@ -30,7 +30,7 @@ angular.module('iron-test').controller('TestcasesController', ['$scope', 'Testca
 
     $scope.teststepGridOptions = {
       data: 'testcase.teststeps',
-      enableFiltering: true,
+      enableSorting: false,
       rowTemplate: '<div grid="grid" class="ui-grid-draggable-row" draggable="true"><div ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader, \'custom\': true }" ui-grid-cell></div></div>',
       columnDefs: [
         {
@@ -51,7 +51,13 @@ angular.module('iron-test').controller('TestcasesController', ['$scope', 'Testca
           name: 'result', width: 100, minWidth: 80,
           cellTemplate: 'teststepGridResultCellTemplate.html'
         }
-      ]
+      ],
+      onRegisterApi: function (gridApi) {
+        gridApi.draggableRows.on.rowDropped($scope, function (info, dropTarget) {
+          console.log("Dropped", info);
+          console.log(dropTarget);
+        });
+      }
     };
 
     $scope.update = function(isValid) {

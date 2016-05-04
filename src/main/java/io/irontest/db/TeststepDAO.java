@@ -124,9 +124,42 @@ public abstract class TeststepDAO {
         return teststep;
     }
 
-    @SqlQuery("select * from teststep where testcase_id = :testcaseId")
+    @SqlQuery("select * from teststep where testcase_id = :testcaseId order by sequence")
     public abstract List<Teststep> findByTestcaseId(@Bind("testcaseId") long testcaseId);
 
-    @SqlQuery("select id, testcase_id, sequence, name, type, description from teststep where testcase_id = :testcaseId")
+    @SqlQuery("select id, testcase_id, sequence, name, type, description from teststep " +
+              "where testcase_id = :testcaseId order by sequence")
     public abstract List<Teststep> findByTestcaseId_PrimaryProperties(@Bind("testcaseId") long testcaseId);
+
+    @SqlQuery("select * from teststep where testcase_id = :testcaseId and sequence = :sequence")
+    protected abstract Teststep findBySequence(@Bind("testcaseId") long testcaseId, @Bind("sequence") short sequence);
+
+    @SqlUpdate("update teststep set sequence = :newSequence where id = :teststepId")
+    protected abstract int updateSequence(@Bind("teststepId") long teststepId, @Bind("newSequence") short newSequence);
+
+    @SqlUpdate("update teststep set sequence = case when :direction = 'up' then sequence - 1 else sequence + 1 end " +
+            "where testcase_id = :testcaseId and sequence >= :firstSequence and sequence <= :lastSequence")
+    protected abstract int batchMoveOneStep(@Bind("testcaseId") long testcaseId,
+                                              @Bind("firstSequence") short firstSequence,
+                                              @Bind("lastSequence") short lastSequence,
+                                              @Bind("direction") String direction);
+
+    @Transaction
+    public void moveInTestcase(long testcaseId, short fromSequence, short toSequence) {
+        if (fromSequence != toSequence) {
+            long draggedStepId = findBySequence(testcaseId, fromSequence).getId();
+
+            //  shelve the dragged step first
+            updateSequence(draggedStepId, (short) -1);
+
+            if (fromSequence < toSequence) {
+                batchMoveOneStep(testcaseId, (short) (fromSequence + 1), toSequence, "up");
+            } else {
+                batchMoveOneStep(testcaseId, toSequence, (short) (fromSequence - 1), "down");
+            }
+
+            //  move the dragged step
+            updateSequence(draggedStepId, toSequence);
+        }
+    }
 }
