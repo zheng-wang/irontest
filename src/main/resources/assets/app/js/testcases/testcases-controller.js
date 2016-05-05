@@ -54,8 +54,19 @@ angular.module('iron-test').controller('TestcasesController', ['$scope', 'Testca
       ],
       onRegisterApi: function (gridApi) {
         gridApi.draggableRows.on.rowDropped($scope, function (info, dropTarget) {
-          console.log("Dropped", info);
-          console.log(dropTarget);
+          var testcase = new Testcases({
+            id: $scope.testcase.id,
+            teststeps: [
+              { sequence: info.draggedRowEntity.sequence },    //  from sequence
+              { sequence: info.targetRowEntity.sequence }     //  to sequence
+            ]
+          });
+          testcase.$update({ moveStep: true }, function(response) {
+            $scope.saveSuccessful = true;
+            $scope.testcase = response;
+          }, function(response) {
+            IronTestUtils.openErrorHTTPResponseModal(response);
+          });
         });
       }
     };

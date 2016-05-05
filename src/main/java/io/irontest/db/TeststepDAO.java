@@ -135,7 +135,7 @@ public abstract class TeststepDAO {
     protected abstract Teststep findBySequence(@Bind("testcaseId") long testcaseId, @Bind("sequence") short sequence);
 
     @SqlUpdate("update teststep set sequence = :newSequence where id = :teststepId")
-    protected abstract int updateSequence(@Bind("teststepId") long teststepId, @Bind("newSequence") short newSequence);
+    protected abstract int updateSequenceById(@Bind("teststepId") long teststepId, @Bind("newSequence") short newSequence);
 
     @SqlUpdate("update teststep set sequence = case when :direction = 'up' then sequence - 1 else sequence + 1 end " +
             "where testcase_id = :testcaseId and sequence >= :firstSequence and sequence <= :lastSequence")
@@ -150,7 +150,7 @@ public abstract class TeststepDAO {
             long draggedStepId = findBySequence(testcaseId, fromSequence).getId();
 
             //  shelve the dragged step first
-            updateSequence(draggedStepId, (short) -1);
+            updateSequenceById(draggedStepId, (short) -1);
 
             if (fromSequence < toSequence) {
                 batchMoveOneStep(testcaseId, (short) (fromSequence + 1), toSequence, "up");
@@ -158,8 +158,8 @@ public abstract class TeststepDAO {
                 batchMoveOneStep(testcaseId, toSequence, (short) (fromSequence - 1), "down");
             }
 
-            //  move the dragged step
-            updateSequence(draggedStepId, toSequence);
+            //  move the dragged step last
+            updateSequenceById(draggedStepId, toSequence);
         }
     }
 }
