@@ -14,7 +14,7 @@ import static io.irontest.IronTestConstants.PASSWORD_ENCRYPTION_KEY;
  */
 @RegisterMapper(EndpointMapper.class)
 public abstract class EndpointDAO {
-    @SqlUpdate("create table IF NOT EXISTS endpoint (id INT PRIMARY KEY auto_increment, environment_id int, " +
+    @SqlUpdate("create table IF NOT EXISTS endpoint (id IDENTITY PRIMARY KEY, environment_id int, " +
             "name varchar(200) NOT NULL, type varchar(20) NOT NULL, description varchar(500), " +
             "url varchar(500), username varchar(200), password varchar(200), " +
             "created timestamp DEFAULT CURRENT_TIMESTAMP, updated timestamp DEFAULT CURRENT_TIMESTAMP, " +

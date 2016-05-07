@@ -14,7 +14,7 @@ import static io.irontest.IronTestConstants.DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFI
  */
 @RegisterMapper(EnvironmentMapper.class)
 public abstract class EnvironmentDAO {
-    @SqlUpdate("create table IF NOT EXISTS environment (id INT PRIMARY KEY auto_increment, " +
+    @SqlUpdate("create table IF NOT EXISTS environment (id IDENTITY PRIMARY KEY, " +
             "name varchar(200) NOT NULL, description varchar(500)," +
             "created timestamp DEFAULT CURRENT_TIMESTAMP, updated timestamp DEFAULT CURRENT_TIMESTAMP, " +
             "CONSTRAINT ENVIRONMENT_" + DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX + " UNIQUE(name))")

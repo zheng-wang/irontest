@@ -17,7 +17,7 @@ import static io.irontest.IronTestConstants.DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFI
 @RegisterMapper(TeststepMapper.class)
 public abstract class TeststepDAO {
     @SqlUpdate("create table IF NOT EXISTS teststep (" +
-            "id INT PRIMARY KEY auto_increment, testcase_id INT NOT NULL, sequence SMALLINT NOT NULL, " +
+            "id IDENTITY PRIMARY KEY, testcase_id INT NOT NULL, sequence SMALLINT NOT NULL, " +
             "name VARCHAR(200) NOT NULL, description CLOB, type VARCHAR(20) NOT NULL, request CLOB, properties CLOB, " +
             "created timestamp DEFAULT CURRENT_TIMESTAMP, updated timestamp DEFAULT CURRENT_TIMESTAMP, " +
             "endpoint_id int, FOREIGN KEY (endpoint_id) REFERENCES endpoint(id), " +
