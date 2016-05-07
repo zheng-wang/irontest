@@ -6,12 +6,11 @@ angular.module('iron-test').config(['$stateProvider', function ($stateProvider) 
             url: '/testcases',
             templateUrl: '/ui/views/testcases/list.html'
         })
-        .state('testcase_create', {
-            url: '/testcases/create',
-            templateUrl: '/ui/views/testcases/create.html'
-        })
         .state('testcase_edit', {
             url: '/testcases/:testcaseId/edit',
+            params: {
+              newlyCreated: null
+            },
             templateUrl: '/ui/views/testcases/edit.html'
         });
 

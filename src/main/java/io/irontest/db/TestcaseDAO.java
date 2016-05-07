@@ -15,17 +15,27 @@ import static io.irontest.IronTestConstants.DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFI
 @RegisterMapper(TestcaseMapper.class)
 public abstract class TestcaseDAO {
     @SqlUpdate("create table IF NOT EXISTS testcase (id IDENTITY PRIMARY KEY, " +
-            "name varchar(200) NOT NULL, description clob, created timestamp DEFAULT CURRENT_TIMESTAMP, " +
-            "updated timestamp DEFAULT CURRENT_TIMESTAMP, " +
+            "name varchar(200) NOT NULL DEFAULT CURRENT_TIMESTAMP, description clob, " +
+            "created timestamp DEFAULT CURRENT_TIMESTAMP, updated timestamp DEFAULT CURRENT_TIMESTAMP, " +
             "CONSTRAINT TESTCASE_" + DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX + " UNIQUE(name))")
     public abstract void createTableIfNotExists();
 
     @CreateSqlObject
     protected abstract TeststepDAO teststepDAO();
 
-    @SqlUpdate("insert into testcase (name, description) values (:name, :description)")
+    @SqlUpdate("insert into testcase values ()")
     @GetGeneratedKeys
-    public abstract long insert(@BindBean Testcase testcase);
+    protected abstract long _insert();
+
+    @SqlUpdate("update testcase set name = :name where id = :id")
+    protected abstract long updateNameForInsert(@Bind("id") long id, @Bind("name") String name);
+
+    @Transaction
+    public long insert() {
+        long id = _insert();
+        updateNameForInsert(id, "Test Case " + id);
+        return id;
+    }
 
     @SqlUpdate("update testcase set name = :name, description = :description, " +
             "updated = CURRENT_TIMESTAMP where id = :id")

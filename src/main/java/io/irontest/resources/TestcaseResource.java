@@ -23,10 +23,9 @@ public class TestcaseResource {
     }
 
     @POST
-    public Testcase create(Testcase testcase) {
-        long id = testcaseDAO.insert(testcase);
-        testcase.setId(id);
-        return testcase;
+    public Testcase create() {
+        long id = testcaseDAO.insert();
+        return testcaseDAO.findById(id);
     }
 
     @PUT @Path("{testcaseId}")

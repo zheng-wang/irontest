@@ -14,7 +14,7 @@ angular.module('iron-test').controller('TestcasesController', ['$scope', 'Testca
 
     $scope.testcaseGridColumnDefs = [
       {
-        name: 'name', width: 200, minWidth: 100,
+        name: 'name', width: 250, minWidth: 100,
         sort: {
           direction: uiGridConstants.ASC,
           priority: 1
@@ -84,20 +84,13 @@ angular.module('iron-test').controller('TestcasesController', ['$scope', 'Testca
       }
     };
 
-    $scope.create = function(isValid) {
-      if (isValid) {
-        var testcase = new Testcases({
-          name: this.name,
-          description: this.description
-        });
-        testcase.$save(function(response) {
-          $state.go('testcase_edit', {testcaseId: response.id});
-        }, function(response) {
-          IronTestUtils.openErrorHTTPResponseModal(response);
-        });
-      } else {
-        $scope.submitted = true;
-      }
+    $scope.create = function() {
+      var testcase = new Testcases();
+      testcase.$save(function(response) {
+        $state.go('testcase_edit', {testcaseId: response.id, newlyCreated: true});
+      }, function(response) {
+        IronTestUtils.openErrorHTTPResponseModal(response);
+      });
     };
 
     $scope.remove = function(testcase) {
@@ -136,7 +129,12 @@ angular.module('iron-test').controller('TestcasesController', ['$scope', 'Testca
       });
     };
 
+    $scope.testcaseNewlyCreated = function() {
+      return $stateParams.newlyCreated === true;
+    };
+
     $scope.findOne = function() {
+      $scope.activeTabIndex = $scope.testcaseNewlyCreated() ? 0 : 1;
       Testcases.get({
         testcaseId: $stateParams.testcaseId
       }, function(testcase) {
