@@ -69,7 +69,7 @@ angular.module('iron-test').controller('TeststepsController', ['$scope', 'Testst
             $scope.teststep.endpoint = selectedEndpoint;
             $scope.update(true);  //  save immediately (no timeout)
           }, function () {
-            //  Modal dismissed
+            //  Modal dismissed. Do nothing.
           });
         }, function errorCallback(response) {
           IronTestUtils.openErrorHTTPResponseModal(response);

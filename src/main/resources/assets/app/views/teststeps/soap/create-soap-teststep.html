@@ -23,39 +23,6 @@
               placeholder="Description" class="form-control"></textarea>
         </div>
       </div>
-      <div class="form-group required" ng-class="{ 'has-error' : submitted && teststepForm.wsdlUrl.$invalid }">
-        <label for="wsdlUrl" class="col-lg-2 control-label">WSDL URL</label>
-        <div class="col-lg-8">
-          <input name="wsdlUrl" type="text" class="form-control" ng-model="wsdlUrl" id="wsdlUrl"
-                 placeholder="http://localhost:8081/soap/article?wsdl" required>
-          <div ng-show="submitted && teststepForm.wsdlUrl.$invalid" class="help-block">
-            <p ng-show="teststepForm.wsdlUrl.$error.required">WSDL URL is required</p>
-          </div>
-        </div>
-        <div class="col-lg-1">
-          <button type="button" class="btn btn-info" ng-click="loadWsdl()">Load</button>
-        </div>
-      </div>
-      <div class="form-group required" ng-class="{ 'has-error' : submitted && teststepForm.wsdlBinding.$invalid }">
-        <label for="wsdlBinding" class="col-lg-2 control-label">WSDL Binding</label>
-        <div class="col-lg-10">
-          <select name="wsdlBinding" id="wsdlBinding" class="form-control" ng-model="wsdlBinding"
-              ng-options="item.name for item in wsdlBindings" ng-change="refreshOperations()" required></select>
-          <div ng-show="submitted && teststepForm.wsdlBinding.$invalid" class="help-block">
-            <p ng-show="teststepForm.wsdlBinding.$error.required">WSDL Binding is required</p>
-          </div>
-        </div>
-      </div>
-      <div class="form-group required" ng-class="{ 'has-error' : submitted && teststepForm.wsdlOperation.$invalid }">
-        <label for="wsdlOperation" class="col-lg-2 control-label">WSDL Operation</label>
-        <div class="col-lg-10">
-          <select name="wsdlOperation" id="wsdlOperation" class="form-control" ng-model="wsdlOperation"
-              ng-options="item for item in wsdlOperations" required></select>
-          <div ng-show="submitted && teststepForm.wsdlOperation.$invalid" class="help-block">
-            <p ng-show="teststepForm.wsdlOperation.$error.required">WSDL Operation is required</p>
-          </div>
-        </div>
-      </div>
       <div class="form-group">
         <div class="col-lg-offset-6">
           <button type="submit" class="btn btn-info">Submit</button>

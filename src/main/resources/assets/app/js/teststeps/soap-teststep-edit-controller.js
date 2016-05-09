@@ -4,9 +4,32 @@
 //    The $scope here prototypically inherits from the $scope of teststeps-controller.js.
 //    ng-include also creates a scope.
 angular.module('iron-test').controller('SOAPTeststepEditController', ['$scope', 'Testruns', 'IronTestUtils',
-  function($scope, Testruns, IronTestUtils) {
+    '$uibModal',
+  function($scope, Testruns, IronTestUtils, $uibModal) {
     $scope.tempData = {};
     $scope.showAssertionsArea = false;
+
+    $scope.generateRequest = function() {
+      //  open modal dialog
+      var modalInstance = $uibModal.open({
+        templateUrl: '/ui/views/teststeps/soap/select-soap-operation-modal.html',
+        controller: 'SelectSOAPOperationModalController',
+        size: 'lg',
+        windowClass: 'select-soap-operation-modal',
+        resolve: {
+          soapAddress: function () {
+            return $scope.teststep.endpoint.url;
+          }
+        }
+      });
+
+      //  handle result from modal dialog
+      modalInstance.result.then(function (successful) {
+
+      }, function () {
+        //  Modal dismissed. Do nothing.
+      });
+    };
 
     $scope.invoke = function() {
       var testrun = {

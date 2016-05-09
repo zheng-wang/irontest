@@ -1,15 +1,16 @@
 <div class="form-group form-group-reduced-bottom-margin"></div>
 <div class="form-group form-group-reduced-bottom-margin">
-  <div class="col-lg-10">
-    <label for="soapAddress" class="col-lg-2 control-label">SOAP Address</label>
-    <div class="col-lg-8">
-      <input name="soapAddress" type="text" class="form-control" ng-change="autoSave(teststepForm.$valid)"
-             ng-model="teststep.endpoint.url" id="soapAddress" spellcheck="false"
-             ng-readonly="teststep.endpoint.environment">  <!-- readonly when it is a managed endpoint -->
-    </div>
-    <div class="col-lg-1">
-      <button type="button" class="btn btn-info" ng-click="invoke()">Invoke</button>
-    </div>
+  <label for="soapAddress" class="col-lg-2 control-label">SOAP Address</label>
+  <div class="col-lg-6">
+    <input name="soapAddress" type="text" class="form-control" ng-change="autoSave(teststepForm.$valid)"
+           ng-model="teststep.endpoint.url" id="soapAddress" spellcheck="false"
+           ng-readonly="teststep.endpoint.environment">  <!-- readonly when it is a managed endpoint -->
+  </div>
+  <div class="col-lg-1">
+    <button type="button" class="btn btn-info" ng-click="invoke()">Invoke</button>
+  </div>
+  <div class="col-lg-offset-1 col-lg-1">
+    <button type="button" class="btn btn-info" ng-click="generateRequest()">Generate Request</button>
   </div>
 </div>
 <div class="form-group form-group-reduced-bottom-margin" request-response-textareas>
@@ -18,7 +19,7 @@
         id="request" placeholder="Request" class="form-control full-height-important" spellcheck="false"></textarea>
   </div>
   <div class="col-lg-6 full-height">
-    <textarea name="response" ng-model="tempData.soapResponse" id="response" placeholder="SOAP Response"
+    <textarea name="response" ng-model="tempData.soapResponse" id="response" placeholder="Response"
         class="form-control full-height-important" spellcheck="false"></textarea>
   </div>
 </div>

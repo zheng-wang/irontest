@@ -39,7 +39,7 @@ public class TeststepResource {
         //  create sample request
         String sampleRequest = null;
         if (Teststep.TEST_STEP_TYPE_SOAP.equals(teststep.getType())) {
-            sampleRequest = WSDLParser.getSampleRequest((SOAPTeststepProperties) properties);
+            //sampleRequest = WSDLParser.getSampleRequest((SOAPTeststepProperties) properties);
         } else if (Teststep.TEST_STEP_TYPE_DB.equals(teststep.getType())){
             sampleRequest = "select * from ? where ?";
         }
@@ -50,9 +50,9 @@ public class TeststepResource {
         endpoint.setName("Unmanaged Endpoint");
         if (Teststep.TEST_STEP_TYPE_SOAP.equals(teststep.getType())) {
             endpoint.setType(Endpoint.ENDPOINT_TYPE_SOAP);
-            endpoint.setUrl(WSDLParser.getAdhocAddress((SOAPTeststepProperties) properties));
+            //endpoint.setUrl(WSDLParser.getAdhocAddress((SOAPTeststepProperties) properties));
         } else if (Teststep.TEST_STEP_TYPE_DB.equals(teststep.getType())) {
-            endpoint.setType(Endpoint.TEST_STEP_TYPE_DB);
+            endpoint.setType(Endpoint.ENDPOINT_TYPE_DB);
         }
         teststep.setEndpoint(endpoint);
     }
