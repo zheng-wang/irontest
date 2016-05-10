@@ -3,10 +3,7 @@ package io.irontest.resources;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.irontest.db.TeststepDAO;
 import io.irontest.models.Endpoint;
-import io.irontest.models.Properties;
-import io.irontest.models.SOAPTeststepProperties;
 import io.irontest.models.Teststep;
-import io.irontest.utils.WSDLParser;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -34,13 +31,9 @@ public class TeststepResource {
 
     //  adding more info to the teststep object
     private void preCreationProcess(Teststep teststep) {
-        Properties properties = teststep.getProperties();
-
         //  create sample request
         String sampleRequest = null;
-        if (Teststep.TEST_STEP_TYPE_SOAP.equals(teststep.getType())) {
-            //sampleRequest = WSDLParser.getSampleRequest((SOAPTeststepProperties) properties);
-        } else if (Teststep.TEST_STEP_TYPE_DB.equals(teststep.getType())){
+        if (Teststep.TEST_STEP_TYPE_DB.equals(teststep.getType())){
             sampleRequest = "select * from ? where ?";
         }
         teststep.setRequest(sampleRequest);
@@ -50,7 +43,6 @@ public class TeststepResource {
         endpoint.setName("Unmanaged Endpoint");
         if (Teststep.TEST_STEP_TYPE_SOAP.equals(teststep.getType())) {
             endpoint.setType(Endpoint.ENDPOINT_TYPE_SOAP);
-            //endpoint.setUrl(WSDLParser.getAdhocAddress((SOAPTeststepProperties) properties));
         } else if (Teststep.TEST_STEP_TYPE_DB.equals(teststep.getType())) {
             endpoint.setType(Endpoint.ENDPOINT_TYPE_DB);
         }

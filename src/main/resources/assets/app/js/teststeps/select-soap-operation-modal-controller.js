@@ -6,13 +6,9 @@ angular.module('iron-test').controller('SelectSOAPOperationModalController', ['$
     $scope.soapAddress = soapAddress;
     $scope.wsdlUrl = soapAddress + '?wsdl';
 
-    $scope.loadWsdl = function() {
+    $scope.loadWSDLBindings = function() {
       $http
-        .get('api/wsdls/anywsdl/operations', {
-          params: {
-            wsdlUrl: $scope.wsdlUrl
-          }
-        })
+        .get('api/wsdls/' + encodeURIComponent($scope.wsdlUrl) + '/bindings')
         .then(function successCallback(response) {
           $scope.wsdlBindings = response.data;
           $scope.wsdlBinding = $scope.wsdlBindings[0];
@@ -33,8 +29,15 @@ angular.module('iron-test').controller('SelectSOAPOperationModalController', ['$
       $uibModalInstance.dismiss('cancel');
     };
 
-    $scope.select = function(endpoint) {
-      $uibModalInstance.close(endpoint);
+    $scope.ok = function() {
+      $http
+        .get('api/wsdls/' + encodeURIComponent($scope.wsdlUrl) + '/bindings/' + $scope.wsdlBinding.name +
+          '/operations/' + $scope.wsdlOperation)
+        .then(function successCallback(response) {
+          $uibModalInstance.close(response.data);
+        }, function errorCallback(response) {
+          IronTestUtils.openErrorHTTPResponseModal(response);
+        });
     };
   }
 ]);

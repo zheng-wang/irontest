@@ -1,7 +1,5 @@
 package io.irontest.models;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
 import java.util.Date;
 
 /**
@@ -18,21 +16,19 @@ public class Teststep {
     private String description;
     private String request;
     private Endpoint endpoint;
-    private Properties properties;
     private Date created;
     private Date updated;
 
     public Teststep() {}
 
     public Teststep(long id, long testcaseId, short sequence, String name, String type, String description,
-                    Properties properties, Date created, Date updated, String request) {
+                    Date created, Date updated, String request) {
         this.id = id;
         this.testcaseId = testcaseId;
         this.sequence = sequence;
         this.name = name;
         this.type = type;
         this.description = description;
-        this.properties = properties;
         this.created = created;
         this.updated = updated;
         this.request = request;
@@ -116,14 +112,5 @@ public class Teststep {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public Properties getProperties() {
-        return properties;
-    }
-
-    @JsonDeserialize(using=TeststepPropertiesDeserializer.class)
-    public void setProperties(Properties properties) {
-        this.properties = properties;
     }
 }

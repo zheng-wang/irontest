@@ -1,7 +1,6 @@
 package io.irontest.db;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.irontest.models.Endpoint;
 import io.irontest.models.Teststep;
 import org.skife.jdbi.v2.sqlobject.*;
@@ -18,7 +17,7 @@ import static io.irontest.IronTestConstants.DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFI
 public abstract class TeststepDAO {
     @SqlUpdate("create table IF NOT EXISTS teststep (" +
             "id IDENTITY PRIMARY KEY, testcase_id INT NOT NULL, sequence SMALLINT NOT NULL, " +
-            "name VARCHAR(200) NOT NULL, description CLOB, type VARCHAR(20) NOT NULL, request CLOB, properties CLOB, " +
+            "name VARCHAR(200) NOT NULL, description CLOB, type VARCHAR(20) NOT NULL, request CLOB, " +
             "created timestamp DEFAULT CURRENT_TIMESTAMP, updated timestamp DEFAULT CURRENT_TIMESTAMP, " +
             "endpoint_id int, FOREIGN KEY (endpoint_id) REFERENCES endpoint(id), " +
             "FOREIGN KEY (testcase_id) REFERENCES testcase(id) ON DELETE CASCADE, " +
@@ -29,39 +28,35 @@ public abstract class TeststepDAO {
     @CreateSqlObject
     protected abstract EndpointDAO endpointDAO();
 
-    @SqlUpdate("insert into teststep (testcase_id, sequence, name, type, description, request, properties, endpoint_id) " +
+    @SqlUpdate("insert into teststep (testcase_id, sequence, name, type, description, request, endpoint_id) " +
             "values (:testcaseId, select coalesce(max(sequence), 0) + 1 from teststep where testcase_id = :testcaseId, " +
-            ":name, :type, :description, :request, :properties, :endpointId)")
+            ":name, :type, :description, :request, :endpointId)")
     @GetGeneratedKeys
     protected abstract long _insert(@Bind("testcaseId") long testcaseId, @Bind("name") String name,
                                 @Bind("type") String type, @Bind("description") String description,
-                                @Bind("request") String request, @Bind("properties") String properties,
-                                @Bind("endpointId") long endpointId);
+                                @Bind("request") String request, @Bind("endpointId") long endpointId);
 
     @Transaction
     public void insert(Teststep teststep) throws JsonProcessingException {
         long endpointId = endpointDAO().insertUnmanagedEndpoint(teststep.getEndpoint());
         teststep.getEndpoint().setId(endpointId);
         long id = _insert(teststep.getTestcaseId(), teststep.getName(), teststep.getType(), teststep.getDescription(),
-                teststep.getRequest(), new ObjectMapper().writeValueAsString(teststep.getProperties()),
-                teststep.getEndpoint().getId());
+                teststep.getRequest(), teststep.getEndpoint().getId());
         teststep.setId(id);
     }
 
     @SqlUpdate("update teststep set name = :name, description = :description, request = :request, " +
-            "properties = :properties, endpoint_id = :endpointId, " +
-            "updated = CURRENT_TIMESTAMP where id = :id")
+            "endpoint_id = :endpointId, updated = CURRENT_TIMESTAMP where id = :id")
     protected abstract int _update(@Bind("name") String name, @Bind("description") String description,
-                               @Bind("request") String request, @Bind("properties") String properties,
-                               @Bind("id") long id, @Bind("endpointId") long endpointId);
+                                   @Bind("request") String request, @Bind("id") long id,
+                                   @Bind("endpointId") long endpointId);
 
     @Transaction
     public Teststep update(Teststep teststep) throws JsonProcessingException {
         Endpoint oldEndpoint = findById_NoTransaction(teststep.getId()).getEndpoint();
         Endpoint newEndpoint = teststep.getEndpoint();
 
-        _update(teststep.getName(), teststep.getDescription(), teststep.getRequest(),
-                new ObjectMapper().writeValueAsString(teststep.getProperties()), teststep.getId(),
+        _update(teststep.getName(), teststep.getDescription(), teststep.getRequest(), teststep.getId(),
                 newEndpoint.getId());
 
         if (newEndpoint.isManaged()) {

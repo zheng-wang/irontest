@@ -1,7 +1,5 @@
 package io.irontest.utils;
 
-import io.irontest.models.SOAPTeststepProperties;
-import io.irontest.models.Teststep;
 import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.ContainsAssertionProperties;
 import io.irontest.models.assertion.DSFieldAssertionProperties;
@@ -17,7 +15,6 @@ import java.util.List;
  * Created by Zheng on 12/07/2015.
  */
 public class IronTestUtils {
-
     public static Class getAssertionPropertiesClassByType(String assertionType) {
         if (Assertion.ASSERTION_TYPE_CONTAINS.equals(assertionType)) {
             return ContainsAssertionProperties.class;
@@ -27,14 +24,6 @@ public class IronTestUtils {
             return DSFieldAssertionProperties.class;
         } else {
             throw new RuntimeException("Unrecognized assertion type " + assertionType);
-        }
-    }
-
-    public static Class getTeststepPropertiesClassByType(String teststepType) {
-        if (Teststep.TEST_STEP_TYPE_SOAP.equals(teststepType)) {
-            return SOAPTeststepProperties.class;
-        } else {
-            return null;
         }
     }
 

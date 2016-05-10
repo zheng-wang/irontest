@@ -1,16 +1,18 @@
 package io.irontest.resources;
 
 import io.irontest.models.WSDLBinding;
+import io.irontest.utils.WSDLParser;
 import org.reficio.ws.builder.SoapBuilder;
 import org.reficio.ws.builder.SoapOperation;
 import org.reficio.ws.builder.core.Wsdl;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.xml.namespace.QName;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,8 +23,8 @@ import java.util.List;
 public class WSDLResource {
     public WSDLResource() {}
 
-    @GET @Path("/anywsdl/operations")
-    public List<WSDLBinding> getWSDLOperations(@QueryParam("wsdlUrl") String wsdlUrl) {
+    @GET @Path("/{wsdlUrl}/bindings")
+    public List<WSDLBinding> getWSDLBindings(@PathParam("wsdlUrl") String wsdlUrl) throws UnsupportedEncodingException {
         List<WSDLBinding> result = new ArrayList<WSDLBinding>();
         Wsdl wsdl = Wsdl.parse(wsdlUrl);
         List<QName> bindings = wsdl.getBindings();
@@ -37,5 +39,12 @@ public class WSDLResource {
         }
 
         return result;
+    }
+
+    @GET @Path("/{wsdlUrl}/bindings/{bindingName}/operations/{operationName}")
+    @Produces({ MediaType.APPLICATION_XML })
+    public String getSampleRequest(@PathParam("wsdlUrl") String wsdlUrl, @PathParam("bindingName") String bindingName,
+                                   @PathParam("operationName") String operationName) {
+        return WSDLParser.getSampleRequest(wsdlUrl, bindingName, operationName);
     }
 }

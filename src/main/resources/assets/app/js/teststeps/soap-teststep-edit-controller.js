@@ -24,8 +24,10 @@ angular.module('iron-test').controller('SOAPTeststepEditController', ['$scope', 
       });
 
       //  handle result from modal dialog
-      modalInstance.result.then(function (successful) {
-
+      modalInstance.result.then(function (request) {
+        //  save the generated request to teststep (in parent scope/controller)
+        $scope.teststep.request = request;
+        $scope.update(true);  //  save immediately (no timeout)
       }, function () {
         //  Modal dismissed. Do nothing.
       });
