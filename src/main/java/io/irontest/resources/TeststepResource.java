@@ -24,7 +24,6 @@ public class TeststepResource {
         preCreationProcess(teststep);
 
         teststepDAO.insert(teststep);
-        teststep.setRequest(null);  //  no need to bring request to client at this point
 
         return teststep;
     }

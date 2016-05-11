@@ -4,6 +4,7 @@
     <label for="name" class="col-lg-2 control-label">Name</label>
     <div class="col-lg-10">
       <input name="name" type="text" class="form-control" ng-model="teststep.name"
+             irt-select="{{ activeTabIndex === 0 && teststepNewlyCreated() }}"
              ng-change="autoSave(teststepForm.$valid)" id="name" placeholder="Name" maxlength="200" required>
       <div ng-show="savingStatus.submitted && teststepForm.name.$invalid" class="help-block">
         <p ng-show="teststepForm.name.$error.required">Name is required</p>

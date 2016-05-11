@@ -17,7 +17,7 @@ import static io.irontest.IronTestConstants.DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFI
 public abstract class TeststepDAO {
     @SqlUpdate("create table IF NOT EXISTS teststep (" +
             "id IDENTITY PRIMARY KEY, testcase_id INT NOT NULL, sequence SMALLINT NOT NULL, " +
-            "name VARCHAR(200) NOT NULL, description CLOB, type VARCHAR(20) NOT NULL, request CLOB, " +
+            "name VARCHAR(200) NOT NULL DEFAULT CURRENT_TIMESTAMP, description CLOB, type VARCHAR(20) NOT NULL, request CLOB, " +
             "created timestamp DEFAULT CURRENT_TIMESTAMP, updated timestamp DEFAULT CURRENT_TIMESTAMP, " +
             "endpoint_id int, FOREIGN KEY (endpoint_id) REFERENCES endpoint(id), " +
             "FOREIGN KEY (testcase_id) REFERENCES testcase(id) ON DELETE CASCADE, " +
@@ -28,21 +28,29 @@ public abstract class TeststepDAO {
     @CreateSqlObject
     protected abstract EndpointDAO endpointDAO();
 
-    @SqlUpdate("insert into teststep (testcase_id, sequence, name, type, description, request, endpoint_id) " +
+    @SqlUpdate("insert into teststep (testcase_id, sequence, type, description, request, endpoint_id) " +
             "values (:testcaseId, select coalesce(max(sequence), 0) + 1 from teststep where testcase_id = :testcaseId, " +
-            ":name, :type, :description, :request, :endpointId)")
+            ":type, :description, :request, :endpointId)")
     @GetGeneratedKeys
-    protected abstract long _insert(@Bind("testcaseId") long testcaseId, @Bind("name") String name,
-                                @Bind("type") String type, @Bind("description") String description,
-                                @Bind("request") String request, @Bind("endpointId") long endpointId);
+    protected abstract long _insert(@Bind("testcaseId") long testcaseId, @Bind("type") String type,
+                                    @Bind("description") String description,
+                                    @Bind("request") String request, @Bind("endpointId") long endpointId);
+
+    @SqlUpdate("update teststep set name = :name where id = :id")
+    protected abstract long updateNameForInsert(@Bind("id") long id, @Bind("name") String name);
 
     @Transaction
     public void insert(Teststep teststep) throws JsonProcessingException {
         long endpointId = endpointDAO().insertUnmanagedEndpoint(teststep.getEndpoint());
         teststep.getEndpoint().setId(endpointId);
-        long id = _insert(teststep.getTestcaseId(), teststep.getName(), teststep.getType(), teststep.getDescription(),
+
+        long id = _insert(teststep.getTestcaseId(), teststep.getType(), teststep.getDescription(),
                 teststep.getRequest(), teststep.getEndpoint().getId());
         teststep.setId(id);
+
+        String name = "Test Step " + id;
+        updateNameForInsert(id, name);
+        teststep.setName(name);
     }
 
     @SqlUpdate("update teststep set name = :name, description = :description, request = :request, " +

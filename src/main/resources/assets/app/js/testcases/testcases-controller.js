@@ -143,5 +143,18 @@ angular.module('iron-test').controller('TestcasesController', ['$scope', 'Testca
         IronTestUtils.openErrorHTTPResponseModal(response);
       });
     };
+
+    $scope.createTeststep = function(type) {
+      var teststep = new Teststeps({
+        testcaseId: $stateParams.testcaseId,
+        type: type
+      });
+
+      teststep.$save(function(response) {
+        $state.go('teststep_edit', {testcaseId: response.testcaseId, teststepId: response.id, newlyCreated: true});
+      }, function(response) {
+        IronTestUtils.openErrorHTTPResponseModal(response);
+      });
+    };
   }
 ]);

@@ -3,7 +3,7 @@
 //  NOTICE:
 //    The $scope here prototypically inherits from the $scope of teststeps-controller.js.
 //    ng-include also creates a scope.
-angular.module('iron-test').controller('SOAPTeststepEditController', ['$scope', 'Testruns', 'IronTestUtils',
+angular.module('iron-test').controller('SOAPTeststepController', ['$scope', 'Testruns', 'IronTestUtils',
     '$uibModal',
   function($scope, Testruns, IronTestUtils, $uibModal) {
     $scope.tempData = {};
