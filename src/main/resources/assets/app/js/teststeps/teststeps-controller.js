@@ -39,7 +39,6 @@ angular.module('iron-test').controller('TeststepsController', ['$scope', 'Testst
     };
 
     $scope.findOne = function() {
-      $scope.activeTabIndex = $scope.teststepNewlyCreated() ? 0 : 2;
       Teststeps.get({
         testcaseId: $stateParams.testcaseId,
         teststepId: $stateParams.teststepId
