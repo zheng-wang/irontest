@@ -52,7 +52,7 @@
       </div>
       <div class="form-group"></div> <!-- spacer -->
       <div class="row">
-        <div ui-grid="teststepGridOptions" ui-grid-resize-columns ui-grid-move-columns class="ui-grid"
+        <div ng-if="activeTabIndex === 1" ui-grid="teststepGridOptions" ui-grid-resize-columns ui-grid-move-columns class="ui-grid"
              ui-grid-draggable-rows></div>
       </div>
     </uib-tab>
