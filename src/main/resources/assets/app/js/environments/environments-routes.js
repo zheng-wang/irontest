@@ -6,12 +6,11 @@ angular.module('iron-test').config(['$stateProvider', function ($stateProvider) 
             url: '/environments',
             templateUrl: '/ui/views/environments/list.html'
         })
-        .state('environment_create', {
-            url: '/environments/create',
-            templateUrl: '/ui/views/environments/create.html'
-        })
         .state('environment_edit', {
             url: '/environments/:environmentId/edit',
+            params: {
+              newlyCreated: null
+            },
             templateUrl: '/ui/views/environments/edit.html'
         });
 }]);

@@ -18,14 +18,24 @@ public abstract class EnvironmentDAO {
     public abstract void createSequenceIfNotExists();
 
     @SqlUpdate("CREATE TABLE IF NOT EXISTS environment (id BIGINT DEFAULT environment_sequence.NEXTVAL PRIMARY KEY, " +
-            "name varchar(200) NOT NULL, description varchar(500)," +
+            "name varchar(200) NOT NULL DEFAULT CURRENT_TIMESTAMP, description varchar(500)," +
             "created timestamp DEFAULT CURRENT_TIMESTAMP, updated timestamp DEFAULT CURRENT_TIMESTAMP, " +
             "CONSTRAINT ENVIRONMENT_" + DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX + " UNIQUE(name))")
     public abstract void createTableIfNotExists();
 
-    @SqlUpdate("insert into environment (name, description) values (:name, :description)")
+    @SqlUpdate("insert into environment values ()")
     @GetGeneratedKeys
-    public abstract long insert(@BindBean Environment environment);
+    public abstract long _insert();
+
+    @SqlUpdate("update environment set name = :name where id = :id")
+    protected abstract long updateNameForInsert(@Bind("id") long id, @Bind("name") String name);
+
+    @Transaction
+    public long insert() {
+        long id = _insert();
+        updateNameForInsert(id, "Environment " + id);
+        return id;
+    }
 
     @SqlUpdate("update environment set name = :name, description = :description, updated = CURRENT_TIMESTAMP where id = :id")
     public abstract int update(@BindBean Environment environment);

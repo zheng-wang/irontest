@@ -48,20 +48,13 @@ angular.module('iron-test').controller('EnvironmentsController', ['$scope', 'Env
       }
     ];
 
-    $scope.create = function(isValid) {
-      if (isValid) {
-        var environment = new Environments({
-          name: this.name,
-          description: this.description
-        });
-        environment.$save(function(response) {
-          $state.go('environment_edit', {environmentId: response.id});
-        }, function(response) {
-          IronTestUtils.openErrorHTTPResponseModal(response);
-        });
-      } else {
-        $scope.submitted = true;
-      }
+    $scope.create = function() {
+      var environment = new Environments();
+      environment.$save(function(response) {
+        $state.go('environment_edit', {environmentId: response.id, newlyCreated: true});
+      }, function(response) {
+        IronTestUtils.openErrorHTTPResponseModal(response);
+      });
     };
 
     $scope.update = function(isValid) {
@@ -93,7 +86,12 @@ angular.module('iron-test').controller('EnvironmentsController', ['$scope', 'Env
       });
     };
 
+    $scope.environmentNewlyCreated = function() {
+      return $stateParams.newlyCreated === true;
+    };
+
     $scope.findOne = function() {
+      $scope.activeTabIndex = $scope.environmentNewlyCreated() ? 0 : 1;
       Environments.get({
         environmentId: $stateParams.environmentId
       }, function(environment) {

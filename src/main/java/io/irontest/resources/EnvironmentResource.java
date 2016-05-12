@@ -23,10 +23,10 @@ public class EnvironmentResource {
     }
 
     @POST
-    public Environment create(Environment environment) {
-        long id = environmentDAO.insert(environment);
-        environment.setId(id);
-        return environment;
+    public Environment create() {
+        Environment result = new Environment();
+        result.setId(environmentDAO.insert());
+        return result;
     }
 
     @PUT @Path("{environmentId}")

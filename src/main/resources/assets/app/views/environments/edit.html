@@ -6,7 +6,7 @@
       <label class="back-link"><a ui-sref="environment_all">Back</a>                    </label>
     </h3>
   </div>
-  <uib-tabset active="1">
+  <uib-tabset active="activeTabIndex">
     <uib-tab heading="Basic Info">
       <form name="environmentForm" class="form-horizontal col-lg-9" role="form" novalidate>
         <div class="form-group"></div> <!-- spacer -->
@@ -14,6 +14,7 @@
           <label for="name" class="col-lg-2 control-label">Name</label>
           <div class="col-lg-10">
             <input name="name" type="text" class="form-control" ng-model="environment.name"
+                   irt-select="{{ activeTabIndex === 0 && environmentNewlyCreated() }}"
                    ng-change="autoSave(environmentForm.$valid)" id="name" placeholder="Name" maxlength="200" required>
             <div ng-show="submitted && environmentForm.name.$invalid" class="help-block">
               <p ng-show="environmentForm.name.$error.required">Name is required</p>
@@ -46,7 +47,8 @@
       </div>
       <div class="form-group"></div> <!-- spacer -->
       <div class="row">
-        <div ui-grid="{paginationPageSizes: [10,20,50,100], paginationPageSize: 10, enableFiltering: true, data: environment.endpoints, columnDefs: endpointGridColumnDefs}"
+        <div ng-if="activeTabIndex === 1" ui-grid="{paginationPageSizes: [10,20,50,100], paginationPageSize: 10,
+               enableFiltering: true, data: environment.endpoints, columnDefs: endpointGridColumnDefs}"
              ui-grid-pagination ui-grid-resize-columns ui-grid-move-columns class="ui-grid"></div>
       </div>
     </uib-tab>
