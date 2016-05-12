@@ -12,7 +12,9 @@ import java.util.List;
  */
 @RegisterMapper(ArticleMapper.class)
 public interface ArticleDAO {
-    @SqlUpdate("create table IF NOT EXISTS article (id IDENTITY PRIMARY KEY, title varchar(50), content varchar(500), created timestamp DEFAULT CURRENT_TIMESTAMP, updated timestamp DEFAULT CURRENT_TIMESTAMP)")
+    @SqlUpdate("CREATE TABLE IF NOT EXISTS article (id IDENTITY PRIMARY KEY, title varchar(50), " +
+            "content varchar(500), created timestamp DEFAULT CURRENT_TIMESTAMP, " +
+            "updated timestamp DEFAULT CURRENT_TIMESTAMP)")
     void createTableIfNotExists();
 
     @SqlUpdate("insert into article (title, content) values (:title, :content)")

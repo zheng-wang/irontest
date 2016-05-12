@@ -53,10 +53,15 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
 
         //  create database tables        
         articleDAO.createTableIfNotExists();
+        environmentDAO.createSequenceIfNotExists();
         environmentDAO.createTableIfNotExists();
+        endpointDAO.createSequenceIfNotExists();
         endpointDAO.createTableIfNotExists();
+        testcaseDAO.createSequenceIfNotExists();
         testcaseDAO.createTableIfNotExists();
+        teststepDAO.createSequenceIfNotExists();
         teststepDAO.createTableIfNotExists();
+        assertionDAO.createSequenceIfNotExists();
         assertionDAO.createTableIfNotExists();
 
         //  register REST resources

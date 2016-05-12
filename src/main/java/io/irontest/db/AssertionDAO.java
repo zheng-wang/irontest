@@ -18,8 +18,11 @@ import static io.irontest.IronTestConstants.DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFI
  */
 @RegisterMapper(AssertionMapper.class)
 public abstract class AssertionDAO {
-    @SqlUpdate("create table IF NOT EXISTS assertion (" +
-            "id IDENTITY PRIMARY KEY, teststep_id INT, name varchar(200) NOT NULL, " +
+    @SqlUpdate("CREATE SEQUENCE IF NOT EXISTS assertion_sequence START WITH 1 INCREMENT BY 1 NOCACHE")
+    public abstract void createSequenceIfNotExists();
+
+    @SqlUpdate("CREATE TABLE IF NOT EXISTS assertion (" +
+            "id BIGINT DEFAULT assertion_sequence.NEXTVAL PRIMARY KEY, teststep_id INT, name varchar(200) NOT NULL, " +
             "type varchar(20) NOT NULL, properties CLOB," +
             "created timestamp DEFAULT CURRENT_TIMESTAMP, updated timestamp DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (teststep_id) REFERENCES teststep(id) ON DELETE CASCADE, " +

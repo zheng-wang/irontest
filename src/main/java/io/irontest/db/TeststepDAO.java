@@ -15,9 +15,13 @@ import static io.irontest.IronTestConstants.DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFI
  */
 @RegisterMapper(TeststepMapper.class)
 public abstract class TeststepDAO {
-    @SqlUpdate("create table IF NOT EXISTS teststep (" +
-            "id IDENTITY PRIMARY KEY, testcase_id INT NOT NULL, sequence SMALLINT NOT NULL, " +
-            "name VARCHAR(200) NOT NULL DEFAULT CURRENT_TIMESTAMP, description CLOB, type VARCHAR(20) NOT NULL, request CLOB, " +
+    @SqlUpdate("CREATE SEQUENCE IF NOT EXISTS teststep_sequence START WITH 1 INCREMENT BY 1 NOCACHE")
+    public abstract void createSequenceIfNotExists();
+
+    @SqlUpdate("CREATE TABLE IF NOT EXISTS teststep (" +
+            "id BIGINT DEFAULT teststep_sequence.NEXTVAL PRIMARY KEY, testcase_id INT NOT NULL, " +
+            "sequence SMALLINT NOT NULL, name VARCHAR(200) NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
+            "description CLOB, type VARCHAR(20) NOT NULL, request CLOB, " +
             "created timestamp DEFAULT CURRENT_TIMESTAMP, updated timestamp DEFAULT CURRENT_TIMESTAMP, " +
             "endpoint_id int, FOREIGN KEY (endpoint_id) REFERENCES endpoint(id), " +
             "FOREIGN KEY (testcase_id) REFERENCES testcase(id) ON DELETE CASCADE, " +

@@ -14,7 +14,10 @@ import static io.irontest.IronTestConstants.DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFI
  */
 @RegisterMapper(TestcaseMapper.class)
 public abstract class TestcaseDAO {
-    @SqlUpdate("create table IF NOT EXISTS testcase (id IDENTITY PRIMARY KEY, " +
+    @SqlUpdate("CREATE SEQUENCE IF NOT EXISTS testcase_sequence START WITH 1 INCREMENT BY 1 NOCACHE")
+    public abstract void createSequenceIfNotExists();
+
+    @SqlUpdate("CREATE TABLE IF NOT EXISTS testcase (id BIGINT DEFAULT testcase_sequence.NEXTVAL PRIMARY KEY, " +
             "name varchar(200) NOT NULL DEFAULT CURRENT_TIMESTAMP, description clob, " +
             "created timestamp DEFAULT CURRENT_TIMESTAMP, updated timestamp DEFAULT CURRENT_TIMESTAMP, " +
             "CONSTRAINT TESTCASE_" + DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX + " UNIQUE(name))")

@@ -14,7 +14,10 @@ import static io.irontest.IronTestConstants.DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFI
  */
 @RegisterMapper(EnvironmentMapper.class)
 public abstract class EnvironmentDAO {
-    @SqlUpdate("create table IF NOT EXISTS environment (id IDENTITY PRIMARY KEY, " +
+    @SqlUpdate("CREATE SEQUENCE IF NOT EXISTS environment_sequence START WITH 1 INCREMENT BY 1 NOCACHE")
+    public abstract void createSequenceIfNotExists();
+
+    @SqlUpdate("CREATE TABLE IF NOT EXISTS environment (id BIGINT DEFAULT environment_sequence.NEXTVAL PRIMARY KEY, " +
             "name varchar(200) NOT NULL, description varchar(500)," +
             "created timestamp DEFAULT CURRENT_TIMESTAMP, updated timestamp DEFAULT CURRENT_TIMESTAMP, " +
             "CONSTRAINT ENVIRONMENT_" + DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX + " UNIQUE(name))")
