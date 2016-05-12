@@ -18,9 +18,9 @@ public abstract class EndpointDAO {
     public abstract void createSequenceIfNotExists();
 
     @SqlUpdate("CREATE TABLE IF NOT EXISTS endpoint (id BIGINT DEFAULT endpoint_sequence.NEXTVAL PRIMARY KEY, " +
-            "environment_id int, name varchar(200) NOT NULL, type varchar(20) NOT NULL, description varchar(500), " +
+            "environment_id int, name varchar(200) NOT NULL, type varchar(20) NOT NULL, description CLOB, " +
             "url varchar(500), username varchar(200), password varchar(200), " +
-            "created timestamp DEFAULT CURRENT_TIMESTAMP, updated timestamp DEFAULT CURRENT_TIMESTAMP, " +
+            "created TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (environment_id) REFERENCES environment(id) ON DELETE CASCADE, " +
             "CONSTRAINT ENDPOINT_" + DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX + " UNIQUE(environment_id, name))")
     public abstract void createTableIfNotExists();
