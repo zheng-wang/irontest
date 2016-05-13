@@ -6,7 +6,7 @@
 
     <groupId>io.irontest</groupId>
     <artifactId>iron-test</artifactId>
-    <version>0.2.1</version>
+    <version>0.2.2</version>
 
     <properties>
         <dropwizard.version>0.9.2</dropwizard.version>
