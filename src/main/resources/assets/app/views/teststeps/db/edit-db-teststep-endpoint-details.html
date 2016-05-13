@@ -6,7 +6,7 @@
     <div class="col-lg-10">
       <input name="endpointJdbcURL" type="text" class="form-control" ng-model="teststep.endpoint.url"
              ng-change="isInShareEndpointMode() ? angular.noop() : autoSave(teststepForm.$valid)"
-             id="endpointJdbcURL" maxlength="500"
+             id="endpointJdbcURL" maxlength="1000"
              ng-readonly="!isInShareEndpointMode() && teststep.endpoint.environment">
     </div>
   </div>
