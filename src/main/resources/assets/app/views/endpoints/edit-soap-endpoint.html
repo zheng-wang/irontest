@@ -1,58 +1,22 @@
-<div class="row" id="page-header">
-  <h3 class="page-header">SOAP Endpoint - {{endpoint.name}}
-    <label class="col-lg-offset-1" irt-successful-message></label>
-    <small>Last edit at {{endpoint.updated | date:'medium'}}</small>
-    <label class="back-link"><a ui-sref="environment_edit({environmentId: endpoint.environment.id})">Back</a>                    </label>
-  </h3>
+<div class="form-group">
+  <label for="soapAddress" class="col-lg-2 control-label">SOAP Address</label>
+  <div class="col-lg-10">
+    <input name="soapAddress" type="text" class="form-control" ng-model="endpoint.url" id="soapAddress"
+           ng-change="autoSave(endpointForm.$valid)" placeholder="http://localhost:8081/soap/article"
+           maxlength="1000">
+  </div>
 </div>
-<div class="row">
-  <form name="endpointForm" class="form-horizontal col-lg-9" role="form" novalidate>
-    <div class="form-group required">
-      <label for="environment" class="col-lg-2 control-label">Environment</label>
-      <div class="col-lg-10">
-        <input name="environment" type="text" class="form-control" ng-model="endpoint.environment.name"
-               id="environment" maxlength="200" readonly>
-      </div>
-    </div>
-    <div class="form-group required" ng-class="{ 'has-error' : submitted && endpointForm.name.$invalid }">
-      <label for="name" class="col-lg-2 control-label">Name</label>
-      <div class="col-lg-10">
-        <input name="name" type="text" class="form-control" ng-model="endpoint.name" id="name"
-               ng-change="autoSave(endpointForm.$valid)" placeholder="Sample Article Service Endpoint"
-               irt-select="{{ endpointNewlyCreated() }}" maxlength="200" required>
-        <div ng-show="submitted && endpointForm.name.$invalid" class="help-block">
-          <p ng-show="endpointForm.name.$error.required">Name is required</p>
-        </div>
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="description" class="col-lg-2 control-label">Description</label>
-      <div class="col-lg-10">
-        <textarea name="description" ng-model="endpoint.description" id="description" cols="30" rows="8"
-                  ng-change="autoSave(endpointForm.$valid)" class="form-control"></textarea>
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="soapAddress" class="col-lg-2 control-label">SOAP Address</label>
-      <div class="col-lg-10">
-        <input name="soapAddress" type="text" class="form-control" ng-model="endpoint.url" id="soapAddress"
-               ng-change="autoSave(endpointForm.$valid)" placeholder="http://localhost:8081/soap/article"
-               maxlength="1000">
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="username" class="col-lg-2 control-label">Username</label>
-      <div class="col-lg-10">
-        <input name="username" type="text" class="form-control" ng-model="endpoint.username" id="username"
-               ng-change="autoSave(endpointForm.$valid)" maxlength="200">
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="password" class="col-lg-2 control-label">Password</label>
-      <div class="col-lg-10">
-        <input name="password" type="password" class="form-control" ng-model="endpoint.password" id="password"
-               ng-change="autoSave(endpointForm.$valid)" maxlength="200">
-      </div>
-    </div>
-  </form>
+<div class="form-group">
+  <label for="username" class="col-lg-2 control-label">Username</label>
+  <div class="col-lg-10">
+    <input name="username" type="text" class="form-control" ng-model="endpoint.username" id="username"
+           ng-change="autoSave(endpointForm.$valid)" maxlength="200">
+  </div>
+</div>
+<div class="form-group">
+  <label for="password" class="col-lg-2 control-label">Password</label>
+  <div class="col-lg-10">
+    <input name="password" type="password" class="form-control" ng-model="endpoint.password" id="password"
+           ng-change="autoSave(endpointForm.$valid)" maxlength="200">
+  </div>
 </div>

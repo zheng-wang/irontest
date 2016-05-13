@@ -42,7 +42,7 @@ angular.module('iron-test')
           if (value === 'true') {
             $timeout(function() {
               element[0].select();
-            });
+            }, 50);    //  without the 50 milliseconds delay, select() often turns into focus()
           }
         });
       }
