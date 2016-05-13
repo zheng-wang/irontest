@@ -19,7 +19,7 @@
       <div class="col-lg-10">
         <input name="name" type="text" class="form-control" ng-model="endpoint.name" id="name"
                ng-change="autoSave(endpointForm.$valid)" placeholder="Sample Article Service Endpoint"
-               maxlength="200" required>
+               irt-select="{{ endpointNewlyCreated() }}" maxlength="200" required>
         <div ng-show="submitted && endpointForm.name.$invalid" class="help-block">
           <p ng-show="endpointForm.name.$error.required">Name is required</p>
         </div>

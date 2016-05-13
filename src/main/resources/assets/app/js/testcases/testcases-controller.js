@@ -151,7 +151,7 @@ angular.module('iron-test').controller('TestcasesController', ['$scope', 'Testca
       });
 
       teststep.$save(function(response) {
-        $state.go('teststep_edit', {testcaseId: response.testcaseId, teststepId: response.id, newlyCreated: true});
+        $state.go('teststep_edit', {testcaseId: $stateParams.testcaseId, teststepId: response.id, newlyCreated: true});
       }, function(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);
       });

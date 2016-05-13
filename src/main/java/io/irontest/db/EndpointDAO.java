@@ -18,24 +18,28 @@ public abstract class EndpointDAO {
     public abstract void createSequenceIfNotExists();
 
     @SqlUpdate("CREATE TABLE IF NOT EXISTS endpoint (id BIGINT DEFAULT endpoint_sequence.NEXTVAL PRIMARY KEY, " +
-            "environment_id int, name varchar(200) NOT NULL, type varchar(20) NOT NULL, description CLOB, " +
-            "url varchar(500), username varchar(200), password varchar(200), " +
+            "environment_id int, name varchar(200) NOT NULL DEFAULT CURRENT_TIMESTAMP, type varchar(20) NOT NULL, " +
+            "description CLOB, url varchar(1000), username varchar(200), password varchar(200), " +
             "created TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (environment_id) REFERENCES environment(id) ON DELETE CASCADE, " +
             "CONSTRAINT ENDPOINT_" + DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX + " UNIQUE(environment_id, name))")
     public abstract void createTableIfNotExists();
 
-    @SqlUpdate("insert into endpoint (environment_id, name, type, description, url, username, password) values (" +
-            ":evId, :ep.name, :ep.type, :ep.description, :ep.url, " +
-            ":ep.username, ENCRYPT('AES', '" + PASSWORD_ENCRYPTION_KEY + "', STRINGTOUTF8(:ep.password)))")
+    @SqlUpdate("insert into endpoint (environment_id, type) values (:evId, :type)")
     @GetGeneratedKeys
-    protected abstract long _insertManagedEndpoint(@BindBean("ep") Endpoint endpoint, @Bind("evId") long environmentId);
+    protected abstract long _insertManagedEndpoint(@Bind("evId") long environmentId, @Bind("type") String type);
 
+    @SqlUpdate("update endpoint set name = :name where id = :id")
+    protected abstract long updateNameForInsert(@Bind("id") long id, @Bind("name") String name);
+
+    @Transaction
     public long insertManagedEndpoint(Endpoint endpoint) {
-        return _insertManagedEndpoint(endpoint, endpoint.getEnvironment().getId());
+        long id = _insertManagedEndpoint(endpoint.getEnvironment().getId(), endpoint.getType());
+        updateNameForInsert(id, "Endpoint " + id);
+        return id;
     }
 
-    @SqlUpdate("insert into endpoint (name, type, description, url) values (:name, :type, :description, :url)")
+    @SqlUpdate("insert into endpoint (name, type) values (:name, :type)")
     @GetGeneratedKeys
     public abstract long insertUnmanagedEndpoint(@BindBean Endpoint endpoint);
 

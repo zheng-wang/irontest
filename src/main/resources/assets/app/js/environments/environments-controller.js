@@ -101,6 +101,19 @@ angular.module('iron-test').controller('EnvironmentsController', ['$scope', 'Env
       });
     };
 
+    $scope.createEndpoint = function(type) {
+      var endpoint = new Endpoints({
+        environment: { id: $stateParams.environmentId },
+        type: type
+      });
+      endpoint.$save(function(returnEndpoint) {
+        $state.go('endpoint_edit', {environmentId: $stateParams.environmentId, endpointId: returnEndpoint.id,
+          newlyCreated: true});
+      }, function(response) {
+        IronTestUtils.openErrorHTTPResponseModal(response);
+      });
+    };
+
     $scope.removeEndpoint = function(endpoint) {
       var endpointService = new Endpoints(endpoint);
       endpointService.$remove(function(response) {

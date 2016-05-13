@@ -1,7 +1,7 @@
 <div ng-controller="EndpointsController" ng-init="findOne()">
     <div>
         <div ng-if="endpoint.type === 'SOAP'"
-             ng-include="'/ui/views/endpoints/soap/edit-soap-endpoint.html'"></div>
+             ng-include="'/ui/views/endpoints/edit-soap-endpoint.html'"></div>
         <div ng-if="endpoint.type === 'DB'"
              ng-include="'/ui/views/endpoints/db/edit-db-endpoint.html'"></div>
     </div>

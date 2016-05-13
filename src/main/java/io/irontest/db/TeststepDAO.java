@@ -32,12 +32,11 @@ public abstract class TeststepDAO {
     @CreateSqlObject
     protected abstract EndpointDAO endpointDAO();
 
-    @SqlUpdate("insert into teststep (testcase_id, sequence, type, description, request, endpoint_id) " +
+    @SqlUpdate("insert into teststep (testcase_id, sequence, type, request, endpoint_id) " +
             "values (:testcaseId, select coalesce(max(sequence), 0) + 1 from teststep where testcase_id = :testcaseId, " +
-            ":type, :description, :request, :endpointId)")
+            ":type, :request, :endpointId)")
     @GetGeneratedKeys
     protected abstract long _insert(@Bind("testcaseId") long testcaseId, @Bind("type") String type,
-                                    @Bind("description") String description,
                                     @Bind("request") String request, @Bind("endpointId") long endpointId);
 
     @SqlUpdate("update teststep set name = :name where id = :id")
@@ -48,8 +47,8 @@ public abstract class TeststepDAO {
         long endpointId = endpointDAO().insertUnmanagedEndpoint(teststep.getEndpoint());
         teststep.getEndpoint().setId(endpointId);
 
-        long id = _insert(teststep.getTestcaseId(), teststep.getType(), teststep.getDescription(),
-                teststep.getRequest(), teststep.getEndpoint().getId());
+        long id = _insert(teststep.getTestcaseId(), teststep.getType(), teststep.getRequest(),
+                teststep.getEndpoint().getId());
         teststep.setId(id);
 
         String name = "Test Step " + id;

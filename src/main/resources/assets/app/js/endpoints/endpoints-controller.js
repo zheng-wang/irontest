@@ -9,6 +9,10 @@ angular.module('iron-test').controller('EndpointsController', ['$scope', 'Endpoi
       saveSuccessful: null,
     };
 
+    $scope.endpointNewlyCreated = function() {
+      return $stateParams.newlyCreated === true;
+    };
+
     $scope.autoSave = function(isValid) {
       if (timer) $timeout.cancel(timer);
       timer = $timeout(function() {
