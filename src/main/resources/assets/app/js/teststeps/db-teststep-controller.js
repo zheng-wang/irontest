@@ -5,8 +5,6 @@
 //    ng-include also creates a scope.
 angular.module('iron-test').controller('DBTeststepController', ['$scope', 'Testruns', 'IronTestUtils',
   function($scope, Testruns, IronTestUtils) {
-    $scope.activeTabIndex = $scope.teststepNewlyCreated() ? 0 : 2;
-
     //  -1 when the request is a SQL select statement; > -1 when request is a SQL insert/update/delete statement.
     $scope.numberOfRowsModified = -1;
 

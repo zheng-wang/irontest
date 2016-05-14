@@ -1,14 +1,9 @@
-<div class="form-group"></div> <!-- spacer -->
-<div class="col-lg-9">
-  <div ng-include="'/ui/views/teststeps/edit-endpoint-details-basic-info.html'"></div>
-  <div class="form-group">
-    <label for="endpointJdbcURL" class="col-lg-2 control-label">JDBC URL</label>
-    <div class="col-lg-10">
-      <input name="endpointJdbcURL" type="text" class="form-control" ng-model="teststep.endpoint.url"
-             ng-change="isInShareEndpointMode() ? angular.noop() : autoSave(teststepForm.$valid)"
-             id="endpointJdbcURL" maxlength="1000"
-             ng-readonly="!isInShareEndpointMode() && teststep.endpoint.environment">
-    </div>
+<div class="form-group">
+  <label for="endpointJdbcURL" class="col-lg-2 control-label">JDBC URL</label>
+  <div class="col-lg-10">
+    <input name="endpointJdbcURL" type="text" class="form-control" ng-model="teststep.endpoint.url"
+           ng-change="isInShareEndpointMode() ? angular.noop() : autoSave(teststepForm.$valid)"
+           id="endpointJdbcURL" maxlength="1000"
+           ng-readonly="!isInShareEndpointMode() && teststep.endpoint.environment">
   </div>
-  <div ng-include="'/ui/views/teststeps/edit-endpoint-details-lower-part.html'"></div>
 </div>

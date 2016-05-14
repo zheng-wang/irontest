@@ -6,8 +6,6 @@
 angular.module('iron-test').controller('SOAPTeststepController', ['$scope', 'Testruns', 'IronTestUtils',
     '$uibModal',
   function($scope, Testruns, IronTestUtils, $uibModal) {
-    $scope.activeTabIndex = $scope.teststepNewlyCreated() ? 0 : 2;
-
     $scope.tempData = {};
     $scope.showAssertionsArea = false;
 
