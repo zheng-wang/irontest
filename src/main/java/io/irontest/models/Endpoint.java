@@ -1,6 +1,8 @@
 package io.irontest.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import java.util.Date;
@@ -8,7 +10,11 @@ import java.util.Date;
 /**
  * Created by Trevor Li on 6/30/15.
  */
-@JsonDeserialize(using=EndpointDeserializer.class)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type", visible = true)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = IIBEndpoint.class, name = Endpoint.ENDPOINT_TYPE_IIB),
+        @JsonSubTypes.Type(value = Endpoint.class, name = Endpoint.ENDPOINT_TYPE_SOAP),
+        @JsonSubTypes.Type(value = Endpoint.class, name = Endpoint.ENDPOINT_TYPE_DB)})
 public class Endpoint {
     public static final String ENDPOINT_TYPE_SOAP = "SOAP";
     public static final String ENDPOINT_TYPE_DB = "DB";
@@ -18,9 +24,9 @@ public class Endpoint {
     private String name;
     private String type;
     private String description;
-    private String url;    //  can be SOAP address, JDBC URL, etc.
-    private String username;
-    private String password;
+    private String url;    //  can be SOAP address, JDBC URL, etc.; not used by IIB endpoint
+    private String username;           //  not used by IIB endpoint
+    private String password;           //  not used by IIB endpoint
     private Date created;
     private Date updated;
 

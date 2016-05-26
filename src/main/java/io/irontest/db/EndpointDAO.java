@@ -1,6 +1,12 @@
 package io.irontest.db;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ser.FilterProvider;
+import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import io.irontest.models.Endpoint;
+import io.irontest.utils.IronTestUtils;
 import org.skife.jdbi.v2.sqlobject.*;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
@@ -45,16 +51,22 @@ public abstract class EndpointDAO {
 
     @SqlUpdate("update endpoint set environment_id = :evId, name = :ep.name, description = :ep.description, " +
             "url = :ep.url, username = :ep.username, password = CASE " +
-                "WHEN COALESCE(password, '') <> COALESCE(:ep.password, '') " +
+                "WHEN COALESCE(password, '') <> COALESCE(:ep.password, '') " + // encrypt only when password is changed
                     "THEN ENCRYPT('AES', '" + PASSWORD_ENCRYPTION_KEY + "', STRINGTOUTF8(:ep.password)) " +
                 "ELSE password END, " +
-            "updated = CURRENT_TIMESTAMP where id = :ep.id")
+            "properties = :properties, updated = CURRENT_TIMESTAMP where id = :ep.id")
     protected abstract int _update(@BindBean("ep") Endpoint endpoint, @Bind("evId") Long environmentId,
                                    @Bind("properties") String properties);
 
-    public int update(Endpoint endpoint) {
+    public int update(Endpoint endpoint) throws JsonProcessingException {
         String properties = null;
-//        if (Endpoint.endpoint)
+        if (Endpoint.ENDPOINT_TYPE_IIB.equals(endpoint.getType())) {
+            properties = IronTestUtils.serializeToJSONWithOnlyCertainFields(endpoint,
+                    new String[] { "queueManagerName", "host", "port", "svrConnChannelName" });
+            System.out.println("aaaaaaaaaaaaaaaaa");
+            System.out.println(properties);
+        }
+
         return _update(endpoint, endpoint.getEnvironment() == null ? null : endpoint.getEnvironment().getId(),
                 properties);
     }

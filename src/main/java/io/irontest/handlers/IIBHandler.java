@@ -1,10 +1,9 @@
 package io.irontest.handlers;
 
-import com.ibm.broker.config.proxy.BrokerConnectionParameters;
-import com.ibm.broker.config.proxy.BrokerProxy;
-import com.ibm.broker.config.proxy.ConfigManagerProxyException;
-import com.ibm.broker.config.proxy.MQBrokerConnectionParameters;
+import com.ibm.broker.config.proxy.*;
 import io.irontest.models.Endpoint;
+
+import java.util.Date;
 
 /**
  * Created by Zheng on 25/05/2016.
@@ -14,16 +13,29 @@ public class IIBHandler implements IronTestHandler {
         String hostname = "localhost";
         int port = 1410;
         String qmgr = "QM1";
-        String brokerName = "Broker1";
+        String channelName = "channel1";
+        String egName = "default";
+        String messageFlowName = "flow1";
         BrokerProxy b = null;
         try {
-            BrokerConnectionParameters bcp =
-                    new MQBrokerConnectionParameters(hostname, port, qmgr);
-            //b = BrokerProxy.getInstance(bcp);
-            b = BrokerProxy.getLocalInstance(brokerName);
-            brokerName = b.getName();
-
+            MQBrokerConnectionParameters bcp = new MQBrokerConnectionParameters(hostname, port, qmgr);
+            bcp.setAdvancedConnectionParameters(channelName, null, null, -1, -1, null);
+            b = BrokerProxy.getInstance(bcp);
+            b.setSynchronous(60 * 1000);
+            String brokerName = b.getName();
             System.out.println("Broker '" + brokerName + "' is available!");
+            System.out.println("Session ID: " + bcp.getSessionIDString());
+            ExecutionGroupProxy egProxy = b.getExecutionGroupByName(egName);
+            System.out.println("EG: " + egProxy.getName());
+
+            MessageFlowProxy messageFlowProxy = egProxy.getMessageFlowByName(messageFlowName);
+            System.out.println("Message flow: " + messageFlowProxy.getName());
+
+            System.out.println(new Date());
+            messageFlowProxy.start();
+            System.out.println(new Date());
+
+
             b.disconnect();
         } catch (ConfigManagerProxyException ex) {
             System.out.println("Broker is NOT available because " + ex);
