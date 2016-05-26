@@ -7,3 +7,21 @@
            ng-readonly="!isInShareEndpointMode() && teststep.endpoint.environment">
   </div>
 </div>
+<div class="form-group">
+  <label for="endpointUsername" class="col-lg-2 control-label">Username</label>
+  <div class="col-lg-10">
+    <input name="endpointUsername" type="text" class="form-control" ng-model="teststep.endpoint.username"
+           ng-change="isInShareEndpointMode() ? angular.noop() : autoSave(teststepForm.$valid)"
+           id="endpointUsername" maxlength="200"
+           ng-readonly="!isInShareEndpointMode() && teststep.endpoint.environment">
+  </div>
+</div>
+<div class="form-group">
+  <label for="endpointPassword" class="col-lg-2 control-label">Password</label>
+  <div class="col-lg-10">
+    <input name="endpointPassword" type="password" class="form-control" ng-model="teststep.endpoint.password"
+           ng-change="isInShareEndpointMode() ? angular.noop() : autoSave(teststepForm.$valid)"
+           id="endpointPassword" maxlength="200"
+           ng-readonly="!isInShareEndpointMode() && teststep.endpoint.environment">
+  </div>
+</div>

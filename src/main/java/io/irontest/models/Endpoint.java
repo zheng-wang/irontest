@@ -1,15 +1,18 @@
 package io.irontest.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import java.util.Date;
 
 /**
  * Created by Trevor Li on 6/30/15.
  */
+@JsonDeserialize(using=EndpointDeserializer.class)
 public class Endpoint {
     public static final String ENDPOINT_TYPE_SOAP = "SOAP";
     public static final String ENDPOINT_TYPE_DB = "DB";
+    public static final String ENDPOINT_TYPE_IIB = "IIB";
     private long id;
     private Environment environment;
     private String name;

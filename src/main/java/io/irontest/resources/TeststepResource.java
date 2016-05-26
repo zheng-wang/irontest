@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.irontest.db.TeststepDAO;
 import io.irontest.models.Endpoint;
 import io.irontest.models.Teststep;
+import junit.framework.Test;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -44,6 +45,8 @@ public class TeststepResource {
             endpoint.setType(Endpoint.ENDPOINT_TYPE_SOAP);
         } else if (Teststep.TEST_STEP_TYPE_DB.equals(teststep.getType())) {
             endpoint.setType(Endpoint.ENDPOINT_TYPE_DB);
+        } else if (Teststep.TEST_STEP_TYPE_IIB.equals(teststep.getType())) {
+            endpoint.setType(Endpoint.ENDPOINT_TYPE_IIB);
         }
         teststep.setEndpoint(endpoint);
     }

@@ -19,7 +19,7 @@ public abstract class EndpointDAO {
 
     @SqlUpdate("CREATE TABLE IF NOT EXISTS endpoint (id BIGINT DEFAULT endpoint_sequence.NEXTVAL PRIMARY KEY, " +
             "environment_id int, name varchar(200) NOT NULL DEFAULT CURRENT_TIMESTAMP, type varchar(20) NOT NULL, " +
-            "description CLOB, url varchar(1000), username varchar(200), password varchar(200), " +
+            "description CLOB, url varchar(1000), username varchar(200), password varchar(200), properties CLOB, " +
             "created TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (environment_id) REFERENCES environment(id) ON DELETE CASCADE, " +
             "CONSTRAINT ENDPOINT_" + DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX + " UNIQUE(environment_id, name))")
@@ -49,10 +49,14 @@ public abstract class EndpointDAO {
                     "THEN ENCRYPT('AES', '" + PASSWORD_ENCRYPTION_KEY + "', STRINGTOUTF8(:ep.password)) " +
                 "ELSE password END, " +
             "updated = CURRENT_TIMESTAMP where id = :ep.id")
-    protected abstract int _update(@BindBean("ep") Endpoint endpoint, @Bind("evId") Long environmentId);
+    protected abstract int _update(@BindBean("ep") Endpoint endpoint, @Bind("evId") Long environmentId,
+                                   @Bind("properties") String properties);
 
     public int update(Endpoint endpoint) {
-        return _update(endpoint, endpoint.getEnvironment() == null ? null : endpoint.getEnvironment().getId());
+        String properties = null;
+//        if (Endpoint.endpoint)
+        return _update(endpoint, endpoint.getEnvironment() == null ? null : endpoint.getEnvironment().getId(),
+                properties);
     }
 
     @SqlUpdate("delete from endpoint where id = :id")

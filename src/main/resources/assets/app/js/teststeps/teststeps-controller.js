@@ -5,6 +5,12 @@ angular.module('iron-test').controller('TeststepsController', ['$scope', 'Testst
   function($scope, Teststeps, $stateParams, $timeout, $uibModal, IronTestUtils, $http, Environments) {
     $scope.teststep = {};
 
+    $scope.teststepNewlyCreated = function() {
+      return $stateParams.newlyCreated === true;
+    };
+
+    $scope.activeTabIndex = $scope.teststepNewlyCreated() ? 0 : 2;
+
     var timer;
     //  use object instead of primitives, so that child scope can update the values
     $scope.savingStatus = {
@@ -34,13 +40,7 @@ angular.module('iron-test').controller('TeststepsController', ['$scope', 'Testst
       }
     };
 
-    $scope.teststepNewlyCreated = function() {
-      return $stateParams.newlyCreated === true;
-    };
-
     $scope.findOne = function() {
-      $scope.activeTabIndex = $scope.teststepNewlyCreated() ? 0 : 2;
-
       Teststeps.get({
         testcaseId: $stateParams.testcaseId,
         teststepId: $stateParams.teststepId
