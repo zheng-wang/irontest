@@ -3,18 +3,12 @@ package io.irontest.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import java.util.Date;
 
 /**
  * Created by Trevor Li on 6/30/15.
  */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type", visible = true)
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = IIBEndpoint.class, name = Endpoint.ENDPOINT_TYPE_IIB),
-        @JsonSubTypes.Type(value = Endpoint.class, name = Endpoint.ENDPOINT_TYPE_SOAP),
-        @JsonSubTypes.Type(value = Endpoint.class, name = Endpoint.ENDPOINT_TYPE_DB)})
 public class Endpoint {
     public static final String ENDPOINT_TYPE_SOAP = "SOAP";
     public static final String ENDPOINT_TYPE_DB = "DB";
@@ -27,13 +21,20 @@ public class Endpoint {
     private String url;    //  can be SOAP address, JDBC URL, etc.; not used by IIB endpoint
     private String username;           //  not used by IIB endpoint
     private String password;           //  not used by IIB endpoint
+    @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
+            property = "type", visible = true)
+    @JsonSubTypes({
+            @JsonSubTypes.Type(value = IIBEndpointProperties.class, name = Endpoint.ENDPOINT_TYPE_IIB),
+            @JsonSubTypes.Type(value = Properties.class, name = Endpoint.ENDPOINT_TYPE_SOAP),
+            @JsonSubTypes.Type(value = Properties.class, name = Endpoint.ENDPOINT_TYPE_DB)})
+    private Properties otherProperties;
     private Date created;
     private Date updated;
 
     public Endpoint() {}
 
     public Endpoint(long id, Environment environment, String name, String type, String description, String url,
-                    String username, String password, Date created, Date updated) {
+                    String username, String password, Properties otherProperties, Date created, Date updated) {
         this.id = id;
         this.environment = environment;
         this.name = name;
@@ -42,6 +43,7 @@ public class Endpoint {
         this.url = url;
         this.username = username;
         this.password = password;
+        this.otherProperties = otherProperties;
         this.created = created;
         this.updated = updated;
     }
@@ -124,6 +126,14 @@ public class Endpoint {
 
     public void setEnvironment(Environment environment) {
         this.environment = environment;
+    }
+
+    public Properties getOtherProperties() {
+        return otherProperties;
+    }
+
+    public void setOtherProperties(Properties otherProperties) {
+        this.otherProperties = otherProperties;
     }
 
     @JsonIgnore

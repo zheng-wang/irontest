@@ -25,7 +25,7 @@ public abstract class EndpointDAO {
 
     @SqlUpdate("CREATE TABLE IF NOT EXISTS endpoint (id BIGINT DEFAULT endpoint_sequence.NEXTVAL PRIMARY KEY, " +
             "environment_id int, name varchar(200) NOT NULL DEFAULT CURRENT_TIMESTAMP, type varchar(20) NOT NULL, " +
-            "description CLOB, url varchar(1000), username varchar(200), password varchar(200), properties CLOB, " +
+            "description CLOB, url varchar(1000), username varchar(200), password varchar(200), other_properties CLOB, " +
             "created TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (environment_id) REFERENCES environment(id) ON DELETE CASCADE, " +
             "CONSTRAINT ENDPOINT_" + DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX + " UNIQUE(environment_id, name))")
@@ -54,21 +54,13 @@ public abstract class EndpointDAO {
                 "WHEN COALESCE(password, '') <> COALESCE(:ep.password, '') " + // encrypt only when password is changed
                     "THEN ENCRYPT('AES', '" + PASSWORD_ENCRYPTION_KEY + "', STRINGTOUTF8(:ep.password)) " +
                 "ELSE password END, " +
-            "properties = :properties, updated = CURRENT_TIMESTAMP where id = :ep.id")
+            "other_properties = :otherProperties, updated = CURRENT_TIMESTAMP where id = :ep.id")
     protected abstract int _update(@BindBean("ep") Endpoint endpoint, @Bind("evId") Long environmentId,
-                                   @Bind("properties") String properties);
+                                   @Bind("otherProperties") String otherProperties);
 
     public int update(Endpoint endpoint) throws JsonProcessingException {
-        String properties = null;
-        if (Endpoint.ENDPOINT_TYPE_IIB.equals(endpoint.getType())) {
-            properties = IronTestUtils.serializeToJSONWithOnlyCertainFields(endpoint,
-                    new String[] { "queueManagerName", "host", "port", "svrConnChannelName" });
-            System.out.println("aaaaaaaaaaaaaaaaa");
-            System.out.println(properties);
-        }
-
         return _update(endpoint, endpoint.getEnvironment() == null ? null : endpoint.getEnvironment().getId(),
-                properties);
+                new ObjectMapper().writeValueAsString(endpoint.getOtherProperties()));
     }
 
     @SqlUpdate("delete from endpoint where id = :id")
@@ -87,7 +79,7 @@ public abstract class EndpointDAO {
     public abstract List<Endpoint> findByEnvironmentId_PrimaryProperties(@Bind("environmentId") long environmentId);
 
     @SqlQuery(
-            "select ep.id, ep.environment_id, ev.name as environment_name, ep.name, ep.description " +
+            "select ep.id, ep.environment_id, ev.name as environment_name, ep.name, ep.type, ep.description " +
             "from endpoint ep left outer join environment ev on ep.environment_id = ev.id " +
             "where ep.type = :endpointType and ep.environment_id is not null")
     public abstract List<Endpoint> findManagedEndpointsByType(@Bind("endpointType") String endpointType);

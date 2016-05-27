@@ -3,7 +3,7 @@ package io.irontest.models;
 /**
  * Created by Zheng on 26/05/2016.
  */
-public class IIBEndpoint extends Endpoint {
+public class IIBEndpointProperties extends Properties {
     private String queueManagerName;
     private String host;
     private int port;
