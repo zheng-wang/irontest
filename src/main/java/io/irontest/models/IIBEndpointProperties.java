@@ -6,7 +6,7 @@ package io.irontest.models;
 public class IIBEndpointProperties extends Properties {
     private String queueManagerName;
     private String host;
-    private int port;
+    private Integer port;
     private String svrConnChannelName;
 
     public String getQueueManagerName() {
@@ -25,11 +25,11 @@ public class IIBEndpointProperties extends Properties {
         this.host = host;
     }
 
-    public int getPort() {
+    public Integer getPort() {
         return port;
     }
 
-    public void setPort(int port) {
+    public void setPort(Integer port) {
         this.port = port;
     }
 

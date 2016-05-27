@@ -1,7 +1,5 @@
 package io.irontest.utils;
 
-import io.irontest.models.Endpoint;
-import io.irontest.models.IIBEndpointProperties;
 import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.ContainsAssertionProperties;
 import io.irontest.models.assertion.DSFieldAssertionProperties;
@@ -29,14 +27,6 @@ public class IronTestUtils {
         }
     }
 
-    public static Class getEndpointPropertiesClassByType(String endpointType) {
-        if (Endpoint.ENDPOINT_TYPE_IIB.equals(endpointType)) {
-            return IIBEndpointProperties.class;
-        } else {
-            throw new RuntimeException("No dedicated Properties class for endpoint type " + endpointType);
-        }
-    }
-
     /**
      * @param rs
      * @return a list of lower case column names present in the result set.
@@ -50,5 +40,4 @@ public class IronTestUtils {
         }
         return fieldsPresentInResultSet;
     }
-
 }

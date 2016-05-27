@@ -1,5 +1,6 @@
 package io.irontest.resources;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.irontest.db.EndpointDAO;
 import io.irontest.models.Endpoint;
 
@@ -25,7 +26,7 @@ public class EndpointResource {
     }
 
     @PUT @Path("{endpointId}")
-    public Endpoint update(Endpoint endpoint) {
+    public Endpoint update(Endpoint endpoint) throws JsonProcessingException {
         endpointDAO.update(endpoint);
         return endpointDAO.findById(endpoint.getId());
     }

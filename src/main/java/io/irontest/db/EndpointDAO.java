@@ -2,11 +2,7 @@ package io.irontest.db;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ser.FilterProvider;
-import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
-import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import io.irontest.models.Endpoint;
-import io.irontest.utils.IronTestUtils;
 import org.skife.jdbi.v2.sqlobject.*;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
@@ -59,8 +55,10 @@ public abstract class EndpointDAO {
                                    @Bind("otherProperties") String otherProperties);
 
     public int update(Endpoint endpoint) throws JsonProcessingException {
-        return _update(endpoint, endpoint.getEnvironment() == null ? null : endpoint.getEnvironment().getId(),
-                new ObjectMapper().writeValueAsString(endpoint.getOtherProperties()));
+        String otherProperties = endpoint.getOtherProperties() == null ?
+                null : new ObjectMapper().writeValueAsString(endpoint.getOtherProperties());
+        Long environmentId = endpoint.getEnvironment() == null ? null : endpoint.getEnvironment().getId();
+        return _update(endpoint, environmentId, otherProperties);
     }
 
     @SqlUpdate("delete from endpoint where id = :id")
