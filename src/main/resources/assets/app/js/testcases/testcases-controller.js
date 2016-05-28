@@ -147,7 +147,8 @@ angular.module('iron-test').controller('TestcasesController', ['$scope', 'Testca
     $scope.createTeststep = function(type) {
       var teststep = new Teststeps({
         testcaseId: $stateParams.testcaseId,
-        type: type
+        type: type,
+        otherProperties: null  //  this is to avoid Jackson 'Missing property' error (http://stackoverflow.com/questions/28089484/deserialization-with-jsonsubtypes-for-no-value-missing-property-error)
       });
 
       teststep.$save(function(response) {

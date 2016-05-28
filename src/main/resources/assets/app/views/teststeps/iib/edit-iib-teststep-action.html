@@ -1,0 +1,36 @@
+<div class="form-group"></div> <!-- spacer -->
+<div class="form-group">
+  <label for="integrationServerName" class="col-lg-2 control-label">Execution Group</label>
+  <div class="col-lg-7">
+    <input name="integrationServerName" type="text" class="form-control" ng-change="autoSave(teststepForm.$valid)"
+           ng-model="teststep.otherProperties.integrationServerName" id="integrationServerName">
+  </div>
+</div>
+<div class="form-group">
+  <label for="messageFlowName" class="col-lg-2 control-label">Message Flow</label>
+  <div class="col-lg-7">
+    <input name="messageFlowName" type="text" class="form-control" ng-change="autoSave(teststepForm.$valid)"
+           ng-model="teststep.otherProperties.messageFlowName" id="messageFlowName">
+  </div>
+</div>
+<div class="form-group">
+  <label for="action" class="col-lg-2 control-label">Action</label>
+  <div class="col-lg-6">
+    <select name="action" id="action" class="form-control" ng-model="teststep.otherProperties.action"
+            ng-change="autoSave(teststepForm.$valid)">
+      <option value="Start">Start</option>
+      <option value="Stop">Stop</option>
+    </select>
+  </div>
+  <div class="col-lg-1">
+    <button type="button" class="btn btn-info" ng-click="doAction()"
+            ng-disabled="!teststep.otherProperties.integrationServerName || !teststep.otherProperties.messageFlowName ||
+            !teststep.otherProperties.action">Do</button>
+  </div>
+</div>
+
+<div class="form-group">
+  <div>
+    <label class="control-label"></label>
+  </div>
+</div>

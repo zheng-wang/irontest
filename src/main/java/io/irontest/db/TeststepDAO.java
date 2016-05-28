@@ -1,6 +1,7 @@
 package io.irontest.db;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.irontest.models.Endpoint;
 import io.irontest.models.Teststep;
 import org.skife.jdbi.v2.sqlobject.*;
@@ -21,7 +22,7 @@ public abstract class TeststepDAO {
     @SqlUpdate("CREATE TABLE IF NOT EXISTS teststep (" +
             "id BIGINT DEFAULT teststep_sequence.NEXTVAL PRIMARY KEY, testcase_id INT NOT NULL, " +
             "sequence SMALLINT NOT NULL, name VARCHAR(200) NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
-            "description CLOB, type VARCHAR(20) NOT NULL, request CLOB, " +
+            "description CLOB, type VARCHAR(20) NOT NULL, request CLOB, other_properties CLOB, " +
             "created TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
             "endpoint_id INT, FOREIGN KEY (endpoint_id) REFERENCES endpoint(id), " +
             "FOREIGN KEY (testcase_id) REFERENCES testcase(id) ON DELETE CASCADE, " +
@@ -57,18 +58,22 @@ public abstract class TeststepDAO {
     }
 
     @SqlUpdate("update teststep set name = :name, description = :description, request = :request, " +
-            "endpoint_id = :endpointId, updated = CURRENT_TIMESTAMP where id = :id")
+            "endpoint_id = :endpointId, other_properties = :otherProperties, " +
+            "updated = CURRENT_TIMESTAMP where id = :id")
     protected abstract int _update(@Bind("name") String name, @Bind("description") String description,
                                    @Bind("request") String request, @Bind("id") long id,
-                                   @Bind("endpointId") long endpointId);
+                                   @Bind("endpointId") long endpointId,
+                                   @Bind("otherProperties") String otherProperties);
 
     @Transaction
     public Teststep update(Teststep teststep) throws JsonProcessingException {
         Endpoint oldEndpoint = findById_NoTransaction(teststep.getId()).getEndpoint();
         Endpoint newEndpoint = teststep.getEndpoint();
 
+        String otherProperties = teststep.getOtherProperties() == null ?
+                null : new ObjectMapper().writeValueAsString(teststep.getOtherProperties());
         _update(teststep.getName(), teststep.getDescription(), teststep.getRequest(), teststep.getId(),
-                newEndpoint.getId());
+                newEndpoint.getId(), otherProperties);
 
         if (newEndpoint.isManaged()) {
             if (oldEndpoint.isManaged()) {

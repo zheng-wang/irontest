@@ -23,16 +23,6 @@ public class Assertion {
 
     public Assertion() {}
 
-    public Assertion(long id, long teststepId, String name, String type, Properties otherProperties, Date created, Date updated) {
-        this.id = id;
-        this.teststepId = teststepId;
-        this.name = name;
-        this.type = type;
-        this.otherProperties = otherProperties;
-        this.created = created;
-        this.updated = updated;
-    }
-
     public long getId() {
         return id;
     }

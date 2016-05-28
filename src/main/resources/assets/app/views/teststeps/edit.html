@@ -53,6 +53,9 @@
         <div ng-if="teststep.type === 'DB'"
              ng-include="'/ui/views/teststeps/db/edit-db-teststep-invocation.html'"
              ng-controller="DBTeststepController"></div>
+        <div ng-if="teststep.type === 'IIB'"
+             ng-include="'/ui/views/teststeps/iib/edit-iib-teststep-action.html'"
+             ng-controller="IIBTeststepController"></div>
       </uib-tab>
     </uib-tabset>
   </form>

@@ -1,5 +1,8 @@
 package io.irontest.models;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import java.util.Date;
 
 /**
@@ -19,21 +22,13 @@ public class Teststep {
     private Endpoint endpoint;
     private Date created;
     private Date updated;
+    @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
+            property = "type", visible = true, defaultImpl = Properties.class)
+    @JsonSubTypes({
+            @JsonSubTypes.Type(value = IIBTeststepProperties.class, name = Teststep.TEST_STEP_TYPE_IIB)})
+    private Properties otherProperties;
 
     public Teststep() {}
-
-    public Teststep(long id, long testcaseId, short sequence, String name, String type, String description,
-                    Date created, Date updated, String request) {
-        this.id = id;
-        this.testcaseId = testcaseId;
-        this.sequence = sequence;
-        this.name = name;
-        this.type = type;
-        this.description = description;
-        this.created = created;
-        this.updated = updated;
-        this.request = request;
-    }
 
     public long getId() {
         return id;
@@ -113,5 +108,13 @@ public class Teststep {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public Properties getOtherProperties() {
+        return otherProperties;
+    }
+
+    public void setOtherProperties(Properties otherProperties) {
+        this.otherProperties = otherProperties;
     }
 }

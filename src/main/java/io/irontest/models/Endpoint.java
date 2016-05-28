@@ -22,31 +22,14 @@ public class Endpoint {
     private String username;           //  not used by IIB endpoint
     private String password;           //  not used by IIB endpoint
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
-            property = "type", visible = true)
+            property = "type", visible = true, defaultImpl = Properties.class)
     @JsonSubTypes({
-            @JsonSubTypes.Type(value = IIBEndpointProperties.class, name = Endpoint.ENDPOINT_TYPE_IIB),
-            @JsonSubTypes.Type(value = Properties.class, name = Endpoint.ENDPOINT_TYPE_SOAP),
-            @JsonSubTypes.Type(value = Properties.class, name = Endpoint.ENDPOINT_TYPE_DB)})
+            @JsonSubTypes.Type(value = IIBEndpointProperties.class, name = Endpoint.ENDPOINT_TYPE_IIB)})
     private Properties otherProperties;
     private Date created;
     private Date updated;
 
     public Endpoint() {}
-
-    public Endpoint(long id, Environment environment, String name, String type, String description, String url,
-                    String username, String password, Properties otherProperties, Date created, Date updated) {
-        this.id = id;
-        this.environment = environment;
-        this.name = name;
-        this.type = type;
-        this.description = description;
-        this.url = url;
-        this.username = username;
-        this.password = password;
-        this.otherProperties = otherProperties;
-        this.created = created;
-        this.updated = updated;
-    }
 
     public long getId() {
         return id;
