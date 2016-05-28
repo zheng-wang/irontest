@@ -27,7 +27,7 @@ public class XPathAssertionVerifier implements AssertionVerifier {
     public AssertionVerificationResult verify(AssertionVerification assertionVerification) {
         AssertionVerificationResult result = new AssertionVerificationResult();
         Assertion assertion = assertionVerification.getAssertion();
-        XPathAssertionProperties assertionProperties = (XPathAssertionProperties) assertion.getProperties();
+        XPathAssertionProperties assertionProperties = (XPathAssertionProperties) assertion.getOtherProperties();
         evaluateXPathExpression((String) assertionVerification.getInput(), assertionProperties.getxPath(),
                 assertionProperties.getNamespacePrefixes(), result);
         result.setPassed(result.getError() == null &&

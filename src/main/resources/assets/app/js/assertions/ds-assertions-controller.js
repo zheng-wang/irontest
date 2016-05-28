@@ -18,10 +18,10 @@ angular.module('iron-test').controller('DSAssertionsController', ['$scope', 'Ass
           },
           editableCellTemplate: 'assertionGridNameEditableCellTemplate.html'
         },
-        {name: 'properties.field', displayName: 'Field', width: 100, minWidth: 100, enableCellEdit: false},
-        {name: 'properties.operator', displayName: 'Operator', width: 100, minWidth: 100, enableCellEdit: false},
+        {name: 'otherProperties.field', displayName: 'Field', width: 100, minWidth: 100, enableCellEdit: false},
+        {name: 'otherProperties.operator', displayName: 'Operator', width: 100, minWidth: 100, enableCellEdit: false},
         {
-          name: 'properties.value', displayName: 'Value', width: 200, minWidth: 200,
+          name: 'otherProperties.value', displayName: 'Value', width: 200, minWidth: 200,
           editableCellTemplate: 'assertionGridValueEditableCellTemplate.html'
         },
         {name: 'delete', width: 100, minWidth: 100, enableSorting: false, enableCellEdit: false,
@@ -61,7 +61,7 @@ angular.module('iron-test').controller('DSAssertionsController', ['$scope', 'Ass
         teststepId: $stateParams.teststepId,
         name: IronTestUtils.getNextNameInSequence($scope.assertionsModelObj.gridOptions.data, 'Field contains value'),
         type: 'DSField',
-        properties: {
+        otherProperties: {
           field: field,
           operator: 'Contains',
           value: ''
@@ -123,8 +123,8 @@ angular.module('iron-test').controller('DSAssertionsController', ['$scope', 'Ass
       var assertions = $scope.assertionsModelObj.gridOptions.data;
       for (var i = 0; i < assertions.length; i ++) {
         var assertion = assertions[i];
-        var values = _.pluck(data, assertion.properties.field);
-        assertion.result = _.contains(values, assertion.properties.value);
+        var values = _.pluck(data, assertion.otherProperties.field);
+        assertion.result = _.contains(values, assertion.otherProperties.value);
       }
     });
   }

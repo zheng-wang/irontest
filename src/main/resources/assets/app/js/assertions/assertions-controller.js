@@ -110,7 +110,7 @@ angular.module('iron-test').controller('AssertionsController', ['$scope', 'Asser
         teststepId: $stateParams.teststepId,
         name: IronTestUtils.getNextNameInSequence($scope.assertionsModelObj.assertions, 'Contains'),
         type: 'Contains',
-        properties: { contains: 'value' }
+        otherProperties: { contains: 'value' }
       });
       createAssertion(assertion);
     };
@@ -120,7 +120,7 @@ angular.module('iron-test').controller('AssertionsController', ['$scope', 'Asser
         teststepId: $stateParams.teststepId,
         name: IronTestUtils.getNextNameInSequence($scope.assertionsModelObj.assertions, 'XPath'),
         type: 'XPath',
-        properties: {
+        otherProperties: {
          xPath: 'true()',
          expectedValue: 'true',
          namespacePrefixes: []
@@ -143,7 +143,7 @@ angular.module('iron-test').controller('AssertionsController', ['$scope', 'Asser
     };
 
     var createNamespacePrefix = function(gridMenuEvent) {
-      $scope.assertionsModelObj.assertion.properties.namespacePrefixes.push(
+      $scope.assertionsModelObj.assertion.otherProperties.namespacePrefixes.push(
         { prefix: 'ns1', namespace: 'http://com.mycompany/service1' }
       );
       assertionUpdateInBackground();
@@ -151,7 +151,7 @@ angular.module('iron-test').controller('AssertionsController', ['$scope', 'Asser
 
     var removeNamespacePrefix = function(gridMenuEvent) {
       var selectedRows = $scope.assertionsModelObj.xPathNamespacePrefixGridApi.selection.getSelectedRows();
-      var namespacePrefixes = $scope.assertionsModelObj.assertion.properties.namespacePrefixes;
+      var namespacePrefixes = $scope.assertionsModelObj.assertion.otherProperties.namespacePrefixes;
       for (var i = 0; i < selectedRows.length; i += 1) {
         IronTestUtils.deleteArrayElementByProperty(namespacePrefixes, '$$hashKey', selectedRows[i].$$hashKey);
       }
@@ -159,7 +159,7 @@ angular.module('iron-test').controller('AssertionsController', ['$scope', 'Asser
     };
 
     $scope.assertionsModelObj.xPathNamespacePrefixesGridOptions = {
-      data: 'assertionsModelObj.assertion.properties.namespacePrefixes',
+      data: 'assertionsModelObj.assertion.otherProperties.namespacePrefixes',
       enableRowHeaderSelection: false, multiSelect: false, enableGridMenu: true, enableColumnMenus: false,
       rowHeight: 20, enableHorizontalScrollbar: uiGridConstants.scrollbars.NEVER,
       columnDefs: [

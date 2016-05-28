@@ -17,7 +17,7 @@ public class DSFieldAssertionVerifier implements AssertionVerifier {
         AssertionVerificationResult result = new AssertionVerificationResult();
         result.setPassed(Boolean.FALSE);
         Assertion assertion = assertionVerification.getAssertion();
-        DSFieldAssertionProperties assertionProperties = (DSFieldAssertionProperties) assertion.getProperties();
+        DSFieldAssertionProperties assertionProperties = (DSFieldAssertionProperties) assertion.getOtherProperties();
         DBHandlerResponse response = (DBHandlerResponse) assertionVerification.getInput();
         if (response.getNumberOfRowsModified() == -1 &&
                 DSFieldAssertionVerifier.CONTAINS_OPERATOR.equals(assertionProperties.getOperator())) {

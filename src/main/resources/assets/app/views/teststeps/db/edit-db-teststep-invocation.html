@@ -45,7 +45,7 @@
   <script type="text/ng-template" id="assertionGridValueEditableCellTemplate.html">
     <div class="ui-grid-cell-contents">
       <div>
-        <input type="text" class="form-control" maxlength="200" ui-grid-editor ng-model="row.entity.properties.value"
+        <input type="text" class="form-control" maxlength="200" ui-grid-editor ng-model="row.entity.otherProperties.value"
                ng-change="grid.appScope.assertionsModelObj.autoSave(true)"
                ng-init="grid.appScope.assertionsModelObj.assertion = row.entity">
       </div>

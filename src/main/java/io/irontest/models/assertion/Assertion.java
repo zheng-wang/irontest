@@ -1,6 +1,7 @@
 package io.irontest.models.assertion;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.irontest.models.Properties;
 
 import java.util.Date;
@@ -16,18 +17,18 @@ public class Assertion {
     private long teststepId;
     private String name;
     private String type;
-    private Properties properties;
+    private Properties otherProperties;
     private Date created;
     private Date updated;
 
     public Assertion() {}
 
-    public Assertion(long id, long teststepId, String name, String type, Properties properties, Date created, Date updated) {
+    public Assertion(long id, long teststepId, String name, String type, Properties otherProperties, Date created, Date updated) {
         this.id = id;
         this.teststepId = teststepId;
         this.name = name;
         this.type = type;
-        this.properties = properties;
+        this.otherProperties = otherProperties;
         this.created = created;
         this.updated = updated;
     }
@@ -80,12 +81,16 @@ public class Assertion {
         this.updated = updated;
     }
 
-    public Properties getProperties() {
-        return properties;
+    public Properties getOtherProperties() {
+        return otherProperties;
     }
 
-    @JsonDeserialize(using=AssertionPropertiesDeserializer.class)
-    public void setProperties(Properties properties) {
-        this.properties = properties;
+    @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY, property = "type")
+    @JsonSubTypes({
+            @JsonSubTypes.Type(value = ContainsAssertionProperties.class, name = Assertion.ASSERTION_TYPE_CONTAINS),
+            @JsonSubTypes.Type(value = XPathAssertionProperties.class, name = Assertion.ASSERTION_TYPE_XPATH),
+            @JsonSubTypes.Type(value = DSFieldAssertionProperties.class, name = Assertion.ASSERTION_TYPE_DSFIELD)})
+    public void setOtherProperties(Properties otherProperties) {
+        this.otherProperties = otherProperties;
     }
 }

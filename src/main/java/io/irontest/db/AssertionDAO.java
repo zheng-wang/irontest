@@ -22,29 +22,30 @@ public abstract class AssertionDAO {
     public abstract void createSequenceIfNotExists();
 
     @SqlUpdate("CREATE TABLE IF NOT EXISTS assertion (" +
-            "id BIGINT DEFAULT assertion_sequence.NEXTVAL PRIMARY KEY, teststep_id INT, name varchar(200) NOT NULL, " +
-            "type varchar(20) NOT NULL, properties CLOB," +
+            "id BIGINT DEFAULT assertion_sequence.NEXTVAL PRIMARY KEY, teststep_id INT, name VARCHAR(200) NOT NULL, " +
+            "type VARCHAR(20) NOT NULL, other_properties CLOB NOT NULL," +
             "created timestamp DEFAULT CURRENT_TIMESTAMP, updated timestamp DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (teststep_id) REFERENCES teststep(id) ON DELETE CASCADE, " +
             "CONSTRAINT ASSERTION_" + DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX + " UNIQUE(teststep_id, name))")
     public abstract void createTableIfNotExists();
 
-    @SqlUpdate("insert into assertion (teststep_id, name, type, properties) values " +
-            "(:teststepId, :name, :type, :properties)")
+    @SqlUpdate("insert into assertion (teststep_id, name, type, other_properties) values " +
+            "(:teststepId, :name, :type, :otherProperties)")
     @GetGeneratedKeys
     public abstract long insert(@Bind("teststepId") long teststepId, @Bind("name") String name,
-                                @Bind("type") String type, @Bind("properties") String properties);
+                                @Bind("type") String type, @Bind("otherProperties") String otherProperties);
 
     public long insert(Assertion assertion) throws JsonProcessingException {
         return insert(assertion.getTeststepId(), assertion.getName(), assertion.getType(),
-                new ObjectMapper().writeValueAsString(assertion.getProperties()));
+                new ObjectMapper().writeValueAsString(assertion.getOtherProperties()));
     }
 
-    @SqlUpdate("update assertion set name = :name, properties = :properties, updated = CURRENT_TIMESTAMP where id = :id")
-    public abstract int update(@Bind("name") String name, @Bind("properties") String properties, @Bind("id") long id);
+    @SqlUpdate("update assertion set name = :name, other_properties = :otherProperties, " +
+            "updated = CURRENT_TIMESTAMP where id = :id")
+    public abstract int update(@Bind("name") String name, @Bind("otherProperties") String otherProperties, @Bind("id") long id);
 
     public int update(Assertion assertion) throws JsonProcessingException {
-        return update(assertion.getName(), new ObjectMapper().writeValueAsString(assertion.getProperties()),
+        return update(assertion.getName(), new ObjectMapper().writeValueAsString(assertion.getOtherProperties()),
                 assertion.getId());
     }
 
