@@ -78,7 +78,7 @@ angular.module('iron-test').controller('DSAssertionsController', ['$scope', 'Ass
           testcaseId: $stateParams.testcaseId,
           teststepId: $stateParams.teststepId
         }, function(response) {
-          $scope.$parent.savingStatus.saveSuccessful = true;
+          $scope.$emit('successfullySaved');
           $scope.assertionsModelObj.assertion = response;
         }, function(response) {
           IronTestUtils.openErrorHTTPResponseModal(response);

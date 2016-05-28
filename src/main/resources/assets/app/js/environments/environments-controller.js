@@ -4,7 +4,6 @@ angular.module('iron-test').controller('EnvironmentsController', ['$scope', 'Env
     '$stateParams', '$state', 'uiGridConstants', '$timeout', 'Endpoints', 'IronTestUtils',
   function($scope, Environments, $stateParams, $state, uiGridConstants, $timeout, Endpoints, IronTestUtils) {
 
-    $scope.saveSuccessful = null;
     var timer;
     $scope.autoSave = function(isValid) {
       if (timer) $timeout.cancel(timer);
@@ -60,7 +59,7 @@ angular.module('iron-test').controller('EnvironmentsController', ['$scope', 'Env
     $scope.update = function(isValid) {
       if (isValid) {
         $scope.environment.$update(function(response) {
-          $scope.saveSuccessful = true;
+          $scope.$broadcast('successfullySaved');
           $scope.environment = response;
         }, function(response) {
           IronTestUtils.openErrorHTTPResponseModal(response);
@@ -104,7 +103,8 @@ angular.module('iron-test').controller('EnvironmentsController', ['$scope', 'Env
     $scope.createEndpoint = function(type) {
       var endpoint = new Endpoints({
         environment: { id: $stateParams.environmentId },
-        type: type
+        type: type,
+        otherProperties: null  //  this is to avoid Jackson 'Missing property' error (http://stackoverflow.com/questions/28089484/deserialization-with-jsonsubtypes-for-no-value-missing-property-error)
       });
       endpoint.$save(function(returnEndpoint) {
         $state.go('endpoint_edit', {environmentId: $stateParams.environmentId, endpointId: returnEndpoint.id,

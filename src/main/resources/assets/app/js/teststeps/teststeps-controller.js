@@ -13,9 +13,7 @@ angular.module('iron-test').controller('TeststepsController', ['$scope', 'Testst
 
     var timer;
     //  use object instead of primitives, so that child scope can update the values
-    $scope.savingStatus = {
-      saveSuccessful: null,
-    };
+    $scope.savingStatus = {};
 
     $scope.autoSave = function(isValid) {
       if (timer) $timeout.cancel(timer);
@@ -27,7 +25,7 @@ angular.module('iron-test').controller('TeststepsController', ['$scope', 'Testst
     $scope.update = function(isValid, successCallback) {
       if (isValid) {
         $scope.teststep.$update(function(response) {
-          $scope.savingStatus.saveSuccessful = true;
+          $scope.$broadcast('successfullySaved');
           $scope.teststep = response;
           if (successCallback) {
             successCallback();

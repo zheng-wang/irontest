@@ -3,7 +3,6 @@
 angular.module('iron-test').controller('TestcasesController', ['$scope', 'Testcases', 'Teststeps', 'Testruns',
     '$stateParams', '$state', 'uiGridConstants', '$timeout', 'IronTestUtils',
   function($scope, Testcases, Teststeps, Testruns, $stateParams, $state, uiGridConstants, $timeout, IronTestUtils) {
-    $scope.saveSuccessful = null;
     var timer;
     $scope.autoSave = function(isValid) {
       if (timer) $timeout.cancel(timer);
@@ -62,7 +61,7 @@ angular.module('iron-test').controller('TestcasesController', ['$scope', 'Testca
             ]
           });
           testcase.$update({ moveStep: true }, function(response) {
-            $scope.saveSuccessful = true;
+            $scope.$broadcast('successfullySaved');
             $scope.testcase = response;
           }, function(response) {
             IronTestUtils.openErrorHTTPResponseModal(response);
@@ -74,7 +73,7 @@ angular.module('iron-test').controller('TestcasesController', ['$scope', 'Testca
     $scope.update = function(isValid) {
       if (isValid) {
         $scope.testcase.$update(function(response) {
-          $scope.saveSuccessful = true;
+          $scope.$broadcast('successfullySaved');
           $scope.testcase = response;
         }, function(response) {
           IronTestUtils.openErrorHTTPResponseModal(response);

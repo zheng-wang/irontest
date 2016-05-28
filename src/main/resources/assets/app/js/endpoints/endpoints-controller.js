@@ -5,9 +5,7 @@ angular.module('iron-test').controller('EndpointsController', ['$scope', 'Endpoi
   function($scope, Endpoints, $stateParams, $state, uiGridConstants, $timeout, IronTestUtils) {
     var timer;
     //  use object instead of primitives, so that child scope can update the values
-    $scope.savingStatus = {
-      saveSuccessful: null,
-    };
+    $scope.savingStatus = {};
 
     $scope.endpointNewlyCreated = function() {
       return $stateParams.newlyCreated === true;
@@ -23,7 +21,7 @@ angular.module('iron-test').controller('EndpointsController', ['$scope', 'Endpoi
     $scope.update = function(isValid) {
       if (isValid) {
         $scope.endpoint.$update(function(response) {
-          $scope.savingStatus.saveSuccessful = true;
+          $scope.$broadcast('successfullySaved');
           $scope.endpoint = response;
         }, function(response) {
           IronTestUtils.openErrorHTTPResponseModal(response);
