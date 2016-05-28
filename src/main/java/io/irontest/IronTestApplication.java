@@ -72,7 +72,7 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         environment.jersey().register(new AssertionResource(assertionDAO));
         environment.jersey().register(new WSDLResource());
         environment.jersey().register(new EnvironmentResource(environmentDAO, endpointDAO));
-        environment.jersey().register(new TestrunResource(endpointDAO, teststepDAO, assertionDAO, utilsDAO));
+        environment.jersey().register(new TestrunResource(teststepDAO, assertionDAO, utilsDAO));
 
         //  register JSON services
         environment.jersey().register(new JSONService(new AssertionVerifierFactory(), endpointDAO));

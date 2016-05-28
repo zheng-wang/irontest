@@ -1,15 +1,15 @@
-package io.irontest.handlers;
+package io.irontest.core.runner;
 
 import com.ibm.broker.config.proxy.*;
-import io.irontest.models.Endpoint;
+import io.irontest.models.Teststep;
 
 import java.util.Date;
 
 /**
  * Created by Zheng on 25/05/2016.
  */
-public class IIBHandler implements IronTestHandler {
-    public Object invoke(String request, Endpoint endpoint) throws Exception {
+public class IIBTeststepRunner implements TeststepRunner {
+    public Object run(Teststep teststep) throws Exception {
         String hostname = "localhost";
         int port = 1410;
         String qmgr = "QM1";
@@ -44,7 +44,7 @@ public class IIBHandler implements IronTestHandler {
     }
 
     public static void main(String[] args) throws Exception {
-        IIBHandler handler = new IIBHandler();
-        handler.invoke(null, null);
+        IIBTeststepRunner runner = new IIBTeststepRunner();
+        runner.run(null);
     }
 }

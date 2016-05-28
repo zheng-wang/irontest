@@ -1,6 +1,7 @@
-package io.irontest.handlers;
+package io.irontest.core.runner;
 
 import io.irontest.models.Endpoint;
+import io.irontest.models.Teststep;
 import org.skife.jdbi.v2.DBI;
 import org.skife.jdbi.v2.Handle;
 import org.skife.jdbi.v2.Query;
@@ -12,11 +13,11 @@ import java.util.Map;
 /**
  * Created by Trevor Li on 7/14/15.
  */
-public class DBHandler implements IronTestHandler {
-    public DBHandler() { }
-
-    public Object invoke(String request, Endpoint endpoint) throws Exception {
-        DBHandlerResponse response = new DBHandlerResponse();
+public class DBTeststepRunner implements TeststepRunner {
+    public Object run(Teststep teststep) throws Exception {
+        DBTeststepRunnerResponse response = new DBTeststepRunnerResponse();
+        String request = teststep.getRequest();
+        Endpoint endpoint = teststep.getEndpoint();
         DBI jdbi = new DBI(endpoint.getUrl(), endpoint.getUsername(), endpoint.getPassword());
         Handle handle = jdbi.open();
 

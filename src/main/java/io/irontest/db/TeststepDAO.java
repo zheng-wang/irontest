@@ -136,7 +136,18 @@ public abstract class TeststepDAO {
     }
 
     @SqlQuery("select * from teststep where testcase_id = :testcaseId order by sequence")
-    public abstract List<Teststep> findByTestcaseId(@Bind("testcaseId") long testcaseId);
+    public abstract List<Teststep> _findByTestcaseId(@Bind("testcaseId") long testcaseId);
+
+    @Transaction
+    public List<Teststep> findByTestcaseId(@Bind("testcaseId") long testcaseId) {
+        List<Teststep> teststeps = _findByTestcaseId(testcaseId);
+        EndpointDAO endpointDAO = endpointDAO();
+        for (Teststep teststep: teststeps) {
+            Endpoint endpoint = endpointDAO.findById(teststep.getEndpoint().getId());
+            teststep.setEndpoint(endpoint);
+        }
+        return teststeps;
+    }
 
     @SqlQuery("select id, testcase_id, sequence, name, type, description from teststep " +
               "where testcase_id = :testcaseId order by sequence")

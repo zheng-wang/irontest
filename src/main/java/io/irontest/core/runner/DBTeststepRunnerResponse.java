@@ -1,15 +1,15 @@
-package io.irontest.handlers;
+package io.irontest.core.runner;
 
 /**
  * numberOfRowsModified being -1 means the SQL is a select statement;
  * > -1 means the SQL is an insert/update/delete statement.
  * Created by Zheng on 10/04/2016.
  */
-public class DBHandlerResponse {
+public class DBTeststepRunnerResponse {
     private int numberOfRowsModified;
     private Object resultSet;
 
-    public DBHandlerResponse() { }
+    public DBTeststepRunnerResponse() { }
 
     public int getNumberOfRowsModified() {
         return numberOfRowsModified;

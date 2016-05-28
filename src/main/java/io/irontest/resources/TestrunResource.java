@@ -2,12 +2,10 @@ package io.irontest.resources;
 
 import io.irontest.core.assertion.AssertionVerifier;
 import io.irontest.core.assertion.AssertionVerifierFactory;
+import io.irontest.core.runner.TeststepRunnerFactory;
 import io.irontest.db.AssertionDAO;
-import io.irontest.db.EndpointDAO;
 import io.irontest.db.TeststepDAO;
 import io.irontest.db.UtilsDAO;
-import io.irontest.handlers.HandlerFactory;
-import io.irontest.models.Endpoint;
 import io.irontest.models.Testrun;
 import io.irontest.models.Teststep;
 import io.irontest.models.assertion.Assertion;
@@ -26,17 +24,24 @@ import java.util.List;
 @Path("/testruns") @Produces({ MediaType.APPLICATION_JSON })
 public class TestrunResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(TestrunResource.class);
-    private final EndpointDAO endpointDao;
     private final TeststepDAO teststepDao;
     private final AssertionDAO assertionDao;
     private final UtilsDAO utilsDAO;
 
-    public TestrunResource(EndpointDAO endpointDao, TeststepDAO teststepDao, AssertionDAO assertionDao,
+    public TestrunResource(TeststepDAO teststepDao, AssertionDAO assertionDao,
                            UtilsDAO utilsDAO) {
-        this.endpointDao = endpointDao;
         this.teststepDao = teststepDao;
         this.assertionDao = assertionDao;
         this.utilsDAO = utilsDAO;
+    }
+
+    private Object runTeststep(Teststep teststep) throws Exception {
+        String password = teststep.getEndpoint().getPassword();
+        if (password != null) {
+            teststep.getEndpoint().setPassword(utilsDAO.decryptPassword(password));
+        }
+        return TeststepRunnerFactory.getInstance().getTeststepRunner(teststep.getType() + "TeststepRunner")
+                .run(teststep);
     }
 
     @POST
@@ -44,23 +49,14 @@ public class TestrunResource {
         if (testrun.getTeststepId() != null) {  //  run a test step (passing invocation response back to client)
             LOGGER.info("Running an individual test step.");
             Teststep teststep = teststepDao.findById(testrun.getTeststepId());
-            Endpoint endpoint = endpointDao.findById(teststep.getEndpoint().getId());
-            endpoint.setPassword(utilsDAO.decryptPassword(endpoint.getPassword()));
-            Object response = HandlerFactory.getInstance().getHandler(endpoint.getType() + "Handler")
-                    .invoke(testrun.getRequest(), endpoint);
-            testrun.setResponse(response);
+            testrun.setResponse(runTeststep(teststep));
         } else if (testrun.getTestcaseId() != null) {  //  run a test case (not passing invocation responses back to client)
             LOGGER.info("Running a test case.");
-            long testcaseId = testrun.getTestcaseId();
-            List<Teststep> teststeps = teststepDao.findByTestcaseId(testcaseId);
+            List<Teststep> teststeps = teststepDao.findByTestcaseId(testrun.getTestcaseId());
 
             for (Teststep teststep : teststeps) {
-                //  invoke and get response
-                Endpoint endpoint = endpointDao.findById(teststep.getEndpoint().getId());
-                endpoint.setPassword(utilsDAO.decryptPassword(endpoint.getPassword()));
-                Object response = HandlerFactory.getInstance().getHandler(endpoint.getType() + "Handler")
-                        .invoke(teststep.getRequest(), endpoint);
-
+                //  run and get response
+                Object response = runTeststep(teststep);
                 LOGGER.info(response.toString());
 
                 //  verify assertions against the invocation response
