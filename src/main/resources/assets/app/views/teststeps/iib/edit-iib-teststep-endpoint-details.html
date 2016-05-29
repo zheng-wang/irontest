@@ -4,7 +4,7 @@
     <input name="endpointQueueManagerName" type="text" class="form-control"
            ng-model="teststep.endpoint.otherProperties.queueManagerName"
            ng-change="isInShareEndpointMode() ? angular.noop() : autoSave(teststepForm.$valid)"
-           id="endpointQueueManagerName" maxlength="100"
+           id="endpointQueueManagerName" maxlength="100" spellcheck="false"
            ng-readonly="!isInShareEndpointMode() && teststep.endpoint.environment">
   </div>
 </div>
@@ -12,7 +12,7 @@
   <label for="endpointHost" class="col-lg-2 control-label">Host</label>
   <div class="col-lg-10">
     <input name="endpointHost" type="text" class="form-control" ng-model="teststep.endpoint.otherProperties.host"
-           ng-change="isInShareEndpointMode() ? angular.noop() : autoSave(teststepForm.$valid)"
+           ng-change="isInShareEndpointMode() ? angular.noop() : autoSave(teststepForm.$valid)" spellcheck="false"
            id="endpointHost" maxlength="200" ng-readonly="!isInShareEndpointMode() && teststep.endpoint.environment">
   </div>
 </div>
@@ -34,7 +34,7 @@
     <input name="endpointSvrConnChannelName" type="text" class="form-control"
            ng-model="teststep.endpoint.otherProperties.svrConnChannelName"
            ng-change="isInShareEndpointMode() ? angular.noop() : autoSave(teststepForm.$valid)"
-           id="endpointSvrConnChannelName" maxlength="200"
+           id="endpointSvrConnChannelName" maxlength="200" spellcheck="false"
            ng-readonly="!isInShareEndpointMode() && teststep.endpoint.environment">
   </div>
 </div>

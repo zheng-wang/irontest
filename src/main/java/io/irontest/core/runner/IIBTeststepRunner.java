@@ -1,46 +1,54 @@
 package io.irontest.core.runner;
 
 import com.ibm.broker.config.proxy.*;
+import io.irontest.models.IIBEndpointProperties;
+import io.irontest.models.IIBTeststepProperties;
 import io.irontest.models.Teststep;
-
-import java.util.Date;
 
 /**
  * Created by Zheng on 25/05/2016.
  */
 public class IIBTeststepRunner implements TeststepRunner {
-    public Object run(Teststep teststep) throws Exception {
-        String hostname = "localhost";
-        int port = 1410;
-        String qmgr = "QM1";
-        String channelName = "channel1";
-        String egName = "default";
-        String messageFlowName = "flow1";
-        BrokerProxy b = null;
+    public Object run(Teststep teststep) throws ConfigManagerProxyLoggedException,
+            ConfigManagerProxyPropertyNotInitializedException {
+        IIBEndpointProperties endpointProperties = (IIBEndpointProperties) teststep.getEndpoint().getOtherProperties();
+        IIBTeststepProperties teststepProperties = (IIBTeststepProperties) teststep.getOtherProperties();
+        MQBrokerConnectionParameters bcp = new MQBrokerConnectionParameters(
+                endpointProperties.getHost(), endpointProperties.getPort(), endpointProperties.getQueueManagerName());
+        bcp.setAdvancedConnectionParameters(endpointProperties.getSvrConnChannelName(), null, null, -1, -1, null);
+        BrokerProxy brokerProxy = null;
         try {
-            MQBrokerConnectionParameters bcp = new MQBrokerConnectionParameters(hostname, port, qmgr);
-            bcp.setAdvancedConnectionParameters(channelName, null, null, -1, -1, null);
-            b = BrokerProxy.getInstance(bcp);
-            b.setSynchronous(60 * 1000);
-            String brokerName = b.getName();
-            System.out.println("Broker '" + brokerName + "' is available!");
-            System.out.println("Session ID: " + bcp.getSessionIDString());
-            ExecutionGroupProxy egProxy = b.getExecutionGroupByName(egName);
-            System.out.println("EG: " + egProxy.getName());
+            //  connect to the broker
+            brokerProxy = BrokerProxy.getInstance(bcp);
+            brokerProxy.setSynchronous(60 * 1000);    //  do everything synchronously
+            String integrationNodeName = brokerProxy.getName();
 
-            MessageFlowProxy messageFlowProxy = egProxy.getMessageFlowByName(messageFlowName);
-            System.out.println("Message flow: " + messageFlowProxy.getName());
+            //  get message flow proxy
+            ExecutionGroupProxy egProxy = brokerProxy.getExecutionGroupByName(
+                    teststepProperties.getIntegrationServerName());
+            if (egProxy == null) {
+                throw new RuntimeException("Execution group " + teststepProperties.getIntegrationServerName() +
+                        " does not exist on broker " + integrationNodeName);
+            }
+            MessageFlowProxy messageFlowProxy = egProxy.getMessageFlowByName(teststepProperties.getMessageFlowName());
+            if (messageFlowProxy == null) {
+                throw new RuntimeException("Message flow " + teststepProperties.getMessageFlowName() +
+                        " does not exist on execution group " + teststepProperties.getIntegrationServerName());
+            }
 
-            System.out.println(new Date());
-            messageFlowProxy.start();
-            System.out.println(new Date());
-
-
-            b.disconnect();
-        } catch (ConfigManagerProxyException ex) {
-            System.out.println("Broker is NOT available because " + ex);
+            //  do the specified action
+            if (IIBTeststepProperties.ACTION_TYPE_START.equals(teststepProperties.getAction())) {
+                messageFlowProxy.start();
+            } else if (IIBTeststepProperties.ACTION_TYPE_STOP.equals(teststepProperties.getAction())) {
+                messageFlowProxy.stop();
+            }
+        } finally {
+            if (brokerProxy != null) {
+                brokerProxy.disconnect();
+            }
         }
-        return null;
+
+        return true;
     }
 
     public static void main(String[] args) throws Exception {

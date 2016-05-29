@@ -3,14 +3,14 @@
   <label for="integrationServerName" class="col-lg-2 control-label">Execution Group</label>
   <div class="col-lg-7">
     <input name="integrationServerName" type="text" class="form-control" ng-change="autoSave(teststepForm.$valid)"
-           ng-model="teststep.otherProperties.integrationServerName" id="integrationServerName">
+           ng-model="teststep.otherProperties.integrationServerName" id="integrationServerName" spellcheck="false">
   </div>
 </div>
 <div class="form-group">
   <label for="messageFlowName" class="col-lg-2 control-label">Message Flow</label>
   <div class="col-lg-7">
     <input name="messageFlowName" type="text" class="form-control" ng-change="autoSave(teststepForm.$valid)"
-           ng-model="teststep.otherProperties.messageFlowName" id="messageFlowName">
+           ng-model="teststep.otherProperties.messageFlowName" id="messageFlowName" spellcheck="false">
   </div>
 </div>
 <div class="form-group">
@@ -28,9 +28,15 @@
             !teststep.otherProperties.action">Do</button>
   </div>
 </div>
-
+<div class="form-group"></div> <!-- spacer -->
+<div class="form-group"></div> <!-- spacer -->
+<div class="form-group"></div> <!-- spacer -->
+<div class="form-group"></div> <!-- spacer -->
 <div class="form-group">
-  <div>
-    <label class="control-label"></label>
+  <div class="col-lg-offset-4">
+    <p ng-if="actionStatus === 'ongoing'">
+      {{ action === 'Start' ? 'Starting' : 'Stopping' }} message flow ...</p>
+    <p ng-if="actionStatus === 'finished'">
+      Message flow {{ action === 'Start' ? 'started' : 'stopped' }}.</p>
   </div>
 </div>
