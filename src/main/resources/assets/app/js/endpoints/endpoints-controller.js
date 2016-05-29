@@ -1,16 +1,14 @@
 'use strict';
 
+//  This controller is for managed endpoints.
 angular.module('iron-test').controller('EndpointsController', ['$scope', 'Endpoints', '$stateParams', '$state',
     'uiGridConstants', '$timeout', 'IronTestUtils',
   function($scope, Endpoints, $stateParams, $state, uiGridConstants, $timeout, IronTestUtils) {
-    var timer;
-    //  use object instead of primitives, so that child scope can update the values
-    $scope.savingStatus = {};
-
     $scope.endpointNewlyCreated = function() {
       return $stateParams.newlyCreated === true;
     };
 
+    var timer;
     $scope.autoSave = function(isValid) {
       if (timer) $timeout.cancel(timer);
       timer = $timeout(function() {
@@ -27,7 +25,7 @@ angular.module('iron-test').controller('EndpointsController', ['$scope', 'Endpoi
           IronTestUtils.openErrorHTTPResponseModal(response);
         });
       } else {
-        $scope.savingStatus.submitted = true;
+        $scope.submitted = true;
       }
     };
 

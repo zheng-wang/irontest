@@ -84,7 +84,7 @@ angular.module('iron-test').controller('DSAssertionsController', ['$scope', 'Ass
           IronTestUtils.openErrorHTTPResponseModal(response);
         });
       } else {
-        $scope.$parent.savingStatus.submitted = true;
+        $scope.savingStatus.submitted = true;
       }
     };
 

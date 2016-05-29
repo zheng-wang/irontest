@@ -29,7 +29,7 @@ angular.module('iron-test').controller('AssertionsController', ['$scope', 'Asser
           IronTestUtils.openErrorHTTPResponseModal(response);
         });
       } else {
-        $scope.$parent.savingStatus.submitted = true;
+        $scope.savingStatus.submitted = true;
       }
     };
 
