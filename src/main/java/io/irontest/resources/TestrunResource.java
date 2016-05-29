@@ -46,10 +46,9 @@ public class TestrunResource {
 
     @POST
     public Testrun create(Testrun testrun) throws Exception {
-        if (testrun.getTeststepId() != null) {  //  run a test step (passing invocation response back to client)
+        if (testrun.getTeststep() != null) {  //  run a test step (passing invocation response back to client)
             LOGGER.info("Running an individual test step.");
-            Teststep teststep = teststepDao.findById(testrun.getTeststepId());
-            testrun.setResponse(runTeststep(teststep));
+            testrun.setResponse(runTeststep(testrun.getTeststep()));
         } else if (testrun.getTestcaseId() != null) {  //  run a test case (not passing invocation responses back to client)
             LOGGER.info("Running a test case.");
             List<Teststep> teststeps = teststepDao.findByTestcaseId(testrun.getTestcaseId());

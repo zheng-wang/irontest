@@ -23,8 +23,7 @@ angular.module('iron-test').controller('DBTeststepController', ['$scope', 'Testr
 
     $scope.invoke = function(teststep) {
       var testrun = {
-        teststepId: $scope.$parent.teststep.id,
-        request: $scope.$parent.teststep.request
+        teststep: $scope.teststep
       };
 
       var testrunRes = new Testruns(testrun);

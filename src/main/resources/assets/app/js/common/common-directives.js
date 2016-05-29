@@ -9,7 +9,7 @@ angular.module('iron-test')
           element.removeClass('successful-message-animation');
           $timeout(function() {  //  wait for the removeClass to take effect
             element.addClass('successful-message-animation');
-          });
+          }, 5);
         })
 
         //  add class that is always on the element

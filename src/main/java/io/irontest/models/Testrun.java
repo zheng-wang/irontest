@@ -8,8 +8,7 @@ import java.util.List;
  */
 public class Testrun {
     //  for test step run
-    private Long teststepId;
-    private String request;
+    private Teststep teststep;
     private Object response;
 
     //  for test case run
@@ -17,14 +16,6 @@ public class Testrun {
     private List<Long> failedTeststepIds = new ArrayList<Long>();
 
     public Testrun() {}
-
-    public String getRequest() {
-        return request;
-    }
-
-    public void setRequest(String request) {
-        this.request = request;
-    }
 
     public Object getResponse() {
         return response;
@@ -42,19 +33,19 @@ public class Testrun {
         this.testcaseId = testcaseId;
     }
 
-    public Long getTeststepId() {
-        return teststepId;
-    }
-
-    public void setTeststepId(Long teststepId) {
-        this.teststepId = teststepId;
-    }
-
     public List<Long> getFailedTeststepIds() {
         return failedTeststepIds;
     }
 
     public void setFailedTeststepIds(List<Long> failedTeststepIds) {
         this.failedTeststepIds = failedTeststepIds;
+    }
+
+    public Teststep getTeststep() {
+        return teststep;
+    }
+
+    public void setTeststep(Teststep teststep) {
+        this.teststep = teststep;
     }
 }

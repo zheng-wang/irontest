@@ -35,8 +35,7 @@ angular.module('iron-test').controller('SOAPTeststepController', ['$scope', 'Tes
 
     $scope.invoke = function() {
       var testrun = {
-        teststepId: $scope.teststep.id,
-        request: $scope.teststep.request
+        teststep: $scope.teststep
       };
       var testrunRes = new Testruns(testrun);
       testrunRes.$save(function(response) {
