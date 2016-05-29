@@ -1,6 +1,6 @@
 <div class="form-group">
-  <label for="endpointQueueManagerName" class="col-lg-3 control-label">Queue Manager Name</label>
-  <div class="col-lg-9">
+  <label for="endpointQueueManagerName" class="col-lg-2 control-label">Queue Manager Name</label>
+  <div class="col-lg-10">
     <input name="endpointQueueManagerName" type="text" class="form-control"
            ng-model="teststep.endpoint.otherProperties.queueManagerName"
            ng-change="isInShareEndpointMode() ? angular.noop() : autoSave(teststepForm.$valid)"
@@ -9,16 +9,16 @@
   </div>
 </div>
 <div class="form-group">
-  <label for="endpointHost" class="col-lg-3 control-label">Host</label>
-  <div class="col-lg-9">
+  <label for="endpointHost" class="col-lg-2 control-label">Host</label>
+  <div class="col-lg-10">
     <input name="endpointHost" type="text" class="form-control" ng-model="teststep.endpoint.otherProperties.host"
            ng-change="isInShareEndpointMode() ? angular.noop() : autoSave(teststepForm.$valid)"
            id="endpointHost" maxlength="200" ng-readonly="!isInShareEndpointMode() && teststep.endpoint.environment">
   </div>
 </div>
 <div class="form-group" ng-class="{ 'has-error' : savingStatus.submitted && teststepForm.endpointPort.$invalid }">
-  <label for="endpointPort" class="col-lg-3 control-label">Port</label>
-  <div class="col-lg-9">
+  <label for="endpointPort" class="col-lg-2 control-label">Port</label>
+  <div class="col-lg-10">
     <input name="endpointPort" type="text" class="form-control" ng-model="teststep.endpoint.otherProperties.port"
            ng-change="isInShareEndpointMode() ? angular.noop() : autoSave(teststepForm.$valid)"
            id="endpointPort" maxlength="5" pattern="[1-6]\d{0,4}"
@@ -29,8 +29,8 @@
   </div>
 </div>
 <div class="form-group">
-  <label for="endpointSvrConnChannelName" class="col-lg-3 control-label">SVRCONN Channel Name</label>
-  <div class="col-lg-9">
+  <label for="endpointSvrConnChannelName" class="col-lg-2 control-label">SVRCONN Channel Name</label>
+  <div class="col-lg-10">
     <input name="endpointSvrConnChannelName" type="text" class="form-control"
            ng-model="teststep.endpoint.otherProperties.svrConnChannelName"
            ng-change="isInShareEndpointMode() ? angular.noop() : autoSave(teststepForm.$valid)"
