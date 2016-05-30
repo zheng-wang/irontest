@@ -26,7 +26,8 @@ public class Teststep {
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
             property = "type", visible = true, defaultImpl = Properties.class)
     @JsonSubTypes({
-            @JsonSubTypes.Type(value = IIBTeststepProperties.class, name = Teststep.TEST_STEP_TYPE_IIB)})
+            @JsonSubTypes.Type(value = IIBTeststepProperties.class, name = Teststep.TEST_STEP_TYPE_IIB),
+            @JsonSubTypes.Type(value = MQTeststepProperties.class, name = Teststep.TEST_STEP_TYPE_MQ)})
     private Properties otherProperties;
 
     public Teststep() {}

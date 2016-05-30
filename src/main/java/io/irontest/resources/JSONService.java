@@ -29,7 +29,7 @@ public class JSONService {
 
     @POST @Path("verifyassertion")
     public AssertionVerificationResult verifyAssertion(AssertionVerification assertionVerification) throws InterruptedException {
-        Thread.sleep(100);  //  workaround for Chrome 44's 'Failed to load response data' problem (no such problem in Chrome 49)
+        Thread.sleep(100);  //  workaround for Chrome 44 to 48's 'Failed to load response data' problem (no such problem in Chrome 49)
         Assertion assertion = assertionVerification.getAssertion();
         String assertionType = assertionVerification.getAssertion().getType();
         AssertionVerifier assertionVerifier = assertionVerifierFactory.create(assertionType);

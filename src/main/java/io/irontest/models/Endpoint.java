@@ -25,7 +25,8 @@ public class Endpoint {
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
             property = "type", visible = true, defaultImpl = Properties.class)
     @JsonSubTypes({
-            @JsonSubTypes.Type(value = IIBEndpointProperties.class, name = Endpoint.ENDPOINT_TYPE_IIB)})
+            @JsonSubTypes.Type(value = IIBEndpointProperties.class, name = Endpoint.ENDPOINT_TYPE_IIB),
+            @JsonSubTypes.Type(value = MQEndpointProperties.class, name = Endpoint.ENDPOINT_TYPE_MQ)})
     private Properties otherProperties;
     private Date created;
     private Date updated;
