@@ -42,6 +42,8 @@
                ng-include="'/ui/views/teststeps/db/edit-db-teststep-endpoint-details.html'"></div>
           <div ng-if="teststep.type === 'IIB'"
                ng-include="'/ui/views/teststeps/iib/edit-iib-teststep-endpoint-details.html'"></div>
+          <div ng-if="teststep.type === 'MQ'"
+               ng-include="'/ui/views/teststeps/mq/edit-mq-teststep-endpoint-details.html'"></div>
 
           <div ng-include="'/ui/views/teststeps/edit-endpoint-details-bottom-part.html'"></div>
         </div>

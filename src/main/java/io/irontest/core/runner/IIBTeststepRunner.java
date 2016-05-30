@@ -50,9 +50,4 @@ public class IIBTeststepRunner implements TeststepRunner {
 
         return true;
     }
-
-    public static void main(String[] args) throws Exception {
-        IIBTeststepRunner runner = new IIBTeststepRunner();
-        runner.run(null);
-    }
 }

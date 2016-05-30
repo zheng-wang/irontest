@@ -12,6 +12,7 @@ public class Teststep {
     public static final String TEST_STEP_TYPE_SOAP = "SOAP";
     public static final String TEST_STEP_TYPE_DB = "DB";
     public static final String TEST_STEP_TYPE_IIB = "IIB";
+    public static final String TEST_STEP_TYPE_MQ = "MQ";
     private long id;
     private long testcaseId;
     private short sequence;

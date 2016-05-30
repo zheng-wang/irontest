@@ -9,4 +9,8 @@ public class MQTeststepRunner implements TeststepRunner {
     public String run(Teststep teststep) throws Exception {
         return null;
     }
+
+    public static void main(String[] args) {
+
+    }
 }

@@ -1,5 +1,14 @@
 <div class="form-group"></div> <!-- spacer -->
 <div class="form-group">
+  <label for="integrationNodeAddress" class="col-lg-2 control-label">Broker Address</label>
+  <div class="col-lg-7">
+    <input type="text" name="integrationNodeAddress" id="integrationNodeAddress" class="form-control" readonly
+           value="{{teststep.endpoint.otherProperties.host + ':' + teststep.endpoint.otherProperties.port + '/' +
+             teststep.endpoint.otherProperties.queueManagerName + '/' +
+             teststep.endpoint.otherProperties.svrConnChannelName}}">
+  </div>
+</div>
+<div class="form-group">
   <label for="integrationServerName" class="col-lg-2 control-label">Execution Group</label>
   <div class="col-lg-7">
     <input name="integrationServerName" type="text" class="form-control" ng-change="autoSave(teststepForm.$valid)"
