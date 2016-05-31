@@ -34,7 +34,7 @@
   <div class="col-lg-1">
     <button type="button" class="btn btn-info" ng-click="doAction()"
             ng-disabled="!teststep.otherProperties.integrationServerName || !teststep.otherProperties.messageFlowName ||
-            !teststep.otherProperties.action">Do</button>
+            !teststep.otherProperties.action || actionStatus === 'ongoing'">Do</button>
   </div>
 </div>
 <div class="form-group"></div> <!-- spacer -->

@@ -1,0 +1,41 @@
+<div class="form-group"></div> <!-- spacer -->
+<div class="form-group">
+  <label for="queueManagerAddress" class="col-lg-2 control-label">Queue Manager Address</label>
+  <div class="col-lg-7">
+    <input type="text" name="queueManagerAddress" id="queueManagerAddress" class="form-control" readonly
+           value="{{teststep.endpoint.otherProperties.host + ':' + teststep.endpoint.otherProperties.port + '/' +
+             teststep.endpoint.otherProperties.queueManagerName}}">
+  </div>
+</div>
+<div class="form-group">
+  <label for="queueName" class="col-lg-2 control-label">Queue Name</label>
+  <div class="col-lg-7">
+    <input name="queueName" type="text" class="form-control" ng-change="autoSave(teststepForm.$valid)"
+           ng-model="teststep.otherProperties.queueName" id="queueName" spellcheck="false">
+  </div>
+</div>
+<div class="form-group">
+  <label for="action" class="col-lg-2 control-label">Action</label>
+  <div class="col-lg-6">
+    <select name="action" id="action" class="form-control" ng-model="teststep.otherProperties.action"
+            ng-change="autoSave(teststepForm.$valid)">
+      <option value="Clear">Clear</option>
+      <option value="CheckDepth">CheckDepth</option>
+    </select>
+  </div>
+  <div class="col-lg-1">
+    <button type="button" class="btn btn-info" ng-click="doAction()"
+            ng-disabled="!teststep.otherProperties.queueName || !teststep.otherProperties.action ||
+              actionStatus === 'ongoing'">Do</button>
+  </div>
+</div>
+<div class="form-group"></div> <!-- spacer -->
+<div class="form-group"></div> <!-- spacer -->
+<div class="form-group"></div> <!-- spacer -->
+<div class="form-group"></div> <!-- spacer -->
+<div class="form-group">
+  <div class="col-lg-offset-4">
+    <p ng-if="actionStatus === 'ongoing'">{{ action === 'Clear' ? 'Clearing queue ...' : '' }}</p>
+    <p ng-if="actionStatus === 'finished'">{{ action === 'Clear' ? 'Queue cleared.' : '' }}</p>
+  </div>
+</div>

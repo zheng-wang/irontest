@@ -1,5 +1,7 @@
 package io.irontest;
 
+import com.ibm.mq.MQException;
+import com.ibm.mq.constants.CMQC;
 import com.roskart.dropwizard.jaxws.EndpointBuilder;
 import com.roskart.dropwizard.jaxws.JAXWSBundle;
 import io.dropwizard.Application;
@@ -85,5 +87,8 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
 
         //  register exception mappers
         environment.jersey().register(new IronTestLoggingExceptionMapper());
+
+        //  disable the default 2033 logging (seems not needed since IBM MQ 8.0)
+        MQException.logExclude(CMQC.MQRC_NO_MSG_AVAILABLE);
     }
 }

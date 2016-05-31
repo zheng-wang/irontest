@@ -40,21 +40,22 @@
                ng-include="'/ui/views/teststeps/soap/edit-soap-teststep-endpoint-details.html'"></div>
           <div ng-if="teststep.type === 'DB'"
                ng-include="'/ui/views/teststeps/db/edit-db-teststep-endpoint-details.html'"></div>
-          <div ng-if="teststep.type === 'IIB'"
-               ng-include="'/ui/views/teststeps/iib/edit-iib-teststep-endpoint-details.html'"></div>
-          <div ng-if="teststep.type === 'MQ'"
-               ng-include="'/ui/views/teststeps/mq/edit-mq-teststep-endpoint-details.html'"></div>
+          <div ng-if="teststep.type === 'MQ' || teststep.type === 'IIB'"
+               ng-include="'/ui/views/teststeps/edit-mq-iib-teststep-endpoint-details.html'"></div>
 
           <div ng-include="'/ui/views/teststeps/edit-endpoint-details-bottom-part.html'"></div>
         </div>
       </uib-tab>
-      <uib-tab heading="{{ teststep.type === 'IIB' ? 'Action' : 'Invocation' }}">
+      <uib-tab heading="{{ teststep.type === 'MQ' || teststep.type === 'IIB' ? 'Action' : 'Invocation' }}">
         <div ng-if="teststep.type === 'SOAP'"
              ng-include="'/ui/views/teststeps/soap/edit-soap-teststep-invocation.html'"
              ng-controller="SOAPTeststepController"></div>
         <div ng-if="teststep.type === 'DB'"
              ng-include="'/ui/views/teststeps/db/edit-db-teststep-invocation.html'"
              ng-controller="DBTeststepController"></div>
+        <div ng-if="teststep.type === 'MQ'"
+             ng-include="'/ui/views/teststeps/mq/edit-mq-teststep-action.html'"
+             ng-controller="MQTeststepController"></div>
         <div ng-if="teststep.type === 'IIB'"
              ng-include="'/ui/views/teststeps/iib/edit-iib-teststep-action.html'"
              ng-controller="IIBTeststepController"></div>

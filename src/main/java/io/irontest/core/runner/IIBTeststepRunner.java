@@ -1,7 +1,7 @@
 package io.irontest.core.runner;
 
 import com.ibm.broker.config.proxy.*;
-import io.irontest.models.IIBEndpointProperties;
+import io.irontest.models.MQIIBEndpointProperties;
 import io.irontest.models.IIBTeststepProperties;
 import io.irontest.models.Teststep;
 
@@ -11,7 +11,7 @@ import io.irontest.models.Teststep;
 public class IIBTeststepRunner implements TeststepRunner {
     public Object run(Teststep teststep) throws ConfigManagerProxyLoggedException,
             ConfigManagerProxyPropertyNotInitializedException {
-        IIBEndpointProperties endpointProperties = (IIBEndpointProperties) teststep.getEndpoint().getOtherProperties();
+        MQIIBEndpointProperties endpointProperties = (MQIIBEndpointProperties) teststep.getEndpoint().getOtherProperties();
         IIBTeststepProperties teststepProperties = (IIBTeststepProperties) teststep.getOtherProperties();
         MQBrokerConnectionParameters bcp = new MQBrokerConnectionParameters(
                 endpointProperties.getHost(), endpointProperties.getPort(), endpointProperties.getQueueManagerName());

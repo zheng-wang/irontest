@@ -1,9 +1,9 @@
 package io.irontest.models;
 
 /**
- * Created by Zheng on 30/05/2016.
+ * Created by Zheng on 26/05/2016.
  */
-public class MQEndpointProperties extends Properties {
+public class MQIIBEndpointProperties extends Properties {
     private String queueManagerName;
     private String host;
     private Integer port;
