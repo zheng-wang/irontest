@@ -13,10 +13,18 @@ public class Assertion {
     public static final String ASSERTION_TYPE_CONTAINS = "Contains";
     public static final String ASSERTION_TYPE_XPATH = "XPath";
     public static final String ASSERTION_TYPE_DSFIELD = "DSField";
+    public static final String ASSERTION_TYPE_INTEGER_EQUALS = "IntegerEquals";
     private long id;
     private long teststepId;
     private String name;
     private String type;
+    @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY, property = "type")
+    @JsonSubTypes({
+            @JsonSubTypes.Type(value = ContainsAssertionProperties.class, name = Assertion.ASSERTION_TYPE_CONTAINS),
+            @JsonSubTypes.Type(value = XPathAssertionProperties.class, name = Assertion.ASSERTION_TYPE_XPATH),
+            @JsonSubTypes.Type(value = DSFieldAssertionProperties.class, name = Assertion.ASSERTION_TYPE_DSFIELD),
+            @JsonSubTypes.Type(value = IntegerEqualsAssertionProperties.class,
+                    name = Assertion.ASSERTION_TYPE_INTEGER_EQUALS)})
     private Properties otherProperties;
     private Date created;
     private Date updated;
@@ -75,11 +83,6 @@ public class Assertion {
         return otherProperties;
     }
 
-    @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY, property = "type")
-    @JsonSubTypes({
-            @JsonSubTypes.Type(value = ContainsAssertionProperties.class, name = Assertion.ASSERTION_TYPE_CONTAINS),
-            @JsonSubTypes.Type(value = XPathAssertionProperties.class, name = Assertion.ASSERTION_TYPE_XPATH),
-            @JsonSubTypes.Type(value = DSFieldAssertionProperties.class, name = Assertion.ASSERTION_TYPE_DSFIELD)})
     public void setOtherProperties(Properties otherProperties) {
         this.otherProperties = otherProperties;
     }

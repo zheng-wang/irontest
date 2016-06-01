@@ -49,6 +49,7 @@ public class TestrunResource {
         if (testrun.getTeststep() != null) {  //  run a test step (passing invocation response back to client)
             LOGGER.info("Running an individual test step.");
             testrun.setResponse(runTeststep(testrun.getTeststep()));
+            testrun.setTeststep(null);    //  no need to pass the test step back to client which might contain decrypted password
         } else if (testrun.getTestcaseId() != null) {  //  run a test case (not passing invocation responses back to client)
             LOGGER.info("Running a test case.");
             List<Teststep> teststeps = teststepDao.findByTestcaseId(testrun.getTestcaseId());

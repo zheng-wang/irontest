@@ -6,6 +6,7 @@
 angular.module('iron-test').controller('MQTeststepController', ['$scope', 'Testruns', 'IronTestUtils', '$timeout',
   function($scope, Testruns, IronTestUtils, $timeout) {
     var timer;
+    $scope.testrun = {};
 
     $scope.doAction = function() {
       if (timer) $timeout.cancel(timer);
@@ -16,7 +17,9 @@ angular.module('iron-test').controller('MQTeststepController', ['$scope', 'Testr
         teststep: $scope.teststep
       };
       var testrunRes = new Testruns(testrun);
+      $scope.testrun.timestamp = new Date();
       testrunRes.$save(function(response) {
+        $scope.testrun.response = response.response;
         $scope.actionStatus = 'finished';
         $timeout(function() {
           $scope.actionStatus = null;

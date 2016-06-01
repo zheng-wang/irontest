@@ -34,6 +34,7 @@ public class MQTeststepRunner implements TeststepRunner {
             }
             queue = queueManager.accessQueue(teststepProperties.getQueueName(), openOptions, null, null, null);
 
+            //  do the action
             if (MQTeststepProperties.ACTION_TYPE_CLEAR.equals(teststepProperties.getAction())) {
                 MQGetMessageOptions getOptions = new MQGetMessageOptions();
                 getOptions.options = CMQC.MQGMO_NO_WAIT + CMQC.MQGMO_FAIL_IF_QUIESCING;
@@ -42,11 +43,9 @@ public class MQTeststepRunner implements TeststepRunner {
                     MQMessage message = new MQMessage();
                     try {
                         queue.get(message, getOptions);
-                        System.out.println(message.readStringOfByteLength(message.getDataLength()));
                     } catch(MQException mqEx) {
                         if (mqEx.getCompCode() == CMQC.MQCC_FAILED && mqEx.getReason() == CMQC.MQRC_NO_MSG_AVAILABLE) {
                             //  no more message left on the queue
-                            System.out.println("No more message left on queue " + teststepProperties.getQueueName());
                             break;
                         } else {
                             throw mqEx;
@@ -56,7 +55,6 @@ public class MQTeststepRunner implements TeststepRunner {
                 result = true;
             } else if (MQTeststepProperties.ACTION_TYPE_CHECK_DEPTH.equals(teststepProperties.getAction())) {
                 int queueDepth = queue.getCurrentDepth();
-                System.out.println("Queue depth: " + queueDepth);
                 result = queueDepth;
             }
         } finally {
