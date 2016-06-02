@@ -22,6 +22,10 @@ angular.module('iron-test').controller('DBTeststepController', ['$scope', 'Testr
     };
 
     $scope.invoke = function(teststep) {
+      //  exclude the result property from the assertion, as the property does not exist in server side Assertion class
+      teststep.assertions.forEach(function(assertion) {
+        delete assertion.result;
+      });
       var testrun = {
         teststep: $scope.teststep
       };

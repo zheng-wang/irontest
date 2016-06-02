@@ -1,14 +1,13 @@
 'use strict';
 
-angular.module('iron-test').controller('DSAssertionsController', ['$scope', 'Assertions',
-  '$stateParams', 'uiGridConstants', '$timeout', 'IronTestUtils', '_',
-  function($scope, Assertions, $stateParams, uiGridConstants, $timeout, IronTestUtils, _) {
+angular.module('iron-test').controller('DSAssertionsController', ['$scope', '$stateParams', 'uiGridConstants',
+    'IronTestUtils', '_',
+  function($scope, $stateParams, uiGridConstants, IronTestUtils, _) {
     //  use assertionsModelObj for all variables in the scope, to avoid conflict with parent scope
     $scope.assertionsModelObj = {};
 
-    var timer;
-
     $scope.assertionsModelObj.gridOptions = {
+      data: 'teststep.assertions',
       columnDefs: [
         {
           name: 'name', displayName: 'Name', width: 250, minWidth: 250,
@@ -31,87 +30,63 @@ angular.module('iron-test').controller('DSAssertionsController', ['$scope', 'Ass
       ]
     };
 
-    $scope.assertionsModelObj.findAll = function() {
-      Assertions.query(
-          {
-            testcaseId: $stateParams.testcaseId,
-            teststepId: $stateParams.teststepId
-          }, function(response) {
-            $scope.assertionsModelObj.gridOptions.data = response;
-          }, function(response) {
-            IronTestUtils.openErrorHTTPResponseModal(response);
-          });
-    };
-
-    var createAssertion = function(assertion) {
-      assertion.$save({
-        testcaseId: $stateParams.testcaseId,
-        teststepId: $stateParams.teststepId
-      }, function(response) {
-        $scope.assertionsModelObj.assertion = response;
-        //  add the new assertion to the grid data
-        $scope.assertionsModelObj.gridOptions.data.push(response);
-      }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
-      });
-    };
-
     $scope.assertionsModelObj.createDSFieldContainAssertion = function(field) {
-      var assertion = new Assertions({
-        teststepId: $stateParams.teststepId,
-        name: IronTestUtils.getNextNameInSequence($scope.assertionsModelObj.gridOptions.data, 'Field contains value'),
-        type: 'DSField',
+      var type = 'DSField';
+      var name = IronTestUtils.getNextNameInSequence($scope.teststep.assertions, 'Field contains value');
+      var assertion = {
+        name: name,
+        type: type,
         otherProperties: {
           field: field,
           operator: 'Contains',
           value: ''
         }
+      };
+      $scope.teststep.assertions.push(assertion);
+      //  exclude the result property from the assertion, as the property does not exist in server side Assertion class
+      $scope.teststep.assertions.forEach(function(assertion) {
+        delete assertion.result;
       });
-      createAssertion(assertion);
+      var selectNewlyCreatedAssertion = function() {
+        selectAssertionByProperty('name', name);
+      };
+      $scope.update(true, selectNewlyCreatedAssertion);
     };
 
-    $scope.assertionsModelObj.update = function(isValid) {
-      if (isValid) {
-        //  exclude the result property from the assertion, as the property does not exist in server side Assertion class
-        var assertionCopy = _.omit($scope.assertionsModelObj.assertion, 'result');
-        assertionCopy.$update({
-          testcaseId: $stateParams.testcaseId,
-          teststepId: $stateParams.teststepId
-        }, function(response) {
-          $scope.$emit('successfullySaved');
-          $scope.assertionsModelObj.assertion = response;
-        }, function(response) {
-          IronTestUtils.openErrorHTTPResponseModal(response);
-        });
-      } else {
-        $scope.savingStatus.submitted = true;
-      }
+    var selectAssertionByProperty = function(propertyName, propertyValue) {
+      var assertion = $scope.teststep.assertions.find(
+        function(asrt) {
+          return asrt[propertyName] === propertyValue;
+        }
+      );
+      $scope.assertionsModelObj.assertion = assertion;
+    };
+
+    var reselectCurrentAssertionInGrid = function() {
+       var currentAssertionId = $scope.assertionsModelObj.assertion.id;
+       selectAssertionByProperty('id', currentAssertionId);
     };
 
     $scope.assertionsModelObj.autoSave = function(isValid) {
-      if (timer) $timeout.cancel(timer);
-      timer = $timeout(function() {
-        $scope.assertionsModelObj.update(isValid);
-      }, 2000);
+      //  exclude the result property from the assertion, as the property does not exist in server side Assertion class
+      $scope.teststep.assertions.forEach(function(assertion) {
+        delete assertion.result;
+      });
+      $scope.autoSave(isValid, reselectCurrentAssertionInGrid);
     };
 
     $scope.assertionsModelObj.remove = function(assertion) {
       var assertionId = assertion.id;
-      assertion.$remove({
-        testcaseId: $stateParams.testcaseId,
-        teststepId: $stateParams.teststepId
-      }, function(response) {
-        //  delete the assertion row from the grid
-        var gridData = $scope.assertionsModelObj.gridOptions.data;
-        var indexOfRowToBeDeleted = IronTestUtils.indexOfArrayElementByProperty(gridData, 'id', assertionId);
-        gridData.splice(indexOfRowToBeDeleted, 1);
-
+      IronTestUtils.deleteArrayElementByProperty($scope.teststep.assertions, 'id', assertionId);
+      //  exclude the result property from the assertion, as the property does not exist in server side Assertion class
+      $scope.teststep.assertions.forEach(function(assertion) {
+        delete assertion.result;
+      });
+      $scope.update(true, function() {
         //  if deleted assertion is the one currently selected, set the current assertion to null
         if ($scope.assertionsModelObj.assertion && $scope.assertionsModelObj.assertion.id === assertionId) {
           $scope.assertionsModelObj.assertion = null;
         }
-      }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
       });
     };
 
@@ -120,7 +95,7 @@ angular.module('iron-test').controller('DSAssertionsController', ['$scope', 'Ass
     });
 
     $scope.$on('evaluateDataSet', function (event, data) {
-      var assertions = $scope.assertionsModelObj.gridOptions.data;
+      var assertions = $scope.teststep.assertions;
       for (var i = 0; i < assertions.length; i ++) {
         var assertion = assertions[i];
         var values = _.pluck(data, assertion.otherProperties.field);
