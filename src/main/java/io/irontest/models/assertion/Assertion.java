@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.irontest.models.Properties;
 
-import java.util.Date;
-
 /**
  * Created by Zheng on 19/07/2015.
  */
@@ -14,8 +12,7 @@ public class Assertion {
     public static final String ASSERTION_TYPE_XPATH = "XPath";
     public static final String ASSERTION_TYPE_DSFIELD = "DSField";
     public static final String ASSERTION_TYPE_INTEGER_EQUALS = "IntegerEquals";
-    private long id;
-    private long teststepId;
+    private Long id;
     private String name;
     private String type;
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY, property = "type")
@@ -26,25 +23,15 @@ public class Assertion {
             @JsonSubTypes.Type(value = IntegerEqualsAssertionProperties.class,
                     name = Assertion.ASSERTION_TYPE_INTEGER_EQUALS)})
     private Properties otherProperties;
-    private Date created;
-    private Date updated;
 
     public Assertion() {}
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
-    }
-
-    public long getTeststepId() {
-        return teststepId;
-    }
-
-    public void setTeststepId(long teststepId) {
-        this.teststepId = teststepId;
     }
 
     public String getName() {
@@ -61,22 +48,6 @@ public class Assertion {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
-    }
-
-    public Date getUpdated() {
-        return updated;
-    }
-
-    public void setUpdated(Date updated) {
-        this.updated = updated;
     }
 
     public Properties getOtherProperties() {

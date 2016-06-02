@@ -1,32 +1,24 @@
 'use strict';
 
 angular.module('iron-test')
-  .factory('IronTestUtils', function ($uibModal, _) {
+  .factory('IronTestUtils', function ($uibModal) {
     return {
-      //  Search elements in the array using property, and return the index of the first element that has the property
-      //  with the property value. The elements must be objects, and the property must be of primitive type.
-      indexOfArrayElementByProperty: function(array, propertyName, propertyValue) {
-        var result = -1;
-        for (var i = 0; i < array.length; i += 1) {
-          if (array[i][propertyName] === propertyValue) {
-            result = i;
-            break;
-          }
-        }
-        return result;
-      },
-
       //  Search elements in the array using property, and delete the first element that has the property
       //  with the property value. The elements must be objects, and the property must be of primitive type.
       deleteArrayElementByProperty: function(array, propertyName, propertyValue) {
-        array.splice(this.indexOfArrayElementByProperty(array, propertyName, propertyValue), 1);
+        var indexOfElement = array.findIndex(
+          function(element) {
+            return element[propertyName] === propertyValue;
+          }
+        );
+        array.splice(indexOfElement, 1);
       },
 
       //  Search the objArray (by inspecting each obj's name property) to
       //  find the next available name-in-sequence to use.
       //  Name-in-sequence format: '<baseName> <sequence>'. For example: 'XPath 1'.
       getNextNameInSequence: function(objArray, baseName) {
-        var checkExistingName = function(obj) {
+        var isExistingName = function(obj) {
           return obj.name === this;
         };
 
@@ -34,8 +26,7 @@ angular.module('iron-test')
         var name;
         for (; sequence < 10000000; sequence += 1) {
           name = baseName + ' ' + sequence;
-          //  replace below underscore usage with Array.findIndex after getting to Chrome 45+
-          if (_.findIndex(objArray, checkExistingName, name) === -1) {
+          if (objArray.findIndex(isExistingName, name) === -1) {
             break;
           }
         }

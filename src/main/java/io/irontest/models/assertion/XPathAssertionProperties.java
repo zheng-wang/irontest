@@ -13,6 +13,14 @@ public class XPathAssertionProperties extends Properties {
     private String expectedValue;
     private List<NamespacePrefix> namespacePrefixes;
 
+    public XPathAssertionProperties() {}
+
+    public XPathAssertionProperties(String xPath, String expectedValue, List<NamespacePrefix> namespacePrefixes) {
+        this.xPath = xPath;
+        this.expectedValue = expectedValue;
+        this.namespacePrefixes = namespacePrefixes;
+    }
+
     public String getxPath() {
         return xPath;
     }

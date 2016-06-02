@@ -4,9 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.irontest.models.Endpoint;
 import io.irontest.models.Teststep;
+import io.irontest.models.assertion.Assertion;
 import org.skife.jdbi.v2.sqlobject.*;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static io.irontest.IronTestConstants.DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX;
@@ -32,6 +34,9 @@ public abstract class TeststepDAO {
 
     @CreateSqlObject
     protected abstract EndpointDAO endpointDAO();
+
+    @CreateSqlObject
+    protected abstract AssertionDAO assertionDAO();
 
     @SqlUpdate("insert into teststep (testcase_id, sequence, type, request, endpoint_id) " +
             "values (:testcaseId, select coalesce(max(sequence), 0) + 1 from teststep where testcase_id = :testcaseId, " +
@@ -75,6 +80,7 @@ public abstract class TeststepDAO {
         _update(teststep.getName(), teststep.getDescription(), teststep.getRequest(), teststep.getId(),
                 newEndpoint.getId(), otherProperties);
 
+        //  update endpoint
         if (newEndpoint.isManaged()) {
             if (oldEndpoint.isManaged()) {
                 //  do nothing
@@ -90,6 +96,22 @@ public abstract class TeststepDAO {
         } else {  //  new endpoint is still unmanaged, so update it
             endpointDAO().update(newEndpoint);
         }
+
+        //  update assertions
+        AssertionDAO assertionDAO = assertionDAO();
+        List<Long> newAssertionIds = new ArrayList<Long>();
+        for (Assertion assertion: teststep.getAssertions()) {
+            if (assertion.getId() == null) {    //  insert the assertion
+                newAssertionIds.add(assertionDAO.insert(teststep.getId(), assertion));
+            } else {
+                newAssertionIds.add(assertion.getId());
+
+                //  update the assertion
+                assertionDAO.update(assertion);
+            }
+        }
+        //  delete assertions whose id is not in the new assertion id list
+        assertionDAO.deleteIfIdNotIn(newAssertionIds);
 
         return findById_NoTransaction(teststep.getId());
     }
@@ -132,11 +154,12 @@ public abstract class TeststepDAO {
         Teststep teststep = _findById(id);
         Endpoint endpoint = endpointDAO().findById(teststep.getEndpoint().getId());
         teststep.setEndpoint(endpoint);
+        teststep.setAssertions(assertionDAO().findByTeststepId(id));
         return teststep;
     }
 
     @SqlQuery("select * from teststep where testcase_id = :testcaseId order by sequence")
-    public abstract List<Teststep> _findByTestcaseId(@Bind("testcaseId") long testcaseId);
+    protected abstract List<Teststep> _findByTestcaseId(@Bind("testcaseId") long testcaseId);
 
     @Transaction
     public List<Teststep> findByTestcaseId(@Bind("testcaseId") long testcaseId) {

@@ -25,11 +25,8 @@ public class AssertionMapper implements ResultSetMapper<Assertion> {
         }
 
         assertion.setId(rs.getLong("id"));
-        assertion.setTeststepId(rs.getLong("teststep_id"));
         assertion.setName(rs.getString("name"));
         assertion.setType(type);
-        assertion.setCreated(rs.getTimestamp("created"));
-        assertion.setUpdated(rs.getTimestamp("updated"));
 
         return assertion;
     }

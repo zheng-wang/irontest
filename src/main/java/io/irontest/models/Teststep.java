@@ -2,8 +2,11 @@ package io.irontest.models;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import io.irontest.models.assertion.Assertion;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Zheng on 7/07/2015.
@@ -21,6 +24,7 @@ public class Teststep {
     private String description;
     private String request;
     private Endpoint endpoint;
+    private List<Assertion> assertions = new ArrayList<Assertion>();
     private Date created;
     private Date updated;
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
@@ -118,5 +122,13 @@ public class Teststep {
 
     public void setOtherProperties(Properties otherProperties) {
         this.otherProperties = otherProperties;
+    }
+
+    public List<Assertion> getAssertions() {
+        return assertions;
+    }
+
+    public void setAssertions(List<Assertion> assertions) {
+        this.assertions = assertions;
     }
 }

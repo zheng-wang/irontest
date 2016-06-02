@@ -1,4 +1,4 @@
-<div class="row" ng-controller="AssertionsController" ng-init="assertionsModelObj.findAll()">
+<div class="row" ng-controller="AssertionsController">
   <!-- use z-index here to avoid assertion grid menu to be partially overridden -->
   <div class="col-lg-3" style="z-index: 1">
     <div class="form-group">
@@ -7,8 +7,8 @@
           Create <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" uib-dropdown-menu role="menu">
-          <li role="menuitem"><a ng-click="assertionsModelObj.createContainsAssertion()" href="">Contains Assertion</a></li>
-          <li role="menuitem"><a ng-click="assertionsModelObj.createXPathAssertion()" href="">XPath Assertion</a></li>
+          <li role="menuitem"><a ng-click="assertionsModelObj.createAssertion('Contains')" href="">Contains Assertion</a></li>
+          <li role="menuitem"><a ng-click="assertionsModelObj.createAssertion('XPath')" href="">XPath Assertion</a></li>
         </ul>
       </div>
       <div class="col-lg-8">

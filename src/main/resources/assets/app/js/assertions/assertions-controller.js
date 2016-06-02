@@ -1,59 +1,30 @@
 'use strict';
 
-//  if unspecified, all grid config is for the assertions grid
-angular.module('iron-test').controller('AssertionsController', ['$scope', 'Assertions',
-    '$stateParams', 'uiGridConstants', 'uiGridEditConstants', '$timeout', 'IronTestUtils', '$http',
-  function($scope, Assertions, $stateParams, uiGridConstants, uiGridEditConstants, $timeout, IronTestUtils, $http) {
+//  NOTICE:
+//    The $scope here prototypically inherits from the $scope of teststeps-controller.js.
+//    ng-include also creates a scope.
+//    If unspecified, all grid config is for the assertions grid
+angular.module('iron-test').controller('AssertionsController', ['$scope',
+    '$stateParams', 'uiGridConstants', 'uiGridEditConstants', 'IronTestUtils', '$http', '$timeout',
+  function($scope, $stateParams, uiGridConstants, uiGridEditConstants, IronTestUtils, $http, $timeout) {
     //  use assertionsModelObj for all variables in the scope, to avoid conflict with parent scope
     $scope.assertionsModelObj = {};
 
     $scope.assertionsModelObj.tempData = {};
 
-    var timer;
-    $scope.assertionsModelObj.autoSave = function(isValid) {
-      if (timer) $timeout.cancel(timer);
-      timer = $timeout(function() {
-        $scope.assertionsModelObj.update(isValid);
-      }, 2000);
-    };
-
-    $scope.assertionsModelObj.update = function(isValid) {
-      if (isValid) {
-        $scope.assertionsModelObj.assertion.$update({
-          testcaseId: $stateParams.testcaseId,
-          teststepId: $stateParams.teststepId
-        }, function(response) {
-          $scope.$emit('successfullySaved');
-          $scope.assertionsModelObj.assertion = response;
-        }, function(response) {
-          IronTestUtils.openErrorHTTPResponseModal(response);
-        });
-      } else {
-        $scope.savingStatus.submitted = true;
-      }
-    };
-
     //  remove currently selected assertion
-    var removeCurrentAssertion = function(gridMenuEvent) {
+    var removeCurrentAssertion = function() {
       var currentAssertion = $scope.assertionsModelObj.assertion;
       if (currentAssertion) {
-        currentAssertion.$remove({
-          testcaseId: $stateParams.testcaseId,
-          teststepId: $stateParams.teststepId
-        }, function(response) {
-          //  delete the assertion from the grid
-          IronTestUtils.deleteArrayElementByProperty($scope.assertionsModelObj.assertions, 'id', currentAssertion.id);
-
-          //  set current assertion to null
-          $scope.assertionsModelObj.assertion = null;
-        }, function(response) {
-          IronTestUtils.openErrorHTTPResponseModal(response);
-        });
+        //  set current assertion to null
+        $scope.assertionsModelObj.assertion = null;
+        IronTestUtils.deleteArrayElementByProperty($scope.teststep.assertions, 'id', currentAssertion.id);
+        $scope.update(true);
       }
     };
 
     $scope.assertionsModelObj.gridOptions = {
-      data: 'assertionsModelObj.assertions',
+      data: 'teststep.assertions',
       enableRowHeaderSelection: false, multiSelect: false, noUnselect: true, enableGridMenu: true,
       enableColumnMenus: false,
       columnDefs: [
@@ -75,78 +46,49 @@ angular.module('iron-test').controller('AssertionsController', ['$scope', 'Asser
       }
     };
 
-    $scope.assertionsModelObj.findAll = function() {
-      Assertions.query(
-        {
-          testcaseId: $stateParams.testcaseId,
-          teststepId: $stateParams.teststepId
-        }, function(response) {
-          $scope.assertionsModelObj.assertions = response;
-        }, function(response) {
-          IronTestUtils.openErrorHTTPResponseModal(response);
-        });
+    var selectUpdatedAssertionInGrid = function() {
+       //  select the updated assertion in the grid
+       var updatedAssertionId = $scope.assertionsModelObj.assertion.id;
+       var updatedAssertion = $scope.teststep.assertions.find(
+           function(asrt) {
+             return asrt.id === updatedAssertionId;
+           }
+       );
+       $timeout(function() {    //  a trick for newly loaded grid data
+         $scope.assertionsModelObj.gridApi.selection.selectRow(updatedAssertion);
+       });
     };
 
-    var createAssertion = function(assertion) {
-      assertion.$save({
-        testcaseId: $stateParams.testcaseId,
-        teststepId: $stateParams.teststepId
-      }, function(response) {
-        $scope.assertionsModelObj.assertion = response;
-        $scope.assertionsModelObj.assertions.push(response);
+    $scope.assertionsModelObj.autoSave = function(isValid) {
+      $scope.autoSave(isValid, selectUpdatedAssertionInGrid);
+    };
 
-        //  select the new assertion in the grid
+    $scope.assertionsModelObj.createAssertion = function(type) {
+      var name = IronTestUtils.getNextNameInSequence($scope.teststep.assertions, type);
+      var assertion = {
+        name: name,
+        type: type,
+        otherProperties: null  //  this is to avoid Jackson 'Missing property' error (http://stackoverflow.com/questions/28089484/deserialization-with-jsonsubtypes-for-no-value-missing-property-error)
+      };
+      $scope.teststep.assertions.push(assertion);
+      var selectNewlyCreatedAssertionInGrid = function() {
+        var newlyCreatedAssertion = $scope.teststep.assertions.find(
+            function(asrt) {
+              return asrt.name === name;
+            }
+        );
         $timeout(function() {    //  a trick for newly loaded grid data
-          $scope.assertionsModelObj.gridApi.selection.selectRow(response);
+          $scope.assertionsModelObj.gridApi.selection.selectRow(newlyCreatedAssertion);
         });
-      }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
-      });
-    };
-
-    $scope.assertionsModelObj.createContainsAssertion = function() {
-      //  create the assertion
-      var assertion = new Assertions({
-        teststepId: $stateParams.teststepId,
-        name: IronTestUtils.getNextNameInSequence($scope.assertionsModelObj.assertions, 'Contains'),
-        type: 'Contains',
-        otherProperties: { contains: 'value' }
-      });
-      createAssertion(assertion);
-    };
-
-    $scope.assertionsModelObj.createXPathAssertion = function() {
-      var assertion = new Assertions({
-        teststepId: $stateParams.teststepId,
-        name: IronTestUtils.getNextNameInSequence($scope.assertionsModelObj.assertions, 'XPath'),
-        type: 'XPath',
-        otherProperties: {
-         xPath: 'true()',
-         expectedValue: 'true',
-         namespacePrefixes: []
-        }
-      });
-
-      createAssertion(assertion);
-    };
-
-    //  update assertion without validating whole form and displaying saving successful message
-    var assertionUpdateInBackground = function() {
-      $scope.assertionsModelObj.assertion.$update({
-        testcaseId: $stateParams.testcaseId,
-        teststepId: $stateParams.teststepId
-      }, function(response) {
-        $scope.assertionsModelObj.assertion = response;
-      }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
-      });
+      };
+      $scope.update(true, selectNewlyCreatedAssertionInGrid);
     };
 
     var createNamespacePrefix = function(gridMenuEvent) {
       $scope.assertionsModelObj.assertion.otherProperties.namespacePrefixes.push(
         { prefix: 'ns1', namespace: 'http://com.mycompany/service1' }
       );
-      assertionUpdateInBackground();
+      $scope.update(true, selectUpdatedAssertionInGrid);
     };
 
     var removeNamespacePrefix = function(gridMenuEvent) {
@@ -155,7 +97,7 @@ angular.module('iron-test').controller('AssertionsController', ['$scope', 'Asser
       for (var i = 0; i < selectedRows.length; i += 1) {
         IronTestUtils.deleteArrayElementByProperty(namespacePrefixes, '$$hashKey', selectedRows[i].$$hashKey);
       }
-      assertionUpdateInBackground();
+      $scope.update(true, selectUpdatedAssertionInGrid);
     };
 
     $scope.assertionsModelObj.xPathNamespacePrefixesGridOptions = {

@@ -3,7 +3,9 @@
 angular.module('iron-test').controller('TeststepsController', ['$scope', 'Teststeps', '$stateParams', '$timeout',
     '$uibModal', 'IronTestUtils', '$http', 'Environments',
   function($scope, Teststeps, $stateParams, $timeout, $uibModal, IronTestUtils, $http, Environments) {
-    $scope.teststep = {};
+    $scope.teststep = {
+      assertions: []
+    };
 
     $scope.teststepNewlyCreated = function() {
       return $stateParams.newlyCreated === true;
@@ -15,10 +17,10 @@ angular.module('iron-test').controller('TeststepsController', ['$scope', 'Testst
     //  use object instead of primitives, so that child scope can update the values
     $scope.savingStatus = {};
 
-    $scope.autoSave = function(isValid) {
+    $scope.autoSave = function(isValid, successCallback) {
       if (timer) $timeout.cancel(timer);
       timer = $timeout(function() {
-        $scope.update(isValid);
+        $scope.update(isValid, successCallback);
       }, 2000);
     };
 
