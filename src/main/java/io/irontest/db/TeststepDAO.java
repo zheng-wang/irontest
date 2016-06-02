@@ -150,11 +150,15 @@ public abstract class TeststepDAO {
         return findById_NoTransaction(id);
     }
 
-    public Teststep findById_NoTransaction(long id) {
-        Teststep teststep = _findById(id);
+    private void populateTeststepWithMoreInfo(Teststep teststep) {
         Endpoint endpoint = endpointDAO().findById(teststep.getEndpoint().getId());
         teststep.setEndpoint(endpoint);
-        teststep.setAssertions(assertionDAO().findByTeststepId(id));
+        teststep.setAssertions(assertionDAO().findByTeststepId(teststep.getId()));
+    }
+
+    public Teststep findById_NoTransaction(long id) {
+        Teststep teststep = _findById(id);
+        populateTeststepWithMoreInfo(teststep);
         return teststep;
     }
 
@@ -164,10 +168,8 @@ public abstract class TeststepDAO {
     @Transaction
     public List<Teststep> findByTestcaseId(@Bind("testcaseId") long testcaseId) {
         List<Teststep> teststeps = _findByTestcaseId(testcaseId);
-        EndpointDAO endpointDAO = endpointDAO();
         for (Teststep teststep: teststeps) {
-            Endpoint endpoint = endpointDAO.findById(teststep.getEndpoint().getId());
-            teststep.setEndpoint(endpoint);
+            populateTeststepWithMoreInfo(teststep);
         }
         return teststeps;
     }

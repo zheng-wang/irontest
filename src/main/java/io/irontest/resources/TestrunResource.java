@@ -3,7 +3,6 @@ package io.irontest.resources;
 import io.irontest.core.assertion.AssertionVerifier;
 import io.irontest.core.assertion.AssertionVerifierFactory;
 import io.irontest.core.runner.TeststepRunnerFactory;
-import io.irontest.db.AssertionDAO;
 import io.irontest.db.TeststepDAO;
 import io.irontest.db.UtilsDAO;
 import io.irontest.models.Testrun;
@@ -25,13 +24,10 @@ import java.util.List;
 public class TestrunResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(TestrunResource.class);
     private final TeststepDAO teststepDao;
-    private final AssertionDAO assertionDao;
     private final UtilsDAO utilsDAO;
 
-    public TestrunResource(TeststepDAO teststepDao, AssertionDAO assertionDao,
-                           UtilsDAO utilsDAO) {
+    public TestrunResource(TeststepDAO teststepDao, UtilsDAO utilsDAO) {
         this.teststepDao = teststepDao;
-        this.assertionDao = assertionDao;
         this.utilsDAO = utilsDAO;
     }
 
@@ -60,8 +56,7 @@ public class TestrunResource {
                 LOGGER.info(response.toString());
 
                 //  verify assertions against the invocation response
-                List<Assertion> assertions = assertionDao.findByTeststepId(teststep.getId());
-                for (Assertion assertion : assertions) {
+                for (Assertion assertion : teststep.getAssertions()) {
                     AssertionVerification verification = new AssertionVerification();
                     verification.setAssertion(assertion);
                     verification.setInput(response);

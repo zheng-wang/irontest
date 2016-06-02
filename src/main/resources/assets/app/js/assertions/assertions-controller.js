@@ -46,21 +46,24 @@ angular.module('iron-test').controller('AssertionsController', ['$scope',
       }
     };
 
-    var selectUpdatedAssertionInGrid = function() {
-       //  select the updated assertion in the grid
-       var updatedAssertionId = $scope.assertionsModelObj.assertion.id;
-       var updatedAssertion = $scope.teststep.assertions.find(
-           function(asrt) {
-             return asrt.id === updatedAssertionId;
-           }
-       );
-       $timeout(function() {    //  a trick for newly loaded grid data
-         $scope.assertionsModelObj.gridApi.selection.selectRow(updatedAssertion);
-       });
+    var selectAssertionInGridByProperty = function(propertyName, propertyValue) {
+      var assertion = $scope.teststep.assertions.find(
+        function(asrt) {
+          return asrt[propertyName] === propertyValue;
+        }
+      );
+      $timeout(function() {    //  a trick for newly loaded grid data
+        $scope.assertionsModelObj.gridApi.selection.selectRow(assertion);
+      });
+    };
+
+    var reselectCurrentAssertionInGrid = function() {
+       var currentAssertionId = $scope.assertionsModelObj.assertion.id;
+       selectAssertionInGridByProperty('id', currentAssertionId);
     };
 
     $scope.assertionsModelObj.autoSave = function(isValid) {
-      $scope.autoSave(isValid, selectUpdatedAssertionInGrid);
+      $scope.autoSave(isValid, reselectCurrentAssertionInGrid);
     };
 
     $scope.assertionsModelObj.createAssertion = function(type) {
@@ -72,14 +75,7 @@ angular.module('iron-test').controller('AssertionsController', ['$scope',
       };
       $scope.teststep.assertions.push(assertion);
       var selectNewlyCreatedAssertionInGrid = function() {
-        var newlyCreatedAssertion = $scope.teststep.assertions.find(
-            function(asrt) {
-              return asrt.name === name;
-            }
-        );
-        $timeout(function() {    //  a trick for newly loaded grid data
-          $scope.assertionsModelObj.gridApi.selection.selectRow(newlyCreatedAssertion);
-        });
+        selectAssertionInGridByProperty('name', name);
       };
       $scope.update(true, selectNewlyCreatedAssertionInGrid);
     };
@@ -88,7 +84,7 @@ angular.module('iron-test').controller('AssertionsController', ['$scope',
       $scope.assertionsModelObj.assertion.otherProperties.namespacePrefixes.push(
         { prefix: 'ns1', namespace: 'http://com.mycompany/service1' }
       );
-      $scope.update(true, selectUpdatedAssertionInGrid);
+      $scope.update(true, reselectCurrentAssertionInGrid);
     };
 
     var removeNamespacePrefix = function(gridMenuEvent) {
@@ -97,7 +93,7 @@ angular.module('iron-test').controller('AssertionsController', ['$scope',
       for (var i = 0; i < selectedRows.length; i += 1) {
         IronTestUtils.deleteArrayElementByProperty(namespacePrefixes, '$$hashKey', selectedRows[i].$$hashKey);
       }
-      $scope.update(true, selectUpdatedAssertionInGrid);
+      $scope.update(true, reselectCurrentAssertionInGrid);
     };
 
     $scope.assertionsModelObj.xPathNamespacePrefixesGridOptions = {
