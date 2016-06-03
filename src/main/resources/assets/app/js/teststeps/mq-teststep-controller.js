@@ -10,20 +10,18 @@ angular.module('iron-test').controller('MQTeststepController', ['$scope', 'Testr
 
     $scope.doAction = function() {
       if (timer) $timeout.cancel(timer);
-      $scope.action = $scope.teststep.otherProperties.action;
       $scope.actionStatus = 'ongoing';
 
       var testrun = {
         teststep: $scope.teststep
       };
       var testrunRes = new Testruns(testrun);
-      $scope.testrun.timestamp = new Date();
       testrunRes.$save(function(response) {
         $scope.testrun.response = response.response;
         $scope.actionStatus = 'finished';
         $timeout(function() {
           $scope.actionStatus = null;
-        }, 10000);
+        }, 15000);
       }, function(response) {
         $scope.actionStatus = 'failed';
         IronTestUtils.openErrorHTTPResponseModal(response);

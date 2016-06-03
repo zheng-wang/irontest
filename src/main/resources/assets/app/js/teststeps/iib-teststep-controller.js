@@ -9,7 +9,6 @@ angular.module('iron-test').controller('IIBTeststepController', ['$scope', 'Test
 
     $scope.doAction = function() {
       if (timer) $timeout.cancel(timer);
-      $scope.action = $scope.teststep.otherProperties.action;
       $scope.actionStatus = 'ongoing';
 
       var testrun = {
@@ -20,7 +19,7 @@ angular.module('iron-test').controller('IIBTeststepController', ['$scope', 'Test
         $scope.actionStatus = 'finished';
         $timeout(function() {
           $scope.actionStatus = null;
-        }, 10000);
+        }, 15000);
       }, function(response) {
         $scope.actionStatus = 'failed';
         IronTestUtils.openErrorHTTPResponseModal(response);

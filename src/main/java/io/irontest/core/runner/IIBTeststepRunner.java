@@ -20,7 +20,7 @@ public class IIBTeststepRunner implements TeststepRunner {
         try {
             //  connect to the broker
             brokerProxy = BrokerProxy.getInstance(bcp);
-            brokerProxy.setSynchronous(60 * 1000);    //  do everything synchronously
+            brokerProxy.setSynchronous(90 * 1000);    //  do everything synchronously
             String integrationNodeName = brokerProxy.getName();
 
             //  get message flow proxy
@@ -28,12 +28,15 @@ public class IIBTeststepRunner implements TeststepRunner {
                     teststepProperties.getIntegrationServerName());
             if (egProxy == null) {
                 throw new RuntimeException("Execution group " + teststepProperties.getIntegrationServerName() +
-                        " does not exist on broker " + integrationNodeName);
+                        " does not exist on broker " + integrationNodeName + ".");
+            } else if (!egProxy.isRunning()) {
+                throw new RuntimeException("Execution group " + teststepProperties.getIntegrationServerName() +
+                        " is not running.");
             }
             MessageFlowProxy messageFlowProxy = egProxy.getMessageFlowByName(teststepProperties.getMessageFlowName());
             if (messageFlowProxy == null) {
                 throw new RuntimeException("Message flow " + teststepProperties.getMessageFlowName() +
-                        " does not exist on execution group " + teststepProperties.getIntegrationServerName());
+                        " does not exist on execution group " + teststepProperties.getIntegrationServerName() + ".");
             }
 
             //  do the specified action

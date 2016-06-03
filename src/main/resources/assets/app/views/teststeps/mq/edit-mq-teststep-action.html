@@ -33,13 +33,6 @@
 <!-- Specific to CheckDepth action -->
 <div ng-if="teststep.otherProperties.action === 'CheckDepth'">
   <div class="form-group">
-    <label for="queueDepth" class="col-lg-2 control-label">Queue Depth</label>
-    <div class="col-lg-7">
-      <input name="queueDepth" id="queueDepth" type="text" class="form-control" value="{{ testrun.response ?
-               testrun.response + ' (checked at ' + (testrun.timestamp | date:'medium') + ')' : '' }}" readonly>
-    </div>
-  </div>
-  <div class="form-group">
     <label for="queueDepthAssertion" class="col-lg-2 control-label">Queue Depth Assertion</label>
     <div class="col-lg-7">
       <input name="queueDepthAssertion" id="queueDepthAssertion" type="number" class="form-control"
@@ -54,8 +47,11 @@
 <div class="form-group"></div> <!-- spacer -->
 <div class="form-group">
   <div class="col-lg-offset-4">
-    <p ng-if="actionStatus === 'ongoing'">{{ action === 'Clear' ? 'Clearing queue ...' : '' }}</p>
-    <p ng-if="actionStatus === 'finished'">{{ action === 'Clear' ? 'Queue cleared.' : '' }}</p>
-    <p ng-if="actionStatus === 'ongoing'">{{ action === 'CheckDepth' ? 'Checking queue depth ...' : '' }}</p>
+    <p ng-if="actionStatus === 'ongoing'">
+      {{ teststep.otherProperties.action === 'Clear' ? 'Clearing queue ...' : '' }}</p>
+    <p ng-if="actionStatus === 'finished'">
+      {{ teststep.otherProperties.action === 'Clear' ? 'Queue cleared.' : '' }}</p>
+    <p ng-if="actionStatus === 'ongoing'">
+      {{ teststep.otherProperties.action === 'CheckDepth' ? 'Checking queue depth ...' : '' }}</p>
   </div>
 </div>

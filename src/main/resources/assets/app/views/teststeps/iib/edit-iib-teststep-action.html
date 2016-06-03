@@ -4,8 +4,7 @@
   <div class="col-lg-7">
     <input type="text" name="integrationNodeAddress" id="integrationNodeAddress" class="form-control" readonly
            value="{{teststep.endpoint.otherProperties.host + ':' + teststep.endpoint.otherProperties.port + '/' +
-             teststep.endpoint.otherProperties.queueManagerName + '/' +
-             teststep.endpoint.otherProperties.svrConnChannelName}}">
+             teststep.endpoint.otherProperties.queueManagerName}}">
   </div>
 </div>
 <div class="form-group">
@@ -44,8 +43,8 @@
 <div class="form-group">
   <div class="col-lg-offset-4">
     <p ng-if="actionStatus === 'ongoing'">
-      {{ action === 'Start' ? 'Starting' : 'Stopping' }} message flow ...</p>
+      {{ teststep.otherProperties.action === 'Start' ? 'Starting' : 'Stopping' }} message flow ...</p>
     <p ng-if="actionStatus === 'finished'">
-      Message flow {{ action === 'Start' ? 'started' : 'stopped' }}.</p>
+      Message flow {{ teststep.otherProperties.action === 'Start' ? 'started' : 'stopped' }}.</p>
   </div>
 </div>
