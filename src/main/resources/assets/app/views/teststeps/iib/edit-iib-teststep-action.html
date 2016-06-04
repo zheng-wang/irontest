@@ -33,7 +33,7 @@
   <div class="col-lg-1">
     <button type="button" class="btn btn-info" ng-click="doAction()"
             ng-disabled="!teststep.otherProperties.integrationServerName || !teststep.otherProperties.messageFlowName ||
-            !teststep.otherProperties.action || actionStatus === 'ongoing'">Do</button>
+            !teststep.otherProperties.action || testrun.status === 'ongoing'">Do</button>
   </div>
 </div>
 <div class="form-group"></div> <!-- spacer -->
@@ -42,9 +42,9 @@
 <div class="form-group"></div> <!-- spacer -->
 <div class="form-group">
   <div class="col-lg-offset-4">
-    <p ng-if="actionStatus === 'ongoing'">
+    <p ng-if="testrun.status === 'ongoing'">
       {{ teststep.otherProperties.action === 'Start' ? 'Starting' : 'Stopping' }} message flow ...</p>
-    <p ng-if="actionStatus === 'finished'">
+    <p ng-if="testrun.status === 'finished'">
       Message flow {{ teststep.otherProperties.action === 'Start' ? 'started' : 'stopped' }}.</p>
   </div>
 </div>

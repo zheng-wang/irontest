@@ -71,6 +71,6 @@ public abstract class AssertionDAO {
     @SqlUpdate("delete from assertion where id = :id")
     public abstract void deleteById(@Bind("id") long id);
 
-    @SqlUpdate("delete from assertion where id not in (<ids>)")
-    public abstract void deleteIfIdNotIn(@BindIn("ids") List<Long> ids);
+    @SqlUpdate("delete from assertion where teststep_id = :teststepId and id not in (<ids>)")
+    public abstract void deleteByTeststepIdIfIdNotIn(@Bind("teststepId") long teststepId, @BindIn("ids") List<Long> ids);
 }

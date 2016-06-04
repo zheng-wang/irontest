@@ -111,7 +111,7 @@ public abstract class TeststepDAO {
             }
         }
         //  delete assertions whose id is not in the new assertion id list
-        assertionDAO.deleteIfIdNotIn(newAssertionIds);
+        assertionDAO.deleteByTeststepIdIfIdNotIn(teststep.getId(), newAssertionIds);
 
         return findById_NoTransaction(teststep.getId());
     }

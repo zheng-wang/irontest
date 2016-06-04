@@ -6,22 +6,23 @@
 angular.module('iron-test').controller('IIBTeststepController', ['$scope', 'Testruns', 'IronTestUtils', '$timeout',
   function($scope, Testruns, IronTestUtils, $timeout) {
     var timer;
+    $scope.testrun = {};
 
     $scope.doAction = function() {
       if (timer) $timeout.cancel(timer);
-      $scope.actionStatus = 'ongoing';
 
       var testrun = {
         teststep: $scope.teststep
       };
       var testrunRes = new Testruns(testrun);
+      $scope.testrun.status = 'ongoing';
       testrunRes.$save(function(response) {
-        $scope.actionStatus = 'finished';
+        $scope.testrun.status = 'finished';
         $timeout(function() {
-          $scope.actionStatus = null;
+          $scope.testrun.status = null;
         }, 15000);
       }, function(response) {
-        $scope.actionStatus = 'failed';
+        $scope.testrun.status = 'failed';
         IronTestUtils.openErrorHTTPResponseModal(response);
       });
     };

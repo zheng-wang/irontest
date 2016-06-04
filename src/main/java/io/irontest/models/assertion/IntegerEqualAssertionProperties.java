@@ -5,7 +5,7 @@ import io.irontest.models.Properties;
 /**
  * Created by zhenw9 on 1/06/2016.
  */
-public class IntegerEqualsAssertionProperties extends Properties {
+public class IntegerEqualAssertionProperties extends Properties {
     private int number;
 
     public int getNumber() {

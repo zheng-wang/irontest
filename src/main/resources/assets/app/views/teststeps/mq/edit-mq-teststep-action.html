@@ -20,13 +20,14 @@
     <select name="action" id="action" class="form-control" ng-model="teststep.otherProperties.action"
             ng-change="actionChanged(teststepForm.$valid)">
       <option value="Clear">Clear</option>
-      <option value="CheckDepth">CheckDepth</option>
+      <option value="CheckDepth">Check Depth</option>
+      <option value="Dequeue">Dequeue</option>
     </select>
   </div>
   <div class="col-lg-1">
     <button type="button" class="btn btn-info" ng-click="doAction()"
             ng-disabled="!teststep.otherProperties.queueName || !teststep.otherProperties.action ||
-              actionStatus === 'ongoing'">Do</button>
+              testrun.status === 'ongoing'">Do</button>
   </div>
 </div>
 
@@ -42,19 +43,45 @@
   </div>
 </div>
 
-<div class="form-group"></div> <!-- spacer -->
-<div class="form-group"></div> <!-- spacer -->
-<div class="form-group"></div> <!-- spacer -->
-<div class="form-group"></div> <!-- spacer -->
-<div class="form-group">
-  <div class="col-lg-offset-4">
-    <p ng-if="actionStatus === 'ongoing'">
-      {{ teststep.otherProperties.action === 'Clear' ? 'Clearing queue ...' : '' }}</p>
-    <p ng-if="actionStatus === 'finished'">
-      {{ teststep.otherProperties.action === 'Clear' ? 'Queue cleared.' : '' }}</p>
-    <p ng-if="actionStatus === 'ongoing'">
-      {{ teststep.otherProperties.action === 'CheckDepth' ? 'Checking queue depth ...' : '' }}</p>
-    <p ng-if="actionStatus === 'finished'">
-      {{ teststep.otherProperties.action === 'CheckDepth' ? 'Queue depth is ' + testrun.response : '' }}</p>
+<div ng-if="teststep.otherProperties.action === 'Clear' || teststep.otherProperties.action === 'CheckDepth'">
+  <div class="form-group"></div> <!-- spacer -->
+  <div class="form-group"></div> <!-- spacer -->
+  <div class="form-group"></div> <!-- spacer -->
+  <div class="form-group"></div> <!-- spacer -->
+  <div class="form-group">
+    <div class="col-lg-offset-4">
+      <p ng-if="testrun.status === 'ongoing'">
+        {{ teststep.otherProperties.action === 'Clear' ? 'Clearing queue ...' : '' }}</p>
+      <p ng-if="testrun.status === 'finished'">
+        {{ teststep.otherProperties.action === 'Clear' ? 'Queue cleared.' : '' }}</p>
+      <p ng-if="testrun.status === 'ongoing'">
+        {{ teststep.otherProperties.action === 'CheckDepth' ? 'Checking queue depth ...' : '' }}</p>
+      <p ng-if="testrun.status === 'finished'">
+        {{ teststep.otherProperties.action === 'CheckDepth' ? 'Queue depth is ' + testrun.response : '' }}</p>
+    </div>
+  </div>
+</div>
+
+<div ng-if="teststep.otherProperties.action === 'Dequeue'">
+  <div class="form-group">
+    <div class="col-lg-6">
+      <textarea name="expectedXML" ng-model="teststep.assertions[0].otherProperties.expectedXML"
+                ng-change="autoSave(teststepForm.$valid)" id="expectedXML" placeholder="Expected XML"
+                class="form-control" rows="20" spellcheck="false"></textarea>
+    </div>
+    <div class="col-lg-6">
+      <textarea name="actualXML" ng-model="testrun.actualXML" id="actualXML" placeholder="Actual XML"
+                class="form-control" rows="20" spellcheck="false"></textarea>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-lg-offset-1 col-lg-1">
+      <button type="button" class="btn btn-info" ng-click="verifyXMLEqualAssertion()"
+              ng-disabled="!teststep.assertions[0].otherProperties.expectedXML || !testrun.actualXML">Verify</button>
+    </div>
+    <div class="col-lg-8">
+      <textarea name="differences" ng-model="testrun.differences" id="differences" placeholder="Differences"
+                class="form-control" rows="5" spellcheck="false" readonly></textarea>
+    </div>
   </div>
 </div>
