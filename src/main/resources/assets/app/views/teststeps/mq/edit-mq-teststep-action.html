@@ -18,7 +18,7 @@
   <label for="action" class="col-lg-2 control-label">Action</label>
   <div class="col-lg-6">
     <select name="action" id="action" class="form-control" ng-model="teststep.otherProperties.action"
-            ng-change="autoSave(teststepForm.$valid)">
+            ng-change="actionChanged(teststepForm.$valid)">
       <option value="Clear">Clear</option>
       <option value="CheckDepth">CheckDepth</option>
     </select>
@@ -33,10 +33,11 @@
 <!-- Specific to CheckDepth action -->
 <div ng-if="teststep.otherProperties.action === 'CheckDepth'">
   <div class="form-group">
-    <label for="queueDepthAssertion" class="col-lg-2 control-label">Queue Depth Assertion</label>
-    <div class="col-lg-7">
-      <input name="queueDepthAssertion" id="queueDepthAssertion" type="number" class="form-control"
-             ng-model="queueDepthAssertion.otherProperties.number">
+    <label for="queueDepthAssertionValue" class="col-lg-2 control-label">Assertion</label>
+    <div class="col-lg-2"><h5>Queue depth equals</h5></div>
+    <div class="col-lg-5">
+      <input name="queueDepthAssertionValue" id="queueDepthAssertionValue" type="number" class="form-control"
+             ng-model="teststep.assertions[0].otherProperties.number" ng-change="autoSave(teststepForm.$valid)">
     </div>
   </div>
 </div>
@@ -53,5 +54,7 @@
       {{ teststep.otherProperties.action === 'Clear' ? 'Queue cleared.' : '' }}</p>
     <p ng-if="actionStatus === 'ongoing'">
       {{ teststep.otherProperties.action === 'CheckDepth' ? 'Checking queue depth ...' : '' }}</p>
+    <p ng-if="actionStatus === 'finished'">
+      {{ teststep.otherProperties.action === 'CheckDepth' ? 'Queue depth is ' + testrun.response : '' }}</p>
   </div>
 </div>

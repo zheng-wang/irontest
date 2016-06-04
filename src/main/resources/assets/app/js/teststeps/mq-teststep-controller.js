@@ -8,6 +8,26 @@ angular.module('iron-test').controller('MQTeststepController', ['$scope', 'Testr
     var timer;
     $scope.testrun = {};
 
+    $scope.actionChanged = function(isValid) {
+      //  clear previous action status
+      $scope.actionStatus = null;
+      $scope.testrun.response = null;
+      $scope.teststep.assertions = [];
+
+      //  setup new action assertion
+      if ($scope.teststep.otherProperties.action === 'CheckDepth') {
+        $scope.teststep.assertions[0] = {
+          name: 'Queue depth equals',
+          type: 'IntegerEquals',
+          otherProperties: {
+            number: 0
+          }
+        };
+      }
+
+      $scope.autoSave(isValid);
+    };
+
     $scope.doAction = function() {
       if (timer) $timeout.cancel(timer);
       $scope.actionStatus = 'ongoing';

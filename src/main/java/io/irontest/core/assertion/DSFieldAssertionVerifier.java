@@ -1,7 +1,10 @@
 package io.irontest.core.assertion;
 
 import io.irontest.core.runner.DBTeststepRunnerResponse;
-import io.irontest.models.assertion.*;
+import io.irontest.models.assertion.Assertion;
+import io.irontest.models.assertion.AssertionVerification;
+import io.irontest.models.assertion.AssertionVerificationResult;
+import io.irontest.models.assertion.DSFieldAssertionProperties;
 
 import java.util.List;
 import java.util.Map;
@@ -12,7 +15,6 @@ import java.util.Map;
 public class DSFieldAssertionVerifier implements AssertionVerifier {
     public static final String CONTAINS_OPERATOR = "Contains";
 
-    @Override
     public AssertionVerificationResult verify(AssertionVerification assertionVerification) {
         AssertionVerificationResult result = new AssertionVerificationResult();
         result.setPassed(Boolean.FALSE);

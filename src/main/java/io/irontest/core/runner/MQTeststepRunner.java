@@ -54,8 +54,7 @@ public class MQTeststepRunner implements TeststepRunner {
                 }
                 result = true;
             } else if (MQTeststepProperties.ACTION_TYPE_CHECK_DEPTH.equals(teststepProperties.getAction())) {
-                int queueDepth = queue.getCurrentDepth();
-                result = queueDepth;
+                result = queue.getCurrentDepth();
             }
         } finally {
             if (queue != null) {

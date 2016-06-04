@@ -14,6 +14,8 @@ public class AssertionVerifierFactory {
             result = new ContainsAssertionVerifier();
         } else if (Assertion.ASSERTION_TYPE_DSFIELD.equals(assertionType)) {
             result = new DSFieldAssertionVerifier();
+        } else if (Assertion.ASSERTION_TYPE_INTEGER_EQUALS.equals(assertionType)) {
+            result = new IntegerEqualsAssertionVerifier();
         } else {
             throw new RuntimeException("Unrecognized assertion type " + assertionType);
         }
