@@ -31,7 +31,6 @@
   </div>
 </div>
 
-<!-- Specific to CheckDepth action -->
 <div ng-if="teststep.otherProperties.action === 'CheckDepth'">
   <div class="form-group">
     <label for="queueDepthAssertionValue" class="col-lg-2 control-label">Assertion</label>
@@ -40,6 +39,13 @@
       <input name="queueDepthAssertionValue" id="queueDepthAssertionValue" type="number" class="form-control"
              ng-model="teststep.assertions[0].otherProperties.number" ng-change="autoSave(teststepForm.$valid)">
     </div>
+  </div>
+</div>
+
+<div ng-if="teststep.otherProperties.action === 'Dequeue'">
+  <div class="form-group">
+    <label class="col-lg-2 control-label">Assertion</label>
+    <div class="col-lg-2"><h5>XML Equal</h5></div>
   </div>
 </div>
 
@@ -70,7 +76,9 @@
                 class="form-control" rows="20" spellcheck="false"></textarea>
     </div>
     <div class="col-lg-6">
-      <textarea name="actualXML" ng-model="testrun.actualXML" id="actualXML" placeholder="Actual XML"
+      <textarea name="actualXML" ng-model="testrun.response" id="actualXML"
+                placeholder="{{ testrun.status === 'ongoing' ? '' : 'Actual XML' }}"
+                ng-class="{ 'text-red' : testrun.noMoreMessage }"
                 class="form-control" rows="20" spellcheck="false"></textarea>
     </div>
   </div>
@@ -80,7 +88,7 @@
               ng-disabled="!teststep.assertions[0].otherProperties.expectedXML || !testrun.actualXML">Verify</button>
     </div>
     <div class="col-lg-8">
-      <textarea name="differences" ng-model="testrun.differences" id="differences" placeholder="Differences"
+      <textarea name="verificationResult" ng-model="testrun.differences" id="verificationResult"
                 class="form-control" rows="5" spellcheck="false" readonly></textarea>
     </div>
   </div>

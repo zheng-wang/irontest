@@ -36,25 +36,12 @@ public class MQTeststepRunner implements TeststepRunner {
 
             //  do the action
             if (MQTeststepProperties.ACTION_TYPE_CLEAR.equals(teststepProperties.getAction())) {
-                MQGetMessageOptions getOptions = new MQGetMessageOptions();
-                getOptions.options = CMQC.MQGMO_NO_WAIT + CMQC.MQGMO_FAIL_IF_QUIESCING;
-                while (true) {
-                    //  read message from queue
-                    MQMessage message = new MQMessage();
-                    try {
-                        queue.get(message, getOptions);
-                    } catch(MQException mqEx) {
-                        if (mqEx.getCompCode() == CMQC.MQCC_FAILED && mqEx.getReason() == CMQC.MQRC_NO_MSG_AVAILABLE) {
-                            //  no more message left on the queue
-                            break;
-                        } else {
-                            throw mqEx;
-                        }
-                    }
-                }
+                clearQueue(queue);
                 result = true;
             } else if (MQTeststepProperties.ACTION_TYPE_CHECK_DEPTH.equals(teststepProperties.getAction())) {
                 result = queue.getCurrentDepth();
+            } else if (MQTeststepProperties.ACTION_TYPE_DEQUEUE.equals(teststepProperties.getAction())) {
+                result = dequeue(queue);
             }
         } finally {
             if (queue != null) {
@@ -66,5 +53,42 @@ public class MQTeststepRunner implements TeststepRunner {
         }
 
         return result;
+    }
+
+    private String dequeue(MQQueue queue) throws MQException, IOException {
+        String result = null;
+        MQGetMessageOptions getOptions = new MQGetMessageOptions();
+        getOptions.options = CMQC.MQGMO_NO_WAIT + CMQC.MQGMO_FAIL_IF_QUIESCING;
+        MQMessage message = new MQMessage();
+        try {
+            queue.get(message, getOptions);
+            result = message.readStringOfByteLength(message.getDataLength());
+        } catch(MQException mqEx) {
+            if (mqEx.getCompCode() == CMQC.MQCC_FAILED && mqEx.getReason() == CMQC.MQRC_NO_MSG_AVAILABLE) {
+                //  No more message available on the queue
+            } else {
+                throw mqEx;
+            }
+        }
+        return result;
+    }
+
+    private void clearQueue(MQQueue queue) throws MQException {
+        MQGetMessageOptions getOptions = new MQGetMessageOptions();
+        getOptions.options = CMQC.MQGMO_NO_WAIT + CMQC.MQGMO_FAIL_IF_QUIESCING;
+        while (true) {
+            //  read message from queue
+            MQMessage message = new MQMessage();
+            try {
+                queue.get(message, getOptions);
+            } catch(MQException mqEx) {
+                if (mqEx.getCompCode() == CMQC.MQCC_FAILED && mqEx.getReason() == CMQC.MQRC_NO_MSG_AVAILABLE) {
+                    //  No more message available on the queue
+                    break;
+                } else {
+                    throw mqEx;
+                }
+            }
+        }
     }
 }

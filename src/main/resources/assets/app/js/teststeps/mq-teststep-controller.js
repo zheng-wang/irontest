@@ -6,7 +6,6 @@
 angular.module('iron-test').controller('MQTeststepController', ['$scope', 'Testruns', 'IronTestUtils', '$timeout',
   function($scope, Testruns, IronTestUtils, $timeout) {
     var timer;
-    $scope.testrun = {};
 
     $scope.actionChanged = function(isValid) {
       //  clear previous action status
@@ -37,6 +36,8 @@ angular.module('iron-test').controller('MQTeststepController', ['$scope', 'Testr
     };
 
     $scope.doAction = function() {
+      //  clear previous run status
+      $scope.testrun = {};
       if (timer) $timeout.cancel(timer);
 
       var testrun = {
@@ -45,7 +46,12 @@ angular.module('iron-test').controller('MQTeststepController', ['$scope', 'Testr
       var testrunRes = new Testruns(testrun);
       $scope.testrun.status = 'ongoing';
       testrunRes.$save(function(response) {
-        $scope.testrun.response = response.response;
+        if ($scope.teststep.otherProperties.action === 'Dequeue' && !response.response) {
+          $scope.testrun.response = 'No more message available on the queue.';
+          $scope.testrun.noMoreMessage = true;
+        } else {
+          $scope.testrun.response = response.response;
+        }
         $scope.testrun.status = 'finished';
         $timeout(function() {
           $scope.testrun.status = null;

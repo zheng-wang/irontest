@@ -6,6 +6,7 @@ package io.irontest.models;
 public class MQTeststepProperties extends Properties {
     public static final String ACTION_TYPE_CLEAR = "Clear";
     public static final String ACTION_TYPE_CHECK_DEPTH = "CheckDepth";
+    public static final String ACTION_TYPE_DEQUEUE = "Dequeue";
 
     private String queueName;
     private String action;
