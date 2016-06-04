@@ -9,10 +9,6 @@ public class AssertionVerificationResult {
     private Boolean passed;          //  true if assertion verification passed, false otherwise, null if not verified
     private String error;            //  message of error occurred during verification
 
-    //  Some assertions, such as XPath assertion, have actualValue as a result of expression evaluation. This value
-    //  is useful for user.
-    private String actualValue;
-
     public Boolean getPassed() {
         return passed;
     }
@@ -27,14 +23,6 @@ public class AssertionVerificationResult {
 
     public void setError(String error) {
         this.error = error;
-    }
-
-    public String getActualValue() {
-        return actualValue;
-    }
-
-    public void setActualValue(String actualValue) {
-        this.actualValue = actualValue;
     }
 
     public long getAssertionId() {

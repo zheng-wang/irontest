@@ -4,8 +4,10 @@
 //    The $scope here prototypically inherits from the $scope of teststeps-controller.js.
 //    ng-include also creates a scope.
 angular.module('iron-test').controller('MQTeststepController', ['$scope', 'Testruns', 'IronTestUtils', '$timeout',
-  function($scope, Testruns, IronTestUtils, $timeout) {
+    '$http',
+  function($scope, Testruns, IronTestUtils, $timeout, $http) {
     var timer;
+    $scope.testrun = {};
 
     $scope.actionChanged = function(isValid) {
       //  clear previous action status
@@ -60,6 +62,21 @@ angular.module('iron-test').controller('MQTeststepController', ['$scope', 'Testr
         $scope.testrun.status = 'failed';
         IronTestUtils.openErrorHTTPResponseModal(response);
       });
+    };
+
+    $scope.verifyXMLEqualAssertion = function() {
+      var url = 'api/jsonservice/verifyassertion';
+      var assertionVerification = {
+        input: $scope.testrun.response,
+        assertion: $scope.teststep.assertions[0]
+      };
+      $http
+        .post(url, assertionVerification)
+        .then(function successCallback(response) {
+          $scope.assertionVerificationResult = response.data;
+        }, function errorCallback(response) {
+          IronTestUtils.openErrorHTTPResponseModal(response);
+        });
     };
   }
 ]);

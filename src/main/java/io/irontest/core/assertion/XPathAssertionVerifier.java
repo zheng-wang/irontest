@@ -3,10 +3,7 @@ package io.irontest.core.assertion;
 import com.sun.org.apache.xpath.internal.XPathException;
 import io.irontest.core.IronTestNamespaceContext;
 import io.irontest.models.NamespacePrefix;
-import io.irontest.models.assertion.Assertion;
-import io.irontest.models.assertion.AssertionVerification;
-import io.irontest.models.assertion.AssertionVerificationResult;
-import io.irontest.models.assertion.XPathAssertionProperties;
+import io.irontest.models.assertion.*;
 import io.irontest.utils.XMLUtils;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
@@ -25,7 +22,7 @@ public class XPathAssertionVerifier implements AssertionVerifier {
     public XPathAssertionVerifier() {}
 
     public AssertionVerificationResult verify(AssertionVerification assertionVerification) {
-        AssertionVerificationResult result = new AssertionVerificationResult();
+        XPathAssertionVerificationResult result = new XPathAssertionVerificationResult();
         Assertion assertion = assertionVerification.getAssertion();
         XPathAssertionProperties assertionProperties = (XPathAssertionProperties) assertion.getOtherProperties();
         evaluateXPathExpression((String) assertionVerification.getInput(), assertionProperties.getxPath(),
@@ -37,7 +34,7 @@ public class XPathAssertionVerifier implements AssertionVerifier {
 
     private void evaluateXPathExpression(String xmlInput, String xPathExpression,
                                          List<NamespacePrefix> namespacePrefixes,
-                                         AssertionVerificationResult result) {
+                                         XPathAssertionVerificationResult result) {
         XPath xpath = XPathFactory.newInstance().newXPath();
         xpath.setNamespaceContext(new IronTestNamespaceContext(namespacePrefixes));
 

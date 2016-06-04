@@ -16,6 +16,8 @@ public class AssertionVerifierFactory {
             result = new DSFieldAssertionVerifier();
         } else if (Assertion.ASSERTION_TYPE_INTEGER_EQUAL.equals(assertionType)) {
             result = new IntegerEqualAssertionVerifier();
+        } else if (Assertion.ASSERTION_TYPE_XML_EQUAL.equals(assertionType)) {
+            result = new XMLEqualAssertionVerifier();
         } else {
             throw new RuntimeException("Unrecognized assertion type " + assertionType);
         }

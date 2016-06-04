@@ -85,11 +85,15 @@
   <div class="form-group">
     <div class="col-lg-offset-1 col-lg-1">
       <button type="button" class="btn btn-info" ng-click="verifyXMLEqualAssertion()"
-              ng-disabled="!teststep.assertions[0].otherProperties.expectedXML || !testrun.actualXML">Verify</button>
+              ng-disabled="!teststep.assertions[0].otherProperties.expectedXML || !testrun.response">Verify</button>
+    </div>
+    <div class="col-lg-1">
+      <h5 ng-if="assertionVerificationResult">
+        {{ assertionVerificationResult.passed ? 'Successful' : 'Failed' }}</h5>
     </div>
     <div class="col-lg-8">
-      <textarea name="verificationResult" ng-model="testrun.differences" id="verificationResult"
-                class="form-control" rows="5" spellcheck="false" readonly></textarea>
+      <textarea name="verificationResult" ng-model="assertionVerificationResult.differences"
+                id="verificationResult" class="form-control" rows="2" spellcheck="false" readonly></textarea>
     </div>
   </div>
 </div>
