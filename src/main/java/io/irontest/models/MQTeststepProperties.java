@@ -1,5 +1,8 @@
 package io.irontest.models;
 
+import io.irontest.models.assertion.IntegerEqualAssertionProperties;
+import io.irontest.models.assertion.XMLEqualAssertionProperties;
+
 /**
  * Created by Zheng on 30/05/2016.
  */
@@ -10,6 +13,8 @@ public class MQTeststepProperties extends Properties {
 
     private String queueName;
     private String action;
+    private IntegerEqualAssertionProperties queueDepthAssertionPropertiesBackup;
+    private XMLEqualAssertionProperties dequeueAssertionPropertiesBackup;
 
     public String getQueueName() {
         return queueName;
@@ -25,5 +30,21 @@ public class MQTeststepProperties extends Properties {
 
     public void setAction(String action) {
         this.action = action;
+    }
+
+    public IntegerEqualAssertionProperties getQueueDepthAssertionPropertiesBackup() {
+        return queueDepthAssertionPropertiesBackup;
+    }
+
+    public void setQueueDepthAssertionPropertiesBackup(IntegerEqualAssertionProperties queueDepthAssertionPropertiesBackup) {
+        this.queueDepthAssertionPropertiesBackup = queueDepthAssertionPropertiesBackup;
+    }
+
+    public XMLEqualAssertionProperties getDequeueAssertionPropertiesBackup() {
+        return dequeueAssertionPropertiesBackup;
+    }
+
+    public void setDequeueAssertionPropertiesBackup(XMLEqualAssertionProperties dequeueAssertionPropertiesBackup) {
+        this.dequeueAssertionPropertiesBackup = dequeueAssertionPropertiesBackup;
     }
 }

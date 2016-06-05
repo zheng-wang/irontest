@@ -9,33 +9,41 @@ angular.module('iron-test').controller('MQTeststepController', ['$scope', 'Testr
     var timer;
     $scope.testrun = {};
 
-    $scope.actionChanged = function(isValid) {
-      //  clear previous action data
+    $scope.actionChanged = function(isValid, oldAction) {
+      //  backup old action's assertions
+      if (oldAction === 'CheckDepth') {
+        $scope.teststep.otherProperties.queueDepthAssertionPropertiesBackup =
+          $scope.teststep.assertions[0].otherProperties;
+      } else if (oldAction === 'Dequeue') {
+        $scope.teststep.otherProperties.dequeueAssertionPropertiesBackup =
+          $scope.teststep.assertions[0].otherProperties;
+      }
+
+      //  reset action data
       $scope.testrun = {};
       $scope.assertionVerificationResult = null;
       $scope.teststep.assertions = [];
-
-      //  setup new action assertion
+      //  setup new action's assertions
       if ($scope.teststep.otherProperties.action === 'CheckDepth') {
         $scope.teststep.assertions[0] = {
           name: 'MQ queue depth equals',
-          type: 'IntegerEqual',
-          otherProperties: {
-            number: 0
-          }
+          type: 'IntegerEqual'
         };
+        //  restore old assertion properties if there is a backup
+        var propertiesBackup = $scope.teststep.otherProperties.queueDepthAssertionPropertiesBackup;
+        $scope.teststep.assertions[0].otherProperties = propertiesBackup ? propertiesBackup : { number: 0 };
       } else if ($scope.teststep.otherProperties.action === 'Dequeue') {
         $scope.teststep.assertions[0] = {
           name: 'Dequeue XML equals',
-          type: 'XMLEqual',
-          otherProperties: {
-            expectedXML: null
-          }
+          type: 'XMLEqual'
         };
+        //  restore old assertion properties if there is a backup
+        var propertiesBackup = $scope.teststep.otherProperties.dequeueAssertionPropertiesBackup;
+        $scope.teststep.assertions[0].otherProperties = propertiesBackup ? propertiesBackup : { expectedXML: null };
       }
 
       //  save test step
-      $scope.autoSave(isValid);
+      $scope.update(isValid);
     };
 
     $scope.doAction = function() {
