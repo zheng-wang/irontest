@@ -1,4 +1,4 @@
-<div class="row" ng-controller="AssertionsController">
+<div class="row" ng-controller="SOAPTeststepAssertionsController">
   <!-- use z-index here to avoid assertion grid menu to be partially overridden -->
   <div class="col-lg-3" style="z-index: 1">
     <div class="form-group">
@@ -25,9 +25,9 @@
   <!-- assertion details area -->
   <div class="col-lg-9" ng-if="assertionsModelObj.assertion">
     <div ng-if="assertionsModelObj.assertion.type === 'Contains'"
-         ng-include="'/ui/views/assertions/contains-assertion-edit.html'"></div>
+         ng-include="'/ui/views/teststeps/soap/contains-assertion-edit.html'"></div>
     <div ng-if="assertionsModelObj.assertion.type === 'XPath'"
-         ng-include="'/ui/views/assertions/xpath-assertion-edit.html'"></div>
+         ng-include="'/ui/views/teststeps/soap/xpath-assertion-edit.html'"></div>
   </div>
 </div>
 <script type="text/ng-template" id="assertionGridNameCellTemplate.html">

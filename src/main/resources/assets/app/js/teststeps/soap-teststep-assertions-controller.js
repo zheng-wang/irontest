@@ -4,7 +4,7 @@
 //    The $scope here prototypically inherits from the $scope of teststeps-controller.js.
 //    ng-include also creates a scope.
 //    If unspecified, all grid config is for the assertions grid
-angular.module('iron-test').controller('AssertionsController', ['$scope',
+angular.module('iron-test').controller('SOAPTeststepAssertionsController', ['$scope',
     '$stateParams', 'uiGridConstants', 'uiGridEditConstants', 'IronTestUtils', '$http', '$timeout',
   function($scope, $stateParams, uiGridConstants, uiGridEditConstants, IronTestUtils, $http, $timeout) {
     //  use assertionsModelObj for all variables in the scope, to avoid conflict with parent scope

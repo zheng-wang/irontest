@@ -26,6 +26,14 @@ angular.module('iron-test').controller('TeststepsController', ['$scope', 'Testst
 
     $scope.update = function(isValid, successCallback) {
       if (isValid) {
+        //  For DB test step, exclude the result property from the assertions,
+        //  as the property does not exist in server side Assertion class
+        if ($scope.teststep.type === 'DB') {
+          $scope.teststep.assertions.forEach(function(assertion) {
+            delete assertion.result;
+          });
+        }
+
         $scope.teststep.$update(function(response) {
           $scope.$broadcast('successfullySaved');
           $scope.teststep = response;

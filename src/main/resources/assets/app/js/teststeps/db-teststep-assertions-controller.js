@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('iron-test').controller('DSAssertionsController', ['$scope', '$stateParams', 'uiGridConstants',
+angular.module('iron-test').controller('DBTeststepAssertionsController', ['$scope', '$stateParams', 'uiGridConstants',
     'IronTestUtils', '_',
   function($scope, $stateParams, uiGridConstants, IronTestUtils, _) {
     //  use assertionsModelObj for all variables in the scope, to avoid conflict with parent scope
@@ -43,10 +43,6 @@ angular.module('iron-test').controller('DSAssertionsController', ['$scope', '$st
         }
       };
       $scope.teststep.assertions.push(assertion);
-      //  exclude the result property from the assertion, as the property does not exist in server side Assertion class
-      $scope.teststep.assertions.forEach(function(assertion) {
-        delete assertion.result;
-      });
       var selectNewlyCreatedAssertion = function() {
         selectAssertionByProperty('name', name);
       };
@@ -68,20 +64,12 @@ angular.module('iron-test').controller('DSAssertionsController', ['$scope', '$st
     };
 
     $scope.assertionsModelObj.autoSave = function(isValid) {
-      //  exclude the result property from the assertion, as the property does not exist in server side Assertion class
-      $scope.teststep.assertions.forEach(function(assertion) {
-        delete assertion.result;
-      });
       $scope.autoSave(isValid, reselectCurrentAssertionInGrid);
     };
 
     $scope.assertionsModelObj.remove = function(assertion) {
       var assertionId = assertion.id;
       IronTestUtils.deleteArrayElementByProperty($scope.teststep.assertions, 'id', assertionId);
-      //  exclude the result property from the assertion, as the property does not exist in server side Assertion class
-      $scope.teststep.assertions.forEach(function(assertion) {
-        delete assertion.result;
-      });
       $scope.update(true, function() {
         //  if deleted assertion is the one currently selected, set the current assertion to null
         if ($scope.assertionsModelObj.assertion && $scope.assertionsModelObj.assertion.id === assertionId) {
