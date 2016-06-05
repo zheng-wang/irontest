@@ -53,7 +53,7 @@ public class TestrunResource {
             for (Teststep teststep : teststeps) {
                 //  run and get response
                 Object response = runTeststep(teststep);
-                LOGGER.info(response.toString());
+                LOGGER.info(response == null ? null : response.toString());
 
                 //  verify assertions against the invocation response
                 for (Assertion assertion : teststep.getAssertions()) {

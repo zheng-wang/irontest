@@ -46,6 +46,9 @@
   <div class="form-group">
     <label class="col-lg-2 control-label">Assertion</label>
     <div class="col-lg-2"><h5>XML Equal</h5></div>
+    <div ng-if="testrun.status === 'finished' && !testrun.response" class="col-lg-offset-4 col-lg-3 text-red">
+      <h5>No more message available on the queue.</h5>
+    </div>
   </div>
 </div>
 
@@ -78,7 +81,6 @@
     <div class="col-lg-6">
       <textarea name="actualXML" ng-model="testrun.response" id="actualXML"
                 placeholder="{{ testrun.status === 'ongoing' ? '' : 'Actual XML' }}"
-                ng-class="{ 'text-red' : testrun.noMoreMessage }"
                 class="form-control" rows="20" spellcheck="false"></textarea>
     </div>
   </div>
@@ -92,8 +94,9 @@
         {{ assertionVerificationResult.passed ? 'Successful' : 'Failed' }}</h5>
     </div>
     <div class="col-lg-8">
-      <textarea name="verificationResult" ng-model="assertionVerificationResult.differences"
-                id="verificationResult" class="form-control" rows="2" spellcheck="false" readonly></textarea>
+      <textarea name="verificationResult" ng-model="assertionVerificationResult.display"
+                ng-class="{ 'text-red' : assertionVerificationResult.error }"
+                id="verificationResult" class="form-control" rows="3" spellcheck="false" readonly></textarea>
     </div>
   </div>
 </div>

@@ -10,8 +10,9 @@ angular.module('iron-test').controller('MQTeststepController', ['$scope', 'Testr
     $scope.testrun = {};
 
     $scope.actionChanged = function(isValid) {
-      //  clear previous action status
+      //  clear previous action data
       $scope.testrun = {};
+      $scope.assertionVerificationResult = null;
       $scope.teststep.assertions = [];
 
       //  setup new action assertion
@@ -38,8 +39,9 @@ angular.module('iron-test').controller('MQTeststepController', ['$scope', 'Testr
     };
 
     $scope.doAction = function() {
-      //  clear previous run status
+      //  clear previous run or assertion verification status
       $scope.testrun = {};
+      $scope.assertionVerificationResult = null;
       if (timer) $timeout.cancel(timer);
 
       var testrun = {
@@ -48,12 +50,7 @@ angular.module('iron-test').controller('MQTeststepController', ['$scope', 'Testr
       var testrunRes = new Testruns(testrun);
       $scope.testrun.status = 'ongoing';
       testrunRes.$save(function(response) {
-        if ($scope.teststep.otherProperties.action === 'Dequeue' && !response.response) {
-          $scope.testrun.response = 'No more message available on the queue.';
-          $scope.testrun.noMoreMessage = true;
-        } else {
-          $scope.testrun.response = response.response;
-        }
+        $scope.testrun.response = response.response;
         $scope.testrun.status = 'finished';
         $timeout(function() {
           $scope.testrun.status = null;
@@ -74,6 +71,8 @@ angular.module('iron-test').controller('MQTeststepController', ['$scope', 'Testr
         .post(url, assertionVerification)
         .then(function successCallback(response) {
           $scope.assertionVerificationResult = response.data;
+          $scope.assertionVerificationResult.display =
+            response.data.error ? response.data.error : response.data.differences;
         }, function errorCallback(response) {
           IronTestUtils.openErrorHTTPResponseModal(response);
         });
