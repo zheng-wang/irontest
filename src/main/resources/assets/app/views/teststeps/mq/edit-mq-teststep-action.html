@@ -16,7 +16,7 @@
 </div>
 <div class="form-group">
   <label for="action" class="col-lg-2 control-label">Action</label>
-  <div class="col-lg-6">
+  <div class="col-lg-2">
     <select name="action" id="action" class="form-control" ng-model="teststep.otherProperties.action"
             ng-change="actionChanged(teststepForm.$valid, '{{teststep.otherProperties.action}}')">
       <option value="Clear">Clear</option>
@@ -28,6 +28,16 @@
     <button type="button" class="btn btn-info" ng-click="doAction()"
             ng-disabled="!teststep.otherProperties.queueName || !teststep.otherProperties.action ||
               testrun.status === 'ongoing'">Do</button>
+  </div>
+  <div class="col-lg-4">       <!-- Action run status message -->
+    <h5 ng-if="teststep.otherProperties.action === 'Clear' && testrun.status === 'ongoing'">Clearing queue ...</h5>
+    <h5 ng-if="teststep.otherProperties.action === 'Clear' && testrun.status === 'finished'">Queue cleared.</h5>
+    <h5 ng-if="teststep.otherProperties.action === 'CheckDepth' && testrun.status === 'ongoing'">
+      Checking queue depth ...</h5>
+    <h5 ng-if="teststep.otherProperties.action === 'CheckDepth' && testrun.status === 'finished'">
+      Queue depth is {{ testrun.response }}</h5>
+    <h5 ng-if="teststep.otherProperties.action === 'Dequeue' && testrun.status === 'finished' && !testrun.response">
+      No more message available on the queue.</h5>
   </div>
 </div>
 
@@ -42,32 +52,10 @@
   </div>
 </div>
 
-<div ng-if="teststep.otherProperties.action === 'Clear' || teststep.otherProperties.action === 'CheckDepth'">
-  <div class="form-group"></div> <!-- spacer -->
-  <div class="form-group"></div> <!-- spacer -->
-  <div class="form-group"></div> <!-- spacer -->
-  <div class="form-group"></div> <!-- spacer -->
-  <div class="form-group">
-    <div class="col-lg-offset-4">
-      <p ng-if="testrun.status === 'ongoing'">
-        {{ teststep.otherProperties.action === 'Clear' ? 'Clearing queue ...' : '' }}</p>
-      <p ng-if="testrun.status === 'finished'">
-        {{ teststep.otherProperties.action === 'Clear' ? 'Queue cleared.' : '' }}</p>
-      <p ng-if="testrun.status === 'ongoing'">
-        {{ teststep.otherProperties.action === 'CheckDepth' ? 'Checking queue depth ...' : '' }}</p>
-      <p ng-if="testrun.status === 'finished'">
-        {{ teststep.otherProperties.action === 'CheckDepth' ? 'Queue depth is ' + testrun.response : '' }}</p>
-    </div>
-  </div>
-</div>
-
 <div ng-if="teststep.otherProperties.action === 'Dequeue'">
   <div class="form-group">
     <label class="col-lg-2 control-label">Assertion</label>
     <div class="col-lg-2"><h5>XML Equal</h5></div>
-    <div ng-if="testrun.status === 'finished' && !testrun.response" class="col-lg-offset-4 col-lg-3 text-red">
-      <h5>No more message available on the queue.</h5>
-    </div>
   </div>
   <div class="form-group">
     <div class="col-lg-6">

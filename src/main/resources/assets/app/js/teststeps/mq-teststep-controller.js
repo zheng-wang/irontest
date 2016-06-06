@@ -9,6 +9,12 @@ angular.module('iron-test').controller('MQTeststepController', ['$scope', 'Testr
     var timer;
     $scope.testrun = {};
 
+    var clearPreviousRunOrAssertionVerificationStatus = function() {
+      if (timer) $timeout.cancel(timer);
+      $scope.testrun = {};
+      $scope.assertionVerificationResult = null;
+    };
+
     $scope.actionChanged = function(isValid, oldAction) {
       //  backup old action's assertions
       if (oldAction === 'CheckDepth') {
@@ -20,8 +26,7 @@ angular.module('iron-test').controller('MQTeststepController', ['$scope', 'Testr
       }
 
       //  reset action data
-      $scope.testrun = {};
-      $scope.assertionVerificationResult = null;
+      clearPreviousRunOrAssertionVerificationStatus();
       $scope.teststep.assertions = [];
       //  setup new action's assertions
       if ($scope.teststep.otherProperties.action === 'CheckDepth') {
@@ -47,10 +52,7 @@ angular.module('iron-test').controller('MQTeststepController', ['$scope', 'Testr
     };
 
     $scope.doAction = function() {
-      //  clear previous run or assertion verification status
-      $scope.testrun = {};
-      $scope.assertionVerificationResult = null;
-      if (timer) $timeout.cancel(timer);
+      clearPreviousRunOrAssertionVerificationStatus();
 
       var testrun = {
         teststep: $scope.teststep
@@ -60,7 +62,7 @@ angular.module('iron-test').controller('MQTeststepController', ['$scope', 'Testr
       testrunRes.$save(function(response) {
         $scope.testrun.response = response.response;
         $scope.testrun.status = 'finished';
-        $timeout(function() {
+        timer = $timeout(function() {
           $scope.testrun.status = null;
         }, 15000);
       }, function(response) {
