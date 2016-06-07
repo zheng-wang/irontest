@@ -13,7 +13,7 @@ angular.module('iron-test').controller('TestcasesController', ['$scope', 'Testca
 
     $scope.testcaseGridColumnDefs = [
       {
-        name: 'name', width: 250, minWidth: 100,
+        name: 'name', width: 350, minWidth: 100,
         sort: {
           direction: uiGridConstants.ASC,
           priority: 1
@@ -37,7 +37,7 @@ angular.module('iron-test').controller('TestcasesController', ['$scope', 'Testca
           cellTemplate: 'teststepGridSequenceCellTemplate.html' //, sort: { direction: uiGridConstants.ASC, priority: 1 }
         },
         {
-          name: 'name', width: 200, minWidth: 100,
+          name: 'name', width: 350, minWidth: 100,
           cellTemplate: 'teststepGridNameCellTemplate.html'
         },
         {name: 'type', width: 80, minWidth: 80},

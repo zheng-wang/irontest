@@ -36,8 +36,8 @@
       Checking queue depth ...</h5>
     <h5 ng-if="teststep.otherProperties.action === 'CheckDepth' && testrun.status === 'finished'">
       Queue depth is {{ testrun.response }}</h5>
-    <h5 ng-if="teststep.otherProperties.action === 'Dequeue' && testrun.status === 'finished' && !testrun.response">
-      No more message available on the queue.</h5>
+    <h5 ng-if="teststep.otherProperties.action === 'Dequeue' && testrun.status === 'finished'">
+      {{ testrun.response ? 'Message fetched.' : 'No more message available on the queue.' }}</h5>
   </div>
 </div>
 

@@ -57,7 +57,7 @@ public abstract class TeststepDAO {
                 teststep.getEndpoint().getId());
         teststep.setId(id);
 
-        String name = "Test Step " + id;
+        String name = "Step " + id;
         updateNameForInsert(id, name);
         teststep.setName(name);
     }

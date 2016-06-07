@@ -9,7 +9,9 @@ angular.module('iron-test').controller('IIBTeststepController', ['$scope', 'Test
     $scope.testrun = {};
 
     $scope.doAction = function() {
+      // clear previous run status
       if (timer) $timeout.cancel(timer);
+      $scope.testrun = {};
 
       var testrun = {
         teststep: $scope.teststep
@@ -18,7 +20,7 @@ angular.module('iron-test').controller('IIBTeststepController', ['$scope', 'Test
       $scope.testrun.status = 'ongoing';
       testrunRes.$save(function(response) {
         $scope.testrun.status = 'finished';
-        $timeout(function() {
+        timer = $timeout(function() {
           $scope.testrun.status = null;
         }, 15000);
       }, function(response) {

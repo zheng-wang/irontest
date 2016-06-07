@@ -23,7 +23,7 @@
 </div>
 <div class="form-group">
   <label for="action" class="col-lg-2 control-label">Action</label>
-  <div class="col-lg-6">
+  <div class="col-lg-2">
     <select name="action" id="action" class="form-control" ng-model="teststep.otherProperties.action"
             ng-change="autoSave(teststepForm.$valid)">
       <option value="Start">Start</option>
@@ -35,16 +35,10 @@
             ng-disabled="!teststep.otherProperties.integrationServerName || !teststep.otherProperties.messageFlowName ||
             !teststep.otherProperties.action || testrun.status === 'ongoing'">Do</button>
   </div>
-</div>
-<div class="form-group"></div> <!-- spacer -->
-<div class="form-group"></div> <!-- spacer -->
-<div class="form-group"></div> <!-- spacer -->
-<div class="form-group"></div> <!-- spacer -->
-<div class="form-group">
-  <div class="col-lg-offset-4">
-    <p ng-if="testrun.status === 'ongoing'">
-      {{ teststep.otherProperties.action === 'Start' ? 'Starting' : 'Stopping' }} message flow ...</p>
-    <p ng-if="testrun.status === 'finished'">
-      Message flow {{ teststep.otherProperties.action === 'Start' ? 'started' : 'stopped' }}.</p>
+  <div class="col-lg-4">       <!-- Action run status message -->
+    <h5 ng-if="testrun.status === 'ongoing'">
+      {{ teststep.otherProperties.action === 'Start' ? 'Starting' : 'Stopping' }} message flow ...</h5>
+    <h5 ng-if="testrun.status === 'finished'">
+      Message flow {{ teststep.otherProperties.action === 'Start' ? 'started' : 'stopped' }}.</h5>
   </div>
 </div>
