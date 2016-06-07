@@ -36,7 +36,7 @@ public abstract class TestcaseDAO {
     @Transaction
     public long insert() {
         long id = _insert();
-        updateNameForInsert(id, "Test Case " + id);
+        updateNameForInsert(id, "Case " + id);
         return id;
     }
 
