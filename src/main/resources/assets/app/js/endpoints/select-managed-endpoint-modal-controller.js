@@ -14,7 +14,7 @@ angular.module('iron-test').controller('SelectManagedEndpointModalController', [
         }
       },
       {
-        name: 'name', width: 250, minWidth: 100,
+        name: 'name', width: 300, minWidth: 100,
         cellTemplate: 'endpointModalGridNameCellTemplate.html'
       },
       {

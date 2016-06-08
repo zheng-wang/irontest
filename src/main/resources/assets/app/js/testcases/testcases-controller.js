@@ -101,6 +101,9 @@ angular.module('iron-test').controller('TestcasesController', ['$scope', 'Testca
     };
 
     $scope.run = function() {
+      //  clear previous run result
+      $scope.failedTeststepIds = null;
+
       var testrun = new Testruns({
         testcaseId: $scope.testcase.id
       });
