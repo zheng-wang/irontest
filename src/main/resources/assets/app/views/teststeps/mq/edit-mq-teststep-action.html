@@ -22,6 +22,7 @@
       <option value="Clear">Clear</option>
       <option value="CheckDepth">Check Depth</option>
       <option value="Dequeue">Dequeue</option>
+      <option value="Enqueue">Enqueue</option>
     </select>
   </div>
   <div class="col-lg-1">
@@ -38,6 +39,8 @@
       Queue depth is {{ testrun.response }}</h5>
     <h5 ng-if="teststep.otherProperties.action === 'Dequeue' && testrun.status === 'finished'">
       {{ testrun.response ? 'Message fetched.' : 'No more message available on the queue.' }}</h5>
+    <h5 ng-if="teststep.otherProperties.action === 'Enqueue' && testrun.status === 'ongoing'">Sending message ...</h5>
+    <h5 ng-if="teststep.otherProperties.action === 'Enqueue' && testrun.status === 'finished'">Message sent.</h5>
   </div>
 </div>
 
@@ -76,12 +79,22 @@
     </div>
     <div class="col-lg-1">
       <h5 ng-if="assertionVerificationResult">
-        {{ assertionVerificationResult.passed ? 'Successful' : 'Failed' }}</h5>
+        {{ assertionVerificationResult.passed ? 'Passed' : 'Failed' }}</h5>
     </div>
     <div class="col-lg-8">
       <textarea name="verificationResult" ng-model="assertionVerificationResult.display"
                 ng-class="{ 'text-red' : assertionVerificationResult.error }"
                 id="verificationResult" class="form-control" rows="3" spellcheck="false" readonly></textarea>
+    </div>
+  </div>
+</div>
+
+<div ng-if="teststep.otherProperties.action === 'Enqueue'">
+  <div class="form-group">
+    <div class="col-lg-9">
+      <textarea name="enqueueBodyText" ng-model="teststep.otherProperties.enqueueBodyText"
+                ng-change="autoSave(teststepForm.$valid)" id="enqueueBodyText" class="form-control" rows="28"
+                spellcheck="false"></textarea>
     </div>
   </div>
 </div>

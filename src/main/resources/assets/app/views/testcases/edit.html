@@ -80,7 +80,7 @@
   </script>
   <script type="text/ng-template" id="teststepGridResultCellTemplate.html">
     <div class="ui-grid-cell-contents">
-      <div ng-if="grid.appScope.failedTeststepIds.indexOf(row.entity.id) === -1">Successful</div>
+      <div ng-if="grid.appScope.failedTeststepIds.indexOf(row.entity.id) === -1">Passed</div>
       <div ng-if="grid.appScope.failedTeststepIds.indexOf(row.entity.id) > -1">Failed</div>
     </div>
   </script>

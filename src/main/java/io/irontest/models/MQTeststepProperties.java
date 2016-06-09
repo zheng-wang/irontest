@@ -10,11 +10,13 @@ public class MQTeststepProperties extends Properties {
     public static final String ACTION_TYPE_CLEAR = "Clear";
     public static final String ACTION_TYPE_CHECK_DEPTH = "CheckDepth";
     public static final String ACTION_TYPE_DEQUEUE = "Dequeue";
+    public static final String ACTION_TYPE_ENQUEUE = "Enqueue";
 
     private String queueName;
     private String action;
-    private IntegerEqualAssertionProperties queueDepthAssertionPropertiesBackup;
-    private XMLEqualAssertionProperties dequeueAssertionPropertiesBackup;
+    private String enqueueBodyText;    //  only for Enqueue action
+    private IntegerEqualAssertionProperties queueDepthAssertionPropertiesBackup;    //  only for CheckDepth action
+    private XMLEqualAssertionProperties dequeueAssertionPropertiesBackup;    //  only for Dequeue action
 
     public String getQueueName() {
         return queueName;
@@ -46,5 +48,13 @@ public class MQTeststepProperties extends Properties {
 
     public void setDequeueAssertionPropertiesBackup(XMLEqualAssertionProperties dequeueAssertionPropertiesBackup) {
         this.dequeueAssertionPropertiesBackup = dequeueAssertionPropertiesBackup;
+    }
+
+    public String getEnqueueBodyText() {
+        return enqueueBodyText;
+    }
+
+    public void setEnqueueBodyText(String enqueueBodyText) {
+        this.enqueueBodyText = enqueueBodyText;
     }
 }

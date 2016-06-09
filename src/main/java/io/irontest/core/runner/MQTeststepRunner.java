@@ -33,6 +33,8 @@ public class MQTeststepRunner implements TeststepRunner {
             //  open queue
             if (MQTeststepProperties.ACTION_TYPE_CHECK_DEPTH.equals(teststepProperties.getAction())) {
                 openOptions += CMQC.MQOO_INQUIRE;
+            } else if (MQTeststepProperties.ACTION_TYPE_ENQUEUE.equals(teststepProperties.getAction())) {
+                openOptions += CMQC.MQOO_OUTPUT;
             }
             queue = queueManager.accessQueue(teststepProperties.getQueueName(), openOptions, null, null, null);
 
@@ -44,6 +46,9 @@ public class MQTeststepRunner implements TeststepRunner {
                 result = queue.getCurrentDepth();
             } else if (MQTeststepProperties.ACTION_TYPE_DEQUEUE.equals(teststepProperties.getAction())) {
                 result = dequeue(queue);
+            } else if (MQTeststepProperties.ACTION_TYPE_ENQUEUE.equals(teststepProperties.getAction())) {
+                enqueue(queue, teststepProperties.getEnqueueBodyText());
+                result = true;
             }
         } finally {
             if (queue != null) {
@@ -55,6 +60,13 @@ public class MQTeststepRunner implements TeststepRunner {
         }
 
         return result;
+    }
+
+    private void enqueue(MQQueue queue, String bodyText) throws MQException, IOException {
+        MQMessage message = new MQMessage();
+        message.writeString(bodyText);
+        MQPutMessageOptions pmo = new MQPutMessageOptions();
+        queue.put(message, pmo);
     }
 
     private String dequeue(MQQueue queue) throws MQException, IOException, MQDataException {

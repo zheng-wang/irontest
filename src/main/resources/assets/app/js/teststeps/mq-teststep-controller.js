@@ -9,7 +9,7 @@ angular.module('iron-test').controller('MQTeststepController', ['$scope', 'Testr
     var timer;
     $scope.testrun = {};
 
-    var clearPreviousRunOrAssertionVerificationStatus = function() {
+    var clearPreviousRunAndAssertionVerificationStatus = function() {
       if (timer) $timeout.cancel(timer);
       $scope.testrun = {};
       $scope.assertionVerificationResult = null;
@@ -26,7 +26,7 @@ angular.module('iron-test').controller('MQTeststepController', ['$scope', 'Testr
       }
 
       //  reset action data
-      clearPreviousRunOrAssertionVerificationStatus();
+      clearPreviousRunAndAssertionVerificationStatus();
       $scope.teststep.assertions = [];
       //  setup new action's assertions
       if ($scope.teststep.otherProperties.action === 'CheckDepth') {
@@ -52,7 +52,7 @@ angular.module('iron-test').controller('MQTeststepController', ['$scope', 'Testr
     };
 
     $scope.doAction = function() {
-      clearPreviousRunOrAssertionVerificationStatus();
+      clearPreviousRunAndAssertionVerificationStatus();
 
       var testrun = {
         teststep: $scope.teststep
