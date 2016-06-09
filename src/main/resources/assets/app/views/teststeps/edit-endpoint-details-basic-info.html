@@ -1,7 +1,7 @@
 <div class="form-group">
   <div class="col-lg-offset-4 col-lg-2">
     <button type="button" class="btn btn-info" ng-click="enterShareEndpointMode()"
-            ng-disabled="teststep.endpoint.environment">Share Endpoint</button>
+            ng-disabled="teststep.endpoint.environment || savingStatus.changeUnsaved">Share Endpoint</button>
   </div>
   <div class="col-lg-2">
     <button type="button" class="btn btn-info"

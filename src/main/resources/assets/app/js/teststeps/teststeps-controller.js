@@ -18,6 +18,7 @@ angular.module('iron-test').controller('TeststepsController', ['$scope', 'Testst
     $scope.savingStatus = {};
 
     $scope.autoSave = function(isValid, successCallback) {
+      $scope.savingStatus.changeUnsaved = true;
       if (timer) $timeout.cancel(timer);
       timer = $timeout(function() {
         $scope.update(isValid, successCallback);
@@ -25,6 +26,7 @@ angular.module('iron-test').controller('TeststepsController', ['$scope', 'Testst
     };
 
     $scope.update = function(isValid, successCallback) {
+      $scope.savingStatus.changeUnsaved = true;
       if (isValid) {
         //  For DB test step, exclude the result property from the assertions,
         //  as the property does not exist in server side Assertion class
@@ -35,15 +37,18 @@ angular.module('iron-test').controller('TeststepsController', ['$scope', 'Testst
         }
 
         $scope.teststep.$update(function(response) {
+          $scope.savingStatus.changeUnsaved = false;
           $scope.$broadcast('successfullySaved');
           $scope.teststep = response;
           if (successCallback) {
             successCallback();
           }
         }, function(response) {
+          $scope.savingStatus.changeUnsaved = false;
           IronTestUtils.openErrorHTTPResponseModal(response);
         });
       } else {
+        $scope.savingStatus.changeUnsaved = false;
         $scope.savingStatus.submitted = true;
       }
     };
