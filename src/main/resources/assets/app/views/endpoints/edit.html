@@ -29,8 +29,8 @@
       <div class="form-group">
         <label for="description" class="col-lg-2 control-label">Description</label>
         <div class="col-lg-10">
-        <textarea name="description" ng-model="endpoint.description" id="description" cols="30" rows="8"
-                  ng-change="autoSave(endpointForm.$valid)" class="form-control"></textarea>
+          <textarea name="description" ng-model="endpoint.description" id="description" rows="5"
+                    ng-change="autoSave(endpointForm.$valid)" class="form-control"></textarea>
         </div>
       </div>
       <div ng-if="endpoint.type === 'SOAP'"
