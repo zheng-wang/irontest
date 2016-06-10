@@ -31,7 +31,8 @@
           </div>
         </div>
       </uib-tab>
-      <uib-tab heading="Endpoint Details">
+      <uib-tab ng-if="teststep.endpoint" heading="Endpoint Details"
+               deselect="isInShareEndpointMode() ? cancelShareEndpoint() : angular.noop()">
         <div class="form-group"></div> <!-- spacer -->
         <div class="col-lg-10">
           <div ng-include="'/ui/views/teststeps/edit-endpoint-details-basic-info.html'"></div>
@@ -46,7 +47,8 @@
           <div ng-include="'/ui/views/teststeps/edit-endpoint-details-bottom-part.html'"></div>
         </div>
       </uib-tab>
-      <uib-tab heading="{{ teststep.type === 'MQ' || teststep.type === 'IIB' ? 'Action' : 'Invocation' }}">
+      <uib-tab heading="{{ teststep.type === 'MQ' || teststep.type === 'IIB' || teststep.type === 'Wait' ?
+                          'Action' : 'Invocation' }}">
         <div ng-if="teststep.type === 'SOAP'"
              ng-include="'/ui/views/teststeps/soap/edit-soap-teststep-invocation.html'"
              ng-controller="SOAPTeststepController"></div>
@@ -59,6 +61,8 @@
         <div ng-if="teststep.type === 'IIB'"
              ng-include="'/ui/views/teststeps/iib/edit-iib-teststep-action.html'"
              ng-controller="IIBTeststepController"></div>
+        <div ng-if="teststep.type === 'Wait'"
+             ng-include="'/ui/views/teststeps/wait/edit-wait-teststep-action.html'"></div>
       </uib-tab>
     </uib-tabset>
   </form>

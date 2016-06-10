@@ -38,23 +38,28 @@ public abstract class TeststepDAO {
     @CreateSqlObject
     protected abstract AssertionDAO assertionDAO();
 
-    @SqlUpdate("insert into teststep (testcase_id, sequence, type, request, endpoint_id) " +
+    @SqlUpdate("insert into teststep (testcase_id, sequence, type, request, endpoint_id, other_properties) " +
             "values (:testcaseId, select coalesce(max(sequence), 0) + 1 from teststep where testcase_id = :testcaseId, " +
-            ":type, :request, :endpointId)")
+            ":type, :request, :endpointId, :otherProperties)")
     @GetGeneratedKeys
     protected abstract long _insert(@Bind("testcaseId") long testcaseId, @Bind("type") String type,
-                                    @Bind("request") String request, @Bind("endpointId") long endpointId);
+                                    @Bind("request") String request, @Bind("endpointId") Long endpointId,
+                                    @Bind("otherProperties") String otherProperties);
 
     @SqlUpdate("update teststep set name = :name where id = :id")
     protected abstract long updateNameForInsert(@Bind("id") long id, @Bind("name") String name);
 
     @Transaction
     public void insert(Teststep teststep) throws JsonProcessingException {
-        long endpointId = endpointDAO().insertUnmanagedEndpoint(teststep.getEndpoint());
-        teststep.getEndpoint().setId(endpointId);
-
+        Endpoint endpoint = teststep.getEndpoint();
+        if (endpoint != null) {
+            long endpointId = endpointDAO().insertUnmanagedEndpoint(endpoint);
+            endpoint.setId(endpointId);
+        }
+        String otherProperties = teststep.getOtherProperties() == null ?
+                null : new ObjectMapper().writeValueAsString(teststep.getOtherProperties());
         long id = _insert(teststep.getTestcaseId(), teststep.getType(), teststep.getRequest(),
-                teststep.getEndpoint().getId());
+                endpoint == null ? null : endpoint.getId(), otherProperties);
         teststep.setId(id);
 
         String name = "Step " + id;
@@ -67,7 +72,7 @@ public abstract class TeststepDAO {
             "updated = CURRENT_TIMESTAMP where id = :id")
     protected abstract int _update(@Bind("name") String name, @Bind("description") String description,
                                    @Bind("request") String request, @Bind("id") long id,
-                                   @Bind("endpointId") long endpointId,
+                                   @Bind("endpointId") Long endpointId,
                                    @Bind("otherProperties") String otherProperties);
 
     @Transaction
@@ -78,23 +83,25 @@ public abstract class TeststepDAO {
         String otherProperties = teststep.getOtherProperties() == null ?
                 null : new ObjectMapper().writeValueAsString(teststep.getOtherProperties());
         _update(teststep.getName(), teststep.getDescription(), teststep.getRequest(), teststep.getId(),
-                newEndpoint.getId(), otherProperties);
+                newEndpoint == null ? null : newEndpoint.getId(), otherProperties);
 
-        //  update endpoint
-        if (newEndpoint.isManaged()) {
-            if (oldEndpoint.isManaged()) {
-                //  do nothing
-            } else {
-                if (newEndpoint.getId() == oldEndpoint.getId()) {
-                    //  the old unmanaged endpoint is shared by user and becomes managed, so save it
-                    endpointDAO().update(newEndpoint);
+        //  update endpoint if exists
+        if (newEndpoint != null) {
+            if (newEndpoint.isManaged()) {
+                if (oldEndpoint.isManaged()) {
+                    //  do nothing
                 } else {
-                    //  the old unmanaged endpoint is replaced by an existing managed endpoint, so delete the old one
-                    endpointDAO().deleteById(oldEndpoint.getId());
+                    if (newEndpoint.getId() == oldEndpoint.getId()) {
+                        //  the old unmanaged endpoint is shared by user and becomes managed, so save it
+                        endpointDAO().update(newEndpoint);
+                    } else {
+                        //  the old unmanaged endpoint is replaced by an existing managed endpoint, so delete the old one
+                        endpointDAO().deleteById(oldEndpoint.getId());
+                    }
                 }
+            } else {  //  new endpoint is still unmanaged, so update it
+                endpointDAO().update(newEndpoint);
             }
-        } else {  //  new endpoint is still unmanaged, so update it
-            endpointDAO().update(newEndpoint);
         }
 
         //  update assertions
@@ -128,8 +135,10 @@ public abstract class TeststepDAO {
         Teststep teststep = findById_NoTransaction(id);
         _deleteById(id);
         decrementSequenceNumbersOfNextSteps(teststep.getTestcaseId(), (short) (teststep.getSequence() + 1));
-        if (!teststep.getEndpoint().isManaged()) {    //  delete the teststep's endpoint if it is unmanaged
-            endpointDAO().deleteById(teststep.getEndpoint().getId());
+
+        Endpoint endpoint = teststep.getEndpoint();
+        if (endpoint != null && !endpoint.isManaged()) {  //  delete the teststep's endpoint if it exists and is unmanaged
+            endpointDAO().deleteById(endpoint.getId());
         }
     }
 

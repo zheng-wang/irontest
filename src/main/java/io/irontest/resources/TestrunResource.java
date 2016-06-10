@@ -5,6 +5,7 @@ import io.irontest.core.assertion.AssertionVerifierFactory;
 import io.irontest.core.runner.TeststepRunnerFactory;
 import io.irontest.db.TeststepDAO;
 import io.irontest.db.UtilsDAO;
+import io.irontest.models.Endpoint;
 import io.irontest.models.Testrun;
 import io.irontest.models.Teststep;
 import io.irontest.models.assertion.Assertion;
@@ -32,9 +33,9 @@ public class TestrunResource {
     }
 
     private Object runTeststep(Teststep teststep) throws Exception {
-        String password = teststep.getEndpoint().getPassword();
-        if (password != null) {
-            teststep.getEndpoint().setPassword(utilsDAO.decryptPassword(password));
+        Endpoint endpoint = teststep.getEndpoint();
+        if (endpoint != null && endpoint.getPassword() != null) {
+            endpoint.setPassword(utilsDAO.decryptPassword(endpoint.getPassword()));
         }
         return TeststepRunnerFactory.getInstance().getTeststepRunner(teststep.getType() + "TeststepRunner")
                 .run(teststep);

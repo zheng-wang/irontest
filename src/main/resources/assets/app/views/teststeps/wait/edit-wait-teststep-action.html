@@ -1,0 +1,12 @@
+<div class="form-group"></div> <!-- spacer -->
+<div class="form-group required" ng-class="{ 'has-error' : savingStatus.submitted && teststepForm.seconds.$invalid }">
+  <label for="seconds" class="col-lg-2 control-label">Seconds</label>
+  <div class="col-lg-7">
+    <input name="seconds" id="seconds" type="text" class="form-control" ng-change="autoSave(teststepForm.$valid)"
+           maxlength="5" pattern="[1-9]\d*" ng-model="teststep.otherProperties.seconds" required>
+    <div ng-show="savingStatus.submitted && teststepForm.seconds.$invalid" class="help-block">
+      <p ng-show="teststepForm.seconds.$error.required">Seconds is required</p>
+      <p ng-show="teststepForm.seconds.$error.pattern">Please enter an integer greater than 0</p>
+    </div>
+  </div>
+</div>

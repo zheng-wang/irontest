@@ -16,6 +16,7 @@ public class Teststep {
     public static final String TEST_STEP_TYPE_DB = "DB";
     public static final String TEST_STEP_TYPE_IIB = "IIB";
     public static final String TEST_STEP_TYPE_MQ = "MQ";
+    public static final String TEST_STEP_TYPE_WAIT = "Wait";
     private long id;
     private long testcaseId;
     private short sequence;
@@ -31,7 +32,8 @@ public class Teststep {
             property = "type", visible = true, defaultImpl = Properties.class)
     @JsonSubTypes({
             @JsonSubTypes.Type(value = IIBTeststepProperties.class, name = Teststep.TEST_STEP_TYPE_IIB),
-            @JsonSubTypes.Type(value = MQTeststepProperties.class, name = Teststep.TEST_STEP_TYPE_MQ)})
+            @JsonSubTypes.Type(value = MQTeststepProperties.class, name = Teststep.TEST_STEP_TYPE_MQ),
+            @JsonSubTypes.Type(value = WaitTeststepProperties.class, name = Teststep.TEST_STEP_TYPE_WAIT)})
     private Properties otherProperties;
 
     public Teststep() {}

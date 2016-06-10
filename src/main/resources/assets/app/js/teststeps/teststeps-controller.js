@@ -58,6 +58,9 @@ angular.module('iron-test').controller('TeststepsController', ['$scope', 'Testst
         testcaseId: $stateParams.testcaseId,
         teststepId: $stateParams.teststepId
       }, function (response) {
+        if (!$scope.teststepNewlyCreated() && response.type === 'Wait') {
+          $scope.activeTabIndex = 1;
+        }
         $scope.teststep = response;
       }, function(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);
