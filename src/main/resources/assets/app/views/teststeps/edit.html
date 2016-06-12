@@ -31,7 +31,9 @@
           </div>
         </div>
       </uib-tab>
-      <uib-tab ng-if="teststep.endpoint" heading="Endpoint Details"
+      <!-- can't use ng-if to replace ng-show below, as ng-if seems turning the tab index to 2 instead of 1
+      when the tab is displayed  -->
+      <uib-tab ng-show="teststep.endpoint" heading="Endpoint Details"
                deselect="isInShareEndpointMode() ? cancelShareEndpoint() : angular.noop()">
         <div class="form-group"></div> <!-- spacer -->
         <div class="col-lg-10">
