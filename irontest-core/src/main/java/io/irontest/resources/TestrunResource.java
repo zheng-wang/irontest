@@ -44,6 +44,7 @@ public class TestrunResource {
     @POST
     public Testrun create(Testrun testrun) throws Exception {
         if (testrun.getTeststep() != null) {  //  run a test step (passing invocation response back to client)
+            Thread.sleep(100); // workaround for Chrome 44 to 48's 'Failed to load response data' problem (no such problem in Chrome 49)
             LOGGER.info("Running an individual test step.");
             testrun.setResponse(runTeststep(testrun.getTeststep()));
             testrun.setTeststep(null);    //  no need to pass the test step back to client which might contain decrypted password

@@ -7,7 +7,8 @@
            ng-readonly="teststep.endpoint.environment">  <!-- readonly when it is a managed endpoint -->
   </div>
   <div class="col-lg-1">
-    <button type="button" class="btn btn-info" ng-click="invoke()">Invoke</button>
+    <button type="button" class="btn btn-info" ng-click="invoke()"
+            ng-disabled="!teststep.request || !teststep.endpoint.url">Invoke</button>
   </div>
   <div class="col-lg-offset-1 col-lg-1">
     <button type="button" class="btn btn-info" ng-click="generateRequest()">Generate Request</button>
