@@ -2,18 +2,20 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <artifactId>irontest-parent</artifactId>
         <groupId>io.irontest</groupId>
-        <version>0.3.2</version>
+        <version>0.3.3</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
 
     <artifactId>irontest-mqiib</artifactId>
 
     <properties>
-        <mq.version>7.5.0.6</mq.version>
-        <iib.version>9.0.0.5</iib.version>
+        <maven.filtering.mqiib.enabled>true</maven.filtering.mqiib.enabled>
+        <mq.version>[7.5.0.3, 7.5.0.6]</mq.version>
+        <iib.version>[9.0.0.3, 9.0.0.5]</iib.version>
     </properties>
 
     <dependencies>
@@ -69,7 +71,21 @@
     </dependencies>
 
     <build>
+        <!-- filter HTML files (remember not to filter binaries, especially ttf) -->
+        <resources>
+            <resource>
+                <directory>../irontest-core/src/main/resources</directory>
+                <filtering>false</filtering>
+            </resource>
+            <resource>
+                <directory>../irontest-core/src/main/resources/assets/app/views</directory>
+                <filtering>true</filtering>
+                <targetPath>assets/app/views</targetPath>
+            </resource>
+        </resources>
+
         <plugins>
+            <!-- launch the application -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
