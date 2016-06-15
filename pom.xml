@@ -7,7 +7,7 @@
     <groupId>io.irontest</groupId>
     <artifactId>irontest-parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.3.3</version>
+    <version>0.3.4</version>
 
     <modules>
         <module>irontest-core-server</module>
