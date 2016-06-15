@@ -13,68 +13,21 @@
     <artifactId>irontest-core</artifactId>
 
     <properties>
-        <dropwizard.version>0.9.2</dropwizard.version>
-        <h2.version>1.4.191</h2.version>
+        <distDir>dist</distDir>
+        <maven.filtering.mqiib.enabled>false</maven.filtering.mqiib.enabled>
     </properties>
-
-    <repositories>
-        <repository>
-            <id>reficio</id>
-            <url>http://repo.reficio.org/maven/</url>
-        </repository>
-    </repositories>
 
     <dependencies>
         <dependency>
-            <groupId>io.dropwizard</groupId>
-            <artifactId>dropwizard-core</artifactId>
-            <version>${dropwizard.version}</version>
+            <groupId>io.irontest</groupId>
+            <artifactId>irontest-core-server</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.dropwizard</groupId>
-            <artifactId>dropwizard-assets</artifactId>
-            <version>${dropwizard.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.dropwizard</groupId>
-            <artifactId>dropwizard-db</artifactId>
-            <version>${dropwizard.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.dropwizard</groupId>
-            <artifactId>dropwizard-jdbi</artifactId>
-            <version>${dropwizard.version}</version>
-        </dependency>
-        <!-- for using @UseStringTemplate3StatementLocator -->
-        <dependency>
-            <groupId>org.antlr</groupId>
-            <artifactId>stringtemplate</artifactId>
-            <version>3.2.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>${h2.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.roskart.dropwizard-jaxws</groupId>
-            <artifactId>dropwizard-jaxws</artifactId>
-            <version>0.10.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.reficio</groupId>
-            <artifactId>soap-builder</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.xmlunit</groupId>
-            <artifactId>xmlunit-core</artifactId>
-            <version>2.2.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.5.2</version>
+            <groupId>io.irontest</groupId>
+            <artifactId>irontest-core-ui</artifactId>
+            <version>${project.version}</version>
+            <type>pom</type>
         </dependency>
     </dependencies>
 
@@ -82,33 +35,105 @@
         <!-- filter HTML files (remember not to filter binaries, especially ttf) -->
         <resources>
             <resource>
-                <directory>src/main/resources</directory>
+                <directory>../irontest-core-ui/src/main/resources</directory>
                 <filtering>false</filtering>
             </resource>
             <resource>
-                <directory>src/main/resources/assets/app/views</directory>
+                <directory>../irontest-core-ui/src/main/resources/assets/app/views</directory>
                 <filtering>true</filtering>
                 <targetPath>assets/app/views</targetPath>
             </resource>
         </resources>
 
         <plugins>
-            <!-- install javascript libraries -->
+            <!-- create uber jar -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.3</version>
+                <configuration>
+                    <createDependencyReducedPom>false</createDependencyReducedPom>
+                    <filters>
+                        <filter>
+                            <artifact>*:*</artifact>
+                            <excludes>
+                                <exclude>META-INF/*.SF</exclude>
+                                <exclude>META-INF/*.DSA</exclude>
+                                <exclude>META-INF/*.RSA</exclude>
+                            </excludes>
+                        </filter>
+                    </filters>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>io.irontest.IronTestApplication</mainClass>
+                                </transformer>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>META-INF/cxf/bus-extensions.txt</resource>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- copy seed files to dist dir -->
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.0.1</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${distDir}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>target</directory>
+                                    <includes>
+                                        <include>${project.artifactId}-${project.version}.jar</include>
+                                    </includes>
+                                </resource>
+                                <resource>
+                                    <directory>../irontest-core-server</directory>
+                                    <includes>
+                                        <include>config.yml</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- launch the application -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.4.0</version>
                 <executions>
                     <execution>
-                        <id>exec-bower-install</id>
-                        <phase>generate-sources</phase>
+                        <id>start-dropwizard-app</id>
+                        <phase>pre-integration-test</phase>
                         <goals>
-                            <goal>exec</goal>
+                            <goal>java</goal>
                         </goals>
                         <configuration>
-                            <executable>bower</executable>
+                            <mainClass>io.irontest.IronTestApplication</mainClass>
                             <arguments>
-                                <argument>install</argument>
+                                <argument>server</argument>
+                                <argument>irontest-core-server/config.yml</argument>
                             </arguments>
                         </configuration>
                     </execution>
