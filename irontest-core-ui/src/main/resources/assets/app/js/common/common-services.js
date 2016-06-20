@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('irontest')
-  .factory('IronTestUtils', function ($uibModal) {
+  .factory('IronTestUtils', function ($uibModal, _) {
     return {
       //  Search elements in the array using property, and delete the first element that has the property
       //  with the property value. The elements must be objects, and the property must be of primitive type.
@@ -26,7 +26,8 @@ angular.module('irontest')
         var name;
         for (; sequence < 10000000; sequence += 1) {
           name = baseName + ' ' + sequence;
-          if (objArray.findIndex(isExistingName, name) === -1) {
+          if (_.findIndex(objArray, isExistingName, name) === -1) {
+          //if (objArray.findIndex(isExistingName, name) === -1) { // to be used since Chrome 45
             break;
           }
         }
