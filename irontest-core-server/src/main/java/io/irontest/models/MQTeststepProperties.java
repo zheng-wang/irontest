@@ -14,6 +14,7 @@ public class MQTeststepProperties extends Properties {
 
     private String queueName;
     private String action;
+    private String enqueueMessageFrom; // only for Enqueue action
     private String enqueueBodyText;    //  only for Enqueue action
     private IntegerEqualAssertionProperties queueDepthAssertionPropertiesBackup;    //  only for CheckDepth action
     private XMLEqualAssertionProperties dequeueAssertionPropertiesBackup;    //  only for Dequeue action
@@ -56,5 +57,13 @@ public class MQTeststepProperties extends Properties {
 
     public void setEnqueueBodyText(String enqueueBodyText) {
         this.enqueueBodyText = enqueueBodyText;
+    }
+
+    public String getEnqueueMessageFrom() {
+        return enqueueMessageFrom;
+    }
+
+    public void setEnqueueMessageFrom(String enqueueMessageFrom) {
+        this.enqueueMessageFrom = enqueueMessageFrom;
     }
 }

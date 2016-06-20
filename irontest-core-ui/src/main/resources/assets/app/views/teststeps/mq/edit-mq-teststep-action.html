@@ -28,7 +28,8 @@
   <div class="col-lg-1">
     <button type="button" class="btn btn-info" ng-click="doAction()"
             ng-disabled="!teststep.otherProperties.queueName || !teststep.otherProperties.action ||
-              testrun.status === 'ongoing'">Do</button>
+            testrun.status === 'ongoing' ||
+            (teststep.otherProperties.action === 'Enqueue' && !teststep.otherProperties.enqueueBodyText)">Do</button>
   </div>
   <div class="col-lg-4">       <!-- Action run status message -->
     <h5 ng-if="teststep.otherProperties.action === 'Clear' && testrun.status === 'ongoing'">Clearing queue ...</h5>
@@ -91,10 +92,25 @@
 
 <div ng-if="teststep.otherProperties.action === 'Enqueue'">
   <div class="form-group">
+    <label for="enqueueMessageFrom" class="col-lg-2 control-label">Message From</label>
+    <div class="col-lg-7">
+      <select name="enqueueMessageFrom" id="enqueueMessageFrom" class="form-control"
+              ng-model="teststep.otherProperties.enqueueMessageFrom" ng-change="update(teststepForm.$valid)">
+        <option value="Text">Text</option>
+        <option value="File">File</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-group" ng-if="teststep.otherProperties.enqueueMessageFrom === 'Text'">
     <div class="col-lg-9">
       <textarea name="enqueueBodyText" ng-model="teststep.otherProperties.enqueueBodyText"
                 ng-change="autoSave(teststepForm.$valid)" id="enqueueBodyText" class="form-control" rows="28"
                 spellcheck="false"></textarea>
+    </div>
+  </div>
+  <div class="form-group" ng-if="teststep.otherProperties.enqueueMessageFrom === 'File'">
+    <div class="col-lg-9">
+      File upload
     </div>
   </div>
 </div>
