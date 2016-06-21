@@ -4,8 +4,8 @@
 //    The $scope here prototypically inherits from the $scope of teststeps-controller.js.
 //    ng-include also creates a scope.
 angular.module('irontest').controller('MQTeststepController', ['$scope', 'Testruns', 'IronTestUtils', '$timeout',
-    '$http',
-  function($scope, Testruns, IronTestUtils, $timeout, $http) {
+    '$http', 'Upload',
+  function($scope, Testruns, IronTestUtils, $timeout, $http, Upload) {
     var timer;
     $scope.testrun = {};
 
@@ -25,16 +25,17 @@ angular.module('irontest').controller('MQTeststepController', ['$scope', 'Testru
           $scope.teststep.assertions[0].otherProperties;
       }
 
-      //  reset action data
+      // clear action data
       clearPreviousRunAndAssertionVerificationStatus();
       $scope.teststep.assertions = [];
-      //  setup new action's assertions
+
+      // setup new action's assertions
       if ($scope.teststep.otherProperties.action === 'CheckDepth') {
         $scope.teststep.assertions[0] = {
           name: 'MQ queue depth equals',
           type: 'IntegerEqual'
         };
-        //  restore old assertion properties if there is a backup
+        // restore old assertion properties if there is a backup
         var propertiesBackup = $scope.teststep.otherProperties.queueDepthAssertionPropertiesBackup;
         $scope.teststep.assertions[0].otherProperties = propertiesBackup ? propertiesBackup : { number: 0 };
       } else if ($scope.teststep.otherProperties.action === 'Dequeue') {
@@ -42,9 +43,16 @@ angular.module('irontest').controller('MQTeststepController', ['$scope', 'Testru
           name: 'Dequeue XML equals',
           type: 'XMLEqual'
         };
-        //  restore old assertion properties if there is a backup
+        // restore old assertion properties if there is a backup
         var propertiesBackup = $scope.teststep.otherProperties.dequeueAssertionPropertiesBackup;
         $scope.teststep.assertions[0].otherProperties = propertiesBackup ? propertiesBackup : { expectedXML: null };
+      }
+
+      // setup new action's other stuff
+      if ($scope.teststep.otherProperties.action === 'Enqueue') {
+        if (!$scope.teststep.otherProperties.enqueueMessageFrom) {
+          $scope.teststep.otherProperties.enqueueMessageFrom = 'Text';
+        }
       }
 
       //  save test step
@@ -87,5 +95,20 @@ angular.module('irontest').controller('MQTeststepController', ['$scope', 'Testru
           IronTestUtils.openErrorHTTPResponseModal(response);
         });
     };
+
+    $scope.uploadFile = function(file) {
+      if (file) {
+        Upload.upload({
+          url: 'api/jsonservice/verifyassertion',
+          data: {file: file, abc: '123'}
+        }).then(function (response) {
+          $timeout(function () {
+            file.result = response.data;
+          });
+        }, function (response) {
+          IronTestUtils.openErrorHTTPResponseModal(response);
+        });
+      }
+    }
   }
 ]);
