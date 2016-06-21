@@ -29,7 +29,7 @@
     <button type="button" class="btn btn-info" ng-click="doAction()"
             ng-disabled="!teststep.otherProperties.queueName || !teststep.otherProperties.action ||
               testrun.status === 'ongoing' ||
-              (teststep.otherProperties.action === 'Enqueue' && !teststep.otherProperties.enqueueBodyText)">Do</button>
+              (teststep.otherProperties.action === 'Enqueue' && !teststep.request)">Do</button>
   </div>
   <div class="col-lg-4">       <!-- Action run status message -->
     <h5 ng-if="teststep.otherProperties.action === 'Clear' && testrun.status === 'ongoing'">Clearing queue ...</h5>
@@ -103,9 +103,8 @@
   </div>
   <div class="form-group" ng-if="teststep.otherProperties.enqueueMessageType === 'Text'">
     <div class="col-lg-9">
-      <textarea name="enqueueBodyText" ng-model="teststep.otherProperties.enqueueBodyText"
-                ng-change="autoSave(teststepForm.$valid)" id="enqueueBodyText" class="form-control" rows="28"
-                spellcheck="false"></textarea>
+      <textarea name="enqueueTextMessage" id="enqueueTextMessage" ng-model="teststep.request"
+                ng-change="autoSave(teststepForm.$valid)" class="form-control" rows="28" spellcheck="false"></textarea>
     </div>
   </div>
   <div class="form-group" ng-if="teststep.otherProperties.enqueueMessageType === 'Binary'">

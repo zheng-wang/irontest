@@ -24,6 +24,7 @@ public class MQTeststepRunner implements TeststepRunner {
         Object result = null;
         MQIIBEndpointProperties endpointProperties = (MQIIBEndpointProperties) teststep.getEndpoint().getOtherProperties();
         MQTeststepProperties teststepProperties = (MQTeststepProperties) teststep.getOtherProperties();
+        String action = teststepProperties.getAction();
         Hashtable qmConnProperties = new Hashtable();
         qmConnProperties.put(CMQC.HOST_NAME_PROPERTY,  endpointProperties.getHost());
         qmConnProperties.put(CMQC.PORT_PROPERTY, endpointProperties.getPort());
@@ -36,23 +37,23 @@ public class MQTeststepRunner implements TeststepRunner {
             queueManager = new MQQueueManager(endpointProperties.getQueueManagerName(), qmConnProperties);
 
             //  open queue
-            if (MQTeststepProperties.ACTION_TYPE_CHECK_DEPTH.equals(teststepProperties.getAction())) {
+            if (MQTeststepProperties.ACTION_TYPE_CHECK_DEPTH.equals(action)) {
                 openOptions += CMQC.MQOO_INQUIRE;
-            } else if (MQTeststepProperties.ACTION_TYPE_ENQUEUE.equals(teststepProperties.getAction())) {
+            } else if (MQTeststepProperties.ACTION_TYPE_ENQUEUE.equals(action)) {
                 openOptions += CMQC.MQOO_OUTPUT;
             }
             queue = queueManager.accessQueue(teststepProperties.getQueueName(), openOptions, null, null, null);
 
             //  do the action
-            if (MQTeststepProperties.ACTION_TYPE_CLEAR.equals(teststepProperties.getAction())) {
+            if (MQTeststepProperties.ACTION_TYPE_CLEAR.equals(action)) {
                 clearQueue(queue);
                 result = true;
-            } else if (MQTeststepProperties.ACTION_TYPE_CHECK_DEPTH.equals(teststepProperties.getAction())) {
+            } else if (MQTeststepProperties.ACTION_TYPE_CHECK_DEPTH.equals(action)) {
                 result = queue.getCurrentDepth();
-            } else if (MQTeststepProperties.ACTION_TYPE_DEQUEUE.equals(teststepProperties.getAction())) {
+            } else if (MQTeststepProperties.ACTION_TYPE_DEQUEUE.equals(action)) {
                 result = dequeue(queue);
-            } else if (MQTeststepProperties.ACTION_TYPE_ENQUEUE.equals(teststepProperties.getAction())) {
-                enqueue(queue, teststepProperties.getEnqueueBodyText());
+            } else if (MQTeststepProperties.ACTION_TYPE_ENQUEUE.equals(action)) {
+                enqueue(queue, teststep.getRequest());
                 result = true;
             }
         } finally {
