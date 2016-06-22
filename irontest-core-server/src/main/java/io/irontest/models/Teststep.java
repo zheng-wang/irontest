@@ -24,6 +24,7 @@ public class Teststep {
     private String type;
     private String description;
     private String request;
+    private ManagedFile requestFile;             //  currently only used by MQ test step (Enqueue message from file)
     private Endpoint endpoint;
     private List<Assertion> assertions = new ArrayList<Assertion>();
     private Date created;
@@ -132,5 +133,13 @@ public class Teststep {
 
     public void setAssertions(List<Assertion> assertions) {
         this.assertions = assertions;
+    }
+
+    public ManagedFile getRequestFile() {
+        return requestFile;
+    }
+
+    public void setRequestFile(ManagedFile requestFile) {
+        this.requestFile = requestFile;
     }
 }

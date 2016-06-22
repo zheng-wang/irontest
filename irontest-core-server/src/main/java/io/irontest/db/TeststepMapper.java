@@ -2,6 +2,7 @@ package io.irontest.db;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.irontest.models.Endpoint;
+import io.irontest.models.ManagedFile;
 import io.irontest.models.Teststep;
 import io.irontest.utils.IronTestUtils;
 import org.skife.jdbi.v2.StatementContext;
@@ -46,6 +47,12 @@ public class TeststepMapper implements ResultSetMapper<Teststep> {
             Endpoint endpoint = new Endpoint();
             endpoint.setId(rs.getLong("endpoint_id"));
             teststep.setEndpoint(endpoint);
+        }
+        if (fields.contains("request_file_id")) {
+            Long requestFileId = rs.getLong("request_file_id");
+            if (!rs.wasNull()) {
+                teststep.setRequestFile(new ManagedFile(requestFileId));
+            }
         }
 
         return teststep;

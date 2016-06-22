@@ -102,11 +102,15 @@ angular.module('irontest').controller('MQTeststepController', ['$scope', 'Testru
           url: 'api/testcases/' + $scope.teststep.testcaseId + '/teststeps/' + $scope.teststep.id + '/uploadRequestFile',
           data: {file: file}
         }).then(function (response) {
-          $scope.teststep = response;
+          $scope.teststep = response.data;
         }, function (response) {
           IronTestUtils.openErrorHTTPResponseModal(response);
         });
       }
-    }
+    };
+
+    $scope.downloadRequestFile = function() {
+
+    };
   }
 ]);

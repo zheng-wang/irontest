@@ -3,6 +3,7 @@ package io.irontest.db;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.irontest.models.Endpoint;
+import io.irontest.models.ManagedFile;
 import io.irontest.models.Teststep;
 import io.irontest.models.assertion.Assertion;
 import org.skife.jdbi.v2.sqlobject.*;
@@ -169,6 +170,10 @@ public abstract class TeststepDAO {
         Endpoint endpoint = endpointDAO().findById(teststep.getEndpoint().getId());
         teststep.setEndpoint(endpoint);
         teststep.setAssertions(assertionDAO().findByTeststepId(teststep.getId()));
+        ManagedFile requestFile = teststep.getRequestFile();
+        if (requestFile != null) {
+            requestFile.setName(fileDAO().getNameById(requestFile.getId()));
+        }
     }
 
     public Teststep findById_NoTransaction(long id) {
