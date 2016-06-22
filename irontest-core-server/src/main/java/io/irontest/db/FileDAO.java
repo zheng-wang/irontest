@@ -15,7 +15,7 @@ public interface FileDAO {
 
     @SqlUpdate("CREATE TABLE IF NOT EXISTS file (id BIGINT DEFAULT file_sequence.NEXTVAL PRIMARY KEY, " +
             "name varchar(200) NOT NULL, data BLOB," +
-            "created TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+            "created TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
     void createTableIfNotExists();
 
     @SqlUpdate("insert into file (name, data) values (:name, :data)")

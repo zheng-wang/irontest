@@ -5,11 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.irontest.models.Endpoint;
 import io.irontest.models.Teststep;
 import io.irontest.models.assertion.Assertion;
-import org.apache.commons.io.IOUtils;
 import org.skife.jdbi.v2.sqlobject.*;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,12 +23,14 @@ public abstract class TeststepDAO {
     public abstract void createSequenceIfNotExists();
 
     @SqlUpdate("CREATE TABLE IF NOT EXISTS teststep (" +
-            "id BIGINT DEFAULT teststep_sequence.NEXTVAL PRIMARY KEY, testcase_id INT NOT NULL, " +
+            "id BIGINT DEFAULT teststep_sequence.NEXTVAL PRIMARY KEY, testcase_id BIGINT NOT NULL, " +
             "sequence SMALLINT NOT NULL, name VARCHAR(200) NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
-            "description CLOB, type VARCHAR(20) NOT NULL, request CLOB, other_properties CLOB, " +
+            "description CLOB, type VARCHAR(20) NOT NULL, endpoint_id BIGINT, " +
+            "request CLOB, request_file_id BIGINT, other_properties CLOB, " +
             "created TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
-            "endpoint_id INT, FOREIGN KEY (endpoint_id) REFERENCES endpoint(id), " +
+            "FOREIGN KEY (endpoint_id) REFERENCES endpoint(id), " +
             "FOREIGN KEY (testcase_id) REFERENCES testcase(id) ON DELETE CASCADE, " +
+            "FOREIGN KEY (request_file_id) REFERENCES file(id), " +
             "CONSTRAINT TESTSTEP_UNIQUE_SEQUENCE_CONSTRAINT UNIQUE(testcase_id, sequence), " +
             "CONSTRAINT TESTSTEP_" + DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX + " UNIQUE(testcase_id, name))")
     public abstract void createTableIfNotExists();
@@ -225,19 +225,13 @@ public abstract class TeststepDAO {
         }
     }
 
+    @SqlUpdate("update teststep set request_file_id = :fileId where id = :teststepId")
+    protected abstract int updateRequestFileId(@Bind("teststepId") long teststepId, @Bind("fileId") long fileId);
+
     @Transaction
-    public Teststep updateRequestFile(long teststepId, String fileName, InputStream inputStream) {
-        try {
-            System.out.println(IOUtils.toString(inputStream));
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                inputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
+    public Teststep setRequestFile(long teststepId, String fileName, InputStream inputStream) {
+        long fileId = fileDAO().insert(fileName, inputStream);
+        updateRequestFileId(teststepId, fileId);
+        return findById_NoTransaction(teststepId);
     }
 }

@@ -54,7 +54,8 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         final FileDAO fileDAO = jdbi.onDemand(FileDAO.class);
         final UtilsDAO utilsDAO = jdbi.onDemand(UtilsDAO.class);
 
-        //  create database tables        
+        //  create database tables
+        //  order is important!!! (there are foreign keys linking them)
         articleDAO.createTableIfNotExists();
         environmentDAO.createSequenceIfNotExists();
         environmentDAO.createTableIfNotExists();
@@ -62,12 +63,12 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         endpointDAO.createTableIfNotExists();
         testcaseDAO.createSequenceIfNotExists();
         testcaseDAO.createTableIfNotExists();
+        fileDAO.createSequenceIfNotExists();
+        fileDAO.createTableIfNotExists();
         teststepDAO.createSequenceIfNotExists();
         teststepDAO.createTableIfNotExists();
         assertionDAO.createSequenceIfNotExists();
         assertionDAO.createTableIfNotExists();
-        fileDAO.createSequenceIfNotExists();
-        fileDAO.createTableIfNotExists();
 
         //  register REST resources
         environment.jersey().register(new ArticleResource(articleDAO));

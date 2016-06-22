@@ -96,15 +96,13 @@ angular.module('irontest').controller('MQTeststepController', ['$scope', 'Testru
         });
     };
 
-    $scope.updateRequestFile = function(file) {
+    $scope.uploadRequestFile = function(file) {
       if (file) {
         Upload.upload({
-          url: 'api/testcases/' + $scope.teststep.testcaseId + '/teststeps/' + $scope.teststep.id + '/updateRequestFile',
+          url: 'api/testcases/' + $scope.teststep.testcaseId + '/teststeps/' + $scope.teststep.id + '/uploadRequestFile',
           data: {file: file}
         }).then(function (response) {
-          $timeout(function () {
-            file.result = response.data;
-          });
+          $scope.teststep = response;
         }, function (response) {
           IronTestUtils.openErrorHTTPResponseModal(response);
         });
