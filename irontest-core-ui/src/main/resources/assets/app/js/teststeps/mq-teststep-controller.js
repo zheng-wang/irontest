@@ -96,11 +96,11 @@ angular.module('irontest').controller('MQTeststepController', ['$scope', 'Testru
         });
     };
 
-    $scope.uploadFile = function(file) {
+    $scope.updateRequestFile = function(file) {
       if (file) {
         Upload.upload({
-          url: 'api/jsonservice/verifyassertion',
-          data: {file: file, abc: '123'}
+          url: 'api/testcases/' + $scope.teststep.testcaseId + '/teststeps/' + $scope.teststep.id + '/updateRequestFile',
+          data: {file: file}
         }).then(function (response) {
           $timeout(function () {
             file.result = response.data;

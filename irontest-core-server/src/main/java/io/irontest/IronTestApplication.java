@@ -4,6 +4,7 @@ import com.roskart.dropwizard.jaxws.EndpointBuilder;
 import com.roskart.dropwizard.jaxws.JAXWSBundle;
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
+import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.jdbi.DBIFactory;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
@@ -35,6 +36,7 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
     public void initialize(Bootstrap<IronTestConfiguration> bootstrap) {
         bootstrap.addBundle(new AssetsBundle("/assets/app", "/ui"));
         bootstrap.addBundle(jaxWsBundle);
+        bootstrap.addBundle(new MultiPartBundle());
     }
 
     @Override
@@ -49,6 +51,7 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         final TeststepDAO teststepDAO = jdbi.onDemand(TeststepDAO.class);
         final AssertionDAO assertionDAO = jdbi.onDemand(AssertionDAO.class);
         final EnvironmentDAO environmentDAO = jdbi.onDemand(EnvironmentDAO.class);
+        final FileDAO fileDAO = jdbi.onDemand(FileDAO.class);
         final UtilsDAO utilsDAO = jdbi.onDemand(UtilsDAO.class);
 
         //  create database tables        
@@ -63,6 +66,8 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         teststepDAO.createTableIfNotExists();
         assertionDAO.createSequenceIfNotExists();
         assertionDAO.createTableIfNotExists();
+        fileDAO.createSequenceIfNotExists();
+        fileDAO.createTableIfNotExists();
 
         //  register REST resources
         environment.jersey().register(new ArticleResource(articleDAO));

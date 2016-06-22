@@ -5,9 +5,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.irontest.models.Endpoint;
 import io.irontest.models.Teststep;
 import io.irontest.models.assertion.Assertion;
+import org.apache.commons.io.IOUtils;
 import org.skife.jdbi.v2.sqlobject.*;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +40,9 @@ public abstract class TeststepDAO {
 
     @CreateSqlObject
     protected abstract AssertionDAO assertionDAO();
+
+    @CreateSqlObject
+    protected abstract FileDAO fileDAO();
 
     @SqlUpdate("insert into teststep (testcase_id, sequence, type, request, endpoint_id, other_properties) " +
             "values (:testcaseId, select coalesce(max(sequence), 0) + 1 from teststep where testcase_id = :testcaseId, " +
@@ -217,5 +223,21 @@ public abstract class TeststepDAO {
             //  move the dragged step last
             updateSequenceById(draggedStepId, toSequence);
         }
+    }
+
+    @Transaction
+    public Teststep updateRequestFile(long teststepId, String fileName, InputStream inputStream) {
+        try {
+            System.out.println(IOUtils.toString(inputStream));
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                inputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 }

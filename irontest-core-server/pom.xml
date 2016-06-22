@@ -45,6 +45,11 @@
             <artifactId>dropwizard-jdbi</artifactId>
             <version>${dropwizard.version}</version>
         </dependency>
+        <dependency>
+            <groupId>io.dropwizard</groupId>
+            <artifactId>dropwizard-forms</artifactId>
+            <version>${dropwizard.version}</version>
+        </dependency>
         <!-- for using @UseStringTemplate3StatementLocator -->
         <dependency>
             <groupId>org.antlr</groupId>

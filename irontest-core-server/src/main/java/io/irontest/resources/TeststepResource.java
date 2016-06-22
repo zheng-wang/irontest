@@ -5,9 +5,13 @@ import io.irontest.db.TeststepDAO;
 import io.irontest.models.Endpoint;
 import io.irontest.models.Teststep;
 import io.irontest.models.WaitTeststepProperties;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Created by Zheng on 11/07/2015.
@@ -60,8 +64,7 @@ public class TeststepResource {
         }
     }
 
-    @GET
-    @Path("{teststepId}")
+    @GET @Path("{teststepId}")
     public Teststep findById(@PathParam("teststepId") long teststepId) {
         return teststepDAO.findById(teststepId);
     }
@@ -70,6 +73,16 @@ public class TeststepResource {
     public Teststep update(Teststep teststep) throws JsonProcessingException, InterruptedException {
         Thread.sleep(100);  //  workaround for Chrome 44 to 48's 'Failed to load response data' problem (no such problem in Chrome 49)
         return teststepDAO.update(teststep);
+    }
+
+    @POST @Path("{teststepId}/updateRequestFile")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public Teststep updateRequestFile(@PathParam("teststepId") long teststepId,
+                                      @FormDataParam("file") InputStream inputStream,
+                                      @FormDataParam("file") FormDataContentDisposition contentDispositionHeader)
+            throws IOException, InterruptedException {
+        Thread.sleep(100);  //  workaround for Chrome 44 to 48's 'Failed to load response data' problem (no such problem in Chrome 49)
+        return teststepDAO.updateRequestFile(teststepId, contentDispositionHeader.getFileName(), inputStream);
     }
 
     @DELETE @Path("{teststepId}")
