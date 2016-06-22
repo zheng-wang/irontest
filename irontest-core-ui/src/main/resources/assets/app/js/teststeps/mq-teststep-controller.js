@@ -4,8 +4,8 @@
 //    The $scope here prototypically inherits from the $scope of teststeps-controller.js.
 //    ng-include also creates a scope.
 angular.module('irontest').controller('MQTeststepController', ['$scope', 'Testruns', 'IronTestUtils', '$timeout',
-    '$http', 'Upload',
-  function($scope, Testruns, IronTestUtils, $timeout, $http, Upload) {
+    '$http', 'Upload', '$window',
+  function($scope, Testruns, IronTestUtils, $timeout, $http, Upload, $window) {
     var timer;
     $scope.testrun = {};
 
@@ -101,16 +101,16 @@ angular.module('irontest').controller('MQTeststepController', ['$scope', 'Testru
         Upload.upload({
           url: 'api/testcases/' + $scope.teststep.testcaseId + '/teststeps/' + $scope.teststep.id + '/uploadRequestFile',
           data: {file: file}
-        }).then(function (response) {
+        }).then(function successCallback(response) {
           $scope.teststep = response.data;
-        }, function (response) {
+        }, function errorCallback(response) {
           IronTestUtils.openErrorHTTPResponseModal(response);
         });
       }
     };
 
     $scope.downloadRequestFile = function() {
-
+      $window.open('api/files/123', '_blank', '');
     };
   }
 ]);
