@@ -18,7 +18,7 @@ import java.io.IOException;
  */
 public class SOAPTeststepRunner implements TeststepRunner {
     public String run(Teststep teststep) throws Exception {
-        String response = postRequest(teststep.getEndpoint().getUrl(), teststep.getRequest());
+        String response = postRequest(teststep.getEndpoint().getUrl(), (String) teststep.getRequest());
         return XMLUtils.prettyPrintXML(response);
     }
 

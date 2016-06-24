@@ -3,7 +3,7 @@ package io.irontest.db;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.irontest.models.Endpoint;
-import io.irontest.models.ManagedFile;
+import io.irontest.models.MQTeststepProperties;
 import io.irontest.models.Teststep;
 import io.irontest.models.assertion.Assertion;
 import org.skife.jdbi.v2.sqlobject.*;
@@ -26,12 +26,10 @@ public abstract class TeststepDAO {
     @SqlUpdate("CREATE TABLE IF NOT EXISTS teststep (" +
             "id BIGINT DEFAULT teststep_sequence.NEXTVAL PRIMARY KEY, testcase_id BIGINT NOT NULL, " +
             "sequence SMALLINT NOT NULL, name VARCHAR(200) NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
-            "description CLOB, type VARCHAR(20) NOT NULL, endpoint_id BIGINT, " +
-            "request CLOB, request_file_id BIGINT, other_properties CLOB, " +
+            "description CLOB, type VARCHAR(20) NOT NULL, endpoint_id BIGINT, request BLOB, other_properties CLOB, " +
             "created TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (endpoint_id) REFERENCES endpoint(id), " +
             "FOREIGN KEY (testcase_id) REFERENCES testcase(id) ON DELETE CASCADE, " +
-            "FOREIGN KEY (request_file_id) REFERENCES file(id), " +
             "CONSTRAINT TESTSTEP_UNIQUE_SEQUENCE_CONSTRAINT UNIQUE(testcase_id, sequence), " +
             "CONSTRAINT TESTSTEP_" + DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX + " UNIQUE(testcase_id, name))")
     public abstract void createTableIfNotExists();
@@ -42,15 +40,12 @@ public abstract class TeststepDAO {
     @CreateSqlObject
     protected abstract AssertionDAO assertionDAO();
 
-    @CreateSqlObject
-    protected abstract FileDAO fileDAO();
-
     @SqlUpdate("insert into teststep (testcase_id, sequence, type, request, endpoint_id, other_properties) " +
             "values (:testcaseId, select coalesce(max(sequence), 0) + 1 from teststep where testcase_id = :testcaseId, " +
             ":type, :request, :endpointId, :otherProperties)")
     @GetGeneratedKeys
     protected abstract long _insert(@Bind("testcaseId") long testcaseId, @Bind("type") String type,
-                                    @Bind("request") String request, @Bind("endpointId") Long endpointId,
+                                    @Bind("request") Object request, @Bind("endpointId") Long endpointId,
                                     @Bind("otherProperties") String otherProperties);
 
     @SqlUpdate("update teststep set name = :name where id = :id")
@@ -63,9 +58,11 @@ public abstract class TeststepDAO {
             long endpointId = endpointDAO().insertUnmanagedEndpoint(endpoint);
             endpoint.setId(endpointId);
         }
+        Object request = teststep.getRequest() instanceof String ?
+                ((String) teststep.getRequest()).getBytes() : teststep.getRequest();
         String otherProperties = teststep.getOtherProperties() == null ?
                 null : new ObjectMapper().writeValueAsString(teststep.getOtherProperties());
-        long id = _insert(teststep.getTestcaseId(), teststep.getType(), teststep.getRequest(),
+        long id = _insert(teststep.getTestcaseId(), teststep.getType(), request,
                 endpoint == null ? null : endpoint.getId(), otherProperties);
         teststep.setId(id);
 
@@ -78,7 +75,7 @@ public abstract class TeststepDAO {
             "endpoint_id = :endpointId, other_properties = :otherProperties, " +
             "updated = CURRENT_TIMESTAMP where id = :id")
     protected abstract int _update(@Bind("name") String name, @Bind("description") String description,
-                                   @Bind("request") String request, @Bind("id") long id,
+                                   @Bind("request") Object request, @Bind("id") long id,
                                    @Bind("endpointId") Long endpointId,
                                    @Bind("otherProperties") String otherProperties);
 
@@ -87,9 +84,11 @@ public abstract class TeststepDAO {
         Endpoint oldEndpoint = findById_NoTransaction(teststep.getId()).getEndpoint();
         Endpoint newEndpoint = teststep.getEndpoint();
 
+        Object request = teststep.getRequest() instanceof String ?
+                ((String) teststep.getRequest()).getBytes() : teststep.getRequest();
         String otherProperties = teststep.getOtherProperties() == null ?
                 null : new ObjectMapper().writeValueAsString(teststep.getOtherProperties());
-        _update(teststep.getName(), teststep.getDescription(), teststep.getRequest(), teststep.getId(),
+        _update(teststep.getName(), teststep.getDescription(), request, teststep.getId(),
                 newEndpoint == null ? null : newEndpoint.getId(), otherProperties);
 
         //  update endpoint if exists
@@ -170,10 +169,6 @@ public abstract class TeststepDAO {
         Endpoint endpoint = endpointDAO().findById(teststep.getEndpoint().getId());
         teststep.setEndpoint(endpoint);
         teststep.setAssertions(assertionDAO().findByTeststepId(teststep.getId()));
-        ManagedFile requestFile = teststep.getRequestFile();
-        if (requestFile != null) {
-            requestFile.setName(fileDAO().getNameById(requestFile.getId()));
-        }
     }
 
     public Teststep findById_NoTransaction(long id) {
@@ -230,13 +225,25 @@ public abstract class TeststepDAO {
         }
     }
 
-    @SqlUpdate("update teststep set request_file_id = :fileId where id = :teststepId")
-    protected abstract int updateRequestFileId(@Bind("teststepId") long teststepId, @Bind("fileId") long fileId);
+    @SqlUpdate("update teststep set request = :request, other_properties = :otherProperties where id = :teststepId")
+    protected abstract int updateRequestAndOtherProperties(@Bind("teststepId") long teststepId,
+                                                           @Bind("request") Object request,
+                                                           @Bind("otherProperties") String otherProperties);
 
     @Transaction
-    public Teststep setRequestFile(long teststepId, String fileName, InputStream inputStream) {
-        long fileId = fileDAO().insert(fileName, inputStream);
-        updateRequestFileId(teststepId, fileId);
+    public Teststep setRequestFile(long teststepId, String fileName, InputStream inputStream)
+            throws JsonProcessingException {
+        Teststep basicTeststep = _findById(teststepId);
+        if (Teststep.TEST_STEP_TYPE_MQ.equals(basicTeststep.getType())) {
+            MQTeststepProperties otherProperties = (MQTeststepProperties) basicTeststep.getOtherProperties();
+            otherProperties.setEnqueueMessageFilename(fileName);
+            String otherPropertiesStr = new ObjectMapper().writeValueAsString(otherProperties);
+            updateRequestAndOtherProperties(teststepId, inputStream, otherPropertiesStr);
+        }
+
         return findById_NoTransaction(teststepId);
     }
+
+    @SqlQuery("select request from teststep where id = :teststepId")
+    public abstract byte[] getBinaryRequestById(@Bind("teststepId") long teststepId);
 }

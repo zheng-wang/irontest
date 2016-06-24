@@ -11,10 +11,13 @@ public class MQTeststepProperties extends Properties {
     public static final String ACTION_TYPE_CHECK_DEPTH = "CheckDepth";
     public static final String ACTION_TYPE_DEQUEUE = "Dequeue";
     public static final String ACTION_TYPE_ENQUEUE = "Enqueue";
+    public static final String ENQUEUE_MESSAGE_TYPE_TEXT = "Text";
+    public static final String ENQUEUE_MESSAGE_TYPE_BINARY = "Binary";
 
     private String queueName;
     private String action;
     private String enqueueMessageType; // only for Enqueue action
+    private String enqueueMessageFilename; // only for Enqueue action with message type Binary
 
     //  fields for backup
     private IntegerEqualAssertionProperties queueDepthAssertionPropertiesBackup;    //  only for CheckDepth action
@@ -58,5 +61,13 @@ public class MQTeststepProperties extends Properties {
 
     public void setEnqueueMessageType(String enqueueMessageType) {
         this.enqueueMessageType = enqueueMessageType;
+    }
+
+    public String getEnqueueMessageFilename() {
+        return enqueueMessageFilename;
+    }
+
+    public void setEnqueueMessageFilename(String enqueueMessageFilename) {
+        this.enqueueMessageFilename = enqueueMessageFilename;
     }
 }

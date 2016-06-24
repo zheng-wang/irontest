@@ -16,7 +16,7 @@ import java.util.Map;
 public class DBTeststepRunner implements TeststepRunner {
     public Object run(Teststep teststep) throws Exception {
         DBTeststepRunnerResponse response = new DBTeststepRunnerResponse();
-        String request = teststep.getRequest();
+        String request = (String) teststep.getRequest();
         Endpoint endpoint = teststep.getEndpoint();
         DBI jdbi = new DBI(endpoint.getUrl(), endpoint.getUsername(), endpoint.getPassword());
         Handle handle = jdbi.open();

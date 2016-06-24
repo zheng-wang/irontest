@@ -51,7 +51,6 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         final TeststepDAO teststepDAO = jdbi.onDemand(TeststepDAO.class);
         final AssertionDAO assertionDAO = jdbi.onDemand(AssertionDAO.class);
         final EnvironmentDAO environmentDAO = jdbi.onDemand(EnvironmentDAO.class);
-        final FileDAO fileDAO = jdbi.onDemand(FileDAO.class);
         final UtilsDAO utilsDAO = jdbi.onDemand(UtilsDAO.class);
 
         //  create database tables
@@ -63,8 +62,6 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         endpointDAO.createTableIfNotExists();
         testcaseDAO.createSequenceIfNotExists();
         testcaseDAO.createTableIfNotExists();
-        fileDAO.createSequenceIfNotExists();
-        fileDAO.createTableIfNotExists();
         teststepDAO.createSequenceIfNotExists();
         teststepDAO.createTableIfNotExists();
         assertionDAO.createSequenceIfNotExists();
@@ -76,9 +73,8 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         environment.jersey().register(new TestcaseResource(testcaseDAO, teststepDAO));
         environment.jersey().register(new TeststepResource(teststepDAO));
         environment.jersey().register(new WSDLResource());
-        environment.jersey().register(new EnvironmentResource(environmentDAO, endpointDAO));
+        environment.jersey().register(new EnvironmentResource(environmentDAO));
         environment.jersey().register(new TestrunResource(teststepDAO, utilsDAO));
-        environment.jersey().register(new FileResource(fileDAO));
 
         //  register JSON services
         environment.jersey().register(new JSONService(new AssertionVerifierFactory(), endpointDAO));

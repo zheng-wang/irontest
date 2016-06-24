@@ -3,13 +3,16 @@ package io.irontest.resources;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.irontest.db.TeststepDAO;
 import io.irontest.models.Endpoint;
+import io.irontest.models.MQTeststepProperties;
 import io.irontest.models.Teststep;
 import io.irontest.models.WaitTeststepProperties;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -83,6 +86,21 @@ public class TeststepResource {
             throws IOException, InterruptedException {
         Thread.sleep(100);  //  workaround for Chrome 44 to 48's 'Failed to load response data' problem (no such problem in Chrome 49)
         return teststepDAO.setRequestFile(teststepId, contentDispositionHeader.getFileName(), inputStream);
+    }
+
+    @GET @Path("{teststepId}/downloadRequestFile")
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public Response downloadFileById(@PathParam("teststepId") long teststepId) throws IOException {
+        Teststep teststep = teststepDAO.findById(teststepId);
+        teststep.setRequest(teststepDAO.getBinaryRequestById(teststep.getId()));
+        String filename = "UnknownFilename";
+        if (teststep.getOtherProperties() instanceof MQTeststepProperties) {
+            MQTeststepProperties properties = (MQTeststepProperties) teststep.getOtherProperties();
+            filename = properties.getEnqueueMessageFilename();
+        }
+        return Response.ok(teststep.getRequest())
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
+                .build();
     }
 
     @DELETE @Path("{teststepId}")

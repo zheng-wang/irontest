@@ -2,7 +2,6 @@ package io.irontest.db;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.irontest.models.Endpoint;
-import io.irontest.models.ManagedFile;
 import io.irontest.models.Teststep;
 import io.irontest.utils.IronTestUtils;
 import org.skife.jdbi.v2.StatementContext;
@@ -42,17 +41,17 @@ public class TeststepMapper implements ResultSetMapper<Teststep> {
         teststep.setDescription(rs.getString("description"));
         teststep.setCreated(fields.contains("created") ? rs.getTimestamp("created") : null);
         teststep.setUpdated(fields.contains("updated") ? rs.getTimestamp("updated") : null);
-        teststep.setRequest(fields.contains("request") ? rs.getString("request") : null);
+        if (fields.contains("request")) {
+            //  no use of retrieving binary request here
+            Object request = teststep.isRequestBinary() ?
+                    null : rs.getBytes("request") == null ? null : new String(rs.getBytes("request"));
+            teststep.setRequest(request);
+        }
+
         if (fields.contains("endpoint_id")) {
             Endpoint endpoint = new Endpoint();
             endpoint.setId(rs.getLong("endpoint_id"));
             teststep.setEndpoint(endpoint);
-        }
-        if (fields.contains("request_file_id")) {
-            Long requestFileId = rs.getLong("request_file_id");
-            if (!rs.wasNull()) {
-                teststep.setRequestFile(new ManagedFile(requestFileId));
-            }
         }
 
         return teststep;

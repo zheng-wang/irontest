@@ -1,5 +1,6 @@
 package io.irontest.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.irontest.models.assertion.Assertion;
@@ -17,14 +18,14 @@ public class Teststep {
     public static final String TEST_STEP_TYPE_IIB = "IIB";
     public static final String TEST_STEP_TYPE_MQ = "MQ";
     public static final String TEST_STEP_TYPE_WAIT = "Wait";
+
     private long id;
     private long testcaseId;
     private short sequence;
     private String name;
     private String type;
     private String description;
-    private String request;
-    private ManagedFile requestFile;             //  currently only used by MQ test step (Enqueue message from file)
+    private Object request;
     private Endpoint endpoint;
     private List<Assertion> assertions = new ArrayList<Assertion>();
     private Date created;
@@ -79,11 +80,11 @@ public class Teststep {
         this.description = description;
     }
 
-    public String getRequest() {
+    public Object getRequest() {
         return request;
     }
 
-    public void setRequest(String request) {
+    public void setRequest(Object request) {
         this.request = request;
     }
 
@@ -135,11 +136,14 @@ public class Teststep {
         this.assertions = assertions;
     }
 
-    public ManagedFile getRequestFile() {
-        return requestFile;
-    }
-
-    public void setRequestFile(ManagedFile requestFile) {
-        this.requestFile = requestFile;
+    @JsonIgnore
+    public boolean isRequestBinary() {
+        boolean result = false;
+        if (otherProperties instanceof MQTeststepProperties) {
+            MQTeststepProperties properties = (MQTeststepProperties) otherProperties;
+            result = MQTeststepProperties.ACTION_TYPE_ENQUEUE.equals(properties.getAction()) &&
+                    MQTeststepProperties.ENQUEUE_MESSAGE_TYPE_BINARY.equals(properties.getEnqueueMessageType());
+        }
+        return result;
     }
 }

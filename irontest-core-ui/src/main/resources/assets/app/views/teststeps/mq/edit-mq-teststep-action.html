@@ -27,9 +27,14 @@
   </div>
   <div class="col-lg-1">
     <button type="button" class="btn btn-info" ng-click="doAction()"
-            ng-disabled="!teststep.otherProperties.queueName || !teststep.otherProperties.action ||
-              testrun.status === 'ongoing' ||
-              (teststep.otherProperties.action === 'Enqueue' && !teststep.request)">Do</button>
+            ng-disabled="!teststep.endpoint.otherProperties.queueManagerName ||
+              !teststep.endpoint.otherProperties.host || !teststep.endpoint.otherProperties.port ||
+              !teststep.endpoint.otherProperties.svrConnChannelName || !teststep.otherProperties.queueName ||
+              !teststep.otherProperties.action ||
+              testrun.status === 'ongoing' || (teststep.otherProperties.action === 'Enqueue' &&
+                (teststep.otherProperties.enqueueMessageType === 'Text' && !teststep.request ||
+                teststep.otherProperties.enqueueMessageType === 'Binary' &&
+                  !teststep.otherProperties.enqueueMessageFilename))">Do</button>
   </div>
   <div class="col-lg-4">       <!-- Action run status message -->
     <h5 ng-if="teststep.otherProperties.action === 'Clear' && testrun.status === 'ongoing'">Clearing queue ...</h5>
@@ -107,16 +112,24 @@
                 ng-change="autoSave(teststepForm.$valid)" class="form-control" rows="28" spellcheck="false"></textarea>
     </div>
   </div>
-  <div class="form-group" ng-if="teststep.otherProperties.enqueueMessageType === 'Binary'">
-    <div class="col-lg-offset-1 col-lg-1">
-      <button type="file" class="btn btn-info" ngf-select="uploadRequestFile($file)"
-              ngf-max-size="10MB">Select File</button>
+
+  <div ng-if="teststep.otherProperties.enqueueMessageType === 'Binary'">
+    <div class="form-group"></div> <!-- spacer -->
+    <div class="form-group"></div> <!-- spacer -->
+    <div class="form-group"></div> <!-- spacer -->
+    <div class="form-group">
+      <div class="col-lg-offset-2 col-lg-1">
+        <button type="file" class="btn btn-info" ngf-select="uploadRequestFile($file)"
+                ngf-max-size="10MB">Select File</button>
+      </div>
+      <div class="col-lg-1" ng-if="teststep.otherProperties.enqueueMessageFilename">
+        <button type="button" class="btn btn-info" ng-click="downloadRequestFile()">Download File</button>
+      </div>
     </div>
-    <div class="col-lg-1" ng-if="teststep.requestFile">
-      <button type="button" class="btn btn-info" ng-click="downloadRequestFile()">Download File</button>
-    </div>
-    <div class="col-lg-6" ng-if="teststep.requestFile">
-      <h5>{{teststep.requestFile.name}}</h5>
+    <div class="form-group">
+      <div class="col-lg-offset-2 col-lg-7" ng-if="teststep.otherProperties.enqueueMessageFilename">
+        <h5>{{teststep.otherProperties.enqueueMessageFilename}}</h5>
+      </div>
     </div>
   </div>
 </div>

@@ -1,8 +1,6 @@
 package io.irontest.resources;
 
-import io.irontest.db.EndpointDAO;
 import io.irontest.db.EnvironmentDAO;
-import io.irontest.models.Endpoint;
 import io.irontest.models.Environment;
 
 import javax.ws.rs.*;
@@ -15,11 +13,9 @@ import java.util.List;
 @Path("/environments") @Produces({ MediaType.APPLICATION_JSON })
 public class EnvironmentResource {
     private final EnvironmentDAO environmentDAO;
-    private final EndpointDAO endpointDao;
 
-    public EnvironmentResource(EnvironmentDAO environmentDAO, EndpointDAO endpointDao) {
+    public EnvironmentResource(EnvironmentDAO environmentDAO) {
         this.environmentDAO = environmentDAO;
-        this.endpointDao = endpointDao;
     }
 
     @POST
