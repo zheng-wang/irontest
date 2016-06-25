@@ -2,7 +2,7 @@ package io.irontest.db;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.irontest.core.ActionDataBackup;
+import io.irontest.core.TeststepActionDataBackup;
 import io.irontest.models.Endpoint;
 import io.irontest.models.MQTeststepProperties;
 import io.irontest.models.Teststep;
@@ -31,7 +31,7 @@ public abstract class TeststepDAO {
             "id BIGINT DEFAULT teststep_sequence.NEXTVAL PRIMARY KEY, testcase_id BIGINT NOT NULL, " +
             "sequence SMALLINT NOT NULL, name VARCHAR(200) NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "type VARCHAR(20) NOT NULL, description CLOB, action VARCHAR(50), endpoint_id BIGINT, request BLOB, " +
-            "other_properties CLOB, action_data_backup CLOB NOT NULL DEFAULT '{}', " +
+            "other_properties CLOB NOT NULL, action_data_backup CLOB NOT NULL DEFAULT '{}', " +
             "created TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (endpoint_id) REFERENCES endpoint(id), " +
             "FOREIGN KEY (testcase_id) REFERENCES testcase(id) ON DELETE CASCADE, " +
@@ -66,7 +66,7 @@ public abstract class TeststepDAO {
         Object request = teststep.getRequest() instanceof String ?
                 ((String) teststep.getRequest()).getBytes() : teststep.getRequest();
         String otherProperties = teststep.getOtherProperties() == null ?
-                null : new ObjectMapper().writeValueAsString(teststep.getOtherProperties());
+                "{}" : new ObjectMapper().writeValueAsString(teststep.getOtherProperties());
         long id = _insert(teststep.getTestcaseId(), teststep.getType(), request,
                 endpoint == null ? null : endpoint.getId(), otherProperties);
         teststep.setId(id);
@@ -96,7 +96,7 @@ public abstract class TeststepDAO {
         Object request = teststep.getRequest() instanceof String ?
                 ((String) teststep.getRequest()).getBytes() : teststep.getRequest();
         String otherProperties = teststep.getOtherProperties() == null ?
-                null : new ObjectMapper().writeValueAsString(teststep.getOtherProperties());
+                "{}" : new ObjectMapper().writeValueAsString(teststep.getOtherProperties());
         _update(teststep.getName(), teststep.getDescription(), teststep.getAction(), request, teststep.getId(),
                 newEndpoint == null ? null : newEndpoint.getId(), otherProperties);
 
@@ -113,11 +113,11 @@ public abstract class TeststepDAO {
         String newAction = teststep.getAction();
         if (newAction != null && !newAction.equals(oldAction)) { // we need backup/restore only when switching action
             if (Teststep.TYPE_MQ.equals(teststep.getType())) {
-                ActionDataBackup backup = new ObjectMapper().readValue(
-                        getActionDataBackupById(teststepId), ActionDataBackup.class);
+                TeststepActionDataBackup backup = new ObjectMapper().readValue(
+                        getActionDataBackupById(teststepId), TeststepActionDataBackup.class);
                 boolean backupChanged = false;
 
-                // backup old action's assertions
+                // backup old action's data
                 if (Teststep.ACTION_CHECK_DEPTH.equals(oldAction)) {
                     Assertion oldAssertion = oldTeststep.getAssertions().get(0);
                     backup.setQueueDepthAssertionProperties(
@@ -128,9 +128,19 @@ public abstract class TeststepDAO {
                     backup.setDequeueAssertionProperties(
                             (XMLEqualAssertionProperties) oldAssertion.getOtherProperties());
                     backupChanged = true;
+                } else if (Teststep.ACTION_ENQUEUE.equals(oldAction)) {
+                    MQTeststepProperties oldProperties = (MQTeststepProperties) oldTeststep.getOtherProperties();
+                    if (MQTeststepProperties.ENQUEUE_MESSAGE_TYPE_TEXT.equals(oldProperties.getEnqueueMessageType())) {
+                        backup.setEnqueueMessage(oldTeststep.getRequest());
+                        backupChanged = true;
+                    } else if (MQTeststepProperties.ENQUEUE_MESSAGE_TYPE_BINARY.equals(
+                            oldProperties.getEnqueueMessageType())) {
+                        backup.setEnqueueMessage(getBinaryRequestById(teststepId));
+                        backupChanged = true;
+                    }
                 }
 
-                // setup new action's assertions
+                // setup new action's data
                 teststep.getAssertions().clear();
                 if (Teststep.ACTION_CHECK_DEPTH.equals(newAction)) {
                     Assertion assertion = new Assertion();
@@ -138,8 +148,8 @@ public abstract class TeststepDAO {
                     assertion.setName("MQ queue depth equals");
                     assertion.setType(Assertion.TYPE_INTEGER_EQUAL);
                     // restore old assertion properties if there is a backup
-                    ActionDataBackup oldBackup = new ObjectMapper().readValue(
-                            getActionDataBackupById(teststepId), ActionDataBackup.class);
+                    TeststepActionDataBackup oldBackup = new ObjectMapper().readValue(
+                            getActionDataBackupById(teststepId), TeststepActionDataBackup.class);
                     IntegerEqualAssertionProperties oldAssertionProperties =
                             oldBackup.getQueueDepthAssertionProperties();
                     if (oldAssertionProperties != null) {
@@ -153,25 +163,42 @@ public abstract class TeststepDAO {
                     assertion.setName("Dequeue XML equals");
                     assertion.setType(Assertion.TYPE_XML_EQUAL);
                     // restore old assertion properties if there is a backup
-                    ActionDataBackup oldBackup = new ObjectMapper().readValue(
-                            getActionDataBackupById(teststepId), ActionDataBackup.class);
+                    TeststepActionDataBackup oldBackup = new ObjectMapper().readValue(
+                            getActionDataBackupById(teststepId), TeststepActionDataBackup.class);
                     XMLEqualAssertionProperties oldAssertionProperties = oldBackup.getDequeueAssertionProperties();
                     if (oldAssertionProperties != null) {
                         assertion.setOtherProperties(oldAssertionProperties);
                     } else {
                         assertion.setOtherProperties(new XMLEqualAssertionProperties());
                     }
+                } else if (Teststep.ACTION_ENQUEUE.equals(newAction)) {
+                    MQTeststepProperties newProperties = (MQTeststepProperties) teststep.getOtherProperties();
+                    if (MQTeststepProperties.ENQUEUE_MESSAGE_TYPE_TEXT.equals(newProperties.getEnqueueMessageType())) {
+                        // restore old message
+                        TeststepActionDataBackup oldBackup = new ObjectMapper().readValue(
+                                getActionDataBackupById(teststepId), TeststepActionDataBackup.class);
+                        teststep.setRequest(oldBackup.getEnqueueMessage());
+                    } else if (MQTeststepProperties.ENQUEUE_MESSAGE_TYPE_BINARY.equals(
+                            newProperties.getEnqueueMessageType())) {
+                        // restore old message if there is a backup
+                        TeststepActionDataBackup oldBackup = new ObjectMapper().readValue(
+                                getActionDataBackupById(teststepId), TeststepActionDataBackup.class);
+                        saveBinaryRequestById(teststepId, oldBackup.getEnqueueMessage());
+                        teststep.setRequest(null);
+                    }
                 }
 
                 //  persist backup if changed
                 if (backupChanged) {
-                    saveActionDataBackupById(teststepId, new ObjectMapper().writeValueAsString(backup));
+                    String backupStr = new ObjectMapper().writeValueAsString(backup);
+                    saveActionDataBackupById(teststepId, backupStr);
                 }
             }
         }
     }
 
-    @SqlUpdate("update teststep set action_data_backup = :backupJSON where id = :teststepId")
+    @SqlUpdate("update teststep set action_data_backup = :backupJSON, updated = CURRENT_TIMESTAMP " +
+            "where id = :teststepId")
     protected abstract int saveActionDataBackupById(@Bind("teststepId") long teststepId,
                                                     @Bind("backupJSON") String backupJSON);
 
@@ -235,7 +262,7 @@ public abstract class TeststepDAO {
     }
 
     //  decrement sequence number of all next test steps
-    @SqlUpdate("update teststep set sequence = sequence - 1 " +
+    @SqlUpdate("update teststep set sequence = sequence - 1, updated = CURRENT_TIMESTAMP " +
                "where testcase_id = :testcaseId and sequence >= :startSequenceNumber")
     protected abstract int decrementSequenceNumbersOfNextSteps(@Bind("testcaseId") long testcaseId,
                                                                @Bind("startSequenceNumber") short startSequenceNumber);
@@ -282,10 +309,11 @@ public abstract class TeststepDAO {
     @SqlQuery("select * from teststep where testcase_id = :testcaseId and sequence = :sequence")
     protected abstract Teststep findBySequence(@Bind("testcaseId") long testcaseId, @Bind("sequence") short sequence);
 
-    @SqlUpdate("update teststep set sequence = :newSequence where id = :teststepId")
+    @SqlUpdate("update teststep set sequence = :newSequence, updated = CURRENT_TIMESTAMP where id = :teststepId")
     protected abstract int updateSequenceById(@Bind("teststepId") long teststepId, @Bind("newSequence") short newSequence);
 
-    @SqlUpdate("update teststep set sequence = case when :direction = 'up' then sequence - 1 else sequence + 1 end " +
+    @SqlUpdate("update teststep set sequence = case when :direction = 'up' then sequence - 1 else sequence + 1 end, " +
+            "updated = CURRENT_TIMESTAMP " +
             "where testcase_id = :testcaseId and sequence >= :firstSequence and sequence <= :lastSequence")
     protected abstract int batchMoveOneStep(@Bind("testcaseId") long testcaseId,
                                               @Bind("firstSequence") short firstSequence,
@@ -311,7 +339,8 @@ public abstract class TeststepDAO {
         }
     }
 
-    @SqlUpdate("update teststep set request = :request, other_properties = :otherProperties where id = :teststepId")
+    @SqlUpdate("update teststep set request = :request, other_properties = :otherProperties, " +
+            "updated = CURRENT_TIMESTAMP where id = :teststepId")
     protected abstract int updateRequestAndOtherProperties(@Bind("teststepId") long teststepId,
                                                            @Bind("request") Object request,
                                                            @Bind("otherProperties") String otherProperties);
@@ -329,6 +358,9 @@ public abstract class TeststepDAO {
 
         return findById_NoTransaction(teststepId);
     }
+
+    @SqlUpdate("update teststep set request = :request, updated = CURRENT_TIMESTAMP where id = :teststepId")
+    protected abstract int saveBinaryRequestById(@Bind("teststepId") long teststepId, @Bind("request") Object request);
 
     @SqlQuery("select request from teststep where id = :teststepId")
     public abstract byte[] getBinaryRequestById(@Bind("teststepId") long teststepId);

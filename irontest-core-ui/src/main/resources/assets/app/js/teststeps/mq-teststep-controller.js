@@ -4,8 +4,8 @@
 //    The $scope here prototypically inherits from the $scope of teststeps-controller.js.
 //    ng-include also creates a scope.
 angular.module('irontest').controller('MQTeststepController', ['$scope', 'Testruns', 'IronTestUtils', '$timeout',
-    '$http', 'Upload', '$window',
-  function($scope, Testruns, IronTestUtils, $timeout, $http, Upload, $window) {
+    '$http', 'Upload', '$window', 'Teststeps',
+  function($scope, Testruns, IronTestUtils, $timeout, $http, Upload, $window, Teststeps) {
     var timer;
     $scope.testrun = {};
 
@@ -15,7 +15,7 @@ angular.module('irontest').controller('MQTeststepController', ['$scope', 'Testru
       $scope.assertionVerificationResult = null;
     };
 
-    $scope.actionChanged = function(isValid, oldAction) {
+    $scope.actionChanged = function(isValid) {
       clearPreviousRunAndAssertionVerificationStatus();
 
       // initialize new action
@@ -74,7 +74,7 @@ angular.module('irontest').controller('MQTeststepController', ['$scope', 'Testru
           url: url,
           data: {file: file}
         }).then(function successCallback(response) {
-          $scope.teststep = response.data;
+          $scope.setTeststep(new Teststeps(response.data));
         }, function errorCallback(response) {
           IronTestUtils.openErrorHTTPResponseModal(response);
         });

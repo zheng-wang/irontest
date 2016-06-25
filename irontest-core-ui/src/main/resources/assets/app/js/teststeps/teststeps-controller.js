@@ -53,6 +53,11 @@ angular.module('irontest').controller('TeststepsController', ['$scope', 'Testste
       }
     };
 
+    //  This function is used by child controllers to replace the teststep object in this scope.
+    $scope.setTeststep = function(teststep) {
+      $scope.teststep = teststep;
+    };
+
     $scope.findOne = function() {
       Teststeps.get({
         testcaseId: $stateParams.testcaseId,
