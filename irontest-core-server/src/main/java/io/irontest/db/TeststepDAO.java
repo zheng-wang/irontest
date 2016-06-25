@@ -81,7 +81,9 @@ public abstract class TeststepDAO {
 
     @Transaction
     public Teststep update(Teststep teststep) throws JsonProcessingException {
-        Endpoint oldEndpoint = findById_NoTransaction(teststep.getId()).getEndpoint();
+        backupRestoreActionData(teststep);
+
+        Endpoint oldEndpoint = endpointDAO().findById(findById(teststep.getId()).getEndpoint().getId());
         Endpoint newEndpoint = teststep.getEndpoint();
 
         Object request = teststep.getRequest() instanceof String ?
@@ -91,7 +93,42 @@ public abstract class TeststepDAO {
         _update(teststep.getName(), teststep.getDescription(), request, teststep.getId(),
                 newEndpoint == null ? null : newEndpoint.getId(), otherProperties);
 
-        //  update endpoint if exists
+        updateEndpointIfExists(oldEndpoint, newEndpoint);
+
+        updateAssertions(teststep);
+
+        return findById_NoTransaction(teststep.getId());
+    }
+
+    private void backupRestoreActionData(Teststep teststep) {
+        //  backup old action's assertions
+//        if (oldAction === 'CheckDepth') {
+//            $scope.teststep.otherProperties.queueDepthAssertionPropertiesBackup =
+//                    $scope.teststep.assertions[0].otherProperties;
+//        } else if (oldAction === 'Dequeue') {
+//            $scope.teststep.otherProperties.dequeueAssertionPropertiesBackup =
+//                    $scope.teststep.assertions[0].otherProperties;
+//        }
+    }
+
+    private void updateAssertions(Teststep teststep) throws JsonProcessingException {
+        AssertionDAO assertionDAO = assertionDAO();
+        List<Long> newAssertionIds = new ArrayList<Long>();
+        for (Assertion assertion: teststep.getAssertions()) {
+            if (assertion.getId() == null) {    //  insert the assertion
+                newAssertionIds.add(assertionDAO.insert(teststep.getId(), assertion));
+            } else {
+                newAssertionIds.add(assertion.getId());
+
+                //  update the assertion
+                assertionDAO.update(assertion);
+            }
+        }
+        //  delete assertions whose id is not in the new assertion id list
+        assertionDAO.deleteByTeststepIdIfIdNotIn(teststep.getId(), newAssertionIds);
+    }
+
+    private void updateEndpointIfExists(Endpoint oldEndpoint, Endpoint newEndpoint) throws JsonProcessingException {
         if (newEndpoint != null) {
             if (newEndpoint.isManaged()) {
                 if (oldEndpoint.isManaged()) {
@@ -109,24 +146,6 @@ public abstract class TeststepDAO {
                 endpointDAO().update(newEndpoint);
             }
         }
-
-        //  update assertions
-        AssertionDAO assertionDAO = assertionDAO();
-        List<Long> newAssertionIds = new ArrayList<Long>();
-        for (Assertion assertion: teststep.getAssertions()) {
-            if (assertion.getId() == null) {    //  insert the assertion
-                newAssertionIds.add(assertionDAO.insert(teststep.getId(), assertion));
-            } else {
-                newAssertionIds.add(assertion.getId());
-
-                //  update the assertion
-                assertionDAO.update(assertion);
-            }
-        }
-        //  delete assertions whose id is not in the new assertion id list
-        assertionDAO.deleteByTeststepIdIfIdNotIn(teststep.getId(), newAssertionIds);
-
-        return findById_NoTransaction(teststep.getId());
     }
 
     @SqlUpdate("delete from teststep where id = :id")
