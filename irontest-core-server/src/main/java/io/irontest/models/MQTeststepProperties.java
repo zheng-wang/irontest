@@ -1,8 +1,5 @@
 package io.irontest.models;
 
-import io.irontest.models.assertion.IntegerEqualAssertionProperties;
-import io.irontest.models.assertion.XMLEqualAssertionProperties;
-
 /**
  * Created by Zheng on 30/05/2016.
  */
@@ -14,32 +11,12 @@ public class MQTeststepProperties extends Properties {
     private String enqueueMessageType; // only for Enqueue action
     private String enqueueMessageFilename; // only for Enqueue action with message type Binary
 
-    //  fields for backup
-    private IntegerEqualAssertionProperties queueDepthAssertionPropertiesBackup;    //  only for CheckDepth action
-    private XMLEqualAssertionProperties dequeueAssertionPropertiesBackup;    //  only for Dequeue action
-
     public String getQueueName() {
         return queueName;
     }
 
     public void setQueueName(String queueName) {
         this.queueName = queueName;
-    }
-
-    public IntegerEqualAssertionProperties getQueueDepthAssertionPropertiesBackup() {
-        return queueDepthAssertionPropertiesBackup;
-    }
-
-    public void setQueueDepthAssertionPropertiesBackup(IntegerEqualAssertionProperties queueDepthAssertionPropertiesBackup) {
-        this.queueDepthAssertionPropertiesBackup = queueDepthAssertionPropertiesBackup;
-    }
-
-    public XMLEqualAssertionProperties getDequeueAssertionPropertiesBackup() {
-        return dequeueAssertionPropertiesBackup;
-    }
-
-    public void setDequeueAssertionPropertiesBackup(XMLEqualAssertionProperties dequeueAssertionPropertiesBackup) {
-        this.dequeueAssertionPropertiesBackup = dequeueAssertionPropertiesBackup;
     }
 
     public String getEnqueueMessageType() {

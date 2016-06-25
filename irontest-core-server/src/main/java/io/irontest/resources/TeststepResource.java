@@ -73,7 +73,7 @@ public class TeststepResource {
     }
 
     @PUT @Path("{teststepId}")
-    public Teststep update(Teststep teststep) throws JsonProcessingException, InterruptedException {
+    public Teststep update(Teststep teststep) throws IOException, InterruptedException {
         Thread.sleep(100);  //  workaround for Chrome 44 to 48's 'Failed to load response data' problem (no such problem in Chrome 49)
         return teststepDAO.update(teststep);
     }

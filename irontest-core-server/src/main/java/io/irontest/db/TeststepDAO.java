@@ -2,13 +2,17 @@ package io.irontest.db;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.irontest.core.ActionDataBackup;
 import io.irontest.models.Endpoint;
 import io.irontest.models.MQTeststepProperties;
 import io.irontest.models.Teststep;
 import io.irontest.models.assertion.Assertion;
+import io.irontest.models.assertion.IntegerEqualAssertionProperties;
+import io.irontest.models.assertion.XMLEqualAssertionProperties;
 import org.skife.jdbi.v2.sqlobject.*;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +31,7 @@ public abstract class TeststepDAO {
             "id BIGINT DEFAULT teststep_sequence.NEXTVAL PRIMARY KEY, testcase_id BIGINT NOT NULL, " +
             "sequence SMALLINT NOT NULL, name VARCHAR(200) NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "type VARCHAR(20) NOT NULL, description CLOB, action VARCHAR(50), endpoint_id BIGINT, request BLOB, " +
-            "other_properties CLOB, " +
+            "other_properties CLOB, action_data_backup CLOB NOT NULL DEFAULT '{}', " +
             "created TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (endpoint_id) REFERENCES endpoint(id), " +
             "FOREIGN KEY (testcase_id) REFERENCES testcase(id) ON DELETE CASCADE, " +
@@ -81,12 +85,12 @@ public abstract class TeststepDAO {
                                    @Bind("otherProperties") String otherProperties);
 
     @Transaction
-    public Teststep update(Teststep teststep) throws JsonProcessingException {
-        Teststep oldTeststepBasic = findById(teststep.getId());
+    public Teststep update(Teststep teststep) throws IOException {
+        Teststep oldTeststep = findById_NoTransaction(teststep.getId());
 
-        backupRestoreActionData(oldTeststepBasic, teststep);
+        backupRestoreActionData(oldTeststep, teststep);
 
-        Endpoint oldEndpoint = endpointDAO().findById(oldTeststepBasic.getEndpoint().getId());
+        Endpoint oldEndpoint = oldTeststep.getEndpoint();
         Endpoint newEndpoint = teststep.getEndpoint();
 
         Object request = teststep.getRequest() instanceof String ?
@@ -103,21 +107,76 @@ public abstract class TeststepDAO {
         return findById_NoTransaction(teststep.getId());
     }
 
-    private void backupRestoreActionData(Teststep oldTeststepBasic, Teststep teststep) {
-//        if (Teststep.TYPE_MQ.equals(teststep.getType())) {
-//            if (!oldTeststepBasic.getAction().equals(teststep.getAction())) {  // we need backup/restore only when switching action
-//
-//            }
-//        }
-        //  backup old action's assertions
-//        if (oldAction === 'CheckDepth') {
-//            $scope.teststep.otherProperties.queueDepthAssertionPropertiesBackup =
-//                    $scope.teststep.assertions[0].otherProperties;
-//        } else if (oldAction === 'Dequeue') {
-//            $scope.teststep.otherProperties.dequeueAssertionPropertiesBackup =
-//                    $scope.teststep.assertions[0].otherProperties;
-//        }
+    private void backupRestoreActionData(Teststep oldTeststep, Teststep teststep) throws IOException {
+        long teststepId = teststep.getId();
+        String oldAction = oldTeststep.getAction();
+        String newAction = teststep.getAction();
+        if (newAction != null && !newAction.equals(oldAction)) { // we need backup/restore only when switching action
+            if (Teststep.TYPE_MQ.equals(teststep.getType())) {
+                ActionDataBackup backup = new ObjectMapper().readValue(
+                        getActionDataBackupById(teststepId), ActionDataBackup.class);
+                boolean backupChanged = false;
+
+                // backup old action's assertions
+                if (Teststep.ACTION_CHECK_DEPTH.equals(oldAction)) {
+                    Assertion oldAssertion = oldTeststep.getAssertions().get(0);
+                    backup.setQueueDepthAssertionProperties(
+                            (IntegerEqualAssertionProperties) oldAssertion.getOtherProperties());
+                    backupChanged = true;
+                } else if (Teststep.ACTION_DEQUEUE.equals(oldAction)) {
+                    Assertion oldAssertion = oldTeststep.getAssertions().get(0);
+                    backup.setDequeueAssertionProperties(
+                            (XMLEqualAssertionProperties) oldAssertion.getOtherProperties());
+                    backupChanged = true;
+                }
+
+                // setup new action's assertions
+                teststep.getAssertions().clear();
+                if (Teststep.ACTION_CHECK_DEPTH.equals(newAction)) {
+                    Assertion assertion = new Assertion();
+                    teststep.getAssertions().add(assertion);
+                    assertion.setName("MQ queue depth equals");
+                    assertion.setType(Assertion.TYPE_INTEGER_EQUAL);
+                    // restore old assertion properties if there is a backup
+                    ActionDataBackup oldBackup = new ObjectMapper().readValue(
+                            getActionDataBackupById(teststepId), ActionDataBackup.class);
+                    IntegerEqualAssertionProperties oldAssertionProperties =
+                            oldBackup.getQueueDepthAssertionProperties();
+                    if (oldAssertionProperties != null) {
+                        assertion.setOtherProperties(oldAssertionProperties);
+                    } else {
+                        assertion.setOtherProperties(new IntegerEqualAssertionProperties(0));
+                    }
+                } else if (Teststep.ACTION_DEQUEUE.equals(newAction)) {
+                    Assertion assertion = new Assertion();
+                    teststep.getAssertions().add(assertion);
+                    assertion.setName("Dequeue XML equals");
+                    assertion.setType(Assertion.TYPE_XML_EQUAL);
+                    // restore old assertion properties if there is a backup
+                    ActionDataBackup oldBackup = new ObjectMapper().readValue(
+                            getActionDataBackupById(teststepId), ActionDataBackup.class);
+                    XMLEqualAssertionProperties oldAssertionProperties = oldBackup.getDequeueAssertionProperties();
+                    if (oldAssertionProperties != null) {
+                        assertion.setOtherProperties(oldAssertionProperties);
+                    } else {
+                        assertion.setOtherProperties(new XMLEqualAssertionProperties());
+                    }
+                }
+
+                //  persist backup if changed
+                if (backupChanged) {
+                    saveActionDataBackupById(teststepId, new ObjectMapper().writeValueAsString(backup));
+                }
+            }
+        }
     }
+
+    @SqlUpdate("update teststep set action_data_backup = :backupJSON where id = :teststepId")
+    protected abstract int saveActionDataBackupById(@Bind("teststepId") long teststepId,
+                                                    @Bind("backupJSON") String backupJSON);
+
+    @SqlQuery("select action_data_backup from teststep where id = :teststepId")
+    protected abstract String getActionDataBackupById(@Bind("teststepId") long teststepId);
 
     private void updateAssertions(Teststep teststep) throws JsonProcessingException {
         AssertionDAO assertionDAO = assertionDAO();

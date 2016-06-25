@@ -16,37 +16,7 @@ angular.module('irontest').controller('MQTeststepController', ['$scope', 'Testru
     };
 
     $scope.actionChanged = function(isValid, oldAction) {
-      //  backup old action's assertions
-      if (oldAction === 'CheckDepth') {
-        $scope.teststep.otherProperties.queueDepthAssertionPropertiesBackup =
-          $scope.teststep.assertions[0].otherProperties;
-      } else if (oldAction === 'Dequeue') {
-        $scope.teststep.otherProperties.dequeueAssertionPropertiesBackup =
-          $scope.teststep.assertions[0].otherProperties;
-      }
-
-      // clear action data
       clearPreviousRunAndAssertionVerificationStatus();
-      $scope.teststep.assertions = [];
-
-      // setup new action's assertions
-      if ($scope.teststep.action === 'CheckDepth') {
-        $scope.teststep.assertions[0] = {
-          name: 'MQ queue depth equals',
-          type: 'IntegerEqual'
-        };
-        // restore old assertion properties if there is a backup
-        var propertiesBackup = $scope.teststep.otherProperties.queueDepthAssertionPropertiesBackup;
-        $scope.teststep.assertions[0].otherProperties = propertiesBackup ? propertiesBackup : { number: 0 };
-      } else if ($scope.teststep.action === 'Dequeue') {
-        $scope.teststep.assertions[0] = {
-          name: 'Dequeue XML equals',
-          type: 'XMLEqual'
-        };
-        // restore old assertion properties if there is a backup
-        var propertiesBackup = $scope.teststep.otherProperties.dequeueAssertionPropertiesBackup;
-        $scope.teststep.assertions[0].otherProperties = propertiesBackup ? propertiesBackup : { expectedXML: null };
-      }
 
       // initialize new action
       if ($scope.teststep.action === 'Enqueue') {
