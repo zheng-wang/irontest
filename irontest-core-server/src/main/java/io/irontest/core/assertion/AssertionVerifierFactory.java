@@ -8,15 +8,15 @@ import io.irontest.models.assertion.Assertion;
 public class AssertionVerifierFactory {
     public AssertionVerifier create(String assertionType) {
         AssertionVerifier result = null;
-        if (Assertion.ASSERTION_TYPE_XPATH.equals(assertionType)) {
+        if (Assertion.TYPE_XPATH.equals(assertionType)) {
             result = new XPathAssertionVerifier();
-        } else if (Assertion.ASSERTION_TYPE_CONTAINS.equals(assertionType)) {
+        } else if (Assertion.TYPE_CONTAINS.equals(assertionType)) {
             result = new ContainsAssertionVerifier();
-        } else if (Assertion.ASSERTION_TYPE_DSFIELD.equals(assertionType)) {
+        } else if (Assertion.TYPE_DSFIELD.equals(assertionType)) {
             result = new DSFieldAssertionVerifier();
-        } else if (Assertion.ASSERTION_TYPE_INTEGER_EQUAL.equals(assertionType)) {
+        } else if (Assertion.TYPE_INTEGER_EQUAL.equals(assertionType)) {
             result = new IntegerEqualAssertionVerifier();
-        } else if (Assertion.ASSERTION_TYPE_XML_EQUAL.equals(assertionType)) {
+        } else if (Assertion.TYPE_XML_EQUAL.equals(assertionType)) {
             result = new XMLEqualAssertionVerifier();
         } else {
             throw new RuntimeException("Unrecognized assertion type " + assertionType);

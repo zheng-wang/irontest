@@ -43,9 +43,9 @@ public abstract class AssertionDAO {
                                 @Bind("type") String type, @Bind("otherProperties") String otherProperties);
 
     public long insert(long teststepId, Assertion assertion) throws JsonProcessingException {
-        if (Assertion.ASSERTION_TYPE_CONTAINS.equals(assertion.getType())) {
+        if (Assertion.TYPE_CONTAINS.equals(assertion.getType())) {
             assertion.setOtherProperties(new ContainsAssertionProperties("value"));
-        } else if (Assertion.ASSERTION_TYPE_XPATH.equals(assertion.getType())) {
+        } else if (Assertion.TYPE_XPATH.equals(assertion.getType())) {
             assertion.setOtherProperties(
                     new XPathAssertionProperties("true()", "true", new ArrayList<NamespacePrefix>()));
         }

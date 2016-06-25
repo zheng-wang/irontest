@@ -10,9 +10,9 @@ import java.util.Date;
  * Created by Trevor Li on 6/30/15.
  */
 public class Endpoint {
-    public static final String ENDPOINT_TYPE_SOAP = "SOAP";
-    public static final String ENDPOINT_TYPE_DB = "DB";
-    public static final String ENDPOINT_TYPE_MQIIB = "MQ/IIB";
+    public static final String TYPE_SOAP = "SOAP";
+    public static final String TYPE_DB = "DB";
+    public static final String TYPE_MQIIB = "MQ/IIB";
     private long id;
     private Environment environment;
     private String name;
@@ -24,7 +24,7 @@ public class Endpoint {
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
             property = "type", visible = true, defaultImpl = Properties.class)
     @JsonSubTypes({
-            @JsonSubTypes.Type(value = MQIIBEndpointProperties.class, name = Endpoint.ENDPOINT_TYPE_MQIIB)})
+            @JsonSubTypes.Type(value = MQIIBEndpointProperties.class, name = Endpoint.TYPE_MQIIB)})
     private Properties otherProperties;
     private Date created;
     private Date updated;

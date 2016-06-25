@@ -8,22 +8,22 @@ import io.irontest.models.Properties;
  * Created by Zheng on 19/07/2015.
  */
 public class Assertion {
-    public static final String ASSERTION_TYPE_CONTAINS = "Contains";
-    public static final String ASSERTION_TYPE_XPATH = "XPath";
-    public static final String ASSERTION_TYPE_DSFIELD = "DSField";
-    public static final String ASSERTION_TYPE_INTEGER_EQUAL = "IntegerEqual";
-    public static final String ASSERTION_TYPE_XML_EQUAL = "XMLEqual";
+    public static final String TYPE_CONTAINS = "Contains";
+    public static final String TYPE_XPATH = "XPath";
+    public static final String TYPE_DSFIELD = "DSField";
+    public static final String TYPE_INTEGER_EQUAL = "IntegerEqual";
+    public static final String TYPE_XML_EQUAL = "XMLEqual";
     private Long id;
     private String name;
     private String type;
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY, property = "type")
     @JsonSubTypes({
-            @JsonSubTypes.Type(value = ContainsAssertionProperties.class, name = Assertion.ASSERTION_TYPE_CONTAINS),
-            @JsonSubTypes.Type(value = XPathAssertionProperties.class, name = Assertion.ASSERTION_TYPE_XPATH),
-            @JsonSubTypes.Type(value = DSFieldAssertionProperties.class, name = Assertion.ASSERTION_TYPE_DSFIELD),
+            @JsonSubTypes.Type(value = ContainsAssertionProperties.class, name = Assertion.TYPE_CONTAINS),
+            @JsonSubTypes.Type(value = XPathAssertionProperties.class, name = Assertion.TYPE_XPATH),
+            @JsonSubTypes.Type(value = DSFieldAssertionProperties.class, name = Assertion.TYPE_DSFIELD),
             @JsonSubTypes.Type(value = IntegerEqualAssertionProperties.class,
-                    name = Assertion.ASSERTION_TYPE_INTEGER_EQUAL),
-            @JsonSubTypes.Type(value = XMLEqualAssertionProperties.class, name = Assertion.ASSERTION_TYPE_XML_EQUAL)})
+                    name = Assertion.TYPE_INTEGER_EQUAL),
+            @JsonSubTypes.Type(value = XMLEqualAssertionProperties.class, name = Assertion.TYPE_XML_EQUAL)})
     private Properties otherProperties;
 
     public Assertion() {}

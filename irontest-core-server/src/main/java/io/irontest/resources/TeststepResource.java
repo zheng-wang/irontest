@@ -50,13 +50,13 @@ public class TeststepResource {
             Endpoint endpoint = new Endpoint();
             endpoint.setName("Unmanaged Endpoint");
             if (Teststep.TYPE_SOAP.equals(teststep.getType())) {
-                endpoint.setType(Endpoint.ENDPOINT_TYPE_SOAP);
+                endpoint.setType(Endpoint.TYPE_SOAP);
             } else if (Teststep.TYPE_DB.equals(teststep.getType())) {
-                endpoint.setType(Endpoint.ENDPOINT_TYPE_DB);
+                endpoint.setType(Endpoint.TYPE_DB);
             } else if (Teststep.TYPE_IIB.equals(teststep.getType())) {
-                endpoint.setType(Endpoint.ENDPOINT_TYPE_MQIIB);
+                endpoint.setType(Endpoint.TYPE_MQIIB);
             } else if (Teststep.TYPE_MQ.equals(teststep.getType())) {
-                endpoint.setType(Endpoint.ENDPOINT_TYPE_MQIIB);
+                endpoint.setType(Endpoint.TYPE_MQIIB);
             }
             teststep.setEndpoint(endpoint);
         }
