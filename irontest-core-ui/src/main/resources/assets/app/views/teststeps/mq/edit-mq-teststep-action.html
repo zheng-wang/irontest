@@ -17,8 +17,9 @@
 <div class="form-group">
   <label for="action" class="col-lg-2 control-label">Action</label>
   <div class="col-lg-2">
-    <select name="action" id="action" class="form-control" ng-model="teststep.otherProperties.action"
-            ng-change="actionChanged(teststepForm.$valid, '{{teststep.otherProperties.action}}')">
+    <select name="action" id="action" class="form-control" ng-model="teststep.action"
+            ng-change="actionChanged(teststepForm.$valid, '{{teststep.action}}')"
+            ng-disabled="testrun.status === 'ongoing'">
       <option value="Clear">Clear</option>
       <option value="CheckDepth">Check Depth</option>
       <option value="Dequeue">Dequeue</option>
@@ -30,27 +31,27 @@
             ng-disabled="!teststep.endpoint.otherProperties.queueManagerName ||
               !teststep.endpoint.otherProperties.host || !teststep.endpoint.otherProperties.port ||
               !teststep.endpoint.otherProperties.svrConnChannelName || !teststep.otherProperties.queueName ||
-              !teststep.otherProperties.action ||
-              testrun.status === 'ongoing' || (teststep.otherProperties.action === 'Enqueue' &&
+              !teststep.action ||
+              testrun.status === 'ongoing' || (teststep.action === 'Enqueue' &&
                 (teststep.otherProperties.enqueueMessageType === 'Text' && !teststep.request ||
                 teststep.otherProperties.enqueueMessageType === 'Binary' &&
                   !teststep.otherProperties.enqueueMessageFilename))">Do</button>
   </div>
   <div class="col-lg-4">       <!-- Action run status message -->
-    <h5 ng-if="teststep.otherProperties.action === 'Clear' && testrun.status === 'ongoing'">Clearing queue ...</h5>
-    <h5 ng-if="teststep.otherProperties.action === 'Clear' && testrun.status === 'finished'">Queue cleared.</h5>
-    <h5 ng-if="teststep.otherProperties.action === 'CheckDepth' && testrun.status === 'ongoing'">
+    <h5 ng-if="teststep.action === 'Clear' && testrun.status === 'ongoing'">Clearing queue ...</h5>
+    <h5 ng-if="teststep.action === 'Clear' && testrun.status === 'finished'">Queue cleared.</h5>
+    <h5 ng-if="teststep.action === 'CheckDepth' && testrun.status === 'ongoing'">
       Checking queue depth ...</h5>
-    <h5 ng-if="teststep.otherProperties.action === 'CheckDepth' && testrun.status === 'finished'">
+    <h5 ng-if="teststep.action === 'CheckDepth' && testrun.status === 'finished'">
       Queue depth is {{ testrun.response }}</h5>
-    <h5 ng-if="teststep.otherProperties.action === 'Dequeue' && testrun.status === 'finished'">
+    <h5 ng-if="teststep.action === 'Dequeue' && testrun.status === 'finished'">
       {{ testrun.response ? 'Message fetched.' : 'No more message available on the queue.' }}</h5>
-    <h5 ng-if="teststep.otherProperties.action === 'Enqueue' && testrun.status === 'ongoing'">Sending message ...</h5>
-    <h5 ng-if="teststep.otherProperties.action === 'Enqueue' && testrun.status === 'finished'">Message sent.</h5>
+    <h5 ng-if="teststep.action === 'Enqueue' && testrun.status === 'ongoing'">Sending message ...</h5>
+    <h5 ng-if="teststep.action === 'Enqueue' && testrun.status === 'finished'">Message sent.</h5>
   </div>
 </div>
 
-<div ng-if="teststep.otherProperties.action === 'CheckDepth'">
+<div ng-if="teststep.action === 'CheckDepth'">
   <div class="form-group">
     <label for="queueDepthAssertionValue" class="col-lg-2 control-label">Assertion</label>
     <div class="col-lg-2"><h5>Queue depth equals</h5></div>
@@ -61,7 +62,7 @@
   </div>
 </div>
 
-<div ng-if="teststep.otherProperties.action === 'Dequeue'">
+<div ng-if="teststep.action === 'Dequeue'">
   <div class="form-group">
     <label class="col-lg-2 control-label">Assertion</label>
     <div class="col-lg-2"><h5>XML Equal</h5></div>
@@ -95,12 +96,13 @@
   </div>
 </div>
 
-<div ng-if="teststep.otherProperties.action === 'Enqueue'">
+<div ng-if="teststep.action === 'Enqueue'">
   <div class="form-group">
     <label for="enqueueMessageType" class="col-lg-2 control-label">Message Type</label>
     <div class="col-lg-7">
       <select name="enqueueMessageType" id="enqueueMessageType" class="form-control"
-              ng-model="teststep.otherProperties.enqueueMessageType" ng-change="update(teststepForm.$valid)">
+              ng-model="teststep.otherProperties.enqueueMessageType" ng-change="update(teststepForm.$valid)"
+              ng-disabled="testrun.status === 'ongoing'">
         <option value="Text">Text</option>
         <option value="Binary">Binary</option>
       </select>

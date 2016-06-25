@@ -72,11 +72,11 @@ public abstract class TeststepDAO {
         teststep.setName(name);
     }
 
-    @SqlUpdate("update teststep set name = :name, description = :description, request = :request, " +
+    @SqlUpdate("update teststep set name = :name, description = :description, action = :action, request = :request, " +
             "endpoint_id = :endpointId, other_properties = :otherProperties, " +
             "updated = CURRENT_TIMESTAMP where id = :id")
     protected abstract int _update(@Bind("name") String name, @Bind("description") String description,
-                                   @Bind("request") Object request, @Bind("id") long id,
+                                   @Bind("action") String action, @Bind("request") Object request, @Bind("id") long id,
                                    @Bind("endpointId") Long endpointId,
                                    @Bind("otherProperties") String otherProperties);
 
@@ -93,7 +93,7 @@ public abstract class TeststepDAO {
                 ((String) teststep.getRequest()).getBytes() : teststep.getRequest();
         String otherProperties = teststep.getOtherProperties() == null ?
                 null : new ObjectMapper().writeValueAsString(teststep.getOtherProperties());
-        _update(teststep.getName(), teststep.getDescription(), request, teststep.getId(),
+        _update(teststep.getName(), teststep.getDescription(), teststep.getAction(), request, teststep.getId(),
                 newEndpoint == null ? null : newEndpoint.getId(), otherProperties);
 
         updateEndpointIfExists(oldEndpoint, newEndpoint);

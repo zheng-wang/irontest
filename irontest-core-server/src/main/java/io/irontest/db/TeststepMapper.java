@@ -39,6 +39,7 @@ public class TeststepMapper implements ResultSetMapper<Teststep> {
         teststep.setName(rs.getString("name"));
         teststep.setType(type);
         teststep.setDescription(rs.getString("description"));
+        teststep.setAction(fields.contains("action") ? rs.getString("action") : null);
         teststep.setCreated(fields.contains("created") ? rs.getTimestamp("created") : null);
         teststep.setUpdated(fields.contains("updated") ? rs.getTimestamp("updated") : null);
         if (fields.contains("request")) {

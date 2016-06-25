@@ -8,10 +8,20 @@ angular.module('irontest').controller('IIBTeststepController', ['$scope', 'Testr
     var timer;
     $scope.testrun = {};
 
-    $scope.doAction = function() {
-      // clear previous run status
+    var clearPreviousRunStatus = function() {
       if (timer) $timeout.cancel(timer);
       $scope.testrun = {};
+    };
+
+    $scope.actionChanged = function(isValid) {
+      clearPreviousRunStatus();
+
+      //  save test step
+      $scope.update(isValid);
+    };
+
+    $scope.doAction = function() {
+      clearPreviousRunStatus();
 
       var testrun = {
         teststep: $scope.teststep

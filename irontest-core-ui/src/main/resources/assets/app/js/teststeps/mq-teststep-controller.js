@@ -30,7 +30,7 @@ angular.module('irontest').controller('MQTeststepController', ['$scope', 'Testru
       $scope.teststep.assertions = [];
 
       // setup new action's assertions
-      if ($scope.teststep.otherProperties.action === 'CheckDepth') {
+      if ($scope.teststep.action === 'CheckDepth') {
         $scope.teststep.assertions[0] = {
           name: 'MQ queue depth equals',
           type: 'IntegerEqual'
@@ -38,7 +38,7 @@ angular.module('irontest').controller('MQTeststepController', ['$scope', 'Testru
         // restore old assertion properties if there is a backup
         var propertiesBackup = $scope.teststep.otherProperties.queueDepthAssertionPropertiesBackup;
         $scope.teststep.assertions[0].otherProperties = propertiesBackup ? propertiesBackup : { number: 0 };
-      } else if ($scope.teststep.otherProperties.action === 'Dequeue') {
+      } else if ($scope.teststep.action === 'Dequeue') {
         $scope.teststep.assertions[0] = {
           name: 'Dequeue XML equals',
           type: 'XMLEqual'
@@ -48,8 +48,8 @@ angular.module('irontest').controller('MQTeststepController', ['$scope', 'Testru
         $scope.teststep.assertions[0].otherProperties = propertiesBackup ? propertiesBackup : { expectedXML: null };
       }
 
-      // setup new action's other stuff
-      if ($scope.teststep.otherProperties.action === 'Enqueue') {
+      // initialize new action
+      if ($scope.teststep.action === 'Enqueue') {
         if (!$scope.teststep.otherProperties.enqueueMessageType) {
           $scope.teststep.otherProperties.enqueueMessageType = 'Text';
         }
