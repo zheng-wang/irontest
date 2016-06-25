@@ -37,22 +37,22 @@ public class MQTeststepRunner implements TeststepRunner {
             queueManager = new MQQueueManager(endpointProperties.getQueueManagerName(), qmConnProperties);
 
             //  open queue
-            if (MQTeststepProperties.ACTION_CHECK_DEPTH.equals(action)) {
+            if (Teststep.ACTION_CHECK_DEPTH.equals(action)) {
                 openOptions += CMQC.MQOO_INQUIRE;
-            } else if (MQTeststepProperties.ACTION_ENQUEUE.equals(action)) {
+            } else if (Teststep.ACTION_ENQUEUE.equals(action)) {
                 openOptions += CMQC.MQOO_OUTPUT;
             }
             queue = queueManager.accessQueue(teststepProperties.getQueueName(), openOptions, null, null, null);
 
             //  do the action
-            if (MQTeststepProperties.ACTION_CLEAR.equals(action)) {
+            if (Teststep.ACTION_CLEAR.equals(action)) {
                 clearQueue(queue);
                 result = true;
-            } else if (MQTeststepProperties.ACTION_CHECK_DEPTH.equals(action)) {
+            } else if (Teststep.ACTION_CHECK_DEPTH.equals(action)) {
                 result = queue.getCurrentDepth();
-            } else if (MQTeststepProperties.ACTION_DEQUEUE.equals(action)) {
+            } else if (Teststep.ACTION_DEQUEUE.equals(action)) {
                 result = dequeue(queue);
-            } else if (MQTeststepProperties.ACTION_ENQUEUE.equals(action)) {
+            } else if (Teststep.ACTION_ENQUEUE.equals(action)) {
                 enqueue(queue, (String) teststep.getRequest());
                 result = true;
             }

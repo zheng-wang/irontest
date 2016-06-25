@@ -19,6 +19,13 @@ public class Teststep {
     public static final String TYPE_MQ = "MQ";
     public static final String TYPE_WAIT = "Wait";
 
+    public static final String ACTION_START = "Start";
+    public static final String ACTION_STOP = "Stop";
+    public static final String ACTION_CLEAR = "Clear";
+    public static final String ACTION_CHECK_DEPTH = "CheckDepth";
+    public static final String ACTION_DEQUEUE = "Dequeue";
+    public static final String ACTION_ENQUEUE = "Enqueue";
+
     private long id;
     private long testcaseId;
     private short sequence;
@@ -150,7 +157,7 @@ public class Teststep {
         boolean result = false;
         if (otherProperties instanceof MQTeststepProperties) {
             MQTeststepProperties properties = (MQTeststepProperties) otherProperties;
-            result = MQTeststepProperties.ACTION_ENQUEUE.equals(action) &&
+            result = ACTION_ENQUEUE.equals(action) &&
                     MQTeststepProperties.ENQUEUE_MESSAGE_TYPE_BINARY.equals(properties.getEnqueueMessageType());
         }
         return result;

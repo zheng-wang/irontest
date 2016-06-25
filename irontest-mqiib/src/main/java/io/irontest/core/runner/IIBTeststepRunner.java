@@ -40,9 +40,9 @@ public class IIBTeststepRunner implements TeststepRunner {
             }
 
             //  do the specified action
-            if (IIBTeststepProperties.ACTION_START.equals(teststep.getAction())) {
+            if (Teststep.ACTION_START.equals(teststep.getAction())) {
                 messageFlowProxy.start();
-            } else if (IIBTeststepProperties.ACTION_STOP.equals(teststep.getAction())) {
+            } else if (Teststep.ACTION_STOP.equals(teststep.getAction())) {
                 messageFlowProxy.stop();
             }
         } finally {
