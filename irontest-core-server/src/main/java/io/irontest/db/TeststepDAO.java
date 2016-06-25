@@ -26,7 +26,8 @@ public abstract class TeststepDAO {
     @SqlUpdate("CREATE TABLE IF NOT EXISTS teststep (" +
             "id BIGINT DEFAULT teststep_sequence.NEXTVAL PRIMARY KEY, testcase_id BIGINT NOT NULL, " +
             "sequence SMALLINT NOT NULL, name VARCHAR(200) NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
-            "description CLOB, type VARCHAR(20) NOT NULL, endpoint_id BIGINT, request BLOB, other_properties CLOB, " +
+            "type VARCHAR(20) NOT NULL, description CLOB, action VARCHAR(50), endpoint_id BIGINT, request BLOB, " +
+            "other_properties CLOB, " +
             "created TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (endpoint_id) REFERENCES endpoint(id), " +
             "FOREIGN KEY (testcase_id) REFERENCES testcase(id) ON DELETE CASCADE, " +
@@ -81,9 +82,11 @@ public abstract class TeststepDAO {
 
     @Transaction
     public Teststep update(Teststep teststep) throws JsonProcessingException {
-        backupRestoreActionData(teststep);
+        Teststep oldTeststepBasic = findById(teststep.getId());
 
-        Endpoint oldEndpoint = endpointDAO().findById(findById(teststep.getId()).getEndpoint().getId());
+        backupRestoreActionData(oldTeststepBasic, teststep);
+
+        Endpoint oldEndpoint = endpointDAO().findById(oldTeststepBasic.getEndpoint().getId());
         Endpoint newEndpoint = teststep.getEndpoint();
 
         Object request = teststep.getRequest() instanceof String ?
@@ -100,7 +103,12 @@ public abstract class TeststepDAO {
         return findById_NoTransaction(teststep.getId());
     }
 
-    private void backupRestoreActionData(Teststep teststep) {
+    private void backupRestoreActionData(Teststep oldTeststepBasic, Teststep teststep) {
+//        if (Teststep.TYPE_MQ.equals(teststep.getType())) {
+//            if (!oldTeststepBasic.getAction().equals(teststep.getAction())) {  // we need backup/restore only when switching action
+//
+//            }
+//        }
         //  backup old action's assertions
 //        if (oldAction === 'CheckDepth') {
 //            $scope.teststep.otherProperties.queueDepthAssertionPropertiesBackup =
@@ -253,7 +261,7 @@ public abstract class TeststepDAO {
     public Teststep setRequestFile(long teststepId, String fileName, InputStream inputStream)
             throws JsonProcessingException {
         Teststep basicTeststep = _findById(teststepId);
-        if (Teststep.TEST_STEP_TYPE_MQ.equals(basicTeststep.getType())) {
+        if (Teststep.TYPE_MQ.equals(basicTeststep.getType())) {
             MQTeststepProperties otherProperties = (MQTeststepProperties) basicTeststep.getOtherProperties();
             otherProperties.setEnqueueMessageFilename(fileName);
             String otherPropertiesStr = new ObjectMapper().writeValueAsString(otherProperties);

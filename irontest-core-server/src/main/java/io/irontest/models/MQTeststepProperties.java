@@ -7,15 +7,14 @@ import io.irontest.models.assertion.XMLEqualAssertionProperties;
  * Created by Zheng on 30/05/2016.
  */
 public class MQTeststepProperties extends Properties {
-    public static final String ACTION_TYPE_CLEAR = "Clear";
-    public static final String ACTION_TYPE_CHECK_DEPTH = "CheckDepth";
-    public static final String ACTION_TYPE_DEQUEUE = "Dequeue";
-    public static final String ACTION_TYPE_ENQUEUE = "Enqueue";
+    public static final String ACTION_CLEAR = "Clear";
+    public static final String ACTION_CHECK_DEPTH = "CheckDepth";
+    public static final String ACTION_DEQUEUE = "Dequeue";
+    public static final String ACTION_ENQUEUE = "Enqueue";
     public static final String ENQUEUE_MESSAGE_TYPE_TEXT = "Text";
     public static final String ENQUEUE_MESSAGE_TYPE_BINARY = "Binary";
 
     private String queueName;
-    private String action;
     private String enqueueMessageType; // only for Enqueue action
     private String enqueueMessageFilename; // only for Enqueue action with message type Binary
 
@@ -29,14 +28,6 @@ public class MQTeststepProperties extends Properties {
 
     public void setQueueName(String queueName) {
         this.queueName = queueName;
-    }
-
-    public String getAction() {
-        return action;
-    }
-
-    public void setAction(String action) {
-        this.action = action;
     }
 
     public IntegerEqualAssertionProperties getQueueDepthAssertionPropertiesBackup() {

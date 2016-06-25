@@ -40,29 +40,29 @@ public class TeststepResource {
     private void preCreationProcess(Teststep teststep) {
         //  create sample request
         String sampleRequest = null;
-        if (Teststep.TEST_STEP_TYPE_DB.equals(teststep.getType())){
+        if (Teststep.TYPE_DB.equals(teststep.getType())){
             sampleRequest = "select * from ? where ?";
         }
         teststep.setRequest(sampleRequest);
 
         //  create unmanaged endpoint
-        if (!Teststep.TEST_STEP_TYPE_WAIT.equals(teststep.getType())) {
+        if (!Teststep.TYPE_WAIT.equals(teststep.getType())) {
             Endpoint endpoint = new Endpoint();
             endpoint.setName("Unmanaged Endpoint");
-            if (Teststep.TEST_STEP_TYPE_SOAP.equals(teststep.getType())) {
+            if (Teststep.TYPE_SOAP.equals(teststep.getType())) {
                 endpoint.setType(Endpoint.ENDPOINT_TYPE_SOAP);
-            } else if (Teststep.TEST_STEP_TYPE_DB.equals(teststep.getType())) {
+            } else if (Teststep.TYPE_DB.equals(teststep.getType())) {
                 endpoint.setType(Endpoint.ENDPOINT_TYPE_DB);
-            } else if (Teststep.TEST_STEP_TYPE_IIB.equals(teststep.getType())) {
+            } else if (Teststep.TYPE_IIB.equals(teststep.getType())) {
                 endpoint.setType(Endpoint.ENDPOINT_TYPE_MQIIB);
-            } else if (Teststep.TEST_STEP_TYPE_MQ.equals(teststep.getType())) {
+            } else if (Teststep.TYPE_MQ.equals(teststep.getType())) {
                 endpoint.setType(Endpoint.ENDPOINT_TYPE_MQIIB);
             }
             teststep.setEndpoint(endpoint);
         }
 
         //  set initial seconds for Wait test step
-        if (Teststep.TEST_STEP_TYPE_WAIT.equals(teststep.getType())) {
+        if (Teststep.TYPE_WAIT.equals(teststep.getType())) {
             teststep.setOtherProperties(new WaitTeststepProperties(1));   //  there is no point to wait for 0 seconds
         }
     }

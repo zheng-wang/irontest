@@ -13,11 +13,11 @@ import java.util.List;
  * Created by Zheng on 7/07/2015.
  */
 public class Teststep {
-    public static final String TEST_STEP_TYPE_SOAP = "SOAP";
-    public static final String TEST_STEP_TYPE_DB = "DB";
-    public static final String TEST_STEP_TYPE_IIB = "IIB";
-    public static final String TEST_STEP_TYPE_MQ = "MQ";
-    public static final String TEST_STEP_TYPE_WAIT = "Wait";
+    public static final String TYPE_SOAP = "SOAP";
+    public static final String TYPE_DB = "DB";
+    public static final String TYPE_IIB = "IIB";
+    public static final String TYPE_MQ = "MQ";
+    public static final String TYPE_WAIT = "Wait";
 
     private long id;
     private long testcaseId;
@@ -25,17 +25,18 @@ public class Teststep {
     private String name;
     private String type;
     private String description;
-    private Object request;
+    private String action;            //  currently only used in MQ test step and IIB test step
     private Endpoint endpoint;
+    private Object request;
     private List<Assertion> assertions = new ArrayList<Assertion>();
     private Date created;
     private Date updated;
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
             property = "type", visible = true, defaultImpl = Properties.class)
     @JsonSubTypes({
-            @JsonSubTypes.Type(value = IIBTeststepProperties.class, name = Teststep.TEST_STEP_TYPE_IIB),
-            @JsonSubTypes.Type(value = MQTeststepProperties.class, name = Teststep.TEST_STEP_TYPE_MQ),
-            @JsonSubTypes.Type(value = WaitTeststepProperties.class, name = Teststep.TEST_STEP_TYPE_WAIT)})
+            @JsonSubTypes.Type(value = IIBTeststepProperties.class, name = Teststep.TYPE_IIB),
+            @JsonSubTypes.Type(value = MQTeststepProperties.class, name = Teststep.TYPE_MQ),
+            @JsonSubTypes.Type(value = WaitTeststepProperties.class, name = Teststep.TYPE_WAIT)})
     private Properties otherProperties;
 
     public Teststep() {}
@@ -136,12 +137,20 @@ public class Teststep {
         this.assertions = assertions;
     }
 
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
+
     @JsonIgnore
     public boolean isRequestBinary() {
         boolean result = false;
         if (otherProperties instanceof MQTeststepProperties) {
             MQTeststepProperties properties = (MQTeststepProperties) otherProperties;
-            result = MQTeststepProperties.ACTION_TYPE_ENQUEUE.equals(properties.getAction()) &&
+            result = MQTeststepProperties.ACTION_ENQUEUE.equals(action) &&
                     MQTeststepProperties.ENQUEUE_MESSAGE_TYPE_BINARY.equals(properties.getEnqueueMessageType());
         }
         return result;

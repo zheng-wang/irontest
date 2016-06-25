@@ -4,11 +4,10 @@ package io.irontest.models;
  * Created by Zheng on 28/05/2016.
  */
 public class IIBTeststepProperties extends Properties {
-    public static final String ACTION_TYPE_START = "Start";
-    public static final String ACTION_TYPE_STOP = "Stop";
+    public static final String ACTION_START = "Start";
+    public static final String ACTION_STOP = "Stop";
     private String integrationServerName;
     private String messageFlowName;
-    private String action;
 
     public String getIntegrationServerName() {
         return integrationServerName;
@@ -24,13 +23,5 @@ public class IIBTeststepProperties extends Properties {
 
     public void setMessageFlowName(String messageFlowName) {
         this.messageFlowName = messageFlowName;
-    }
-
-    public String getAction() {
-        return action;
-    }
-
-    public void setAction(String action) {
-        this.action = action;
     }
 }

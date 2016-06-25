@@ -1,8 +1,8 @@
 package io.irontest.core.runner;
 
 import com.ibm.broker.config.proxy.*;
-import io.irontest.models.MQIIBEndpointProperties;
 import io.irontest.models.IIBTeststepProperties;
+import io.irontest.models.MQIIBEndpointProperties;
 import io.irontest.models.Teststep;
 
 /**
@@ -40,9 +40,9 @@ public class IIBTeststepRunner implements TeststepRunner {
             }
 
             //  do the specified action
-            if (IIBTeststepProperties.ACTION_TYPE_START.equals(teststepProperties.getAction())) {
+            if (IIBTeststepProperties.ACTION_START.equals(teststep.getAction())) {
                 messageFlowProxy.start();
-            } else if (IIBTeststepProperties.ACTION_TYPE_STOP.equals(teststepProperties.getAction())) {
+            } else if (IIBTeststepProperties.ACTION_STOP.equals(teststep.getAction())) {
                 messageFlowProxy.stop();
             }
         } finally {
