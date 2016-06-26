@@ -6,6 +6,7 @@ import io.irontest.core.runner.TeststepRunnerFactory;
 import io.irontest.db.TeststepDAO;
 import io.irontest.db.UtilsDAO;
 import io.irontest.models.Endpoint;
+import io.irontest.models.MQTeststepProperties;
 import io.irontest.models.Testrun;
 import io.irontest.models.Teststep;
 import io.irontest.models.assertion.Assertion;
@@ -24,21 +25,34 @@ import java.util.List;
 @Path("/testruns") @Produces({ MediaType.APPLICATION_JSON })
 public class TestrunResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(TestrunResource.class);
-    private final TeststepDAO teststepDao;
+    private final TeststepDAO teststepDAO;
     private final UtilsDAO utilsDAO;
 
-    public TestrunResource(TeststepDAO teststepDao, UtilsDAO utilsDAO) {
-        this.teststepDao = teststepDao;
+    public TestrunResource(TeststepDAO teststepDAO, UtilsDAO utilsDAO) {
+        this.teststepDAO = teststepDAO;
         this.utilsDAO = utilsDAO;
     }
 
     private Object runTeststep(Teststep teststep) throws Exception {
+        prepareTeststepForRun(teststep);
+        return TeststepRunnerFactory.getInstance().getTeststepRunner(teststep.getType() + "TeststepRunner")
+                .run(teststep);
+    }
+
+    private void prepareTeststepForRun(Teststep teststep) {
+        //  decrypt password in endpoint
         Endpoint endpoint = teststep.getEndpoint();
         if (endpoint != null && endpoint.getPassword() != null) {
             endpoint.setPassword(utilsDAO.decryptPassword(endpoint.getPassword()));
         }
-        return TeststepRunnerFactory.getInstance().getTeststepRunner(teststep.getType() + "TeststepRunner")
-                .run(teststep);
+
+        //  fetch binary message for MQ test step Enqueue action Binary message type
+        if (Teststep.TYPE_MQ.equals(teststep.getType()) && Teststep.ACTION_ENQUEUE.equals(teststep.getAction())) {
+            MQTeststepProperties properties = (MQTeststepProperties) teststep.getOtherProperties();
+            if (MQTeststepProperties.ENQUEUE_MESSAGE_TYPE_BINARY.equals(properties.getEnqueueMessageType())) {
+                teststep.setRequest(teststepDAO.getBinaryRequestById(teststep.getId()));
+            }
+        }
     }
 
     @POST
@@ -50,7 +64,7 @@ public class TestrunResource {
             testrun.setTeststep(null);    //  no need to pass the test step back to client which might contain decrypted password
         } else if (testrun.getTestcaseId() != null) {  //  run a test case (not passing invocation responses back to client)
             LOGGER.info("Running a test case.");
-            List<Teststep> teststeps = teststepDao.findByTestcaseId(testrun.getTestcaseId());
+            List<Teststep> teststeps = teststepDAO.findByTestcaseId(testrun.getTestcaseId());
 
             for (Teststep teststep : teststeps) {
                 //  run and get response

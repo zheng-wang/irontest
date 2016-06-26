@@ -31,8 +31,7 @@
             ng-disabled="!teststep.endpoint.otherProperties.queueManagerName ||
               !teststep.endpoint.otherProperties.host || !teststep.endpoint.otherProperties.port ||
               !teststep.endpoint.otherProperties.svrConnChannelName || !teststep.otherProperties.queueName ||
-              !teststep.action ||
-              testrun.status === 'ongoing' || (teststep.action === 'Enqueue' &&
+              !teststep.action || testrun.status === 'ongoing' || (teststep.action === 'Enqueue' &&
                 (teststep.otherProperties.enqueueMessageType === 'Text' && !teststep.request ||
                 teststep.otherProperties.enqueueMessageType === 'Binary' &&
                   !teststep.otherProperties.enqueueMessageFilename))">Do</button>
