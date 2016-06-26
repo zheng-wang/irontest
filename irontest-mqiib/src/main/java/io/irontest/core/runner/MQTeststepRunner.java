@@ -2,7 +2,8 @@ package io.irontest.core.runner;
 
 import com.ibm.mq.*;
 import com.ibm.mq.constants.CMQC;
-import com.ibm.mq.headers.*;
+import com.ibm.mq.headers.MQDataException;
+import com.ibm.mq.headers.MQHeaderIterator;
 import com.ibm.mq.headers.MQMD;
 import io.irontest.models.MQIIBEndpointProperties;
 import io.irontest.models.MQTeststepProperties;
@@ -77,11 +78,10 @@ public class MQTeststepRunner implements TeststepRunner {
             message.writeString((String) data);
         } else {
             byte[] bytes = (byte[]) data;
-            MQMD mqmdHeader = new MQMD(new DataInputStream(new ByteArrayInputStream(bytes)));
+            MQMD mqmdHeader = new MQMD(new DataInputStream(new ByteArrayInputStream(bytes)),
+                    CMQC.MQENC_REVERSED, CMQC.MQCCSI_DEFAULT);
             message.putDateTime = new GregorianCalendar();
             mqmdHeader.copyTo(message);
-            message.encoding = CMQC.MQENC_REVERSED;
-            message.characterSet = CMQC.MQCCSI_DEFAULT;
             message.persistence = CMQC.MQPER_PERSISTENT;
             message.write(bytes, mqmdHeader.size(), bytes.length - mqmdHeader.size());
         }
