@@ -9,7 +9,8 @@ import io.irontest.models.assertion.XMLEqualAssertionProperties;
 public class TeststepActionDataBackup {
     private IntegerEqualAssertionProperties queueDepthAssertionProperties; // only for MQ test step CheckDepth action
     private XMLEqualAssertionProperties dequeueAssertionProperties;    // only for MQ test step Dequeue action
-    private Object enqueueMessage;      // only for MQ test step Enqueue action
+    private String enqueueTextMessage;  // only for MQ test step Enqueue action
+    private byte[] enqueueBinaryMessage;  // only for MQ test step Enqueue action
 
     public IntegerEqualAssertionProperties getQueueDepthAssertionProperties() {
         return queueDepthAssertionProperties;
@@ -27,11 +28,19 @@ public class TeststepActionDataBackup {
         this.dequeueAssertionProperties = dequeueAssertionProperties;
     }
 
-    public Object getEnqueueMessage() {
-        return enqueueMessage;
+    public String getEnqueueTextMessage() {
+        return enqueueTextMessage;
     }
 
-    public void setEnqueueMessage(Object enqueueMessage) {
-        this.enqueueMessage = enqueueMessage;
+    public void setEnqueueTextMessage(String enqueueTextMessage) {
+        this.enqueueTextMessage = enqueueTextMessage;
+    }
+
+    public byte[] getEnqueueBinaryMessage() {
+        return enqueueBinaryMessage;
+    }
+
+    public void setEnqueueBinaryMessage(byte[] enqueueBinaryMessage) {
+        this.enqueueBinaryMessage = enqueueBinaryMessage;
     }
 }
