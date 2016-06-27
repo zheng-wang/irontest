@@ -83,7 +83,7 @@ public class MQTeststepRunner implements TeststepRunner {
             message.putDateTime = new GregorianCalendar();
             mqmdHeader.copyTo(message);
             message.persistence = CMQC.MQPER_PERSISTENT;
-            message.write(bytes, mqmdHeader.size(), bytes.length - mqmdHeader.size());
+            message.write(bytes, MQMD.SIZE2, bytes.length - MQMD.SIZE2);
         }
         MQPutMessageOptions pmo = new MQPutMessageOptions();
         queue.put(message, pmo);
