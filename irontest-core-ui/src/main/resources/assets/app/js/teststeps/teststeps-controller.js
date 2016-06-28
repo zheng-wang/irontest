@@ -26,6 +26,7 @@ angular.module('irontest').controller('TeststepsController', ['$scope', 'Testste
     };
 
     $scope.update = function(isValid, successCallback) {
+      if (timer) $timeout.cancel(timer);  //  cancel existing timer if the update function is called directly (to avoid duplicate save)
       $scope.savingStatus.changeUnsaved = true;
       if (isValid) {
         //  For DB test step, exclude the result property from the assertions,

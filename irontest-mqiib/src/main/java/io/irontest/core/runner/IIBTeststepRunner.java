@@ -11,6 +11,11 @@ import io.irontest.models.Teststep;
 public class IIBTeststepRunner implements TeststepRunner {
     public Object run(Teststep teststep) throws ConfigManagerProxyLoggedException,
             ConfigManagerProxyPropertyNotInitializedException {
+        String action = teststep.getAction();
+        if (action == null) {
+            throw new RuntimeException("Action not specified.");
+        }
+
         MQIIBEndpointProperties endpointProperties = (MQIIBEndpointProperties) teststep.getEndpoint().getOtherProperties();
         IIBTeststepProperties teststepProperties = (IIBTeststepProperties) teststep.getOtherProperties();
         MQBrokerConnectionParameters bcp = new MQBrokerConnectionParameters(
@@ -40,9 +45,9 @@ public class IIBTeststepRunner implements TeststepRunner {
             }
 
             //  do the specified action
-            if (Teststep.ACTION_START.equals(teststep.getAction())) {
+            if (Teststep.ACTION_START.equals(action)) {
                 messageFlowProxy.start();
-            } else if (Teststep.ACTION_STOP.equals(teststep.getAction())) {
+            } else if (Teststep.ACTION_STOP.equals(action)) {
                 messageFlowProxy.stop();
             }
         } finally {

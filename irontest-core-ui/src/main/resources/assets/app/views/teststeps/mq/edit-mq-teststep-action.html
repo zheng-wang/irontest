@@ -19,7 +19,7 @@
   <div class="col-lg-2">
     <select name="action" id="action" class="form-control" ng-model="teststep.action"
             ng-change="actionChanged(teststepForm.$valid)"
-            ng-disabled="savingStatus.changeUnsaved || testrun.status === 'ongoing'">
+            ng-disabled="testrun.status === 'ongoing'">
       <option value="Clear">Clear</option>
       <option value="CheckDepth">Check Depth</option>
       <option value="Dequeue">Dequeue</option>

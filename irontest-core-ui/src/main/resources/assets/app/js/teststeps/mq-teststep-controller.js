@@ -74,6 +74,7 @@ angular.module('irontest').controller('MQTeststepController', ['$scope', 'Testru
           url: url,
           data: {file: file}
         }).then(function successCallback(response) {
+          $scope.$emit('successfullySaved');
           $scope.setTeststep(new Teststeps(response.data));
         }, function errorCallback(response) {
           IronTestUtils.openErrorHTTPResponseModal(response);
