@@ -31,7 +31,7 @@ public abstract class TeststepDAO {
             "id BIGINT DEFAULT teststep_sequence.NEXTVAL PRIMARY KEY, testcase_id BIGINT NOT NULL, " +
             "sequence SMALLINT NOT NULL, name VARCHAR(200) NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "type VARCHAR(20) NOT NULL, description CLOB, action VARCHAR(50), endpoint_id BIGINT, request BLOB, " +
-            "other_properties CLOB NOT NULL, action_data_backup CLOB NOT NULL DEFAULT '{}', " +
+            "other_properties CLOB, action_data_backup CLOB, " +
             "created TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (endpoint_id) REFERENCES endpoint(id), " +
             "FOREIGN KEY (testcase_id) REFERENCES testcase(id) ON DELETE CASCADE, " +
@@ -66,7 +66,7 @@ public abstract class TeststepDAO {
         Object request = teststep.getRequest() instanceof String ?
                 ((String) teststep.getRequest()).getBytes() : teststep.getRequest();
         String otherProperties = teststep.getOtherProperties() == null ?
-                "{}" : new ObjectMapper().writeValueAsString(teststep.getOtherProperties());
+                null : new ObjectMapper().writeValueAsString(teststep.getOtherProperties());
         long id = _insert(teststep.getTestcaseId(), teststep.getType(), request,
                 endpoint == null ? null : endpoint.getId(), otherProperties);
         teststep.setId(id);
@@ -96,7 +96,7 @@ public abstract class TeststepDAO {
         Object request = teststep.getRequest() instanceof String ?
                 ((String) teststep.getRequest()).getBytes() : teststep.getRequest();
         String otherProperties = teststep.getOtherProperties() == null ?
-                "{}" : new ObjectMapper().writeValueAsString(teststep.getOtherProperties());
+                null : new ObjectMapper().writeValueAsString(teststep.getOtherProperties());
         _update(teststep.getName(), teststep.getDescription(), teststep.getAction(), request, teststep.getId(),
                 newEndpoint == null ? null : newEndpoint.getId(), otherProperties);
 
@@ -112,8 +112,17 @@ public abstract class TeststepDAO {
             long teststepId = teststep.getId();
             String oldAction = oldTeststep.getAction();
             String newAction = teststep.getAction();
-            TeststepActionDataBackup backup = new ObjectMapper().readValue(
-                    getActionDataBackupById(teststepId), TeststepActionDataBackup.class);
+            String backupStr = getActionDataBackupById(teststepId);
+            TeststepActionDataBackup backup = null;
+            TeststepActionDataBackup oldBackup = null;
+            if (backupStr == null) {
+                backup = new TeststepActionDataBackup();
+                oldBackup = new TeststepActionDataBackup();
+            } else {
+                ObjectMapper mapper = new ObjectMapper();
+                backup = mapper.readValue(backupStr, TeststepActionDataBackup.class);
+                oldBackup = mapper.readValue(backupStr, TeststepActionDataBackup.class);
+            }
             boolean backupChanged = false;
 
             // backup old action's data
@@ -140,6 +149,12 @@ public abstract class TeststepDAO {
                 }
             }
 
+            //  persist backup if changed
+            if (backupChanged) {
+                backupStr = new ObjectMapper().writeValueAsString(backup);
+                saveActionDataBackupById(teststepId, backupStr);
+            }
+
             // setup new action's data
             teststep.getAssertions().clear();
             if (Teststep.ACTION_CHECK_DEPTH.equals(newAction)) {
@@ -147,9 +162,7 @@ public abstract class TeststepDAO {
                 teststep.getAssertions().add(assertion);
                 assertion.setName("MQ queue depth equals");
                 assertion.setType(Assertion.TYPE_INTEGER_EQUAL);
-                // restore old assertion properties if there is a backup
-                TeststepActionDataBackup oldBackup = new ObjectMapper().readValue(
-                        getActionDataBackupById(teststepId), TeststepActionDataBackup.class);
+                // restore old assertion properties if exists
                 IntegerEqualAssertionProperties oldAssertionProperties =
                         oldBackup.getQueueDepthAssertionProperties();
                 if (oldAssertionProperties != null) {
@@ -162,9 +175,7 @@ public abstract class TeststepDAO {
                 teststep.getAssertions().add(assertion);
                 assertion.setName("Dequeue XML equals");
                 assertion.setType(Assertion.TYPE_XML_EQUAL);
-                // restore old assertion properties if there is a backup
-                TeststepActionDataBackup oldBackup = new ObjectMapper().readValue(
-                        getActionDataBackupById(teststepId), TeststepActionDataBackup.class);
+                // restore old assertion properties if exists
                 XMLEqualAssertionProperties oldAssertionProperties = oldBackup.getDequeueAssertionProperties();
                 if (oldAssertionProperties != null) {
                     assertion.setOtherProperties(oldAssertionProperties);
@@ -175,22 +186,12 @@ public abstract class TeststepDAO {
                 MQTeststepProperties newProperties = (MQTeststepProperties) teststep.getOtherProperties();
                 if (MQTeststepProperties.ENQUEUE_MESSAGE_TYPE_TEXT.equals(newProperties.getEnqueueMessageType())) {
                     // restore old message
-                    TeststepActionDataBackup oldBackup = new ObjectMapper().readValue(
-                            getActionDataBackupById(teststepId), TeststepActionDataBackup.class);
                     teststep.setRequest(oldBackup.getEnqueueTextMessage());
                 } else if (MQTeststepProperties.ENQUEUE_MESSAGE_TYPE_BINARY.equals(
                         newProperties.getEnqueueMessageType())) {
-                    // restore old message if there is a backup
-                    TeststepActionDataBackup oldBackup = new ObjectMapper().readValue(
-                            getActionDataBackupById(teststepId), TeststepActionDataBackup.class);
+                    // restore old message
                     teststep.setRequest(oldBackup.getEnqueueBinaryMessage());
                 }
-            }
-
-            //  persist backup if changed
-            if (backupChanged) {
-                String backupStr = new ObjectMapper().writeValueAsString(backup);
-                saveActionDataBackupById(teststepId, backupStr);
             }
         }
     }
