@@ -8,6 +8,8 @@ import com.ibm.mq.headers.MQMD;
 import io.irontest.models.MQIIBEndpointProperties;
 import io.irontest.models.MQTeststepProperties;
 import io.irontest.models.Teststep;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
@@ -19,16 +21,21 @@ import java.util.Hashtable;
  * Created by Trevor Li on 7/14/15.
  */
 public class MQTeststepRunner implements TeststepRunner {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MQTeststepRunner.class);
     //  disable the default 2033 logging (seems not needed since IBM MQ 8.0)
     static {
         MQException.logExclude(CMQC.MQRC_NO_MSG_AVAILABLE);
     }
 
     public Object run(Teststep teststep) throws MQException, IOException, MQDataException {
+        String action = teststep.getAction();
+        if (action == null) {
+            throw new RuntimeException("Action not specified.");
+        }
+
         Object result = null;
         MQIIBEndpointProperties endpointProperties = (MQIIBEndpointProperties) teststep.getEndpoint().getOtherProperties();
         MQTeststepProperties teststepProperties = (MQTeststepProperties) teststep.getOtherProperties();
-        String action = teststep.getAction();
         Hashtable qmConnProperties = new Hashtable();
         qmConnProperties.put(CMQC.HOST_NAME_PROPERTY,  endpointProperties.getHost());
         qmConnProperties.put(CMQC.PORT_PROPERTY, endpointProperties.getPort());
@@ -73,18 +80,36 @@ public class MQTeststepRunner implements TeststepRunner {
     }
 
     private void enqueue(MQQueue queue, Object data) throws MQException, IOException, MQDataException {
-        MQMessage message = new MQMessage();
-        if (data instanceof String) {
-            message.writeString((String) data);
-        } else {
-            byte[] bytes = (byte[]) data;
-            MQMD mqmdHeader = new MQMD(new DataInputStream(new ByteArrayInputStream(bytes)),
-                    CMQC.MQENC_REVERSED, CMQC.MQCCSI_DEFAULT);
-            message.putDateTime = new GregorianCalendar();
-            mqmdHeader.copyTo(message);
-            message.persistence = CMQC.MQPER_PERSISTENT;
-            message.write(bytes, MQMD.SIZE2, bytes.length - MQMD.SIZE2);
+        if (data == null) {
+            throw new RuntimeException("Can not enqueue null.");
         }
+
+        MQMessage message = new MQMessage();
+        if (data instanceof String) {    //  text message
+            message.writeString((String) data);
+        } else {                         //  binary message
+            byte[] bytes = (byte[]) data;
+            MQMD mqmdHeader = null;
+            try {
+                mqmdHeader = new MQMD(new DataInputStream(new ByteArrayInputStream(bytes)),
+                        CMQC.MQENC_REVERSED, CMQC.MQCCSI_DEFAULT);
+            } catch (Exception e) {
+                LOGGER.info("Not able to construct MQMD out of the bytes. Exception details: ", e);
+                mqmdHeader = null;
+            }
+            if (mqmdHeader != null && CMQC.MQMD_STRUC_ID.equals(mqmdHeader.getStrucId()) &&
+                    (CMQC.MQMD_VERSION_1 == mqmdHeader.getVersion() || CMQC.MQMD_VERSION_2 == mqmdHeader.getVersion())) {
+                LOGGER.info("MQMD constructed. Writing other bytes as application data.");
+                message.putDateTime = new GregorianCalendar();
+                mqmdHeader.copyTo(message);
+                message.persistence = CMQC.MQPER_PERSISTENT;
+                message.write(bytes, MQMD.SIZE2, bytes.length - MQMD.SIZE2);
+            } else {
+                LOGGER.info("No valid MQMD. Writing all bytes as application data.");
+                message.write(bytes);
+            }
+        }
+
         MQPutMessageOptions pmo = new MQPutMessageOptions();
         queue.put(message, pmo);
     }
