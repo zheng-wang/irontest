@@ -19,3 +19,5 @@ Note: The tool is not yet fully production ready, but you can use it for informa
 
 ## Build
 Prerequisites: JDK 1.7+, Maven 3.x, NPM, Bower.
+#### Build without MQ/IIB testing features
+#### Build with MQ/IIB testing features
