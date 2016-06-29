@@ -9,4 +9,10 @@ Note: The tool is not yet fully production ready, but you can use it for informa
 - Web UI, so zero installation for end users.
 - API test automation.
 - Centralized test cases and environments management and sharing.
+- No middleware.
 
+## Primary Dependencies
+- Dropwizard
+- H2 Database
+- AngularJS
+- Bootstrap
