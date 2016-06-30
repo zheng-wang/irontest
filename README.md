@@ -7,6 +7,7 @@ Note: The tool is not yet fully production ready, but you can use it for informa
 
 ## Characteristics
 - Web UI, so zero installation for end users.
+- No (or little) programming skills are required to use the tool.
 - Centralized test cases and environments management, enabling team work by default.
 - No middleware.
 - Platform independent. Can run on Windows, Linux/Unix and Mac.
@@ -78,3 +79,7 @@ To shut down the application
 To move Iron Test to a different folder or computer/VM, just shut down the application, copy the whole `<IronTest_Home>` folder over, and launch the application from there.
 
 ## Using
+Iron Test home page is test case list. 
+
+![Alt Text](screenshots/home-page.png)
+
