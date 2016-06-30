@@ -81,5 +81,5 @@ To move Iron Test to a different folder or computer/VM, just shut down the appli
 ## Using
 Iron Test home page is test case list. 
 
-![Alt Text](screenshots/home-page.png)
+![Home Page](screenshots/home-page.png)
 
