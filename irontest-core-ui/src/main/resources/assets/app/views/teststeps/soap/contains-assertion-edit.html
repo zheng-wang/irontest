@@ -4,7 +4,7 @@
   <div class="col-lg-10">
     <textarea name="assertionContains" ng-model="assertionsModelObj.assertion.otherProperties.contains"
               id="assertionContains" cols="10" rows="5" class="form-control"
-              ng-change="assertionsModelObj.autoSave(teststepForm.$valid)" required>
+              ng-change="assertionsModelObj.autoSave(teststepForm.$valid)" spellcheck="false" required>
     </textarea>
     <div ng-show="savingStatus.submitted && teststepForm.assertionContains.$invalid" class="help-block">
       <p ng-show="teststepForm.assertionContains.$error.required">Contains is required</p>

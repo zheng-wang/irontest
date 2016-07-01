@@ -4,8 +4,8 @@
             ng-disabled="teststep.endpoint.environment || savingStatus.changeUnsaved">Share Endpoint</button>
   </div>
   <div class="col-lg-2">
-    <button type="button" class="btn btn-info"
-            ng-click="selectManagedEndpoint()">Select Managed Endpoint</button>
+    <button type="button" class="btn btn-info" ng-click="selectManagedEndpoint()"
+            ng-disabled="isInShareEndpointMode()">Select Managed Endpoint</button>
   </div>
 </div>
 <div class="form-group required" ng-if="teststep.endpoint.environment">

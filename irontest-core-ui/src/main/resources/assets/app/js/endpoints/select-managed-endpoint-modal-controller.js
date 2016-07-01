@@ -1,8 +1,9 @@
 'use strict';
 
-angular.module('irontest').controller('SelectManagedEndpointModalController', ['$scope', 'uiGridConstants', '$uibModalInstance',
-    'endpoints',
-  function($scope, uiGridConstants, $uibModalInstance, endpoints) {
+angular.module('irontest').controller('SelectManagedEndpointModalController', ['$scope', 'uiGridConstants',
+    '$uibModalInstance', 'endpointType', 'endpoints',
+  function($scope, uiGridConstants, $uibModalInstance, endpointType, endpoints) {
+    $scope.endpointType = endpointType;
     $scope.endpoints = endpoints;
 
     $scope.endpointModalGridColumnDefs = [
