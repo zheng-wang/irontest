@@ -181,6 +181,6 @@ Hopefully you are able to DIY now. The result test case looks like below
 ![Web Service to Queue](screenshots/iib/ws-to-queue.png)
 
 ## License
-Apache License 2.0, see LICENSE.
+Apache License 2.0, see [LICENSE](LICENSE).
 
 
