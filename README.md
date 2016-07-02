@@ -22,7 +22,6 @@ Table of Contents:
 
 ## Characteristics
 - Web UI, so zero installation for end users.
-- No (or little) programming skills are required to use the tool.
 - Centralized test cases and endpoints management, enabling team work by default.
 - No middleware.
 - Platform independent. Can run on Windows, Linux/Unix and Mac.
@@ -90,6 +89,8 @@ To shut down the application
     On Windows: Ctrl + C
     
     On Linux/Unix: kill -SIGINT <pid>
+    
+You can tune Iron Test application to suit your needs by changing contents of the config.yml under `<IronTest_Home>`. Refer to [Dropwizard doc](http://www.dropwizard.io/0.9.3/docs/manual/configuration.html) for how to do it. Re-launch the application for the changes to take effect.
     
 To move Iron Test to a different folder or computer/VM, just shut down the application, copy the whole `<IronTest_Home>` folder over, and launch the application from there.
 
