@@ -1,5 +1,5 @@
 # Iron Test
-Iron Test is an open source tool for functionally testing APIs such as SOAP web services, databases (currently only H2), MQ, IIB, RESTful web services (TBD), JMS (TBD), etc. with automation. It helps with SOA, Microservices (TBD) and ESB testing.
+Iron Test is an open source tool for functionally testing APIs such as SOAP web services, databases (currently only H2), WebSphere MQ, IBM Integration Bus (IIB), RESTful web services (TBD), JMS (TBD), etc. with automation. It helps with SOA, Microservices (TBD) and ESB testing.
 
 It supports neither performance testing (for now) nor GUI testing.
 
