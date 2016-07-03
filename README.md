@@ -82,7 +82,7 @@ If this is the first time you launch the application in the `<IronTest_Home>` fo
     logs - where Iron Test application runtime logs are located.
     
 ## Maintain
-It is highly recommended that you back up `<IronTest_Home>/database` folder regularly. Remember to shut down the application before backing up.
+**It is highly recommended that you back up `<IronTest_Home>/database` folder regularly.** Remember to shut down the application before backing up.
 
 To shut down the application
     
