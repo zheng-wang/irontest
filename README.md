@@ -32,7 +32,7 @@ Dropwizard, H2 Database, AngularJS, Bootstrap.
 ## Build
 Prerequisites: JDK 1.7+, Maven 3.x, NPM, Bower.
 
-Download or clone code to your local machine. cd to the root directory of the project, and run below Maven command
+Download the latest Iron Test release to your local machine. cd to the root directory of the project, and run below Maven command
 
 `mvn clean package --projects irontest-core --also-make`
 
