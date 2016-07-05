@@ -138,12 +138,11 @@ public abstract class TeststepDAO {
                 backupChanged = true;
             } else if (Teststep.ACTION_ENQUEUE.equals(oldAction)) {
                 MQTeststepProperties oldProperties = (MQTeststepProperties) oldTeststep.getOtherProperties();
-                if (MQTeststepProperties.ENQUEUE_MESSAGE_TYPE_TEXT.equals(oldProperties.getEnqueueMessageType())) {
+                if (MQTeststepProperties.ENQUEUE_MESSAGE_FROM_TEXT.equals(oldProperties.getEnqueueMessageFrom())) {
                     backup.setEnqueueTextMessage((String) oldTeststep.getRequest());
                     backupChanged = true;
-                } else if (MQTeststepProperties.ENQUEUE_MESSAGE_TYPE_BINARY.equals(
-                        oldProperties.getEnqueueMessageType())) {
-                    //  replace apache Base64 with JDK one after migrating to JDK 8
+                } else if (MQTeststepProperties.ENQUEUE_MESSAGE_FROM_FILE.equals(
+                        oldProperties.getEnqueueMessageFrom())) {
                     backup.setEnqueueBinaryMessage(getBinaryRequestById(teststepId));
                     backupChanged = true;
                 }
@@ -184,11 +183,11 @@ public abstract class TeststepDAO {
                 }
             } else if (Teststep.ACTION_ENQUEUE.equals(newAction)) {
                 MQTeststepProperties newProperties = (MQTeststepProperties) teststep.getOtherProperties();
-                if (MQTeststepProperties.ENQUEUE_MESSAGE_TYPE_TEXT.equals(newProperties.getEnqueueMessageType())) {
+                if (MQTeststepProperties.ENQUEUE_MESSAGE_FROM_TEXT.equals(newProperties.getEnqueueMessageFrom())) {
                     // restore old message
                     teststep.setRequest(oldBackup.getEnqueueTextMessage());
-                } else if (MQTeststepProperties.ENQUEUE_MESSAGE_TYPE_BINARY.equals(
-                        newProperties.getEnqueueMessageType())) {
+                } else if (MQTeststepProperties.ENQUEUE_MESSAGE_FROM_FILE.equals(
+                        newProperties.getEnqueueMessageFrom())) {
                     // restore old message
                     teststep.setRequest(oldBackup.getEnqueueBinaryMessage());
                 }
@@ -205,8 +204,8 @@ public abstract class TeststepDAO {
             if (newAction != null && !newAction.equals(oldAction)) {
                 result = true;
             } else if (Teststep.ACTION_ENQUEUE.equals(oldAction) && Teststep.ACTION_ENQUEUE.equals(newAction)) {
-                String oldMessageType = ((MQTeststepProperties) oldTeststep.getOtherProperties()).getEnqueueMessageType();
-                String newMessageType = ((MQTeststepProperties) teststep.getOtherProperties()).getEnqueueMessageType();
+                String oldMessageType = ((MQTeststepProperties) oldTeststep.getOtherProperties()).getEnqueueMessageFrom();
+                String newMessageType = ((MQTeststepProperties) teststep.getOtherProperties()).getEnqueueMessageFrom();
                 if (!newMessageType.equals(oldMessageType)) {
                     result = true;
                 }

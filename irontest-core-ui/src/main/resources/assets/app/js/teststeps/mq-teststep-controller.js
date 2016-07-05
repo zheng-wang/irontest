@@ -20,8 +20,8 @@ angular.module('irontest').controller('MQTeststepController', ['$scope', 'Testru
 
       // initialize new action
       if ($scope.teststep.action === 'Enqueue') {
-        if (!$scope.teststep.otherProperties.enqueueMessageType) {
-          $scope.teststep.otherProperties.enqueueMessageType = 'Text';
+        if (!$scope.teststep.otherProperties.enqueueMessageFrom) {
+          $scope.teststep.otherProperties.enqueueMessageFrom = 'Text';
         }
       }
 

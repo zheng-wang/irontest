@@ -46,10 +46,10 @@ public class TestrunResource {
             endpoint.setPassword(utilsDAO.decryptPassword(endpoint.getPassword()));
         }
 
-        //  fetch binary message for MQ test step Enqueue action Binary message type
+        //  fetch request for MQ test step Enqueue action with message from file
         if (Teststep.TYPE_MQ.equals(teststep.getType()) && Teststep.ACTION_ENQUEUE.equals(teststep.getAction())) {
             MQTeststepProperties properties = (MQTeststepProperties) teststep.getOtherProperties();
-            if (MQTeststepProperties.ENQUEUE_MESSAGE_TYPE_BINARY.equals(properties.getEnqueueMessageType())) {
+            if (MQTeststepProperties.ENQUEUE_MESSAGE_FROM_FILE.equals(properties.getEnqueueMessageFrom())) {
                 teststep.setRequest(teststepDAO.getBinaryRequestById(teststep.getId()));
             }
         }
