@@ -1,8 +1,8 @@
 package io.irontest.core.runner;
 
 import io.irontest.models.Teststep;
-import io.irontest.utils.XMLUtils;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpPost;
@@ -17,21 +17,23 @@ import java.io.IOException;
  * Created by Trevor Li on 7/14/15.
  */
 public class SOAPTeststepRunner implements TeststepRunner {
-    public String run(Teststep teststep) throws Exception {
-        String response = postRequest(teststep.getEndpoint().getUrl(), (String) teststep.getRequest());
-        return XMLUtils.prettyPrintXML(response);
-    }
+    public SOAPTeststepRunResult run(Teststep teststep) throws Exception {
+        final SOAPTeststepRunResult result = new SOAPTeststepRunResult();
 
-    private String postRequest(String soapAddress, String soapRequest) throws IOException {
         CloseableHttpClient httpclient = HttpClients.createDefault();
-        HttpPost httpPost = new HttpPost(soapAddress);
-        httpPost.setEntity(new StringEntity(soapRequest));
-        ResponseHandler<String> responseHandler = new ResponseHandler<String>() {
-            public String handleResponse(final HttpResponse response) throws IOException {
+        HttpPost httpPost = new HttpPost(teststep.getEndpoint().getUrl());
+        httpPost.setEntity(new StringEntity((String) teststep.getRequest()));
+        ResponseHandler<Void> responseHandler = new ResponseHandler<Void>() {
+            public Void handleResponse(final HttpResponse response) throws IOException {
+                String contentType = response.getFirstHeader(HttpHeaders.CONTENT_TYPE).getValue();
+                result.setResponseContentType(contentType);
                 HttpEntity entity = response.getEntity();
-                return entity != null ? EntityUtils.toString(entity) : null;
+                result.setResponseBody(entity != null ? EntityUtils.toString(entity) : null);
+                return null;
             }
         };
-        return httpclient.execute(httpPost, responseHandler);
+        httpclient.execute(httpPost, responseHandler);
+
+        return result;
     }
 }

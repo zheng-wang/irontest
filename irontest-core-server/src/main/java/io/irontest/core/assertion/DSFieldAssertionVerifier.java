@@ -1,6 +1,6 @@
 package io.irontest.core.assertion;
 
-import io.irontest.core.runner.DBTeststepRunnerResponse;
+import io.irontest.core.runner.DBTeststepRunResult;
 import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.AssertionVerification;
 import io.irontest.models.assertion.AssertionVerificationResult;
@@ -20,7 +20,7 @@ public class DSFieldAssertionVerifier implements AssertionVerifier {
         result.setPassed(Boolean.FALSE);
         Assertion assertion = assertionVerification.getAssertion();
         DSFieldAssertionProperties assertionProperties = (DSFieldAssertionProperties) assertion.getOtherProperties();
-        DBTeststepRunnerResponse response = (DBTeststepRunnerResponse) assertionVerification.getInput();
+        DBTeststepRunResult response = (DBTeststepRunResult) assertionVerification.getInput();
         if (response.getNumberOfRowsModified() == -1 &&
                 DSFieldAssertionVerifier.CONTAINS_OPERATOR.equals(assertionProperties.getOperator())) {
             List<Map<String, Object>> resultSet = (List<Map<String, Object>>) response.getResultSet();

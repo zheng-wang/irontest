@@ -2,6 +2,7 @@ package io.irontest.resources;
 
 import io.irontest.core.assertion.AssertionVerifier;
 import io.irontest.core.assertion.AssertionVerifierFactory;
+import io.irontest.core.runner.SOAPTeststepRunResult;
 import io.irontest.core.runner.TeststepRunnerFactory;
 import io.irontest.db.TeststepDAO;
 import io.irontest.db.UtilsDAO;
@@ -12,6 +13,7 @@ import io.irontest.models.Teststep;
 import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.AssertionVerification;
 import io.irontest.models.assertion.AssertionVerificationResult;
+import io.irontest.utils.XMLUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,8 +37,10 @@ public class TestrunResource {
 
     private Object runTeststep(Teststep teststep) throws Exception {
         prepareTeststepForRun(teststep);
-        return TeststepRunnerFactory.getInstance().getTeststepRunner(teststep.getType() + "TeststepRunner")
+        Object result = TeststepRunnerFactory.getInstance().getTeststepRunner(teststep.getType() + "TeststepRunner")
                 .run(teststep);
+        LOGGER.info(result == null ? null : result.toString());
+        return result;
     }
 
     private void prepareTeststepForRun(Teststep teststep) {
@@ -57,10 +61,20 @@ public class TestrunResource {
 
     @POST
     public Testrun create(Testrun testrun) throws Exception {
-        if (testrun.getTeststep() != null) {  //  run a test step (passing invocation response back to client)
+        if (testrun.getTeststep() != null) {
             Thread.sleep(100); // workaround for Chrome 44 to 48's 'Failed to load response data' problem (no such problem in Chrome 49)
             LOGGER.info("Running an individual test step.");
-            testrun.setResponse(runTeststep(testrun.getTeststep()));
+            Object result = runTeststep(testrun.getTeststep());
+
+            if (Teststep.TYPE_SOAP.equals(testrun.getTeststep().getType())) {
+                //  for better display in browser, transform XML response to be pretty-printed
+                SOAPTeststepRunResult runResult = (SOAPTeststepRunResult) result;
+                if (MediaType.TEXT_XML_TYPE.isCompatible(MediaType.valueOf(runResult.getResponseContentType()))) {
+                    runResult.setResponseBody(XMLUtils.prettyPrintXML(runResult.getResponseBody()));
+                }
+            }
+
+            testrun.setResponse(result);
             testrun.setTeststep(null);    //  no need to pass the test step back to client which might contain decrypted password
         } else if (testrun.getTestcaseId() != null) {  //  run a test case (not passing invocation responses back to client)
             LOGGER.info("Running a test case.");
@@ -68,14 +82,13 @@ public class TestrunResource {
 
             for (Teststep teststep : teststeps) {
                 //  run and get response
-                Object response = runTeststep(teststep);
-                LOGGER.info(response == null ? null : response.toString());
+                Object result = runTeststep(teststep);
 
                 //  verify assertions against the invocation response
                 for (Assertion assertion : teststep.getAssertions()) {
                     AssertionVerification verification = new AssertionVerification();
                     verification.setAssertion(assertion);
-                    verification.setInput(response);
+                    verification.setInput(result);
                     AssertionVerifier verifier = new AssertionVerifierFactory().create(assertion.getType());
                     AssertionVerificationResult verificationResult = verifier.verify(verification);
                     if (Boolean.FALSE == verificationResult.getPassed()) {
