@@ -61,16 +61,16 @@ public class TestrunResource {
 
     @POST
     public Testrun create(Testrun testrun) throws Exception {
-        if (testrun.getTeststep() != null) {
+        if (testrun.getTeststep() != null) {   //  run an individual test step (passing invocation response back to client)
             Thread.sleep(100); // workaround for Chrome 44 to 48's 'Failed to load response data' problem (no such problem in Chrome 49)
             LOGGER.info("Running an individual test step.");
             Object result = runTeststep(testrun.getTeststep());
 
             if (Teststep.TYPE_SOAP.equals(testrun.getTeststep().getType())) {
-                //  for better display in browser, transform XML response to be pretty-printed
+                //  for better displaying SOAP response in browser, transform XML to be pretty-printed
                 SOAPTeststepRunResult runResult = (SOAPTeststepRunResult) result;
-                if (MediaType.TEXT_XML_TYPE.isCompatible(MediaType.valueOf(runResult.getResponseContentType()))) {
-                    runResult.setResponseBody(XMLUtils.prettyPrintXML(runResult.getResponseBody()));
+                if (MediaType.TEXT_XML_TYPE.isCompatible(MediaType.valueOf(runResult.getHttpResponseContentType()))) {
+                    runResult.setHttpResponseBody(XMLUtils.prettyPrintXML(runResult.getHttpResponseBody()));
                 }
             }
 
@@ -81,14 +81,19 @@ public class TestrunResource {
             List<Teststep> teststeps = teststepDAO.findByTestcaseId(testrun.getTestcaseId());
 
             for (Teststep teststep : teststeps) {
-                //  run and get response
+                //  run and get result
                 Object result = runTeststep(teststep);
 
                 //  verify assertions against the invocation response
                 for (Assertion assertion : teststep.getAssertions()) {
                     AssertionVerification verification = new AssertionVerification();
                     verification.setAssertion(assertion);
-                    verification.setInput(result);
+                    if (Teststep.TYPE_SOAP.equals(teststep.getType())) {
+                        //  currently assertions in SOAP test step are against the HTTP response body
+                        verification.setInput(((SOAPTeststepRunResult) result).getHttpResponseBody());
+                    } else {
+                        verification.setInput(result);
+                    }
                     AssertionVerifier verifier = new AssertionVerifierFactory().create(assertion.getType());
                     AssertionVerificationResult verificationResult = verifier.verify(verification);
                     if (Boolean.FALSE == verificationResult.getPassed()) {

@@ -4,29 +4,29 @@ package io.irontest.core.runner;
  * Created by Zheng on 6/07/2016.
  */
 public class SOAPTeststepRunResult {
-    private String responseContentType;  //  an HTTP header
-    private String responseBody;
+    private String httpResponseContentType;  //  an HTTP header
+    private String httpResponseBody;
 
-    public String getResponseContentType() {
-        return responseContentType;
+    public String getHttpResponseContentType() {
+        return httpResponseContentType;
     }
 
-    public void setResponseContentType(String responseContentType) {
-        this.responseContentType = responseContentType;
+    public void setHttpResponseContentType(String httpResponseContentType) {
+        this.httpResponseContentType = httpResponseContentType;
     }
 
-    public String getResponseBody() {
-        return responseBody;
+    public String getHttpResponseBody() {
+        return httpResponseBody;
     }
 
-    public void setResponseBody(String responseBody) {
-        this.responseBody = responseBody;
+    public void setHttpResponseBody(String httpResponseBody) {
+        this.httpResponseBody = httpResponseBody;
     }
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Response content type: ").append(responseContentType).append(". Response body: ")
-                .append(responseBody);
+        sb.append("HTTP response content type: ").append(httpResponseContentType).append(". HTTP response body: ")
+                .append(httpResponseBody);
         return sb.toString();
     }
 }
