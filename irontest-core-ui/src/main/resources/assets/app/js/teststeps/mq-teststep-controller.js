@@ -8,6 +8,7 @@ angular.module('irontest').controller('MQTeststepController', ['$scope', 'Testru
   function($scope, Testruns, IronTestUtils, $timeout, $http, Upload, $window, Teststeps) {
     var timer;
     $scope.testrun = {};
+    $scope.enqueueMessageFromTextActiveTabIndex = 0;
 
     var clearPreviousRunAndAssertionVerificationStatus = function() {
       if (timer) $timeout.cancel(timer);
@@ -20,6 +21,9 @@ angular.module('irontest').controller('MQTeststepController', ['$scope', 'Testru
 
       // initialize new action
       if ($scope.teststep.action === 'Enqueue') {
+        if (!$scope.teststep.otherProperties) {
+          $scope.teststep.otherProperties = {};
+        }
         if (!$scope.teststep.otherProperties.enqueueMessageFrom) {
           $scope.teststep.otherProperties.enqueueMessageFrom = 'Text';
         }
@@ -64,6 +68,17 @@ angular.module('irontest').controller('MQTeststepController', ['$scope', 'Testru
         }, function errorCallback(response) {
           IronTestUtils.openErrorHTTPResponseModal(response);
         });
+    };
+
+    $scope.addRFH2Folder = function() {
+      $scope.teststep.otherProperties.enqueueMessageRFH2Header.folders.push({ name: 'RFH V2 Folder' });
+      $scope.enqueueMessageFromTextActiveTabIndex = null;  //  deselect the selected tab; without this, the newly created tab won't be selected; not sure whether this is a ui-bootstrap tabs defect.
+      $scope.update(true, function successCallback() {
+        $timeout(function() {
+          $scope.enqueueMessageFromTextActiveTabIndex =
+            $scope.teststep.otherProperties.enqueueMessageRFH2Header.folders.length;
+        });
+      });
     };
 
     $scope.uploadRequestFile = function(file) {
