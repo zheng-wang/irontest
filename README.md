@@ -54,8 +54,8 @@ To build Iron Test with MQ/IIB testing features, follow below instructions inste
 
 - Check MQ/IIB versions in irontest/irontest-mqiib/pom.xml. If your MQ or IIB version falls outside the range, modify the POM. I haven't tested that version, but Iron Test might work with it. Refer to [this doc](http://maven.apache.org/enforcer/enforcer-rules/versionRanges.html) for more info about Maven version ranges.
     ```
-    <mq.version>[7.5.0.3, 7.5.0.6]</mq.version>
-    <iib.version>[9.0.0.3, 9.0.0.5]</iib.version>
+    <mq.version>...</mq.version>
+    <iib.version>...</iib.version>
     ```
  
 - Run below Maven command

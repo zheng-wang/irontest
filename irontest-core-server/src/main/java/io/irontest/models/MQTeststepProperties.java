@@ -9,6 +9,7 @@ public class MQTeststepProperties extends Properties {
 
     private String queueName;
     private String enqueueMessageFrom; // only for Enqueue action
+    private MQRFH2Header enqueueMessageRFH2Header;  // only for Enqueue action with message from text
     private String enqueueMessageFilename; // only for Enqueue action with message from file
 
     public String getQueueName() {
@@ -33,5 +34,13 @@ public class MQTeststepProperties extends Properties {
 
     public void setEnqueueMessageFilename(String enqueueMessageFilename) {
         this.enqueueMessageFilename = enqueueMessageFilename;
+    }
+
+    public MQRFH2Header getEnqueueMessageRFH2Header() {
+        return enqueueMessageRFH2Header;
+    }
+
+    public void setEnqueueMessageRFH2Header(MQRFH2Header enqueueMessageRFH2Header) {
+        this.enqueueMessageRFH2Header = enqueueMessageRFH2Header;
     }
 }
