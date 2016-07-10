@@ -72,11 +72,23 @@ angular.module('irontest').controller('MQTeststepController', ['$scope', 'Testru
 
     $scope.addRFH2Folder = function() {
       $scope.teststep.otherProperties.enqueueMessageRFH2Header.folders.push({ name: 'RFH V2 Folder' });
-      $scope.enqueueMessageFromTextActiveTabIndex = null;  //  deselect the selected tab; without this, the newly created tab won't be selected; not sure whether this is a ui-bootstrap tabs defect.
       $scope.update(true, function successCallback() {
-        $timeout(function() {
+        $timeout(function() {  //  refer to https://github.com/angular-ui/bootstrap/issues/5656
           $scope.enqueueMessageFromTextActiveTabIndex =
             $scope.teststep.otherProperties.enqueueMessageRFH2Header.folders.length;
+        });
+      });
+    };
+
+    $scope.enqueueMessageFromTextTabSelected = function(selectedIndex) {
+      $scope.enqueueMessageFromTextActiveTabIndex = selectedIndex;  //  ui bootstrap tabs does not update the active index on tabset when a tab is selected, so it is done here
+    };
+
+    $scope.rfh2FolderStringChanged = function(isValid) {
+      var currentIndex = $scope.enqueueMessageFromTextActiveTabIndex;
+      $scope.autoSave(isValid, function successCallback() {
+        $timeout(function() {  //  refer to https://github.com/angular-ui/bootstrap/issues/5656
+          $scope.enqueueMessageFromTextActiveTabIndex = currentIndex;
         });
       });
     };
