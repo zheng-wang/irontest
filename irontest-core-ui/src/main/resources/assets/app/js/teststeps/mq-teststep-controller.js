@@ -8,7 +8,7 @@ angular.module('irontest').controller('MQTeststepController', ['$scope', 'Testru
   function($scope, Testruns, IronTestUtils, $timeout, $http, Upload, $window, Teststeps) {
     var timer;
     $scope.testrun = {};
-    $scope.enqueueMessageFromTextActiveTabIndex = 0;
+    $scope.enqueueMessageActiveTabIndex = 0;
 
     var clearPreviousRunAndAssertionVerificationStatus = function() {
       if (timer) $timeout.cancel(timer);
@@ -70,27 +70,15 @@ angular.module('irontest').controller('MQTeststepController', ['$scope', 'Testru
         });
     };
 
-    $scope.addRFH2Folder = function() {
-      $scope.teststep.otherProperties.enqueueMessageRFH2Header.folders.push({ name: 'RFH V2 Folder' });
-      $scope.update(true, function successCallback() {
-        $timeout(function() {  //  refer to https://github.com/angular-ui/bootstrap/issues/5656
-          $scope.enqueueMessageFromTextActiveTabIndex =
-            $scope.teststep.otherProperties.enqueueMessageRFH2Header.folders.length;
-        });
-      });
+    $scope.addRFH2Folder = function(isValid) {
+      var folders = $scope.teststep.otherProperties.enqueueMessageRFH2Header.folders;
+      folders.push({ name: 'RFH V2 Folder' });
+      $scope.enqueueMessageActiveTabIndex = folders.length;
+      $scope.update(isValid);
     };
 
-    $scope.enqueueMessageFromTextTabSelected = function(selectedIndex) {
-      $scope.enqueueMessageFromTextActiveTabIndex = selectedIndex;  //  ui bootstrap tabs does not update the active index on tabset when a tab is selected, so it is done here
-    };
-
-    $scope.rfh2FolderStringChanged = function(isValid) {
-      var currentIndex = $scope.enqueueMessageFromTextActiveTabIndex;
-      $scope.autoSave(isValid, function successCallback() {
-        $timeout(function() {  //  refer to https://github.com/angular-ui/bootstrap/issues/5656
-          $scope.enqueueMessageFromTextActiveTabIndex = currentIndex;
-        });
-      });
+    $scope.enqueueMessageTabSelected = function(index) {
+      $scope.enqueueMessageActiveTabIndex = index;
     };
 
     $scope.uploadRequestFile = function(file) {

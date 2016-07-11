@@ -16,30 +16,40 @@
       </label>
     </div>
     <div class="col-lg-2" ng-if="teststep.otherProperties.enqueueMessageRFH2Header.enabled">
-      <button type="button" class="btn btn-info" ng-click="addRFH2Folder()">Add RFH V2 Folder</button>
+      <button type="button" class="btn btn-info" ng-click="addRFH2Folder(teststepForm.$valid)">Add RFH V2 Folder</button>
     </div>
   </div>
 </div>
 
 <div class="form-group" ng-if="teststep.otherProperties.enqueueMessageFrom === 'Text'">
   <div class="col-lg-10">
-    <uib-tabset active="enqueueMessageFromTextActiveTabIndex">
-      <uib-tab heading="Body">
+    <ul class="nav nav-tabs">
+      <li ng-class="{ 'active' : enqueueMessageActiveTabIndex === 0 }" ng-click="enqueueMessageTabSelected(0)">
+        <a data-toggle="tab" href="#enqueueMessageTab0" target="_self">Body</a>
+      </li>
+      <li ng-repeat="folder in teststep.otherProperties.enqueueMessageRFH2Header.folders track by $index + 1"
+          ng-class="{ 'active' : enqueueMessageActiveTabIndex === $index + 1 }" ng-click="enqueueMessageTabSelected($index + 1)">
+        <a data-toggle="tab" href="#enqueueMessageTab{{$index + 1}}" target="_self">{{folder.name}}</a>
+      </li>
+    </ul>
+    <div class="tab-content">
+      <div id="enqueueMessageTab0" class="tab-pane" ng-class="{ 'active' : enqueueMessageActiveTabIndex === 0 }">
         <div class="form-group"></div> <!-- spacer -->
         <div class="col-lg-12">
-            <textarea name="enqueueTextMessage" id="enqueueTextMessage" ng-model="teststep.request"
-                      ng-change="autoSave(teststepForm.$valid)" class="form-control" rows="23" spellcheck="false"></textarea>
+            <textarea ng-model="teststep.request" ng-change="autoSave(teststepForm.$valid)" class="form-control"
+                      rows="23" spellcheck="false"></textarea>
         </div>
-      </uib-tab>
-      <uib-tab ng-repeat="folder in teststep.otherProperties.enqueueMessageRFH2Header.folders"
-               select="enqueueMessageFromTextTabSelected($index + 1)" heading="{{folder.name}}">
+      </div>
+      <div id="enqueueMessageTab{{$index + 1}}" class="tab-pane"
+           ng-class="{ 'active' : enqueueMessageActiveTabIndex === $index + 1 }"
+           ng-repeat="folder in teststep.otherProperties.enqueueMessageRFH2Header.folders track by $index + 1">
         <div class="form-group"></div> <!-- spacer -->
         <div class="col-lg-12">
-            <textarea ng-model="folder.string" ng-change="rfh2FolderStringChanged(teststepForm.$valid)"
-                      class="form-control" rows="23" spellcheck="false"></textarea>
+            <textarea ng-model="folder.string" ng-change="autoSave(teststepForm.$valid)" class="form-control" rows="23"
+                      spellcheck="false"></textarea>
         </div>
-      </uib-tab>
-    </uib-tabset>
+      </div>
+    </div>
   </div>
 </div>
 
