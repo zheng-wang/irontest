@@ -72,13 +72,20 @@ angular.module('irontest').controller('MQTeststepController', ['$scope', 'Testru
 
     $scope.addRFH2Folder = function(isValid) {
       var folders = $scope.teststep.otherProperties.enqueueMessageRFH2Header.folders;
-      folders.push({ name: 'RFH V2 Folder' });
+      folders.push({ name: 'RFH2 Folder' });
       $scope.enqueueMessageActiveTabIndex = folders.length;
       $scope.update(isValid);
     };
 
     $scope.enqueueMessageTabSelected = function(index) {
       $scope.enqueueMessageActiveTabIndex = index;
+    };
+
+    $scope.deleteRFH2Folder = function(isValid) {
+      var folders = $scope.teststep.otherProperties.enqueueMessageRFH2Header.folders;
+      folders.splice($scope.enqueueMessageActiveTabIndex - 1, 1);
+      $scope.enqueueMessageActiveTabIndex = $scope.enqueueMessageActiveTabIndex - 1;
+      $scope.update(isValid);
     };
 
     $scope.uploadRequestFile = function(file) {

@@ -1,6 +1,6 @@
 <div class="form-group">
   <label for="enqueueMessageFrom" class="col-lg-2 control-label">Message From</label>
-  <div class="col-lg-3">
+  <div class="col-lg-2">
     <select name="enqueueMessageFrom" id="enqueueMessageFrom" class="form-control"
             ng-model="teststep.otherProperties.enqueueMessageFrom" ng-change="update(teststepForm.$valid)"
             ng-disabled="testrun.status === 'ongoing'">
@@ -12,11 +12,15 @@
     <div class="col-lg-2 checkbox">
       <label>
         <input type="checkbox" ng-model="teststep.otherProperties.enqueueMessageRFH2Header.enabled"
-               ng-change="update(teststepForm.$valid)">Set RFH V2 header
+               ng-change="update(teststepForm.$valid)">Set RFH2 Header
       </label>
     </div>
     <div class="col-lg-2" ng-if="teststep.otherProperties.enqueueMessageRFH2Header.enabled">
-      <button type="button" class="btn btn-info" ng-click="addRFH2Folder(teststepForm.$valid)">Add RFH V2 Folder</button>
+      <button type="button" class="btn btn-info" ng-click="addRFH2Folder(teststepForm.$valid)">Add RFH2 Folder</button>
+    </div>
+    <div class="col-lg-2" ng-if="teststep.otherProperties.enqueueMessageRFH2Header.enabled">
+      <button type="button" class="btn btn-info" ng-click="deleteRFH2Folder(teststepForm.$valid)"
+              ng-disabled="enqueueMessageActiveTabIndex === 0">Delete RFH2 Folder</button>
     </div>
   </div>
 </div>
