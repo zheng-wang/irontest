@@ -3,15 +3,18 @@ package io.irontest.db;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.irontest.core.TeststepActionDataBackup;
-import io.irontest.models.Endpoint;
-import io.irontest.models.MQTeststepProperties;
-import io.irontest.models.Teststep;
+import io.irontest.models.*;
 import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.IntegerEqualAssertionProperties;
 import io.irontest.models.assertion.XMLEqualAssertionProperties;
+import io.irontest.utils.XMLUtils;
 import org.skife.jdbi.v2.sqlobject.*;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
+import javax.print.Doc;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -88,6 +91,8 @@ public abstract class TeststepDAO {
     public Teststep update(Teststep teststep) throws IOException {
         Teststep oldTeststep = findById_NoTransaction(teststep.getId());
 
+        processRFH2Folders(teststep);
+
         backupRestoreActionData(oldTeststep, teststep);
 
         Endpoint oldEndpoint = oldTeststep.getEndpoint();
@@ -105,6 +110,34 @@ public abstract class TeststepDAO {
         updateAssertions(teststep);
 
         return findById_NoTransaction(teststep.getId());
+    }
+
+    /**
+     * Process MQ test step enqueue action (with message from text) RFH2 folders.
+     * @param teststep
+     */
+    private void processRFH2Folders(Teststep teststep) {
+        if (Teststep.TYPE_MQ.equals(teststep.getType()) && Teststep.ACTION_ENQUEUE.equals(teststep.getAction())) {
+            MQTeststepProperties mqTeststepProperties = (MQTeststepProperties) teststep.getOtherProperties();
+            if (MQTeststepProperties.ENQUEUE_MESSAGE_FROM_TEXT.equals(mqTeststepProperties.getEnqueueMessageFrom())) {
+                MQRFH2Header rfh2Header = mqTeststepProperties.getEnqueueMessageRFH2Header();
+                if (rfh2Header.isEnabled()) {
+                    List<MQRFH2Folder> rfh2Folders = rfh2Header.getFolders();
+                    for (MQRFH2Folder folder : rfh2Folders) {
+                        //  validate folder string is well formed XML
+                        Document doc = null;
+                        try {
+                            doc = XMLUtils.xmlStringToDOM(folder.getString());
+                        } catch (Exception e) {
+                            throw new RuntimeException("Folder string is not a valid XML. " + folder.getString(), e);
+                        }
+
+                        //  update folder name to be the XML root element name
+                        folder.setName(doc.getDocumentElement().getTagName());
+                    }
+                }
+            }
+        }
     }
 
     private void backupRestoreActionData(Teststep oldTeststep, Teststep teststep) throws IOException {

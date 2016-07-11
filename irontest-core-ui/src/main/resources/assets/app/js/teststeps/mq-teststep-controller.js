@@ -72,7 +72,7 @@ angular.module('irontest').controller('MQTeststepController', ['$scope', 'Testru
 
     $scope.addRFH2Folder = function(isValid) {
       var folders = $scope.teststep.otherProperties.enqueueMessageRFH2Header.folders;
-      folders.push({ name: 'RFH2 Folder' });
+      folders.push({ string: '<RFH2Folder></RFH2Folder>' });
       $scope.enqueueMessageActiveTabIndex = folders.length;
       $scope.update(isValid);
     };

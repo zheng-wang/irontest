@@ -9,7 +9,7 @@ public class MQTeststepProperties extends Properties {
 
     private String queueName;
     private String enqueueMessageFrom; // only for Enqueue action
-    private MQRFH2Header enqueueMessageRFH2Header;  // only for Enqueue action with message from text
+    private MQRFH2Header enqueueMessageRFH2Header = new MQRFH2Header();  // only for Enqueue action with message from text
     private String enqueueMessageFilename; // only for Enqueue action with message from file
 
     public String getQueueName() {
