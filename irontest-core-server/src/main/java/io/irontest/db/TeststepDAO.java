@@ -11,10 +11,7 @@ import io.irontest.utils.XMLUtils;
 import org.skife.jdbi.v2.sqlobject.*;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
 
-import javax.print.Doc;
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;

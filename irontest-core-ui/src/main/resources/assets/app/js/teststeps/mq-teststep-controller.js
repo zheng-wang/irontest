@@ -70,6 +70,16 @@ angular.module('irontest').controller('MQTeststepController', ['$scope', 'Testru
         });
     };
 
+    $scope.toggleRFH2Header = function(isValid) {
+      var header = $scope.teststep.otherProperties.enqueueMessageRFH2Header;
+      if (header.enabled === true && header.folders.length === 0) {
+        $scope.addRFH2Folder(isValid);
+      } else {
+        $scope.enqueueMessageTabSelected(0);
+        $scope.update(isValid);
+      }
+    };
+
     $scope.addRFH2Folder = function(isValid) {
       var folders = $scope.teststep.otherProperties.enqueueMessageRFH2Header.folders;
       folders.push({ string: '<RFH2Folder></RFH2Folder>' });
