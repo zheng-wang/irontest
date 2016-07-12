@@ -1,5 +1,7 @@
 package io.irontest.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,5 +26,14 @@ public class MQRFH2Header {
 
     public void setFolders(List<MQRFH2Folder> folders) {
         this.folders = folders;
+    }
+
+    @JsonIgnore
+    public String[] getFolderStrings() {
+        List<String> folderStringList = new ArrayList<String>();
+        for (MQRFH2Folder folder : folders) {
+            folderStringList.add(folder.getString());
+        }
+        return folderStringList.toArray(new String[folderStringList.size()]);
     }
 }

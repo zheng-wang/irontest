@@ -5,7 +5,9 @@ import com.ibm.mq.constants.CMQC;
 import com.ibm.mq.headers.MQDataException;
 import com.ibm.mq.headers.MQHeaderIterator;
 import com.ibm.mq.headers.MQMD;
+import com.ibm.mq.headers.MQRFH2;
 import io.irontest.models.MQIIBEndpointProperties;
+import io.irontest.models.MQRFH2Header;
 import io.irontest.models.MQTeststepProperties;
 import io.irontest.models.Teststep;
 import org.slf4j.Logger;
@@ -64,7 +66,7 @@ public class MQTeststepRunner implements TeststepRunner {
             } else if (Teststep.ACTION_DEQUEUE.equals(action)) {
                 result = dequeue(queue);
             } else if (Teststep.ACTION_ENQUEUE.equals(action)) {
-                enqueue(queue, teststep.getRequest());
+                enqueue(queue, teststep.getRequest(), teststepProperties);
                 result = true;
             }
         } finally {
@@ -79,39 +81,72 @@ public class MQTeststepRunner implements TeststepRunner {
         return result;
     }
 
-    private void enqueue(MQQueue queue, Object data) throws MQException, IOException, MQDataException {
+    private void enqueue(MQQueue queue, Object data, MQTeststepProperties teststepProperties) throws MQException, IOException, MQDataException {
         if (data == null) {
             throw new RuntimeException("Can not enqueue null.");
         }
 
-        MQMessage message = new MQMessage();
-        if (data instanceof String) {    //  text message
-            message.writeString((String) data);
-        } else {                         //  binary message
-            byte[] bytes = (byte[]) data;
-            MQMD mqmdHeader = null;
-            try {
-                mqmdHeader = new MQMD(new DataInputStream(new ByteArrayInputStream(bytes)),
-                        CMQC.MQENC_REVERSED, CMQC.MQCCSI_DEFAULT);
-            } catch (Exception e) {
-                LOGGER.info("Not able to construct MQMD out of the bytes. Exception details: ", e);
-                mqmdHeader = null;
-            }
-            if (mqmdHeader != null && CMQC.MQMD_STRUC_ID.equals(mqmdHeader.getStrucId()) &&
-                    (CMQC.MQMD_VERSION_1 == mqmdHeader.getVersion() || CMQC.MQMD_VERSION_2 == mqmdHeader.getVersion())) {
-                LOGGER.info("MQMD constructed. Writing other bytes as application data.");
-                message.putDateTime = new GregorianCalendar();
-                mqmdHeader.copyTo(message);
-                message.persistence = CMQC.MQPER_PERSISTENT;
-                message.write(bytes, MQMD.SIZE2, bytes.length - MQMD.SIZE2);
-            } else {
-                LOGGER.info("No valid MQMD. Writing all bytes as application data.");
-                message.write(bytes);
-            }
+        MQMessage message = null;
+        if (data instanceof String) {
+            message = buildMessageFromText((String) data, teststepProperties);
+        } else {
+            message = buildMessageFromFile((byte[]) data);
         }
 
         MQPutMessageOptions pmo = new MQPutMessageOptions();
         queue.put(message, pmo);
+    }
+
+    private MQMessage buildMessageFromText(String body, MQTeststepProperties teststepProperties)
+            throws IOException, MQDataException {
+        MQMessage message = new MQMessage();
+
+        //  add RFH2 header if included
+        MQRFH2Header rfh2Header = teststepProperties.getEnqueueMessageRFH2Header();
+        if (rfh2Header.isEnabled()) {
+            //  create MQMD properties on the message object (MQMD is not written into message, but is used by MQ PUT)
+            MQMD mqmd = new MQMD();
+            mqmd.setFormat(CMQC.MQFMT_RF_HEADER_2);
+            mqmd.setEncoding(CMQC.MQENC_REVERSED);
+            mqmd.setCodedCharSetId(CMQC.MQCCSI_DEFAULT);
+            mqmd.setPersistence(CMQC.MQPER_PERSISTENT);
+            message.putDateTime = new GregorianCalendar();
+            mqmd.copyTo(message);
+
+            //  populate RFH2 header
+            MQRFH2 mqrfh2 = new MQRFH2();
+            mqrfh2.setFolderStrings(rfh2Header.getFolderStrings());
+            mqrfh2.write(message);
+        }
+
+        //  populate message body
+        message.writeString(body);
+
+        return message;
+    }
+
+    private MQMessage buildMessageFromFile(byte[] bytes) throws MQDataException, IOException {
+        MQMessage message = new MQMessage();
+        MQMD mqmdHeader = null;
+        try {
+            mqmdHeader = new MQMD(new DataInputStream(new ByteArrayInputStream(bytes)),
+                    CMQC.MQENC_REVERSED, CMQC.MQCCSI_DEFAULT);
+        } catch (Exception e) {
+            LOGGER.info("Not able to construct MQMD out of the bytes. Exception details: ", e);
+            mqmdHeader = null;
+        }
+        if (mqmdHeader != null && CMQC.MQMD_STRUC_ID.equals(mqmdHeader.getStrucId()) &&
+                (CMQC.MQMD_VERSION_1 == mqmdHeader.getVersion() || CMQC.MQMD_VERSION_2 == mqmdHeader.getVersion())) {
+            LOGGER.info("MQMD constructed. Writing other bytes as application data.");
+            message.putDateTime = new GregorianCalendar();
+            mqmdHeader.copyTo(message);
+            message.persistence = CMQC.MQPER_PERSISTENT;
+            message.write(bytes, MQMD.SIZE2, bytes.length - MQMD.SIZE2);
+        } else {
+            LOGGER.info("No valid MQMD. Writing all bytes as application data.");
+            message.write(bytes);
+        }
+        return message;
     }
 
     private String dequeue(MQQueue queue) throws MQException, IOException, MQDataException {
