@@ -11,13 +11,13 @@ Table of Contents:
 - [Primary Dependencies](#primary-dependencies)
 - [Build](#build)
 - [Deploy](#deploy)
-- [Maintain](#maintain)
 - [Use](#use)
     - [SOAP Web Service Testing](#soap-web-service-testing)
     - [Endpoints Management](#endpoints-management)
         - [Create Managed Endpoint in the Environments area](#create-managed-endpoint-in-the-environments-area)
         - [Share Unmanaged Endpoint from Test Step](#share-unmanaged-endpoint-from-test-step)
     - [IIB Testing](#iib-testing)
+- [Maintain](#maintain)
 - [License](#license)
 
 ## Characteristics
@@ -30,7 +30,7 @@ Table of Contents:
 Dropwizard, H2 Database, AngularJS, Bootstrap.
 
 ## Build
-Prerequisites: JDK 1.7+, Maven 3.x, NPM, Bower.
+Prerequisites: JDK 1.7+, Maven 3.x.
 
 Download the latest Iron Test release to your local machine. cd to the root directory of the project, and run below Maven command
 
@@ -81,19 +81,6 @@ If this is the first time you launch the application in the `<IronTest_Home>` fo
     
     logs - where Iron Test application runtime logs are located.
     
-## Maintain
-**It is highly recommended that you back up `<IronTest_Home>/database` folder regularly.** Remember to shut down the application before backing up.
-
-To shut down the application
-    
-    On Windows: Ctrl + C
-    
-    On Linux/Unix: kill -SIGINT <pid>
-    
-You can tune Iron Test application to suit your runtime needs by changing contents of the config.yml under `<IronTest_Home>`. Refer to [Dropwizard doc](http://www.dropwizard.io/0.9.3/docs/manual/configuration.html) for how to do it. Re-launch the application for the changes to take effect.
-    
-To move Iron Test to a different folder or computer/VM, just shut down the application, copy the whole `<IronTest_Home>` folder over, and launch the application from there.
-
 ## Use
 Iron Test home page (http://&lt;host&gt;:8081/ui) is test case list. 
 
@@ -179,6 +166,19 @@ Then we add below test steps to the same test case
 Hopefully you are able to DIY now. The result test case looks like below
 
 ![Web Service to Queue](screenshots/iib/ws-to-queue.png)
+
+## Maintain
+**It is highly recommended that you back up `<IronTest_Home>/database` folder regularly.** Remember to shut down the application before backing up.
+
+To shut down the application
+    
+    On Windows: Ctrl + C
+    
+    On Linux/Unix: kill -SIGINT <pid>
+    
+You can tune Iron Test application to suit your runtime needs by changing contents of the config.yml under `<IronTest_Home>`. Refer to [Dropwizard doc](http://www.dropwizard.io/0.9.3/docs/manual/configuration.html) for how to do it. Re-launch the application for the changes to take effect.
+    
+To move Iron Test to a different folder or computer/VM, just shut down the application, copy the whole `<IronTest_Home>` folder over, and launch the application from there.
 
 ## License
 Apache License 2.0, see [LICENSE](LICENSE).
