@@ -42,9 +42,9 @@
               <li role="menuitem"><a ng-click="createTeststep('SOAP')" href="">SOAP Step</a></li>
               <li role="menuitem"><a ng-click="createTeststep('DB')" href="">Database Step</a></li>
               <li role="menuitem"><a href="">HTTP Step (TBD)</a></li>
-              <li role="menuitem" ng-if="${maven.filtering.mqiib.enabled}">
+              <li role="menuitem" ng-if="${mqiib.enabled}">
                 <a ng-click="createTeststep('MQ')" href="">MQ Step</a></li>
-              <li role="menuitem" ng-if="${maven.filtering.mqiib.enabled}">
+              <li role="menuitem" ng-if="${mqiib.enabled}">
                 <a ng-click="createTeststep('IIB')" href="">IIB Step</a></li>
               <li role="menuitem"><a ng-click="createTeststep('Wait')" href="">Wait Step</a></li>
             </ul>

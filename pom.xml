@@ -15,4 +15,123 @@
         <module>irontest-core</module>
         <module>irontest-mqiib</module>
     </modules>
+
+    <properties>
+        <distDir>dist</distDir>
+    </properties>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <!-- create uber jar -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>2.3</version>
+                    <configuration>
+                        <createDependencyReducedPom>false</createDependencyReducedPom>
+                        <filters>
+                            <filter>
+                                <artifact>*:*</artifact>
+                                <excludes>
+                                    <exclude>META-INF/*.SF</exclude>
+                                    <exclude>META-INF/*.DSA</exclude>
+                                    <exclude>META-INF/*.RSA</exclude>
+                                    <exclude>META-INF/maven/**</exclude>
+                                    <exclude>META-INF/resources/webjars/*/*/src/**</exclude>
+                                    <exclude>META-INF/resources/webjars/*/*/less/**</exclude>
+                                    <exclude>META-INF/resources/webjars/*/*/scss/**</exclude>
+                                    <exclude>META-INF/resources/webjars/*/*/i18n/**</exclude>
+                                    <exclude>META-INF/resources/webjars/**/*.gz</exclude>
+                                    <exclude>META-INF/resources/webjars/**/*.map</exclude>
+                                    <exclude>META-INF/resources/webjars/**/*.json</exclude>
+                                    <exclude>META-INF/resources/webjars/**/*.txt</exclude>
+                                    <exclude>META-INF/resources/webjars/**/*.md</exclude>
+                                    <exclude>META-INF/resources/webjars/**/*.sh</exclude>
+                                    <exclude>META-INF/resources/webjars/**/*.swf</exclude>
+                                    <exclude>META-INF/resources/webjars/**/LICENSE</exclude>
+                                    <exclude>META-INF/resources/webjars/**/.gitignore</exclude>
+                                    <exclude>META-INF/resources/webjars/**/.npmignore</exclude>
+                                </excludes>
+                            </filter>
+                        </filters>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>shade</goal>
+                            </goals>
+                            <configuration>
+                                <transformers>
+                                    <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                                    <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                        <mainClass>io.irontest.IronTestApplication</mainClass>
+                                    </transformer>
+                                    <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                        <resource>META-INF/cxf/bus-extensions.txt</resource>
+                                    </transformer>
+                                </transformers>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <!-- copy seed files to dist dir -->
+                <plugin>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>3.0.1</version>
+                    <executions>
+                        <execution>
+                            <id>copy-resources</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>copy-resources</goal>
+                            </goals>
+                            <configuration>
+                                <outputDirectory>${distDir}</outputDirectory>
+                                <resources>
+                                    <resource>
+                                        <directory>target</directory>
+                                        <includes>
+                                            <include>${project.artifactId}-${project.version}.jar</include>
+                                        </includes>
+                                    </resource>
+                                    <resource>
+                                        <directory>../irontest-core-server</directory>
+                                        <includes>
+                                            <include>config.yml</include>
+                                        </includes>
+                                    </resource>
+                                </resources>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <!-- launch the application -->
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <version>1.4.0</version>
+                    <executions>
+                        <execution>
+                            <id>start-dropwizard-app</id>
+                            <phase>pre-integration-test</phase>
+                            <goals>
+                                <goal>java</goal>
+                            </goals>
+                            <configuration>
+                                <mainClass>io.irontest.IronTestApplication</mainClass>
+                                <arguments>
+                                    <argument>server</argument>
+                                    <argument>irontest-core-server/config.yml</argument>
+                                </arguments>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>

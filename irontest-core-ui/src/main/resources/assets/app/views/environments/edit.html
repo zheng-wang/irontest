@@ -41,7 +41,7 @@
             <li role="menuitem"><a ng-click="createEndpoint('SOAP')" href="">SOAP Endpoint</a></li>
             <li role="menuitem"><a ng-click="createEndpoint('DB')" href="">Database Endpoint</a></li>
             <li role="menuitem"><a href="">HTTP Endpoint (TBD)</a></li>
-            <li role="menuitem" ng-if="${maven.filtering.mqiib.enabled}">
+            <li role="menuitem" ng-if="${mqiib.enabled}">
               <a ng-click="createEndpoint('MQ/IIB')" href="">MQ/IIB Endpoint</a></li>
           </ul>
         </div>
