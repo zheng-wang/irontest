@@ -20,6 +20,37 @@
         <distDir>dist</distDir>
     </properties>
 
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <build>
+                <plugins>
+                    <!-- no need to build jar -->
+                    <plugin>
+                        <artifactId>maven-jar-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>default-jar</id>
+                                <phase>none</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- no need to produce dist -->
+                    <plugin>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>copy-resources</id>
+                                <phase>none</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
     <build>
         <pluginManagement>
             <plugins>

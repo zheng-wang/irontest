@@ -86,6 +86,19 @@
     </dependencies>
 
     <build>
+        <plugins>
+            <!-- no need to produce dist, no matter dev or prod profile -->
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>none</phase>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
         <!-- filter index.htm with library versions -->
         <resources>
             <resource>

@@ -83,24 +83,18 @@
         </dependency>
     </dependencies>
 
-    <profiles>
-        <profile>
-            <id>dev</id>
-            <build>
-                <plugins>
-                    <!-- no need to build jar -->
-                    <plugin>
-                        <artifactId>maven-jar-plugin</artifactId>
-                        <version>3.0.2</version>
-                        <executions>
-                            <execution>
-                                <id>default-jar</id>
-                                <phase>none</phase>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
+    <build>
+        <plugins>
+            <!-- no need to produce dist, no matter dev or prod profile -->
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>none</phase>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

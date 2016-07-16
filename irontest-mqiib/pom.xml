@@ -80,10 +80,13 @@
             <id>prod</id>
             <build>
                 <plugins>
+                    <!-- create uber jar -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-shade-plugin</artifactId>
                     </plugin>
+
+                    <!-- copy seed files to dist dir -->
                     <plugin>
                         <artifactId>maven-resources-plugin</artifactId>
                     </plugin>
@@ -95,18 +98,7 @@
             <id>dev</id>
             <build>
                 <plugins>
-                    <!-- no need to build jar -->
-                    <plugin>
-                        <artifactId>maven-jar-plugin</artifactId>
-                        <version>3.0.2</version>
-                        <executions>
-                            <execution>
-                                <id>default-jar</id>
-                                <phase>none</phase>
-                            </execution>
-                        </executions>
-                    </plugin>
-
+                    <!-- launch the application -->
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>exec-maven-plugin</artifactId>
