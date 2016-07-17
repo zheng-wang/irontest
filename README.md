@@ -13,6 +13,7 @@ Table of Contents:
 - [Deploy](#deploy)
 - [Use](#use)
     - [SOAP Web Service Testing](#soap-web-service-testing)
+    - [More Usages](#more-usages)
 - [Maintain](#maintain)
 - [License](#license)
 
@@ -86,6 +87,9 @@ Now the test step edit has finished. Click the Back link to return to test case 
 Our test case has only one step. Click the Run button to run the test case, and result is displayed for each test step.
 
 ![Test Case Run](screenshots/soap/test-case-run.png)
+
+#### More Usages
+Refer to the [wiki](https://github.com/zheng-wang/irontest/wiki).
 
 ## Maintain
 **It is highly recommended that you back up `<IronTest_Home>/database` folder regularly.** Remember to shut down the application before backing up.
