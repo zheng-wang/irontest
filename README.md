@@ -59,7 +59,7 @@ Iron Test home page (http://&lt;host&gt;:8081/ui) is test case list.
 
 ![Home Page](screenshots/home-page.png)
 
-#### SOAP Web Service Testing
+### SOAP Web Service Testing
 Create a test case by clicking the Create button. Test case edit view displays. 
 
 Under the Basic Info tab, enter name and (optional) description. Click the Test Steps tab. 
@@ -88,7 +88,7 @@ Our test case has only one step. Click the Run button to run the test case, and 
 
 ![Test Case Run](screenshots/soap/test-case-run.png)
 
-#### More Usages
+### More Usages
 Refer to the [wiki](https://github.com/zheng-wang/irontest/wiki).
 
 ## Maintain
