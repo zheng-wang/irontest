@@ -31,7 +31,7 @@ Prerequisites: JDK 1.7+, Maven 3.x.
 
 Download the latest Iron Test release to your local machine. cd to the root directory of the project, and run below Maven command
 
-`mvn clean package --projects irontest-core --also-make -P prod`
+`mvn clean package -pl irontest-core -am -P prod`
 
 This builds Iron Test without MQ/IIB testing features, and the seed files for deployment can be found in the `irontest-core/dist` folder.
 
