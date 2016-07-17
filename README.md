@@ -33,7 +33,7 @@ Download the latest Iron Test release to your local machine. cd to the root dire
 
 `mvn clean package --projects irontest-core --also-make -P prod`
 
-This builds Iron Test without MQ/IIB testing features, and the seed files for deployment can be found in the `irontest/irontest-core/dist` folder.
+This builds Iron Test without MQ/IIB testing features, and the seed files for deployment can be found in the `irontest-core/dist` folder.
 
 To build Iron Test with MQ/IIB testing features, refer to the [wiki page](https://github.com/zheng-wang/irontest/wiki/Build-Iron-Test-with-MQ-IIB-Testing-Features) instead.
    
