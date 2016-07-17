@@ -13,10 +13,6 @@ Table of Contents:
 - [Deploy](#deploy)
 - [Use](#use)
     - [SOAP Web Service Testing](#soap-web-service-testing)
-    - [Endpoints Management](#endpoints-management)
-        - [Create Managed Endpoint in the Environments area](#create-managed-endpoint-in-the-environments-area)
-        - [Share Unmanaged Endpoint from Test Step](#share-unmanaged-endpoint-from-test-step)
-    - [IIB Testing](#iib-testing)
 - [Maintain](#maintain)
 - [License](#license)
 
@@ -36,34 +32,10 @@ Download the latest Iron Test release to your local machine. cd to the root dire
 
 `mvn clean package --projects irontest-core --also-make -P prod`
 
-This builds Iron Test without MQ/IIB testing features, and the seed files for deployment can be found in the irontest/irontest-core/dist folder.
+This builds Iron Test without MQ/IIB testing features, and the seed files for deployment can be found in the `irontest/irontest-core/dist` folder.
 
-To build Iron Test with MQ/IIB testing features, follow below instructions instead
-
-- Install MQ and IIB libraries to your local Maven repository
-    ```
-    mvn install:install-file -Dfile="<MQ_Home>/java/lib/com.ibm.mq.jar" -DgroupId=com.ibm -DartifactId=com.ibm.mq -Dversion=<MQ_Version> -Dpackaging=jar
-    mvn install:install-file -Dfile="<MQ_Home>/java/lib/com.ibm.mq.jmqi.jar" -DgroupId=com.ibm -DartifactId=com.ibm.mq.jmqi -Dversion=<MQ_Version> -Dpackaging=jar
-    mvn install:install-file -Dfile="<MQ_Home>/java/lib/com.ibm.mq.commonservices.jar" -DgroupId=com.ibm -DartifactId=com.ibm.mq.commonservices -Dversion=<MQ_Version> -Dpackaging=jar
-    mvn install:install-file -Dfile="<MQ_Home>/java/lib/com.ibm.mq.pcf.jar" -DgroupId=com.ibm -DartifactId=com.ibm.mq.pcf -Dversion=<MQ_Version> -Dpackaging=jar
-    mvn install:install-file -Dfile="<MQ_Home>/java/lib/com.ibm.mq.headers.jar" -DgroupId=com.ibm -DartifactId=com.ibm.mq.headers -Dversion=<MQ_Version> -Dpackaging=jar
-    mvn install:install-file -Dfile="<MQ_Home>/java/lib/connector.jar" -DgroupId=javax.resource -DartifactId=connector -Dversion=1.3.0 -Dpackaging=jar
-	mvn install:install-file -Dfile="<IIB_Home>/classes/ConfigManagerProxy.jar" -DgroupId=com.ibm -DartifactId=ConfigManagerProxy -Dversion=<IIB_Version> -Dpackaging=jar
-    mvn install:install-file -Dfile="<IIB_Home>/jre17/lib/ibmjsseprovider2.jar" -DgroupId=com.ibm -DartifactId=ibmjsseprovider2 -Dversion=<IIB_Version> -Dpackaging=jar
-    ```
-
-- Check MQ/IIB versions in irontest/irontest-mqiib/pom.xml. If your MQ or IIB version falls outside the range, modify the POM. I haven't tested that version, but Iron Test might work with it. Refer to [this doc](http://maven.apache.org/enforcer/enforcer-rules/versionRanges.html) for more info about Maven version ranges.
-    ```
-    <mq.version>...</mq.version>
-    <iib.version>...</iib.version>
-    ```
- 
-- Run below Maven command
-
-    `mvn clean package --projects irontest-mqiib --also-make -P prod`
-
-    Seed files for deployment can be found in the irontest/irontest-mqiib/dist folder.
-    
+To build Iron Test with MQ/IIB testing features, refer to the [wiki page](https://github.com/zheng-wang/irontest/wiki/Build-Iron-Test-with-MQ-IIB-Testing-Features) instead.
+   
 ## Deploy
 Prerequisites: JRE 1.7+.
 
@@ -114,58 +86,6 @@ Now the test step edit has finished. Click the Back link to return to test case 
 Our test case has only one step. Click the Run button to run the test case, and result is displayed for each test step.
 
 ![Test Case Run](screenshots/soap/test-case-run.png)
-
-#### Endpoints Management
-When we entered SOAP Address under the SOAP test step Endpoint Details tab, we were using unmanaged endpoint. Unmanaged endpoint is specific to a test step. It is invisible to other test steps in the same test case, or other test cases.
-
-To reuse endpoints across test steps or test cases, you can create managed endpoints. Managed endpoint resides in environment. If you haven't created an environment, click the Administration > Environments link in the left panel, and click Create button. A new environment is created and its edit view displays.
- 
-Under the Basic Info tab, enter name and (optional) description. Click Endpoints tab.
-
-![Environment](screenshots/env-mgmt/environment.png)
-
-There are two ways to create a managed endpoint: create managed endpoint in the Environments area, share unmanaged endpoint from test step.
-
-##### Create Managed Endpoint in the Environments area
-In the 'Local' environment we just created, click Create dropdown button and select SOAP Endpoint to create a managed SOAP endpoint. SOAP endpoint edit view displays. Enter details and Iron Test saves them automatically.
-
-![Managed SOAP Endpoint](screenshots/env-mgmt/managed-soap-endpoint.png)
-
-To use the newly created managed endpoint, go to the SOAP test step by clicking its link in the test case edit view, and click the Endpoint Details tab. Click Select Managed Endpoint button to see a SOAP endpoint list popup. 
-
-![Select Managed Endpoint](screenshots/env-mgmt/select-managed-endpoint.png)
-
-Click the endpoint name to select it for use in the SOAP test step.
-
-##### Share Unmanaged Endpoint from Test Step
-This is a convenient function for you to capture endpoint during test step edit.
-
-Under Endpoint Details tab of a test step with unmanaged endpoint, click Share Endpoint button. Enter details and click OK button. The unmanaged endpoint will be turned into managed.
-
-![Share Unmanaged Endpoint](screenshots/env-mgmt/share-unmanaged-endpoint.png)
-
-Notice that while unmanaged endpoint can be edited in test step edit view, managed endpoint can only be edited in the Environments area.
- 
-#### IIB Testing
-If you have been familiar with the SOAP Web Service Testing and Endpoints Management, it will be intuitive for you to do IIB Testing using Iron Test.
-
-Here is a sample test case for (in-server) unit testing an IIB message flow. The message flow (Flow1) has a SOAPInput node to receive SOAP request, and an MQOutput node to output the message to an MQ queue. 
-
-There is a downstream message flow (Flow2) listening to the queue, so to isolate the testing of Flow1, we need some setup steps.
-
-    Setup: stop downstream message flow
-    Setup: clear output queue
-    Setup: start the message flow under test
-    
-Then we add below test steps to the same test case
-
-    Invoke web service with a valid SOAP request and assert successful SOAP response
-    Check output queue depth equals 1
-    Dequeue message from the output queue and assert expected message body
-    
-Hopefully you are able to DIY now. The result test case looks like below
-
-![Web Service to Queue](screenshots/iib/ws-to-queue.png)
 
 ## Maintain
 **It is highly recommended that you back up `<IronTest_Home>/database` folder regularly.** Remember to shut down the application before backing up.
