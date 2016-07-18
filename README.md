@@ -70,9 +70,9 @@ No Save button. Iron Test uses automatic saving.
 
 Under the Test Steps tab, click Create dropdown button, and select SOAP Step to create a SOAP test step. SOAP test step edit view displays. 
 
-Under the Basic Info tab, enter name and (optional) description. Click Endpoint Details tab.
+Under the Basic Info tab, enter name and (optional) description.
              
-Under the Endpoint Details tab, enter SOAP Address. A sample Article web service (http://localhost:8081/soap/article) is bundled, which can be used for playing with Iron Test. Ignore Username and Password fields as they are not used for now. Click Invocation tab.
+Under the Endpoint Details tab, enter SOAP Address. A sample Article web service (http://localhost:8081/soap/article) is bundled, which can be used for playing with Iron Test. Ignore Username and Password fields as they are not used for now.
 
 Under the Invocation tab, click Generate Request button. Click Load button to load the WSDL, select WSDL Operation `createArticle`, and click OK. A sample request is generated.
      
