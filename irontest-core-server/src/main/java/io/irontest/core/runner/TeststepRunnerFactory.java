@@ -1,15 +1,16 @@
 package io.irontest.core.runner;
 
-import java.util.HashMap;
-import java.util.Map;
+import io.irontest.db.TeststepDAO;
+import io.irontest.db.UtilsDAO;
+import io.irontest.models.Teststep;
+
+import java.lang.reflect.Constructor;
 
 /**
  * Created by Trevor Li on 7/14/15.
  */
 public class TeststepRunnerFactory {
     private static TeststepRunnerFactory instance;
-
-    private Map<String, TeststepRunner> runners = new HashMap<String, TeststepRunner>();
 
     private TeststepRunnerFactory() { }
 
@@ -20,19 +21,15 @@ public class TeststepRunnerFactory {
         return instance;
     }
 
-    public TeststepRunner getTeststepRunner(String runnerName) {
+    public TeststepRunner newTeststepRunner(Teststep teststep, TeststepDAO teststepDAO, UtilsDAO utisDAO) {
         TeststepRunner runner = null;
-        if (runnerName != null) {
-            runner = runners.get(runnerName);
-            if (runner == null) {
-                try {
-                    Class runnerClass = Class.forName("io.irontest.core.runner." + runnerName);
-                    runner = (TeststepRunner) runnerClass.newInstance();
-                    runners.put(runnerName, runner);
-                } catch (Exception e) {
-                    throw new RuntimeException("Unable to instantiate test step runner.", e);
-                }
-            }
+        try {
+            Class runnerClass = Class.forName("io.irontest.core.runner." + teststep.getType() + "TeststepRunner");
+            Constructor<TeststepRunner> constructor = runnerClass.getConstructor(
+                    new Class[] { Teststep.class, TeststepDAO.class, UtilsDAO.class });
+            runner = constructor.newInstance(teststep, teststepDAO, utisDAO);
+        } catch (Exception e) {
+            throw new RuntimeException("Unable to instantiate test step runner.", e);
         }
 
         return runner;

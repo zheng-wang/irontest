@@ -6,6 +6,7 @@ import com.ibm.mq.headers.MQDataException;
 import com.ibm.mq.headers.MQHeaderIterator;
 import com.ibm.mq.headers.MQMD;
 import com.ibm.mq.headers.MQRFH2;
+import io.irontest.db.TeststepDAO;
 import io.irontest.models.MQIIBEndpointProperties;
 import io.irontest.models.MQRFH2Header;
 import io.irontest.models.MQTeststepProperties;
@@ -22,11 +23,22 @@ import java.util.Hashtable;
 /**
  * Created by Trevor Li on 7/14/15.
  */
-public class MQTeststepRunner implements TeststepRunner {
+public class MQTeststepRunner extends TeststepRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(MQTeststepRunner.class);
     //  disable the default 2033 logging (seems not needed since IBM MQ 8.0)
     static {
         MQException.logExclude(CMQC.MQRC_NO_MSG_AVAILABLE);
+    }
+
+    @Override
+    protected void preRun(Teststep teststep, TeststepDAO teststepDAO) {
+        //  fetch request for Enqueue action with message from file
+        if (Teststep.ACTION_ENQUEUE.equals(teststep.getAction())) {
+            MQTeststepProperties properties = (MQTeststepProperties) teststep.getOtherProperties();
+            if (MQTeststepProperties.ENQUEUE_MESSAGE_FROM_FILE.equals(properties.getEnqueueMessageFrom())) {
+                teststep.setRequest(teststepDAO.getBinaryRequestById(teststep.getId()));
+            }
+        }
     }
 
     public Object run(Teststep teststep) throws MQException, IOException, MQDataException {

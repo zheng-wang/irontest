@@ -1,11 +1,15 @@
 package io.irontest.resources;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.irontest.core.runner.SOAPTeststepRunResult;
+import io.irontest.core.runner.TeststepRunnerFactory;
 import io.irontest.db.TeststepDAO;
+import io.irontest.db.UtilsDAO;
 import io.irontest.models.Endpoint;
 import io.irontest.models.MQTeststepProperties;
 import io.irontest.models.Teststep;
 import io.irontest.models.WaitTeststepProperties;
+import io.irontest.utils.XMLUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -22,9 +26,11 @@ import java.io.InputStream;
 @Path("/testcases/{testcaseId}/teststeps") @Produces({ MediaType.APPLICATION_JSON })
 public class TeststepResource {
     private final TeststepDAO teststepDAO;
+    private final UtilsDAO utilsDAO;
 
-    public TeststepResource(TeststepDAO teststepDAO) {
+    public TeststepResource(TeststepDAO teststepDAO, UtilsDAO utilsDAO) {
         this.teststepDAO = teststepDAO;
+        this.utilsDAO = utilsDAO;
     }
 
     @POST
@@ -106,5 +112,27 @@ public class TeststepResource {
     @DELETE @Path("{teststepId}")
     public void delete(@PathParam("teststepId") long teststepId) {
         teststepDAO.deleteById(teststepId);
+    }
+
+    /**
+     *
+     * @param teststep
+     * @return test step run result
+     */
+    @POST @Path("{teststepId}/run")
+    public Object run(Teststep teststep) throws Exception {
+        Thread.sleep(100); // workaround for Chrome 44 to 48's 'Failed to load response data' problem (no such problem in Chrome 49)
+
+        Object result = TeststepRunnerFactory.getInstance()
+                .newTeststepRunner(teststep, teststepDAO, utilsDAO).run();
+        if (Teststep.TYPE_SOAP.equals(teststep.getType())) {
+            //  for better displaying SOAP response in browser, transform XML to be pretty-printed
+            SOAPTeststepRunResult runResult = (SOAPTeststepRunResult) result;
+            if (MediaType.TEXT_XML_TYPE.isCompatible(MediaType.valueOf(runResult.getHttpResponseContentType()))) {
+                runResult.setHttpResponseBody(XMLUtils.prettyPrintXML(runResult.getHttpResponseBody()));
+            }
+        }
+
+        return result;
     }
 }

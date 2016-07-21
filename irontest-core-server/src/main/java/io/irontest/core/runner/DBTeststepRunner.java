@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * Created by Trevor Li on 7/14/15.
  */
-public class DBTeststepRunner implements TeststepRunner {
+public class DBTeststepRunner extends TeststepRunner {
     public DBTeststepRunResult run(Teststep teststep) throws Exception {
         DBTeststepRunResult result = new DBTeststepRunResult();
         String request = (String) teststep.getRequest();
