@@ -4,7 +4,7 @@
 angular.module('irontest').factory('Teststeps', ['$resource',
   function($resource) {
     return $resource('api/testcases/:testcaseId/teststeps/:teststepId/:verb', {
-      testcaseId: '@testcaseId', teststepId: '@id', verb: null
+      testcaseId: '@testcaseId', teststepId: '@id'
     }, {
       update: {
         method: 'PUT'
