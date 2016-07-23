@@ -123,8 +123,7 @@ public class TeststepResource {
     public Object run(Teststep teststep) throws Exception {
         Thread.sleep(100); // workaround for Chrome 44 to 48's 'Failed to load response data' problem (no such problem in Chrome 49)
 
-        Object result = TeststepRunnerFactory.getInstance()
-                .newTeststepRunner(teststep, teststepDAO, utilsDAO).run();
+        Object result = TeststepRunnerFactory.getInstance().newTeststepRunner(teststep, teststepDAO, utilsDAO).run();
         if (Teststep.TYPE_SOAP.equals(teststep.getType())) {
             //  for better displaying SOAP response in browser, transform XML to be pretty-printed
             SOAPTeststepRunResult runResult = (SOAPTeststepRunResult) result;

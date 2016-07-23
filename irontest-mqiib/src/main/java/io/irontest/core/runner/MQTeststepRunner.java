@@ -31,7 +31,9 @@ public class MQTeststepRunner extends TeststepRunner {
     }
 
     @Override
-    protected void preRun(Teststep teststep, TeststepDAO teststepDAO) {
+    protected void prepareTeststep(Teststep teststep, TeststepDAO teststepDAO) {
+        super.prepareTeststep(teststep, teststepDAO);
+
         //  fetch request for Enqueue action with message from file
         if (Teststep.ACTION_ENQUEUE.equals(teststep.getAction())) {
             MQTeststepProperties properties = (MQTeststepProperties) teststep.getOtherProperties();

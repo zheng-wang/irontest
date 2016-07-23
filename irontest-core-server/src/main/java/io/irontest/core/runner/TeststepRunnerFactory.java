@@ -25,9 +25,11 @@ public class TeststepRunnerFactory {
         TeststepRunner runner = null;
         try {
             Class runnerClass = Class.forName("io.irontest.core.runner." + teststep.getType() + "TeststepRunner");
-            Constructor<TeststepRunner> constructor = runnerClass.getConstructor(
-                    new Class[] { Teststep.class, TeststepDAO.class, UtilsDAO.class });
-            runner = constructor.newInstance(teststep, teststepDAO, utisDAO);
+            Constructor<TeststepRunner> constructor = runnerClass.getConstructor();
+            runner = constructor.newInstance();
+            runner.setTeststep(teststep);
+            runner.setTeststepDAO(teststepDAO);
+            runner.setUtilsDAO(utisDAO);
         } catch (Exception e) {
             throw new RuntimeException("Unable to instantiate test step runner.", e);
         }

@@ -15,27 +15,35 @@ public abstract class TeststepRunner {
 
     protected TeststepRunner() {}
 
-    protected TeststepRunner(Teststep teststep, TeststepDAO teststepDAO, UtilsDAO utilsDAO) {
-        this.teststep = teststep;
-        this.teststepDAO = teststepDAO;
-        this.utilsDAO = utilsDAO;
+    public Object run() throws Exception {
+        prepareTeststep(teststep, teststepDAO);
+        return run(teststep);
     }
 
-    public Object run() throws Exception {
+    /**
+     * Sub class can optionally override.
+     * @param teststep
+     * @param teststepDAO
+     */
+    protected void prepareTeststep(Teststep teststep, TeststepDAO teststepDAO) {
         //  decrypt password in endpoint
         Endpoint endpoint = teststep.getEndpoint();
         if (endpoint != null && endpoint.getPassword() != null) {
             endpoint.setPassword(utilsDAO.decryptPassword(endpoint.getPassword()));
         }
-
-        preRun(teststep, teststepDAO);
-        return run(teststep);
-    }
-
-    protected void preRun(Teststep teststep, TeststepDAO teststepDAO) {
-        //  do nothing here
-        //  sub class can optionally override
     }
 
     protected abstract Object run(Teststep teststep) throws Exception;
+
+    protected void setTeststep(Teststep teststep) {
+        this.teststep = teststep;
+    }
+
+    protected void setTeststepDAO(TeststepDAO teststepDAO) {
+        this.teststepDAO = teststepDAO;
+    }
+
+    protected void setUtilsDAO(UtilsDAO utilsDAO) {
+        this.utilsDAO = utilsDAO;
+    }
 }

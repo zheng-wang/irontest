@@ -3,9 +3,9 @@
 //  NOTICE:
 //    The $scope here prototypically inherits from the $scope of teststeps-controller.js.
 //    ng-include also creates a scope.
-angular.module('irontest').controller('SOAPTeststepController', ['$scope', 'Testruns', 'IronTestUtils',
+angular.module('irontest').controller('SOAPTeststepController', ['$scope', 'Teststeps', 'IronTestUtils',
     '$uibModal',
-  function($scope, Testruns, IronTestUtils, $uibModal) {
+  function($scope, Teststeps, IronTestUtils, $uibModal) {
     $scope.tempData = {};
     $scope.showAssertionsArea = false;
 
@@ -34,12 +34,9 @@ angular.module('irontest').controller('SOAPTeststepController', ['$scope', 'Test
     };
 
     $scope.invoke = function() {
-      var testrun = {
-        teststep: $scope.teststep
-      };
-      var testrunRes = new Testruns(testrun);
-      testrunRes.$save(function(response) {
-        $scope.tempData.soapResponse = response.response.httpResponseBody;
+      var teststepRes = new Teststeps($scope.teststep);
+      teststepRes.$run(function(response) {
+        $scope.tempData.soapResponse = response.httpResponseBody;
       }, function(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);
       });
