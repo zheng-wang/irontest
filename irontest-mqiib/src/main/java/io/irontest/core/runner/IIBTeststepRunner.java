@@ -9,7 +9,7 @@ import io.irontest.models.Teststep;
  * Created by Zheng on 25/05/2016.
  */
 public class IIBTeststepRunner extends TeststepRunner {
-    public Object run(Teststep teststep) throws ConfigManagerProxyLoggedException,
+    protected Object run(Teststep teststep) throws ConfigManagerProxyLoggedException,
             ConfigManagerProxyPropertyNotInitializedException {
         String action = teststep.getAction();
         if (action == null) {

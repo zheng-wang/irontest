@@ -3,7 +3,7 @@
   <div class="col-lg-2">
     <select name="enqueueMessageFrom" id="enqueueMessageFrom" class="form-control"
             ng-model="teststep.otherProperties.enqueueMessageFrom" ng-change="update(teststepForm.$valid)"
-            ng-disabled="testrun.status === 'ongoing'">
+            ng-disabled="steprun.status === 'ongoing'">
       <option value="Text">Text</option>
       <option value="File">File</option>
     </select>

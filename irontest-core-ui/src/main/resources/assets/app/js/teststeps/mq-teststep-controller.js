@@ -3,16 +3,16 @@
 //  NOTICE:
 //    The $scope here prototypically inherits from the $scope of teststeps-controller.js.
 //    ng-include also creates a scope.
-angular.module('irontest').controller('MQTeststepController', ['$scope', 'Testruns', 'IronTestUtils', '$timeout',
-    '$http', 'Upload', '$window', 'Teststeps',
-  function($scope, Testruns, IronTestUtils, $timeout, $http, Upload, $window, Teststeps) {
+angular.module('irontest').controller('MQTeststepController', ['$scope', 'IronTestUtils', '$timeout', '$http',
+    'Upload', '$window', 'Teststeps',
+  function($scope, IronTestUtils, $timeout, $http, Upload, $window, Teststeps) {
     var timer;
-    $scope.testrun = {};
+    $scope.steprun = {};
     $scope.enqueueMessageActiveTabIndex = 0;
 
     var clearPreviousRunAndAssertionVerificationStatus = function() {
       if (timer) $timeout.cancel(timer);
-      $scope.testrun = {};
+      $scope.steprun = {};
       $scope.assertionVerificationResult = null;
     };
 
@@ -36,19 +36,16 @@ angular.module('irontest').controller('MQTeststepController', ['$scope', 'Testru
     $scope.doAction = function() {
       clearPreviousRunAndAssertionVerificationStatus();
 
-      var testrun = {
-        teststep: $scope.teststep
-      };
-      var testrunRes = new Testruns(testrun);
-      $scope.testrun.status = 'ongoing';
-      testrunRes.$save(function(response) {
-        $scope.testrun.response = response.response;
-        $scope.testrun.status = 'finished';
+      var teststepRes = new Teststeps($scope.teststep);
+      $scope.steprun.status = 'ongoing';
+      teststepRes.$run(function(response) {
+        $scope.steprun.response = response.value;
+        $scope.steprun.status = 'finished';
         timer = $timeout(function() {
-          $scope.testrun.status = null;
+          $scope.steprun.status = null;
         }, 15000);
       }, function(response) {
-        $scope.testrun.status = 'failed';
+        $scope.steprun.status = 'failed';
         IronTestUtils.openErrorHTTPResponseModal(response);
       });
     };
@@ -56,7 +53,7 @@ angular.module('irontest').controller('MQTeststepController', ['$scope', 'Testru
     $scope.verifyXMLEqualAssertion = function() {
       var url = 'api/jsonservice/verifyassertion';
       var assertionVerification = {
-        input: $scope.testrun.response,
+        input: $scope.steprun.response,
         assertion: $scope.teststep.assertions[0]
       };
       $http

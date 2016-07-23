@@ -19,7 +19,7 @@
   <div class="col-lg-2">
     <select name="action" id="action" class="form-control" ng-model="teststep.action"
             ng-change="actionChanged(teststepForm.$valid)"
-            ng-disabled="testrun.status === 'ongoing'">
+            ng-disabled="steprun.status === 'ongoing'">
       <option value="Clear">Clear</option>
       <option value="CheckDepth">Check Depth</option>
       <option value="Dequeue">Dequeue</option>
@@ -31,22 +31,22 @@
             ng-disabled="!teststep.endpoint.otherProperties.queueManagerName ||
               !teststep.endpoint.otherProperties.host || !teststep.endpoint.otherProperties.port ||
               !teststep.endpoint.otherProperties.svrConnChannelName || !teststep.otherProperties.queueName ||
-              !teststep.action || testrun.status === 'ongoing' || (teststep.action === 'Enqueue' &&
+              !teststep.action || steprun.status === 'ongoing' || (teststep.action === 'Enqueue' &&
                 (teststep.otherProperties.enqueueMessageFrom === 'Text' && !teststep.request ||
                 teststep.otherProperties.enqueueMessageFrom === 'File' &&
                   !teststep.otherProperties.enqueueMessageFilename))">Do</button>
   </div>
   <div class="col-lg-4">       <!-- Action run status message -->
-    <h5 ng-if="teststep.action === 'Clear' && testrun.status === 'ongoing'">Clearing queue ...</h5>
-    <h5 ng-if="teststep.action === 'Clear' && testrun.status === 'finished'">Queue cleared.</h5>
-    <h5 ng-if="teststep.action === 'CheckDepth' && testrun.status === 'ongoing'">
+    <h5 ng-if="teststep.action === 'Clear' && steprun.status === 'ongoing'">Clearing queue ...</h5>
+    <h5 ng-if="teststep.action === 'Clear' && steprun.status === 'finished'">Queue cleared.</h5>
+    <h5 ng-if="teststep.action === 'CheckDepth' && steprun.status === 'ongoing'">
       Checking queue depth ...</h5>
-    <h5 ng-if="teststep.action === 'CheckDepth' && testrun.status === 'finished'">
-      Queue depth is {{ testrun.response }}</h5>
-    <h5 ng-if="teststep.action === 'Dequeue' && testrun.status === 'finished'">
-      {{ testrun.response ? 'Message fetched.' : 'No more message available on the queue.' }}</h5>
-    <h5 ng-if="teststep.action === 'Enqueue' && testrun.status === 'ongoing'">Sending message ...</h5>
-    <h5 ng-if="teststep.action === 'Enqueue' && testrun.status === 'finished'">Message sent.</h5>
+    <h5 ng-if="teststep.action === 'CheckDepth' && steprun.status === 'finished'">
+      Queue depth is {{ steprun.response }}</h5>
+    <h5 ng-if="teststep.action === 'Dequeue' && steprun.status === 'finished'">
+      {{ steprun.response ? 'Message fetched.' : 'No more message available on the queue.' }}</h5>
+    <h5 ng-if="teststep.action === 'Enqueue' && steprun.status === 'ongoing'">Sending message ...</h5>
+    <h5 ng-if="teststep.action === 'Enqueue' && steprun.status === 'finished'">Message sent.</h5>
   </div>
 </div>
 
@@ -73,15 +73,15 @@
                 class="form-control" rows="20" spellcheck="false"></textarea>
     </div>
     <div class="col-lg-6">
-      <textarea name="actualXML" ng-model="testrun.response" id="actualXML"
-                placeholder="{{ testrun.status === 'ongoing' ? '' : 'Actual XML' }}"
+      <textarea name="actualXML" ng-model="steprun.response" id="actualXML"
+                placeholder="{{ steprun.status === 'ongoing' ? '' : 'Actual XML' }}"
                 class="form-control" rows="20" spellcheck="false"></textarea>
     </div>
   </div>
   <div class="form-group">
     <div class="col-lg-offset-1 col-lg-1">
       <button type="button" class="btn btn-info" ng-click="verifyXMLEqualAssertion()"
-              ng-disabled="!teststep.assertions[0].otherProperties.expectedXML || !testrun.response">Verify</button>
+              ng-disabled="!teststep.assertions[0].otherProperties.expectedXML || !steprun.response">Verify</button>
     </div>
     <div class="col-lg-1">
       <h5 ng-if="assertionVerificationResult">

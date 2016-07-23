@@ -2,6 +2,7 @@ package io.irontest.resources;
 
 import io.irontest.core.assertion.AssertionVerifier;
 import io.irontest.core.assertion.AssertionVerifierFactory;
+import io.irontest.core.runner.MQTeststepRunResult;
 import io.irontest.core.runner.SOAPTeststepRunResult;
 import io.irontest.core.runner.TeststepRunnerFactory;
 import io.irontest.db.TeststepDAO;
@@ -50,6 +51,8 @@ public class TestrunResource {
                     if (Teststep.TYPE_SOAP.equals(teststep.getType())) {
                         //  currently assertions in SOAP test step are against the HTTP response body
                         verification.setInput(((SOAPTeststepRunResult) result).getHttpResponseBody());
+                    } else if (Teststep.TYPE_MQ.equals(teststep.getType())) {
+                        verification.setInput(((MQTeststepRunResult) result).getValue());
                     } else {
                         verification.setInput(result);
                     }
