@@ -84,31 +84,6 @@ public class TeststepResource {
         return teststepDAO.update(teststep);
     }
 
-    @POST @Path("{teststepId}/uploadRequestFile")
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public Teststep uploadRequestFile(@PathParam("teststepId") long teststepId,
-                                      @FormDataParam("file") InputStream inputStream,
-                                      @FormDataParam("file") FormDataContentDisposition contentDispositionHeader)
-            throws IOException, InterruptedException {
-        Thread.sleep(100);  //  workaround for Chrome 44 to 48's 'Failed to load response data' problem (no such problem in Chrome 49)
-        return teststepDAO.setRequestFile(teststepId, contentDispositionHeader.getFileName(), inputStream);
-    }
-
-    @GET @Path("{teststepId}/downloadRequestFile")
-    @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public Response downloadFileById(@PathParam("teststepId") long teststepId) throws IOException {
-        Teststep teststep = teststepDAO.findById(teststepId);
-        teststep.setRequest(teststepDAO.getBinaryRequestById(teststep.getId()));
-        String filename = "UnknownFilename";
-        if (teststep.getOtherProperties() instanceof MQTeststepProperties) {
-            MQTeststepProperties properties = (MQTeststepProperties) teststep.getOtherProperties();
-            filename = properties.getEnqueueMessageFilename();
-        }
-        return Response.ok(teststep.getRequest())
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
-                .build();
-    }
-
     @DELETE @Path("{teststepId}")
     public void delete(@PathParam("teststepId") long teststepId) {
         teststepDAO.deleteById(teststepId);
@@ -134,5 +109,45 @@ public class TeststepResource {
         }
 
         return result;
+    }
+
+    /**
+     * Save the uploaded file as Teststep.request.
+     * @param teststepId
+     * @param inputStream
+     * @param contentDispositionHeader
+     * @return
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    @POST @Path("{teststepId}/uploadRequestFile")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public Teststep uploadRequestFile(@PathParam("teststepId") long teststepId,
+                                      @FormDataParam("file") InputStream inputStream,
+                                      @FormDataParam("file") FormDataContentDisposition contentDispositionHeader)
+            throws IOException, InterruptedException {
+        Thread.sleep(100);  //  workaround for Chrome 44 to 48's 'Failed to load response data' problem (no such problem in Chrome 49)
+        return teststepDAO.setRequestFile(teststepId, contentDispositionHeader.getFileName(), inputStream);
+    }
+
+    /**
+     * Download Teststep.request as a file.
+     * @param teststepId
+     * @return
+     * @throws IOException
+     */
+    @GET @Path("{teststepId}/downloadRequestFile")
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public Response downloadRequestFile(@PathParam("teststepId") long teststepId) throws IOException {
+        Teststep teststep = teststepDAO.findById(teststepId);
+        teststep.setRequest(teststepDAO.getBinaryRequestById(teststep.getId()));
+        String filename = "UnknownFilename";
+        if (teststep.getOtherProperties() instanceof MQTeststepProperties) {
+            MQTeststepProperties properties = (MQTeststepProperties) teststep.getOtherProperties();
+            filename = properties.getEnqueueMessageFilename();
+        }
+        return Response.ok(teststep.getRequest())
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
+                .build();
     }
 }
