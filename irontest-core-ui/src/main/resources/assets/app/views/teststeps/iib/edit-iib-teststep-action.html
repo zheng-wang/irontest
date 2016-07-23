@@ -25,7 +25,7 @@
   <label for="action" class="col-lg-2 control-label">Action</label>
   <div class="col-lg-2">
     <select name="action" id="action" class="form-control" ng-model="teststep.action"
-            ng-change="actionChanged(teststepForm.$valid)" ng-disabled="testrun.status === 'ongoing'">
+            ng-change="actionChanged(teststepForm.$valid)" ng-disabled="steprun.status === 'ongoing'">
       <option value="Start">Start</option>
       <option value="Stop">Stop</option>
     </select>
@@ -33,12 +33,12 @@
   <div class="col-lg-1">
     <button type="button" class="btn btn-info" ng-click="doAction()"
             ng-disabled="!teststep.otherProperties.integrationServerName || !teststep.otherProperties.messageFlowName ||
-            !teststep.action || testrun.status === 'ongoing'">Do</button>
+            !teststep.action || steprun.status === 'ongoing'">Do</button>
   </div>
   <div class="col-lg-4">       <!-- Action run status message -->
-    <h5 ng-if="testrun.status === 'ongoing'">
+    <h5 ng-if="steprun.status === 'ongoing'">
       {{ teststep.action === 'Start' ? 'Starting' : 'Stopping' }} message flow ...</h5>
-    <h5 ng-if="testrun.status === 'finished'">
+    <h5 ng-if="steprun.status === 'finished'">
       Message flow {{ teststep.action === 'Start' ? 'started' : 'stopped' }}.</h5>
   </div>
 </div>

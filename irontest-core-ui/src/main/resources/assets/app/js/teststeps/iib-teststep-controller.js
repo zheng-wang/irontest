@@ -3,14 +3,14 @@
 //  NOTICE:
 //    The $scope here prototypically inherits from the $scope of teststeps-controller.js.
 //    ng-include also creates a scope.
-angular.module('irontest').controller('IIBTeststepController', ['$scope', 'Testruns', 'IronTestUtils', '$timeout',
-  function($scope, Testruns, IronTestUtils, $timeout) {
+angular.module('irontest').controller('IIBTeststepController', ['$scope', 'Teststeps', 'IronTestUtils', '$timeout',
+  function($scope, Teststeps, IronTestUtils, $timeout) {
     var timer;
-    $scope.testrun = {};
+    $scope.steprun = {};
 
     var clearPreviousRunStatus = function() {
       if (timer) $timeout.cancel(timer);
-      $scope.testrun = {};
+      $scope.steprun = {};
     };
 
     $scope.actionChanged = function(isValid) {
@@ -23,18 +23,15 @@ angular.module('irontest').controller('IIBTeststepController', ['$scope', 'Testr
     $scope.doAction = function() {
       clearPreviousRunStatus();
 
-      var testrun = {
-        teststep: $scope.teststep
-      };
-      var testrunRes = new Testruns(testrun);
-      $scope.testrun.status = 'ongoing';
-      testrunRes.$save(function(response) {
-        $scope.testrun.status = 'finished';
+      var teststepRes = new Teststeps($scope.teststep);
+      $scope.steprun.status = 'ongoing';
+      teststepRes.$run(function(response) {
+        $scope.steprun.status = 'finished';
         timer = $timeout(function() {
-          $scope.testrun.status = null;
+          $scope.steprun.status = null;
         }, 15000);
       }, function(response) {
-        $scope.testrun.status = 'failed';
+        $scope.steprun.status = 'failed';
         IronTestUtils.openErrorHTTPResponseModal(response);
       });
     };
