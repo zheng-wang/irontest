@@ -49,6 +49,7 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         final ArticleDAO articleDAO = jdbi.onDemand(ArticleDAO.class);
         final EndpointDAO endpointDAO = jdbi.onDemand(EndpointDAO.class);
         final TestcaseDAO testcaseDAO = jdbi.onDemand(TestcaseDAO.class);
+        final TestcaseRunDAO testcaseRunDAO = jdbi.onDemand(TestcaseRunDAO.class);
         final TeststepDAO teststepDAO = jdbi.onDemand(TeststepDAO.class);
         final AssertionDAO assertionDAO = jdbi.onDemand(AssertionDAO.class);
         final EnvironmentDAO environmentDAO = jdbi.onDemand(EnvironmentDAO.class);
@@ -63,6 +64,8 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         endpointDAO.createTableIfNotExists();
         testcaseDAO.createSequenceIfNotExists();
         testcaseDAO.createTableIfNotExists();
+        testcaseRunDAO.createSequenceIfNotExists();
+        testcaseRunDAO.createTableIfNotExists();
         teststepDAO.createSequenceIfNotExists();
         teststepDAO.createTableIfNotExists();
         assertionDAO.createSequenceIfNotExists();
