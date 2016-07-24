@@ -342,7 +342,7 @@ public abstract class TeststepDAO {
     protected abstract List<Teststep> _findByTestcaseId(@Bind("testcaseId") long testcaseId);
 
     @Transaction
-    public List<Teststep> findByTestcaseId(@Bind("testcaseId") long testcaseId) {
+    public List<Teststep> findByTestcaseId(long testcaseId) {
         List<Teststep> teststeps = _findByTestcaseId(testcaseId);
         for (Teststep teststep: teststeps) {
             populateTeststepWithMoreInfo(teststep);
