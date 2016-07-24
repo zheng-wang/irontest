@@ -7,11 +7,11 @@ import java.util.List;
  * Test case run.
  * Created by Trevor Li on 7/24/15.
  */
-public class Testrun {
+public class TestcaseRun {
     private Long testcaseId;
     private List<Long> failedTeststepIds = new ArrayList<Long>();
 
-    public Testrun() {}
+    public TestcaseRun() {}
 
     public Long getTestcaseId() {
         return testcaseId;

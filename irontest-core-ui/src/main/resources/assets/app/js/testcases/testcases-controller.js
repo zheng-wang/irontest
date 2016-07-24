@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcases', 'Teststeps', 'Testruns',
+angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcases', 'Teststeps', 'TestcaseRuns',
     '$stateParams', '$state', 'uiGridConstants', '$timeout', 'IronTestUtils',
-  function($scope, Testcases, Teststeps, Testruns, $stateParams, $state, uiGridConstants, $timeout, IronTestUtils) {
+  function($scope, Testcases, Teststeps, TestcaseRuns, $stateParams, $state, uiGridConstants, $timeout, IronTestUtils) {
     var timer;
     $scope.autoSave = function(isValid) {
       if (timer) $timeout.cancel(timer);
@@ -104,10 +104,10 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
       //  clear previous run result
       $scope.failedTeststepIds = null;
 
-      var testrun = new Testruns({
+      var testcaseRun = new TestcaseRuns({
         testcaseId: $scope.testcase.id
       });
-      testrun.$save(function(response) {
+      testcaseRun.$save(function(response) {
         $scope.failedTeststepIds = response.failedTeststepIds;
       },function(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);

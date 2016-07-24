@@ -36,9 +36,9 @@ angular.module('irontest').controller('MQTeststepController', ['$scope', 'IronTe
     $scope.doAction = function() {
       clearPreviousRunAndAssertionVerificationStatus();
 
-      var teststepRes = new Teststeps($scope.teststep);
+      var teststep = new Teststeps($scope.teststep);
       $scope.steprun.status = 'ongoing';
-      teststepRes.$run(function(response) {
+      teststep.$run(function(response) {
         $scope.steprun.response = response.value;
         $scope.steprun.status = 'finished';
         timer = $timeout(function() {

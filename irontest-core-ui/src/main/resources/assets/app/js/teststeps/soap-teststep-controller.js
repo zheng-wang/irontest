@@ -34,8 +34,8 @@ angular.module('irontest').controller('SOAPTeststepController', ['$scope', 'Test
     };
 
     $scope.invoke = function() {
-      var teststepRes = new Teststeps($scope.teststep);
-      teststepRes.$run(function(response) {
+      var teststep = new Teststeps($scope.teststep);
+      teststep.$run(function(response) {
         $scope.tempData.soapResponse = response.httpResponseBody;
       }, function(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);

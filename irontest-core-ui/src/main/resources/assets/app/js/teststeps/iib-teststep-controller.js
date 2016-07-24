@@ -23,9 +23,9 @@ angular.module('irontest').controller('IIBTeststepController', ['$scope', 'Tests
     $scope.doAction = function() {
       clearPreviousRunStatus();
 
-      var teststepRes = new Teststeps($scope.teststep);
+      var teststep = new Teststeps($scope.teststep);
       $scope.steprun.status = 'ongoing';
-      teststepRes.$run(function(response) {
+      teststep.$run(function(response) {
         $scope.steprun.status = 'finished';
         timer = $timeout(function() {
           $scope.steprun.status = null;
