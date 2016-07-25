@@ -25,7 +25,7 @@ public class TestcaseResource {
     @POST
     public Testcase create() {
         long id = testcaseDAO.insert();
-        return testcaseDAO.findById(id);
+        return testcaseDAO.findById_Mini(id);
     }
 
     @PUT @Path("{testcaseId}")
@@ -36,7 +36,7 @@ public class TestcaseResource {
         } else {         //  update testcase details
             testcaseDAO.update(testcase);
         }
-        return testcaseDAO.findById(testcase.getId());
+        return testcaseDAO.findById_Mini(testcase.getId());
     }
 
     @DELETE @Path("{testcaseId}")
@@ -51,6 +51,6 @@ public class TestcaseResource {
 
     @GET @Path("{testcaseId}")
     public Testcase findById(@PathParam("testcaseId") long testcaseId) {
-        return testcaseDAO.findById(testcaseId);
+        return testcaseDAO.findById_Mini(testcaseId);
     }
 }

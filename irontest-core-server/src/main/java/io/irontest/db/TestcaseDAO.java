@@ -64,9 +64,17 @@ public abstract class TestcaseDAO {
     protected abstract Testcase _findById(@Bind("id") long id);
 
     @Transaction
-    public Testcase findById(long id) {
+    public Testcase findById_Mini(long id) {
         Testcase result = _findById(id);
         List<Teststep> teststeps = teststepDAO().findByTestcaseId_PrimaryProperties(id);
+        result.setTeststeps(teststeps);
+        return result;
+    }
+
+    @Transaction
+    public Testcase findById_Complete(long id) {
+        Testcase result = _findById(id);
+        List<Teststep> teststeps = teststepDAO().findByTestcaseId(id);
         result.setTeststeps(teststeps);
         return result;
     }

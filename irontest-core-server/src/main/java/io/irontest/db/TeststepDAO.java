@@ -298,7 +298,7 @@ public abstract class TeststepDAO {
         deleteById_NoTransaction(id);
     }
 
-    public void deleteById_NoTransaction(long id) {
+    protected void deleteById_NoTransaction(long id) {
         Teststep teststep = findById_NoTransaction(id);
         _deleteById(id);
         decrementSequenceNumbersOfNextSteps(teststep.getTestcaseId(), (short) (teststep.getSequence() + 1));
@@ -332,7 +332,7 @@ public abstract class TeststepDAO {
         teststep.setAssertions(assertionDAO().findByTeststepId(teststep.getId()));
     }
 
-    public Teststep findById_NoTransaction(long id) {
+    private Teststep findById_NoTransaction(long id) {
         Teststep teststep = _findById(id);
         populateTeststepWithMoreInfo(teststep);
         return teststep;
@@ -341,8 +341,7 @@ public abstract class TeststepDAO {
     @SqlQuery("select * from teststep where testcase_id = :testcaseId order by sequence")
     protected abstract List<Teststep> _findByTestcaseId(@Bind("testcaseId") long testcaseId);
 
-    @Transaction
-    public List<Teststep> findByTestcaseId(long testcaseId) {
+    protected List<Teststep> findByTestcaseId(long testcaseId) {
         List<Teststep> teststeps = _findByTestcaseId(testcaseId);
         for (Teststep teststep: teststeps) {
             populateTeststepWithMoreInfo(teststep);
@@ -352,7 +351,7 @@ public abstract class TeststepDAO {
 
     @SqlQuery("select id, testcase_id, sequence, name, type, description from teststep " +
               "where testcase_id = :testcaseId order by sequence")
-    public abstract List<Teststep> findByTestcaseId_PrimaryProperties(@Bind("testcaseId") long testcaseId);
+    protected abstract List<Teststep> findByTestcaseId_PrimaryProperties(@Bind("testcaseId") long testcaseId);
 
     @SqlQuery("select * from teststep where testcase_id = :testcaseId and sequence = :sequence")
     protected abstract Teststep findBySequence(@Bind("testcaseId") long testcaseId, @Bind("sequence") short sequence);
