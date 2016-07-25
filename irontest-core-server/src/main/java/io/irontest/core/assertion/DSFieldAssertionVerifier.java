@@ -2,7 +2,6 @@ package io.irontest.core.assertion;
 
 import io.irontest.core.runner.DBTeststepRunResult;
 import io.irontest.models.assertion.Assertion;
-import io.irontest.models.assertion.AssertionVerification;
 import io.irontest.models.assertion.AssertionVerificationResult;
 import io.irontest.models.assertion.DSFieldAssertionProperties;
 
@@ -15,12 +14,11 @@ import java.util.Map;
 public class DSFieldAssertionVerifier implements AssertionVerifier {
     public static final String CONTAINS_OPERATOR = "Contains";
 
-    public AssertionVerificationResult verify(AssertionVerification assertionVerification) {
+    public AssertionVerificationResult verify(Assertion assertion, Object input) {
         AssertionVerificationResult result = new AssertionVerificationResult();
         result.setPassed(Boolean.FALSE);
-        Assertion assertion = assertionVerification.getAssertion();
         DSFieldAssertionProperties assertionProperties = (DSFieldAssertionProperties) assertion.getOtherProperties();
-        DBTeststepRunResult response = (DBTeststepRunResult) assertionVerification.getInput();
+        DBTeststepRunResult response = (DBTeststepRunResult) input;
         if (response.getNumberOfRowsModified() == -1 &&
                 DSFieldAssertionVerifier.CONTAINS_OPERATOR.equals(assertionProperties.getOperator())) {
             List<Map<String, Object>> resultSet = (List<Map<String, Object>>) response.getResultSet();

@@ -1,6 +1,6 @@
 package io.irontest.core.assertion;
 
-import io.irontest.models.assertion.AssertionVerification;
+import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.AssertionVerificationResult;
 import io.irontest.models.assertion.XMLEqualAssertionProperties;
 import io.irontest.models.assertion.XMLEqualAssertionVerificationResult;
@@ -16,19 +16,18 @@ import java.util.Iterator;
  * Created by Zheng on 4/06/2016.
  */
 public class XMLEqualAssertionVerifier implements AssertionVerifier {
-    public AssertionVerificationResult verify(AssertionVerification assertionVerification) {
+    public AssertionVerificationResult verify(Assertion assertion, Object input) {
         XMLEqualAssertionVerificationResult result = new XMLEqualAssertionVerificationResult();
-        XMLEqualAssertionProperties assertionProperties = (XMLEqualAssertionProperties)
-                assertionVerification.getAssertion().getOtherProperties();
+        XMLEqualAssertionProperties assertionProperties = (XMLEqualAssertionProperties) assertion.getOtherProperties();
 
-        if (assertionVerification.getInput() == null) {
+        if (input == null) {
             result.setError("Actual XML is null.");
             result.setPassed(false);
         } else {
             try {
                 Diff diff = DiffBuilder
                         .compare(assertionProperties.getExpectedXML())
-                        .withTest(assertionVerification.getInput())
+                        .withTest(input)
                         .normalizeWhitespace()
                         .build();
                 if (diff.hasDifferences()) {

@@ -3,7 +3,10 @@ package io.irontest.core.assertion;
 import com.sun.org.apache.xpath.internal.XPathException;
 import io.irontest.core.IronTestNamespaceContext;
 import io.irontest.models.NamespacePrefix;
-import io.irontest.models.assertion.*;
+import io.irontest.models.assertion.Assertion;
+import io.irontest.models.assertion.AssertionVerificationResult;
+import io.irontest.models.assertion.XPathAssertionProperties;
+import io.irontest.models.assertion.XPathAssertionVerificationResult;
 import io.irontest.utils.XMLUtils;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
@@ -21,11 +24,10 @@ import java.util.List;
 public class XPathAssertionVerifier implements AssertionVerifier {
     public XPathAssertionVerifier() {}
 
-    public AssertionVerificationResult verify(AssertionVerification assertionVerification) {
+    public AssertionVerificationResult verify(Assertion assertion, Object input) {
         XPathAssertionVerificationResult result = new XPathAssertionVerificationResult();
-        Assertion assertion = assertionVerification.getAssertion();
         XPathAssertionProperties assertionProperties = (XPathAssertionProperties) assertion.getOtherProperties();
-        evaluateXPathExpression((String) assertionVerification.getInput(), assertionProperties.getxPath(),
+        evaluateXPathExpression((String) input, assertionProperties.getxPath(),
                 assertionProperties.getNamespacePrefixes(), result);
         result.setPassed(result.getError() == null &&
                 assertionProperties.getExpectedValue().equals(result.getActualValue()));

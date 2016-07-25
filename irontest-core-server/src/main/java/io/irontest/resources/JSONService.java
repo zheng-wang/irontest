@@ -33,7 +33,8 @@ public class JSONService {
         Assertion assertion = assertionVerification.getAssertion();
         String assertionType = assertionVerification.getAssertion().getType();
         AssertionVerifier assertionVerifier = assertionVerifierFactory.create(assertionType);
-        AssertionVerificationResult result = assertionVerifier.verify(assertionVerification);
+        AssertionVerificationResult result = assertionVerifier.verify(
+                assertionVerification.getAssertion(), assertionVerification.getInput());
         result.setAssertionId(assertion.getId());
         return result;
     }

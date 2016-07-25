@@ -10,7 +10,6 @@ import io.irontest.db.UtilsDAO;
 import io.irontest.models.TestcaseRun;
 import io.irontest.models.Teststep;
 import io.irontest.models.assertion.Assertion;
-import io.irontest.models.assertion.AssertionVerification;
 import io.irontest.models.assertion.AssertionVerificationResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,18 +44,17 @@ public class TestcaseRunResource {
 
             //  verify assertions against the invocation response
             for (Assertion assertion : teststep.getAssertions()) {
-                AssertionVerification verification = new AssertionVerification();
-                verification.setAssertion(assertion);
+                Object input = null;
                 if (Teststep.TYPE_SOAP.equals(teststep.getType())) {
                     //  currently assertions in SOAP test step are against the HTTP response body
-                    verification.setInput(((SOAPTeststepRunResult) result).getHttpResponseBody());
+                    input = ((SOAPTeststepRunResult) result).getHttpResponseBody();
                 } else if (Teststep.TYPE_MQ.equals(teststep.getType())) {
-                    verification.setInput(((MQTeststepRunResult) result).getValue());
+                    input = ((MQTeststepRunResult) result).getValue();
                 } else {
-                    verification.setInput(result);
+                    input = result;
                 }
                 AssertionVerifier verifier = new AssertionVerifierFactory().create(assertion.getType());
-                AssertionVerificationResult verificationResult = verifier.verify(verification);
+                AssertionVerificationResult verificationResult = verifier.verify(assertion, input);
                 if (Boolean.FALSE == verificationResult.getPassed()) {
                     testcaseRun.getFailedTeststepIds().add(teststep.getId());
                     break;
