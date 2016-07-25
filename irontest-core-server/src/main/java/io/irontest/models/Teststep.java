@@ -3,6 +3,7 @@ package io.irontest.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonView;
 import io.irontest.models.assertion.Assertion;
 
 import java.util.ArrayList;
@@ -29,15 +30,22 @@ public class Teststep {
     private long id;
     private long testcaseId;
     private short sequence;
+    @JsonView(JsonViews.TestcaseRun.class)
     private String name;
+    @JsonView(JsonViews.TestcaseRun.class)
     private String type;
+    @JsonView(JsonViews.TestcaseRun.class)
     private String description;
+    @JsonView(JsonViews.TestcaseRun.class)
     private String action;            //  currently only used in MQ test step and IIB test step
+    @JsonView(JsonViews.TestcaseRun.class)
     private Endpoint endpoint;
+    @JsonView(JsonViews.TestcaseRun.class)
     private Object request;
     private List<Assertion> assertions = new ArrayList<Assertion>();
     private Date created;
     private Date updated;
+    @JsonView(JsonViews.TestcaseRun.class)
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
             property = "type", visible = true, defaultImpl = Properties.class)
     @JsonSubTypes({

@@ -8,31 +8,22 @@ import java.util.List;
  * Created by Trevor Li on 7/24/15.
  */
 public class TestcaseRun {
-    private long testcaseId;
-    private String testcaseName;
+    private Testcase testcase;
     private Date startTime;
     private long duration;              //  number of milliseconds
-    private TestResult result;
     private List<TeststepRun> stepRuns = new ArrayList<TeststepRun>();
+    private TestResult result;
 
     private List<Long> failedTeststepIds = new ArrayList<Long>();
 
     public TestcaseRun() {}
 
-    public long getTestcaseId() {
-        return testcaseId;
+    public Testcase getTestcase() {
+        return testcase;
     }
 
-    public void setTestcaseId(long testcaseId) {
-        this.testcaseId = testcaseId;
-    }
-
-    public String getTestcaseName() {
-        return testcaseName;
-    }
-
-    public void setTestcaseName(String testcaseName) {
-        this.testcaseName = testcaseName;
+    public void setTestcase(Testcase testcase) {
+        this.testcase = testcase;
     }
 
     public Date getStartTime() {

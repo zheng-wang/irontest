@@ -105,7 +105,7 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
       $scope.failedTeststepIds = null;
 
       var testcaseRun = new TestcaseRuns({
-        testcaseId: $scope.testcase.id
+        testcase: { id: $scope.testcase.id }
       });
       testcaseRun.$save(function(response) {
         $scope.failedTeststepIds = response.failedTeststepIds;

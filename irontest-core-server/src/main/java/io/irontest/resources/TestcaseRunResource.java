@@ -34,7 +34,7 @@ public class TestcaseRunResource {
 
     @POST
     public TestcaseRun create(TestcaseRun testcaseRun) throws Exception {
-        List<Teststep> teststeps = teststepDAO.findByTestcaseId(testcaseRun.getTestcaseId());
+        List<Teststep> teststeps = teststepDAO.findByTestcaseId(testcaseRun.getTestcase().getId());
 
         for (Teststep teststep : teststeps) {
             //  run and get result
