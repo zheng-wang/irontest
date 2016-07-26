@@ -8,9 +8,7 @@ import io.irontest.core.runner.TeststepRunnerFactory;
 import io.irontest.db.TestcaseDAO;
 import io.irontest.db.TeststepDAO;
 import io.irontest.db.UtilsDAO;
-import io.irontest.models.Testcase;
-import io.irontest.models.TestcaseRun;
-import io.irontest.models.Teststep;
+import io.irontest.models.*;
 import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.AssertionVerificationResult;
 import org.slf4j.Logger;
@@ -20,6 +18,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.util.Date;
 
 /**
  * Created by Trevor Li on 24/07/2015.
@@ -40,32 +39,56 @@ public class TestcaseRunResource {
     @POST
     public TestcaseRun create(TestcaseRun testcaseRun) throws Exception {
         Testcase testcase = testcaseDAO.findById_Complete(testcaseRun.getTestcase().getId());
+        testcaseRun.setTestcase(testcase);
+
+        //  test case run starts
+        testcaseRun.setStartTime(new Date());
 
         for (Teststep teststep : testcase.getTeststeps()) {
-            //  run and get result
+            TeststepRun stepRun = new TeststepRun();
+            testcaseRun.getStepRuns().add(stepRun);
+            stepRun.setTeststep(teststep);
+
+            //  test step run starts
+            stepRun.setStartTime(new Date());
+
+            //  run test step and get result
             Object result = TeststepRunnerFactory.getInstance()
                     .newTeststepRunner(teststep, teststepDAO, utilsDAO).run();
             LOGGER.info(result == null ? null : result.toString());
 
-            //  verify assertions against the invocation response
+            //  get endpoint response
+            Object response = null;
+            if (Teststep.TYPE_SOAP.equals(teststep.getType())) {
+                //  currently assertions in SOAP test step are against the HTTP response body
+                response = ((SOAPTeststepRunResult) result).getHttpResponseBody();
+            } else if (Teststep.TYPE_MQ.equals(teststep.getType())) {
+                response = ((MQTeststepRunResult) result).getValue();
+            } else {
+                response = result;
+            }
+            stepRun.setResponse(response);
+
+            //  verify assertions against the endpoint response
             for (Assertion assertion : teststep.getAssertions()) {
-                Object input = null;
-                if (Teststep.TYPE_SOAP.equals(teststep.getType())) {
-                    //  currently assertions in SOAP test step are against the HTTP response body
-                    input = ((SOAPTeststepRunResult) result).getHttpResponseBody();
-                } else if (Teststep.TYPE_MQ.equals(teststep.getType())) {
-                    input = ((MQTeststepRunResult) result).getValue();
-                } else {
-                    input = result;
-                }
                 AssertionVerifier verifier = new AssertionVerifierFactory().create(assertion.getType());
-                AssertionVerificationResult verificationResult = verifier.verify(assertion, input);
-                if (Boolean.FALSE == verificationResult.getPassed()) {
+                AssertionVerificationResult verificationResult = verifier.verify(assertion, response);
+                if (Boolean.FALSE == verificationResult.getPassed() &&
+                        !testcaseRun.getFailedTeststepIds().contains(teststep.getId())) {
                     testcaseRun.getFailedTeststepIds().add(teststep.getId());
-                    break;
                 }
             }
+
+            //  test step run ends
+            stepRun.setDuration(new Date().getTime() - stepRun.getStartTime().getTime());
         }
+
+        //  test case run ends
+        testcaseRun.setDuration(new Date().getTime() - testcaseRun.getStartTime().getTime());
+
+        testcaseRun.setResult(testcaseRun.getFailedTeststepIds().size() > 0 ? TestResult.FAILED : TestResult.PASSED);
+
+        //  TODO persist testcaseRun into database
 
         return testcaseRun;
     }
