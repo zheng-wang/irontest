@@ -12,8 +12,7 @@ public class TeststepRun {
     private Date startTime;
     private long duration;              //  number of milliseconds
     private Object response;            //  endpoint response (could be unavailable when such as no endpoint); used for assertion verification against
-    private long responseTime;          //  endpoint response time (number of milliseconds)
-    private String errorMessage;        //  exception stack trace or custom error message
+    private String errorMessage;
     private List<AssertionVerification> assertionVerifications = new ArrayList<AssertionVerification>();
     private TestResult result;
 
@@ -47,14 +46,6 @@ public class TeststepRun {
 
     public void setResponse(Object response) {
         this.response = response;
-    }
-
-    public long getResponseTime() {
-        return responseTime;
-    }
-
-    public void setResponseTime(long responseTime) {
-        this.responseTime = responseTime;
     }
 
     public String getErrorMessage() {

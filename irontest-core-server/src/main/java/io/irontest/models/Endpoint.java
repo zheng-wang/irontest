@@ -3,7 +3,6 @@ package io.irontest.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonView;
 
 import java.util.Date;
 
@@ -19,9 +18,7 @@ public class Endpoint {
     private String name;
     private String type;
     private String description;
-    @JsonView(JsonViews.TestcaseRun.class)
     private String url;                //  can be SOAP address, JDBC URL, etc.; not used by MQ/IIB endpoint
-    @JsonView(JsonViews.TestcaseRun.class)
     private String username;           //  not used by MQ/IIB endpoint
     private String password;           //  not used by MQ/IIB endpoint
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY,

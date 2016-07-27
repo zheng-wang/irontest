@@ -2,8 +2,6 @@ package io.irontest.models.assertion;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonView;
-import io.irontest.models.JsonViews;
 import io.irontest.models.Properties;
 
 /**
@@ -17,9 +15,7 @@ public class Assertion {
     public static final String TYPE_XML_EQUAL = "XMLEqual";
     private Long id;
     private String name;
-    @JsonView(JsonViews.TestcaseRun.class)
     private String type;
-    @JsonView(JsonViews.TestcaseRun.class)
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY, property = "type")
     @JsonSubTypes({
             @JsonSubTypes.Type(value = ContainsAssertionProperties.class, name = Assertion.TYPE_CONTAINS),

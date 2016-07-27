@@ -32,11 +32,9 @@ public class JSONService {
             throws InterruptedException {
         Thread.sleep(100);  //  workaround for Chrome 44 to 48's 'Failed to load response data' problem (no such problem in Chrome 49)
         Assertion assertion = assertionVerificationRequest.getAssertion();
-        String assertionType = assertionVerificationRequest.getAssertion().getType();
-        AssertionVerifier assertionVerifier = assertionVerifierFactory.create(assertionType);
+        AssertionVerifier assertionVerifier = assertionVerifierFactory.create(assertion.getType());
         AssertionVerificationResult result = assertionVerifier.verify(
-                assertionVerificationRequest.getAssertion(), assertionVerificationRequest.getInput());
-        result.setAssertionId(assertion.getId());
+                assertion, assertionVerificationRequest.getInput());
         return result;
     }
 

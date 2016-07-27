@@ -202,7 +202,7 @@ public abstract class TeststepDAO {
             } else if (Teststep.ACTION_DEQUEUE.equals(newAction)) {
                 Assertion assertion = new Assertion();
                 teststep.getAssertions().add(assertion);
-                assertion.setName("Dequeue XML equals");
+                assertion.setName("Dequeue XML Equals");
                 assertion.setType(Assertion.TYPE_XML_EQUAL);
                 // restore old assertion properties if exists
                 XMLEqualAssertionProperties oldAssertionProperties = oldBackup.getDequeueAssertionProperties();

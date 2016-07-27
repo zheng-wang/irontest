@@ -132,6 +132,7 @@ angular.module('irontest').controller('SOAPTeststepAssertionsController', ['$sco
         .then(function successCallback(response) {
           var data = response.data;
           $scope.assertionsModelObj.assertionVerificationResult = data;
+          $scope.assertionsModelObj.assertionVerificationResult.assertionId = assertion.id;
 
           if (assertion.type === 'XPath') {
             $scope.assertionsModelObj.tempData.assertionXPathActualValue =
