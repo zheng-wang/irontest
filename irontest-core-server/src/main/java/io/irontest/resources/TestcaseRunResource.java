@@ -70,6 +70,8 @@ public class TestcaseRunResource {
 
             //  get endpoint response
             if (stepRunResult != null) {
+                stepRun.setResult(TestResult.PASSED);
+
                 Object response = null;
                 if (Teststep.TYPE_SOAP.equals(teststep.getType())) {
                     //  currently assertions in SOAP test step are against the HTTP response body
@@ -92,16 +94,9 @@ public class TestcaseRunResource {
 
                     verification.setAssertionVerificationResult(verificationResult);
 
-                    if (Boolean.FALSE == verificationResult.getPassed() &&
-                            !testcaseRun.getFailedTeststepIds().contains(teststep.getId())) {
-                        testcaseRun.getFailedTeststepIds().add(teststep.getId());
+                    if (Boolean.FALSE == verificationResult.getPassed()) {
+                        stepRun.setResult(TestResult.FAILED);
                     }
-                }
-
-                if (testcaseRun.getFailedTeststepIds().contains(teststep.getId())) {
-                    stepRun.setResult(TestResult.FAILED);
-                } else {
-                    stepRun.setResult(TestResult.PASSED);
                 }
             } else {
                 stepRun.setResult(TestResult.FAILED);
@@ -109,13 +104,16 @@ public class TestcaseRunResource {
 
             //  test step run ends
             stepRun.setDuration(new Date().getTime() - stepRun.getStartTime().getTime());
+            if (TestResult.FAILED == stepRun.getResult()) {
+                testcaseRun.getFailedTeststepIds().add(teststep.getId());
+            }
         }
 
         //  test case run ends
         testcaseRun.setDuration(new Date().getTime() - testcaseRun.getStartTime().getTime());
-
         testcaseRun.setResult(testcaseRun.getFailedTeststepIds().size() > 0 ? TestResult.FAILED : TestResult.PASSED);
 
+        //  persist test case run details into database
         testcaseRunDAO.insert(testcaseRun);
 
         //  currently mainly return failed teststep ids (for UI display)
