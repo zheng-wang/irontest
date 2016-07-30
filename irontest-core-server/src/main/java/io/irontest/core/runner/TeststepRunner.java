@@ -16,7 +16,7 @@ public abstract class TeststepRunner {
     protected TeststepRunner() {}
 
     /**
-     * @return API response.
+     * @return API response (could be null when such as no endpoint).
      * @throws Exception
      */
     public Object run() throws Exception {
