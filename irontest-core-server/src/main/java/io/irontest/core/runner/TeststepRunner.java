@@ -15,6 +15,10 @@ public abstract class TeststepRunner {
 
     protected TeststepRunner() {}
 
+    /**
+     * @return Endpoint response.
+     * @throws Exception
+     */
     public Object run() throws Exception {
         prepareTeststep(teststep, teststepDAO);
         return run(teststep);

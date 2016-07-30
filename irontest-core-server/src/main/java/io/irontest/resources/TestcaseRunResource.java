@@ -57,41 +57,41 @@ public class TestcaseRunResource {
             //  test step run starts
             stepRun.setStartTime(new Date());
 
-            //  run test step and get result
-            Object stepRunResult = null;
+            //  run test step and get endpoint response
+            Object endpointResponse = null;
             try {
-                stepRunResult = TeststepRunnerFactory.getInstance()
+                endpointResponse = TeststepRunnerFactory.getInstance()
                         .newTeststepRunner(teststep, teststepDAO, utilsDAO).run();
+                stepRun.setResponse(endpointResponse);
             } catch (Exception e) {
                 String message = "Error running test step " + teststep.getId() + ". ";
                 stepRun.setErrorMessage(message + e.getMessage());
                 LOGGER.error(message, e);
             }
-            LOGGER.info(stepRunResult == null ? null : stepRunResult.toString());
+            LOGGER.info(endpointResponse == null ? null : endpointResponse.toString());
 
+            //  verify assertions
             if (stepRun.getErrorMessage() == null) {
                 stepRun.setResult(TestResult.PASSED);
 
-                //  get endpoint response
-                Object response = null;
+                //  get input for assertion verifications
+                Object assertionVerificationInput = null;
                 if (Teststep.TYPE_SOAP.equals(teststep.getType())) {
-                    //  currently assertions in SOAP test step are against the HTTP response body
-                    response = ((SOAPTeststepRunResult) stepRunResult).getHttpResponseBody();
+                    assertionVerificationInput = ((SOAPTeststepRunResult) endpointResponse).getHttpResponseBody();
                 } else if (Teststep.TYPE_MQ.equals(teststep.getType())) {
-                    response = ((MQTeststepRunResult) stepRunResult).getValue();
+                    assertionVerificationInput = ((MQTeststepRunResult) endpointResponse).getValue();
                 } else {
-                    response = stepRunResult;
+                    assertionVerificationInput = endpointResponse;
                 }
-                stepRun.setResponse(response);
 
-                //  verify assertions against the endpoint response
+                //  verify assertions against the input
                 for (Assertion assertion : teststep.getAssertions()) {
                     AssertionVerification verification = new AssertionVerification();
                     stepRun.getAssertionVerifications().add(verification);
                     verification.setAssertion(assertion);
 
                     AssertionVerifier verifier = new AssertionVerifierFactory().create(assertion.getType());
-                    AssertionVerificationResult verificationResult = verifier.verify(assertion, response);
+                    AssertionVerificationResult verificationResult = verifier.verify(assertion, assertionVerificationInput);
 
                     verification.setAssertionVerificationResult(verificationResult);
 

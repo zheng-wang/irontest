@@ -15,6 +15,11 @@ import java.util.Map;
 public class DSFieldAssertionVerifier implements AssertionVerifier {
     public static final String CONTAINS_OPERATOR = "Contains";
 
+    /**
+     * @param assertion
+     * @param input the {@link DBTeststepRunResult} object that the assertion is verified against
+     * @return
+     */
     public AssertionVerificationResult verify(Assertion assertion, Object input) {
         AssertionVerificationResult result = new AssertionVerificationResult();
         result.setResult(TestResult.FAILED);

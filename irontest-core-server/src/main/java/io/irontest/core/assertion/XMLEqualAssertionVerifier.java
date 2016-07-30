@@ -17,6 +17,12 @@ import java.util.Iterator;
  * Created by Zheng on 4/06/2016.
  */
 public class XMLEqualAssertionVerifier implements AssertionVerifier {
+    /**
+     *
+     * @param assertion
+     * @param input the XML String that the assertion is verified against
+     * @return
+     */
     public AssertionVerificationResult verify(Assertion assertion, Object input) {
         XMLEqualAssertionVerificationResult result = new XMLEqualAssertionVerificationResult();
         XMLEqualAssertionProperties assertionProperties = (XMLEqualAssertionProperties) assertion.getOtherProperties();

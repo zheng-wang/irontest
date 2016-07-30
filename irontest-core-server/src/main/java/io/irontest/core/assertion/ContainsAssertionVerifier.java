@@ -9,6 +9,12 @@ import io.irontest.models.assertion.ContainsAssertionProperties;
  * Created by Zheng on 6/08/2015.
  */
 public class ContainsAssertionVerifier implements AssertionVerifier {
+    /**
+     *
+     * @param assertion
+     * @param input the String that the assertion is verified against
+     * @return
+     */
     public AssertionVerificationResult verify(Assertion assertion, Object input) {
         AssertionVerificationResult result = new AssertionVerificationResult();
         ContainsAssertionProperties properties =

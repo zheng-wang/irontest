@@ -25,6 +25,12 @@ import java.util.List;
 public class XPathAssertionVerifier implements AssertionVerifier {
     public XPathAssertionVerifier() {}
 
+    /**
+     *
+     * @param assertion
+     * @param input the XML String that the assertion is verified against
+     * @return
+     */
     public AssertionVerificationResult verify(Assertion assertion, Object input) {
         XPathAssertionVerificationResult result = new XPathAssertionVerificationResult();
         XPathAssertionProperties assertionProperties = (XPathAssertionProperties) assertion.getOtherProperties();
