@@ -1,19 +1,21 @@
 package io.irontest.models.assertion;
 
+import io.irontest.models.TestResult;
+
 /**
  * Output of assertion verifier.
  * Created by Zheng on 5/08/2015.
  */
 public class AssertionVerificationResult {
-    private Boolean passed;          //  true if assertion verification passed, false otherwise, null if not verified
+    private TestResult result;
     private String error;            //  message of error occurred during verification
 
-    public Boolean getPassed() {
-        return passed;
+    public TestResult getResult() {
+        return result;
     }
 
-    public void setPassed(Boolean passed) {
-        this.passed = passed;
+    public void setResult(TestResult result) {
+        this.result = result;
     }
 
     public String getError() {

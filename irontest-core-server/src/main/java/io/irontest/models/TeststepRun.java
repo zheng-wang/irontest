@@ -12,7 +12,7 @@ public class TeststepRun {
     private Date startTime;
     private long duration;              //  number of milliseconds
     private Object response;            //  endpoint response (could be unavailable when such as no endpoint); used for assertion verification against
-    private String errorMessage;
+    private String errorMessage;        //  error message of running the test step (errors when verifying assertions are captured in AssertionVerification)
     private List<AssertionVerification> assertionVerifications = new ArrayList<AssertionVerification>();
     private TestResult result;
 

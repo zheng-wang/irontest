@@ -1,5 +1,6 @@
 package io.irontest.core.assertion;
 
+import io.irontest.models.TestResult;
 import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.AssertionVerificationResult;
 import io.irontest.models.assertion.ContainsAssertionProperties;
@@ -13,7 +14,7 @@ public class ContainsAssertionVerifier implements AssertionVerifier {
         ContainsAssertionProperties properties =
                 (ContainsAssertionProperties) assertion.getOtherProperties();
         String inputStr = (String) input;
-        result.setPassed(inputStr.contains(properties.getContains()));
+        result.setResult(inputStr.contains(properties.getContains()) ? TestResult.PASSED : TestResult.FAILED);
         return result;
     }
 }

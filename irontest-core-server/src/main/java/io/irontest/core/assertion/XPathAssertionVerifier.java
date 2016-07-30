@@ -3,6 +3,7 @@ package io.irontest.core.assertion;
 import com.sun.org.apache.xpath.internal.XPathException;
 import io.irontest.core.IronTestNamespaceContext;
 import io.irontest.models.NamespacePrefix;
+import io.irontest.models.TestResult;
 import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.AssertionVerificationResult;
 import io.irontest.models.assertion.XPathAssertionProperties;
@@ -29,8 +30,9 @@ public class XPathAssertionVerifier implements AssertionVerifier {
         XPathAssertionProperties assertionProperties = (XPathAssertionProperties) assertion.getOtherProperties();
         evaluateXPathExpression((String) input, assertionProperties.getxPath(),
                 assertionProperties.getNamespacePrefixes(), result);
-        result.setPassed(result.getError() == null &&
-                assertionProperties.getExpectedValue().equals(result.getActualValue()));
+        result.setResult(result.getError() == null &&
+                assertionProperties.getExpectedValue().equals(result.getActualValue()) ?
+                TestResult.PASSED : TestResult.FAILED);
         return result;
     }
 

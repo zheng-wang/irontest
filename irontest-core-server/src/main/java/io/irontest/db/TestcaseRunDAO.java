@@ -29,7 +29,7 @@ public abstract class TestcaseRunDAO {
     @GetGeneratedKeys
     protected abstract long _insert(@Bind("testcase_id") long testcaseId, @Bind("testcase_name") String testcaseName,
                                     @Bind("starttime") Date startTime, @Bind("duration") long duration,
-                                    @Bind("result") TestResult result, @Bind("stepruns") String stepRunsJSON);
+                                    @Bind("result") String result, @Bind("stepruns") String stepRunsJSON);
 
     @Transaction
     public void insert(TestcaseRun testcaseRun) throws JsonProcessingException {
@@ -48,6 +48,6 @@ public abstract class TestcaseRunDAO {
         String stepRunsJSON = new ObjectMapper().writeValueAsString(stepRuns);
 
         long id = _insert(testcaseRun.getTestcase().getId(), testcaseRun.getTestcase().getName(),
-                testcaseRun.getStartTime(), testcaseRun.getDuration(), testcaseRun.getResult(), stepRunsJSON);
+                testcaseRun.getStartTime(), testcaseRun.getDuration(), testcaseRun.getResult().toString(), stepRunsJSON);
     }
 }

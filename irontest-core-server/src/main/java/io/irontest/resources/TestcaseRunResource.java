@@ -94,7 +94,7 @@ public class TestcaseRunResource {
 
                     verification.setAssertionVerificationResult(verificationResult);
 
-                    if (Boolean.FALSE == verificationResult.getPassed()) {
+                    if (TestResult.FAILED == verificationResult.getResult()) {
                         stepRun.setResult(TestResult.FAILED);
                     }
                 }

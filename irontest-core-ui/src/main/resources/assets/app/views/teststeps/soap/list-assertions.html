@@ -33,9 +33,9 @@
 <script type="text/ng-template" id="assertionGridNameCellTemplate.html">
   <div class="ui-grid-cell-contents">
     <div ng-class="{ 'background-red' : row.entity.id === grid.appScope.assertionsModelObj.assertionVerificationResult.assertionId &&
-                         grid.appScope.assertionsModelObj.assertionVerificationResult.passed === false,
+                         grid.appScope.assertionsModelObj.assertionVerificationResult.result === 'Failed',
                      'background-green' : row.entity.id === grid.appScope.assertionsModelObj.assertionVerificationResult.assertionId &&
-                         grid.appScope.assertionsModelObj.assertionVerificationResult.passed === true }">{{COL_FIELD}}</div>
+                         grid.appScope.assertionsModelObj.assertionVerificationResult.result === 'Passed' }">{{COL_FIELD}}</div>
   </div>
 </script>
 <script type="text/ng-template" id="assertionGridNameEditableCellTemplate.html">

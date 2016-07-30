@@ -1,5 +1,6 @@
 package io.irontest.core.assertion;
 
+import io.irontest.models.TestResult;
 import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.AssertionVerificationResult;
 import io.irontest.models.assertion.IntegerEqualAssertionProperties;
@@ -12,7 +13,7 @@ public class IntegerEqualAssertionVerifier implements AssertionVerifier {
         AssertionVerificationResult result = new AssertionVerificationResult();
         IntegerEqualAssertionProperties properties = (IntegerEqualAssertionProperties)
                 assertion.getOtherProperties();
-        result.setPassed(new Integer(properties.getNumber()).equals(input));
+        result.setResult(new Integer(properties.getNumber()).equals(input) ? TestResult.PASSED : TestResult.FAILED);
 
         return result;
     }

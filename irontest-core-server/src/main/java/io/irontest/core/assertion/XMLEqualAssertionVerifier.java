@@ -1,5 +1,6 @@
 package io.irontest.core.assertion;
 
+import io.irontest.models.TestResult;
 import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.AssertionVerificationResult;
 import io.irontest.models.assertion.XMLEqualAssertionProperties;
@@ -22,7 +23,7 @@ public class XMLEqualAssertionVerifier implements AssertionVerifier {
 
         if (input == null) {
             result.setError("Actual XML is null.");
-            result.setPassed(false);
+            result.setResult(TestResult.FAILED);
         } else {
             try {
                 Diff diff = DiffBuilder
@@ -43,17 +44,17 @@ public class XMLEqualAssertionVerifier implements AssertionVerifier {
                         }
                     }
                     if (differencesSB.length() > 0) {
-                        result.setPassed(false);
+                        result.setResult(TestResult.FAILED);
                         result.setDifferences(differencesSB.toString());
                     } else {
-                        result.setPassed(true);
+                        result.setResult(TestResult.PASSED);
                     }
                 } else {
-                    result.setPassed(true);
+                    result.setResult(TestResult.PASSED);
                 }
             } catch (XMLUnitException e) {
                 result.setError(e.getMessage());
-                result.setPassed(false);
+                result.setResult(TestResult.FAILED);
             }
         }
 

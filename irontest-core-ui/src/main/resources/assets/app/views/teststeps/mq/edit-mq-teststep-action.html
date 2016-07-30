@@ -84,8 +84,7 @@
               ng-disabled="!teststep.assertions[0].otherProperties.expectedXML || !steprun.response">Verify</button>
     </div>
     <div class="col-lg-1">
-      <h5 ng-if="assertionVerificationResult">
-        {{ assertionVerificationResult.passed ? 'Passed' : 'Failed' }}</h5>
+      <h5 ng-if="assertionVerificationResult">{{ assertionVerificationResult.result }}</h5>
     </div>
     <div class="col-lg-8">
       <textarea name="verificationResult" ng-model="assertionVerificationResult.display"
