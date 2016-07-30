@@ -15,7 +15,7 @@ server:
       - type: file
         currentLogFilename: ./logs/request.log
         archivedLogFilenamePattern: ./logs/request-%d.log.gz
-        archivedFileCount: 10
+        archivedFileCount: 20
 
 logging:
   loggers:
@@ -25,13 +25,13 @@ logging:
         - type: file
           currentLogFilename: ./logs/api.log
           archivedLogFilenamePattern: ./logs/api-%d.log.gz
-          archivedFileCount: 10
+          archivedFileCount: 20
   appenders:
     - type: console
     - type: file
       currentLogFilename: ./logs/main.log
       archivedLogFilenamePattern: ./logs/main-%d.log.gz
-      archivedFileCount: 10
+      archivedFileCount: 20
 
 # Database settings.
 database:
