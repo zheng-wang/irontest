@@ -63,15 +63,16 @@ public class TestcaseRunResource {
                 stepRunResult = TeststepRunnerFactory.getInstance()
                         .newTeststepRunner(teststep, teststepDAO, utilsDAO).run();
             } catch (Exception e) {
-                stepRun.setErrorMessage(e.getMessage());
-                LOGGER.error("Error running test step " + teststep.getId(), e);
+                String message = "Error running test step " + teststep.getId() + ". ";
+                stepRun.setErrorMessage(message + e.getMessage());
+                LOGGER.error(message, e);
             }
             LOGGER.info(stepRunResult == null ? null : stepRunResult.toString());
 
-            //  get endpoint response
-            if (stepRunResult != null) {
+            if (stepRun.getErrorMessage() == null) {
                 stepRun.setResult(TestResult.PASSED);
 
+                //  get endpoint response
                 Object response = null;
                 if (Teststep.TYPE_SOAP.equals(teststep.getType())) {
                     //  currently assertions in SOAP test step are against the HTTP response body

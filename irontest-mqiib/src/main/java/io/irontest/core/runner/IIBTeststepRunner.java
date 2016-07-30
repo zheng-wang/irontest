@@ -56,6 +56,6 @@ public class IIBTeststepRunner extends TeststepRunner {
             }
         }
 
-        return true;
+        return null;
     }
 }

@@ -74,14 +74,12 @@ public class MQTeststepRunner extends TeststepRunner {
             //  do the action
             if (Teststep.ACTION_CLEAR.equals(action)) {
                 clearQueue(queue);
-                result.setValue(true);
             } else if (Teststep.ACTION_CHECK_DEPTH.equals(action)) {
                 result.setValue(queue.getCurrentDepth());
             } else if (Teststep.ACTION_DEQUEUE.equals(action)) {
                 result.setValue(dequeue(queue));
             } else if (Teststep.ACTION_ENQUEUE.equals(action)) {
                 enqueue(queue, teststep.getRequest(), teststepProperties);
-                result.setValue(true);
             }
         } finally {
             if (queue != null) {
