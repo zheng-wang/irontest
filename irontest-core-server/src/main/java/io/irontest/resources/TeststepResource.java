@@ -1,7 +1,7 @@
 package io.irontest.resources;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import io.irontest.core.runner.SOAPTeststepRunResult;
+import io.irontest.core.runner.SOAPAPIResponse;
 import io.irontest.core.runner.TeststepRunnerFactory;
 import io.irontest.db.TeststepDAO;
 import io.irontest.db.UtilsDAO;
@@ -92,23 +92,23 @@ public class TeststepResource {
     /**
      *
      * @param teststep
-     * @return test step run result
+     * @return API response
      */
     @POST @Path("{teststepId}/run")
     public Object run(Teststep teststep) throws Exception {
         Thread.sleep(100); // workaround for Chrome 44 to 48's 'Failed to load response data' problem (no such problem in Chrome 49)
 
-        Object result = TeststepRunnerFactory.getInstance().newTeststepRunner(teststep, teststepDAO, utilsDAO).run();
+        Object response = TeststepRunnerFactory.getInstance().newTeststepRunner(teststep, teststepDAO, utilsDAO).run();
 
         if (Teststep.TYPE_SOAP.equals(teststep.getType())) {
             //  for better displaying SOAP response in browser, transform XML to be pretty-printed
-            SOAPTeststepRunResult runResult = (SOAPTeststepRunResult) result;
-            if (MediaType.TEXT_XML_TYPE.isCompatible(MediaType.valueOf(runResult.getHttpResponseContentType()))) {
-                runResult.setHttpResponseBody(XMLUtils.prettyPrintXML(runResult.getHttpResponseBody()));
+            SOAPAPIResponse soapAPIResponse = (SOAPAPIResponse) response;
+            if (MediaType.TEXT_XML_TYPE.isCompatible(MediaType.valueOf(soapAPIResponse.getHttpResponseContentType()))) {
+                soapAPIResponse.setHttpResponseBody(XMLUtils.prettyPrintXML(soapAPIResponse.getHttpResponseBody()));
             }
         }
 
-        return result;
+        return response;
     }
 
     /**

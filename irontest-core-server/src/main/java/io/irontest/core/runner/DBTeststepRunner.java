@@ -14,8 +14,8 @@ import java.util.Map;
  * Created by Trevor Li on 7/14/15.
  */
 public class DBTeststepRunner extends TeststepRunner {
-    protected DBTeststepRunResult run(Teststep teststep) throws Exception {
-        DBTeststepRunResult result = new DBTeststepRunResult();
+    protected DBAPIResponse run(Teststep teststep) throws Exception {
+        DBAPIResponse response = new DBAPIResponse();
         String request = (String) teststep.getRequest();
         Endpoint endpoint = teststep.getEndpoint();
         DBI jdbi = new DBI(endpoint.getUrl(), endpoint.getUsername(), endpoint.getPassword());
@@ -24,16 +24,16 @@ public class DBTeststepRunner extends TeststepRunner {
         //  assume the request SQL is an insert/update/delete statement first
         Update update = handle.createStatement(request);
         int numberOfRowsModified = update.execute();
-        result.setNumberOfRowsModified(numberOfRowsModified);
+        response.setNumberOfRowsModified(numberOfRowsModified);
 
         if (numberOfRowsModified == -1) {    // the request SQL is a select statement
             Query<Map<String, Object>> query = handle.createQuery(request);
             List<Map<String, Object>> resultSet = query.list();
-            result.setResultSet(resultSet);
+            response.setResultSet(resultSet);
         }
 
         handle.close();
 
-        return result;
+        return response;
     }
 }

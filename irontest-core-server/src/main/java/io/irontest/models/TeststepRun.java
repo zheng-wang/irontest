@@ -11,7 +11,7 @@ public class TeststepRun {
     private Teststep teststep;
     private Date startTime;
     private long duration;              //  number of milliseconds
-    private Object response;            //  endpoint response (could be unavailable when such as no endpoint)
+    private Object response;            //  API response (could be null when such as no endpoint)
     private String errorMessage;        //  error message of running the test step (errors when verifying assertions are captured in AssertionVerification)
     private List<AssertionVerification> assertionVerifications = new ArrayList<AssertionVerification>();
     private TestResult result;

@@ -3,7 +3,7 @@ package io.irontest.core.runner;
 /**
  * Created by Zheng on 6/07/2016.
  */
-public class SOAPTeststepRunResult {
+public class SOAPAPIResponse {
     private String httpResponseContentType;  //  an HTTP header
     private String httpResponseBody;
 

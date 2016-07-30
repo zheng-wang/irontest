@@ -3,8 +3,8 @@ package io.irontest.resources;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.irontest.core.assertion.AssertionVerifier;
 import io.irontest.core.assertion.AssertionVerifierFactory;
-import io.irontest.core.runner.MQTeststepRunResult;
-import io.irontest.core.runner.SOAPTeststepRunResult;
+import io.irontest.core.runner.MQAPIResponse;
+import io.irontest.core.runner.SOAPAPIResponse;
 import io.irontest.core.runner.TeststepRunnerFactory;
 import io.irontest.db.TestcaseDAO;
 import io.irontest.db.TestcaseRunDAO;
@@ -57,18 +57,18 @@ public class TestcaseRunResource {
             //  test step run starts
             stepRun.setStartTime(new Date());
 
-            //  run test step and get endpoint response
-            Object endpointResponse = null;
+            //  run test step and get API response
+            Object apiResponse = null;
             try {
-                endpointResponse = TeststepRunnerFactory.getInstance()
+                apiResponse = TeststepRunnerFactory.getInstance()
                         .newTeststepRunner(teststep, teststepDAO, utilsDAO).run();
-                stepRun.setResponse(endpointResponse);
+                stepRun.setResponse(apiResponse);
             } catch (Exception e) {
                 String message = "Error running test step " + teststep.getId() + ". ";
                 stepRun.setErrorMessage(message + e.getMessage());
                 LOGGER.error(message, e);
             }
-            LOGGER.info(endpointResponse == null ? null : endpointResponse.toString());
+            LOGGER.info(apiResponse == null ? null : apiResponse.toString());
 
             //  verify assertions
             if (stepRun.getErrorMessage() == null) {
@@ -77,11 +77,11 @@ public class TestcaseRunResource {
                 //  get input for assertion verifications
                 Object assertionVerificationInput = null;
                 if (Teststep.TYPE_SOAP.equals(teststep.getType())) {
-                    assertionVerificationInput = ((SOAPTeststepRunResult) endpointResponse).getHttpResponseBody();
+                    assertionVerificationInput = ((SOAPAPIResponse) apiResponse).getHttpResponseBody();
                 } else if (Teststep.TYPE_MQ.equals(teststep.getType())) {
-                    assertionVerificationInput = ((MQTeststepRunResult) endpointResponse).getValue();
+                    assertionVerificationInput = ((MQAPIResponse) apiResponse).getValue();
                 } else {
-                    assertionVerificationInput = endpointResponse;
+                    assertionVerificationInput = apiResponse;
                 }
 
                 //  verify assertions against the input

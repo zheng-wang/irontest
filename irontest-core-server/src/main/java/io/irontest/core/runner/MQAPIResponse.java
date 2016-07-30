@@ -5,7 +5,7 @@ package io.irontest.core.runner;
  * Refer to https://github.com/angular/angular.js/issues/12787).
  * Created by Zheng on 23/07/2016.
  */
-public class MQTeststepRunResult {
+public class MQAPIResponse {
     private Object value;
 
     public Object getValue() {

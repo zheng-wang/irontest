@@ -5,11 +5,11 @@ package io.irontest.core.runner;
  * > -1 means the SQL is an insert/update/delete statement.
  * Created by Zheng on 10/04/2016.
  */
-public class DBTeststepRunResult {
+public class DBAPIResponse {
     private int numberOfRowsModified;
     private Object resultSet;
 
-    public DBTeststepRunResult() { }
+    public DBAPIResponse() { }
 
     public int getNumberOfRowsModified() {
         return numberOfRowsModified;

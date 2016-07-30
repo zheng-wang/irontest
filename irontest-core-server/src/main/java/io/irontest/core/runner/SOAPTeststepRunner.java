@@ -24,8 +24,8 @@ import java.io.IOException;
  * Created by Trevor Li on 7/14/15.
  */
 public class SOAPTeststepRunner extends TeststepRunner {
-    protected SOAPTeststepRunResult run(Teststep teststep) throws Exception {
-        final SOAPTeststepRunResult result = new SOAPTeststepRunResult();
+    protected SOAPAPIResponse run(Teststep teststep) throws Exception {
+        final SOAPAPIResponse apiResponse = new SOAPAPIResponse();
 
         Endpoint endpoint = teststep.getEndpoint();
 
@@ -43,16 +43,16 @@ public class SOAPTeststepRunner extends TeststepRunner {
         HttpPost httpPost = new HttpPost(endpoint.getUrl());
         httpPost.setEntity(new StringEntity((String) teststep.getRequest()));
         ResponseHandler<Void> responseHandler = new ResponseHandler<Void>() {
-            public Void handleResponse(final HttpResponse response) throws IOException {
-                String contentType = response.getFirstHeader(HttpHeaders.CONTENT_TYPE).getValue();
-                result.setHttpResponseContentType(contentType);
-                HttpEntity entity = response.getEntity();
-                result.setHttpResponseBody(entity != null ? EntityUtils.toString(entity) : null);
+            public Void handleResponse(final HttpResponse httpResponse) throws IOException {
+                String contentType = httpResponse.getFirstHeader(HttpHeaders.CONTENT_TYPE).getValue();
+                apiResponse.setHttpResponseContentType(contentType);
+                HttpEntity entity = httpResponse.getEntity();
+                apiResponse.setHttpResponseBody(entity != null ? EntityUtils.toString(entity) : null);
                 return null;
             }
         };
         httpclient.execute(httpPost, responseHandler);
 
-        return result;
+        return apiResponse;
     }
 }

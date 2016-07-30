@@ -43,13 +43,13 @@ public class MQTeststepRunner extends TeststepRunner {
         }
     }
 
-    protected MQTeststepRunResult run(Teststep teststep) throws MQException, IOException, MQDataException {
+    protected MQAPIResponse run(Teststep teststep) throws MQException, IOException, MQDataException {
         String action = teststep.getAction();
         if (action == null) {
             throw new RuntimeException("Action not specified.");
         }
 
-        MQTeststepRunResult result = new MQTeststepRunResult();
+        MQAPIResponse response = new MQAPIResponse();
         MQIIBEndpointProperties endpointProperties = (MQIIBEndpointProperties) teststep.getEndpoint().getOtherProperties();
         MQTeststepProperties teststepProperties = (MQTeststepProperties) teststep.getOtherProperties();
         Hashtable qmConnProperties = new Hashtable();
@@ -75,9 +75,9 @@ public class MQTeststepRunner extends TeststepRunner {
             if (Teststep.ACTION_CLEAR.equals(action)) {
                 clearQueue(queue);
             } else if (Teststep.ACTION_CHECK_DEPTH.equals(action)) {
-                result.setValue(queue.getCurrentDepth());
+                response.setValue(queue.getCurrentDepth());
             } else if (Teststep.ACTION_DEQUEUE.equals(action)) {
-                result.setValue(dequeue(queue));
+                response.setValue(dequeue(queue));
             } else if (Teststep.ACTION_ENQUEUE.equals(action)) {
                 enqueue(queue, teststep.getRequest(), teststepProperties);
             }
@@ -90,7 +90,7 @@ public class MQTeststepRunner extends TeststepRunner {
             }
         }
 
-        return result;
+        return response;
     }
 
     private void enqueue(MQQueue queue, Object data, MQTeststepProperties teststepProperties) throws MQException, IOException, MQDataException {
