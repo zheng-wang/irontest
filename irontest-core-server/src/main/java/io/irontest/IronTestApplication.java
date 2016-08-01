@@ -8,6 +8,7 @@ import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.jdbi.DBIFactory;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import io.dropwizard.views.ViewBundle;
 import io.irontest.core.assertion.AssertionVerifierFactory;
 import io.irontest.db.*;
 import io.irontest.resources.*;
@@ -38,6 +39,7 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         bootstrap.addBundle(new AssetsBundle("/META-INF/resources/webjars", "/ui/lib", null, "uilib"));
         bootstrap.addBundle(jaxWsBundle);
         bootstrap.addBundle(new MultiPartBundle());
+        bootstrap.addBundle(new ViewBundle<IronTestConfiguration>());
     }
 
     @Override

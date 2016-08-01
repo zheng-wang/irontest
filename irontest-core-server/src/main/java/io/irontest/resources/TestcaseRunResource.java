@@ -16,9 +16,7 @@ import io.irontest.models.assertion.AssertionVerificationResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.Date;
 
@@ -121,5 +119,12 @@ public class TestcaseRunResource {
         testcaseRun.setTestcase(null);
         testcaseRun.getStepRuns().clear();
         return testcaseRun;
+    }
+
+    @GET @Path("{testcaseRunId}/htmlreport") @Produces(MediaType.TEXT_HTML)
+    public TestcaseRunView getHTMLReportByTestcaseRunId(@PathParam("testcaseRunId") long testcaseRunId) {
+        TestcaseRun testcaseRun = new TestcaseRun();
+        testcaseRun.setDuration(111111);
+        return new TestcaseRunView(testcaseRun);
     }
 }
