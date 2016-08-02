@@ -2,11 +2,12 @@ package io.irontest.db;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.irontest.models.*;
-import org.skife.jdbi.v2.sqlobject.Bind;
-import org.skife.jdbi.v2.sqlobject.GetGeneratedKeys;
-import org.skife.jdbi.v2.sqlobject.SqlUpdate;
-import org.skife.jdbi.v2.sqlobject.Transaction;
+import io.irontest.models.Endpoint;
+import io.irontest.models.TestcaseRun;
+import io.irontest.models.Teststep;
+import io.irontest.models.TeststepRun;
+import org.skife.jdbi.v2.sqlobject.*;
+import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
 import java.util.Date;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.List;
 /**
  * Created by Zheng on 24/07/2016.
  */
+@RegisterMapper(TestcaseRunMapper.class)
 public abstract class TestcaseRunDAO {
     @SqlUpdate("CREATE SEQUENCE IF NOT EXISTS testcase_run_sequence START WITH 1 INCREMENT BY 1 NOCACHE")
     public abstract void createSequenceIfNotExists();
@@ -48,6 +50,11 @@ public abstract class TestcaseRunDAO {
         String stepRunsJSON = new ObjectMapper().writeValueAsString(stepRuns);
 
         long id = _insert(testcaseRun.getTestcase().getId(), testcaseRun.getTestcase().getName(),
-                testcaseRun.getStartTime(), testcaseRun.getDuration(), testcaseRun.getResult().toString(), stepRunsJSON);
+                testcaseRun.getStartTime(), testcaseRun.getDuration(),
+                testcaseRun.getResult().toString(), stepRunsJSON);
+        testcaseRun.setId(id);
     }
+
+    @SqlQuery("select * from testcase_run where id = :id")
+    public abstract TestcaseRun findById(@Bind("id") long id);
 }

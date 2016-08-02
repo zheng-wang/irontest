@@ -102,13 +102,13 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
 
     $scope.run = function() {
       //  clear previous run result
-      $scope.failedTeststepIds = null;
+      $scope.testcaseRun = null;
 
       var testcaseRun = new TestcaseRuns({
         testcase: { id: $scope.testcase.id }
       });
       testcaseRun.$save(function(response) {
-        $scope.failedTeststepIds = response.failedTeststepIds;
+        $scope.testcaseRun = response;
       },function(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);
       });

@@ -123,8 +123,7 @@ public class TestcaseRunResource {
 
     @GET @Path("{testcaseRunId}/htmlreport") @Produces(MediaType.TEXT_HTML)
     public TestcaseRunView getHTMLReportByTestcaseRunId(@PathParam("testcaseRunId") long testcaseRunId) {
-        TestcaseRun testcaseRun = new TestcaseRun();
-        testcaseRun.setDuration(111111);
+        TestcaseRun testcaseRun = testcaseRunDAO.findById(testcaseRunId);
         return new TestcaseRunView(testcaseRun);
     }
 }

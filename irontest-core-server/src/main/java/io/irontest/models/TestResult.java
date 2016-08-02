@@ -20,4 +20,13 @@ public enum TestResult {
     public String toString() {
         return text;
     }
+
+    public static TestResult getByText(String text) {
+        for (TestResult e : values()) {
+            if (e.text.equals(text)) {
+                return e;
+            }
+        }
+        return null;
+    }
 }

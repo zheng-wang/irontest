@@ -8,6 +8,7 @@ import java.util.List;
  * Created by Trevor Li on 7/24/15.
  */
 public class TestcaseRun {
+    private Long id;
     private Testcase testcase;
     private Date startTime;
     private long duration;              //  number of milliseconds
@@ -15,6 +16,14 @@ public class TestcaseRun {
     private TestResult result;
 
     private List<Long> failedTeststepIds = new ArrayList<Long>();
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public TestcaseRun() {}
 
