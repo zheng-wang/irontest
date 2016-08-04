@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Test Report - {{testcaseRun.testcase.name }}</title>
+
+  <!-- Bootstrap CSS -->
+  <style>
+    {{> bootstrap.min.css}}
+  </style>
+
+  <!-- Custom CSS -->
+  <style>
+    .test-result-color-Passed {
+      color: lime;
+    }
+    .test-result-color-Failed {
+      color: red;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+  <div class="row">
+    <h3>{{testcaseRun.testcase.name }}</h3>
+  </div>
+
+  <div class="row">&nbsp;</div>
+
+  {{#testcaseRun.stepRuns}}
+  <div class="row">{{teststep.name}}</div>
+  <div class="row test-result-color-{{result}}">{{result}}</div>
+  <div class="row">Response: {{response}}</div>
+  <div class="row">Error message: {{errorMessage}}</div>
+  {{#assertionVerifications}}
+  <div class="row">
+    Assertion:
+  </div>
+  <div class="row">
+    <div class="col-lg-offset-1 col-lg-2">Name:</div>
+    <div>{{assertion.name}}</div>
+  </div>
+  <div class="row">
+    <div class="col-lg-offset-1 col-lg-2">Verification result:</div>
+    <div class="test-result-color-{{assertionVerificationResult.result}}">
+        {{assertionVerificationResult.result}}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-offset-1 col-lg-2">Verification error:</div>
+    <div>{{assertionVerificationResult.error}}</div>
+  </div>
+  {{/assertionVerifications}}
+  <div class="row">&nbsp;</div>
+  {{/testcaseRun.stepRuns}}
+</div>
+
+</body>
+</html>

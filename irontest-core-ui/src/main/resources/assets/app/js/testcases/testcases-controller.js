@@ -13,14 +13,14 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
 
     $scope.testcaseGridColumnDefs = [
       {
-        name: 'name', width: 350, minWidth: 100,
+        name: 'name', width: 400, minWidth: 100,
         sort: {
           direction: uiGridConstants.ASC,
           priority: 1
         },
         cellTemplate: 'testcaseGridNameCellTemplate.html'
       },
-      {name: 'description', width: 600, minWidth: 300},
+      {name: 'description', width: 550, minWidth: 300},
       {
         name: 'delete', width: 100, minWidth: 80, enableSorting: false, enableFiltering: false,
         cellTemplate: 'testcaseGridDeleteCellTemplate.html'
@@ -37,11 +37,11 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
           cellTemplate: 'teststepGridSequenceCellTemplate.html' //, sort: { direction: uiGridConstants.ASC, priority: 1 }
         },
         {
-          name: 'name', width: 350, minWidth: 100,
+          name: 'name', width: 450, minWidth: 100,
           cellTemplate: 'teststepGridNameCellTemplate.html'
         },
         {name: 'type', width: 80, minWidth: 80},
-        {name: 'description', width: 500, minWidth: 300},
+        {name: 'description', width: 400, minWidth: 300},
         {
           name: 'delete', width: 100, minWidth: 80, enableSorting: false, enableFiltering: false,
           cellTemplate: 'teststepGridDeleteCellTemplate.html'
