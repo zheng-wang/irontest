@@ -44,7 +44,7 @@
       </div>
     </#if>
     <#if stepRun.errorMessage??>
-      <div class="row">Error message: ${stepRun.errorMessage}</div>
+      <div class="row"><div class="col-lg-12">Error message: ${stepRun.errorMessage}</div></div>
     </#if>
     <#list stepRun.assertionVerifications as verification>
       <div class="row">
@@ -52,16 +52,18 @@
         <div class="col-lg-11">
           <div class="row">
             <div class="col-lg-2">Verification result:</div>
-            <div class="test-result-color-${verification.verificationResult.result}">
+            <div class="col-lg-1 test-result-color-${verification.verificationResult.result}">
                 ${verification.verificationResult.result}
             </div>
           </div>
-          <#if verification.verificationResult.error??>
-            <div class="row">
+          <div class="row">
+            <#if verification.verificationResult.error??>
               <div class="col-lg-2">Verification error:</div>
               <div>${verification.verificationResult.error}</div>
-            </div>
-          </#if>
+            <#else>
+              <#include "${verification.assertion.type?lower_case}Assertion.ftl">
+            </#if>
+          </div>
         </div>
       </div>
     </#list>
