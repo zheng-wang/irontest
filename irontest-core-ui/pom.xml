@@ -110,7 +110,7 @@
                 <filtering>true</filtering>
                 <includes>
                     <include>assets/app/index.htm</include>
-                    <include>io/irontest/models/testcaseRun.ftl</include>
+                    <include>io/irontest/views/testcaseRun.ftl</include>
                 </includes>
             </resource>
         </resources>

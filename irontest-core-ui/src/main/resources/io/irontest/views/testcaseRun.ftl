@@ -58,10 +58,21 @@
           </div>
           <div class="row">
             <#if verification.verificationResult.error??>
-              <div class="col-lg-2">Verification error:</div>
-              <div>${verification.verificationResult.error}</div>
+              <div class="col-lg-2">Error:</div>
+              <div class="col-lg-10">${verification.verificationResult.error}</div>
             <#else>
-              <#include "${verification.assertion.type?lower_case}Assertion.ftl">
+              <div class="col-lg-1">Expected:</div>
+              <div class="col-lg-5">
+                <#include "assertion/${verification.assertion.type?lower_case}AssertionExpected.ftl">
+              </div>
+              <div class="col-lg-1">Actual:</div>
+              <div class="col-lg-5">
+                <#if verification.verificationResult.result == "Passed">
+                  As expected.
+                <#else>
+                  <#include "assertion/${verification.assertion.type?lower_case}AssertionActualWhenFailed.ftl">
+                </#if>
+              </div>
             </#if>
           </div>
         </div>

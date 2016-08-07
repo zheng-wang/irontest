@@ -1,6 +1,7 @@
-package io.irontest.models;
+package io.irontest.views;
 
 import io.dropwizard.views.View;
+import io.irontest.models.TestcaseRun;
 
 /**
  * Created by Zheng on 1/08/2016.
@@ -9,7 +10,7 @@ public class TestcaseRunView extends View {
     private final TestcaseRun testcaseRun;
 
     public TestcaseRunView(TestcaseRun testcaseRun) {
-        super("testcaseRun.ftl");
+        super("../views/testcaseRun.ftl");
         this.testcaseRun = testcaseRun;
     }
 

@@ -13,6 +13,7 @@ import io.irontest.db.UtilsDAO;
 import io.irontest.models.*;
 import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.AssertionVerificationResult;
+import io.irontest.views.TestcaseRunView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
