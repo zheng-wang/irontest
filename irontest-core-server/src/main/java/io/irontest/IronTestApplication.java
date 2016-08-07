@@ -16,6 +16,7 @@ import io.irontest.ws.ArticleSOAP;
 import org.glassfish.jersey.filter.LoggingFilter;
 import org.skife.jdbi.v2.DBI;
 
+import java.util.Map;
 import java.util.logging.Logger;
 
 /**
@@ -39,7 +40,12 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         bootstrap.addBundle(new AssetsBundle("/META-INF/resources/webjars", "/ui/lib", null, "uilib"));
         bootstrap.addBundle(jaxWsBundle);
         bootstrap.addBundle(new MultiPartBundle());
-        bootstrap.addBundle(new ViewBundle<IronTestConfiguration>());
+        bootstrap.addBundle(new ViewBundle<IronTestConfiguration>(){
+            @Override
+            public Map<String, Map<String, String>> getViewConfiguration(IronTestConfiguration config) {
+                return config.getViewRendererConfiguration();
+            }
+        });
     }
 
     @Override

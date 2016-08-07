@@ -44,3 +44,7 @@ database:
   # the JDBC URL
   url: jdbc:h2:./database/test;AUTO_SERVER=TRUE
 
+viewRendererConfiguration:
+  .ftl:
+    datetime_format: MMM d, yyyy hh:mm:ss.SSS a
+

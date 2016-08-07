@@ -26,7 +26,7 @@ public class TestcaseRunMapper implements ResultSetMapper<TestcaseRun> {
         testcase.setId(rs.getLong("testcase_id"));
         testcase.setName(rs.getString("testcase_name"));
         testcaseRun.setTestcase(testcase);
-        testcaseRun.setStartTime(rs.getDate("starttime"));
+        testcaseRun.setStartTime(rs.getTimestamp("starttime"));
         testcaseRun.setDuration(rs.getLong("duration"));
         testcaseRun.setResult(TestResult.getByText(rs.getString("result")));
         List<TeststepRun> stepRuns = null;
