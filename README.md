@@ -23,7 +23,7 @@ Table of Contents:
 - Web UI, so zero installation for end users.
 - Centralized test cases and endpoints management, enabling team work by default.
 - No middleware.
-- Platform independent. Can run on Windows, Linux/Unix and Mac.
+- Easy deployment and maintenance.
         
 ## Primary Dependencies
 Dropwizard, H2 Database, AngularJS, Bootstrap.
