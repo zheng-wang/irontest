@@ -87,45 +87,6 @@
 
     <build>
         <plugins>
-            <!-- extract bootstrap mini css file, renamed, to the same folder as the mustache file;
-                 remove the plugins after https://github.com/spullara/mustache.java/issues/168 is resolved -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>2.10</version>
-                <executions>
-                    <execution>
-                        <id>unpack-dependencies</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>unpack-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <includeArtifactIds>bootstrap</includeArtifactIds>
-                            <includes>**/bootstrap.min.css</includes>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>com.coderplus.maven.plugins</groupId>
-                <artifactId>copy-rename-maven-plugin</artifactId>
-                <version>1.0</version>
-                <executions>
-                    <execution>
-                        <id>copy-file</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <sourceFile>target/dependency/META-INF/resources/webjars/bootstrap/${bootstrap.version}/css/bootstrap.min.css</sourceFile>
-                            <destinationFile>target/classes/io/irontest/models/bootstrap.min.css.mustache</destinationFile>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
             <!-- no need to produce dist, no matter dev or prod profile -->
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -138,17 +99,18 @@
             </plugin>
         </plugins>
 
-        <!-- filter index.htm with library versions -->
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>false</filtering>
             </resource>
+            <!-- filter resources -->
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
                 <includes>
                     <include>assets/app/index.htm</include>
+                    <include>io/irontest/models/testcaseRun.ftl</include>
                 </includes>
             </resource>
         </resources>

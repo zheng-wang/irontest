@@ -91,7 +91,7 @@ public class TestcaseRunResource {
                     AssertionVerifier verifier = new AssertionVerifierFactory().create(assertion.getType());
                     AssertionVerificationResult verificationResult = verifier.verify(assertion, assertionVerificationInput);
 
-                    verification.setAssertionVerificationResult(verificationResult);
+                    verification.setVerificationResult(verificationResult);
 
                     if (TestResult.FAILED == verificationResult.getResult()) {
                         stepRun.setResult(TestResult.FAILED);

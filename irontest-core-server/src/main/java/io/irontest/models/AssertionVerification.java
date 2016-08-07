@@ -8,7 +8,7 @@ import io.irontest.models.assertion.AssertionVerificationResult;
  */
 public class AssertionVerification {
     private Assertion assertion;
-    private AssertionVerificationResult assertionVerificationResult;
+    private AssertionVerificationResult verificationResult;
 
     public Assertion getAssertion() {
         return assertion;
@@ -18,11 +18,11 @@ public class AssertionVerification {
         this.assertion = assertion;
     }
 
-    public AssertionVerificationResult getAssertionVerificationResult() {
-        return assertionVerificationResult;
+    public AssertionVerificationResult getVerificationResult() {
+        return verificationResult;
     }
 
-    public void setAssertionVerificationResult(AssertionVerificationResult assertionVerificationResult) {
-        this.assertionVerificationResult = assertionVerificationResult;
+    public void setVerificationResult(AssertionVerificationResult verificationResult) {
+        this.verificationResult = verificationResult;
     }
 }

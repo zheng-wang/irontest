@@ -9,7 +9,7 @@ public class TestcaseRunView extends View {
     private final TestcaseRun testcaseRun;
 
     public TestcaseRunView(TestcaseRun testcaseRun) {
-        super("testcaseRun.mustache");
+        super("testcaseRun.ftl");
         this.testcaseRun = testcaseRun;
     }
 
