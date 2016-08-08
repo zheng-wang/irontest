@@ -4,7 +4,7 @@ package io.irontest.models;
  * Created by Zheng on 10/07/2016.
  */
 public class MQRFH2Folder {
-    private String name;
+    private String name;               //  only useful to UI
     private String string;
 
     public String getName() {

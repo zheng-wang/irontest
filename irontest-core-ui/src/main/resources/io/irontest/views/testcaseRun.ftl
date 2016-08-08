@@ -23,6 +23,10 @@
     .test-result-color-Failed {
       color: red;
     }
+    /* used to wrap long unspaced word such as base64 encoding of file contents */
+    .word-wrap {
+      word-wrap: break-word;
+    }
   </style>
 </head>
 
@@ -71,7 +75,22 @@
         <#if stepRun.teststep.request??>
           <div class="row">
             <div class="col-lg-1">Request:</div>
-            <div class="col-lg-11"><#escape x as x?html>${ stepRun.teststep.request }</#escape></div>
+            <div class="col-lg-11 word-wrap"><#escape x as x?html>${ stepRun.teststep.request }</#escape></div>
+          </div>
+        </#if>
+
+        <#-- Extra request info for MQ step Enqueue action with RFH2 header -->
+        <#if stepRun.teststep.type == "MQ" && stepRun.teststep.action == "Enqueue" &&
+            stepRun.teststep.otherProperties.enqueueMessageRFH2Header.enabled == true>
+          <div class="row">
+            <div class="col-lg-2">RFH2 Header Folders:</div>
+            <div class="col-lg-10">
+              <#list stepRun.teststep.otherProperties.enqueueMessageRFH2Header.folders as rfh2Folder>
+                <div class="row">
+                  <div class="col-lg-12"><#escape x as x?html>${ rfh2Folder.string }</#escape></div>
+                </div>
+              </#list>
+            </div>
           </div>
         </#if>
 
