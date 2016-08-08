@@ -8,6 +8,7 @@ public class MQIIBEndpointProperties extends Properties {
     private String host;
     private Integer port;
     private String svrConnChannelName;
+    private String queueManagerAddress;
 
     public String getQueueManagerName() {
         return queueManagerName;
@@ -39,5 +40,13 @@ public class MQIIBEndpointProperties extends Properties {
 
     public void setSvrConnChannelName(String svrConnChannelName) {
         this.svrConnChannelName = svrConnChannelName;
+    }
+
+    public String getQueueManagerAddress() {
+        return queueManagerAddress != null ? queueManagerAddress : host + ':' + port + '/' + queueManagerName;
+    }
+
+    public void setQueueManagerAddress(String queueManagerAddress) {
+        this.queueManagerAddress = queueManagerAddress;
     }
 }

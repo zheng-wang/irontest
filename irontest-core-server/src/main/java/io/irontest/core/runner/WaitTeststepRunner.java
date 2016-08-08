@@ -10,6 +10,6 @@ public class WaitTeststepRunner extends TeststepRunner {
     protected Object run(Teststep teststep) throws InterruptedException {
         WaitTeststepProperties teststepProperties = (WaitTeststepProperties) teststep.getOtherProperties();
         Thread.sleep(teststepProperties.getSeconds() * 1000);
-        return true;
+        return null;
     }
 }
