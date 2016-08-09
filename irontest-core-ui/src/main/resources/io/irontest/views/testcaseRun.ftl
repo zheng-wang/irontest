@@ -53,7 +53,7 @@
 
       <#list testcaseRun.stepRuns as stepRun>
         <div class="row">
-          <div class="col-lg-12">${stepRun.teststep.name}</div>
+          <div class="col-lg-12"><b>${stepRun.teststep.name}</b></div>
         </div>
 
         <div class="row">
@@ -65,10 +65,17 @@
           <div class="col-lg-2">${ stepRun.duration } ms</div>
         </div>
 
+        <#if stepRun.teststep.description?? && stepRun.teststep.description?has_content>
+          <div class="row">
+            <div class="col-lg-1">Description:</div>
+            <div class="col-lg-11">${ stepRun.teststep.description }</div>
+          </div>
+        </#if>
+
         <div class="row">
-          <div class="col-lg-2">Step Description:</div>
-          <div class="col-lg-10">
-            <#include "teststep/${stepRun.teststep.type?lower_case}TeststepDescription.ftl">
+          <div class="col-lg-1">Action:</div>
+          <div class="col-lg-11">
+            <#include "teststep/${stepRun.teststep.type?lower_case}TeststepActionDescription.ftl">
           </div>
         </div>
 
@@ -103,7 +110,10 @@
         </#if>
 
         <#if stepRun.errorMessage??>
-          <div class="row"><div class="col-lg-12">Error message: ${stepRun.errorMessage}</div></div>
+          <div class="row">
+            <div class="col-lg-1">Error:</div>
+            <div class="col-lg-11">${stepRun.errorMessage}</div>
+          </div>
         </#if>
 
         <#list stepRun.assertionVerifications as verification>

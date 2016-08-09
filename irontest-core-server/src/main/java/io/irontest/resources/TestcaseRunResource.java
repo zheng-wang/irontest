@@ -58,19 +58,23 @@ public class TestcaseRunResource {
 
             //  run test step and get API response
             Object apiResponse = null;
+            boolean exceptionOccurred = false;  //  use this flag as exception message could be null (though rarely)
             try {
                 apiResponse = TeststepRunnerFactory.getInstance()
                         .newTeststepRunner(teststep, teststepDAO, utilsDAO).run();
                 stepRun.setResponse(apiResponse);
             } catch (Exception e) {
-                String message = "Error running test step " + teststep.getId() + ". ";
-                stepRun.setErrorMessage(message + e.getMessage());
+                exceptionOccurred = true;
+                String message = e.getMessage();
+                stepRun.setErrorMessage(message);
                 LOGGER.error(message, e);
             }
             LOGGER.info(apiResponse == null ? null : apiResponse.toString());
 
             //  verify assertions
-            if (stepRun.getErrorMessage() == null) {
+            if (exceptionOccurred) {
+                stepRun.setResult(TestResult.FAILED);
+            } else {
                 stepRun.setResult(TestResult.PASSED);
 
                 //  get input for assertion verifications
@@ -98,8 +102,6 @@ public class TestcaseRunResource {
                         stepRun.setResult(TestResult.FAILED);
                     }
                 }
-            } else {
-                stepRun.setResult(TestResult.FAILED);
             }
 
             //  test step run ends
