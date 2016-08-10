@@ -1,3 +1,7 @@
+body {
+  zoom: 96%;
+}
+
 /* custom bootstrap class */
 .page-header {
   padding-bottom: 8px;
