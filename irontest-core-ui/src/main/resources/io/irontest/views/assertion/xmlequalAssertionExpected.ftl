@@ -1,1 +1,1 @@
-XML "<#escape x as x?html>${ verification.assertion.otherProperties.expectedXML }</#escape>".
+<#escape x as x?html>${ verification.assertion.otherProperties.expectedXML }</#escape>.
