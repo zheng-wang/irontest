@@ -15,6 +15,7 @@ public class TestcaseRun {
     private List<TeststepRun> stepRuns = new ArrayList<TeststepRun>();
     private TestResult result;
 
+    //  only used on UI
     private List<Long> failedTeststepIds = new ArrayList<Long>();
 
     public Long getId() {

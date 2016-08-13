@@ -19,7 +19,9 @@ import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Trevor Li on 24/07/2015.
@@ -46,6 +48,7 @@ public class TestcaseRunResource {
         testcaseRun.setTestcase(testcase);
 
         //  test case run starts
+        testcaseRun.setResult(TestResult.PASSED);
         testcaseRun.setStartTime(new Date());
 
         for (Teststep teststep : testcase.getTeststeps()) {
@@ -107,19 +110,25 @@ public class TestcaseRunResource {
             //  test step run ends
             stepRun.setDuration(new Date().getTime() - stepRun.getStartTime().getTime());
             if (TestResult.FAILED == stepRun.getResult()) {
-                testcaseRun.getFailedTeststepIds().add(teststep.getId());
+                testcaseRun.setResult(TestResult.FAILED);
             }
         }
 
         //  test case run ends
         testcaseRun.setDuration(new Date().getTime() - testcaseRun.getStartTime().getTime());
-        testcaseRun.setResult(testcaseRun.getFailedTeststepIds().size() > 0 ? TestResult.FAILED : TestResult.PASSED);
 
         //  persist test case run details into database
         testcaseRunDAO.insert(testcaseRun);
 
-        //  currently mainly return failed teststep ids (for UI display)
+        //  prepare return object for UI (reduced contents for performance)
         testcaseRun.setTestcase(null);
+        List<Long> failedTeststepIds = new ArrayList<Long>();
+        for (TeststepRun stepRun : testcaseRun.getStepRuns()) {
+            if (TestResult.FAILED == stepRun.getResult()) {
+                failedTeststepIds.add(stepRun.getTeststep().getId());
+            }
+        }
+        testcaseRun.setFailedTeststepIds(failedTeststepIds);
         testcaseRun.getStepRuns().clear();
         return testcaseRun;
     }
