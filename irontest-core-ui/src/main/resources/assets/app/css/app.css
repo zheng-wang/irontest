@@ -1,5 +1,7 @@
 body {
-  zoom: 97%;
+  /* Commented out zoom, as there is column/header alignment issue in ui grid.
+    Refer to https://github.com/angular-ui/ui-grid/issues/4944 */
+  /* zoom: 97%; */
 }
 
 /* custom bootstrap class */
@@ -176,6 +178,10 @@ body {
 }
 
 .required .control-label:after {
-    content:"*";
-    color:red;
+  content:"*";
+  color:red;
+}
+
+.selected-step-run-report-area {
+  overflow: auto;
 }

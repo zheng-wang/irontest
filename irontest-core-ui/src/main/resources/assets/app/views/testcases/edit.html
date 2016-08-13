@@ -61,13 +61,14 @@
         </div>
       </div>
       <div class="form-group"></div> <!-- spacer -->
-      <div class="row">
-        <div ng-if="activeTabIndex === 1" ui-grid="teststepGridOptions" ui-grid-resize-columns ui-grid-move-columns class="ui-grid"
-             ui-grid-draggable-rows></div>
+      <div class="row" id="teststepGrid">
+        <div ng-if="activeTabIndex === 1" ui-grid="teststepGridOptions" ui-grid-resize-columns
+             ui-grid-move-columns class="ui-grid" ui-grid-draggable-rows></div>
       </div>
-      <div class="row">
+      <div class="form-group"></div> <!-- spacer -->
+      <div class="row selected-step-run-report-area" selected-step-run-report-area>
         <div class="col-lg-12" ng-bind-html="testcaseRun.selectedStepRunReport"></div>
-      </div> <!-- spacer -->
+      </div>
     </uib-tab>
   </uib-tabset>
 
