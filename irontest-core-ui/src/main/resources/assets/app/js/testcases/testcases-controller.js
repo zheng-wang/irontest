@@ -109,9 +109,21 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
       });
       testcaseRun.$save(function(response) {
         $scope.testcaseRun = response;
-      },function(response) {
+      }, function(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);
       });
+    };
+
+    $scope.showStepRunHTMLReport = function(teststepId) {
+      var testcaseRun = new TestcaseRuns({
+        id: $scope.testcaseRun.id
+      });
+      testcaseRun.$getStepRunHTMLReport({ teststepId: teststepId },
+        function(response) {
+          $scope.testcaseRun.selectedStepRunReport = response.report;
+        }, function(response) {
+          IronTestUtils.openErrorHTTPResponseModal(response);
+        });
     };
 
     $scope.removeTeststep = function(teststep) {

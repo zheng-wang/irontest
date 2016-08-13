@@ -14,6 +14,7 @@ import io.irontest.models.*;
 import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.AssertionVerificationResult;
 import io.irontest.views.TestcaseRunView;
+import io.irontest.views.TeststepRunView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -137,5 +138,19 @@ public class TestcaseRunResource {
     public TestcaseRunView getHTMLReportByTestcaseRunId(@PathParam("testcaseRunId") long testcaseRunId) {
         TestcaseRun testcaseRun = testcaseRunDAO.findById(testcaseRunId);
         return new TestcaseRunView(testcaseRun);
+    }
+
+    @GET @Path("{testcaseRunId}/stepruns/{teststepId}/htmlreport") @Produces(MediaType.TEXT_HTML)
+    public TeststepRunView getStepRunHTMLReportByTeststepId(@PathParam("testcaseRunId") long testcaseRunId,
+                                                            @PathParam("teststepId") long teststepId) {
+        TestcaseRun testcaseRun = testcaseRunDAO.findById(testcaseRunId);
+        TeststepRun theStepRun = null;
+        for (TeststepRun stepRun : testcaseRun.getStepRuns()) {
+            if (stepRun.getTeststep().getId() == teststepId) {
+                theStepRun = stepRun;
+                break;
+            }
+        }
+        return new TeststepRunView(theStepRun);
     }
 }
