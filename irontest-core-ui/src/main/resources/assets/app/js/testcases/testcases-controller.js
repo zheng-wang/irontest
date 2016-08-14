@@ -107,9 +107,12 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
       var testcaseRun = new TestcaseRuns({
         testcase: { id: $scope.testcase.id }
       });
+      $scope.testcaseRunStatus = 'ongoing';
       testcaseRun.$save(function(response) {
+        $scope.testcaseRunStatus = 'finished';
         $scope.testcaseRun = response;
       }, function(response) {
+        $scope.testcaseRunStatus = 'failed';
         IronTestUtils.openErrorHTTPResponseModal(response);
       });
     };
