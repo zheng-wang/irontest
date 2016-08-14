@@ -57,13 +57,14 @@
           <!-- Test case run status message -->
           <div class="col-lg-offset-1 col-lg-2">
             <h5 ng-if="testcaseRunStatus === 'ongoing'">Running ...</h5>
-            <div ng-if="testcaseRunStatus === 'finished'">
-              <a ng-href="api/testcaseruns/{{testcaseRun.id}}/htmlreport" target='_blank'>
-                <h4 ng-class="{ 'text-red' : testcaseRun.result === 'Failed',
+            <a ng-if="testcaseRunStatus === 'finished'" ng-href="api/testcaseruns/{{testcaseRun.id}}/htmlreport"
+               target='_blank'>
+              <h4 ng-class="{ 'text-red' : testcaseRun.result === 'Failed',
                 'text-lime' : testcaseRun.result === 'Passed' }">{{testcaseRun.result}}</h4>
-              </a>
-            </div>
+            </a>
           </div>
+          <!-- for preventing button row height change when running test case -->
+          <div class="col-lg-1"><h4>&nbsp;</h4></div>
         </div>
       </div>
       <div class="form-group"></div> <!-- spacer -->
