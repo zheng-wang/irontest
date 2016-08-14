@@ -37,7 +37,7 @@ Download the latest Iron Test release to your local machine. cd to the root dire
 
 This builds Iron Test without MQ/IIB testing features, and the seed files for deployment can be found in the `irontest-core/dist` folder.
 
-To build Iron Test with MQ/IIB testing features, refer to the [wiki page](https://github.com/zheng-wang/irontest/wiki/Build-Iron-Test-with-MQ-IIB-Testing-Features) instead.
+To build Iron Test with MQ/IIB testing features, please refer to the [wiki page](https://github.com/zheng-wang/irontest/wiki/Build-Iron-Test-with-MQ-IIB-Testing-Features) instead.
    
 ## Deploy
 Prerequisites: JRE 1.7+.
@@ -86,11 +86,13 @@ In the assertions pane, click Create dropdown button and select Contains Asserti
 
 Now the test step edit has finished. Click the Back link to return to test case edit view. 
 
-Our test case has only one step. Click the Run button to run the test case.
+Our test case has only one step. Click the Run button to run the test case. Click the result for the test step to see only its run report.
 
-![Test Case Run](screenshots/soap/test-case-run.png)
+![Test Step Run Report](screenshots/soap/test-step-run-report.png)
 
-Click the result beside the Run button to see the whole test case run report. Click the result for one test step to see only its run report.
+Click the result beside the Run button to see the whole test case run report. This report can be saved as HTML file and used as test evidence in other places such as HP ALM. 
+
+![Test Case Run Report](screenshots/soap/test-case-run-report.png)
 
 ### More Usages
 Please refer to the [wiki](https://github.com/zheng-wang/irontest/wiki).

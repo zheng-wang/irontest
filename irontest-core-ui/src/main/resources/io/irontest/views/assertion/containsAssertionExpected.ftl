@@ -1,1 +1,1 @@
-Response contains ${ verification.assertion.otherProperties.contains }.
+Response contains "${ verification.assertion.otherProperties.contains }".
