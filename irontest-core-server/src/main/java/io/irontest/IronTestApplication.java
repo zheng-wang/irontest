@@ -50,11 +50,15 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
 
     @Override
     public void run(IronTestConfiguration configuration, Environment environment) throws Exception {
+        createSystemResources(configuration, environment);
+        createSampleResources(configuration, environment);
+    }
+
+    private void createSystemResources(IronTestConfiguration configuration, Environment environment) {
         final DBIFactory factory = new DBIFactory();
-        final DBI jdbi = factory.build(environment, configuration.getDatabase(), "h2");
+        final DBI jdbi = factory.build(environment, configuration.getSystemDatabase(), "systemDatabase");
 
         //  create DAO objects
-        final ArticleDAO articleDAO = jdbi.onDemand(ArticleDAO.class);
         final EndpointDAO endpointDAO = jdbi.onDemand(EndpointDAO.class);
         final TestcaseDAO testcaseDAO = jdbi.onDemand(TestcaseDAO.class);
         final TestcaseRunDAO testcaseRunDAO = jdbi.onDemand(TestcaseRunDAO.class);
@@ -65,7 +69,6 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
 
         //  create database tables
         //  order is important!!! (there are foreign keys linking them)
-        articleDAO.createTableIfNotExists();
         environmentDAO.createSequenceIfNotExists();
         environmentDAO.createTableIfNotExists();
         endpointDAO.createSequenceIfNotExists();
@@ -80,7 +83,6 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         assertionDAO.createTableIfNotExists();
 
         //  register REST resources
-        environment.jersey().register(new ArticleResource(articleDAO));
         environment.jersey().register(new EndpointResource(endpointDAO));
         environment.jersey().register(new TestcaseResource(testcaseDAO, teststepDAO));
         environment.jersey().register(new TeststepResource(teststepDAO, utilsDAO));
@@ -91,13 +93,27 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         //  register JSON services
         environment.jersey().register(new JSONService(new AssertionVerifierFactory(), endpointDAO));
 
-        //  register SOAP web services
-        jaxWsBundle.publishEndpoint(new EndpointBuilder("/article", new ArticleSOAP(articleDAO)));
-
         //  register jersey LoggingFilter
         environment.jersey().register(new LoggingFilter(Logger.getLogger(LoggingFilter.class.getName()), true));
 
         //  register exception mappers
         environment.jersey().register(new IronTestLoggingExceptionMapper());
+    }
+
+    private void createSampleResources(IronTestConfiguration configuration, Environment environment) {
+        final DBIFactory factory = new DBIFactory();
+        final DBI jdbi = factory.build(environment, configuration.getSampleDatabase(), "sampleDatabase");
+
+        //  create DAO objects
+        final ArticleDAO articleDAO = jdbi.onDemand(ArticleDAO.class);
+
+        //  create database tables
+        articleDAO.createTableIfNotExists();
+
+        //  register REST resources
+        environment.jersey().register(new ArticleResource(articleDAO));
+
+        //  register SOAP web services
+        jaxWsBundle.publishEndpoint(new EndpointBuilder("/article", new ArticleSOAP(articleDAO)));
     }
 }

@@ -15,16 +15,26 @@ import java.util.Map;
 public class IronTestConfiguration extends Configuration {
     @Valid
     @NotNull
-    private DataSourceFactory database = new DataSourceFactory();
+    private DataSourceFactory systemDatabase = new DataSourceFactory();
+
+    private DataSourceFactory sampleDatabase = new DataSourceFactory();
 
     private Map<String, Map<String, String>> viewRendererConfiguration = Collections.emptyMap();
 
-    public DataSourceFactory getDatabase() {
-        return database;
+    public DataSourceFactory getSystemDatabase() {
+        return systemDatabase;
     }
 
-    public void setDatabase(DataSourceFactory database) {
-        this.database = database;
+    public void setSystemDatabase(DataSourceFactory systemDatabase) {
+        this.systemDatabase = systemDatabase;
+    }
+
+    public DataSourceFactory getSampleDatabase() {
+        return sampleDatabase;
+    }
+
+    public void setSampleDatabase(DataSourceFactory sampleDatabase) {
+        this.sampleDatabase = sampleDatabase;
     }
 
     public Map<String, Map<String, String>> getViewRendererConfiguration() {

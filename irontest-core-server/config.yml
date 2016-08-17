@@ -33,8 +33,8 @@ logging:
       archivedLogFilenamePattern: ./logs/main-%d.log.gz
       archivedFileCount: 20
 
-# Database settings.
-database:
+# System database settings.
+systemDatabase:
   # the name of your JDBC driver
   driverClass: org.h2.Driver
   # the username
@@ -43,6 +43,17 @@ database:
   password: pass
   # the JDBC URL
   url: jdbc:h2:./database/test;AUTO_SERVER=TRUE
+
+# Sample database settings.
+sampleDatabase:
+  # the name of your JDBC driver
+  driverClass: org.h2.Driver
+  # the username
+  user: user
+  # the password
+  password: pass
+  # the JDBC URL
+  url: jdbc:h2:./database/sample;AUTO_SERVER=TRUE
 
 viewRendererConfiguration:
   .ftl:
