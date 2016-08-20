@@ -27,7 +27,7 @@ Table of Contents:
 ## Build
 Prerequisites: JDK 1.7+, Maven 3.x.
 
-Download the latest Iron Test release (a zip or tar.gz file containing source code) to your local machine. Extract it, cd to the project directory (containing README.md), and run below Maven command
+Download the latest Iron Test release from [here](https://github.com/zheng-wang/irontest/releases) to your local machine. Extract it, cd to the project directory (in which there is README.md), and run below Maven command
 
 `mvn clean package -pl irontest-core -am -P prod`
 
