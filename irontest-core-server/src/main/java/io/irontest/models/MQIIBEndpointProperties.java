@@ -1,5 +1,8 @@
 package io.irontest.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Created by Zheng on 26/05/2016.
  */
@@ -8,7 +11,6 @@ public class MQIIBEndpointProperties extends Properties {
     private String host;
     private Integer port;
     private String svrConnChannelName;
-    private String queueManagerAddress;
 
     public String getQueueManagerName() {
         return queueManagerName;
@@ -42,11 +44,13 @@ public class MQIIBEndpointProperties extends Properties {
         this.svrConnChannelName = svrConnChannelName;
     }
 
+    @JsonProperty
     public String getQueueManagerAddress() {
-        return queueManagerAddress != null ? queueManagerAddress : host + ':' + port + '/' + queueManagerName;
+        return host + ':' + port + '/' + queueManagerName;
     }
 
+    @JsonIgnore
     public void setQueueManagerAddress(String queueManagerAddress) {
-        this.queueManagerAddress = queueManagerAddress;
+        //  do nothing
     }
 }
