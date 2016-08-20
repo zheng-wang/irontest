@@ -62,7 +62,7 @@ public class TestcaseRunResource {
 
             //  run test step and get API response
             Object apiResponse = null;
-            boolean exceptionOccurred = false;  //  use this flag as exception message could be null (though rarely)
+            boolean exceptionOccurred = false;  //  use this flag instead of checking stepRun.getErrorMessage() != null, for code clarity
             try {
                 apiResponse = TeststepRunnerFactory.getInstance()
                         .newTeststepRunner(teststep, teststepDAO, utilsDAO).run();
@@ -70,7 +70,7 @@ public class TestcaseRunResource {
             } catch (Exception e) {
                 exceptionOccurred = true;
                 String message = e.getMessage();
-                stepRun.setErrorMessage(message);
+                stepRun.setErrorMessage(message == null ? "null" : message);  // exception message could be null (though rarely)
                 LOGGER.error(message, e);
             }
             LOGGER.info(apiResponse == null ? null : apiResponse.toString());

@@ -1,18 +1,24 @@
-<#if stepRun.teststep.action == "Clear">
-  Clear
-<#elseif stepRun.teststep.action == "Enqueue">
-  Enqueue message
-  <#if stepRun.teststep.otherProperties.enqueueMessageFrom == "Text">
-    from text
-  <#elseif stepRun.teststep.otherProperties.enqueueMessageFrom == "File">
-    from file "${ stepRun.teststep.otherProperties.enqueueMessageFilename }"
+<@mqTeststepActionDescription teststep = stepRun.teststep/>
+
+<#macro mqTeststepActionDescription teststep>
+  <#local stepOtherProperties = teststep.otherProperties>
+  <#local endpointOtherProperties = teststep.endpoint.otherProperties>
+  <#if teststep.action == "Clear">
+    Clear
+  <#elseif teststep.action == "Enqueue">
+    Enqueue message
+    <#if stepOtherProperties.enqueueMessageFrom == "Text">
+      from text
+    <#elseif stepOtherProperties.enqueueMessageFrom == "File">
+      from file "${ stepOtherProperties.enqueueMessageFilename }"
+    </#if>
+    into
+  <#elseif teststep.action == "CheckDepth">
+    Check depth of
+  <#elseif teststep.action == "Dequeue">
+    Dequeue message from
   </#if>
-  into
-<#elseif stepRun.teststep.action == "CheckDepth">
-  Check depth of
-<#elseif stepRun.teststep.action == "Dequeue">
-  Dequeue message from
-</#if>
-queue "${ stepRun.teststep.otherProperties.queueName }"
-on queue manager "${ stepRun.teststep.endpoint.otherProperties.queueManagerAddress }"
-through channel "${ stepRun.teststep.endpoint.otherProperties.svrConnChannelName }".
+  queue "${ stepOtherProperties.queueName }"
+  on queue manager "${ endpointOtherProperties.queueManagerAddress }"
+  through channel "${ (endpointOtherProperties.svrConnChannelName??)?then(endpointOtherProperties.svrConnChannelName, 'null') }".
+</#macro>
