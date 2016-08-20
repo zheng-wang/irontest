@@ -10,7 +10,6 @@ The tool is not yet fully production ready for use in enterprise environment, bu
 Table of Contents:
 
 - [Characteristics](#characteristics)
-- [Primary Dependencies](#primary-dependencies)
 - [Build](#build)
 - [Deploy](#deploy)
 - [Use](#use)
@@ -25,9 +24,6 @@ Table of Contents:
 - No middleware.
 - Easy deployment and maintenance.
         
-## Primary Dependencies
-Dropwizard, H2 Database, AngularJS, Bootstrap.
-
 ## Build
 Prerequisites: JDK 1.7+, Maven 3.x.
 
