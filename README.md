@@ -86,13 +86,11 @@ In the assertions pane, click Create dropdown button and select Contains Asserti
 
 Now the test step edit has finished. Click the Back link to return to test case edit view. 
 
-Our test case has only one step. Click the Run button to run the test case. Click the result for the test step to see only its run report.
+Our test case has only one step. Click the Run button to run the test case. Click the result link for the test step to see only its run report.
 
 ![Test Step Run Report](screenshots/soap/test-step-run-report.png)
 
-Click the result beside the Run button to see the whole test case run report. This report can be saved as HTML file and used as test evidence in other places such as HP ALM. 
-
-![Test Case Run Report](screenshots/soap/test-case-run-report.png)
+Click the result link beside the Run button to see the whole test case run report. This report can be saved as HTML file and used as test evidence in other places such as HP ALM.
 
 ### More Usages
 Please refer to the [wiki](https://github.com/zheng-wang/irontest/wiki).
