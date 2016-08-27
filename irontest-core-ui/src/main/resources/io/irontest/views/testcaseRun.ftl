@@ -12,7 +12,7 @@
 
   <#-- Bootstrap CSS; ${bootstrap.version} is Maven property (for filtering) -->
   <style>
-    <#include "/META-INF/resources/webjars/bootstrap/${bootstrap.version}/css/bootstrap.min.css">
+    <#include "/META-INF/resources/webjars/bootstrap/${bootstrap.version}/dist/css/bootstrap.min.css">
   </style>
 
   <#-- Custom CSS -->
