@@ -65,6 +65,7 @@
                         <filters>
                             <filter>
                                 <artifact>*:*</artifact>
+                                <!-- not excluding license files, such as LICENSE, LICENSE.md and LICENSE.txt -->
                                 <excludes>
                                     <exclude>META-INF/*.SF</exclude>
                                     <exclude>META-INF/*.DSA</exclude>
@@ -77,11 +78,8 @@
                                     <exclude>META-INF/resources/webjars/**/*.gz</exclude>
                                     <exclude>META-INF/resources/webjars/**/*.map</exclude>
                                     <exclude>META-INF/resources/webjars/**/*.json</exclude>
-                                    <exclude>META-INF/resources/webjars/**/*.txt</exclude>
-                                    <exclude>META-INF/resources/webjars/**/*.md</exclude>
                                     <exclude>META-INF/resources/webjars/**/*.sh</exclude>
                                     <exclude>META-INF/resources/webjars/**/*.swf</exclude>
-                                    <exclude>META-INF/resources/webjars/**/LICENSE</exclude>
                                     <exclude>META-INF/resources/webjars/**/.gitignore</exclude>
                                     <exclude>META-INF/resources/webjars/**/.npmignore</exclude>
                                 </excludes>
