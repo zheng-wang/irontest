@@ -13,7 +13,7 @@
     <artifactId>irontest-core-ui</artifactId>
 
     <properties>
-        <angularjs.version>1.5.7</angularjs.version>
+        <angular.version>1.5.8</angular.version>
         <angular-ui-grid.version>3.2.1</angular-ui-grid.version>
         <angular-ui-router.version>0.3.1</angular-ui-router.version>
         <bootstrap.version>3.3.6</bootstrap.version>
@@ -29,14 +29,31 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>angularjs</artifactId>
-            <version>${angularjs.version}</version>
+            <groupId>org.webjars.bower</groupId>
+            <artifactId>angular</artifactId>
+            <version>${angular.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars.bower</groupId>
+            <artifactId>angular-resource</artifactId>
+            <version>${angular.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars.bower</groupId>
+            <artifactId>angular-sanitize</artifactId>
+            <version>${angular.version}</version>
         </dependency>
         <dependency>
             <groupId>org.webjars.bower</groupId>
             <artifactId>angular-ui-grid</artifactId>
             <version>${angular-ui-grid.version}</version>
+            <!-- ui grid 3.2.1 declares dependency on angular [1.2.16,1.5), but actually it works with angular 1.5.8 -->
+            <exclusions>
+                <exclusion>
+                    <groupId>org.webjars.bower</groupId>
+                    <artifactId>angular</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.webjars.bower</groupId>
@@ -69,7 +86,7 @@
             <version>${ui-grid-draggable-rows.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.webjars</groupId>
+            <groupId>org.webjars.bower</groupId>
             <artifactId>ng-file-upload</artifactId>
             <version>${ng-file-upload.version}</version>
         </dependency>
