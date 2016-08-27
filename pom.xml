@@ -76,12 +76,14 @@
                                     <exclude>META-INF/resources/webjars/*/*/scss/**</exclude>
                                     <exclude>META-INF/resources/webjars/*/*/i18n/**</exclude>
                                     <exclude>META-INF/resources/webjars/**/*.gz</exclude>
+                                    <exclude>META-INF/resources/webjars/**/*.gzip</exclude>
                                     <exclude>META-INF/resources/webjars/**/*.map</exclude>
                                     <exclude>META-INF/resources/webjars/**/*.json</exclude>
                                     <exclude>META-INF/resources/webjars/**/*.sh</exclude>
                                     <exclude>META-INF/resources/webjars/**/*.swf</exclude>
                                     <exclude>META-INF/resources/webjars/**/.gitignore</exclude>
                                     <exclude>META-INF/resources/webjars/**/.npmignore</exclude>
+                                    <exclude>META-INF/resources/webjars/**/README.md</exclude>
                                 </excludes>
                             </filter>
                         </filters>
