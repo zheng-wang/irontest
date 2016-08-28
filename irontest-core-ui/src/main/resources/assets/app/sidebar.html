@@ -1,20 +1,20 @@
 <div class="navbar-default sidebar" role="navigation">
-    <div class="sidebar-nav navbar-collapse">
-        <ul class="nav" id="side-menu">
+  <div class="sidebar-nav navbar-collapse">
+    <ul class="nav" id="side-menu">
+      <li>
+        <a href="#Administration"><i class="fa fa-wrench fa-fw"></i> Administration<span class="fa arrow"></span></a>
+        <ul class="nav nav-second-level">
             <li>
-                <a href="#Administration"><i class="fa fa-wrench fa-fw"></i> Administration<span class="fa arrow"></span></a>
-                <ul class="nav nav-second-level">
-                    <li>
-                        <a ui-sref="environment_all">Environments</a>
-                    </li>
-                </ul>
-                <!-- /.nav-second-level -->
-            </li>
-            <li>
-                <a ui-sref="testcase_all"><i class="fa fa-edit fa-fw"></i> Test Cases</a>
+                <a ui-sref="environment_all">Environments</a>
             </li>
         </ul>
-    </div>
-    <!-- /.sidebar-collapse -->
+      </li>
+      <li>
+        <a ui-sref="testcase_all"><i class="fa fa-edit fa-fw"></i> Test Cases</a>
+      </li>
+    </ul>
+  </div>
+  <div ng-controller="FolderTreeController">
+    <div js-tree="treeConfig" ng-model="treeData" should-apply="true" tree="treeInstance" tree-events-obj="treeEventsObj"></div>
+  </div>
 </div>
-<!-- /.navbar-static-side -->

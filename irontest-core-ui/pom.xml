@@ -25,6 +25,8 @@
         <ng-file-upload.version>12.0.4</ng-file-upload.version>
         <metisMenu.version>2.5.2</metisMenu.version>
         <font-awesome.version>4.6.3</font-awesome.version>
+        <jstree.version>3.3.2</jstree.version>
+        <ng-js-tree.version>0.0.10</ng-js-tree.version>
     </properties>
 
     <dependencies>
@@ -47,8 +49,9 @@
             <groupId>org.webjars.bower</groupId>
             <artifactId>angular-ui-grid</artifactId>
             <version>${angular-ui-grid.version}</version>
-            <!-- ui grid 3.2.1 declares dependency on angular [1.2.16,1.5), but actually it works with angular 1.5.8 -->
             <exclusions>
+                <!-- this is to resolve version conflict. ui grid 3.2.1 declares dependency on angular [1.2.16,1.5),
+                    but actually it works (for Iron Test use) with angular 1.5.8 -->
                 <exclusion>
                     <groupId>org.webjars.bower</groupId>
                     <artifactId>angular</artifactId>
@@ -99,6 +102,16 @@
             <groupId>org.webjars.bower</groupId>
             <artifactId>font-awesome</artifactId>
             <version>${font-awesome.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars.bower</groupId>
+            <artifactId>jstree</artifactId>
+            <version>${jstree.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars.bower</groupId>
+            <artifactId>ng-js-tree</artifactId>
+            <version>${ng-js-tree.version}</version>
         </dependency>
     </dependencies>
 

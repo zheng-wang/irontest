@@ -12,6 +12,7 @@
   <link href="/ui/lib/font-awesome/${font-awesome.version}/css/font-awesome.min.css" rel="stylesheet" type="text/css">
   <link href="/ui/lib/startbootstrap-sb-admin-2/${startbootstrap-sb-admin-2.version}/css/sb-admin-2.css" rel="stylesheet">
   <link href="/ui/css/app.css" rel="stylesheet">
+  <link href="/ui/lib/jstree/${jstree.version}/dist/themes/default/style.min.css" rel="stylesheet">
   <link href="/ui/css/ui-grid-draggable-rows.css" rel="stylesheet">
   <link href="/ui/css/html-report.css" rel="stylesheet">
   <link href="data:;base64,iVBORw0KGgo=" rel="icon"> <!-- this is to avoid favicon.ico 404 error -->
@@ -53,6 +54,8 @@
   <script src="/ui/lib/angular-bootstrap/${angular-bootstrap.version}/ui-bootstrap-tpls.min.js"></script>
   <script src="/ui/lib/ui-grid-draggable-rows/${ui-grid-draggable-rows.version}/js/draggable-rows.js"></script>
   <script src="/ui/lib/ng-file-upload/${ng-file-upload.version}/ng-file-upload.min.js"></script>
+  <script src="/ui/lib/jstree/${jstree.version}/dist/jstree.min.js"></script>
+  <script src="/ui/lib/ng-js-tree/${ng-js-tree.version}/dist/ngJsTree.min.js"></script>
   <!-- use ng-src here to make the sidebar init script run after the sidebar ng-include (actually all ng-includes) in this html -->
   <script ng-src="/ui/lib/startbootstrap-sb-admin-2/${startbootstrap-sb-admin-2.version}/js/sb-admin-2.js"></script>
 
@@ -87,6 +90,7 @@
   <script src="/ui/js/environments/environments-services.js"></script>
   <script src="/ui/js/environments/environments-controller.js"></script>
   <script src="/ui/js/testcaseruns/testcaseruns-services.js"></script>
+  <script src="/ui/js/foldertree/foldertree-controller.js"></script>
 
   <!-- Always load the error message modal template, in case Iron Test server is down during using
     and browser is unable to alert user of the error. -->
