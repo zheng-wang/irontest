@@ -9,14 +9,14 @@ angular.module('irontest').controller('FolderTreeController', ['$scope',
         },
         check_callback: true
       },
+      plugins : [ 'contextmenu' ],
       version : 1          //  ngJsTree property
     };
 
     $scope.treeData = [
-      { id : 'ajson1', parent : '#', text : 'Simple root node', state: { opened: true} },
-      { id : 'ajson2', parent : '#', text : 'Root node 2', state: { opened: true} },
-      { id : 'ajson3', parent : 'ajson2', text : 'Child 1', state: { opened: true} },
-      { id : 'ajson4', parent : 'ajson2', text : 'Child 2' , state: { opened: true}}
+      { id : '1', parent : '#', text : 'Root', state: { opened: true} },
+      { id : '2', parent : '1', text : 'Child 1', state: { opened: true} },
+      { id : '3', parent : '1', text : 'Child 2' , state: { opened: true}}
     ];
 
     var createNodeCB = function(e, item) {

@@ -30,6 +30,11 @@ body {
   padding: 7px 12px;
 }
 
+/* custom jsTree contextmenu class */
+.vakata-context {
+  z-index: 1000;        /* avoid the tree context menu being partially hidden */
+}
+
 .successful-message {
   opacity: 0;
   color: green;
