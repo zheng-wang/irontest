@@ -4,18 +4,16 @@ body {
   /* zoom: 97%; */
 }
 
-/* custom bootstrap class */
+/* custom bootstrap classes */
 .page-header {
   padding-bottom: 8px;
   margin: 20px 0 10px;
   border-bottom: 1px solid #eee;
 }
-
 .page-header small {
   font-size: 55%;
   float: right;
 }
-
 .page-header .back-link {
   white-space: pre;
   float: right;
@@ -33,6 +31,18 @@ body {
 /* custom jsTree contextmenu class */
 .vakata-context {
   z-index: 1000;        /* avoid the tree context menu being partially hidden */
+}
+
+/* custom sb admin 2 classes */
+@media (min-width: 1600px) {
+  .sidebar {
+    width: 350px;
+  }
+}
+@media (min-width: 1600px) {
+  #page-wrapper {
+    margin: 0 0 0 350px;
+  }
 }
 
 .successful-message {
@@ -187,6 +197,14 @@ body {
   color:red;
 }
 
-.selected-step-run-report-area {
+.selected-step-run-report-area, .foldertree-pane {
   overflow: auto;
+}
+
+.foldertree-pane {
+  height: 800px;
+}
+
+.foldertree-pane ul li {
+  border-bottom: 0px;     /* counter '.sidebar ul li' in the sb-admin-2.css */
 }
