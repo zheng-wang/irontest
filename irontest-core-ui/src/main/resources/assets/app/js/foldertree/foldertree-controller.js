@@ -9,6 +9,30 @@ angular.module('irontest').controller('FolderTreeController', ['$scope',
         },
         check_callback: true
       },
+      contextmenu: {
+        items: function(node) {
+          var tree = $scope.treeInstance.jstree(true);
+          return {
+            Create: {
+              separator_before: false,
+              separator_after: false,
+              label: 'Create',
+              action: function (obj) {
+                node = tree.create_node(node);
+                tree.edit(node);
+              }
+            },
+            Rename: {
+              separator_before: false,
+              separator_after: false,
+              label: 'Rename',
+              action: function (obj) {
+                tree.edit(node);
+              }
+            }
+          };
+        }
+      },
       plugins: [ 'contextmenu' ],
       version: 1          //  ngJsTree property
     };
@@ -27,7 +51,7 @@ angular.module('irontest').controller('FolderTreeController', ['$scope',
     };
 
     /*var readyCB = function() {
-      // tree is ready and $scope.treeInstance is ready for use
+      // tree is ready and the tree instance $scope.treeInstance.jstree(true) is ready for use
       console.log('JS Tree Ready');
     };*/
 
