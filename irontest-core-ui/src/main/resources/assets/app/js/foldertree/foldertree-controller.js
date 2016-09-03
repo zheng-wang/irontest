@@ -1,7 +1,9 @@
 'use strict';
 
-angular.module('irontest').controller('FolderTreeController', ['$scope',
-  function($scope) {
+angular.module('irontest').controller('FolderTreeController', ['$scope', '$state',
+  function($scope, $state) {
+    var NODE_TYPE_TEST_CASE = 'testcase';
+
     $scope.treeConfig = {
       core: {
         error: function(error) {
@@ -18,7 +20,7 @@ angular.module('irontest').controller('FolderTreeController', ['$scope',
               separator_after: false,
               label: 'Create Test Case',
               action: function () {
-                var newNode = tree.create_node(selectedNode, { type : 'file' });
+                var newNode = tree.create_node(selectedNode, {type: NODE_TYPE_TEST_CASE});
                 tree.edit(newNode);
               }
             },
@@ -41,7 +43,7 @@ angular.module('irontest').controller('FolderTreeController', ['$scope',
             }
           };
 
-          if (selectedNode.type === 'file') {
+          if (selectedNode.type === NODE_TYPE_TEST_CASE) {
             delete items.createTestcase;
             delete items.createFolder;
           }
@@ -50,30 +52,28 @@ angular.module('irontest').controller('FolderTreeController', ['$scope',
         }
       },
       types: {
-			  file: { valid_children: [], icon: 'jstree-file' }
+			  testcase: {valid_children: [], icon: 'jstree-file'}
       },
-      plugins: [ 'types', 'contextmenu' ],
+      plugins: ['types', 'contextmenu', 'sort'],
       version: 1          //  ngJsTree property
     };
 
     $scope.treeData = [
-      { id: '1', parent: '#', text: 'Root', state: { opened: true} },
-      { id: '2', parent: '1', text: 'Folder 1', state: { opened: true} },
-      { id: '3', parent: '1', text: 'Folder 2 erewradfdsfasfasdfasdfasdfasdfasfdafdfasfaf', state: { opened: true }}
+      {id: '1', parent: '#', text: 'Root', state: {opened: true}},
+      {id: '2', parent: '1', text: 'Folder 1', state: {opened: true}},
+      {id: '3', parent: '1', text: 'Folder 2 erewradfdsfasfasdfasdfasdfasdfasfdafdfasfaf', state: {opened: true}},
+      {id: '100', parent: '2', text: 'Case 1', type: NODE_TYPE_TEST_CASE, data: {testcaseId: 3}}
     ];
-    $scope.treeData.push({ id: '100', parent: '2', text: 'Case 1', type: 'file' }),
 
-    /*var createNodeCB = function(e, item) {
-      console.log('Added new node with the text ' + item.node.text);
+    var nodeSelected = function(event, data) {
+      var node = data.node;
+      if (node.type === NODE_TYPE_TEST_CASE) {
+        $state.go('testcase_edit', {testcaseId: node.data.testcaseId});
+      }
     };
-    var readyCB = function() {
-      // tree is ready and the tree instance $scope.treeInstance.jstree(true) is ready for use
-      console.log('JS Tree Ready');
-    };*/
 
     $scope.treeEventsObj = {
-      //ready: readyCB,
-      //create_node: createNodeCB
+      select_node: nodeSelected
     }
   }
 ]);
