@@ -54,7 +54,7 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
       types: {
 			  testcase: {valid_children: [], icon: 'jstree-file'}
       },
-      plugins: ['types', 'contextmenu', 'sort'],
+      plugins: ['types', 'contextmenu', 'sort', 'dnd'],
       version: 1          //  ngJsTree property
     };
 
@@ -62,6 +62,7 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
       {id: '1', parent: '#', text: 'Root', state: {opened: true}},
       {id: '2', parent: '1', text: 'Folder 1', state: {opened: true}},
       {id: '3', parent: '1', text: 'Folder 2 erewradfdsfasfasdfasdfasdfasdfasfdafdfasfaf', state: {opened: true}},
+      {id: '4', parent: '1', text: 'Folder 3', state: {opened: true}},
       {id: '100', parent: '2', text: 'Case 1', type: NODE_TYPE_TEST_CASE, data: {testcaseId: 3}}
     ];
 
