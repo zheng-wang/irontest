@@ -84,6 +84,14 @@ public abstract class TeststepDAO {
                                    @Bind("endpointId") Long endpointId,
                                    @Bind("otherProperties") String otherProperties);
 
+    @SqlUpdate("update teststep set name = :name, description = :description, action = :action, " +
+            "endpoint_id = :endpointId, other_properties = :otherProperties, " +
+            "updated = CURRENT_TIMESTAMP where id = :id")
+    protected abstract int _updateWithoutRequest(@Bind("name") String name, @Bind("description") String description,
+                                   @Bind("action") String action, @Bind("id") long id,
+                                   @Bind("endpointId") Long endpointId,
+                                   @Bind("otherProperties") String otherProperties);
+
     @Transaction
     public Teststep update(Teststep teststep) throws IOException {
         Teststep oldTeststep = findById_NoTransaction(teststep.getId());
@@ -94,19 +102,37 @@ public abstract class TeststepDAO {
 
         Endpoint oldEndpoint = oldTeststep.getEndpoint();
         Endpoint newEndpoint = teststep.getEndpoint();
-
-        Object request = teststep.getRequest() instanceof String ?
-                ((String) teststep.getRequest()).getBytes() : teststep.getRequest();
+        Long newEndpointId = newEndpoint == null ? null : newEndpoint.getId();
         String otherProperties = teststep.getOtherProperties() == null ?
                 null : new ObjectMapper().writeValueAsString(teststep.getOtherProperties());
-        _update(teststep.getName(), teststep.getDescription(), teststep.getAction(), request, teststep.getId(),
-                newEndpoint == null ? null : newEndpoint.getId(), otherProperties);
+
+        if (isRequestToBeUpdatedWhenUpdatingTeststep(teststep)) {
+            Object request = teststep.getRequest() instanceof String ?
+                    ((String) teststep.getRequest()).getBytes() : teststep.getRequest();
+            _update(teststep.getName(), teststep.getDescription(), teststep.getAction(), request, teststep.getId(),
+                    newEndpointId, otherProperties);
+        } else {
+            _updateWithoutRequest(teststep.getName(), teststep.getDescription(), teststep.getAction(), teststep.getId(),
+                    newEndpointId, otherProperties);
+        }
 
         updateEndpointIfExists(oldEndpoint, newEndpoint);
 
         updateAssertions(teststep);
 
         return findById_NoTransaction(teststep.getId());
+    }
+
+    private boolean isRequestToBeUpdatedWhenUpdatingTeststep(Teststep teststep) {
+        boolean result = true;
+        if (Teststep.TYPE_MQ.equals(teststep.getType()) &&
+                Teststep.ACTION_ENQUEUE.equals(teststep.getAction())) {
+            MQTeststepProperties mqTeststepProperties = (MQTeststepProperties) teststep.getOtherProperties();
+            if (MQTeststepProperties.ENQUEUE_MESSAGE_FROM_FILE.equals(mqTeststepProperties.getEnqueueMessageFrom())) {
+                result = false;
+            }
+        }
+        return result;
     }
 
     /**
