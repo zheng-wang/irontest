@@ -32,7 +32,8 @@ public abstract class TeststepDAO {
             "sequence SMALLINT NOT NULL, name VARCHAR(200) NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "type VARCHAR(20) NOT NULL, description CLOB, action VARCHAR(50), endpoint_id BIGINT, request BLOB, " +
             "other_properties CLOB, action_data_backup CLOB, " +
-            "created TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
+            "created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
+            "updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (endpoint_id) REFERENCES endpoint(id), " +
             "FOREIGN KEY (testcase_id) REFERENCES testcase(id) ON DELETE CASCADE, " +
             "CONSTRAINT TESTSTEP_UNIQUE_SEQUENCE_CONSTRAINT UNIQUE(testcase_id, sequence), " +

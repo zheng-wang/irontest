@@ -31,7 +31,8 @@ public abstract class AssertionDAO {
     @SqlUpdate("CREATE TABLE IF NOT EXISTS assertion (" +
             "id BIGINT DEFAULT assertion_sequence.NEXTVAL PRIMARY KEY, teststep_id BIGINT, " +
             "name VARCHAR(200) NOT NULL, type VARCHAR(20) NOT NULL, other_properties CLOB NOT NULL," +
-            "created timestamp DEFAULT CURRENT_TIMESTAMP, updated timestamp DEFAULT CURRENT_TIMESTAMP, " +
+            "created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
+            "updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (teststep_id) REFERENCES teststep(id) ON DELETE CASCADE, " +
             "CONSTRAINT ASSERTION_" + DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX + " UNIQUE(teststep_id, name))")
     public abstract void createTableIfNotExists();

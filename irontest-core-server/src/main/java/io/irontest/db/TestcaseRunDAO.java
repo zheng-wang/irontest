@@ -23,7 +23,8 @@ public abstract class TestcaseRunDAO {
     @SqlUpdate("CREATE TABLE IF NOT EXISTS testcase_run (id BIGINT DEFAULT testcase_run_sequence.NEXTVAL PRIMARY KEY, " +
             "testcase_id BIGINT NOT NULL, testcase_name varchar(200) NOT NULL, starttime TIMESTAMP NOT NULL, " +
             "duration BIGINT NOT NULL, result varchar(15) NOT NULL, stepruns CLOB NOT NULL, " +
-            "created TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
+            "created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
+            "updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)")
     public abstract void createTableIfNotExists();
 
     @SqlUpdate("insert into testcase_run (testcase_id, testcase_name, starttime, duration, result, stepruns) " +
