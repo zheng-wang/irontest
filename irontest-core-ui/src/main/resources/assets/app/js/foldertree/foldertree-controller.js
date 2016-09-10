@@ -1,7 +1,8 @@
 'use strict';
 
-angular.module('irontest').controller('FolderTreeController', ['$scope', '$state',
-  function($scope, $state) {
+angular.module('irontest').controller('FolderTreeController', ['$scope', '$state', 'IronTestUtils', 'FolderTreeNodes',
+    '$timeout',
+  function($scope, $state, IronTestUtils, FolderTreeNodes, $timeout) {
     var NODE_TYPE_TEST_CASE = 'testcase';
 
     $scope.treeConfig = {
@@ -58,13 +59,30 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
       version: 1          //  ngJsTree property
     };
 
-    $scope.treeData = [
-      {id: '1', parent: '#', text: 'Root', state: {opened: true}},
-      {id: '2', parent: '1', text: 'Folder 1', state: {opened: true}},
-      {id: '3', parent: '1', text: 'Folder 2 erewradfdsfasfasdfasdfasdfasdfasfdafdfasfaf', state: {opened: true}},
-      {id: '4', parent: '1', text: 'Folder 3', state: {opened: true}},
-      {id: '100', parent: '2', text: 'Case 1', type: NODE_TYPE_TEST_CASE, data: {testcaseId: 3}}
-    ];
+    /* $scope.treeData = [
+        {id: '1', parent: '#', text: 'Root', state: {opened: true}},
+        {id: '2', parent: '1', text: 'Folder 1', state: {opened: true}},
+        {id: '3', parent: '1', text: 'Folder 2 erewradfdsfasfasdfasdfasdfasdfasfdafdfasfaf', state: {opened: true}},
+        {id: '4', parent: '1', text: 'Folder 3', state: {opened: true}},
+        {id: '100', parent: '2', text: 'Case 1', type: NODE_TYPE_TEST_CASE, data: {testcaseId: 3}}
+    ]; */
+
+    $scope.loadTreeData = function() {
+      FolderTreeNodes.query(function(folderTreeNodes) {
+        //  transform null parent to '#' for complying with jstree format
+        folderTreeNodes.forEach(function(treeNode) {
+          if (treeNode.parent === null) {
+              treeNode.parent = '#';
+          }
+        });
+
+        $scope.treeData = folderTreeNodes;
+        //  recreate the tree using new data
+        $scope.treeConfig.version++;
+      }, function(response) {
+        IronTestUtils.openErrorHTTPResponseModal(response);
+      });
+    };
 
     var nodeSelected = function(event, data) {
       var node = data.node;
