@@ -28,6 +28,8 @@ public abstract class FolderTreeNodeDAO {
                "select 'Root', 'folder' where not exists (select 1 from foldertree_node where parent_id is null)")
     public abstract void insertARootNodeIfNotExists();
 
-    @SqlQuery("select * from foldertree_node")
+    @SqlQuery("select n.id, n.parent_id, n.type, n.testcase_id, " +
+            "CASE WHEN n.testcase_id is null THEN n.text ELSE t.name END as text " +
+            "from foldertree_node n left outer join testcase t on t.id = n.testcase_id")
     public abstract List<FolderTreeNode> findAll();
 }

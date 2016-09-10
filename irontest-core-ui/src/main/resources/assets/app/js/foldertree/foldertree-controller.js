@@ -8,7 +8,7 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
     $scope.treeConfig = {
       core: {
         error: function(error) {
-          alert('treeCtrl: error from js tree - ' + angular.toJson(error));
+          IronTestUtils.openErrorMessageModal('Error from js tree.', angular.toJson(error));
         },
         check_callback: true
       },
@@ -17,27 +17,21 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
           var tree = $scope.treeInstance.jstree(true);
           var items = {
             createTestcase: {
-              separator_before: false,
-              separator_after: false,
-              label: 'Create Test Case',
+              separator_before: false, separator_after: false, label: 'Create Test Case',
               action: function () {
                 var newNode = tree.create_node(selectedNode, {type: NODE_TYPE_TEST_CASE});
                 tree.edit(newNode);
               }
             },
             createFolder: {
-              separator_before: false,
-              separator_after: false,
-              label: 'Create Folder',
+              separator_before: false, separator_after: false, label: 'Create Folder',
               action: function () {
                 var newNode = tree.create_node(selectedNode);
                 tree.edit(newNode);
               }
             },
             rename: {
-              separator_before: false,
-              separator_after: false,
-              label: 'Rename',
+              separator_before: false, separator_after: false, label: 'Rename',
               action: function () {
                 tree.edit(selectedNode);
               }
@@ -69,10 +63,16 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
 
     $scope.loadTreeData = function() {
       FolderTreeNodes.query(function(folderTreeNodes) {
-        //  transform null parent to '#' for complying with jstree format
+        //  transform for default display effect (expanding Root folder) and complying with jstree format
         folderTreeNodes.forEach(function(treeNode) {
+          if (treeNode.text === 'Root') {
+            treeNode.state = {opened: true};
+          }
           if (treeNode.parent === null) {
-              treeNode.parent = '#';
+            treeNode.parent = '#';
+          }
+          if (treeNode.type === NODE_TYPE_TEST_CASE) {
+            treeNode.data = {testcaseId: treeNode.testcaseId};
           }
         });
 
