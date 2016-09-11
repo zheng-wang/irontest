@@ -19,8 +19,9 @@ public abstract class TestcaseDAO {
 
     @SqlUpdate("CREATE TABLE IF NOT EXISTS testcase (id BIGINT DEFAULT testcase_sequence.NEXTVAL PRIMARY KEY, " +
             "name varchar(200) NOT NULL DEFAULT CURRENT_TIMESTAMP, description CLOB, " +
-            "created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
+            "parent_folder_id BIGINT NOT NULL, created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
+            "FOREIGN KEY (parent_folder_id) REFERENCES folder(id), " +
             "CONSTRAINT TESTCASE_" + DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX + " UNIQUE(name))")
     public abstract void createTableIfNotExists();
 

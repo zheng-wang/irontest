@@ -59,26 +59,27 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         final DBI jdbi = factory.build(environment, configuration.getSystemDatabase(), "systemDatabase");
 
         //  create DAO objects
+        final FolderDAO folderDAO = jdbi.onDemand(FolderDAO.class);
+        final EnvironmentDAO environmentDAO = jdbi.onDemand(EnvironmentDAO.class);
         final EndpointDAO endpointDAO = jdbi.onDemand(EndpointDAO.class);
         final TestcaseDAO testcaseDAO = jdbi.onDemand(TestcaseDAO.class);
-        final FolderTreeNodeDAO folderTreeNodeDAO = jdbi.onDemand(FolderTreeNodeDAO.class);
         final TestcaseRunDAO testcaseRunDAO = jdbi.onDemand(TestcaseRunDAO.class);
         final TeststepDAO teststepDAO = jdbi.onDemand(TeststepDAO.class);
         final AssertionDAO assertionDAO = jdbi.onDemand(AssertionDAO.class);
-        final EnvironmentDAO environmentDAO = jdbi.onDemand(EnvironmentDAO.class);
         final UtilsDAO utilsDAO = jdbi.onDemand(UtilsDAO.class);
+        final FolderTreeNodeDAO folderTreeNodeDAO = jdbi.onDemand(FolderTreeNodeDAO.class);
 
         //  create database tables
         //  order is important!!! (there are foreign keys linking them)
+        folderDAO.createSequenceIfNotExists();
+        folderDAO.createTableIfNotExists();
+        folderDAO.insertARootNodeIfNotExists();
         environmentDAO.createSequenceIfNotExists();
         environmentDAO.createTableIfNotExists();
         endpointDAO.createSequenceIfNotExists();
         endpointDAO.createTableIfNotExists();
         testcaseDAO.createSequenceIfNotExists();
         testcaseDAO.createTableIfNotExists();
-        folderTreeNodeDAO.createSequenceIfNotExists();
-        folderTreeNodeDAO.createTableIfNotExists();
-        folderTreeNodeDAO.insertARootNodeIfNotExists();
         testcaseRunDAO.createSequenceIfNotExists();
         testcaseRunDAO.createTableIfNotExists();
         teststepDAO.createSequenceIfNotExists();

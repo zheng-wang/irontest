@@ -83,15 +83,6 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
       }
     };
 
-    $scope.create = function() {
-      var testcase = new Testcases();
-      testcase.$save(function(response) {
-        $state.go('testcase_edit', {testcaseId: response.id, newlyCreated: true});
-      }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
-      });
-    };
-
     $scope.remove = function(testcase) {
       testcase.$remove(function(response) {
         $state.go($state.current, {}, {reload: true});

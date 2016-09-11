@@ -23,7 +23,7 @@ public class TestcaseResource {
     }
 
     @POST
-    public Testcase create() {
+    public Testcase create(@QueryParam("parentFolderTreeNodeId") long parentFolderTreeNodeId) {
         long id = testcaseDAO.insert();
         return testcaseDAO.findById_Mini(id);
     }

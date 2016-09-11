@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('irontest').controller('FolderTreeController', ['$scope', '$state', 'IronTestUtils', 'FolderTreeNodes',
-    '$timeout',
-  function($scope, $state, IronTestUtils, FolderTreeNodes, $timeout) {
+    'Testcases',
+  function($scope, $state, IronTestUtils, FolderTreeNodes, Testcases) {
     var NODE_TYPE_TEST_CASE = 'testcase';
 
     $scope.treeConfig = {
@@ -19,8 +19,18 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
             createTestcase: {
               separator_before: false, separator_after: false, label: 'Create Test Case',
               action: function () {
-                var newNode = tree.create_node(selectedNode, {type: NODE_TYPE_TEST_CASE});
-                tree.edit(newNode);
+                var testcase = new Testcases();
+                testcase.$save({ parentFolderTreeNodeId: selectedNode.id }, function(response) {
+                  //  reload the tree
+                  $scope.loadTreeData();
+                  //  display the newly created test case in the right pane
+                  $state.go('testcase_edit', {testcaseId: response.id, newlyCreated: true});
+                  //  enable user to edit the test case's name
+                  //var newNode = tree.create_node(selectedNode, {type: NODE_TYPE_TEST_CASE});
+                  //tree.edit(newNode);
+                }, function(response) {
+                  IronTestUtils.openErrorHTTPResponseModal(response);
+                });
               }
             },
             createFolder: {
@@ -65,11 +75,9 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
       FolderTreeNodes.query(function(folderTreeNodes) {
         //  transform for default display effect (expanding Root folder) and complying with jstree format
         folderTreeNodes.forEach(function(treeNode) {
-          if (treeNode.text === 'Root') {
-            treeNode.state = {opened: true};
-          }
-          if (treeNode.parent === null) {
+          if (treeNode.parent === null) {    //  root node(s)
             treeNode.parent = '#';
+            treeNode.state = {opened: true};
           }
           if (treeNode.type === NODE_TYPE_TEST_CASE) {
             treeNode.data = {testcaseId: treeNode.testcaseId};
