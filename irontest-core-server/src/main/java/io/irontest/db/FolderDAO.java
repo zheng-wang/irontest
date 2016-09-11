@@ -1,10 +1,6 @@
 package io.irontest.db;
 
-import io.irontest.models.FolderTreeNode;
-import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
-
-import java.util.List;
 
 /**
  * Created by Zheng on 10/09/2015.

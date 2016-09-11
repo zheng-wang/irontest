@@ -1,8 +1,9 @@
 'use strict';
 
 angular.module('irontest').controller('FolderTreeController', ['$scope', '$state', 'IronTestUtils', 'FolderTreeNodes',
-    'Testcases',
-  function($scope, $state, IronTestUtils, FolderTreeNodes, Testcases) {
+    'Testcases', '$timeout',
+  function($scope, $state, IronTestUtils, FolderTreeNodes, Testcases, $timeout) {
+    var NODE_TYPE_FOLDER = 'folder';
     var NODE_TYPE_TEST_CASE = 'testcase';
 
     $scope.treeConfig = {
@@ -14,20 +15,26 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
       },
       contextmenu: {
         items: function(selectedNode) {    //  selectedNode: the node you right clicked on
-          var tree = $scope.treeInstance.jstree(true);
           var items = {
             createTestcase: {
               separator_before: false, separator_after: false, label: 'Create Test Case',
               action: function () {
+                var parentFolderId = selectedNode.id;
                 var testcase = new Testcases();
-                testcase.$save({ parentFolderTreeNodeId: selectedNode.id }, function(response) {
+                testcase.$save({ parentFolderId: selectedNode.data.idPerType }, function(response) {
                   //  reload the tree
-                  $scope.loadTreeData();
-                  //  display the newly created test case in the right pane
-                  $state.go('testcase_edit', {testcaseId: response.id, newlyCreated: true});
-                  //  enable user to edit the test case's name
-                  //var newNode = tree.create_node(selectedNode, {type: NODE_TYPE_TEST_CASE});
-                  //tree.edit(newNode);
+                  $scope.loadTreeData(function successCallback() {
+                    //  select the newly created test case
+                    $timeout(function() {
+                      var tree = $scope.treeInstance.jstree(true);
+                      tree.select_node(NODE_TYPE_TEST_CASE + response.id);
+                    }, 100);
+
+                    //  enable user to edit the test case's name
+                    //var newNode = tree.create_node(selectedNode, {type: NODE_TYPE_TEST_CASE});
+                    //tree.edit(newNode);
+                  });
+
                 }, function(response) {
                   IronTestUtils.openErrorHTTPResponseModal(response);
                 });
@@ -36,6 +43,7 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
             createFolder: {
               separator_before: false, separator_after: false, label: 'Create Folder',
               action: function () {
+                var tree = $scope.treeInstance.jstree(true);
                 var newNode = tree.create_node(selectedNode);
                 tree.edit(newNode);
               }
@@ -43,6 +51,7 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
             rename: {
               separator_before: false, separator_after: false, label: 'Rename',
               action: function () {
+                var tree = $scope.treeInstance.jstree(true);
                 tree.edit(selectedNode);
               }
             }
@@ -71,22 +80,27 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
         {id: '100', parent: '2', text: 'Case 1', type: NODE_TYPE_TEST_CASE, data: {testcaseId: 3}}
     ]; */
 
-    $scope.loadTreeData = function() {
+    $scope.loadTreeData = function(successCallback) {
       FolderTreeNodes.query(function(folderTreeNodes) {
         //  transform for default display effect (expanding Root folder) and complying with jstree format
         folderTreeNodes.forEach(function(treeNode) {
-          if (treeNode.parent === null) {    //  root node(s)
+          treeNode.id = treeNode.type + treeNode.idPerType;
+          treeNode.data = {idPerType: treeNode.idPerType};
+          if (treeNode.parentFolderId === null) {    //  root node(s)
             treeNode.parent = '#';
-            treeNode.state = {opened: true};
-          }
-          if (treeNode.type === NODE_TYPE_TEST_CASE) {
-            treeNode.data = {testcaseId: treeNode.testcaseId};
+            treeNode.state = {opened: true};         //  always open root node
+          } else {
+            treeNode.parent = NODE_TYPE_FOLDER + treeNode.parentFolderId;
           }
         });
 
         $scope.treeData = folderTreeNodes;
         //  recreate the tree using new data
         $scope.treeConfig.version++;
+
+        if (successCallback) {
+          successCallback();
+        }
       }, function(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);
       });
@@ -95,7 +109,7 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
     var nodeSelected = function(event, data) {
       var node = data.node;
       if (node.type === NODE_TYPE_TEST_CASE) {
-        $state.go('testcase_edit', {testcaseId: node.data.testcaseId});
+        $state.go('testcase_edit', {testcaseId: node.data.idPerType});
       }
     };
 

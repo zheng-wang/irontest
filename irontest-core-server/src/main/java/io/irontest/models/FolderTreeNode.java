@@ -5,13 +5,13 @@ package io.irontest.models;
  */
 public class FolderTreeNode {
     private Long idPerType;
-    private Long parent;
+    private Long parentFolderId;
     private String text;
     private FolderTreeNodeType type;
 
-    public FolderTreeNode(Long idPerType, Long parent, String text, FolderTreeNodeType type) {
+    public FolderTreeNode(Long idPerType, Long parentFolderId, String text, FolderTreeNodeType type) {
         this.idPerType = idPerType;
-        this.parent = parent;
+        this.parentFolderId = parentFolderId;
         this.text = text;
         this.type = type;
     }
@@ -24,12 +24,12 @@ public class FolderTreeNode {
         this.idPerType = idPerType;
     }
 
-    public Long getParent() {
-        return parent;
+    public Long getParentFolderId() {
+        return parentFolderId;
     }
 
-    public void setParent(Long parent) {
-        this.parent = parent;
+    public void setParentFolderId(Long parentFolderId) {
+        this.parentFolderId = parentFolderId;
     }
 
     public String getText() {

@@ -28,16 +28,16 @@ public abstract class TestcaseDAO {
     @CreateSqlObject
     protected abstract TeststepDAO teststepDAO();
 
-    @SqlUpdate("insert into testcase values ()")
+    @SqlUpdate("insert into testcase (parent_folder_id) values (:parentFolderId)")
     @GetGeneratedKeys
-    protected abstract long _insert();
+    protected abstract long _insert(@Bind("parentFolderId") long parentFolderId);
 
     @SqlUpdate("update testcase set name = :name where id = :id")
     protected abstract long updateNameForInsert(@Bind("id") long id, @Bind("name") String name);
 
     @Transaction
-    public long insert() {
-        long id = _insert();
+    public long insert(long parentFolderId) {
+        long id = _insert(parentFolderId);
         updateNameForInsert(id, "Case " + id);
         return id;
     }
