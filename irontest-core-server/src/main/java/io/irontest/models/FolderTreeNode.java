@@ -9,6 +9,8 @@ public class FolderTreeNode {
     private String text;
     private FolderTreeNodeType type;
 
+    public FolderTreeNode() {}
+
     public FolderTreeNode(Long idPerType, Long parentFolderId, String text, FolderTreeNodeType type) {
         this.idPerType = idPerType;
         this.parentFolderId = parentFolderId;

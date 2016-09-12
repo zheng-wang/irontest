@@ -1,7 +1,10 @@
 package io.irontest.db;
 
 import io.irontest.models.FolderTreeNode;
+import io.irontest.models.FolderTreeNodeType;
+import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
+import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
 import java.util.List;
@@ -15,4 +18,13 @@ public abstract class FolderTreeNodeDAO {
             "union " +
             "select id as id_per_type, name as text, parent_folder_id, 'testcase' as type from testcase")
     public abstract List<FolderTreeNode> findAll();
+
+    @SqlUpdate("update testcase set name = :name, updated = CURRENT_TIMESTAMP where id = :id")
+    protected abstract int _updateTestcase(@Bind("name") String name, @Bind("id") long id);
+
+    public void update(FolderTreeNode node) {
+        if (FolderTreeNodeType.TESTCASE == node.getType()) {
+            _updateTestcase(node.getText(), node.getIdPerType());
+        }
+    }
 }
