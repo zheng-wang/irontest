@@ -126,8 +126,6 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
           }, function(response) {
             IronTestUtils.openErrorHTTPResponseModal(response);
           });
-        } else {                          //  test case name is not changed
-          tree.select_node(node.id);
         }
       }
     };

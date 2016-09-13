@@ -137,12 +137,8 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
       });
     };
 
-    $scope.testcaseNewlyCreated = function() {
-      return $stateParams.newlyCreated === true;
-    };
-
     $scope.findOne = function() {
-      $scope.activeTabIndex = $scope.testcaseNewlyCreated() ? 0 : 1;
+      $scope.activeTabIndex = 1;
       Testcases.get({
         testcaseId: $stateParams.testcaseId
       }, function(testcase) {
