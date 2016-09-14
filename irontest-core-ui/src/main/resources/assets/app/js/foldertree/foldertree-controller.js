@@ -9,7 +9,7 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
     var createTestcase = function(parentFolderId) {
       var testcaseRes = new Testcases();
       testcaseRes.$save({ parentFolderId: parentFolderId }, function(response) {
-        //  reload the tree
+        //  reload the tree (a chance to sync between users in a team)
         $scope.loadTreeData(function successCallback() {
           $timeout(function() {    //  wait for the tree to finish loading
             var newNodeId = NODE_TYPE_TEST_CASE + response.id;
@@ -134,7 +134,21 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
     };
 
     var nodeMoved = function(event, data) {
-      console.log(data);
+      var tree = $scope.treeInstance.jstree(true);
+      var node = data.node;
+      var newParentNode = tree.get_node(data.parent);
+
+      //  update node at server side
+      var nodeRes = new FolderTreeNodes({
+        idPerType: node.data.idPerType, parentFolderId: newParentNode.data.idPerType,
+        text: node.text, type: node.type
+      });
+      nodeRes.$update(function(response) {
+        //  reload the tree (a chance to sync between users in a team)
+        $scope.loadTreeData();
+      }, function(response) {
+        IronTestUtils.openErrorHTTPResponseModal(response);
+      });
     };
 
     $scope.treeEventsObj = {

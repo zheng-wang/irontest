@@ -19,12 +19,13 @@ public abstract class FolderTreeNodeDAO {
             "select id as id_per_type, name as text, parent_folder_id, 'testcase' as type from testcase")
     public abstract List<FolderTreeNode> findAll();
 
-    @SqlUpdate("update testcase set name = :name, updated = CURRENT_TIMESTAMP where id = :id")
-    protected abstract int _updateTestcase(@Bind("name") String name, @Bind("id") long id);
+    @SqlUpdate("update testcase set name = :name, parent_folder_id = :parentFolderId, updated = CURRENT_TIMESTAMP where id = :id")
+    protected abstract int _updateTestcase(@Bind("name") String name, @Bind("parentFolderId") long parentFolderId,
+                                           @Bind("id") long id);
 
     public void update(FolderTreeNode node) {
         if (FolderTreeNodeType.TESTCASE == node.getType()) {
-            _updateTestcase(node.getText(), node.getIdPerType());
+            _updateTestcase(node.getText(),node.getParentFolderId(), node.getIdPerType());
         }
     }
 }
