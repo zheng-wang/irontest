@@ -16,7 +16,7 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
             var tree = $scope.treeInstance.jstree(true);
 
             //  switch the selection from the folder to the newly created test case,
-            //  so as the state plugin can remember this selection.
+            //  so that the state plugin can remember this status.
             var parentNodeId = NODE_TYPE_FOLDER + parentFolderId;
             tree.deselect_node(parentNodeId);
             tree.select_node(newNodeId);
@@ -118,7 +118,7 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
 
     var nodeRenamed = function(event, data) {
       var node = data.node;
-      if (data.text !== data.old) {      //  test case name is changed
+      if (data.text !== data.old) {      //  node is actually renamed
         //  update node at server side
         var nodeRes = new FolderTreeNodes({
           idPerType: node.data.idPerType, parentFolderId: node.data.parentFolderId,
@@ -144,7 +144,14 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
       });
       nodeRes.$update(function(response) {
         //  reload the tree (a chance to sync between users in a team)
-        $scope.loadTreeData();
+        $scope.loadTreeData(function successCallback() {
+          $timeout(function() {    //  wait for the tree to finish loading
+            var tree = $scope.treeInstance.jstree(true);
+
+            //  open the new parent folder, so that the state plugin can remember this status.
+            tree.open_node(data.parent);
+          }, 100);
+        });
       }, function(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);
       });
