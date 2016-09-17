@@ -22,12 +22,6 @@ public class TestcaseResource {
         this.teststepDAO = teststepDAO;
     }
 
-    @POST
-    public Testcase create(@QueryParam("parentFolderId") long parentFolderId) {
-        long id = testcaseDAO.insert(parentFolderId);
-        return testcaseDAO.findById_Mini(id);
-    }
-
     @PUT @Path("{testcaseId}")
     public Testcase update(Testcase testcase, @QueryParam("moveStep") boolean moveStep) {
         if (moveStep) {  //  move teststep in testcase

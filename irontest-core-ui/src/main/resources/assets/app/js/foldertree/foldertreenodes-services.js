@@ -2,9 +2,7 @@
 
 angular.module('irontest').factory('FolderTreeNodes', ['$resource',
   function($resource) {
-    return $resource('api/foldertreenodes/:type.:idPerType', {
-      type: '@type', idPerType: '@idPerType'
-    }, {
+    return $resource('api/foldertreenodes', {}, {
       update: {
         method: 'PUT'
       }

@@ -1,18 +1,18 @@
 'use strict';
 
 angular.module('irontest').controller('FolderTreeController', ['$scope', '$state', 'IronTestUtils', 'FolderTreeNodes',
-    'Testcases', '$timeout',
-  function($scope, $state, IronTestUtils, FolderTreeNodes, Testcases, $timeout) {
+    '$timeout',
+  function($scope, $state, IronTestUtils, FolderTreeNodes, $timeout) {
     var NODE_TYPE_FOLDER = 'folder';
     var NODE_TYPE_TEST_CASE = 'testcase';
 
-    var createTestcase = function(parentFolderId) {
-      var testcaseRes = new Testcases();
-      testcaseRes.$save({ parentFolderId: parentFolderId }, function(response) {
+    var createNode = function(parentFolderId, type) {
+      var nodeRes = new FolderTreeNodes({ parentFolderId: parentFolderId, type: type });
+      nodeRes.$save(function(response) {
         //  reload the tree (a chance to sync between users in a team)
         $scope.loadTreeData(function successCallback() {
           $timeout(function() {    //  wait for the tree to finish loading
-            var newNodeId = NODE_TYPE_TEST_CASE + response.id;
+            var newNodeId = type + response.idPerType;
             var tree = $scope.treeInstance.jstree(true);
 
             //  switch the selection from the folder to the newly created test case,
@@ -21,7 +21,7 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
             tree.deselect_node(parentNodeId);
             tree.select_node(newNodeId);
 
-            //  enable user to edit the test case's name
+            //  enable user to edit the node's name
             tree.edit(newNodeId);     //  as a (good) side effect, this opens all the node's ancestor folders
           }, 100);
         });
@@ -43,15 +43,11 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
           var items = {
             createTestcase: {
               separator_before: false, separator_after: false, label: 'Create Test Case',
-              action: function() { createTestcase(selectedNode.data.idPerType); }
+              action: function() { createNode(selectedNode.data.idPerType, NODE_TYPE_TEST_CASE); }
             },
             createFolder: {
               separator_before: false, separator_after: false, label: 'Create Folder',
-              action: function () {
-                var tree = $scope.treeInstance.jstree(true);
-                var newNode = tree.create_node(selectedNode);
-                tree.edit(newNode);
-              }
+              action: function() { createNode(selectedNode.data.idPerType, NODE_TYPE_FOLDER); }
             },
             rename: {
               separator_before: false, separator_after: false, label: 'Rename',

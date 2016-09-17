@@ -36,10 +36,10 @@ public abstract class TestcaseDAO {
     protected abstract long updateNameForInsert(@Bind("id") long id, @Bind("name") String name);
 
     @Transaction
-    public long insert(long parentFolderId) {
+    public Testcase insert(long parentFolderId) {
         long id = _insert(parentFolderId);
         updateNameForInsert(id, "Case " + id);
-        return id;
+        return _findById(id);
     }
 
     @SqlUpdate("update testcase set name = :name, description = :description, " +
@@ -62,7 +62,7 @@ public abstract class TestcaseDAO {
     /*@SqlQuery("select * from testcase")
     public abstract List<Testcase> findAll();*/
 
-    @SqlQuery("select * from testcase where testcase.id = :id")
+    @SqlQuery("select * from testcase where id = :id")
     protected abstract Testcase _findById(@Bind("id") long id);
 
     @Transaction

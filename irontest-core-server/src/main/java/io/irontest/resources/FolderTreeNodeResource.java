@@ -3,10 +3,7 @@ package io.irontest.resources;
 import io.irontest.db.FolderTreeNodeDAO;
 import io.irontest.models.FolderTreeNode;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
@@ -21,13 +18,17 @@ public class FolderTreeNodeResource {
         this.folderTreeNodeDAO = folderTreeNodeDAO;
     }
 
+    @POST
+    public FolderTreeNode create(FolderTreeNode node) {
+        return folderTreeNodeDAO.insert(node);
+    }
+
     @GET
     public List<FolderTreeNode> findAll() {
         return folderTreeNodeDAO.findAll();
     }
 
     @PUT
-    @Path("{type}.{idPerType}")   //  composite id
     public void update(FolderTreeNode node) {
         folderTreeNodeDAO.update(node);
     }
