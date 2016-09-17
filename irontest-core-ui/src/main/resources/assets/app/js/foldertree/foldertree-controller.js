@@ -67,6 +67,7 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
         }
       },
       types: {
+        folder: {},
 			  testcase: {valid_children: [], icon: 'jstree-file'}
       },
       plugins: ['types', 'contextmenu', 'sort', 'dnd', 'state'],
@@ -102,27 +103,29 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
       });
     };
 
-    var openTestcase = function(testcaseId) {
-      $state.go('testcase_edit', {testcaseId: testcaseId}, {reload: true});
+    var displayNodeDetails = function(type, idPerType) {
+      if (type === NODE_TYPE_TEST_CASE) {
+        $state.go('testcase_edit', {testcaseId: idPerType}, {reload: true});
+      } else if (type === NODE_TYPE_FOLDER) {
+        $state.go('folder');
+      }
     };
 
     var nodeSelected = function(event, data) {
       var node = data.node;
-      if (node.type === NODE_TYPE_TEST_CASE) {
-        openTestcase(node.data.idPerType);
-      }
+      displayNodeDetails(node.type, node.data.idPerType);
     };
 
     var nodeRenamed = function(event, data) {
       var node = data.node;
-      if (node.type === NODE_TYPE_TEST_CASE && data.text !== data.old) {      //  test case name is changed
+      if (data.text !== data.old) {      //  test case name is changed
         //  update node at server side
         var nodeRes = new FolderTreeNodes({
           idPerType: node.data.idPerType, parentFolderId: node.data.parentFolderId,
           text: data.text, type: node.type
         });
         nodeRes.$update(function(response) {
-          openTestcase(node.data.idPerType);
+          displayNodeDetails(node.type, node.data.idPerType);
         }, function(response) {
           IronTestUtils.openErrorHTTPResponseModal(response);
         });

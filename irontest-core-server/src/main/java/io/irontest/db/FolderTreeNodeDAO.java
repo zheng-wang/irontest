@@ -32,9 +32,15 @@ public abstract class FolderTreeNodeDAO {
     protected abstract int _updateTestcase(@Bind("name") String name, @Bind("parentFolderId") long parentFolderId,
                                            @Bind("id") long id);
 
+    @SqlUpdate("update folder set name = :name, parent_folder_id = :parentFolderId, updated = CURRENT_TIMESTAMP where id = :id")
+    protected abstract int _updateFolder(@Bind("name") String name, @Bind("parentFolderId") long parentFolderId,
+                                           @Bind("id") long id);
+
     public void update(FolderTreeNode node) {
         if (FolderTreeNodeType.TESTCASE == node.getType()) {
-            _updateTestcase(node.getText(),node.getParentFolderId(), node.getIdPerType());
+            _updateTestcase(node.getText(), node.getParentFolderId(), node.getIdPerType());
+        } else if (FolderTreeNodeType.FOLDER == node.getType()) {
+            _updateFolder(node.getText(), node.getParentFolderId(), node.getIdPerType());
         }
     }
 
