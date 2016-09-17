@@ -46,7 +46,7 @@ public abstract class TestcaseDAO {
             "updated = CURRENT_TIMESTAMP where id = :id")
     public abstract int update(@BindBean Testcase testcase);
 
-    @SqlUpdate("delete from testcase where id = :id")
+    /*@SqlUpdate("delete from testcase where id = :id")
     public abstract void _deleteById(@Bind("id") long id);
 
     @Transaction
@@ -57,10 +57,10 @@ public abstract class TestcaseDAO {
             teststepDAO.deleteById_NoTransaction(teststep.getId());
         }
         _deleteById(id);
-    }
+    }*/
 
-    @SqlQuery("select * from testcase")
-    public abstract List<Testcase> findAll();
+    /*@SqlQuery("select * from testcase")
+    public abstract List<Testcase> findAll();*/
 
     @SqlQuery("select * from testcase where testcase.id = :id")
     protected abstract Testcase _findById(@Bind("id") long id);

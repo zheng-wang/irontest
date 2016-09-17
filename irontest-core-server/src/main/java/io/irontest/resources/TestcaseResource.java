@@ -39,15 +39,15 @@ public class TestcaseResource {
         return testcaseDAO.findById_Mini(testcase.getId());
     }
 
-    @DELETE @Path("{testcaseId}")
+    /*@DELETE @Path("{testcaseId}")
     public void delete(@PathParam("testcaseId") long testcaseId) {
         testcaseDAO.deleteById(testcaseId);
-    }
+    }*/
 
-    @GET
+    /*@GET
     public List<Testcase> findAll() {
         return testcaseDAO.findAll();
-    }
+    }*/
 
     @GET @Path("{testcaseId}")
     public Testcase findById(@PathParam("testcaseId") long testcaseId) {

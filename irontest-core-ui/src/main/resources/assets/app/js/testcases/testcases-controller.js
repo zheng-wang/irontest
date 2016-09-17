@@ -11,22 +11,6 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
       }, 2000);
     };
 
-    $scope.testcaseGridColumnDefs = [
-      {
-        name: 'name', width: 600, minWidth: 100,
-        sort: {
-          direction: uiGridConstants.ASC,
-          priority: 1
-        },
-        cellTemplate: 'testcaseGridNameCellTemplate.html'
-      },
-      {name: 'description', width: 500, minWidth: 300},
-      {
-        name: 'delete', width: 100, minWidth: 80, enableSorting: false, enableFiltering: false,
-        cellTemplate: 'testcaseGridDeleteCellTemplate.html'
-      }
-    ];
-
     $scope.teststepGridOptions = {
       data: 'testcase.teststeps',
       enableSorting: false,
@@ -83,13 +67,13 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
       }
     };
 
-    $scope.remove = function(testcase) {
+    /*$scope.remove = function(testcase) {
       testcase.$remove(function(response) {
         $state.go($state.current, {}, {reload: true});
       }, function(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);
       });
-    };
+    };*/
 
     $scope.run = function() {
       //  clear previous run result
@@ -124,14 +108,6 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
       var teststepService = new Teststeps(teststep);
       teststepService.$remove(function(response) {
         $state.go($state.current, {}, {reload: true});
-      }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
-      });
-    };
-
-    $scope.find = function() {
-      Testcases.query(function(testcases) {
-        $scope.testcases = testcases;
       }, function(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);
       });
