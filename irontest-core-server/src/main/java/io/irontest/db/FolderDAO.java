@@ -4,6 +4,8 @@ import io.irontest.models.Folder;
 import org.skife.jdbi.v2.sqlobject.*;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
+import static io.irontest.IronTestConstants.DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX;
+
 /**
  * Created by Zheng on 10/09/2015.
  */
@@ -17,7 +19,8 @@ public abstract class FolderDAO {
             "name varchar(200) NOT NULL DEFAULT CURRENT_TIMESTAMP, parent_folder_id BIGINT, " +
             "created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
-            "FOREIGN KEY (parent_folder_id) REFERENCES folder(id))")
+            "FOREIGN KEY (parent_folder_id) REFERENCES folder(id), " +
+            "CONSTRAINT FOLDER_" + DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX + " UNIQUE(parent_folder_id, name))")
     public abstract void createTableIfNotExists();
 
     @SqlUpdate("insert into folder (name) " +

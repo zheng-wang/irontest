@@ -23,7 +23,7 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
 
             //  enable user to edit the node's name
             tree.edit(newNodeId);     //  as a (good) side effect, this opens all the node's ancestor folders
-          }, 100);
+          }, 50);
         });
       }, function(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);
@@ -74,6 +74,7 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
       version: 1          //  ngJsTree property
     };
 
+    // load or reload the tree
     $scope.loadTreeData = function(successCallback) {
       FolderTreeNodes.query(function(folderTreeNodes) {
         //  transform for default display effect (expanding Root folder) and complying with jstree format
@@ -99,7 +100,8 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
           successCallback();
         }
       }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        var instruction = 'Please refresh the page. If problem is still there, please contact the system administrator.'
+        IronTestUtils.openErrorHTTPResponseModal(response, instruction);
       });
     };
 
@@ -128,6 +130,8 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
           displayNodeDetails(node.type, node.data.idPerType);
         }, function(response) {
           IronTestUtils.openErrorHTTPResponseModal(response);
+          //  reload the tree to restore previous status
+          $scope.loadTreeData();
         });
       }
     };
@@ -150,10 +154,12 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
 
             //  open the new parent folder, so that the state plugin can remember this status.
             tree.open_node(data.parent);
-          }, 100);
+          }, 50);
         });
       }, function(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);
+        //  reload the tree to restore previous status
+        $scope.loadTreeData();
       });
     };
 

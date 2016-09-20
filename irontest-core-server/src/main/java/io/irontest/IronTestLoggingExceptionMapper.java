@@ -30,7 +30,7 @@ public class IronTestLoggingExceptionMapper extends LoggingExceptionMapper<Throw
             SQLException se = (SQLException) exception.getCause();
             if (se.getErrorCode() == ErrorCode.DUPLICATE_KEY_1 &&
                     se.getMessage().contains("_" + DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX)) {
-                errorDetails = "Name is already used.";
+                errorDetails = "Duplicate name.";
             }
         }
 

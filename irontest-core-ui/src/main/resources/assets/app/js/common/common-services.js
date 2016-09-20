@@ -35,7 +35,8 @@ angular.module('irontest')
         return name;
       },
 
-      openErrorHTTPResponseModal: function(errorHTTPResponse) {
+      //  instruction is to tell user how to handle the error
+      openErrorHTTPResponseModal: function(errorHTTPResponse, instruction) {
         var errorMessage = null;
         var errorDetails = null;
 
@@ -45,6 +46,10 @@ angular.module('irontest')
         } else {
           errorMessage = errorHTTPResponse.data.message;
           errorDetails = errorHTTPResponse.data.details;
+        }
+
+        if (instruction) {
+          errorMessage += ' ' + instruction;
         }
 
         this.openErrorMessageModal(errorMessage, errorDetails);
