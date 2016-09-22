@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('irontest').controller('FolderTreeController', ['$scope', '$state', 'IronTestUtils', 'FolderTreeNodes',
-    '$timeout',
-  function($scope, $state, IronTestUtils, FolderTreeNodes, $timeout) {
+    '$timeout', '$rootScope',
+  function($scope, $state, IronTestUtils, FolderTreeNodes, $timeout, $rootScope) {
     var NODE_TYPE_FOLDER = 'folder';
     var NODE_TYPE_TEST_CASE = 'testcase';
 
@@ -74,6 +74,19 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
       version: 1          //  ngJsTree property
     };
 
+    //  select tree node according to ui router state
+    $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+      var tree = $scope.treeInstance.jstree(true);
+
+      if (toState.name === 'testcase_edit') {
+        tree.select_node(NODE_TYPE_TEST_CASE + toParams.testcaseId);
+      }
+      /*console.log(fromState.name);
+      console.log(toState.name);
+      console.log(fromParams);
+      console.log(toParams);*/
+    });
+
     // load or reload the tree
     $scope.loadTreeData = function(successCallback) {
       FolderTreeNodes.query(function(folderTreeNodes) {
@@ -109,8 +122,15 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
       if (type === NODE_TYPE_TEST_CASE) {
         $state.go('testcase_edit', {testcaseId: idPerType}, {reload: true});
       } else if (type === NODE_TYPE_FOLDER) {
-        $state.go('folder');
+        $state.go('folder', {folderId: idPerType});
       }
+    };
+
+    var treeLoaded = function(event, data) {
+      var tree = $scope.treeInstance.jstree(true);
+
+      //  workaround for state plugin events 'open_node.jstree close_node.jstree' which still remembers selected node sometimes
+      tree.deselect_all();
     };
 
     var nodeSelected = function(event, data) {
@@ -164,6 +184,7 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
     };
 
     $scope.treeEventsObj = {
+      ready: treeLoaded,
       select_node: nodeSelected,
       rename_node: nodeRenamed,
       move_node: nodeMoved
