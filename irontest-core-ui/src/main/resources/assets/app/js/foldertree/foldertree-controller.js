@@ -25,7 +25,7 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
             displayNodeDetails(nodeType, response.idPerType);
 
             //  enable user to edit the node's name
-            tree.edit(newNodeId);     //  as a (good) side effect, this opens all the node's ancestor folders
+            tree.edit(newNodeId);
           }, 60);
         });
       }, function(response) {
@@ -77,17 +77,23 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
       version: 1          //  ngJsTree property
     };
 
-    //  select tree node according to ui router state
+    //  select tree node according to ui router state change
     $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
-      /*var tree = $scope.treeInstance.jstree(true);
+      if (fromState.name !== '') {             //  do nothing if refreshing browser
+        var tree = $scope.treeInstance.jstree(true);
+        tree.deselect_all();
 
-      if (toState.name === 'testcase_edit') {
-        tree.select_node(NODE_TYPE_TEST_CASE + toParams.testcaseId);
-      }*/
-      /*console.log(fromState.name);
-      console.log(toState.name);
-      console.log(fromParams);
-      console.log(toParams);*/
+        switch (toState.name) {
+          case 'testcase_edit':
+            tree.select_node(NODE_TYPE_TEST_CASE + toParams.testcaseId);
+            break;
+          case 'folder':
+            tree.select_node(NODE_TYPE_FOLDER + toParams.folderId);
+            break;
+          default:
+            break;
+        }
+      }
     });
 
     // load or reload the tree
@@ -127,13 +133,6 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
       } else if (type === NODE_TYPE_FOLDER) {
         $state.go('folder', {folderId: idPerType});
       }
-    };
-
-    var treeLoaded = function(event, data) {
-      var tree = $scope.treeInstance.jstree(true);
-
-      //  workaround for state plugin events 'open_node.jstree close_node.jstree' which still remembers selected node sometimes
-      tree.deselect_all();
     };
 
     var nodeSelected = function(event, data) {
@@ -189,7 +188,6 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
     };
 
     $scope.treeEventsObj = {
-      //ready: treeLoaded,
       select_node: nodeSelected,
       rename_node: nodeRenamed,
       move_node: nodeMoved
