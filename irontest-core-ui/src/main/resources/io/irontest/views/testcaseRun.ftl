@@ -28,7 +28,7 @@
     <div class="col-lg-offset-1 col-lg-10">
 
       <div class="row">
-        <div class="col-lg-12"><h3>${ testcaseRun.testcase.name }</h3></div>
+        <div class="col-lg-12"><h3>${ testcaseRun.testcase.folderPath }/${ testcaseRun.testcase.name }</h3></div>
       </div>
 
       <div class="row">

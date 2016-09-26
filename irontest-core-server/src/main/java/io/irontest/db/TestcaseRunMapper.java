@@ -25,6 +25,7 @@ public class TestcaseRunMapper implements ResultSetMapper<TestcaseRun> {
         Testcase testcase = new Testcase();
         testcase.setId(rs.getLong("testcase_id"));
         testcase.setName(rs.getString("testcase_name"));
+        testcase.setFolderPath(rs.getString("testcase_folderpath"));
         testcaseRun.setTestcase(testcase);
         testcaseRun.setStartTime(rs.getTimestamp("starttime"));
         testcaseRun.setDuration(rs.getLong("duration"));

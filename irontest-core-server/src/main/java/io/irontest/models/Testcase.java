@@ -9,6 +9,7 @@ import java.util.List;
 public class Testcase {
     private long id;
     private String name;
+    private String folderPath;
     private String description;
     private Date created;
     private Date updated;
@@ -70,5 +71,13 @@ public class Testcase {
 
     public void setTeststeps(List<Teststep> teststeps) {
         this.teststeps = teststeps;
+    }
+
+    public String getFolderPath() {
+        return folderPath;
+    }
+
+    public void setFolderPath(String folderPath) {
+        this.folderPath = folderPath;
     }
 }

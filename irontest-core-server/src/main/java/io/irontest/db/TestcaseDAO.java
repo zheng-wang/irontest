@@ -3,7 +3,9 @@ package io.irontest.db;
 import io.irontest.models.Testcase;
 import io.irontest.models.Teststep;
 import org.skife.jdbi.v2.sqlobject.*;
+import org.skife.jdbi.v2.sqlobject.customizers.Define;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
+import org.skife.jdbi.v2.sqlobject.stringtemplate.UseStringTemplate3StatementLocator;
 
 import java.util.List;
 
@@ -12,6 +14,7 @@ import static io.irontest.IronTestConstants.DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFI
 /**
  * Created by Zheng on 1/07/2015.
  */
+@UseStringTemplate3StatementLocator
 @RegisterMapper(TestcaseMapper.class)
 public abstract class TestcaseDAO {
     @SqlUpdate("CREATE SEQUENCE IF NOT EXISTS testcase_sequence START WITH 1 INCREMENT BY 1 NOCACHE")
@@ -75,9 +78,23 @@ public abstract class TestcaseDAO {
         return result;
     }
 
+    /**
+     * @param testcaseId
+     * @return folder path of the testcase
+     */
+    @SqlQuery("WITH RECURSIVE T(parent_folder_id, path) AS (" +
+                  "SELECT parent_folder_id, name AS path " +
+                  "FROM folder WHERE id = (SELECT parent_folder_id FROM testcase WHERE id = <testcaseId>) " +
+                  "UNION ALL " +
+                  "SELECT T2.parent_folder_id, (T2.name || '/' || T.path) AS path " +
+                  "FROM T INNER JOIN folder AS T2 ON T.parent_folder_id = T2.id " +
+              ") SELECT path FROM T WHERE parent_folder_id IS NULL")
+    protected abstract String getFolderPath(@Define("testcaseId") long testcaseId);
+
     @Transaction
     public Testcase findById_Complete(long id) {
         Testcase result = _findById(id);
+        result.setFolderPath(getFolderPath(id));
         List<Teststep> teststeps = teststepDAO().findByTestcaseId(id);
         result.setTeststeps(teststeps);
         return result;
