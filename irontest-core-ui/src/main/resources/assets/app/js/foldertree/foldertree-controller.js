@@ -10,7 +10,7 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
       var nodeRes = new FolderTreeNodes({ parentFolderId: parentFolderId, type: nodeType });
       nodeRes.$save(function(response) {
         //  reload the tree (a chance to sync between users in a team)
-        $scope.loadTreeData(function successCallback() {
+        $scope.reloadTreeData(function successCallback() {
           $timeout(function() {    //  wait for the tree to finish loading
             var newNodeId = nodeType + response.idPerType;
             var tree = $scope.treeInstance.jstree(true);
@@ -32,6 +32,8 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
         IronTestUtils.openErrorHTTPResponseModal(response);
       });
     };
+
+    $scope.treeData = [];
 
     $scope.treeConfig = {
       core: {
@@ -96,8 +98,7 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
       }
     });
 
-    // load or reload the tree
-    $scope.loadTreeData = function(successCallback) {
+    $scope.reloadTreeData = function(successCallback) {
       FolderTreeNodes.query(function(folderTreeNodes) {
         //  transform for default display effect (expanding Root folder) and complying with jstree format
         folderTreeNodes.forEach(function(treeNode) {
@@ -135,6 +136,12 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
       }
     };
 
+    var treeReady = function() {
+      if ($scope.treeConfig.version === 1) {       //  initial tree data loading
+        $scope.reloadTreeData();
+      }
+    };
+
     var nodeSelected = function(event, data) {
       var node = data.node;
       if (data.event && data.event.type === 'click') {   //  open node's URL only on mouse left click
@@ -155,7 +162,7 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
         }, function(response) {
           IronTestUtils.openErrorHTTPResponseModal(response);
           //  reload the tree to restore previous status
-          $scope.loadTreeData();
+          $scope.reloadTreeData();
         });
       }
     };
@@ -172,7 +179,7 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
       });
       nodeRes.$update(function(response) {
         //  reload the tree (a chance to sync between users in a team)
-        $scope.loadTreeData(function successCallback() {
+        $scope.reloadTreeData(function successCallback() {
           $timeout(function() {    //  wait for the tree to finish loading
             var tree = $scope.treeInstance.jstree(true);
 
@@ -183,11 +190,12 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
       }, function(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);
         //  reload the tree to restore previous status
-        $scope.loadTreeData();
+        $scope.reloadTreeData();
       });
     };
 
     $scope.treeEventsObj = {
+      ready: treeReady,
       select_node: nodeSelected,
       rename_node: nodeRenamed,
       move_node: nodeMoved
