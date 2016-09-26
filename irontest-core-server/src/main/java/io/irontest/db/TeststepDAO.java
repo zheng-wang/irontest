@@ -361,7 +361,9 @@ public abstract class TeststepDAO {
 
     private Teststep findById_NoTransaction(long id) {
         Teststep teststep = _findById(id);
-        populateTeststepWithMoreInfo(teststep);
+        if (teststep != null) {
+            populateTeststepWithMoreInfo(teststep);
+        }
         return teststep;
     }
 

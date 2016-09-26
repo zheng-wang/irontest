@@ -68,8 +68,10 @@ public abstract class TestcaseDAO {
     @Transaction
     public Testcase findById_Mini(long id) {
         Testcase result = _findById(id);
-        List<Teststep> teststeps = teststepDAO().findByTestcaseId_PrimaryProperties(id);
-        result.setTeststeps(teststeps);
+        if (result != null) {
+            List<Teststep> teststeps = teststepDAO().findByTestcaseId_PrimaryProperties(id);
+            result.setTeststeps(teststeps);
+        }
         return result;
     }
 
