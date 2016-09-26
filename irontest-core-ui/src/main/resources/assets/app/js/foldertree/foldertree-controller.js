@@ -11,22 +11,20 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
       nodeRes.$save(function(response) {
         //  reload the tree (a chance to sync between users in a team)
         $scope.reloadTreeData(function successCallback() {
-          $timeout(function() {    //  wait for the tree to finish loading
-            var newNodeId = nodeType + response.idPerType;
-            var tree = $scope.treeInstance.jstree(true);
+          var newNodeId = nodeType + response.idPerType;
+          var tree = $scope.treeInstance.jstree(true);
 
-            //  switch the selection from the folder to the newly created test case,
-            //  so that the state plugin can remember this status.
-            var parentNodeId = NODE_TYPE_FOLDER + parentFolderId;
-            tree.deselect_node(parentNodeId);
-            tree.select_node(newNodeId);
+          //  switch the selection from the folder to the newly created test case,
+          //  so that the state plugin can remember this status.
+          var parentNodeId = NODE_TYPE_FOLDER + parentFolderId;
+          tree.deselect_node(parentNodeId);
+          tree.select_node(newNodeId);
 
-            //  open the node's URL
-            displayNodeDetails(nodeType, response.idPerType);
+          //  open the node's URL
+          displayNodeDetails(nodeType, response.idPerType);
 
-            //  enable user to edit the node's name
-            tree.edit(newNodeId);
-          }, 60);
+          //  enable user to edit the node's name
+          tree.edit(newNodeId);
         });
       }, function(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);
@@ -79,22 +77,25 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
       version: 1          //  ngJsTree property
     };
 
-    //  select tree node according to ui router state change
-    $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
-      if (fromState.name !== '') {             //  do nothing if refreshing browser
-        var tree = $scope.treeInstance.jstree(true);
-        tree.deselect_all();
+    var selectNodeByUIRouterState = function(stateName, params) {
+      var tree = $scope.treeInstance.jstree(true);
+      tree.deselect_all();
+      switch (stateName) {
+        case 'testcase_edit':
+        case 'teststep_edit':
+          tree.select_node(NODE_TYPE_TEST_CASE + params.testcaseId);
+          break;
+        case 'folder':
+          tree.select_node(NODE_TYPE_FOLDER + params.folderId);
+          break;
+        default:
+          break;
+      }
+    };
 
-        switch (toState.name) {
-          case 'testcase_edit':
-            tree.select_node(NODE_TYPE_TEST_CASE + toParams.testcaseId);
-            break;
-          case 'folder':
-            tree.select_node(NODE_TYPE_FOLDER + toParams.folderId);
-            break;
-          default:
-            break;
-        }
+    $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+      if (fromState.name !== '') {    //  do nothing if refreshing browser (node selection is done by the treeReady function)
+        selectNodeByUIRouterState(toState.name, toParams);
       }
     });
 
@@ -120,7 +121,9 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
         $scope.treeConfig.version++;
 
         if (successCallback) {
-          successCallback();
+          $timeout(function() {    //  wait for the tree to finish building
+            successCallback();
+          }, 60);
         }
       }, function(response) {
         var instruction = 'Please refresh the page. If problem is still there, please contact the system administrator.'
@@ -138,7 +141,9 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
 
     var treeReady = function() {
       if ($scope.treeConfig.version === 1) {       //  initial tree data loading
-        $scope.reloadTreeData();
+        $scope.reloadTreeData(function successCallback() {
+          selectNodeByUIRouterState($state.current.name, $state.params);
+        });
       }
     };
 
@@ -180,12 +185,10 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
       nodeRes.$update(function(response) {
         //  reload the tree (a chance to sync between users in a team)
         $scope.reloadTreeData(function successCallback() {
-          $timeout(function() {    //  wait for the tree to finish loading
-            var tree = $scope.treeInstance.jstree(true);
+          var tree = $scope.treeInstance.jstree(true);
 
-            //  open the new parent folder, so that the state plugin can remember this status.
-            tree.open_node(data.parent);
-          }, 60);
+          //  open the new parent folder, so that the state plugin can remember this status.
+          tree.open_node(data.parent);
         });
       }, function(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);
