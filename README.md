@@ -53,22 +53,18 @@ If this is the first time you launch the application in the `<IronTest_Home>` fo
     logs - where Iron Test application runtime logs are located.
     
 ## Use
-Iron Test home page (http://&lt;host&gt;:8081/ui) is test case list. 
-
-![Home Page](screenshots/home-page.png)
+Open Iron Test home page (http://&lt;host&gt;:8081/ui). 
 
 ### SOAP Web Service Testing
-Create a test case by clicking the Create button. Test case edit view displays. 
-
-Under the Basic Info tab, enter name and (optional) description. Click the Test Steps tab. 
+Right click on a folder and select Create Test Case. Give the test case a name.
 
 ![New Test Case](screenshots/soap/new-test-case.png)
 
-No Save button. Iron Test uses automatic saving.
+(You can create your preferred folder structure for managing test cases, by right clicking on folder and selecting Create Folder)
 
 Under the Test Steps tab, click Create dropdown button, and select SOAP Step to create a SOAP test step. SOAP test step edit view displays. 
 
-Under the Basic Info tab, enter name and (optional) description.
+Under the Basic Info tab, enter name and (optional) description. No Save button. Iron Test uses automatic saving.
              
 Under the Endpoint Details tab, enter SOAP Address. A sample Article web service (http://localhost:8081/soap/article) is bundled, which can be used for playing with Iron Test. Ignore Username and Password fields as they are not used for now.
 
