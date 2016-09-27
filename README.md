@@ -56,11 +56,11 @@ If this is the first time you launch the application in the `<IronTest_Home>` fo
 Open Iron Test home page (http://&lt;host&gt;:8081/ui). 
 
 ### SOAP Web Service Testing
-Right click on a folder and select Create Test Case. Give the test case a name.
+Right click on a folder in the tree and select Create Test Case. Give the test case a name.
 
 ![New Test Case](screenshots/soap/new-test-case.png)
 
-(You can create your preferred folder structure for managing test cases, by right clicking on folder and selecting Create Folder)
+(You can create your preferred folder structure for managing test cases, by right clicking on folder and selecting needed context menu item)
 
 Under the Test Steps tab, click Create dropdown button, and select SOAP Step to create a SOAP test step. SOAP test step edit view displays. 
 
