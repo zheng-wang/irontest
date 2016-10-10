@@ -5,6 +5,7 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
   function($scope, $state, IronTestUtils, FolderTreeNodes, $timeout, $rootScope) {
     var NODE_TYPE_FOLDER = 'folder';
     var NODE_TYPE_TEST_CASE = 'testcase';
+    var idOfTestcaseCopied = null;
 
     var createNode = function(parentFolderId, nodeType) {
       var nodeRes = new FolderTreeNodes({ parentFolderId: parentFolderId, type: nodeType });
@@ -29,6 +30,11 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
       }, function(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);
       });
+    };
+
+    var copyTestcase = function(testcaseId) {
+      idOfTestcaseCopied = testcaseId;
+      console.log(idOfTestcaseCopied);
     };
 
     $scope.treeData = [];
@@ -58,12 +64,23 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
                 var tree = $scope.treeInstance.jstree(true);
                 tree.edit(selectedNode);
               }
+            },
+            copyTestcase: {
+              separator_before: false, separator_after: false, label: 'Copy',
+              action: function() { copyTestcase(selectedNode.data.idPerType); }
             }
           };
 
-          if (selectedNode.type === NODE_TYPE_TEST_CASE) {
-            delete items.createTestcase;
-            delete items.createFolder;
+          switch (selectedNode.type) {
+            case NODE_TYPE_TEST_CASE:
+              delete items.createTestcase;
+              delete items.createFolder;
+              break;
+            case NODE_TYPE_FOLDER:
+              delete items.copyTestcase;
+              break;
+            default:
+              break;
           }
 
           return items;
@@ -149,7 +166,8 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
 
     var nodeSelected = function(event, data) {
       var node = data.node;
-      if (data.event && data.event.type === 'click') {   //  open node's URL only on mouse left click
+      //  open node's URL only on mouse left or right click
+      if (data.event && (data.event.type === 'click' || data.event.type === 'contextmenu')) {
         displayNodeDetails(node.type, node.data.idPerType);
       }
     };
