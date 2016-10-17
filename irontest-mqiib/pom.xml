@@ -15,7 +15,7 @@
     <properties>
         <mqiib.enabled>true</mqiib.enabled>
         <mq.version>[7.5.0.1, 7.5.0.6]</mq.version>
-        <iib.version>[9.0.0.3, 9.0.0.5]</iib.version>
+        <iib.version>[9.0.0.3, 9.0.0.6]</iib.version>
     </properties>
 
     <dependencies>
