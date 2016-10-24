@@ -47,4 +47,17 @@ public class TestcaseResource {
     public Testcase findById(@PathParam("testcaseId") long testcaseId) {
         return testcaseDAO.findById_Mini(testcaseId);
     }
+
+    /**
+     * @param testcaseId
+     * @param targetFolderId
+     * @return the new test case
+     */
+    @PUT @Path("{testcaseId}/duplicate")
+    public Testcase duplicate(@PathParam("testcaseId") long testcaseId,
+                          @QueryParam("targetFolderId") long targetFolderId) {
+        Testcase testcase = new Testcase();
+        testcase.setId(testcaseDAO.duplicate(testcaseId, targetFolderId));
+        return testcase;
+    }
 }

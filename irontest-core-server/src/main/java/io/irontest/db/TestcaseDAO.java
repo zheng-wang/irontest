@@ -99,4 +99,40 @@ public abstract class TestcaseDAO {
         result.setTeststeps(teststeps);
         return result;
     }
+
+    @SqlUpdate("insert into testcase (name, description, parent_folder_id) " +
+            "select :newName, description, :targetFolderId " +
+            "from testcase where id = <testcaseId>")
+    @GetGeneratedKeys
+    protected abstract long _duplicate(@Bind("newName") String newName, @Bind("targetFolderId") long targetFolderId,
+                                       @Define("testcaseId") long testcaseId);
+    @SqlQuery("select count(*) = 1 from testcase where name = :name and parent_folder_id = :parentFolderId")
+    protected abstract boolean _nameExistsInFolder(@Bind("name") String name,
+                                                   @Bind("parentFolderId") long parentFolderId);
+
+    /**
+     * Clone the test case and its contents.
+     * @param testcaseId
+     * @param targetFolderId
+     * @return new test case id
+     */
+    @Transaction
+    public long duplicate(long testcaseId, long targetFolderId) {
+        //  resolve new test case name
+        Testcase oldTestcase = _findById(testcaseId);
+        String newTestcaseName = oldTestcase.getName();
+        if (oldTestcase.getParentFolderId() == targetFolderId) {
+            int copyIndex = 1;
+            newTestcaseName = oldTestcase.getName() + " - Copy";
+            while (_nameExistsInFolder(newTestcaseName, targetFolderId)) {
+                copyIndex++;
+                newTestcaseName = oldTestcase.getName() + " - Copy (" + copyIndex + ")";
+            }
+        }
+
+        //  duplicate the test case record
+        long newTestcaseId = _duplicate(newTestcaseName, targetFolderId, testcaseId);
+
+        return newTestcaseId;
+    }
 }

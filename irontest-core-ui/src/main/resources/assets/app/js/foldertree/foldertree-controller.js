@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('irontest').controller('FolderTreeController', ['$scope', '$state', 'IronTestUtils', 'FolderTreeNodes',
-    '$timeout', '$rootScope',
-  function($scope, $state, IronTestUtils, FolderTreeNodes, $timeout, $rootScope) {
+    '$timeout', '$rootScope', 'Testcases',
+  function($scope, $state, IronTestUtils, FolderTreeNodes, $timeout, $rootScope, Testcases) {
     var NODE_TYPE_FOLDER = 'folder';
     var NODE_TYPE_TEST_CASE = 'testcase';
     var idOfTestcaseCopied = null;
@@ -34,7 +34,21 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
 
     var copyTestcase = function(testcaseId) {
       idOfTestcaseCopied = testcaseId;
-      console.log(idOfTestcaseCopied);
+    };
+
+    var pasteTestcase = function(folderId) {
+      var testcaseRes = new Testcases({
+        id: idOfTestcaseCopied
+      });
+      testcaseRes.$duplicate({ targetFolderId: folderId }, function(response) {
+        var newTestcaseId = response.id;
+         //  reload the tree (a chance to sync between users in a team)
+         $scope.reloadTreeData(function successCallback() {
+           displayNodeDetails(NODE_TYPE_TEST_CASE, newTestcaseId);
+         });
+      }, function(response) {
+        IronTestUtils.openErrorHTTPResponseModal(response);
+      });
     };
 
     $scope.treeData = [];
@@ -68,6 +82,10 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
             copyTestcase: {
               separator_before: false, separator_after: false, label: 'Copy',
               action: function() { copyTestcase(selectedNode.data.idPerType); }
+            },
+            pasteTestcase: {
+              separator_before: false, separator_after: false, label: 'Paste',
+              action: function() { pasteTestcase(selectedNode.data.idPerType); }
             }
           };
 
@@ -75,9 +93,13 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
             case NODE_TYPE_TEST_CASE:
               delete items.createTestcase;
               delete items.createFolder;
+              delete items.pasteTestcase;
               break;
             case NODE_TYPE_FOLDER:
               delete items.copyTestcase;
+              if (!idOfTestcaseCopied) {
+                delete items.pasteTestcase;
+              }
               break;
             default:
               break;
