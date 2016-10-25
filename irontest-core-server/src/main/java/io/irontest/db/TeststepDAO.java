@@ -65,7 +65,7 @@ public abstract class TeststepDAO {
 
     public Teststep insert_NoTransaction(Teststep teststep) throws JsonProcessingException {
         Endpoint endpoint = teststep.getEndpoint();
-        if (endpoint != null && !endpoint.isManaged()) {
+        if (endpoint != null && endpoint.getId() == 0) {
             long endpointId = endpointDAO().insertUnmanagedEndpoint_NoTransaction(endpoint);
             endpoint.setId(endpointId);
         }
