@@ -127,10 +127,6 @@ public abstract class TestcaseDAO {
     public Testcase duplicate(long oldTestcaseId, long targetFolderId) throws JsonProcessingException {
         Testcase oldTestcase = findById_Complete_NoTransaction(oldTestcaseId);
 
-        return importTestcase(oldTestcase, targetFolderId);
-    }
-
-    private Testcase importTestcase(Testcase oldTestcase, long targetFolderId) throws JsonProcessingException {
         //  resolve new test case name
         String newTestcaseName = oldTestcase.getName();
         if (oldTestcase.getParentFolderId() == targetFolderId) {
