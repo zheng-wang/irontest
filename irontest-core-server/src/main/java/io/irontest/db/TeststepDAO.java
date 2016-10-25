@@ -46,35 +46,42 @@ public abstract class TeststepDAO {
     @CreateSqlObject
     protected abstract AssertionDAO assertionDAO();
 
-    @SqlUpdate("insert into teststep (testcase_id, sequence, type, request, endpoint_id, other_properties) " +
-            "values (:testcaseId, select coalesce(max(sequence), 0) + 1 from teststep where testcase_id = :testcaseId, " +
-            ":type, :request, :endpointId, :otherProperties)")
+    @SqlUpdate("insert into teststep (testcase_id, sequence, type, description, action, request, endpoint_id, other_properties) " +
+            "values (:t.testcaseId, case when :t.sequence = 0 " +
+                    "then (select coalesce(max(sequence), 0) + 1 from teststep where testcase_id = :t.testcaseId) " +
+                    "else :t.sequence end, " +
+                ":t.type, :t.description, :t.action, :request, :endpointId, :otherProperties)")
     @GetGeneratedKeys
-    protected abstract long _insert(@Bind("testcaseId") long testcaseId, @Bind("type") String type,
-                                    @Bind("request") Object request, @Bind("endpointId") Long endpointId,
-                                    @Bind("otherProperties") String otherProperties);
+    protected abstract long _insert(@BindBean("t") Teststep teststep, @Bind("request") Object request,
+                                    @Bind("endpointId") Long endpointId, @Bind("otherProperties") String otherProperties);
 
     @SqlUpdate("update teststep set name = :name where id = :id")
     protected abstract long updateNameForInsert(@Bind("id") long id, @Bind("name") String name);
 
     @Transaction
-    public void insert(Teststep teststep) throws JsonProcessingException {
+    public Teststep insert(Teststep teststep) throws JsonProcessingException {
+        return insert_NoTransaction(teststep);
+    }
+
+    public Teststep insert_NoTransaction(Teststep teststep) throws JsonProcessingException {
         Endpoint endpoint = teststep.getEndpoint();
-        if (endpoint != null) {
-            long endpointId = endpointDAO().insertUnmanagedEndpoint(endpoint);
+        if (endpoint != null && !endpoint.isManaged()) {
+            long endpointId = endpointDAO().insertUnmanagedEndpoint_NoTransaction(endpoint);
             endpoint.setId(endpointId);
         }
         Object request = teststep.getRequest() instanceof String ?
                 ((String) teststep.getRequest()).getBytes() : teststep.getRequest();
         String otherProperties = teststep.getOtherProperties() == null ?
                 null : new ObjectMapper().writeValueAsString(teststep.getOtherProperties());
-        long id = _insert(teststep.getTestcaseId(), teststep.getType(), request,
-                endpoint == null ? null : endpoint.getId(), otherProperties);
+        long id = _insert(teststep, request, endpoint == null ? null : endpoint.getId(), otherProperties);
         teststep.setId(id);
 
-        String name = "Step " + id;
-        updateNameForInsert(id, name);
-        teststep.setName(name);
+        if (teststep.getName() == null) {
+            teststep.setName("Step " + id);
+        }
+        updateNameForInsert(id, teststep.getName());
+
+        return teststep;
     }
 
     @SqlUpdate("update teststep set name = :name, description = :description, action = :action, request = :request, " +

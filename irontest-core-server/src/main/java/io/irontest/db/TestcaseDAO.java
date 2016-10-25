@@ -1,5 +1,7 @@
 package io.irontest.db;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import io.irontest.models.Endpoint;
 import io.irontest.models.Testcase;
 import io.irontest.models.Teststep;
 import org.skife.jdbi.v2.sqlobject.*;
@@ -100,6 +102,10 @@ public abstract class TestcaseDAO {
 
     @Transaction
     public Testcase findById_Complete(long id) {
+        return findById_Complete_NoTransaction(id);
+    }
+
+    public Testcase findById_Complete_NoTransaction(long id) {
         Testcase result = _findById(id);
         result.setFolderPath(getFolderPath(id));
         List<Teststep> teststeps = teststepDAO().findByTestcaseId(id);
@@ -113,14 +119,19 @@ public abstract class TestcaseDAO {
 
     /**
      * Clone the test case and its contents.
-     * @param testcaseId
+     * @param oldTestcaseId
      * @param targetFolderId
      * @return new test case id
      */
     @Transaction
-    public Testcase duplicate(long testcaseId, long targetFolderId) {
+    public Testcase duplicate(long oldTestcaseId, long targetFolderId) throws JsonProcessingException {
+        Testcase oldTestcase = findById_Complete_NoTransaction(oldTestcaseId);
+
+        return importTestcase(oldTestcase, targetFolderId);
+    }
+
+    private Testcase importTestcase(Testcase oldTestcase, long targetFolderId) throws JsonProcessingException {
         //  resolve new test case name
-        Testcase oldTestcase = _findById(testcaseId);
         String newTestcaseName = oldTestcase.getName();
         if (oldTestcase.getParentFolderId() == targetFolderId) {
             int copyIndex = 1;
@@ -137,6 +148,38 @@ public abstract class TestcaseDAO {
         newTestcase.setDescription(oldTestcase.getDescription());
         newTestcase.setParentFolderId(targetFolderId);
         newTestcase = insert_NoTransaction(newTestcase);
+
+        //  duplicate test steps
+        for (Teststep oldTeststep : oldTestcase.getTeststeps()) {
+            Teststep newTeststep = new Teststep();
+            newTeststep.setName(oldTeststep.getName());
+            newTeststep.setTestcaseId(newTestcase.getId());
+            newTeststep.setSequence(oldTeststep.getSequence());
+            newTeststep.setType(oldTeststep.getType());
+            newTeststep.setDescription(oldTeststep.getDescription());
+            newTeststep.setAction(oldTeststep.getAction());
+            newTeststep.setRequest(oldTeststep.getRequest());
+            newTeststep.setOtherProperties(oldTeststep.getOtherProperties());
+            Endpoint oldEndpoint = oldTeststep.getEndpoint();
+            if (oldEndpoint != null) {
+                Endpoint newEndpoint = new Endpoint();
+                newTeststep.setEndpoint(newEndpoint);
+                if (oldEndpoint.isManaged()) {
+                    newEndpoint.setId(oldEndpoint.getId());
+                } else {
+                    newEndpoint.setName(oldEndpoint.getName());
+                    newEndpoint.setType(oldEndpoint.getType());
+                    newEndpoint.setDescription(oldEndpoint.getDescription());
+                    newEndpoint.setUrl(oldEndpoint.getUrl());
+                    newEndpoint.setUsername(oldEndpoint.getUsername());
+                    newEndpoint.setPassword(oldEndpoint.getPassword());
+                    newEndpoint.setOtherProperties(oldEndpoint.getOtherProperties());
+                }
+            }
+            teststepDAO().insert_NoTransaction(newTeststep);
+
+            //  duplicate assertions
+        }
 
         return newTestcase;
     }

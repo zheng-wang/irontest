@@ -37,9 +37,7 @@ public class TeststepResource {
     public Teststep create(Teststep teststep) throws JsonProcessingException {
         preCreationProcess(teststep);
 
-        teststepDAO.insert(teststep);
-
-        return teststep;
+        return teststepDAO.insert(teststep);
     }
 
     //  adding more info to the teststep object

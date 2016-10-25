@@ -42,9 +42,23 @@ public abstract class EndpointDAO {
         return id;
     }
 
-    @SqlUpdate("insert into endpoint (name, type) values (:name, :type)")
+    /**
+     * Here assuming endpoint.password is already encrypted.
+     * @param endpoint
+     * @param otherProperties
+     * @return
+     */
+    @SqlUpdate("insert into endpoint (name, type, description, url, username, password, other_properties) " +
+               "values (:ep.name, :ep.type, :ep.description, :ep.url, :ep.username, :ep.password, :otherProperties)")
     @GetGeneratedKeys
-    public abstract long insertUnmanagedEndpoint(@BindBean Endpoint endpoint);
+    protected abstract long _insertUnmanagedEndpoint(@BindBean("ep") Endpoint endpoint,
+                                                  @Bind("otherProperties") String otherProperties);
+
+    public long insertUnmanagedEndpoint_NoTransaction(Endpoint endpoint) throws JsonProcessingException {
+        String otherProperties = endpoint.getOtherProperties() == null ?
+                null : new ObjectMapper().writeValueAsString(endpoint.getOtherProperties());
+        return _insertUnmanagedEndpoint(endpoint, otherProperties);
+    }
 
     @SqlUpdate("update endpoint set environment_id = :evId, name = :ep.name, description = :ep.description, " +
             "url = :ep.url, username = :ep.username, password = CASE " +

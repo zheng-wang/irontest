@@ -1,5 +1,6 @@
 package io.irontest.resources;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.irontest.db.TestcaseDAO;
 import io.irontest.db.TeststepDAO;
 import io.irontest.models.Testcase;
@@ -55,7 +56,7 @@ public class TestcaseResource {
      */
     @PUT @Path("{testcaseId}/duplicate")
     public Testcase duplicate(@PathParam("testcaseId") long testcaseId,
-                          @QueryParam("targetFolderId") long targetFolderId) {
+                          @QueryParam("targetFolderId") long targetFolderId) throws JsonProcessingException {
         return testcaseDAO.duplicate(testcaseId, targetFolderId);
     }
 }
