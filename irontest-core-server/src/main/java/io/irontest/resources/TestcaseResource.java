@@ -56,8 +56,6 @@ public class TestcaseResource {
     @PUT @Path("{testcaseId}/duplicate")
     public Testcase duplicate(@PathParam("testcaseId") long testcaseId,
                           @QueryParam("targetFolderId") long targetFolderId) {
-        Testcase testcase = new Testcase();
-        testcase.setId(testcaseDAO.duplicate(testcaseId, targetFolderId));
-        return testcase;
+        return testcaseDAO.duplicate(testcaseId, targetFolderId);
     }
 }

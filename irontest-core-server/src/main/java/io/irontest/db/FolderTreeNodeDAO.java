@@ -46,7 +46,9 @@ public abstract class FolderTreeNodeDAO {
 
     public FolderTreeNode insert(FolderTreeNode node) {
         if (node.getType() == FolderTreeNodeType.TESTCASE) {
-            Testcase testcase = testcaseDAO().insert(node.getParentFolderId());
+            Testcase testcase = new Testcase();
+            testcase.setParentFolderId(node.getParentFolderId());
+            testcase = testcaseDAO().insert(testcase);
             node.setIdPerType(testcase.getId());
             node.setText(testcase.getName());
         } else if (node.getType() == FolderTreeNodeType.FOLDER) {

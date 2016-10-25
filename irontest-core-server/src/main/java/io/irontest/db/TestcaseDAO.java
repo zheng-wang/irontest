@@ -31,18 +31,25 @@ public abstract class TestcaseDAO {
     @CreateSqlObject
     protected abstract TeststepDAO teststepDAO();
 
-    @SqlUpdate("insert into testcase (parent_folder_id) values (:parentFolderId)")
+    @SqlUpdate("insert into testcase (description, parent_folder_id) values (:description, :parentFolderId)")
     @GetGeneratedKeys
-    protected abstract long _insert(@Bind("parentFolderId") long parentFolderId);
+    protected abstract long _insert(@BindBean Testcase testcase);
 
     @SqlUpdate("update testcase set name = :name where id = :id")
     protected abstract long updateNameForInsert(@Bind("id") long id, @Bind("name") String name);
 
-    @Transaction
-    public Testcase insert(long parentFolderId) {
-        long id = _insert(parentFolderId);
-        updateNameForInsert(id, "Case " + id);
+    private Testcase insert_NoTransaction(Testcase testcase) {
+        long id = _insert(testcase);
+        if (testcase.getName() == null) {
+            testcase.setName("Case " + id);
+        }
+        updateNameForInsert(id, testcase.getName());
         return _findById(id);
+    }
+
+    @Transaction
+    public Testcase insert(Testcase testcase) {
+        return insert_NoTransaction(testcase);
     }
 
     @SqlUpdate("update testcase set name = :name, description = :description, " +
@@ -100,12 +107,6 @@ public abstract class TestcaseDAO {
         return result;
     }
 
-    @SqlUpdate("insert into testcase (name, description, parent_folder_id) " +
-            "select :newName, description, :targetFolderId " +
-            "from testcase where id = <testcaseId>")
-    @GetGeneratedKeys
-    protected abstract long _duplicate(@Bind("newName") String newName, @Bind("targetFolderId") long targetFolderId,
-                                       @Define("testcaseId") long testcaseId);
     @SqlQuery("select count(*) = 1 from testcase where name = :name and parent_folder_id = :parentFolderId")
     protected abstract boolean _nameExistsInFolder(@Bind("name") String name,
                                                    @Bind("parentFolderId") long parentFolderId);
@@ -117,7 +118,7 @@ public abstract class TestcaseDAO {
      * @return new test case id
      */
     @Transaction
-    public long duplicate(long testcaseId, long targetFolderId) {
+    public Testcase duplicate(long testcaseId, long targetFolderId) {
         //  resolve new test case name
         Testcase oldTestcase = _findById(testcaseId);
         String newTestcaseName = oldTestcase.getName();
@@ -131,8 +132,12 @@ public abstract class TestcaseDAO {
         }
 
         //  duplicate the test case record
-        long newTestcaseId = _duplicate(newTestcaseName, targetFolderId, testcaseId);
+        Testcase newTestcase = new Testcase();
+        newTestcase.setName(newTestcaseName);
+        newTestcase.setDescription(oldTestcase.getDescription());
+        newTestcase.setParentFolderId(targetFolderId);
+        newTestcase = insert_NoTransaction(newTestcase);
 
-        return newTestcaseId;
+        return newTestcase;
     }
 }
