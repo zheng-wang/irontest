@@ -43,7 +43,7 @@ public abstract class AssertionDAO {
             "updated = CURRENT_TIMESTAMP where id = :id")
     protected abstract int _update(@Bind("name") String name, @Bind("otherProperties") String otherProperties, @Bind("id") long id);
 
-    public int update(Assertion assertion) throws JsonProcessingException {
+    public int update_NoTransaction(Assertion assertion) throws JsonProcessingException {
         return _update(assertion.getName(), new ObjectMapper().writeValueAsString(assertion.getOtherProperties()),
                 assertion.getId());
     }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.irontest.models.Endpoint;
 import io.irontest.models.Testcase;
 import io.irontest.models.Teststep;
+import io.irontest.models.assertion.Assertion;
 import org.skife.jdbi.v2.sqlobject.*;
 import org.skife.jdbi.v2.sqlobject.customizers.Define;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
@@ -32,6 +33,9 @@ public abstract class TestcaseDAO {
 
     @CreateSqlObject
     protected abstract TeststepDAO teststepDAO();
+
+    @CreateSqlObject
+    protected abstract AssertionDAO assertionDAO();
 
     @SqlUpdate("insert into testcase (description, parent_folder_id) values (:description, :parentFolderId)")
     @GetGeneratedKeys
@@ -119,9 +123,9 @@ public abstract class TestcaseDAO {
 
     /**
      * Clone the test case and its contents.
-     * @param oldTestcaseId
-     * @param targetFolderId
-     * @return new test case id
+     * @param oldTestcaseId id of the test case to be cloned
+     * @param targetFolderId id of the folder in which the new test case will be created
+     * @return the new test case
      */
     @Transaction
     public Testcase duplicate(long oldTestcaseId, long targetFolderId) throws JsonProcessingException {
@@ -172,9 +176,17 @@ public abstract class TestcaseDAO {
                     newEndpoint.setOtherProperties(oldEndpoint.getOtherProperties());
                 }
             }
-            teststepDAO().insert_NoTransaction(newTeststep);
+            newTeststep = teststepDAO().insert_NoTransaction(newTeststep);
 
             //  duplicate assertions
+            for (Assertion oldAssertion : oldTeststep.getAssertions()) {
+                Assertion newAssertion = new Assertion();
+                newAssertion.setTeststepId(newTeststep.getId());
+                newAssertion.setName(oldAssertion.getName());
+                newAssertion.setType(oldAssertion.getType());
+                newAssertion.setOtherProperties(oldAssertion.getOtherProperties());
+                assertionDAO().insert_NoTransaction(newAssertion);
+            }
         }
 
         return newTestcase;

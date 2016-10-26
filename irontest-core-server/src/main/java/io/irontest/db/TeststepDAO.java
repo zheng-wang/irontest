@@ -302,7 +302,7 @@ public abstract class TeststepDAO {
                 newAssertionIds.add(assertion.getId());
 
                 //  update the assertion
-                assertionDAO.update(assertion);
+                assertionDAO.update_NoTransaction(assertion);
             }
         }
         //  delete assertions whose id is not in the new assertion id list
