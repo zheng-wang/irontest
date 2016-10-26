@@ -4,9 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.irontest.core.TeststepActionDataBackup;
 import io.irontest.models.*;
-import io.irontest.models.assertion.Assertion;
-import io.irontest.models.assertion.IntegerEqualAssertionProperties;
-import io.irontest.models.assertion.XMLEqualAssertionProperties;
+import io.irontest.models.assertion.*;
 import io.irontest.utils.XMLUtils;
 import org.skife.jdbi.v2.sqlobject.*;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
@@ -292,7 +290,14 @@ public abstract class TeststepDAO {
         List<Long> newAssertionIds = new ArrayList<Long>();
         for (Assertion assertion: teststep.getAssertions()) {
             if (assertion.getId() == null) {    //  insert the assertion
-                newAssertionIds.add(assertionDAO.insert(teststep.getId(), assertion));
+                assertion.setTeststepId(teststep.getId());
+                if (Assertion.TYPE_CONTAINS.equals(assertion.getType())) {
+                    assertion.setOtherProperties(new ContainsAssertionProperties("value"));
+                } else if (Assertion.TYPE_XPATH.equals(assertion.getType())) {
+                    assertion.setOtherProperties(
+                            new XPathAssertionProperties("true()", "true", new ArrayList<NamespacePrefix>()));
+                }
+                newAssertionIds.add(assertionDAO.insert_NoTransaction(assertion));
             } else {
                 newAssertionIds.add(assertion.getId());
 

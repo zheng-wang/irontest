@@ -14,6 +14,7 @@ public class Assertion {
     public static final String TYPE_INTEGER_EQUAL = "IntegerEqual";
     public static final String TYPE_XML_EQUAL = "XMLEqual";
     private Long id;
+    private Long teststepId;
     private String name;
     private String type;
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY, property = "type")
@@ -34,6 +35,14 @@ public class Assertion {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getTeststepId() {
+        return teststepId;
+    }
+
+    public void setTeststepId(Long teststepId) {
+        this.teststepId = teststepId;
     }
 
     public String getName() {
