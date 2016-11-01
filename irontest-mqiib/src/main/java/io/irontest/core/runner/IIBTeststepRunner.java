@@ -32,16 +32,16 @@ public class IIBTeststepRunner extends TeststepRunner {
             ExecutionGroupProxy egProxy = brokerProxy.getExecutionGroupByName(
                     teststepProperties.getIntegrationServerName());
             if (egProxy == null) {
-                throw new RuntimeException("Execution group " + teststepProperties.getIntegrationServerName() +
-                        " does not exist on broker " + integrationNodeName + ".");
+                throw new RuntimeException("Execution group \"" + teststepProperties.getIntegrationServerName() +
+                        "\" not found on broker \"" + integrationNodeName + "\".");
             } else if (!egProxy.isRunning()) {
-                throw new RuntimeException("Execution group " + teststepProperties.getIntegrationServerName() +
-                        " is not running.");
+                throw new RuntimeException("Execution group \"" + teststepProperties.getIntegrationServerName() +
+                        "\" not running.");
             }
             MessageFlowProxy messageFlowProxy = egProxy.getMessageFlowByName(teststepProperties.getMessageFlowName());
             if (messageFlowProxy == null) {
-                throw new RuntimeException("Message flow " + teststepProperties.getMessageFlowName() +
-                        " does not exist on execution group " + teststepProperties.getIntegrationServerName() + ".");
+                throw new RuntimeException("Message flow \"" + teststepProperties.getMessageFlowName() +
+                        "\" not found on execution group \"" + teststepProperties.getIntegrationServerName() + "\".");
             }
 
             //  do the specified action

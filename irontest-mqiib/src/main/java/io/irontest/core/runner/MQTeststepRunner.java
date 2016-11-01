@@ -69,7 +69,15 @@ public class MQTeststepRunner extends TeststepRunner {
             } else if (Teststep.ACTION_ENQUEUE.equals(action)) {
                 openOptions += CMQC.MQOO_OUTPUT;
             }
-            queue = queueManager.accessQueue(teststepProperties.getQueueName(), openOptions, null, null, null);
+            try {
+                queue = queueManager.accessQueue(teststepProperties.getQueueName(), openOptions, null, null, null);
+            } catch (MQException mqEx) {
+                if (mqEx.getCompCode() == CMQC.MQCC_FAILED && mqEx.getReason() == CMQC.MQRC_UNKNOWN_OBJECT_NAME) {
+                    throw new RuntimeException("Queue \"" + teststepProperties.getQueueName() + "\" not found.");
+                } else {
+                    throw mqEx;
+                }
+            }
 
             //  do the action
             if (Teststep.ACTION_CLEAR.equals(action)) {
