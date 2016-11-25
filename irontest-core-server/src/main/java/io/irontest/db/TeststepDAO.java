@@ -306,7 +306,9 @@ public abstract class TeststepDAO {
             }
         }
         //  delete assertions whose id is not in the new assertion id list
-        assertionDAO.deleteByTeststepIdIfIdNotIn(teststep.getId(), newAssertionIds);
+        if (newAssertionIds.size() > 0) {
+            assertionDAO.deleteByTeststepIdIfIdNotIn(teststep.getId(), newAssertionIds);
+        }
     }
 
     private void updateEndpointIfExists(Endpoint oldEndpoint, Endpoint newEndpoint) throws JsonProcessingException {

@@ -22,6 +22,7 @@ angular.module('irontest').controller('DBTeststepController', ['$scope', 'Testst
     };
 
     $scope.invoke = function() {
+      $scope.invocationResponseReceived = false;
       //  exclude the result property from the assertion, as the property does not exist in server side Assertion class
       $scope.teststep.assertions.forEach(function(assertion) {
         delete assertion.result;
@@ -29,6 +30,7 @@ angular.module('irontest').controller('DBTeststepController', ['$scope', 'Testst
 
       var teststep = new Teststeps($scope.teststep);
       teststep.$run(function(response) {
+        $scope.invocationResponseReceived = true;
         $scope.numberOfRowsModified = response.numberOfRowsModified;
         if (response.numberOfRowsModified === -1) {
           $scope.responseOptions.data = response.resultSet;

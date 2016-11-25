@@ -13,6 +13,8 @@
     <artifactId>irontest-core-server</artifactId>
 
     <properties>
+        <jdbi.version>2.77</jdbi.version>
+        <antlr.version>3.4</antlr.version>
         <dropwizard.version>0.9.3</dropwizard.version>
         <h2.version>1.4.191</h2.version>
     </properties>
@@ -25,6 +27,20 @@
     </repositories>
 
     <dependencies>
+        <!-- These two dependencies were introduced for DB test step while keeping dropwizard version below 1.0, to avoid upgrading Java version to 1.8.
+            Remove them after upgrading to dropwizard 1.0.5.
+        -->
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr-runtime</artifactId>
+            <version>${antlr.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jdbi</groupId>
+            <artifactId>jdbi</artifactId>
+            <version>${jdbi.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-core</artifactId>
