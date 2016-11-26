@@ -1,22 +1,25 @@
 package io.irontest.core.runner;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * numberOfRowsModified being -1 means the SQL is a select statement;
- * > -1 means the SQL is an insert/update/delete statement.
  * Created by Zheng on 10/04/2016.
  */
 public class DBAPIResponse {
-    private int numberOfRowsModified;
+    //  applicable only to non-select statements
+    private List<StatementExecutionResult> statementExecutionResults = new ArrayList<StatementExecutionResult>();
+    //  applicable only to select statement
     private Object resultSet;
 
     public DBAPIResponse() { }
 
-    public int getNumberOfRowsModified() {
-        return numberOfRowsModified;
+    public List<StatementExecutionResult> getStatementExecutionResults() {
+        return statementExecutionResults;
     }
 
-    public void setNumberOfRowsModified(int numberOfRowsModified) {
-        this.numberOfRowsModified = numberOfRowsModified;
+    public void setStatementExecutionResults(List<StatementExecutionResult> statementExecutionResults) {
+        this.statementExecutionResults = statementExecutionResults;
     }
 
     public Object getResultSet() {

@@ -25,10 +25,8 @@ public class DSFieldAssertionVerifier implements AssertionVerifier {
         result.setResult(TestResult.FAILED);
         DSFieldAssertionProperties assertionProperties = (DSFieldAssertionProperties) assertion.getOtherProperties();
         DBAPIResponse response = (DBAPIResponse) input;
-        if (response.getNumberOfRowsModified() == -1 &&
-                DSFieldAssertionVerifier.CONTAINS_OPERATOR.equals(assertionProperties.getOperator())) {
-            List<Map<String, Object>> resultSet = (List<Map<String, Object>>) response.getResultSet();
-
+        List<Map<String, Object>> resultSet = (List<Map<String, Object>>) response.getResultSet();
+        if (resultSet != null && DSFieldAssertionVerifier.CONTAINS_OPERATOR.equals(assertionProperties.getOperator())) {
             for (Map<String, Object> row : resultSet) {
                 if (assertionProperties.getValue().equals(row.get(assertionProperties.getField()))) {
                     result.setResult(TestResult.PASSED);

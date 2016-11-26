@@ -1,9 +1,9 @@
 <div class="row">
-  <div class="col-lg-2">numberOfRowsModified:</div>
-  <div>${stepRun.response.numberOfRowsModified}</div>
+  <div class="col-lg-2">Non-Select Statements Execution Result:</div>
+  <div>${stepRun.response.statementExecutionResults}</div>
 </div>
 <div class="row">
-  <div class="col-lg-2">resultSet:</div>
+  <div class="col-lg-2">Select Statement Execution Result Set:</div>
   <div class="col-lg-10">
     <#list stepRun.response.resultSet as row>
       <div class="row">{

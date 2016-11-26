@@ -18,12 +18,12 @@
         id="request" rows="18" placeholder="Request" class="form-control"></textarea>
   </div>
 </div>
-<div class="form-group" ng-if="invocationResponseReceived">
+<div class="form-group" ng-if="invocationResponse">
   <div class="col-lg-12">
-    <div ng-if="activeTabIndex === 2 && numberOfRowsModified === -1" ui-grid="responseOptions" ui-grid-resize-columns
+    <div ng-if="activeTabIndex === 2 && invocationResponse.resultSet" ui-grid="responseOptions" ui-grid-resize-columns
          ui-grid-move-columns class="ui-grid dbresponse-grid"></div>
-    <textarea ng-if="numberOfRowsModified > -1"
-         class="form-control background-color-inherit" rows="9" readonly>Number of rows modified: {{numberOfRowsModified}}.</textarea>
+    <textarea ng-if="!invocationResponse.resultSet" ng-model="nonSelectStatementsExecutionResult"
+         class="form-control background-color-inherit" rows="9" readonly></textarea>
   </div>
 </div>
 <div class="form-group" ng-if="false">

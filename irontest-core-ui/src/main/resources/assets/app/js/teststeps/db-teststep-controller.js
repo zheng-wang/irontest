@@ -5,9 +5,6 @@
 //    ng-include also creates a scope.
 angular.module('irontest').controller('DBTeststepController', ['$scope', 'Teststeps', 'IronTestUtils',
   function($scope, Teststeps, IronTestUtils) {
-    //  -1 when the request is a SQL select statement; > -1 when request is a SQL insert/update/delete statement.
-    $scope.numberOfRowsModified = -1;
-
     $scope.responseOptions = {
       enableFiltering: true,
       columnDefs: [ ]
@@ -22,7 +19,7 @@ angular.module('irontest').controller('DBTeststepController', ['$scope', 'Testst
     };
 
     $scope.invoke = function() {
-      $scope.invocationResponseReceived = false;
+      $scope.invocationResponse = null;
       //  exclude the result property from the assertion, as the property does not exist in server side Assertion class
       $scope.teststep.assertions.forEach(function(assertion) {
         delete assertion.result;
@@ -30,9 +27,17 @@ angular.module('irontest').controller('DBTeststepController', ['$scope', 'Testst
 
       var teststep = new Teststeps($scope.teststep);
       teststep.$run(function(response) {
-        $scope.invocationResponseReceived = true;
-        $scope.numberOfRowsModified = response.numberOfRowsModified;
-        if (response.numberOfRowsModified === -1) {
+        $scope.invocationResponse = response;
+        if (!response.resultSet) {    //  non select statements
+          var results = response.statementExecutionResults;
+          $scope.nonSelectStatementsExecutionResult = "";
+          for (var i = 0; i < results.length; i += 1) {
+            var statementType = results[i].statementType;
+            var log = results[i].returnValue + ' rows ' + statementType.toLowerCase();
+            log += statementType.endsWith('E') ? 'd' : 'ed';
+            $scope.nonSelectStatementsExecutionResult += log + '\n' ;
+          }
+        } else {                      //  select statement
           $scope.responseOptions.data = response.resultSet;
           $scope.responseOptions.columnDefs = [ ];
           if (response.resultSet.length > 0) {

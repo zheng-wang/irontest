@@ -29,26 +29,25 @@ public class DBTeststepRunner extends TeststepRunner {
         if ("".equals(request)) {      //  if passing "" to handle.createScript(), script.getStatements() returns unexpected values
             statements = new ArrayList<String>();
         } else {
-            //  parse the SQL script (code could be broken since JDK 9 when setAccessible will be gone)
+            //  parse the SQL script
             script = handle.createScript(request);
+            //  replace below code with statements = script.getStatements() after upgrading JDBI to a release after 2016.11.26
             Method method = script.getClass().getDeclaredMethod("getStatements");
             method.setAccessible(true);
             statements = (List<String>) method.invoke(script);
         }
-        System.out.println(statements);
         sanityCheckTheStatements(statements);
 
-        if (statements.get(0).startsWith("select ")) {    //  the request is a select statement
+        if (SQLStatementType.isSelectStatement(statements.get(0))) {    //  the request is a select statement
             Query<Map<String, Object>> query = handle.createQuery(request);
             List<Map<String, Object>> resultSet = query.list();
             response.setResultSet(resultSet);
-            response.setNumberOfRowsModified(-1);
         } else {                                          //  the request is one or more non-select statements
             int[] returnValues = script.execute();
-            for (int number: returnValues) {
-                System.out.println(number);
+            for (int i = 0; i < returnValues.length; i++) {
+                response.getStatementExecutionResults().add(new StatementExecutionResult(
+                        SQLStatementType.getByStatement(statements.get(i)), returnValues[i]));
             }
-            response.setNumberOfRowsModified(returnValues[0]);
         }
 
         handle.close();
@@ -69,22 +68,24 @@ public class DBTeststepRunner extends TeststepRunner {
         int selectStatementCount = 0;
         boolean nonSelectStatementExists = false;
         for (String statement: statements) {
-            statement = statement.toLowerCase();
-            if (!(statement.startsWith("select ") || statement.startsWith("insert ") ||
-                    statement.startsWith("update ") || statement.startsWith("delete "))) {
-                throw new Exception("Only select, insert, update and delete statements are supported.");
+            if (!(SQLStatementType.isSelectStatement(statement) ||
+                    SQLStatementType.isInsertStatement(statement) ||
+                    SQLStatementType.isUpdateStatement(statement) ||
+                    SQLStatementType.isDeleteStatement(statement))) {
+                throw new Exception("Only " + SQLStatementType.SELECT + ", " + SQLStatementType.INSERT + ", " +
+                        SQLStatementType.UPDATE + " and " + SQLStatementType.DELETE + " statements are supported.");
             }
-            if (statement.startsWith("select ")) {
+            if (SQLStatementType.isSelectStatement(statement)) {
                 selectStatementCount++;
             } else {
                 nonSelectStatementExists = true;
             }
         }
         if (selectStatementCount > 1) {
-            throw new Exception("At most one select statement is supported.");
+            throw new Exception("At most one " + SQLStatementType.SELECT + " statement is supported.");
         }
         if (selectStatementCount == 1 && nonSelectStatementExists) {
-            throw new Exception("Mixture of select and non-select statements are not supported.");
+            throw new Exception("Mixture of " + SQLStatementType.SELECT + " and non-" + SQLStatementType.SELECT + " statements are not supported.");
         }
     }
 }
