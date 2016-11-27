@@ -1,14 +1,19 @@
 <div class="form-group"></div> <!-- spacer -->
 <div class="form-group">
-  <div class="col-lg-10">
+  <div class="col-lg-11">
     <label for="jdbcURL" class="col-lg-2 control-label">JDBC URL</label>
-    <div class="col-lg-7">
+    <div class="col-lg-6">
       <input name="jdbcURL" type="text" class="form-control" ng-change="autoSave(teststepForm.$valid)"
              ng-model="teststep.endpoint.url" id="jdbcURL"
              ng-readonly="teststep.endpoint.environment">  <!-- readonly when it is a managed endpoint -->
     </div>
     <div class="col-lg-1">
-      <button type="button" class="btn btn-info" ng-click="invoke()">Invoke</button>
+      <button type="button" class="btn btn-info" ng-click="invoke()" ng-disabled="!teststep.endpoint ||
+            steprun.status === 'ongoing'">Invoke</button>
+    </div>
+    <div class="col-lg-3">       <!-- Test step run status message -->
+      <h5 ng-if="steprun.status === 'ongoing'">Running the statement(s) ...</h5>
+      <h5 ng-if="steprun.status === 'finished'">Statement(s) successfully run.</h5>
     </div>
   </div>
 </div>
@@ -18,11 +23,11 @@
         id="request" rows="18" placeholder="Request" class="form-control"></textarea>
   </div>
 </div>
-<div class="form-group" ng-if="invocationResponse">
+<div class="form-group" ng-if="steprun.response">
   <div class="col-lg-12">
-    <div ng-if="activeTabIndex === 2 && invocationResponse.resultSet" ui-grid="responseOptions" ui-grid-resize-columns
+    <div ng-if="activeTabIndex === 2 && steprun.response.resultSet" ui-grid="responseOptions" ui-grid-resize-columns
          ui-grid-move-columns class="ui-grid dbresponse-grid"></div>
-    <textarea ng-if="!invocationResponse.resultSet" ng-model="nonSelectStatementsExecutionResult"
+    <textarea ng-if="!steprun.response.resultSet" ng-model="nonSelectStatementsExecutionResult"
          class="form-control background-color-inherit" rows="9" readonly></textarea>
   </div>
 </div>

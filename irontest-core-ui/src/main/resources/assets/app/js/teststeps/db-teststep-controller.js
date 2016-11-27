@@ -3,8 +3,10 @@
 //  NOTICE:
 //    The $scope here prototypically inherits from the $scope of teststeps-controller.js.
 //    ng-include also creates a scope.
-angular.module('irontest').controller('DBTeststepController', ['$scope', 'Teststeps', 'IronTestUtils',
-  function($scope, Teststeps, IronTestUtils) {
+angular.module('irontest').controller('DBTeststepController', ['$scope', 'Teststeps', 'IronTestUtils', '$timeout',
+  function($scope, Teststeps, IronTestUtils, $timeout) {
+    var timer;
+
     $scope.responseOptions = {
       enableFiltering: true,
       columnDefs: [ ]
@@ -18,22 +20,35 @@ angular.module('irontest').controller('DBTeststepController', ['$scope', 'Testst
       $scope.$broadcast('evaluateDataSet', $scope.responseOptions.data);
     };
 
+    var clearPreviousRunStatus = function() {
+      if (timer) $timeout.cancel(timer);
+      $scope.steprun = {};
+    };
+
     $scope.invoke = function() {
-      $scope.invocationResponse = null;
+      clearPreviousRunStatus();
+
       //  exclude the result property from the assertion, as the property does not exist in server side Assertion class
       $scope.teststep.assertions.forEach(function(assertion) {
         delete assertion.result;
       });
 
       var teststep = new Teststeps($scope.teststep);
+      $scope.steprun.status = 'ongoing';
       teststep.$run(function(response) {
-        $scope.invocationResponse = response;
+        $scope.steprun.response = response;
+        $scope.steprun.status = 'finished';
+        timer = $timeout(function() {
+          $scope.steprun.status = null;
+        }, 15000);
+
+        //  process the response
         if (!response.resultSet) {    //  non select statements
           var results = response.statementExecutionResults;
           $scope.nonSelectStatementsExecutionResult = "";
           for (var i = 0; i < results.length; i += 1) {
             var statementType = results[i].statementType;
-            var log = results[i].returnValue + ' rows ' + statementType.toLowerCase();
+            var log = results[i].returnValue + ' row(s) ' + statementType.toLowerCase();
             log += statementType.endsWith('E') ? 'd' : 'ed';
             $scope.nonSelectStatementsExecutionResult += log + '\n' ;
           }
@@ -59,6 +74,7 @@ angular.module('irontest').controller('DBTeststepController', ['$scope', 'Testst
           }
         }
       }, function(response) {
+        $scope.steprun.status = 'failed';
         IronTestUtils.openErrorHTTPResponseModal(response);
       });
     };
