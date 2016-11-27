@@ -28,7 +28,9 @@
 <#if stepRun.teststep.request??>
   <div class="row">
     <div class="col-lg-1">Request:</div>
-    <div class="col-lg-11 word-wrap"><#escape x as x?html>${ stepRun.teststep.request }</#escape></div>
+    <div class="col-lg-11">
+      <textarea class="form-control" rows="8" readonly>${ stepRun.teststep.request }</textarea>
+    </div>
   </div>
 </#if>
 

@@ -1,24 +1,21 @@
 package io.irontest.core.runner;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by Zheng on 10/04/2016.
  */
 public class DBAPIResponse {
     //  applicable only to non-select statements
-    private List<StatementExecutionResult> statementExecutionResults = new ArrayList<StatementExecutionResult>();
+    private String statementExecutionResults;
     //  applicable only to select statement
     private Object resultSet;
 
     public DBAPIResponse() { }
 
-    public List<StatementExecutionResult> getStatementExecutionResults() {
+    public String getStatementExecutionResults() {
         return statementExecutionResults;
     }
 
-    public void setStatementExecutionResults(List<StatementExecutionResult> statementExecutionResults) {
+    public void setStatementExecutionResults(String statementExecutionResults) {
         this.statementExecutionResults = statementExecutionResults;
     }
 

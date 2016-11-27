@@ -44,9 +44,12 @@ public class DBTeststepRunner extends TeststepRunner {
             response.setResultSet(resultSet);
         } else {                                          //  the request is one or more non-select statements
             int[] returnValues = script.execute();
+            StringBuilder sb = new StringBuilder();
             for (int i = 0; i < returnValues.length; i++) {
-                response.getStatementExecutionResults().add(new StatementExecutionResult(
-                        SQLStatementType.getByStatement(statements.get(i)), returnValues[i]));
+                String statementType = SQLStatementType.getByStatement(statements.get(i)).toString();
+                sb.append(returnValues[i]).append(" row(s) ").append(statementType.toLowerCase())
+                    .append(statementType.endsWith("E") ? "d" : "ed").append("\n");
+                response.setStatementExecutionResults(sb.toString());
             }
         }
 

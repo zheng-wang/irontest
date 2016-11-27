@@ -42,17 +42,7 @@ angular.module('irontest').controller('DBTeststepController', ['$scope', 'Testst
           $scope.steprun.status = null;
         }, 15000);
 
-        //  process the response
-        if (!response.resultSet) {    //  non select statements
-          var results = response.statementExecutionResults;
-          $scope.nonSelectStatementsExecutionResult = "";
-          for (var i = 0; i < results.length; i += 1) {
-            var statementType = results[i].statementType;
-            var log = results[i].returnValue + ' row(s) ' + statementType.toLowerCase();
-            log += statementType.endsWith('E') ? 'd' : 'ed';
-            $scope.nonSelectStatementsExecutionResult += log + '\n' ;
-          }
-        } else {                      //  select statement
+        if (response.resultSet) {    //  the request is a select statement
           $scope.responseOptions.data = response.resultSet;
           $scope.responseOptions.columnDefs = [ ];
           if (response.resultSet.length > 0) {

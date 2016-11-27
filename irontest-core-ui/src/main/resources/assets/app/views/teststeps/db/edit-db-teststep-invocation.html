@@ -27,7 +27,7 @@
   <div class="col-lg-12">
     <div ng-if="activeTabIndex === 2 && steprun.response.resultSet" ui-grid="responseOptions" ui-grid-resize-columns
          ui-grid-move-columns class="ui-grid dbresponse-grid"></div>
-    <textarea ng-if="!steprun.response.resultSet" ng-model="nonSelectStatementsExecutionResult"
+    <textarea ng-if="!steprun.response.resultSet" ng-model="steprun.response.statementExecutionResults"
          class="form-control background-color-inherit" rows="9" readonly></textarea>
   </div>
 </div>
