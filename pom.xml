@@ -17,6 +17,7 @@
     </modules>
 
     <properties>
+        <oracle.jdbc.driver.relativePath>lib/jdbc/oracle/ojdbc6.jar</oracle.jdbc.driver.relativePath>
         <distDir>dist</distDir>
     </properties>
 
@@ -98,7 +99,10 @@
                                 <transformers>
                                     <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                                     <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                        <mainClass>io.irontest.IronTestApplication</mainClass>
+                                        <manifestEntries>
+                                            <Main-Class>io.irontest.IronTestApplication</Main-Class>
+                                            <Class-Path>${oracle.jdbc.driver.relativePath}</Class-Path>
+                                        </manifestEntries>
                                     </transformer>
                                     <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
                                         <resource>META-INF/cxf/bus-extensions.txt</resource>
@@ -141,7 +145,7 @@
                     </executions>
                 </plugin>
 
-                <!-- launch the application -->
+                <!-- launch the application by classes (not by uber jar) -->
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>exec-maven-plugin</artifactId>
@@ -155,6 +159,9 @@
                             </goals>
                             <configuration>
                                 <mainClass>io.irontest.IronTestApplication</mainClass>
+                                <additionalClasspathElements>
+                                    <additionalClasspathElement>../${oracle.jdbc.driver.relativePath}</additionalClasspathElement>
+                                </additionalClasspathElements>
                                 <arguments>
                                     <argument>server</argument>
                                     <argument>irontest-core-server/config.yml</argument>
