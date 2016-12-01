@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcases', 'Teststeps', 'TestcaseRuns',
-    '$stateParams', '$state', 'uiGridConstants', '$timeout', 'IronTestUtils',
-  function($scope, Testcases, Teststeps, TestcaseRuns, $stateParams, $state, uiGridConstants, $timeout, IronTestUtils) {
+    '$stateParams', '$state', 'uiGridConstants', '$timeout', 'IronTestUtils', '$sce',
+  function($scope, Testcases, Teststeps, TestcaseRuns, $stateParams, $state, uiGridConstants, $timeout, IronTestUtils, $sce) {
     var timer;
     $scope.autoSave = function(isValid) {
       if (timer) $timeout.cancel(timer);
@@ -98,7 +98,8 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
       });
       testcaseRun.$getStepRunHTMLReport({ teststepId: teststepId },
         function(response) {
-          $scope.testcaseRun.selectedStepRunReport = response.report;
+          //  without $sce.trustAsHtml, ngSanitize will strip elements like <textarea>
+          $scope.testcaseRun.selectedStepRunReport = $sce.trustAsHtml(response.report);
         }, function(response) {
           IronTestUtils.openErrorHTTPResponseModal(response);
         });

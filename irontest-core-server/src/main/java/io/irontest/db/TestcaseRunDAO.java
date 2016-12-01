@@ -14,6 +14,13 @@ import java.util.List;
  */
 @RegisterMapper(TestcaseRunMapper.class)
 public abstract class TestcaseRunDAO {
+    //  object mapper from Dropwizard environment
+    private ObjectMapper environmentObjectMapper;
+
+    public void setEnvironmentObjectMapper(ObjectMapper environmentObjectMapper) {
+        this.environmentObjectMapper = environmentObjectMapper;
+    }
+
     @SqlUpdate("CREATE SEQUENCE IF NOT EXISTS testcase_run_sequence START WITH 1 INCREMENT BY 1 NOCACHE")
     public abstract void createSequenceIfNotExists();
 
@@ -47,7 +54,7 @@ public abstract class TestcaseRunDAO {
         }
 
         //  serialize stepRuns into JSON string
-        String stepRunsJSON = new ObjectMapper().writeValueAsString(stepRuns);
+        String stepRunsJSON = environmentObjectMapper.writeValueAsString(stepRuns);
         Testcase testcase = testcaseRun.getTestcase();
         long id = _insert(testcase.getId(), testcase.getName(), testcase.getFolderPath(), testcaseRun.getStartTime(),
                 testcaseRun.getDuration(), testcaseRun.getResult().toString(), stepRunsJSON);

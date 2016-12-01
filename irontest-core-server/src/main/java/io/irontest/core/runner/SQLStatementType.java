@@ -23,8 +23,6 @@ public enum SQLStatementType {
 
     @JsonIgnore
     public static boolean isSelectStatement(String statement) {
-        System.out.printf(statement);
-        System.out.println(SELECT + " ");
         return statement.toUpperCase().startsWith(SELECT + " ");
     }
 

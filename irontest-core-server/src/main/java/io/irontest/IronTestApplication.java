@@ -1,5 +1,6 @@
 package io.irontest;
 
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.roskart.dropwizard.jaxws.EndpointBuilder;
 import com.roskart.dropwizard.jaxws.JAXWSBundle;
 import io.dropwizard.Application;
@@ -11,6 +12,7 @@ import io.dropwizard.setup.Environment;
 import io.dropwizard.views.ViewBundle;
 import io.irontest.core.assertion.AssertionVerifierFactory;
 import io.irontest.db.*;
+import io.irontest.models.OracleTIMESTAMPTZSerializer;
 import io.irontest.resources.*;
 import io.irontest.ws.ArticleSOAP;
 import org.glassfish.jersey.filter.LoggingFilter;
@@ -64,6 +66,7 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         final EndpointDAO endpointDAO = jdbi.onDemand(EndpointDAO.class);
         final TestcaseDAO testcaseDAO = jdbi.onDemand(TestcaseDAO.class);
         final TestcaseRunDAO testcaseRunDAO = jdbi.onDemand(TestcaseRunDAO.class);
+        testcaseRunDAO.setEnvironmentObjectMapper(environment.getObjectMapper());
         final TeststepDAO teststepDAO = jdbi.onDemand(TeststepDAO.class);
         final AssertionDAO assertionDAO = jdbi.onDemand(AssertionDAO.class);
         final UtilsDAO utilsDAO = jdbi.onDemand(UtilsDAO.class);
@@ -104,6 +107,17 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
 
         //  register exception mappers
         environment.jersey().register(new IronTestLoggingExceptionMapper());
+
+        //  register custom JSON serializer for Oracle TIMESTAMPTZ class
+        try {
+            Class clazz = Class.forName("oracle.sql.TIMESTAMPTZ");
+            SimpleModule module = new SimpleModule("OracleModule");
+            module.addSerializer(clazz, new OracleTIMESTAMPTZSerializer(clazz));
+            environment.getObjectMapper().registerModule(module);
+        } catch (ClassNotFoundException e) {
+            //  do nothing if the TIMESTAMPTZ class does not exist
+        }
+
     }
 
     private void createSampleResources(IronTestConfiguration configuration, Environment environment) {

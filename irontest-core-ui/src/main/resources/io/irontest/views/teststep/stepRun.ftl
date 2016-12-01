@@ -26,12 +26,14 @@
 </div>
 
 <#if stepRun.teststep.request??>
+  <div class="form-group"></div> <!-- spacer -->
   <div class="row">
     <div class="col-lg-1">Request:</div>
     <div class="col-lg-11">
       <textarea class="form-control" rows="8" readonly>${ stepRun.teststep.request }</textarea>
     </div>
   </div>
+  <div class="form-group"></div> <!-- spacer -->
 </#if>
 
 <#-- Extra request info for MQ step Enqueue action with RFH2 header -->
@@ -55,6 +57,7 @@
     <div class="col-lg-1">Response: </div>
     <div class="col-lg-11"><#include "${stepRun.teststep.type?lower_case}TeststepResponse.ftl"></div>
   </div>
+  <div class="form-group"></div> <!-- spacer -->
 </#if>
 
 <#if stepRun.errorMessage??>
