@@ -108,6 +108,9 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         //  register exception mappers
         environment.jersey().register(new IronTestLoggingExceptionMapper());
 
+        //  settings for Oracle
+        //  for ResultSet.getObject to return java.sql.Timestamp instead of oracle.sql.TIMESTAMP.
+        System.getProperties().setProperty("oracle.jdbc.J2EE13Compliant", "true");
         //  register custom JSON serializer for Oracle TIMESTAMPTZ class
         try {
             Class clazz = Class.forName("oracle.sql.TIMESTAMPTZ");
