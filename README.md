@@ -17,9 +17,8 @@ Table of Contents:
 - [License](#license)
 
 ## Characteristics
-- Web UI, so zero installation for end users.
+- Web UI. Zero installation for end users.
 - Centralized test cases and endpoints management, enabling team work by default.
-- No middleware.
 - Easy deployment and maintenance.
         
 ## Build
