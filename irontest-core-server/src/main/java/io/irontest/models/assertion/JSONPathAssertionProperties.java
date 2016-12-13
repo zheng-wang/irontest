@@ -7,7 +7,7 @@ import io.irontest.models.Properties;
  */
 public class JSONPathAssertionProperties extends Properties {
     private String jsonPath;
-    private String expectedValue;
+    private Object expectedValue;
 
     public String getJsonPath() {
         return jsonPath;
@@ -17,11 +17,11 @@ public class JSONPathAssertionProperties extends Properties {
         this.jsonPath = jsonPath;
     }
 
-    public String getExpectedValue() {
+    public Object getExpectedValue() {
         return expectedValue;
     }
 
-    public void setExpectedValue(String expectedValue) {
+    public void setExpectedValue(Object expectedValue) {
         this.expectedValue = expectedValue;
     }
 }

@@ -80,7 +80,7 @@ angular.module('irontest').controller('DBTeststepController', ['$scope', 'Testst
           "name": "abc",
           "type": "JSONPath",
           "otherProperties": {
-          	"jsonPath": "$.*.length()",
+          	"jsonPath": "$.length()",
             "expectedValue": 0
           }}
       };
