@@ -9,7 +9,7 @@ import java.util.Map;
 public class DBAPIResponse {
     //  applicable only to non-select statements
     private String statementExecutionResults;
-    //  applicable only to select statement
+    //  applicable only to select statement; column names are of lower case (default behavior of JDBI)
     private List<Map<String, Object>> resultSet;
 
     public DBAPIResponse() { }

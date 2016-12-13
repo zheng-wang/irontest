@@ -27,6 +27,12 @@ public class JSONService {
         this.endpointDAO = endpointDAO;
     }
 
+    /**
+     * This is a stateless operation, i.e. not persisting anything in database.
+     * @param assertionVerificationRequest
+     * @return
+     * @throws InterruptedException
+     */
     @POST @Path("verifyassertion")
     public AssertionVerificationResult verifyAssertion(AssertionVerificationRequest assertionVerificationRequest)
             throws InterruptedException {

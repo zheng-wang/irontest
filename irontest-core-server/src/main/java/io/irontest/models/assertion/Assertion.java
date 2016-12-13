@@ -13,6 +13,7 @@ public class Assertion {
     public static final String TYPE_DSFIELD = "DSField";
     public static final String TYPE_INTEGER_EQUAL = "IntegerEqual";
     public static final String TYPE_XML_EQUAL = "XMLEqual";
+    public static final String TYPE_JSONPATH = "JSONPath";
     private Long id;
     private Long teststepId;
     private String name;
@@ -24,7 +25,8 @@ public class Assertion {
             @JsonSubTypes.Type(value = DSFieldAssertionProperties.class, name = Assertion.TYPE_DSFIELD),
             @JsonSubTypes.Type(value = IntegerEqualAssertionProperties.class,
                     name = Assertion.TYPE_INTEGER_EQUAL),
-            @JsonSubTypes.Type(value = XMLEqualAssertionProperties.class, name = Assertion.TYPE_XML_EQUAL)})
+            @JsonSubTypes.Type(value = XMLEqualAssertionProperties.class, name = Assertion.TYPE_XML_EQUAL),
+            @JsonSubTypes.Type(value = JSONPathAssertionProperties.class, name = Assertion.TYPE_JSONPATH)})
     private Properties otherProperties;
 
     public Assertion() {}

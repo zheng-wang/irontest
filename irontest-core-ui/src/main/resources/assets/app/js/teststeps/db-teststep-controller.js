@@ -4,7 +4,8 @@
 //    The $scope here prototypically inherits from the $scope of teststeps-controller.js.
 //    ng-include also creates a scope.
 angular.module('irontest').controller('DBTeststepController', ['$scope', 'Teststeps', 'IronTestUtils', '$timeout',
-  function($scope, Teststeps, IronTestUtils, $timeout) {
+    '$http',
+  function($scope, Teststeps, IronTestUtils, $timeout, $http) {
     var timer;
 
     $scope.responseOptions = {
@@ -16,9 +17,9 @@ angular.module('irontest').controller('DBTeststepController', ['$scope', 'Testst
       $scope.$broadcast('createDSFieldContainAssertion', fieldName);
     };
 
-    $scope.evaluateDataSet = function() {
+    /*$scope.evaluateDataSet = function() {
       $scope.$broadcast('evaluateDataSet', $scope.responseOptions.data);
-    };
+    };*/
 
     var clearPreviousRunStatus = function() {
       if (timer) $timeout.cancel(timer);
@@ -67,6 +68,29 @@ angular.module('irontest').controller('DBTeststepController', ['$scope', 'Testst
         $scope.steprun.status = 'failed';
         IronTestUtils.openErrorHTTPResponseModal(response);
       });
+    };
+
+    $scope.verifyJSONPathAssertion = function() {
+      var url = 'api/jsonservice/verifyassertion';
+      var assertionVerification = {
+        input: $scope.steprun.response.resultSet,
+        assertion: {
+          "id": 10000,
+          "teststepId": 10000,
+          "name": "abc",
+          "type": "JSONPath",
+          "otherProperties": {
+          	"jsonPath": "$.*.length()",
+            "expectedValue": 0
+          }}
+      };
+      $http
+        .post(url, assertionVerification)
+        .then(function successCallback(response) {
+          //  TODO
+        }, function errorCallback(response) {
+          IronTestUtils.openErrorHTTPResponseModal(response);
+        });
     };
   }
 ]);

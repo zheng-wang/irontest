@@ -82,13 +82,13 @@ angular.module('irontest').controller('DBTeststepAssertionsController', ['$scope
       $scope.assertionsModelObj.createDSFieldContainAssertion(data);
     });
 
-    $scope.$on('evaluateDataSet', function (event, data) {
+    /*$scope.$on('evaluateDataSet', function (event, data) {
       var assertions = $scope.teststep.assertions;
       for (var i = 0; i < assertions.length; i ++) {
         var assertion = assertions[i];
         var values = _.pluck(data, assertion.otherProperties.field);
         assertion.result = _.contains(values, assertion.otherProperties.value);
       }
-    });
+    });*/
   }
 ]);
