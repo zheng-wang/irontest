@@ -9,8 +9,9 @@ import java.util.Map;
 public class DBAPIResponse {
     //  applicable only to non-select statements
     private String statementExecutionResults;
-    //  applicable only to select statement; column names are of lower case (default behavior of JDBI)
-    private List<Map<String, Object>> resultSet;
+
+    //  applicable only to select statement; column names are of lower case
+    private List<Map<String, Object>> rows;
 
     public DBAPIResponse() { }
 
@@ -22,11 +23,12 @@ public class DBAPIResponse {
         this.statementExecutionResults = statementExecutionResults;
     }
 
-    public List<Map<String, Object>> getResultSet() {
-        return resultSet;
+    public List<Map<String, Object>> getRows() {
+        return rows;
     }
 
-    public void setResultSet(List<Map<String, Object>> resultSet) {
-        this.resultSet = resultSet;
+    public void setRows(List<Map<String, Object>> rows) {
+        this.rows = rows;
     }
+
 }

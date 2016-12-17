@@ -28,7 +28,7 @@
 <div class="form-group" ng-if="steprun.response">
   <div class="col-lg-12">
     <!-- SQL query result set -->
-    <uib-tabset ng-if="activeTabIndex === 2 && steprun.response.resultSet">
+    <uib-tabset ng-if="activeTabIndex === 2 && steprun.response.rows">
       <uib-tab heading="Grid View">
         <div class="form-group"></div> <!-- spacer -->
         <div ui-grid="responseOptions" ui-grid-resize-columns ui-grid-move-columns
@@ -36,12 +36,12 @@
       </uib-tab>
       <uib-tab heading="JSON View">
         <div class="form-group"></div> <!-- spacer -->
-        <textarea class="form-control" rows="9">{{ steprun.response.resultSet }}</textarea>
+        <textarea class="form-control" rows="9">{{ steprun.response.rows }}</textarea>
       </uib-tab>
     </uib-tabset>
 
     <!-- SQL insert/delete/update log(s) -->
-    <textarea ng-if="!steprun.response.resultSet" ng-model="steprun.response.statementExecutionResults"
+    <textarea ng-if="!steprun.response.rows" ng-model="steprun.response.statementExecutionResults"
          class="form-control background-color-inherit" rows="9" readonly></textarea>
   </div>
 </div>

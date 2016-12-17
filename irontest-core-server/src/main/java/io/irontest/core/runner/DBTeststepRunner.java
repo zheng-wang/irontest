@@ -39,9 +39,11 @@ public class DBTeststepRunner extends TeststepRunner {
         sanityCheckTheStatements(statements);
 
         if (SQLStatementType.isSelectStatement(statements.get(0))) {    //  the request is a select statement
-            Query<Map<String, Object>> query = handle.createQuery(statements.get(0));  //  can not use request, as Oracle does not support trailing semicolon in select statement
-            List<Map<String, Object>> resultSet = query.list();
-            response.setResultSet(resultSet);
+            MetadataResultSetMapper mapper = new MetadataResultSetMapper();
+            //  use statements.get(0) instead of the raw request, as Oracle does not support trailing semicolon in select statement
+            Query<Map<String, Object>> query = handle.createQuery(statements.get(0)).map(mapper);
+            List<Map<String, Object>> rows = query.list();
+            response.setRows(rows);
         } else {                                          //  the request is one or more non-select statements
             int[] returnValues = script.execute();
             StringBuilder sb = new StringBuilder();
