@@ -11,6 +11,7 @@ public class DBAPIResponse {
     private String statementExecutionResults;
 
     //  applicable only to select statement; column names are of lower case
+    private List<String> columnNames;
     private List<Map<String, Object>> rows;
 
     public DBAPIResponse() { }
@@ -31,4 +32,11 @@ public class DBAPIResponse {
         this.rows = rows;
     }
 
+    public List<String> getColumnNames() {
+        return columnNames;
+    }
+
+    public void setColumnNames(List<String> columnNames) {
+        this.columnNames = columnNames;
+    }
 }

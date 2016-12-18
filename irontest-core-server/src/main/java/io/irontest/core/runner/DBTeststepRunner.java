@@ -2,12 +2,13 @@ package io.irontest.core.runner;
 
 import io.irontest.models.Endpoint;
 import io.irontest.models.Teststep;
-import org.skife.jdbi.v2.DBI;
-import org.skife.jdbi.v2.Handle;
-import org.skife.jdbi.v2.Query;
-import org.skife.jdbi.v2.Script;
+import org.skife.jdbi.v2.*;
+import org.skife.jdbi.v2.tweak.BaseStatementCustomizer;
 
 import java.lang.reflect.Method;
+import java.sql.PreparedStatement;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -39,10 +40,21 @@ public class DBTeststepRunner extends TeststepRunner {
         sanityCheckTheStatements(statements);
 
         if (SQLStatementType.isSelectStatement(statements.get(0))) {    //  the request is a select statement
-            MetadataResultSetMapper mapper = new MetadataResultSetMapper();
+            RetainingColumnOrderResultSetMapper mapper = new RetainingColumnOrderResultSetMapper();
             //  use statements.get(0) instead of the raw request, as Oracle does not support trailing semicolon in select statement
             Query<Map<String, Object>> query = handle.createQuery(statements.get(0)).map(mapper);
+            //  obtain columnNames in case the query returns no row
+            final List<String> columnNames = new ArrayList<String>();
+            query.addStatementCustomizer(new BaseStatementCustomizer() {
+                public void afterExecution(PreparedStatement stmt, StatementContext ctx) throws SQLException {
+                    ResultSetMetaData metaData = stmt.getMetaData();
+                    for (int i = 1; i <= metaData.getColumnCount(); i++) {
+                        columnNames.add(metaData.getColumnLabel(i).toLowerCase());
+                    }
+                }
+            });
             List<Map<String, Object>> rows = query.list();
+            response.setColumnNames(columnNames);
             response.setRows(rows);
         } else {                                          //  the request is one or more non-select statements
             int[] returnValues = script.execute();

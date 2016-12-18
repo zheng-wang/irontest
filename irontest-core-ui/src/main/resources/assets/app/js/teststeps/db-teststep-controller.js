@@ -46,22 +46,19 @@ angular.module('irontest').controller('DBTeststepController', ['$scope', 'Testst
         if (response.rows) {    //  the request is a select statement
           $scope.responseOptions.data = response.rows;
           $scope.responseOptions.columnDefs = [ ];
-          if (response.rows.length > 0) {
-            var row = response.rows[0];
-            for (var key in row) {
-              $scope.responseOptions.columnDefs.push({
-                field: key,
-                menuItems: [
-                  {
-                    title: 'Create An Assertion', icon: 'ui-grid-icon-info-circled',
-                    context: $scope,
-                    action: function() {
-                      this.context.createDSFieldContainAssertion(this.context.col.colDef.field);
-                    }
+          for (var i = 0; i < response.columnNames.length; i++) {
+            $scope.responseOptions.columnDefs.push({
+              field: response.columnNames[i],
+              menuItems: [
+                {
+                  title: 'Create An Assertion', icon: 'ui-grid-icon-info-circled',
+                  context: $scope,
+                  action: function() {
+                    this.context.createDSFieldContainAssertion(this.context.col.colDef.field);
                   }
-                ]
-              });
-            }
+                }
+              ]
+            });
           }
         }
       }, function(response) {
