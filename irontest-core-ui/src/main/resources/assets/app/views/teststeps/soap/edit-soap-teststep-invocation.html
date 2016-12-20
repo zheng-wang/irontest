@@ -14,7 +14,7 @@
     <button type="button" class="btn btn-info" ng-click="generateRequest()">Generate Request</button>
   </div>
 </div>
-<div class="form-group form-group-reduced-bottom-margin" request-response-textareas>
+<div class="form-group form-group-reduced-bottom-margin" assertions-area-associative-element="0.8">
   <div class="col-lg-6 full-height">
     <textarea name="request" ng-model="teststep.request" ng-change="autoSave(teststepForm.$valid)"
         id="request" placeholder="Request" class="form-control full-height-important" spellcheck="false"></textarea>
@@ -31,6 +31,6 @@
 </div>
 <div class="form-group no-bottom-margin">
   <div class="col-lg-2">
-    <button type="button" class="btn btn-info" id="assertionAreaToggleButton">Assertions</button>
+    <button type="button" class="btn btn-info" ng-click="toggleAssertionsArea()">Assertions</button>
   </div>
 </div>

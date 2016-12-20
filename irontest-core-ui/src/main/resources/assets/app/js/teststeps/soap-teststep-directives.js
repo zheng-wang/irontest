@@ -1,9 +1,12 @@
 'use strict';
 
-angular.module('irontest').directive('requestResponseTextareas', function () {
+/*
+  The element's height is dynamically adjusted when the assertions area is toggled on or off.
+*/
+angular.module('irontest').directive('assertionsAreaAssociativeElement', function () {
   return {
     link: function(scope, element, attrs) {
-      //  Use nearest absolute height node to determine reqResTextareas height.
+      //  Determine the initial height of the element, by using nearest absolute height node.
       //  Chose window object.
       //  Not able to use page-wrapper node as it's height is dynamically changed by
       //  startbootstrap-sb-admin-2 javascript on window resize.
@@ -11,19 +14,22 @@ angular.module('irontest').directive('requestResponseTextareas', function () {
         document.getElementById('page-header').offsetHeight +
         angular.element('.nav-tabs').height();     // tab heading height
       var tabContentsHeight = window.innerHeight - topOffset;
-      element.height(tabContentsHeight * 0.8);
+      var initialHeightFactor = attrs['assertionsAreaAssociativeElement'];   //  initial proportion of tabContentHeight
+      element.height(tabContentsHeight * initialHeightFactor);
 
-      var toggleButton = angular.element(document.getElementById('assertionAreaToggleButton'));
-      toggleButton.bind('click', function() {
-        var newHeight = element.height() + document.getElementById('assertionsArea').offsetHeight;
-        element.height(newHeight);
-        scope.showAssertionsArea = !(scope.showAssertionsArea);
-        scope.$apply();
+      var assertionsArea = document.getElementById('assertionsArea');
+
+      scope.$on('toggleAssertionsArea', function() {
+        if (scope.showAssertionsArea) {     //  toggle off
+          element.height(element.height() + assertionsArea.offsetHeight);
+          scope.showAssertionsArea = false;
+        } else {                            //  toggle on
+          scope.showAssertionsArea = true;
+        }
       });
 
-      scope.$on('assertionsAreaLoaded', function () {
-        var newHeight = element.height() - document.getElementById('assertionsArea').offsetHeight;
-        element.height(newHeight);
+      scope.$on('assertionsAreaLoaded', function() {
+        element.height(element.height() - assertionsArea.offsetHeight);
       })
     }
   };

@@ -42,6 +42,10 @@ angular.module('irontest').controller('SOAPTeststepController', ['$scope', 'Test
       });
     };
 
+    $scope.toggleAssertionsArea = function() {
+      $scope.$broadcast('toggleAssertionsArea');
+    };
+
     $scope.assertionsAreaLoadedCallback = function() {
       $scope.$broadcast('assertionsAreaLoaded');
     };
