@@ -7,7 +7,6 @@ angular.module('irontest').controller('SOAPTeststepController', ['$scope', 'Test
     '$uibModal',
   function($scope, Teststeps, IronTestUtils, $uibModal) {
     $scope.tempData = {};
-    $scope.showAssertionsArea = false;
 
     $scope.generateRequest = function() {
       //  open modal dialog
@@ -40,14 +39,6 @@ angular.module('irontest').controller('SOAPTeststepController', ['$scope', 'Test
       }, function(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);
       });
-    };
-
-    $scope.toggleAssertionsArea = function() {
-      $scope.$broadcast('toggleAssertionsArea');
-    };
-
-    $scope.assertionsAreaLoadedCallback = function() {
-      $scope.$broadcast('assertionsAreaLoaded');
     };
   }
 ]);

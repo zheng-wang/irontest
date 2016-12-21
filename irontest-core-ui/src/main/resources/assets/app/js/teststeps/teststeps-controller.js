@@ -6,6 +6,7 @@ angular.module('irontest').controller('TeststepsController', ['$scope', 'Testste
     $scope.teststep = {
       assertions: []
     };
+    $scope.showAssertionsArea = false;
 
     $scope.teststepNewlyCreated = function() {
       return $stateParams.newlyCreated === true;
@@ -138,6 +139,20 @@ angular.module('irontest').controller('TeststepsController', ['$scope', 'Testste
 
       //  exit share-endpoint mode
       delete $scope.environments;
+    };
+
+    $scope.toggleAssertionsArea = function() {
+      if ($scope.showAssertionsArea) {    //  for toggle off
+        var elementHeight = document.getElementById('assertionsArea').offsetHeight;
+        $scope.$broadcast('elementRemovedFromColumn', { elementHeight: elementHeight });
+      }
+
+      $scope.showAssertionsArea = !$scope.showAssertionsArea;
+    };
+
+    $scope.assertionsAreaLoadedCallback = function() {
+      var elementHeight = document.getElementById('assertionsArea').offsetHeight;
+      $scope.$broadcast('elementInsertedIntoColumn', { elementHeight: elementHeight });
     };
   }
 ]);

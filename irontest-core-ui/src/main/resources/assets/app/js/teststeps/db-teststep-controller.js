@@ -23,6 +23,8 @@ angular.module('irontest').controller('DBTeststepController', ['$scope', 'Testst
 
     var clearPreviousRunStatus = function() {
       if (timer) $timeout.cancel(timer);
+      var elementHeight = document.getElementById('invocationResultArea').offsetHeight;
+      $scope.$broadcast('elementRemovedFromColumn', { elementHeight: elementHeight });
       $scope.steprun = {};
     };
 
@@ -43,7 +45,7 @@ angular.module('irontest').controller('DBTeststepController', ['$scope', 'Testst
           $scope.steprun.status = null;
         }, 15000);
 
-        if (response.rows) {    //  the request is a select statement
+        if (response.rows) {    //  the request is a select statement, so display result set
           $scope.responseOptions.data = response.rows;
           $scope.responseOptions.columnDefs = [ ];
           for (var i = 0; i < response.columnNames.length; i++) {
@@ -64,6 +66,13 @@ angular.module('irontest').controller('DBTeststepController', ['$scope', 'Testst
       }, function(response) {
         $scope.steprun.status = 'failed';
         IronTestUtils.openErrorHTTPResponseModal(response);
+      });
+    };
+
+    $scope.invocationResultAreaLoadedCallback = function() {
+      timer = $timeout(function() {
+        var elementHeight = document.getElementById('invocationResultArea').offsetHeight;
+        $scope.$broadcast('elementInsertedIntoColumn', { elementHeight: elementHeight });
       });
     };
 
