@@ -1,5 +1,10 @@
 package io.irontest.utils;
 
+import io.irontest.core.runner.SQLStatementType;
+import org.skife.jdbi.v2.Script;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -22,5 +27,25 @@ public class IronTestUtils {
             fieldsPresentInResultSet.add(metaData.getColumnLabel(index).toLowerCase());
         }
         return fieldsPresentInResultSet;
+    }
+
+    public static boolean isSQLRequestSingleSelectStatement(String sqlRequest) throws Exception {
+        List<String> statements = getStatements(sqlRequest);
+        return statements.size() == 1 && SQLStatementType.isSelectStatement(statements.get(0));
+    }
+
+    public static List<String> getStatements(String sqlRequest) throws Exception {
+        List<String> statements = null;
+        if ("".equals(sqlRequest)) {      //  if passing "" to handle.createScript(), script.getStatements() returns unexpected values
+            statements = new ArrayList<String>();
+        } else {                          //  parse the SQL script
+            Constructor constructor = Script.class.getDeclaredConstructors()[0];
+            constructor.setAccessible(true);
+            Script script = (Script) constructor.newInstance(null, null, null, null);
+            Method method = Script.class.getDeclaredMethod("splitToStatements", String.class);
+            method.setAccessible(true);
+            statements = (List<String>) method.invoke(script, sqlRequest);
+        }
+        return statements;
     }
 }

@@ -41,7 +41,8 @@ angular.module('irontest').controller('TeststepsController', ['$scope', 'Testste
         $scope.teststep.$update(function(response) {
           $scope.savingStatus.changeUnsaved = false;
           $scope.$broadcast('successfullySaved');
-          $scope.teststep = response;
+          $scope.teststep = new Teststeps(response.teststep);
+          $scope.teststepParameters = response.parameters;
           if (successCallback) {
             successCallback();
           }
@@ -65,7 +66,8 @@ angular.module('irontest').controller('TeststepsController', ['$scope', 'Testste
         testcaseId: $stateParams.testcaseId,
         teststepId: $stateParams.teststepId
       }, function (response) {
-        $scope.teststep = response;
+        $scope.teststep = new Teststeps(response.teststep);
+        $scope.teststepParameters = response.parameters;
       }, function(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);
       });

@@ -2,10 +2,10 @@ package io.irontest.core.runner;
 
 import io.irontest.models.Endpoint;
 import io.irontest.models.Teststep;
+import io.irontest.utils.IronTestUtils;
 import org.skife.jdbi.v2.*;
 import org.skife.jdbi.v2.tweak.BaseStatementCustomizer;
 
-import java.lang.reflect.Method;
 import java.sql.PreparedStatement;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -22,23 +22,12 @@ public class DBTeststepRunner extends TeststepRunner {
         String request = (String) teststep.getRequest();
         Endpoint endpoint = teststep.getEndpoint();
         DBI jdbi = new DBI(endpoint.getUrl(), endpoint.getUsername(), endpoint.getPassword());
-        Handle handle = jdbi.open();
 
         //  get SQL statements (trimmed and without comments) and JDBI script object
-        List<String> statements = null;
-        Script script = null;
-        if ("".equals(request)) {      //  if passing "" to handle.createScript(), script.getStatements() returns unexpected values
-            statements = new ArrayList<String>();
-        } else {
-            //  parse the SQL script
-            script = handle.createScript(request);
-            //  replace below code with statements = script.getStatements() after upgrading JDBI to a release after 2016.11.26
-            Method method = script.getClass().getDeclaredMethod("getStatements");
-            method.setAccessible(true);
-            statements = (List<String>) method.invoke(script);
-        }
+        List<String> statements = IronTestUtils.getStatements(request);
         sanityCheckTheStatements(statements);
 
+        Handle handle = jdbi.open();
         if (SQLStatementType.isSelectStatement(statements.get(0))) {    //  the request is a select statement
             RetainingColumnOrderResultSetMapper mapper = new RetainingColumnOrderResultSetMapper();
             //  use statements.get(0) instead of the raw request, as Oracle does not support trailing semicolon in select statement
@@ -57,6 +46,7 @@ public class DBTeststepRunner extends TeststepRunner {
             response.setColumnNames(columnNames);
             response.setRows(rows);
         } else {                                          //  the request is one or more non-select statements
+            Script script = handle.createScript(request);
             int[] returnValues = script.execute();
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < returnValues.length; i++) {

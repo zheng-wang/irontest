@@ -5,10 +5,8 @@ import io.irontest.core.runner.SOAPAPIResponse;
 import io.irontest.core.runner.TeststepRunnerFactory;
 import io.irontest.db.TeststepDAO;
 import io.irontest.db.UtilsDAO;
-import io.irontest.models.Endpoint;
-import io.irontest.models.MQTeststepProperties;
-import io.irontest.models.Teststep;
-import io.irontest.models.WaitTeststepProperties;
+import io.irontest.models.*;
+import io.irontest.utils.IronTestUtils;
 import io.irontest.utils.XMLUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -71,15 +69,33 @@ public class TeststepResource {
         }
     }
 
+    private void populateParametersInWrapper(TeststepWrapper wrapper) throws Exception {
+        Teststep teststep = wrapper.getTeststep();
+        if (Teststep.TYPE_DB.equals(teststep.getType())) {
+            wrapper.getParameters().put("isSQLRequestSingleSelectStatement",
+                    IronTestUtils.isSQLRequestSingleSelectStatement((String) teststep.getRequest()));
+        }
+    }
+
     @GET @Path("{teststepId}")
-    public Teststep findById(@PathParam("teststepId") long teststepId) {
-        return teststepDAO.findById(teststepId);
+    public TeststepWrapper findById(@PathParam("teststepId") long teststepId) throws Exception {
+        TeststepWrapper wrapper = new TeststepWrapper();
+        Teststep teststep = teststepDAO.findById(teststepId);
+        wrapper.setTeststep(teststep);
+        populateParametersInWrapper(wrapper);
+
+        return wrapper;
     }
 
     @PUT @Path("{teststepId}")
-    public Teststep update(Teststep teststep) throws IOException, InterruptedException {
+    public TeststepWrapper update(Teststep teststep) throws Exception {
         Thread.sleep(100);  //  workaround for Chrome 44 to 48's 'Failed to load response data' problem (no such problem in Chrome 49)
-        return teststepDAO.update(teststep);
+        TeststepWrapper wrapper = new TeststepWrapper();
+        teststep = teststepDAO.update(teststep);
+        wrapper.setTeststep(teststep);
+        populateParametersInWrapper(wrapper);
+
+        return wrapper;
     }
 
     @DELETE @Path("{teststepId}")
