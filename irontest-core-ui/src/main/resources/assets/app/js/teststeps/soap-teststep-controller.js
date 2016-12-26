@@ -6,7 +6,7 @@
 angular.module('irontest').controller('SOAPTeststepController', ['$scope', 'Teststeps', 'IronTestUtils',
     '$uibModal',
   function($scope, Teststeps, IronTestUtils, $uibModal) {
-    $scope.tempData = {};
+    $scope.steprun = {};
 
     $scope.generateRequest = function() {
       //  open modal dialog
@@ -35,7 +35,7 @@ angular.module('irontest').controller('SOAPTeststepController', ['$scope', 'Test
     $scope.invoke = function() {
       var teststep = new Teststeps($scope.teststep);
       teststep.$run(function(response) {
-        $scope.tempData.soapResponse = response.httpResponseBody;
+        $scope.steprun.response = response.httpResponseBody;
       }, function(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);
       });

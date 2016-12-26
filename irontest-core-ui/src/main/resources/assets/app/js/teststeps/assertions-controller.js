@@ -124,7 +124,7 @@ angular.module('irontest').controller('AssertionsController', ['$scope',
       var assertion = $scope.assertionsModelObj.assertion;
       var url = 'api/jsonservice/verifyassertion';
       var assertionVerification = {
-        input: $scope.$parent.tempData.soapResponse,
+        input: $scope.$parent.steprun.response,
         assertion: assertion
       };
       $http

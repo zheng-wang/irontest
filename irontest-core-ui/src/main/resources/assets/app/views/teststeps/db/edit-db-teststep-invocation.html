@@ -28,7 +28,7 @@
 <div class="form-group form-group-reduced-bottom-margin" id="invocationResultArea">
   <div class="col-lg-12" ng-if="steprun.response">
     <!-- SQL select result set -->
-    <uib-tabset ng-if="activeTabIndex === 2 && steprun.response.rows">
+    <uib-tabset ng-if="activeTabIndex === 2 && steprun.isQueryResponse">
       <uib-tab heading="Grid View">
         <div class="form-group"></div> <!-- spacer -->
         <div ui-grid="responseOptions" ui-grid-resize-columns ui-grid-move-columns class="ui-grid dbresponse-grid"></div>
@@ -40,7 +40,7 @@
     </uib-tabset>
 
     <!-- SQL insert/delete/update log(s) -->
-    <textarea ng-if="!steprun.response.rows" ng-model="steprun.response.statementExecutionResults"
+    <textarea ng-if="!steprun.isQueryResponse" ng-model="steprun.response"
               class="form-control background-color-inherit" rows="9" readonly></textarea>
 
     <div ng-init="invocationResultAreaLoadedCallback()"></div>

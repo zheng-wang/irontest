@@ -7,13 +7,14 @@
           Create <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" uib-dropdown-menu role="menu">
-          <li role="menuitem"><a ng-click="assertionsModelObj.createAssertion('Contains')" href="">Contains Assertion</a></li>
-          <li role="menuitem"><a ng-click="assertionsModelObj.createAssertion('XPath')" href="">XPath Assertion</a></li>
+          <li role="menuitem" ng-if="teststep.type === 'SOAP'"><a ng-click="assertionsModelObj.createAssertion('Contains')" href="">Contains Assertion</a></li>
+          <li role="menuitem" ng-if="teststep.type === 'SOAP'"><a ng-click="assertionsModelObj.createAssertion('XPath')" href="">XPath Assertion</a></li>
+          <li role="menuitem" ng-if="teststep.type === 'DB'"><a ng-click="assertionsModelObj.createAssertion('JSONPath')" href="">JSONPath Assertion</a></li>
         </ul>
       </div>
       <div class="col-lg-8">
         <button type="button" class="btn btn-info" title="Verify assertion against current response"
-                ng-disabled="!$parent.tempData.soapResponse || !assertionsModelObj.assertion"
+                ng-disabled="!steprun.response || !assertionsModelObj.assertion"
                 ng-click="assertionsModelObj.verifyCurrentAssertion()">Verify</button>
       </div>
     </div>
@@ -28,6 +29,8 @@
          ng-include="'/ui/views/teststeps/soap/contains-assertion-edit.html'"></div>
     <div ng-if="assertionsModelObj.assertion.type === 'XPath'"
          ng-include="'/ui/views/teststeps/soap/xpath-assertion-edit.html'"></div>
+    <div ng-if="assertionsModelObj.assertion.type === 'JSONPath'"
+         ng-include="'/ui/views/teststeps/db/jsonpath-assertion-edit.html'"></div>
   </div>
 </div>
 <script type="text/ng-template" id="assertionGridNameCellTemplate.html">

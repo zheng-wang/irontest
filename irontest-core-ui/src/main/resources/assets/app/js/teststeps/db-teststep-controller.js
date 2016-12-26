@@ -39,13 +39,14 @@ angular.module('irontest').controller('DBTeststepController', ['$scope', 'Testst
       var teststep = new Teststeps($scope.teststep);
       $scope.steprun.status = 'ongoing';
       teststep.$run(function(response) {
-        $scope.steprun.response = response;
         $scope.steprun.status = 'finished';
         timer = $timeout(function() {
           $scope.steprun.status = null;
         }, 15000);
 
         if (response.rows) {    //  the request is a select statement, so display result set
+          $scope.steprun.response = response.rows;
+          $scope.steprun.isQueryResponse = true;
           $scope.responseOptions.data = response.rows;
           $scope.responseOptions.columnDefs = [ ];
           for (var i = 0; i < response.columnNames.length; i++) {
@@ -62,6 +63,8 @@ angular.module('irontest').controller('DBTeststepController', ['$scope', 'Testst
               ]
             });
           }
+        } else {
+          $scope.steprun.response = response.statementExecutionResults;
         }
       }, function(response) {
         $scope.steprun.status = 'failed';
@@ -79,7 +82,7 @@ angular.module('irontest').controller('DBTeststepController', ['$scope', 'Testst
     $scope.verifyJSONPathAssertion = function() {
       var url = 'api/jsonservice/verifyassertion';
       var assertionVerification = {
-        input: $scope.steprun.response.rows,
+        input: $scope.steprun.response,
         assertion: {
           "id": 10000,
           "teststepId": 10000,
