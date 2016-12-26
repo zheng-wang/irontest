@@ -18,7 +18,7 @@
         <angular-ui-router.version>0.3.1</angular-ui-router.version>
         <bootstrap.version>3.3.7</bootstrap.version>
         <jquery.version>3.1.1</jquery.version>
-        <angular-bootstrap.version>2.3.1</angular-bootstrap.version>
+        <angular-bootstrap.version>2.3.0</angular-bootstrap.version>
         <startbootstrap-sb-admin-2.version>3.3.7+1</startbootstrap-sb-admin-2.version>
         <underscore.version>1.8.3</underscore.version>
         <ui-grid-draggable-rows.version>0.3.2</ui-grid-draggable-rows.version>
