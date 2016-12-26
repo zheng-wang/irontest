@@ -1,6 +1,5 @@
 package io.irontest.core.assertion;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import io.irontest.models.TestResult;
@@ -20,16 +19,18 @@ public class JSONPathAssertionVerifier implements AssertionVerifier {
         AssertionVerificationResult result = new AssertionVerificationResult();
         JSONPathAssertionProperties otherProperties =
                 (JSONPathAssertionProperties) assertion.getOtherProperties();
-        String inputJSON = null;
         try {
-            inputJSON = new ObjectMapper().writeValueAsString(input);
-        } catch (JsonProcessingException e) {
+            String inputJSON = new ObjectMapper().writeValueAsString(input);
+            Object value = JsonPath.read(inputJSON, otherProperties.getJsonPath());
+
+            //Object expectedValueObj = JsonPath.read((String) otherProperties.getExpectedValue(), "$");
+            result.setResult(otherProperties.getExpectedValue().equals(value) ?
+                    TestResult.PASSED : TestResult.FAILED);
+        } catch (Exception e) {
             LOGGER.error("Failed to verify JSONPathAssertion.", e);
             result.setError(e.getMessage());
+            result.setResult(TestResult.FAILED);
         }
-        result.setResult(result.getError() == null &&
-                otherProperties.getExpectedValue().equals(JsonPath.read(inputJSON, otherProperties.getJsonPath())) ?
-                TestResult.PASSED : TestResult.FAILED);
 
         return result;
     }
