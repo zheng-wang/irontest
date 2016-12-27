@@ -49,9 +49,11 @@
     </div>
   </div>
   <div class="col-lg-5 no-left-padding">
-    <textarea name="assertionXPathActualValue" id="assertionXPathActualValue" rows="6"
-              ng-model="assertionsModelObj.tempData.assertionXPathActualValue" class="form-control"
-              ng-class="{ 'text-red' : assertionsModelObj.tempData.assertionXPathActualValueError }" readonly>
+    <textarea name="assertionXPathActualValue" id="assertionXPathActualValue" rows="6" class="form-control"
+              ng-class="{ 'text-red' : assertionsModelObj.assertionVerificationResult.error }" readonly>
+      {{ $parent.assertionsModelObj.assertionVerificationResult.error ?
+        $parent.assertionsModelObj.assertionVerificationResult.error :
+        $parent.assertionsModelObj.assertionVerificationResult.actualValue }}
     </textarea>
   </div>
 </div>

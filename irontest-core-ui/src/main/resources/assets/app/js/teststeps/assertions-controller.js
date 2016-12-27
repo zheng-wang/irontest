@@ -1,7 +1,7 @@
 'use strict';
 
 //  NOTICE:
-//    The $scope here prototypically inherits from the $scope of teststeps-controller.js.
+//    The $scope here prototypically inherits from the $scope of TeststepsController.
 //    ng-include also creates a scope.
 //    If unspecified, all grid config is for the assertions grid
 angular.module('irontest').controller('AssertionsController', ['$scope',
@@ -9,8 +9,6 @@ angular.module('irontest').controller('AssertionsController', ['$scope',
   function($scope, $stateParams, uiGridConstants, uiGridEditConstants, IronTestUtils, $http, $timeout) {
     //  use assertionsModelObj for all variables in the scope, to avoid conflict with parent scope
     $scope.assertionsModelObj = {};
-
-    $scope.assertionsModelObj.tempData = {};
 
     //  remove currently selected assertion
     var removeCurrentAssertion = function() {
@@ -133,12 +131,6 @@ angular.module('irontest').controller('AssertionsController', ['$scope',
           var data = response.data;
           $scope.assertionsModelObj.assertionVerificationResult = data;
           $scope.assertionsModelObj.assertionVerificationResult.assertionId = assertion.id;
-
-          if (assertion.type === 'XPath') {
-            $scope.assertionsModelObj.tempData.assertionXPathActualValue =
-              data.error ? data.error : data.actualValue;
-            $scope.assertionsModelObj.tempData.assertionXPathActualValueError = data.error;
-          }
         }, function errorCallback(response) {
           IronTestUtils.openErrorHTTPResponseModal(response);
         });
