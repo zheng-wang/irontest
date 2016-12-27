@@ -113,13 +113,20 @@ body {
 }
 
 .assertions-grid {
-  height: 210px;
+  height: 200px;
   margin-left: 15px;
   padding-left: 0px;
   padding-right: 0px;
 }
 
-.dbresponse-grid {
+.db-teststep-assertions-grid {
+  height: 172px;
+  margin-left: 15px;
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.db-query-result-set-grid {
   height: 200px;
 }
 
@@ -148,7 +155,7 @@ body {
 }
 
 .xpath-assertion-namespace-prefixes-grid {
-  height: 110px;
+  height: 92px;
 }
 
 .xpath-assertion-namespace-prefixes-grid .ui-grid-cell-contents {

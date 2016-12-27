@@ -10,7 +10,10 @@ angular.module('irontest').controller('DBTeststepController', ['$scope', 'Testst
 
     $scope.responseOptions = {
       enableFiltering: true,
-      columnDefs: [ ]
+      columnDefs: [ ],
+      onRegisterApi: function (gridApi) {
+        $scope.invocationResultAreaLoadedCallback();
+      }
     };
 
     $scope.createDSFieldContainAssertion = function(fieldName) {
@@ -23,8 +26,11 @@ angular.module('irontest').controller('DBTeststepController', ['$scope', 'Testst
 
     var clearPreviousRunStatus = function() {
       if (timer) $timeout.cancel(timer);
-      var elementHeight = document.getElementById('invocationResultArea').offsetHeight;
-      $scope.$broadcast('elementRemovedFromColumn', { elementHeight: elementHeight });
+      var invocationResultArea = document.getElementById('invocationResultArea');
+      if (invocationResultArea) {
+        var elementHeight = invocationResultArea.offsetHeight;
+        $scope.$broadcast('elementRemovedFromColumn', { elementHeight: elementHeight });
+      }
       $scope.steprun = {};
     };
 
@@ -32,9 +38,9 @@ angular.module('irontest').controller('DBTeststepController', ['$scope', 'Testst
       clearPreviousRunStatus();
 
       //  exclude the result property from the assertion, as the property does not exist in server side Assertion class
-      $scope.teststep.assertions.forEach(function(assertion) {
+      /*$scope.teststep.assertions.forEach(function(assertion) {
         delete assertion.result;
-      });
+      });*/
 
       var teststep = new Teststeps($scope.teststep);
       $scope.steprun.status = 'ongoing';
@@ -47,11 +53,11 @@ angular.module('irontest').controller('DBTeststepController', ['$scope', 'Testst
         if (response.rows) {    //  the request is a select statement, so display result set
           $scope.steprun.response = response.rows;
           $scope.steprun.isQueryResponse = true;
-          $scope.responseOptions.data = response.rows;
           $scope.responseOptions.columnDefs = [ ];
           for (var i = 0; i < response.columnNames.length; i++) {
             $scope.responseOptions.columnDefs.push({
-              field: response.columnNames[i],
+              field: response.columnNames[i]
+              /*,
               menuItems: [
                 {
                   title: 'Create An Assertion', icon: 'ui-grid-icon-info-circled',
@@ -60,9 +66,10 @@ angular.module('irontest').controller('DBTeststepController', ['$scope', 'Testst
                     this.context.createDSFieldContainAssertion(this.context.col.colDef.field);
                   }
                 }
-              ]
+              ]*/
             });
           }
+          $scope.responseOptions.data = response.rows;
         } else {
           $scope.steprun.response = response.statementExecutionResults;
         }
@@ -73,13 +80,13 @@ angular.module('irontest').controller('DBTeststepController', ['$scope', 'Testst
     };
 
     $scope.invocationResultAreaLoadedCallback = function() {
-      timer = $timeout(function() {
+      $timeout(function() {
         var elementHeight = document.getElementById('invocationResultArea').offsetHeight;
         $scope.$broadcast('elementInsertedIntoColumn', { elementHeight: elementHeight });
       });
     };
 
-    $scope.verifyJSONPathAssertion = function() {
+    /*$scope.verifyJSONPathAssertion = function() {
       var url = 'api/jsonservice/verifyassertion';
       var assertionVerification = {
         input: $scope.steprun.response,
@@ -100,6 +107,6 @@ angular.module('irontest').controller('DBTeststepController', ['$scope', 'Testst
         }, function errorCallback(response) {
           IronTestUtils.openErrorHTTPResponseModal(response);
         });
-    };
+    };*/
   }
 ]);

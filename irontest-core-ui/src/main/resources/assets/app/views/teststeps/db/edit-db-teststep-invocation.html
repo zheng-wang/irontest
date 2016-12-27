@@ -25,24 +25,23 @@
   </div>
 </div>
 
-<div class="form-group form-group-reduced-bottom-margin" id="invocationResultArea">
-  <div class="col-lg-12" ng-if="steprun.response">
-    <!-- SQL select result set -->
-    <uib-tabset ng-if="activeTabIndex === 2 && steprun.isQueryResponse">
+<div class="form-group form-group-reduced-bottom-margin" id="invocationResultArea" ng-if="steprun.response">
+  <div class="col-lg-12" ng-if="steprun.isQueryResponse">    <!-- SQL select result set -->
+    <uib-tabset >
       <uib-tab heading="Grid View">
         <div class="form-group"></div> <!-- spacer -->
-        <div ui-grid="responseOptions" ui-grid-resize-columns ui-grid-move-columns class="ui-grid dbresponse-grid"></div>
+        <div ui-grid="responseOptions" ui-grid-resize-columns ui-grid-move-columns
+             class="ui-grid db-query-result-set-grid"></div>
       </uib-tab>
       <uib-tab heading="JSON View">
         <div class="form-group"></div> <!-- spacer -->
-        <textarea class="form-control" rows="9">{{ steprun.response.rows }}</textarea>
+        <textarea class="form-control" rows="9">{{ steprun.response }}</textarea>
       </uib-tab>
     </uib-tabset>
-
-    <!-- SQL insert/delete/update log(s) -->
-    <textarea ng-if="!steprun.isQueryResponse" ng-model="steprun.response"
+  </div>
+  <div class="col-lg-12" ng-if="!steprun.isQueryResponse">    <!-- SQL insert/delete/update log(s) -->
+    <textarea ng-model="steprun.response"
               class="form-control background-color-inherit" rows="9" readonly></textarea>
-
     <div ng-init="invocationResultAreaLoadedCallback()"></div>
   </div>
 </div>
@@ -56,16 +55,5 @@
 <div class="form-group no-bottom-margin" ng-if="teststepParameters.isSQLRequestSingleSelectStatement">
   <div class="col-lg-2">
     <button type="button" class="btn btn-info" ng-click="toggleAssertionsArea()">Assertions</button>
-  </div>
-</div>
-
-<div class="form-group">
-  <div class="col-lg-1">
-    <button type="button" class="btn btn-info" ng-click="verifyJSONPathAssertion()">Verify</button>
-  </div>
-  <div>
-    <div class="col-lg-5">
-      <textarea ng-model="aaa.bbb" class="form-control" rows="2"></textarea>
-    </div>
   </div>
 </div>

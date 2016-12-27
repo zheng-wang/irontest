@@ -6,6 +6,7 @@ import io.irontest.models.TestResult;
 import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.AssertionVerificationResult;
 import io.irontest.models.assertion.JSONPathAssertionProperties;
+import io.irontest.models.assertion.JSONPathAssertionVerificationResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,15 +17,16 @@ public class JSONPathAssertionVerifier implements AssertionVerifier {
     private static final Logger LOGGER = LoggerFactory.getLogger(JSONPathAssertionVerifier.class);
 
     public AssertionVerificationResult verify(Assertion assertion, Object input) {
-        AssertionVerificationResult result = new AssertionVerificationResult();
+        JSONPathAssertionVerificationResult result = new JSONPathAssertionVerificationResult();
         JSONPathAssertionProperties otherProperties =
                 (JSONPathAssertionProperties) assertion.getOtherProperties();
         try {
             String inputJSON = new ObjectMapper().writeValueAsString(input);
-            Object value = JsonPath.read(inputJSON, otherProperties.getJsonPath());
+            Object actualValue = JsonPath.read(inputJSON, otherProperties.getJsonPath());
 
             //Object expectedValueObj = JsonPath.read((String) otherProperties.getExpectedValue(), "$");
-            result.setResult(otherProperties.getExpectedValue().equals(value) ?
+            result.setActualValue(actualValue);
+            result.setResult(otherProperties.getExpectedValue().equals(actualValue) ?
                     TestResult.PASSED : TestResult.FAILED);
         } catch (Exception e) {
             LOGGER.error("Failed to verify JSONPathAssertion.", e);

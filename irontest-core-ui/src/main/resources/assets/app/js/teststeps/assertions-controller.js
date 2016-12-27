@@ -37,6 +37,7 @@ angular.module('irontest').controller('AssertionsController', ['$scope', 'uiGrid
         { title: 'Delete', order: 210, action: removeCurrentAssertion }
       ],
       onRegisterApi: function (gridApi) {
+        $scope.assertionsAreaLoadedCallback();
         $scope.assertionsModelObj.gridApi = gridApi;
         gridApi.selection.on.rowSelectionChanged($scope, function(row) {
           $scope.assertionsModelObj.assertion = row.entity;

@@ -19,8 +19,13 @@
       </div>
     </div>
     <div class="form-group no-bottom-margin">
-      <div ui-grid="assertionsModelObj.gridOptions" ui-grid-resize-columns ui-grid-move-columns ui-grid-selection
+      <!-- ng-class does not work here as the grid height needs to be determined before rendering the grid -->
+      <div ng-if="teststep.type === 'SOAP'" ui-grid="assertionsModelObj.gridOptions"
+           ui-grid-resize-columns ui-grid-move-columns ui-grid-selection
            ui-grid-edit class="ui-grid col-lg-12 assertions-grid"></div>
+      <div ng-if="teststep.type === 'DB'" ui-grid="assertionsModelObj.gridOptions"
+           ui-grid-resize-columns ui-grid-move-columns ui-grid-selection
+           ui-grid-edit class="ui-grid col-lg-12 db-teststep-assertions-grid"></div>
     </div>
   </div>
   <!-- assertion details area -->
@@ -51,5 +56,3 @@
   </div>
 </script>
 
-<!-- this is for the parent controller -->
-<div ng-init="assertionsAreaLoadedCallback()"></div>
