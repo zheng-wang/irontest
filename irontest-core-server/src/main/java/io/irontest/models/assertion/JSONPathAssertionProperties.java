@@ -9,6 +9,13 @@ public class JSONPathAssertionProperties extends Properties {
     private String jsonPath;
     private Object expectedValue;
 
+    public JSONPathAssertionProperties() {}
+
+    public JSONPathAssertionProperties(String jsonPath, Object expectedValue) {
+        this.jsonPath = jsonPath;
+        this.expectedValue = expectedValue;
+    }
+
     public String getJsonPath() {
         return jsonPath;
     }

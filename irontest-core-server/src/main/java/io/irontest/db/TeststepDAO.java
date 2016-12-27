@@ -296,6 +296,8 @@ public abstract class TeststepDAO {
                 } else if (Assertion.TYPE_XPATH.equals(assertion.getType())) {
                     assertion.setOtherProperties(
                             new XPathAssertionProperties("true()", "true", new ArrayList<NamespacePrefix>()));
+                } else if (Assertion.TYPE_JSONPATH.equals(assertion.getType())) {
+                    assertion.setOtherProperties(new JSONPathAssertionProperties("$", new ArrayList()));
                 }
                 newAssertionIds.add(assertionDAO.insert_NoTransaction(assertion));
             } else {
