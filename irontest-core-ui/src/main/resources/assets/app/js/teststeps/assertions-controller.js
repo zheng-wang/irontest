@@ -4,9 +4,9 @@
 //    The $scope here prototypically inherits from the $scope of TeststepsController.
 //    ng-include also creates a scope.
 //    If unspecified, all grid config is for the assertions grid
-angular.module('irontest').controller('AssertionsController', ['$scope',
-    '$stateParams', 'uiGridConstants', 'uiGridEditConstants', 'IronTestUtils', '$http', '$timeout',
-  function($scope, $stateParams, uiGridConstants, uiGridEditConstants, IronTestUtils, $http, $timeout) {
+angular.module('irontest').controller('AssertionsController', ['$scope', 'uiGridConstants', 'IronTestUtils', '$http',
+    '$timeout',
+  function($scope, uiGridConstants, IronTestUtils, $http, $timeout) {
     //  use assertionsModelObj for all variables in the scope, to avoid conflict with parent scope
     $scope.assertionsModelObj = {};
 
@@ -40,6 +40,7 @@ angular.module('irontest').controller('AssertionsController', ['$scope',
         $scope.assertionsModelObj.gridApi = gridApi;
         gridApi.selection.on.rowSelectionChanged($scope, function(row) {
           $scope.assertionsModelObj.assertion = row.entity;
+          $scope.assertionsModelObj.assertionVerificationResult = null;
         });
       }
     };
@@ -55,13 +56,13 @@ angular.module('irontest').controller('AssertionsController', ['$scope',
       });
     };
 
-    var reselectCurrentAssertionInGrid = function() {
+    $scope.assertionsModelObj.reselectCurrentAssertionInGrid = function() {
        var currentAssertionId = $scope.assertionsModelObj.assertion.id;
        selectAssertionInGridByProperty('id', currentAssertionId);
     };
 
     $scope.assertionsModelObj.autoSave = function(isValid) {
-      $scope.autoSave(isValid, reselectCurrentAssertionInGrid);
+      $scope.autoSave(isValid, $scope.assertionsModelObj.reselectCurrentAssertionInGrid);
     };
 
     $scope.assertionsModelObj.createAssertion = function(type) {
@@ -76,46 +77,6 @@ angular.module('irontest').controller('AssertionsController', ['$scope',
         selectAssertionInGridByProperty('name', name);
       };
       $scope.update(true, selectNewlyCreatedAssertionInGrid);
-    };
-
-    var createNamespacePrefix = function(gridMenuEvent) {
-      $scope.assertionsModelObj.assertion.otherProperties.namespacePrefixes.push(
-        { prefix: 'ns1', namespace: 'http://com.mycompany/service1' }
-      );
-      $scope.update(true, reselectCurrentAssertionInGrid);
-    };
-
-    var removeNamespacePrefix = function(gridMenuEvent) {
-      var selectedRows = $scope.assertionsModelObj.xPathNamespacePrefixGridApi.selection.getSelectedRows();
-      var namespacePrefixes = $scope.assertionsModelObj.assertion.otherProperties.namespacePrefixes;
-      for (var i = 0; i < selectedRows.length; i += 1) {
-        IronTestUtils.deleteArrayElementByProperty(namespacePrefixes, '$$hashKey', selectedRows[i].$$hashKey);
-      }
-      $scope.update(true, reselectCurrentAssertionInGrid);
-    };
-
-    $scope.assertionsModelObj.xPathNamespacePrefixesGridOptions = {
-      data: 'assertionsModelObj.assertion.otherProperties.namespacePrefixes',
-      enableRowHeaderSelection: false, multiSelect: false, enableGridMenu: true, enableColumnMenus: false,
-      rowHeight: 20, enableHorizontalScrollbar: uiGridConstants.scrollbars.NEVER,
-      columnDefs: [
-        {
-          name: 'prefix', width: 65, minWidth: 65, headerTooltip: 'Double click to edit',
-          sort: { direction: uiGridConstants.ASC, priority: 1 }, enableCellEdit: true,
-          editableCellTemplate: 'namespacePrefixGridPrefixEditableCellTemplate.html'
-        },
-        {
-          name: 'namespace', headerTooltip: 'Double click to edit', enableCellEdit: true,
-          editableCellTemplate: 'namespacePrefixGridNamespaceEditableCellTemplate.html'
-        }
-      ],
-      gridMenuCustomItems: [
-        { title: 'Create', order: 210, action: createNamespacePrefix },
-        { title: 'Delete', order: 220, action: removeNamespacePrefix }
-      ],
-      onRegisterApi: function (gridApi) {
-        $scope.assertionsModelObj.xPathNamespacePrefixGridApi = gridApi;
-      }
     };
 
     $scope.assertionsModelObj.verifyCurrentAssertion = function() {

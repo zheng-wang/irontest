@@ -50,11 +50,10 @@
   </div>
   <div class="col-lg-5 no-left-padding">
     <textarea name="assertionXPathActualValue" id="assertionXPathActualValue" rows="6" class="form-control"
-              ng-class="{ 'text-red' : assertionsModelObj.assertionVerificationResult.error }" readonly>
-      {{ $parent.assertionsModelObj.assertionVerificationResult.error ?
+              ng-class="{ 'text-red' : assertionsModelObj.assertionVerificationResult.error }" readonly>{{
+        $parent.assertionsModelObj.assertionVerificationResult.error ?
         $parent.assertionsModelObj.assertionVerificationResult.error :
-        $parent.assertionsModelObj.assertionVerificationResult.actualValue }}
-    </textarea>
+        $parent.assertionsModelObj.assertionVerificationResult.actualValue }}</textarea>
   </div>
 </div>
 <script type="text/ng-template" id="namespacePrefixGridPrefixEditableCellTemplate.html">
