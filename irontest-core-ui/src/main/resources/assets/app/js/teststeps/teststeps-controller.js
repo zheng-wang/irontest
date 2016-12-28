@@ -30,14 +30,6 @@ angular.module('irontest').controller('TeststepsController', ['$scope', 'Testste
       if (timer) $timeout.cancel(timer);  //  cancel existing timer if the update function is called directly (to avoid duplicate save)
       $scope.savingStatus.changeUnsaved = true;
       if (isValid) {
-        //  For DB test step, exclude the result property from the assertions,
-        //  as the property does not exist in server side Assertion class
-        if ($scope.teststep.type === 'DB') {
-          $scope.teststep.assertions.forEach(function(assertion) {
-            delete assertion.result;
-          });
-        }
-
         $scope.teststep.$update(function(response) {
           $scope.savingStatus.changeUnsaved = false;
           $scope.$broadcast('successfullySaved');

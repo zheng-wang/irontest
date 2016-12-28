@@ -57,6 +57,11 @@ public abstract class AssertionDAO {
     @SqlUpdate("delete from assertion where id = :id")
     public abstract void deleteById(@Bind("id") long id);
 
+    /**
+     *
+     * @param teststepId
+     * @param ids can not be empty, otherwise jdbi will throw exception, though H2 works with empty.
+     */
     @SqlUpdate("delete from assertion where teststep_id = :teststepId and id not in (<ids>)")
     public abstract void deleteByTeststepIdIfIdNotIn(@Bind("teststepId") long teststepId, @BindIn("ids") List<Long> ids);
 }

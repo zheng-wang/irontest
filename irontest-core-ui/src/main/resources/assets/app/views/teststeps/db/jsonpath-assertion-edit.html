@@ -1,4 +1,4 @@
-<div class="form-group no-left-margin required"
+<div class="form-group no-left-margin"
      ng-class="{ 'has-error' : savingStatus.submitted && teststepForm.assertionJSONPath.$invalid }">
   <div class="col-lg-1 text-right">
     <div class="form-group"></div>
@@ -9,31 +9,25 @@
   </div>
   <div class="col-lg-8">
     <textarea name="assertionJSONPath" ng-model="assertionsModelObj.assertion.otherProperties.jsonPath"
-              id="assertionJSONPath" rows="3" class="form-control" placeholder="JSONPath"
-              ng-change="assertionsModelObj.autoSave(teststepForm.$valid)" required>
+              id="assertionJSONPath" rows="3" class="form-control"
+              ng-change="assertionsModelObj.autoSave(teststepForm.$valid)">
     </textarea>
-    <div ng-show="savingStatus.submitted && teststepForm.assertionJSONPath.$invalid" class="help-block">
-      <p ng-show="teststepForm.assertionJSONPath.$error.required">JSONPath is required</p>
-    </div>
   </div>
 </div>
 <div class="form-group no-bottom-margin no-left-margin">
-  <div class="required" ng-class="{ 'has-error' : savingStatus.submitted && teststepForm.assertionExpectedValue.$invalid }">
+  <div>
     <div class="col-lg-1">
       <div class="form-group"></div>
       <div class="form-group"></div>
       <div class="form-group">
-        <label for="assertionExpectedValue" class="control-label">Expected Value</label>
+        <label for="expectedValueJSON" class="control-label">Expected Value</label>
       </div>
     </div>
     <div class="col-lg-5 no-right-padding">
-      <textarea name="assertionExpectedValue" ng-model="assertionsModelObj.assertion.otherProperties.expectedValue"
-                id="assertionExpectedValue" rows="6" class="form-control" placeholder="Expected value"
-                ng-change="assertionsModelObj.autoSave(teststepForm.$valid)" required>
+      <textarea name="expectedValueJSON" ng-model="assertionsModelObj.assertion.otherProperties.expectedValueJSON"
+                id="expectedValueJSON" rows="6" class="form-control"
+                ng-change="assertionsModelObj.autoSave(teststepForm.$valid)">
       </textarea>
-      <div ng-show="savingStatus.submitted && teststepForm.assertionExpectedValue.$invalid" class="help-block">
-        <p ng-show="teststepForm.assertionExpectedValue.$error.required">Expected Value is required</p>
-      </div>
     </div>
   </div>
   <div class="col-lg-1">
