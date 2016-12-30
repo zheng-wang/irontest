@@ -7,7 +7,6 @@ The tool is mainly designed for testers and developers, but in the same team/pro
 
 Table of Contents:
 
-- [Characteristics](#characteristics)
 - [Build](#build)
 - [Deploy](#deploy)
 - [Use](#use)
@@ -15,11 +14,6 @@ Table of Contents:
     - [More Usages](#more-usages)
 - [Maintain](#maintain)
 - [License](#license)
-
-## Characteristics
-- Web UI. Zero installation for end users.
-- Centralized test cases and endpoints management, enabling team work by default.
-- Easy deployment and maintenance.
         
 ## Build
 Prerequisites: JDK 1.7+, Maven 3.x.
