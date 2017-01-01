@@ -22,15 +22,13 @@ public class JSONPathAssertionVerifier implements AssertionVerifier {
                 (JSONPathAssertionProperties) assertion.getOtherProperties();
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            String inputJSON = objectMapper.writeValueAsString(input);
             Object expectedValue = objectMapper.readValue(otherProperties.getExpectedValueJSON(), Object.class);
             /*System.out.println(otherProperties.getExpectedValueJSON());
             System.out.println(expectedValue.getClass());
             System.out.println(expectedValue);*/
 
-            Object actualValue = JsonPath.read(inputJSON, otherProperties.getJsonPath());
+            Object actualValue = JsonPath.read(input, otherProperties.getJsonPath());
 
-            //Object expectedValueObj = JsonPath.read((String) otherProperties.getExpectedValueJSON(), "$");
             result.setActualValueJSON(objectMapper.writeValueAsString(actualValue));
             result.setResult(expectedValue.equals(actualValue) ? TestResult.PASSED : TestResult.FAILED);
         } catch (Exception e) {

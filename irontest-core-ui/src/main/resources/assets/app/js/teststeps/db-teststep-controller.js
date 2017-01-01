@@ -37,11 +37,6 @@ angular.module('irontest').controller('DBTeststepController', ['$scope', 'Testst
     $scope.invoke = function() {
       clearPreviousRunStatus();
 
-      //  exclude the result property from the assertion, as the property does not exist in server side Assertion class
-      /*$scope.teststep.assertions.forEach(function(assertion) {
-        delete assertion.result;
-      });*/
-
       var teststep = new Teststeps($scope.teststep);
       $scope.steprun.status = 'ongoing';
       teststep.$run(function(response) {
@@ -85,28 +80,5 @@ angular.module('irontest').controller('DBTeststepController', ['$scope', 'Testst
         $scope.$broadcast('elementInsertedIntoColumn', { elementHeight: elementHeight });
       });
     };
-
-    /*$scope.verifyJSONPathAssertion = function() {
-      var url = 'api/jsonservice/verifyassertion';
-      var assertionVerification = {
-        input: $scope.steprun.response,
-        assertion: {
-          "id": 10000,
-          "teststepId": 10000,
-          "name": "abc",
-          "type": "JSONPath",
-          "otherProperties": {
-          	"jsonPath": "$.length()",
-            "expectedValue": 0
-          }}
-      };
-      $http
-        .post(url, assertionVerification)
-        .then(function successCallback(response) {
-          //  TODO
-        }, function errorCallback(response) {
-          IronTestUtils.openErrorHTTPResponseModal(response);
-        });
-    };*/
   }
 ]);
