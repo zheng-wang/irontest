@@ -4,13 +4,13 @@ package io.irontest.models.assertion;
  * Created by Zheng on 27/12/2016.
  */
 public class JSONPathAssertionVerificationResult extends AssertionVerificationResult {
-    private Object actualValue;
+    private String actualValueJSON;
 
-    public Object getActualValue() {
-        return actualValue;
+    public String getActualValueJSON() {
+        return actualValueJSON;
     }
 
-    public void setActualValue(Object actualValue) {
-        this.actualValue = actualValue;
+    public void setActualValueJSON(String actualValueJSON) {
+        this.actualValueJSON = actualValueJSON;
     }
 }

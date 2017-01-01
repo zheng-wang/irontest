@@ -31,7 +31,7 @@ public class JSONPathAssertionVerifier implements AssertionVerifier {
             Object actualValue = JsonPath.read(inputJSON, otherProperties.getJsonPath());
 
             //Object expectedValueObj = JsonPath.read((String) otherProperties.getExpectedValueJSON(), "$");
-            result.setActualValue(actualValue);
+            result.setActualValueJSON(objectMapper.writeValueAsString(actualValue));
             result.setResult(expectedValue.equals(actualValue) ? TestResult.PASSED : TestResult.FAILED);
         } catch (Exception e) {
             LOGGER.error("Failed to verify JSONPathAssertion.", e);
