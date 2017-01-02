@@ -43,7 +43,7 @@ public class DBTeststepRunner extends TeststepRunner {
                     }
                 }
             });
-            List<Map<String, Object>> rows = query.list();
+            List<Map<String, Object>> rows = query.list(5000);    //  limit the number of returned rows
             response.setColumnNames(columnNames);
             response.setRowsJSON(new ObjectMapper().writeValueAsString(rows));
         } else {                                          //  the request is one or more non-select statements

@@ -43,10 +43,23 @@ angular.module('irontest').controller('DBTeststepController', ['$scope', 'Testst
           $scope.responseOptions.columnDefs = [];
           for (var i = 0; i < response.columnNames.length; i++) {
             $scope.responseOptions.columnDefs.push({
-              field: response.columnNames[i]
+              field: window.btoa(response.columnNames[i]),
+              displayName: response.columnNames[i]
             });
           }
-          $scope.responseOptions.data = response.rowsJSON;
+          //  column names are base64 encoded due to parentheses (seems only right parenthesis) in column names cause grid display problem (refer to https://github.com/angular-ui/ui-grid/issues/5169)
+          var rows = angular.fromJson(response.rowsJSON);
+          var newRows = [];
+          for (var i = 0; i < rows.length; i++) {
+            var row = rows[i];
+            var newRow = {}
+            var keys = Object.keys(row);
+            for (var j = 0; j < keys.length; j++) {
+              newRow[window.btoa(keys[j])] = row[keys[j]];
+            }
+            newRows[i] = newRow;
+          }
+          $scope.responseOptions.data = newRows;
         } else {
           $scope.steprun.response = response.statementExecutionResults;
         }
