@@ -1,7 +1,6 @@
 package io.irontest.core.runner;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Zheng on 10/04/2016.
@@ -12,7 +11,7 @@ public class DBAPIResponse {
 
     //  applicable only to select statement; column names are of lower case
     private List<String> columnNames;
-    private List<Map<String, Object>> rows;
+    private String rowsJSON;
 
     public DBAPIResponse() { }
 
@@ -24,12 +23,12 @@ public class DBAPIResponse {
         this.statementExecutionResults = statementExecutionResults;
     }
 
-    public List<Map<String, Object>> getRows() {
-        return rows;
+    public String getRowsJSON() {
+        return rowsJSON;
     }
 
-    public void setRows(List<Map<String, Object>> rows) {
-        this.rows = rows;
+    public void setRowsJSON(String rowsJSON) {
+        this.rowsJSON = rowsJSON;
     }
 
     public List<String> getColumnNames() {

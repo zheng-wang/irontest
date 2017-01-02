@@ -7,6 +7,7 @@ import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.AssertionVerificationResult;
 import io.irontest.models.assertion.JSONPathAssertionProperties;
 import io.irontest.models.assertion.JSONPathAssertionVerificationResult;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,21 +17,29 @@ import org.slf4j.LoggerFactory;
 public class JSONPathAssertionVerifier implements AssertionVerifier {
     private static final Logger LOGGER = LoggerFactory.getLogger(JSONPathAssertionVerifier.class);
 
+    /**
+     * @param assertion the assertion to be verified (against the input)
+     * @param input the JSON string that the assertion is verified against
+     * @return
+     */
     public AssertionVerificationResult verify(Assertion assertion, Object input) {
         JSONPathAssertionVerificationResult result = new JSONPathAssertionVerificationResult();
         JSONPathAssertionProperties otherProperties =
                 (JSONPathAssertionProperties) assertion.getOtherProperties();
         try {
+            if ("".equals(StringUtils.trimToEmpty(otherProperties.getJsonPath()))) {
+                throw new IllegalArgumentException("JSONPath not specified");
+            }
+            if ("".equals(StringUtils.trimToEmpty(otherProperties.getExpectedValueJSON()))) {
+                throw new IllegalArgumentException("Expected Value not specified");
+            }
+
             ObjectMapper objectMapper = new ObjectMapper();
             Object expectedValue = objectMapper.readValue(otherProperties.getExpectedValueJSON(), Object.class);
-            /*System.out.println(otherProperties.getExpectedValueJSON());
-            System.out.println(expectedValue.getClass());
-            System.out.println(expectedValue);*/
-
-            Object actualValue = JsonPath.read(input, otherProperties.getJsonPath());
-
+            Object actualValue = JsonPath.read((String) input, otherProperties.getJsonPath());
             result.setActualValueJSON(objectMapper.writeValueAsString(actualValue));
-            result.setResult(expectedValue.equals(actualValue) ? TestResult.PASSED : TestResult.FAILED);
+            boolean equal = expectedValue == null ? actualValue == null : expectedValue.equals(actualValue);
+            result.setResult(equal ? TestResult.PASSED : TestResult.FAILED);
         } catch (Exception e) {
             LOGGER.error("Failed to verify JSONPathAssertion.", e);
             result.setError(e.getMessage());

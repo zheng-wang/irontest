@@ -1,5 +1,6 @@
 package io.irontest.core.runner;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.irontest.models.Endpoint;
 import io.irontest.models.Teststep;
 import io.irontest.utils.IronTestUtils;
@@ -29,9 +30,9 @@ public class DBTeststepRunner extends TeststepRunner {
 
         Handle handle = jdbi.open();
         if (SQLStatementType.isSelectStatement(statements.get(0))) {    //  the request is a select statement
-            RetainingColumnOrderResultSetMapper mapper = new RetainingColumnOrderResultSetMapper();
+            RetainingColumnOrderResultSetMapper resultSetMapper = new RetainingColumnOrderResultSetMapper();
             //  use statements.get(0) instead of the raw request, as Oracle does not support trailing semicolon in select statement
-            Query<Map<String, Object>> query = handle.createQuery(statements.get(0)).map(mapper);
+            Query<Map<String, Object>> query = handle.createQuery(statements.get(0)).map(resultSetMapper);
             //  obtain columnNames in case the query returns no row
             final List<String> columnNames = new ArrayList<String>();
             query.addStatementCustomizer(new BaseStatementCustomizer() {
@@ -44,7 +45,7 @@ public class DBTeststepRunner extends TeststepRunner {
             });
             List<Map<String, Object>> rows = query.list();
             response.setColumnNames(columnNames);
-            response.setRows(rows);
+            response.setRowsJSON(new ObjectMapper().writeValueAsString(rows));
         } else {                                          //  the request is one or more non-select statements
             Script script = handle.createScript(request);
             int[] returnValues = script.execute();

@@ -10,7 +10,6 @@ import io.irontest.models.Properties;
 public class Assertion {
     public static final String TYPE_CONTAINS = "Contains";
     public static final String TYPE_XPATH = "XPath";
-    public static final String TYPE_DSFIELD = "DSField";
     public static final String TYPE_INTEGER_EQUAL = "IntegerEqual";
     public static final String TYPE_XML_EQUAL = "XMLEqual";
     public static final String TYPE_JSONPATH = "JSONPath";
@@ -22,7 +21,6 @@ public class Assertion {
     @JsonSubTypes({
             @JsonSubTypes.Type(value = ContainsAssertionProperties.class, name = Assertion.TYPE_CONTAINS),
             @JsonSubTypes.Type(value = XPathAssertionProperties.class, name = Assertion.TYPE_XPATH),
-            @JsonSubTypes.Type(value = DSFieldAssertionProperties.class, name = Assertion.TYPE_DSFIELD),
             @JsonSubTypes.Type(value = IntegerEqualAssertionProperties.class,
                     name = Assertion.TYPE_INTEGER_EQUAL),
             @JsonSubTypes.Type(value = XMLEqualAssertionProperties.class, name = Assertion.TYPE_XML_EQUAL),

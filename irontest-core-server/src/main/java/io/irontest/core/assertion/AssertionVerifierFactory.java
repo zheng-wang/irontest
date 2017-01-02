@@ -12,8 +12,6 @@ public class AssertionVerifierFactory {
             result = new XPathAssertionVerifier();
         } else if (Assertion.TYPE_CONTAINS.equals(assertionType)) {
             result = new ContainsAssertionVerifier();
-        } else if (Assertion.TYPE_DSFIELD.equals(assertionType)) {
-            result = new DSFieldAssertionVerifier();
         } else if (Assertion.TYPE_INTEGER_EQUAL.equals(assertionType)) {
             result = new IntegerEqualAssertionVerifier();
         } else if (Assertion.TYPE_XML_EQUAL.equals(assertionType)) {

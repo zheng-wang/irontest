@@ -45,10 +45,10 @@ angular.module('irontest').controller('DBTeststepController', ['$scope', 'Testst
           $scope.steprun.status = null;
         }, 15000);
 
-        if (response.rows) {    //  the request is a select statement, so display result set
-          $scope.steprun.response = response.rows;
+        if (response.rowsJSON) {    //  the request is a select statement, so display result set
+          $scope.steprun.response = response.rowsJSON;
           $scope.steprun.isQueryResponse = true;
-          $scope.responseOptions.columnDefs = [ ];
+          $scope.responseOptions.columnDefs = [];
           for (var i = 0; i < response.columnNames.length; i++) {
             $scope.responseOptions.columnDefs.push({
               field: response.columnNames[i]
@@ -64,7 +64,7 @@ angular.module('irontest').controller('DBTeststepController', ['$scope', 'Testst
               ]*/
             });
           }
-          $scope.responseOptions.data = response.rows;
+          $scope.responseOptions.data = response.rowsJSON;
         } else {
           $scope.steprun.response = response.statementExecutionResults;
         }
