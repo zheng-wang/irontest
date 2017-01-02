@@ -3,6 +3,7 @@ package io.irontest.resources;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.irontest.core.assertion.AssertionVerifier;
 import io.irontest.core.assertion.AssertionVerifierFactory;
+import io.irontest.core.runner.DBAPIResponse;
 import io.irontest.core.runner.MQAPIResponse;
 import io.irontest.core.runner.SOAPAPIResponse;
 import io.irontest.core.runner.TeststepRunnerFactory;
@@ -85,25 +86,31 @@ public class TestcaseRunResource {
                 Object assertionVerificationInput = null;
                 if (Teststep.TYPE_SOAP.equals(teststep.getType())) {
                     assertionVerificationInput = ((SOAPAPIResponse) apiResponse).getHttpResponseBody();
+                } else if (Teststep.TYPE_DB.equals(teststep.getType())) {
+                    assertionVerificationInput = ((DBAPIResponse) apiResponse).getRowsJSON();
                 } else if (Teststep.TYPE_MQ.equals(teststep.getType())) {
                     assertionVerificationInput = ((MQAPIResponse) apiResponse).getValue();
                 } else {
                     assertionVerificationInput = apiResponse;
                 }
 
-                //  verify assertions against the input
-                for (Assertion assertion : teststep.getAssertions()) {
-                    AssertionVerification verification = new AssertionVerification();
-                    stepRun.getAssertionVerifications().add(verification);
-                    verification.setAssertion(assertion);
+                if (Teststep.TYPE_DB.equals(teststep.getType()) && assertionVerificationInput == null) {
+                    //  SQL inserts/deletes/updates, no assertion verification needed
+                } else {
+                    //  verify assertions against the input
+                    for (Assertion assertion : teststep.getAssertions()) {
+                        AssertionVerification verification = new AssertionVerification();
+                        stepRun.getAssertionVerifications().add(verification);
+                        verification.setAssertion(assertion);
 
-                    AssertionVerifier verifier = new AssertionVerifierFactory().create(assertion.getType());
-                    AssertionVerificationResult verificationResult = verifier.verify(assertion, assertionVerificationInput);
+                        AssertionVerifier verifier = new AssertionVerifierFactory().create(assertion.getType());
+                        AssertionVerificationResult verificationResult = verifier.verify(assertion, assertionVerificationInput);
 
-                    verification.setVerificationResult(verificationResult);
+                        verification.setVerificationResult(verificationResult);
 
-                    if (TestResult.FAILED == verificationResult.getResult()) {
-                        stepRun.setResult(TestResult.FAILED);
+                        if (TestResult.FAILED == verificationResult.getResult()) {
+                            stepRun.setResult(TestResult.FAILED);
+                        }
                     }
                 }
             }
