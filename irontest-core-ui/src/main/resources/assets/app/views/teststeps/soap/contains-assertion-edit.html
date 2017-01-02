@@ -1,13 +1,9 @@
-<div class="form-group required"
-     ng-class="{ 'has-error' : savingStatus.submitted && teststepForm.assertionContains.$invalid }">
+<div class="form-group">
   <label for="assertionContains" class="col-lg-2 control-label">Contains</label>
   <div class="col-lg-10">
     <textarea name="assertionContains" ng-model="assertionsModelObj.assertion.otherProperties.contains"
               id="assertionContains" cols="10" rows="5" class="form-control"
-              ng-change="assertionsModelObj.autoSave(teststepForm.$valid)" spellcheck="false" required>
+              ng-change="assertionsModelObj.autoSave(teststepForm.$valid)" spellcheck="false">
     </textarea>
-    <div ng-show="savingStatus.submitted && teststepForm.assertionContains.$invalid" class="help-block">
-      <p ng-show="teststepForm.assertionContains.$error.required">Contains is required</p>
-    </div>
   </div>
 </div>

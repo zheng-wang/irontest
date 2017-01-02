@@ -34,7 +34,7 @@
          ng-include="'/ui/views/teststeps/soap/contains-assertion-edit.html'"></div>
     <div ng-if="assertionsModelObj.assertion.type === 'XPath'"
          ng-include="'/ui/views/teststeps/soap/xpath-assertion-edit.html'"
-         ng-controller="XPathAssertionController"></div>
+         ng-controller="XPathAssertionController" ng-init="init()"></div>
     <div ng-if="assertionsModelObj.assertion.type === 'JSONPath'"
          ng-include="'/ui/views/teststeps/db/jsonpath-assertion-edit.html'"></div>
   </div>

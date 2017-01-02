@@ -1,5 +1,4 @@
-<div class="form-group no-left-margin required"
-     ng-class="{ 'has-error' : savingStatus.submitted && teststepForm.assertionXPath.$invalid }">
+<div class="form-group no-left-margin">
   <div class="col-lg-1 text-right">
     <div class="form-group"></div>
     <div class="form-group"></div>
@@ -9,12 +8,9 @@
   </div>
   <div class="col-lg-6">
     <textarea name="assertionXPath" ng-model="assertionsModelObj.assertion.otherProperties.xPath"
-              id="assertionXPath" rows="4" class="form-control" placeholder="XPath"
-              ng-change="assertionsModelObj.autoSave(teststepForm.$valid)" required>
+              id="assertionXPath" rows="4" class="form-control"
+              ng-change="assertionsModelObj.autoSave(teststepForm.$valid)">
     </textarea>
-    <div ng-show="savingStatus.submitted && teststepForm.assertionXPath.$invalid" class="help-block">
-      <p ng-show="teststepForm.assertionXPath.$error.required">XPath is required</p>
-    </div>
   </div>
   <!-- use z-index here to avoid namespace prefix grid menu to be partially overridden -->
   <div class="col-lg-5 no-left-padding" style="z-index: 1">
@@ -23,7 +19,7 @@
   </div>
 </div>
 <div class="form-group no-bottom-margin no-left-margin">
-  <div class="required" ng-class="{ 'has-error' : savingStatus.submitted && teststepForm.assertionXPathExpectedValue.$invalid }">
+  <div>
     <div class="col-lg-1">
       <div class="form-group"></div>
       <div class="form-group"></div>
@@ -33,12 +29,9 @@
     </div>
     <div class="col-lg-5 no-right-padding">
       <textarea name="assertionXPathExpectedValue" ng-model="assertionsModelObj.assertion.otherProperties.expectedValue"
-                id="assertionXPathExpectedValue" rows="6" class="form-control" placeholder="Expected value"
-                ng-change="assertionsModelObj.autoSave(teststepForm.$valid)" required>
+                id="assertionXPathExpectedValue" rows="6" class="form-control"
+                ng-change="assertionsModelObj.autoSave(teststepForm.$valid)">
       </textarea>
-      <div ng-show="savingStatus.submitted && teststepForm.assertionXPathExpectedValue.$invalid" class="help-block">
-        <p ng-show="teststepForm.assertionXPathExpectedValue.$error.required">Expected Value is required</p>
-      </div>
     </div>
   </div>
   <div class="col-lg-1">

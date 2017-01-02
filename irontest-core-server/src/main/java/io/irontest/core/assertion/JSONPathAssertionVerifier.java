@@ -26,14 +26,19 @@ public class JSONPathAssertionVerifier implements AssertionVerifier {
         JSONPathAssertionVerificationResult result = new JSONPathAssertionVerificationResult();
         JSONPathAssertionProperties otherProperties =
                 (JSONPathAssertionProperties) assertion.getOtherProperties();
-        try {
-            if ("".equals(StringUtils.trimToEmpty(otherProperties.getJsonPath()))) {
-                throw new IllegalArgumentException("JSONPath not specified");
-            }
-            if ("".equals(StringUtils.trimToEmpty(otherProperties.getExpectedValueJSON()))) {
-                throw new IllegalArgumentException("Expected Value not specified");
-            }
+        //  validate other properties
+        if (otherProperties == null || "".equals(StringUtils.trimToEmpty(otherProperties.getJsonPath()))) {
+            result.setError("JSONPath not specified");
+            result.setResult(TestResult.FAILED);
+            return result;
+        }
+        if ("".equals(StringUtils.trimToEmpty(otherProperties.getExpectedValueJSON()))) {
+            result.setError("Expected Value not specified");
+            result.setResult(TestResult.FAILED);
+            return result;
+        }
 
+        try {
             ObjectMapper objectMapper = new ObjectMapper();
             Object expectedValue = objectMapper.readValue(otherProperties.getExpectedValueJSON(), Object.class);
             Object actualValue = JsonPath.read((String) input, otherProperties.getJsonPath());

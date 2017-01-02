@@ -3,6 +3,7 @@ package io.irontest.models.assertion;
 import io.irontest.models.NamespacePrefix;
 import io.irontest.models.Properties;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,15 +12,7 @@ import java.util.List;
 public class XPathAssertionProperties extends Properties {
     private String xPath;
     private String expectedValue;
-    private List<NamespacePrefix> namespacePrefixes;
-
-    public XPathAssertionProperties() {}
-
-    public XPathAssertionProperties(String xPath, String expectedValue, List<NamespacePrefix> namespacePrefixes) {
-        this.xPath = xPath;
-        this.expectedValue = expectedValue;
-        this.namespacePrefixes = namespacePrefixes;
-    }
+    private List<NamespacePrefix> namespacePrefixes = new ArrayList<NamespacePrefix>();
 
     public String getxPath() {
         return xPath;
