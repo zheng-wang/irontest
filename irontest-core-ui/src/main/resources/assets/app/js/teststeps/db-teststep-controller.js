@@ -16,14 +16,6 @@ angular.module('irontest').controller('DBTeststepController', ['$scope', 'Testst
       }
     };
 
-    $scope.createDSFieldContainAssertion = function(fieldName) {
-      $scope.$broadcast('createDSFieldContainAssertion', fieldName);
-    };
-
-    /*$scope.evaluateDataSet = function() {
-      $scope.$broadcast('evaluateDataSet', $scope.responseOptions.data);
-    };*/
-
     var clearPreviousRunStatus = function() {
       if (timer) $timeout.cancel(timer);
       var invocationResultArea = document.getElementById('invocationResultArea');
@@ -52,16 +44,6 @@ angular.module('irontest').controller('DBTeststepController', ['$scope', 'Testst
           for (var i = 0; i < response.columnNames.length; i++) {
             $scope.responseOptions.columnDefs.push({
               field: response.columnNames[i]
-              /*,
-              menuItems: [
-                {
-                  title: 'Create An Assertion', icon: 'ui-grid-icon-info-circled',
-                  context: $scope,
-                  action: function() {
-                    this.context.createDSFieldContainAssertion(this.context.col.colDef.field);
-                  }
-                }
-              ]*/
             });
           }
           $scope.responseOptions.data = response.rowsJSON;
