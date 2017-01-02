@@ -47,7 +47,8 @@ angular.module('irontest').controller('DBTeststepController', ['$scope', 'Testst
               displayName: response.columnNames[i]
             });
           }
-          //  column names are base64 encoded due to parentheses (seems only right parenthesis) in column names cause grid display problem (refer to https://github.com/angular-ui/ui-grid/issues/5169)
+          //  in grid data, column names are base64 encoded due to parentheses (seems only right parenthesis) in column name, such as 'count(*)', causing the column data not displayed
+          //  refer to https://github.com/angular-ui/ui-grid/issues/5169
           var rows = angular.fromJson(response.rowsJSON);
           var newRows = [];
           for (var i = 0; i < rows.length; i++) {
