@@ -1,7 +1,9 @@
 package io.irontest.core.runner;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import io.irontest.models.Endpoint;
+import io.irontest.models.OracleTIMESTAMPTZSerializer;
 import io.irontest.models.Teststep;
 import io.irontest.utils.IronTestUtils;
 import org.skife.jdbi.v2.*;
@@ -10,6 +12,7 @@ import org.skife.jdbi.v2.tweak.BaseStatementCustomizer;
 import java.sql.PreparedStatement;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +21,25 @@ import java.util.Map;
  * Created by Trevor Li on 7/14/15.
  */
 public class DBTeststepRunner extends TeststepRunner {
+    private static ObjectMapper jacksonObjectMapper = new ObjectMapper();
+
+    static {
+        jacksonObjectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"));
+
+        //  settings for Oracle
+        //  for ResultSet.getObject to return java.sql.Timestamp instead of oracle.sql.TIMESTAMP which Jackson does not know how to serialize.
+        System.getProperties().setProperty("oracle.jdbc.J2EE13Compliant", "true");
+        //  register custom JSON serializer for Oracle TIMESTAMPTZ class
+        try {
+            Class clazz = Class.forName("oracle.sql.TIMESTAMPTZ");
+            SimpleModule module = new SimpleModule("OracleModule");
+            module.addSerializer(clazz, new OracleTIMESTAMPTZSerializer(clazz));
+            jacksonObjectMapper.registerModule(module);
+        } catch (ClassNotFoundException e) {
+            //  do nothing if the TIMESTAMPTZ class does not exist
+        }
+    }
+
     protected DBAPIResponse run(Teststep teststep) throws Exception {
         DBAPIResponse response = new DBAPIResponse();
         String request = (String) teststep.getRequest();
@@ -45,7 +67,7 @@ public class DBTeststepRunner extends TeststepRunner {
             });
             List<Map<String, Object>> rows = query.list(5000);    //  limit the number of returned rows
             response.setColumnNames(columnNames);
-            response.setRowsJSON(new ObjectMapper().writeValueAsString(rows));
+            response.setRowsJSON(jacksonObjectMapper.writeValueAsString(rows));
         } else {                                          //  the request is one or more non-select statements
             Script script = handle.createScript(request);
             int[] returnValues = script.execute();

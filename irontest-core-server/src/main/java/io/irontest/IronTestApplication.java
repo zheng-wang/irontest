@@ -1,6 +1,5 @@
 package io.irontest;
 
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.Option;
 import com.jayway.jsonpath.spi.json.JacksonJsonProvider;
@@ -18,7 +17,6 @@ import io.dropwizard.setup.Environment;
 import io.dropwizard.views.ViewBundle;
 import io.irontest.core.assertion.AssertionVerifierFactory;
 import io.irontest.db.*;
-import io.irontest.models.OracleTIMESTAMPTZSerializer;
 import io.irontest.resources.*;
 import io.irontest.ws.ArticleSOAP;
 import org.glassfish.jersey.filter.LoggingFilter;
@@ -134,20 +132,6 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
 
         //  register exception mappers
         environment.jersey().register(new IronTestLoggingExceptionMapper());
-
-        //  settings for Oracle
-        //  for ResultSet.getObject to return java.sql.Timestamp instead of oracle.sql.TIMESTAMP.
-        System.getProperties().setProperty("oracle.jdbc.J2EE13Compliant", "true");
-        //  register custom JSON serializer for Oracle TIMESTAMPTZ class
-        try {
-            Class clazz = Class.forName("oracle.sql.TIMESTAMPTZ");
-            SimpleModule module = new SimpleModule("OracleModule");
-            module.addSerializer(clazz, new OracleTIMESTAMPTZSerializer(clazz));
-            environment.getObjectMapper().registerModule(module);
-        } catch (ClassNotFoundException e) {
-            //  do nothing if the TIMESTAMPTZ class does not exist
-        }
-
     }
 
     private void createSampleResources(IronTestConfiguration configuration, Environment environment) {
