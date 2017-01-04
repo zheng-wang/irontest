@@ -72,8 +72,17 @@ public class TeststepResource {
     private void populateParametersInWrapper(TeststepWrapper wrapper) throws Exception {
         Teststep teststep = wrapper.getTeststep();
         if (Teststep.TYPE_DB.equals(teststep.getType())) {
-            wrapper.getParameters().put("isSQLRequestSingleSelectStatement",
-                    IronTestUtils.isSQLRequestSingleSelectStatement((String) teststep.getRequest()));
+            boolean isSQLRequestSingleSelectStatement;
+            try {
+                isSQLRequestSingleSelectStatement = IronTestUtils.isSQLRequestSingleSelectStatement(
+                        (String) teststep.getRequest());
+            } catch (Exception e) {
+                //  the SQL script is invalid, so it can't be a single select statement
+                //  swallow the exception to avoid premature error message on UI (user is still editing the SQL script)
+                //  the exception will popup on UI when user executes the script (the script will be reparsed at that time)
+                isSQLRequestSingleSelectStatement = false;
+            }
+            wrapper.getParameters().put("isSQLRequestSingleSelectStatement", isSQLRequestSingleSelectStatement);
         }
     }
 
