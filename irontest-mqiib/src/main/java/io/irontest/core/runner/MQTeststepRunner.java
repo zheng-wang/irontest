@@ -172,7 +172,8 @@ public class MQTeststepRunner extends TeststepRunner {
     private String dequeue(MQQueue queue) throws MQException, IOException, MQDataException {
         String result = null;
         MQGetMessageOptions getOptions = new MQGetMessageOptions();
-        getOptions.options = CMQC.MQGMO_NO_WAIT + CMQC.MQGMO_FAIL_IF_QUIESCING;
+        getOptions.options = CMQC.MQGMO_WAIT + CMQC.MQGMO_FAIL_IF_QUIESCING;
+        getOptions.waitInterval = 3 * 1000;
         MQMessage message = new MQMessage();
         try {
             queue.get(message, getOptions);
