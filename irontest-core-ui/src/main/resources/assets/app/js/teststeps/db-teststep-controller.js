@@ -44,7 +44,11 @@ angular.module('irontest').controller('DBTeststepController', ['$scope', 'Testst
           for (var i = 0; i < response.columnNames.length; i++) {
             $scope.responseOptions.columnDefs.push({
               field: window.btoa(response.columnNames[i]),
-              displayName: response.columnNames[i]
+              displayName: response.columnNames[i],
+              // determine column min width according to the length of column name
+              // assuming each character deserves 8 pixels
+              // 30 pixels for displaying grid header menu arrow
+              minWidth: response.columnNames[i].length * 8 + 30
             });
           }
           //  in grid data, column names are base64 encoded due to parentheses (seems only right parenthesis) in column name, such as 'count(*)', causing the column data not displayed
