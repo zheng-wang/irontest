@@ -12,6 +12,7 @@ public abstract class TeststepRunner {
     private Teststep teststep;
     private TeststepDAO teststepDAO;
     private UtilsDAO utilsDAO;
+    private TestcaseRunContext testcaseRunContext;
 
     protected TeststepRunner() {}
 
@@ -20,20 +21,18 @@ public abstract class TeststepRunner {
      * @throws Exception
      */
     public Object run() throws Exception {
-        prepareTeststep(teststep, teststepDAO);
+        prepareTeststep();
         return run(teststep);
     }
 
     /**
      * Sub class can optionally override.
-     * @param teststep
-     * @param teststepDAO
      */
-    protected void prepareTeststep(Teststep teststep, TeststepDAO teststepDAO) {
+    protected void prepareTeststep() {
         //  decrypt password in endpoint
-        Endpoint endpoint = teststep.getEndpoint();
+        Endpoint endpoint = this.teststep.getEndpoint();
         if (endpoint != null && endpoint.getPassword() != null) {
-            endpoint.setPassword(utilsDAO.decryptPassword(endpoint.getPassword()));
+            endpoint.setPassword(this.utilsDAO.decryptPassword(endpoint.getPassword()));
         }
     }
 
@@ -47,7 +46,23 @@ public abstract class TeststepRunner {
         this.teststepDAO = teststepDAO;
     }
 
+    protected Teststep getTeststep() {
+        return teststep;
+    }
+
+    protected TeststepDAO getTeststepDAO() {
+        return teststepDAO;
+    }
+
     protected void setUtilsDAO(UtilsDAO utilsDAO) {
         this.utilsDAO = utilsDAO;
+    }
+
+    protected TestcaseRunContext getTestcaseRunContext() {
+        return testcaseRunContext;
+    }
+
+    protected void setTestcaseRunContext(TestcaseRunContext testcaseRunContext) {
+        this.testcaseRunContext = testcaseRunContext;
     }
 }

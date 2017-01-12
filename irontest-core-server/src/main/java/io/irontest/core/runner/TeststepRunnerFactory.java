@@ -21,7 +21,8 @@ public class TeststepRunnerFactory {
         return instance;
     }
 
-    public TeststepRunner newTeststepRunner(Teststep teststep, TeststepDAO teststepDAO, UtilsDAO utisDAO) {
+    public TeststepRunner newTeststepRunner(Teststep teststep, TeststepDAO teststepDAO, UtilsDAO utisDAO,
+                                            TestcaseRunContext testcaseRunContext) {
         TeststepRunner runner = null;
         try {
             Class runnerClass = Class.forName("io.irontest.core.runner." + teststep.getType() + "TeststepRunner");
@@ -30,6 +31,7 @@ public class TeststepRunnerFactory {
             runner.setTeststep(teststep);
             runner.setTeststepDAO(teststepDAO);
             runner.setUtilsDAO(utisDAO);
+            runner.setTestcaseRunContext(testcaseRunContext);
         } catch (Exception e) {
             throw new RuntimeException("Unable to instantiate test step runner.", e);
         }

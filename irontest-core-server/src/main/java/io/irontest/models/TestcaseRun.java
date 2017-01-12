@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
+ * Used for collecting data when running a test case.
  * Created by Trevor Li on 7/24/15.
  */
 public class TestcaseRun {

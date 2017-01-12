@@ -27,12 +27,13 @@
             ng-change="actionChanged(teststepForm.$valid)" ng-disabled="steprun.status === 'ongoing'">
       <option value="Start">Start</option>
       <option value="Stop">Stop</option>
+      <option value="WaitForProcessingCompletion">Wait For Processing Completion</option>
     </select>
   </div>
   <div class="col-lg-1">
     <button type="button" class="btn btn-info" ng-click="doAction()"
             ng-disabled="!teststep.otherProperties.integrationServerName || !teststep.otherProperties.messageFlowName ||
-            !teststep.action || steprun.status === 'ongoing'">Do</button>
+            !teststep.action || teststep.action === 'WaitForProcessingCompletion' || steprun.status === 'ongoing'">Do</button>
   </div>
   <div class="col-lg-4">       <!-- Action run status message -->
     <h5 ng-if="steprun.status === 'ongoing'">

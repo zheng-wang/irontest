@@ -31,10 +31,12 @@ public class MQTeststepRunner extends TeststepRunner {
     }
 
     @Override
-    protected void prepareTeststep(Teststep teststep, TeststepDAO teststepDAO) {
-        super.prepareTeststep(teststep, teststepDAO);
+    protected void prepareTeststep() {
+        super.prepareTeststep();
 
         //  fetch request for Enqueue action with message from file
+        Teststep teststep = getTeststep();
+        TeststepDAO teststepDAO = getTeststepDAO();
         if (Teststep.ACTION_ENQUEUE.equals(teststep.getAction())) {
             MQTeststepProperties properties = (MQTeststepProperties) teststep.getOtherProperties();
             if (MQTeststepProperties.ENQUEUE_MESSAGE_FROM_FILE.equals(properties.getEnqueueMessageFrom())) {
@@ -43,10 +45,10 @@ public class MQTeststepRunner extends TeststepRunner {
         }
     }
 
-    protected MQAPIResponse run(Teststep teststep) throws MQException, IOException, MQDataException {
+    protected MQAPIResponse run(Teststep teststep) throws Exception {
         String action = teststep.getAction();
         if (action == null) {
-            throw new RuntimeException("Action not specified.");
+            throw new Exception("Action not specified.");
         }
 
         MQAPIResponse response = new MQAPIResponse();
@@ -73,7 +75,7 @@ public class MQTeststepRunner extends TeststepRunner {
                 queue = queueManager.accessQueue(teststepProperties.getQueueName(), openOptions, null, null, null);
             } catch (MQException mqEx) {
                 if (mqEx.getCompCode() == CMQC.MQCC_FAILED && mqEx.getReason() == CMQC.MQRC_UNKNOWN_OBJECT_NAME) {
-                    throw new RuntimeException("Queue \"" + teststepProperties.getQueueName() + "\" not found.");
+                    throw new Exception("Queue \"" + teststepProperties.getQueueName() + "\" not found.");
                 } else {
                     throw mqEx;
                 }
@@ -88,6 +90,8 @@ public class MQTeststepRunner extends TeststepRunner {
                 response.setValue(dequeue(queue));
             } else if (Teststep.ACTION_ENQUEUE.equals(action)) {
                 enqueue(queue, teststep.getRequest(), teststepProperties);
+            } else {
+                throw new Exception("Unrecognized action " + action);
             }
         } finally {
             if (queue != null) {
@@ -101,9 +105,9 @@ public class MQTeststepRunner extends TeststepRunner {
         return response;
     }
 
-    private void enqueue(MQQueue queue, Object data, MQTeststepProperties teststepProperties) throws MQException, IOException, MQDataException {
+    private void enqueue(MQQueue queue, Object data, MQTeststepProperties teststepProperties) throws Exception {
         if (data == null) {
-            throw new RuntimeException("Can not enqueue null.");
+            throw new Exception("Can not enqueue null.");
         }
 
         MQMessage message = null;
@@ -172,8 +176,7 @@ public class MQTeststepRunner extends TeststepRunner {
     private String dequeue(MQQueue queue) throws MQException, IOException, MQDataException {
         String result = null;
         MQGetMessageOptions getOptions = new MQGetMessageOptions();
-        getOptions.options = CMQC.MQGMO_WAIT + CMQC.MQGMO_FAIL_IF_QUIESCING;
-        getOptions.waitInterval = 3 * 1000;
+        getOptions.options = CMQC.MQGMO_NO_WAIT + CMQC.MQGMO_FAIL_IF_QUIESCING;
         MQMessage message = new MQMessage();
         try {
             queue.get(message, getOptions);

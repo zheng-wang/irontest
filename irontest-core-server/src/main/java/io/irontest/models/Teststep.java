@@ -19,8 +19,12 @@ public class Teststep {
     public static final String TYPE_MQ = "MQ";
     public static final String TYPE_WAIT = "Wait";
 
+    /* of IIB test step */
     public static final String ACTION_START = "Start";
     public static final String ACTION_STOP = "Stop";
+    public static final String ACTION_WAIT_FOR_PROCESSING_COMPLETION = "WaitForProcessingCompletion";
+
+    /* of MQ test step */
     public static final String ACTION_CLEAR = "Clear";
     public static final String ACTION_CHECK_DEPTH = "CheckDepth";
     public static final String ACTION_DEQUEUE = "Dequeue";

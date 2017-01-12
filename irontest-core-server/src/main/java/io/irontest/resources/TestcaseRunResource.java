@@ -3,10 +3,7 @@ package io.irontest.resources;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.irontest.core.assertion.AssertionVerifier;
 import io.irontest.core.assertion.AssertionVerifierFactory;
-import io.irontest.core.runner.DBAPIResponse;
-import io.irontest.core.runner.MQAPIResponse;
-import io.irontest.core.runner.SOAPAPIResponse;
-import io.irontest.core.runner.TeststepRunnerFactory;
+import io.irontest.core.runner.*;
 import io.irontest.db.TestcaseDAO;
 import io.irontest.db.TestcaseRunDAO;
 import io.irontest.db.TeststepDAO;
@@ -50,8 +47,11 @@ public class TestcaseRunResource {
         testcaseRun.setTestcase(testcase);
 
         //  test case run starts
+        TestcaseRunContext testcaseRunContext = new TestcaseRunContext();
+        Date startTime = new Date();
         testcaseRun.setResult(TestResult.PASSED);
-        testcaseRun.setStartTime(new Date());
+        testcaseRun.setStartTime(startTime);
+        testcaseRunContext.setTestcaseRunStartTime(startTime);
 
         for (Teststep teststep : testcase.getTeststeps()) {
             TeststepRun stepRun = new TeststepRun();
@@ -66,7 +66,7 @@ public class TestcaseRunResource {
             boolean exceptionOccurred = false;  //  use this flag instead of checking stepRun.getErrorMessage() != null, for code clarity
             try {
                 apiResponse = TeststepRunnerFactory.getInstance()
-                        .newTeststepRunner(teststep, teststepDAO, utilsDAO).run();
+                        .newTeststepRunner(teststep, teststepDAO, utilsDAO, testcaseRunContext).run();
                 stepRun.setResponse(apiResponse);
             } catch (Exception e) {
                 exceptionOccurred = true;
