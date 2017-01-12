@@ -22,14 +22,16 @@ Download the latest Iron Test release from [here](https://github.com/zheng-wang/
 
 `mvn clean package -pl irontest-core -am -P prod`
 
-This builds Iron Test without MQ/IIB testing features, and the seed files for deployment can be found in the `irontest-core/dist` folder.
+This builds Iron Test without MQ/IIB testing features, and an `irontest-core/dist` folder is created containing the files and folders for deployment.
 
 To build Iron Test with MQ/IIB testing features, please refer to the [wiki page](https://github.com/zheng-wang/irontest/wiki/Build-Iron-Test-with-MQ-IIB-Testing-Features) instead.
    
 ## Deploy
 Prerequisites: JRE 1.7+.
 
-Copy seed files to any folder on any computer/VM that has access to the APIs you want to test. That folder will be referred to as `<IronTest_Home>` hereafter.
+Create a folder on any computer/VM that has access to the APIs you want to test. This folder will be referred to as `<IronTest_Home>` hereafter.
+
+Copy all files and folders from `dist` to `<IronTest_Home>`.
 
 To launch Iron Test application, cd to `<IronTest_Home>` and run below command
 
