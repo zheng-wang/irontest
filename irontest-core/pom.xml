@@ -40,7 +40,7 @@
                         <artifactId>maven-shade-plugin</artifactId>
                     </plugin>
 
-                    <!-- copy seed files to dist dir -->
+                    <!-- produce dist -->
                     <plugin>
                         <artifactId>maven-resources-plugin</artifactId>
                     </plugin>

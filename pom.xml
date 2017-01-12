@@ -114,7 +114,7 @@
                     </executions>
                 </plugin>
 
-                <!-- copy seed files to dist dir -->
+                <!-- produce dist -->
                 <plugin>
                     <artifactId>maven-resources-plugin</artifactId>
                     <version>3.0.1</version>
@@ -128,17 +128,23 @@
                             <configuration>
                                 <outputDirectory>${distDir}</outputDirectory>
                                 <resources>
+                                    <!-- copy jar -->
                                     <resource>
                                         <directory>target</directory>
                                         <includes>
                                             <include>${project.artifactId}-${project.version}.jar</include>
                                         </includes>
                                     </resource>
+                                    <!-- copy config.yml -->
                                     <resource>
                                         <directory>../irontest-core-server</directory>
                                         <includes>
                                             <include>config.yml</include>
                                         </includes>
+                                    </resource>
+                                    <!-- create folders -->
+                                    <resource>
+                                        <directory>../irontest-core/folders</directory>
                                     </resource>
                                 </resources>
                             </configuration>
