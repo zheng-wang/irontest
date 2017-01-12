@@ -39,7 +39,7 @@ To launch Iron Test application, cd to `<IronTest_Home>` and run below command
 
 To verify the application is successfully launched, open a web browser (Chrome is preferred), and go to Iron Test home page http://localhost:8081/ui (no ending '/').
 
-If this is the first time you launch the application in the `<IronTest_Home>` folder, you will see two sub-folders created
+If this is the first time you launch the application, you will see two new folders created under `<IronTest_Home>`.
 
     database - where Iron Test database is located. The database is used to store all test cases, environments, endpoints, etc. you create using Iron Test.
     
