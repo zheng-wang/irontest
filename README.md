@@ -33,7 +33,7 @@ Create a folder on any computer/VM that has access to the APIs you want to test.
 
 Copy all files and folders from `dist` to `<IronTest_Home>`.
 
-To enable Iron Test to interact with databases such as Oracle or SQL Server, please refer to the [wiki page](https://github.com/zheng-wang/irontest/wiki/Interact-with-Databases).
+To enable Iron Test to interact with databases such as Oracle or SQL Server, prepare JDBC drivers as described on the [wiki page](https://github.com/zheng-wang/irontest/wiki/Interact-with-Databases).
 
 To launch Iron Test application, cd to `<IronTest_Home>` and run below command
 
