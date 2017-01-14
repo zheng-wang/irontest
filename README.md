@@ -110,18 +110,18 @@ Under the Invocation tab, click Generate Request button. Click Load button to lo
      
 Modify the request for updating article2. Click the Invoke button to try it out and you'll see a SOAP response in the right pane. 
 
-Click the Assertions button to open the assertions pane. In the assertions pane, click Create dropdown button and select `Contains Assertion` to create a Contains assertion. Enter the expected string, and click the Verify button to verify the assertion, as shown below.
+Click the Assertions button to open the assertions pane. In the assertions pane, click Create dropdown button and select `Contains Assertion` to create a Contains assertion. Enter the expected string, and click the Verify button to verify the assertion (the SOAP response contains the expected string), as shown below.
 
 ![SOAP Invocation and Assertion](screenshots/integrated-soap-testing/soap-invocation-and-assertion.png)
 
-You can also create XPath assertions against the SOAP response in a more accurate way.
+You can also create XPath assertions against the SOAP response for advanced verification.
 
 Click the Back link to return to the test case edit view.
  
 #### Populate the Third Test Step  
 Click the name of the third test step to open its edit view. 
  
-Under the Endpoint Details tab, enter exactly the same information as in the first test step because we are interacting with the same database.
+Under the Endpoint Details tab, enter exactly the same information as in the first test step because we are interacting with the same database. The information duplication can be avoided by using `managed endpoints`. Refer to this [wiki page](https://github.com/zheng-wang/irontest/wiki/Endpoints-Management) for more details.
 
 Under the Invocation tab, enter SQL query `select title, content from article;`.
 
