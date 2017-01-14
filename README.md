@@ -114,7 +114,7 @@ Click the Assertions button to open the assertions pane. In the assertions pane,
 
 ![SOAP Invocation and Assertion](screenshots/integrated-soap-testing/soap-invocation-and-assertion.png)
 
-You can also create `XPath assertions` against the SOAP response for advanced verification.
+You can also create `XPath Assertion`s against the SOAP response for advanced verification.
 
 Click the Back link to return to the test case edit view.
  
