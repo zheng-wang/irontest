@@ -10,7 +10,12 @@ Table of Contents:
 - [Build](#build)
 - [Deploy](#deploy)
 - [Use](#use)
-    - [SOAP Web Service Testing](#soap-web-service-testing)
+    - [Integrated SOAP Web Service Testing](#integrated-soap-web-service-testing)
+        - [Create Test Case Outline](#create-test-case-outline)
+        - [Populate the First Test Step](#populate-the-first-test-step)
+        - [Populate the Second Test Step](#populate-the-second-test-step)
+        - [Populate the Third Test Step](#populate-the-third-test-step)
+        - [Run the Test Case](#run-the-test-case)
     - [More Usages](#more-usages)
 - [Maintain](#maintain)
 - [License](#license)
@@ -43,39 +48,101 @@ To verify the application is successfully launched, open a web browser (Chrome i
 
 If this is the first time you launch the application, you will see two new folders created under `<IronTest_Home>`.
 
-    database - where Iron Test database is located. The database is used to store all test cases, environments, endpoints, etc. you create using Iron Test.
+    database - where system database and a sample database are located. Both are H2 databases. 
+        System database is used to store all test cases, environments, endpoints, etc. you create using Iron Test.
+        Sample database is for you to play with Iron Test basic features such as SOAP web service testing or database testing. An Article table is in it.
     
     logs - where Iron Test application runtime logs are located.
     
 ## Use
-Open Iron Test home page (http://&lt;host&gt;:8081/ui). 
+Open Iron Test home page (http://localhost:8081/ui). 
 
-### SOAP Web Service Testing
-Right click on a folder in the tree and select Create Test Case. Give the test case a name.
-
-![New Test Case](screenshots/soap/new-test-case.png)
-
-(You can create your preferred folder structure for managing test cases, by right clicking on folder and selecting needed context menu item)
-
-Under the Test Steps tab, click Create dropdown button, and select SOAP Step to create a SOAP test step. SOAP test step edit view displays. 
-
-Under the Basic Info tab, enter name and (optional) description. No Save button. Iron Test uses automatic saving.
-             
-Under the Endpoint Details tab, enter SOAP Address. A sample Article web service (http://localhost:8081/soap/article) is bundled, which can be used for playing with Iron Test. Ignore Username and Password fields as they are not used for now.
-
-Under the Invocation tab, click Generate Request button. Click Load button to load the WSDL, select WSDL Operation `createArticle`, and click OK. A sample request is generated.
-     
-Modify the request as appropriate. Click the Invoke button and you'll see a SOAP response in the right pane. Click the Assertions button to open the assertions pane.
+### Integrated SOAP Web Service Testing
+We are going to demo how to test a web service that updates an article in database by its title.
  
-In the assertions pane, click Create dropdown button and select Contains Assertion to create a Contains assertion. Modify the Contains field as appropriate, and click the Verify button to verify the assertion. You can also create XPath assertions to verify the SOAP response is as expected in a more accurate way.
+There will be three test steps 
+```
+Set up database data
+Call the web service operation updateArticleByTitle
+Check database data to verify the article has been updated
+```
 
-![SOAP Invocation and Assertion](screenshots/soap/soap-invocation-and-assertion.png)
+#### Create Test Case Outline
+First of all, create a test case by right clicking on a folder in the tree and selecting Create Test Case. Give it a name. The test case edit view shows as below.
 
-Now the test step edit has finished. Click the Back link to return to test case edit view. 
+![New Test Case](screenshots/integrated-soap-testing/new-test-case.png)
 
-Our test case has only one step. Click the Run button to run the test case. Click the result link for the test step to see only its run report.
+You can create your preferred folder structure for managing test cases, by right clicking on folder and selecting needed context menu item.
 
-![Test Step Run Report](screenshots/soap/test-step-run-report.png)
+Now we are going to add test steps to the test case.
+
+Under the Test Steps tab, click Create dropdown button and select Database Step. Enter the name of the first test step `Set up database data`. Click Back link to return to the test case edit view. Repeat this to add the other two test steps (one SOAP Step and one Database Step). The test case outline is created as shown below.
+
+![Test Case Outline](screenshots/integrated-soap-testing/test-case-outline.png)
+
+#### Populate the First Test Step 
+Click the name of the first test step to open its edit view.
+          
+Under the Endpoint Details tab, enter JDBC URL that will be used to connect to the sample database (automatically created when launching Iron Test for the first time). The format is `jdbc:h2:<IronTest_Home>/database/sample;AUTO_SERVER=TRUE`. Then enter Username and Password which can be found in `<IronTest_Home>/config.yml`.
+
+Under the Invocation tab, enter below SQL script.
+```
+-- Clear the table
+delete from article;
+
+-- Create two article records
+insert into article (title, content) values ('article1', 'content1');
+insert into article (title, content) values ('article2', 'content2');
+```
+
+Click the Invoke button to try it out (run the script), like shown below.
+
+![Database Setup](screenshots/integrated-soap-testing/database-setup.png)
+
+Click the Back link to return to test case edit view.
+
+#### Populate the Second Test Step 
+Click the name of the second test step to open its edit view.
+
+Under the Endpoint Details tab, enter SOAP Address `http://localhost:8081/soap/article` which is the address of the sample Article web service bundled with Iron Test. Ignore Username and Password fields as they are not used in this test case.
+
+Under the Invocation tab, click Generate Request button. Click Load button to load the WSDL, select WSDL Operation `updateArticleByTitle`, and click OK. A sample request is generated.
+     
+Modify the request for updating article2. Click the Invoke button to try it out and you'll see a SOAP response in the right pane. 
+
+Click the Assertions button to open the assertions pane. In the assertions pane, click Create dropdown button and select `Contains Assertion` to create a Contains assertion. Enter the expected string, and click the Verify button to verify the assertion, as shown below.
+
+![SOAP Invocation and Assertion](screenshots/integrated-soap-testing/soap-invocation-and-assertion.png)
+
+You can also create XPath assertions against the SOAP response in a more accurate way.
+
+Click the Back link to return to the test case edit view.
+ 
+#### Populate the Third Test Step  
+Click the name of the third test step to open its edit view. 
+ 
+Under the Endpoint Details tab, enter exactly the same information as in the first test step because we are interacting with the same database.
+
+Under the Invocation tab, enter SQL query `select title, content from article;`.
+
+Click the Invoke button to try it out (run the query), like shown below.
+
+![Database Check Query Result](screenshots/integrated-soap-testing/database-check-query-result.png)
+
+Click the JSON View tab to see the JSON representation of the SQL query result set.
+
+Click the Assertions button to open the assertions pane. In the assertions pane, click Create dropdown button and select `JSONPath Assertion` to create a JSONPath assertion. We want to assert the whole result set, so enter `$` into the JSONPath field and copy the JSON string from the JSON View to the Expected Value field. Click the Verify button to verify the assertion, as shown below. 
+
+![Database Check Query Result and Assertion](screenshots/integrated-soap-testing/database-check-query-result-and-assertion.png)
+
+For how to use JSONPath, please refer to [this page](https://github.com/jayway/JsonPath).
+
+Click the Back link to return to the test case edit view.
+
+#### Run the Test Case
+Now we have finished editing our test case. It's time to run it. Click the Run button, and you'll see the result for both the test case and each test step. Click the result link for a test step to see its run report, like shown below.
+
+![Test Step Run Report](screenshots/integrated-soap-testing/test-step-run-report.png)
 
 Click the result link beside the Run button to see the whole test case run report. This report can be saved as HTML file and used as test evidence in other places such as HP ALM.
 

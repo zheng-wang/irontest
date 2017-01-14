@@ -37,4 +37,9 @@ public class ArticleSOAP {
         long id = dao.insert(article);
         return dao.findById(id);
     }
+
+    @WebMethod
+    public int updateArticleByTitle(@WebParam(name = "title") String title, @WebParam(name = "content") String content) {
+        return dao.updateByTitle(title, content);
+    }
 }

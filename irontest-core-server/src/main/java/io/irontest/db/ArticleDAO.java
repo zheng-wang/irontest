@@ -35,4 +35,7 @@ public interface ArticleDAO {
 
     @SqlQuery("select * from article where created >= :startTime and created <= :endTime")
     List<Article> findByCreationTime(@Bind("startTime") Date startTime, @Bind("endTime") Date endTime);
+
+    @SqlUpdate("update article set content = :content, updated = CURRENT_TIMESTAMP where title = :title")
+    int updateByTitle(@Bind("title") String title, @Bind("content") String content);
 }
