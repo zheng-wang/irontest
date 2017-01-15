@@ -40,7 +40,8 @@ public class DBTeststepRunner extends TeststepRunner {
         }
     }
 
-    protected DBAPIResponse run(Teststep teststep) throws Exception {
+    protected BasicTeststepRun run(Teststep teststep) throws Exception {
+        BasicTeststepRun basicTeststepRun = new BasicTeststepRun();
         DBAPIResponse response = new DBAPIResponse();
         String request = (String) teststep.getRequest();
         Endpoint endpoint = teststep.getEndpoint();
@@ -82,7 +83,8 @@ public class DBTeststepRunner extends TeststepRunner {
 
         handle.close();
 
-        return response;
+        basicTeststepRun.setResponse(response);
+        return basicTeststepRun;
     }
 
     /**

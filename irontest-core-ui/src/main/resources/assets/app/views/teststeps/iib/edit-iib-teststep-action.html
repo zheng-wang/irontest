@@ -38,7 +38,6 @@
   <div class="col-lg-4">       <!-- Action run status message -->
     <h5 ng-if="steprun.status === 'ongoing'">
       {{ teststep.action === 'Start' ? 'Starting' : 'Stopping' }} message flow ...</h5>
-    <h5 ng-if="steprun.status === 'finished'">
-      Message flow {{ teststep.action === 'Start' ? 'started' : 'stopped' }}.</h5>
+    <h5 ng-if="steprun.status === 'finished'">{{ steprun.infoMessage }}</h5>
   </div>
 </div>

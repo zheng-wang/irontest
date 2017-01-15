@@ -17,11 +17,13 @@ public class IIBTeststepRunner extends TeststepRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(IIBTeststepRunner.class);
     private static final int ACTIVITY_LOG_POLLING_TIMEOUT = 60;    // in seconds
 
-    protected Object run(Teststep teststep) throws Exception {
+    protected BasicTeststepRun run(Teststep teststep) throws Exception {
         String action = teststep.getAction();
         if (action == null) {
             throw new Exception("Action not specified.");
         }
+
+        BasicTeststepRun basicTeststepRun = new BasicTeststepRun();
 
         MQIIBEndpointProperties endpointProperties = (MQIIBEndpointProperties) teststep.getEndpoint().getOtherProperties();
         IIBTeststepProperties teststepProperties = (IIBTeststepProperties) teststep.getOtherProperties();
@@ -53,9 +55,9 @@ public class IIBTeststepRunner extends TeststepRunner {
 
             //  do the specified action
             if (Teststep.ACTION_START.equals(action)) {
-                messageFlowProxy.start();
+                start(messageFlowProxy, basicTeststepRun);
             } else if (Teststep.ACTION_STOP.equals(action)) {
-                messageFlowProxy.stop();
+                stop(messageFlowProxy, basicTeststepRun);
             } else if (Teststep.ACTION_WAIT_FOR_PROCESSING_COMPLETION.equals(action)) {
                 waitForProcessingCompletion(messageFlowProxy);
             } else {
@@ -67,35 +69,58 @@ public class IIBTeststepRunner extends TeststepRunner {
             }
         }
 
-        return null;
+        return basicTeststepRun;
     }
 
-    private void waitForProcessingCompletion(MessageFlowProxy messageFlowProxy) throws Exception {
-        TestcaseRunContext testcaseRunContext = getTestcaseRunContext();
-        Date pollingEndTime = DateUtils.addSeconds(new Date(), ACTIVITY_LOG_POLLING_TIMEOUT);
-        ActivityLogEntry processingCompletionSignal = null;
-        while (System.currentTimeMillis() < pollingEndTime.getTime()) {
-            ActivityLogProxy activityLogProxy = messageFlowProxy.getActivityLog();
-            if (activityLogProxy != null) {
-                for (int i = 1; i <= activityLogProxy.getSize(); i++) {
-                    ActivityLogEntry logEntry = activityLogProxy.getLogEntry(i);
-                    if (11504 == logEntry.getMessageNumber() &&
-                            logEntry.getTimestamp().after(testcaseRunContext.getTestcaseRunStartTime())) {
-                        processingCompletionSignal = logEntry;
-                        break;
+    private void start(MessageFlowProxy messageFlowProxy, BasicTeststepRun basicTeststepRun) throws Exception {
+        if (messageFlowProxy.isRunning()) {
+            basicTeststepRun.setInfoMessage("Message flow is already running");
+        } else {
+            messageFlowProxy.start();
+            basicTeststepRun.setInfoMessage("Message flow started");
+        }
+    }
+
+    private void stop(MessageFlowProxy messageFlowProxy, BasicTeststepRun basicTeststepRun) throws Exception {
+        if (messageFlowProxy.isRunning()) {
+            messageFlowProxy.stop();
+            basicTeststepRun.setInfoMessage("Message flow stopped");
+        } else {
+            basicTeststepRun.setInfoMessage("Message flow is already stopped");
+        }
+    }
+
+    private void waitForProcessingCompletion(MessageFlowProxy messageFlowProxy)
+            throws Exception {
+        if (!messageFlowProxy.isRunning()) {
+            throw new Exception("Message flow not running.");
+        } else {
+            TestcaseRunContext testcaseRunContext = getTestcaseRunContext();
+            Date pollingEndTime = DateUtils.addSeconds(new Date(), ACTIVITY_LOG_POLLING_TIMEOUT);
+            ActivityLogEntry processingCompletionSignal = null;
+            while (System.currentTimeMillis() < pollingEndTime.getTime()) {
+                ActivityLogProxy activityLogProxy = messageFlowProxy.getActivityLog();
+                if (activityLogProxy != null) {
+                    for (int i = 1; i <= activityLogProxy.getSize(); i++) {
+                        ActivityLogEntry logEntry = activityLogProxy.getLogEntry(i);
+                        if (11504 == logEntry.getMessageNumber() &&
+                                logEntry.getTimestamp().after(testcaseRunContext.getTestcaseRunStartTime())) {
+                            processingCompletionSignal = logEntry;
+                            break;
+                        }
                     }
                 }
+                if (processingCompletionSignal != null) {
+                    break;
+                } else {
+                    Thread.sleep(1000);
+                }
             }
-            if (processingCompletionSignal != null) {
-                break;
+            if (processingCompletionSignal == null) {
+                throw new Exception("Message flow activity log polling timeout. No processing completion signal found.");
             } else {
-                Thread.sleep(1000);
+                LOGGER.info("Message flow processing completion signal found. " + processingCompletionSignal.toString());
             }
-        }
-        if (processingCompletionSignal == null) {
-            throw new Exception("Message flow activity log polling timeout. No processing completion signal found.");
-        } else {
-            LOGGER.info("Message flow processing completion signal found. " + processingCompletionSignal.toString());
         }
     }
 }

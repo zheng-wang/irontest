@@ -16,11 +16,7 @@ public abstract class TeststepRunner {
 
     protected TeststepRunner() {}
 
-    /**
-     * @return API response (could be null when such as no endpoint).
-     * @throws Exception
-     */
-    public Object run() throws Exception {
+    public BasicTeststepRun run() throws Exception {
         prepareTeststep();
         return run(teststep);
     }
@@ -36,7 +32,7 @@ public abstract class TeststepRunner {
         }
     }
 
-    protected abstract Object run(Teststep teststep) throws Exception;
+    protected abstract BasicTeststepRun run(Teststep teststep) throws Exception;
 
     protected void setTeststep(Teststep teststep) {
         this.teststep = teststep;

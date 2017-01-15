@@ -24,7 +24,8 @@ import java.io.IOException;
  * Created by Trevor Li on 7/14/15.
  */
 public class SOAPTeststepRunner extends TeststepRunner {
-    protected SOAPAPIResponse run(Teststep teststep) throws Exception {
+    protected BasicTeststepRun run(Teststep teststep) throws Exception {
+        BasicTeststepRun basicTeststepRun = new BasicTeststepRun();
         final SOAPAPIResponse apiResponse = new SOAPAPIResponse();
 
         Endpoint endpoint = teststep.getEndpoint();
@@ -53,6 +54,8 @@ public class SOAPTeststepRunner extends TeststepRunner {
         };
         httpclient.execute(httpPost, responseHandler);
 
-        return apiResponse;
+        basicTeststepRun.setResponse(apiResponse);
+
+        return basicTeststepRun;
     }
 }

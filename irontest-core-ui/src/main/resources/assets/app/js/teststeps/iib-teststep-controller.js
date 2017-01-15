@@ -25,14 +25,15 @@ angular.module('irontest').controller('IIBTeststepController', ['$scope', 'Tests
 
       var teststep = new Teststeps($scope.teststep);
       $scope.steprun.status = 'ongoing';
-      teststep.$run(function(response) {
+      teststep.$run(function(basicTeststepRun) {
         $scope.steprun.status = 'finished';
         timer = $timeout(function() {
           $scope.steprun.status = null;
         }, 15000);
-      }, function(response) {
+        $scope.steprun.infoMessage = basicTeststepRun.infoMessage;
+      }, function(error) {
         $scope.steprun.status = 'failed';
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        IronTestUtils.openErrorHTTPResponseModal(error);
       });
     };
   }

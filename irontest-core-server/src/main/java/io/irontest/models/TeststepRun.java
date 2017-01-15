@@ -1,17 +1,19 @@
 package io.irontest.models;
 
+import io.irontest.core.runner.BasicTeststepRun;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 /**
+ * Used for test case running.
  * Created by Zheng on 24/07/2016.
  */
-public class TeststepRun {
+public class TeststepRun extends BasicTeststepRun {
     private Teststep teststep;
     private Date startTime;
     private long duration;              //  number of milliseconds
-    private Object response;            //  API response (could be null when such as no endpoint)
     private String errorMessage;        //  error message of running the test step (errors when verifying assertions are captured in AssertionVerification)
     private List<AssertionVerification> assertionVerifications = new ArrayList<AssertionVerification>();
     private TestResult result;
@@ -40,14 +42,6 @@ public class TeststepRun {
         this.duration = duration;
     }
 
-    public Object getResponse() {
-        return response;
-    }
-
-    public void setResponse(Object response) {
-        this.response = response;
-    }
-
     public String getErrorMessage() {
         return errorMessage;
     }
@@ -70,5 +64,10 @@ public class TeststepRun {
 
     public void setResult(TestResult result) {
         this.result = result;
+    }
+
+    public void importBasicTeststepRun(BasicTeststepRun basicTeststepRun) {
+        setResponse(basicTeststepRun.getResponse());
+        setInfoMessage(basicTeststepRun.getInfoMessage());
     }
 }

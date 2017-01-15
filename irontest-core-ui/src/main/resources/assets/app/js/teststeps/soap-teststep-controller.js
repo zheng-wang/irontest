@@ -34,10 +34,10 @@ angular.module('irontest').controller('SOAPTeststepController', ['$scope', 'Test
 
     $scope.invoke = function() {
       var teststep = new Teststeps($scope.teststep);
-      teststep.$run(function(response) {
-        $scope.steprun.response = response.httpResponseBody;
-      }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+      teststep.$run(function(basicTeststepRun) {
+        $scope.steprun.response = basicTeststepRun.response.httpResponseBody;
+      }, function(error) {
+        IronTestUtils.openErrorHTTPResponseModal(error);
       });
     };
   }

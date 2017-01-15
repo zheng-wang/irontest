@@ -60,21 +60,23 @@ public class TestcaseRunResource {
 
             //  test step run starts
             stepRun.setStartTime(new Date());
+            LOGGER.info("Start running test step: " + teststep.getName());
 
-            //  run test step and get API response
-            Object apiResponse = null;
+            //  run test step
+            BasicTeststepRun basicTeststepRun = null;
             boolean exceptionOccurred = false;  //  use this flag instead of checking stepRun.getErrorMessage() != null, for code clarity
             try {
-                apiResponse = TeststepRunnerFactory.getInstance()
+                basicTeststepRun = TeststepRunnerFactory.getInstance()
                         .newTeststepRunner(teststep, teststepDAO, utilsDAO, testcaseRunContext).run();
-                stepRun.setResponse(apiResponse);
+                LOGGER.info("API invocation response: " +
+                        (basicTeststepRun.getResponse() == null ? null : basicTeststepRun.getResponse().toString()));
+                stepRun.importBasicTeststepRun(basicTeststepRun);
             } catch (Exception e) {
                 exceptionOccurred = true;
                 String message = e.getMessage();
                 stepRun.setErrorMessage(message == null ? "null" : message);  // exception message could be null (though rarely)
                 LOGGER.error(message, e);
             }
-            LOGGER.info(apiResponse == null ? null : apiResponse.toString());
 
             //  verify assertions
             if (exceptionOccurred) {
@@ -83,6 +85,7 @@ public class TestcaseRunResource {
                 stepRun.setResult(TestResult.PASSED);
 
                 //  get input for assertion verifications
+                Object apiResponse = stepRun.getResponse();
                 Object assertionVerificationInput = null;
                 if (Teststep.TYPE_SOAP.equals(teststep.getType())) {
                     assertionVerificationInput = ((SOAPAPIResponse) apiResponse).getHttpResponseBody();

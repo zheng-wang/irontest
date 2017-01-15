@@ -60,6 +60,13 @@
   <div class="form-group"></div> <!-- spacer -->
 </#if>
 
+<#if stepRun.infoMessage??>
+  <div class="row">
+    <div class="col-lg-1">Info:</div>
+    <div class="col-lg-11">${stepRun.infoMessage}</div>
+  </div>
+</#if>
+
 <#if stepRun.errorMessage??>
   <div class="row">
     <div class="col-lg-1">Error:</div>

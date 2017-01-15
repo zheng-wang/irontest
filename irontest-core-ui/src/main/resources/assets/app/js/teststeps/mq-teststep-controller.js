@@ -38,15 +38,15 @@ angular.module('irontest').controller('MQTeststepController', ['$scope', 'IronTe
 
       var teststep = new Teststeps($scope.teststep);
       $scope.steprun.status = 'ongoing';
-      teststep.$run(function(response) {
-        $scope.steprun.response = response.value;
+      teststep.$run(function(basicTeststepRun) {
+        $scope.steprun.response = basicTeststepRun.response.value;
         $scope.steprun.status = 'finished';
         timer = $timeout(function() {
           $scope.steprun.status = null;
         }, 15000);
-      }, function(response) {
+      }, function(error) {
         $scope.steprun.status = 'failed';
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        IronTestUtils.openErrorHTTPResponseModal(error);
       });
     };
 

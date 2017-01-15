@@ -31,12 +31,13 @@ angular.module('irontest').controller('DBTeststepController', ['$scope', 'Testst
 
       var teststep = new Teststeps($scope.teststep);
       $scope.steprun.status = 'ongoing';
-      teststep.$run(function(response) {
+      teststep.$run(function(basicTeststepRun) {
         $scope.steprun.status = 'finished';
         timer = $timeout(function() {
           $scope.steprun.status = null;
         }, 15000);
 
+        var response = basicTeststepRun.response;
         if (response.rowsJSON) {    //  the request is a select statement, so display result set
           $scope.steprun.response = response.rowsJSON;
           $scope.steprun.isQueryResponse = true;
@@ -68,9 +69,9 @@ angular.module('irontest').controller('DBTeststepController', ['$scope', 'Testst
         } else {
           $scope.steprun.response = response.statementExecutionResults;
         }
-      }, function(response) {
+      }, function(error) {
         $scope.steprun.status = 'failed';
-        IronTestUtils.openErrorHTTPResponseModal(response);
+        IronTestUtils.openErrorHTTPResponseModal(error);
       });
     };
 

@@ -45,11 +45,13 @@ public class MQTeststepRunner extends TeststepRunner {
         }
     }
 
-    protected MQAPIResponse run(Teststep teststep) throws Exception {
+    protected BasicTeststepRun run(Teststep teststep) throws Exception {
         String action = teststep.getAction();
         if (action == null) {
             throw new Exception("Action not specified.");
         }
+
+        BasicTeststepRun basicTeststepRun = new BasicTeststepRun();
 
         MQAPIResponse response = new MQAPIResponse();
         MQIIBEndpointProperties endpointProperties = (MQIIBEndpointProperties) teststep.getEndpoint().getOtherProperties();
@@ -102,7 +104,9 @@ public class MQTeststepRunner extends TeststepRunner {
             }
         }
 
-        return response;
+        basicTeststepRun.setResponse(response);
+
+        return basicTeststepRun;
     }
 
     private void enqueue(MQQueue queue, Object data, MQTeststepProperties teststepProperties) throws Exception {
