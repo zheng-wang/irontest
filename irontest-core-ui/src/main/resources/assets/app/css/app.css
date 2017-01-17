@@ -68,8 +68,8 @@ body {
   to {opacity: 0;}
 }
 
-.testcase-grid {
-  height: 500px;
+.teststep-grid {
+  height: 420px;
 }
 
 .environment-grid {
