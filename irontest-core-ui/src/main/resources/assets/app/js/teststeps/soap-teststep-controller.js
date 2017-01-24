@@ -3,8 +3,7 @@
 //  NOTICE:
 //    The $scope here prototypically inherits from the $scope of TeststepsController.
 //    ng-include also creates a scope.
-angular.module('irontest').controller('SOAPTeststepController', ['$scope', 'Teststeps', 'IronTestUtils',
-    '$uibModal',
+angular.module('irontest').controller('SOAPTeststepController', ['$scope', 'Teststeps', 'IronTestUtils', '$uibModal',
   function($scope, Teststeps, IronTestUtils, $uibModal) {
     $scope.steprun = {};
 
@@ -32,11 +31,20 @@ angular.module('irontest').controller('SOAPTeststepController', ['$scope', 'Test
       });
     };
 
+    var clearPreviousRunStatus = function() {
+      $scope.steprun = {};
+    };
+
     $scope.invoke = function() {
+      clearPreviousRunStatus();
+
       var teststep = new Teststeps($scope.teststep);
+      $scope.steprun.status = 'ongoing';
       teststep.$run(function(basicTeststepRun) {
+        $scope.steprun.status = 'finished';
         $scope.steprun.response = basicTeststepRun.response.httpResponseBody;
       }, function(error) {
+        $scope.steprun.status = 'failed';
         IronTestUtils.openErrorHTTPResponseModal(error);
       });
     };

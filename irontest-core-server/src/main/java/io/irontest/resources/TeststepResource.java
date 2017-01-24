@@ -127,7 +127,9 @@ public class TeststepResource {
         if (Teststep.TYPE_SOAP.equals(teststep.getType())) {
             //  for better displaying SOAP response in browser, transform XML to be pretty-printed
             SOAPAPIResponse soapAPIResponse = (SOAPAPIResponse) basicTeststepRun.getResponse();
-            if (MediaType.TEXT_XML_TYPE.isCompatible(MediaType.valueOf(soapAPIResponse.getHttpResponseContentType()))) {
+            String httpResponseContentType = soapAPIResponse.getHttpResponseContentType();
+            if (httpResponseContentType != null &&
+                    MediaType.TEXT_XML_TYPE.isCompatible(MediaType.valueOf(httpResponseContentType))) {
                 soapAPIResponse.setHttpResponseBody(XMLUtils.prettyPrintXML(soapAPIResponse.getHttpResponseBody()));
             }
         }

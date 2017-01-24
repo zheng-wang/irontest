@@ -3,6 +3,7 @@ package io.irontest.core.runner;
 import io.irontest.models.Endpoint;
 import io.irontest.models.Teststep;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
@@ -17,6 +18,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
@@ -24,6 +27,8 @@ import java.io.IOException;
  * Created by Trevor Li on 7/14/15.
  */
 public class SOAPTeststepRunner extends TeststepRunner {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SOAPTeststepRunner.class);
+
     protected BasicTeststepRun run(Teststep teststep) throws Exception {
         BasicTeststepRun basicTeststepRun = new BasicTeststepRun();
         final SOAPAPIResponse apiResponse = new SOAPAPIResponse();
@@ -42,11 +47,13 @@ public class SOAPTeststepRunner extends TeststepRunner {
         CloseableHttpClient httpclient = httpClientBuilder.build();
 
         HttpPost httpPost = new HttpPost(endpoint.getUrl());
+        httpPost.setHeader(HttpHeaders.CONTENT_TYPE, "text/xml; charset=utf-8");
         httpPost.setEntity(new StringEntity((String) teststep.getRequest()));
         ResponseHandler<Void> responseHandler = new ResponseHandler<Void>() {
             public Void handleResponse(final HttpResponse httpResponse) throws IOException {
-                String contentType = httpResponse.getFirstHeader(HttpHeaders.CONTENT_TYPE).getValue();
-                apiResponse.setHttpResponseContentType(contentType);
+                LOGGER.info(httpResponse.toString());
+                Header contentType = httpResponse.getFirstHeader(HttpHeaders.CONTENT_TYPE);
+                apiResponse.setHttpResponseContentType(contentType == null ? null : contentType.getValue());
                 HttpEntity entity = httpResponse.getEntity();
                 apiResponse.setHttpResponseBody(entity != null ? EntityUtils.toString(entity) : null);
                 return null;

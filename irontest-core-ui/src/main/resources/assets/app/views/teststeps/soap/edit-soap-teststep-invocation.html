@@ -8,7 +8,7 @@
   </div>
   <div class="col-lg-1">
     <button type="button" class="btn btn-info" ng-click="invoke()"
-            ng-disabled="!teststep.request || !teststep.endpoint.url">Invoke</button>
+            ng-disabled="!teststep.request || !teststep.endpoint.url || steprun.status === 'ongoing'">Invoke</button>
   </div>
   <div class="col-lg-offset-1 col-lg-1">
     <button type="button" class="btn btn-info" ng-click="generateRequest()">Generate Request</button>
