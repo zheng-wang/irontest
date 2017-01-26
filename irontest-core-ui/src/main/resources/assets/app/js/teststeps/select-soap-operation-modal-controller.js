@@ -33,10 +33,10 @@ angular.module('irontest').controller('SelectSOAPOperationModalController', ['$s
       $http
         .get('api/wsdls/' + encodeURIComponent($scope.wsdlUrl) + '/bindings/' + $scope.wsdlBinding.name +
           '/operations/' + $scope.wsdlOperation)
-        .then(function successCallback(response) {
-          $uibModalInstance.close(response.data);
-        }, function errorCallback(response) {
-          IronTestUtils.openErrorHTTPResponseModal(response);
+        .then(function successCallback(operationInfo) {
+          $uibModalInstance.close(operationInfo.data);
+        }, function errorCallback(error) {
+          IronTestUtils.openErrorHTTPResponseModal(error);
         });
     };
   }

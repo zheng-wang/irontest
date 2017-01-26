@@ -1,7 +1,7 @@
 package io.irontest.resources;
 
+import io.irontest.models.SOAPOperationInfo;
 import io.irontest.models.WSDLBinding;
-import io.irontest.utils.WSDLParser;
 import org.reficio.ws.builder.SoapBuilder;
 import org.reficio.ws.builder.SoapOperation;
 import org.reficio.ws.builder.core.Wsdl;
@@ -42,9 +42,14 @@ public class WSDLResource {
     }
 
     @GET @Path("/{wsdlUrl}/bindings/{bindingName}/operations/{operationName}")
-    @Produces({ MediaType.APPLICATION_XML })
-    public String getSampleRequest(@PathParam("wsdlUrl") String wsdlUrl, @PathParam("bindingName") String bindingName,
-                                   @PathParam("operationName") String operationName) {
-        return WSDLParser.getSampleRequest(wsdlUrl, bindingName, operationName);
+    public SOAPOperationInfo getOperationInfo(@PathParam("wsdlUrl") String wsdlUrl, @PathParam("bindingName") String bindingName,
+                                              @PathParam("operationName") String operationName) {
+        SOAPOperationInfo info = new SOAPOperationInfo();
+        Wsdl wsdl = Wsdl.parse(wsdlUrl);
+        SoapBuilder builder = wsdl.binding().localPart(bindingName).find();
+        SoapOperation operation = builder.operation().name(operationName).find();
+        info.setSampleRequest(builder.buildInputMessage(operation));
+        info.setSoapAction(operation.getSoapAction());
+        return info;
     }
 }
