@@ -1,5 +1,7 @@
 package io.irontest.models;
 
+import io.irontest.models.teststep.Teststep;
+
 import java.util.Date;
 import java.util.List;
 

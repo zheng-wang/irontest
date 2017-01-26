@@ -1,7 +1,7 @@
 package io.irontest.core.runner;
 
 import io.irontest.models.Endpoint;
-import io.irontest.models.Teststep;
+import io.irontest.models.teststep.Teststep;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;

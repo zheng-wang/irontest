@@ -3,7 +3,7 @@ package io.irontest.core.runner;
 import io.irontest.db.TeststepDAO;
 import io.irontest.db.UtilsDAO;
 import io.irontest.models.Endpoint;
-import io.irontest.models.Teststep;
+import io.irontest.models.teststep.Teststep;
 
 /**
  * Created by Trevor Li on 7/14/15.

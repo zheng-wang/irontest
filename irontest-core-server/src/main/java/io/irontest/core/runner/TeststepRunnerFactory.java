@@ -2,7 +2,7 @@ package io.irontest.core.runner;
 
 import io.irontest.db.TeststepDAO;
 import io.irontest.db.UtilsDAO;
-import io.irontest.models.Teststep;
+import io.irontest.models.teststep.Teststep;
 
 import java.lang.reflect.Constructor;
 

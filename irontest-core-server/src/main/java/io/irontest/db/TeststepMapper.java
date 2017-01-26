@@ -2,7 +2,7 @@ package io.irontest.db;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.irontest.models.Endpoint;
-import io.irontest.models.Teststep;
+import io.irontest.models.teststep.Teststep;
 import io.irontest.utils.IronTestUtils;
 import org.skife.jdbi.v2.StatementContext;
 import org.skife.jdbi.v2.tweak.ResultSetMapper;

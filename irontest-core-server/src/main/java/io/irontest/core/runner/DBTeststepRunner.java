@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import io.irontest.models.Endpoint;
 import io.irontest.models.OracleTIMESTAMPTZSerializer;
-import io.irontest.models.Teststep;
+import io.irontest.models.teststep.Teststep;
 import io.irontest.utils.IronTestUtils;
 import org.skife.jdbi.v2.*;
 import org.skife.jdbi.v2.tweak.BaseStatementCustomizer;

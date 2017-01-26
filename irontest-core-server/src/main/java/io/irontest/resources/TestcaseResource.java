@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.irontest.db.TestcaseDAO;
 import io.irontest.db.TeststepDAO;
 import io.irontest.models.Testcase;
-import io.irontest.models.Teststep;
+import io.irontest.models.teststep.Teststep;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

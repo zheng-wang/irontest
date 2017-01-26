@@ -1,9 +1,9 @@
 package io.irontest.core.runner;
 
 import com.ibm.broker.config.proxy.*;
-import io.irontest.models.IIBTeststepProperties;
 import io.irontest.models.MQIIBEndpointProperties;
-import io.irontest.models.Teststep;
+import io.irontest.models.teststep.IIBTeststepProperties;
+import io.irontest.models.teststep.Teststep;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

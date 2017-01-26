@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.irontest.models.TestResult;
 import io.irontest.models.Testcase;
 import io.irontest.models.TestcaseRun;
-import io.irontest.models.TeststepRun;
+import io.irontest.models.teststep.TeststepRun;
 import org.skife.jdbi.v2.StatementContext;
 import org.skife.jdbi.v2.tweak.ResultSetMapper;
 

@@ -1,4 +1,6 @@
-package io.irontest.models;
+package io.irontest.models.teststep;
+
+import io.irontest.models.Properties;
 
 /**
  * Created by Zheng on 28/05/2016.

@@ -9,8 +9,8 @@ import com.ibm.mq.headers.MQRFH2;
 import io.irontest.db.TeststepDAO;
 import io.irontest.models.MQIIBEndpointProperties;
 import io.irontest.models.MQRFH2Header;
-import io.irontest.models.MQTeststepProperties;
-import io.irontest.models.Teststep;
+import io.irontest.models.teststep.MQTeststepProperties;
+import io.irontest.models.teststep.Teststep;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

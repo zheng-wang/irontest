@@ -2,7 +2,11 @@ package io.irontest.db;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.irontest.models.*;
+import io.irontest.models.Endpoint;
+import io.irontest.models.Testcase;
+import io.irontest.models.TestcaseRun;
+import io.irontest.models.teststep.Teststep;
+import io.irontest.models.teststep.TeststepRun;
 import org.skife.jdbi.v2.sqlobject.*;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 

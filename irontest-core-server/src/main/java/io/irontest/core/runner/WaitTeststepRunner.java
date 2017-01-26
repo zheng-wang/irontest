@@ -1,7 +1,7 @@
 package io.irontest.core.runner;
 
-import io.irontest.models.Teststep;
-import io.irontest.models.WaitTeststepProperties;
+import io.irontest.models.teststep.Teststep;
+import io.irontest.models.teststep.WaitTeststepProperties;
 
 /**
  * Created by zhenw9 on 10/06/2016.

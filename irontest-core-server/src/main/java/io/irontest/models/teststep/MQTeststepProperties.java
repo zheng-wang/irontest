@@ -1,4 +1,7 @@
-package io.irontest.models;
+package io.irontest.models.teststep;
+
+import io.irontest.models.MQRFH2Header;
+import io.irontest.models.Properties;
 
 /**
  * Created by Zheng on 30/05/2016.

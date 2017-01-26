@@ -1,8 +1,10 @@
-package io.irontest.models;
+package io.irontest.models.teststep;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import io.irontest.models.Endpoint;
+import io.irontest.models.Properties;
 import io.irontest.models.assertion.Assertion;
 
 import java.util.ArrayList;

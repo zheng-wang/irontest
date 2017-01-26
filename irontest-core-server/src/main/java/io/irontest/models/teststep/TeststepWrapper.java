@@ -1,4 +1,4 @@
-package io.irontest.models;
+package io.irontest.models.teststep;
 
 import java.util.HashMap;
 import java.util.Map;

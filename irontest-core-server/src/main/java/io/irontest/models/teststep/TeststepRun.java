@@ -1,6 +1,8 @@
-package io.irontest.models;
+package io.irontest.models.teststep;
 
 import io.irontest.core.runner.BasicTeststepRun;
+import io.irontest.models.TestResult;
+import io.irontest.models.assertion.AssertionVerification;
 
 import java.util.ArrayList;
 import java.util.Date;
