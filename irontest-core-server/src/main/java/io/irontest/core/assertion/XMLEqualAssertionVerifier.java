@@ -27,41 +27,47 @@ public class XMLEqualAssertionVerifier implements AssertionVerifier {
         XMLEqualAssertionVerificationResult result = new XMLEqualAssertionVerificationResult();
         XMLEqualAssertionProperties assertionProperties = (XMLEqualAssertionProperties) assertion.getOtherProperties();
 
+        //  validate arguments
         if (input == null) {
             result.setError("Actual XML is null.");
             result.setResult(TestResult.FAILED);
-        } else {
-            try {
-                Diff diff = DiffBuilder
-                        .compare(assertionProperties.getExpectedXML())
-                        .withTest(input)
-                        .normalizeWhitespace()
-                        .build();
-                if (diff.hasDifferences()) {
-                    StringBuilder differencesSB = new StringBuilder();
-                    Iterator it = diff.getDifferences().iterator();
-                    while (it.hasNext()) {
-                        Difference difference = (Difference) it.next();
-                        if (difference.getResult() == ComparisonResult.DIFFERENT) {   //  ignore SIMILAR differences
-                            if (differencesSB.length() > 0) {
-                                differencesSB.append("\n");
-                            }
-                            differencesSB.append(difference.getComparison().toString());
+            return result;
+        } else if (assertionProperties.getExpectedXML() == null) {
+            result.setError("Expected XML is null.");
+            result.setResult(TestResult.FAILED);
+            return result;
+        }
+
+        try {
+            Diff diff = DiffBuilder
+                    .compare(assertionProperties.getExpectedXML())
+                    .withTest(input)
+                    .normalizeWhitespace()
+                    .build();
+            if (diff.hasDifferences()) {
+                StringBuilder differencesSB = new StringBuilder();
+                Iterator it = diff.getDifferences().iterator();
+                while (it.hasNext()) {
+                    Difference difference = (Difference) it.next();
+                    if (difference.getResult() == ComparisonResult.DIFFERENT) {   //  ignore SIMILAR differences
+                        if (differencesSB.length() > 0) {
+                            differencesSB.append("\n");
                         }
+                        differencesSB.append(difference.getComparison().toString());
                     }
-                    if (differencesSB.length() > 0) {
-                        result.setResult(TestResult.FAILED);
-                        result.setDifferences(differencesSB.toString());
-                    } else {
-                        result.setResult(TestResult.PASSED);
-                    }
+                }
+                if (differencesSB.length() > 0) {
+                    result.setResult(TestResult.FAILED);
+                    result.setDifferences(differencesSB.toString());
                 } else {
                     result.setResult(TestResult.PASSED);
                 }
-            } catch (XMLUnitException e) {
-                result.setError(e.getMessage());
-                result.setResult(TestResult.FAILED);
+            } else {
+                result.setResult(TestResult.PASSED);
             }
+        } catch (XMLUnitException e) {
+            result.setError(e.getMessage());
+            result.setResult(TestResult.FAILED);
         }
 
         return result;
