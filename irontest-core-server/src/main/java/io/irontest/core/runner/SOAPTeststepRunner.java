@@ -50,8 +50,10 @@ public class SOAPTeststepRunner extends TeststepRunner {
 
         HttpPost httpPost = new HttpPost(endpoint.getUrl());
         SOAPTeststepProperties otherProperties = (SOAPTeststepProperties) teststep.getOtherProperties();
-        for (Map.Entry<String, String> httpHeader: otherProperties.getHttpHeaders().entrySet()) {
-            httpPost.setHeader(httpHeader.getKey(), httpHeader.getValue());
+        if (otherProperties != null) {
+            for (Map.Entry<String, String> httpHeader : otherProperties.getHttpHeaders().entrySet()) {
+                httpPost.setHeader(httpHeader.getKey(), httpHeader.getValue());
+            }
         }
         httpPost.setHeader(HttpHeaders.CONTENT_TYPE, "text/xml; charset=utf-8");
         httpPost.setEntity(new StringEntity((String) teststep.getRequest()));
