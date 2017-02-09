@@ -46,7 +46,9 @@ To launch Iron Test application, cd to `<IronTest_Home>` and run below command
 
 `java -jar <jarFilename> server config.yml`
 
-To verify the application is successfully launched, open a web browser (Chrome is preferred), and go to Iron Test home page http://localhost:8081/ui (no ending '/').
+To verify the application is successfully launched, open a web browser, and go to Iron Test home page http://localhost:8081/ui (no ending '/'). 
+
+Though the UI is crossing browsers, Google Chrome is preferred as it is the main browser that is used to test the application.
 
 If this is the first time you launch the application, you will see two new folders created under `<IronTest_Home>`.
 
@@ -57,7 +59,7 @@ If this is the first time you launch the application, you will see two new folde
     logs - where Iron Test application runtime logs are located.
     
 ## Use
-Open Iron Test home page (http://localhost:8081/ui). Though the UI is crossing browsers, Google Chrome is preferred. 
+Open Iron Test home page (http://localhost:8081/ui). 
 
 ### Integrated SOAP Web Service Testing
 We are going to demo how to test a web service that updates an article in database by its title.
