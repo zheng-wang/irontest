@@ -9,6 +9,7 @@ Table of Contents:
 
 - [Build](#build)
 - [Deploy](#deploy)
+- [Launch](#launch)
 - [Use](#use)
     - [Integrated SOAP Web Service Testing](#integrated-soap-web-service-testing)
         - [Create Test Case Outline](#create-test-case-outline)
@@ -40,6 +41,7 @@ Copy all files and folders from `dist` to `<IronTest_Home>`.
 
 To enable Iron Test to interact with databases such as Oracle or SQL Server, prepare JDBC drivers as described on the [wiki page](https://github.com/zheng-wang/irontest/wiki/Interact-with-Databases).
 
+## Launch
 To launch Iron Test application, cd to `<IronTest_Home>` and run below command
 
 `java -jar <jarFilename> server config.yml`
@@ -55,7 +57,7 @@ If this is the first time you launch the application, you will see two new folde
     logs - where Iron Test application runtime logs are located.
     
 ## Use
-Open Iron Test home page (http://localhost:8081/ui). 
+Open Iron Test home page (http://localhost:8081/ui). Though the UI is crossing browsers, Google Chrome is preferred. 
 
 ### Integrated SOAP Web Service Testing
 We are going to demo how to test a web service that updates an article in database by its title.
