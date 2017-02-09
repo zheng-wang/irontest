@@ -33,8 +33,6 @@ This builds Iron Test without MQ/IIB testing features, and an `irontest-core/dis
 To build Iron Test with MQ/IIB testing features, please refer to the [wiki page](https://github.com/zheng-wang/irontest/wiki/Build-Iron-Test-with-MQ-IIB-Testing-Features) instead.
    
 ## Deploy
-Prerequisites: JRE 1.7+.
-
 Create a folder on any computer/VM that has access to the APIs you want to test. This folder will be referred to as `<IronTest_Home>` hereafter.
 
 Copy all files and folders from `dist` to `<IronTest_Home>`.
@@ -42,6 +40,8 @@ Copy all files and folders from `dist` to `<IronTest_Home>`.
 To enable Iron Test to interact with databases such as Oracle or SQL Server, prepare JDBC drivers as described on the [wiki page](https://github.com/zheng-wang/irontest/wiki/Interact-with-Databases).
 
 ## Launch
+Prerequisites: JRE 1.7+.
+
 To launch Iron Test application, cd to `<IronTest_Home>` and run below command
 
 `java -jar <jarFilename> server config.yml`
