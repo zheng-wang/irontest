@@ -19,6 +19,7 @@ Table of Contents:
         - [Run the Test Case](#run-the-test-case)
     - [More Usages](#more-usages)
 - [Maintain](#maintain)
+- [For Contributors](#for-contributors)
 - [License](#license)
         
 ## Build
@@ -167,6 +168,13 @@ To shut down the application
 You can tune Iron Test application to suit your runtime needs by changing contents of the config.yml under `<IronTest_Home>`. Refer to [Dropwizard doc](http://www.dropwizard.io/0.9.3/docs/manual/configuration.html) for how to do it. Re-launch the application for the changes to take effect.
     
 To move Iron Test to a different folder or computer/VM, just shut down the application, copy the whole `<IronTest_Home>` folder over, and launch the application from there.
+
+## For Contributors
+Pull requests are welcome.
+
+To launch Iron Test in your IDE (such as IntelliJ IDEA) without producing dist files, under the project directory (in which there is README.md) run below Maven command
+
+    verify -pl irontest-mqiib -am -P dev
 
 ## License
 Apache License 2.0, see [LICENSE](LICENSE).
