@@ -1,3 +1,4 @@
+<#ftl encoding='UTF-8'>
 <div class="row">
   <div class="col-lg-12"><b>${stepRun.teststep.name}</b></div>
 </div>
