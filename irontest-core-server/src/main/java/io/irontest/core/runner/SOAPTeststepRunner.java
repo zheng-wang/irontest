@@ -56,7 +56,7 @@ public class SOAPTeststepRunner extends TeststepRunner {
             }
         }
         httpPost.setHeader(HttpHeaders.CONTENT_TYPE, "text/xml; charset=utf-8");
-        httpPost.setEntity(new StringEntity((String) teststep.getRequest()));
+        httpPost.setEntity(new StringEntity((String) teststep.getRequest(),"UTF-8"));
         ResponseHandler<Void> responseHandler = new ResponseHandler<Void>() {
             public Void handleResponse(final HttpResponse httpResponse) throws IOException {
                 LOGGER.info(httpResponse.toString());
