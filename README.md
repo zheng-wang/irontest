@@ -174,7 +174,9 @@ Pull requests are welcome.
 
 To launch Iron Test in your IDE (such as IntelliJ IDEA) without producing dist files, under the project directory (in which there is README.md) run below Maven command
 
-    verify -pl irontest-mqiib -am -P dev
+    verify -pl irontest-core -am -P dev                 //  no MQ/IIB testing feature
+    
+    verify -pl irontest-mqiib -am -P dev                //  with MQ/IIB testing feature
 
 ## License
 Apache License 2.0, see [LICENSE](LICENSE).
