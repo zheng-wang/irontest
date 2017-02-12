@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
@@ -34,37 +35,31 @@ public class XPathAssertionVerifier implements AssertionVerifier {
      * @param input the XML String that the assertion is verified against
      * @return
      */
-    public AssertionVerificationResult verify(Assertion assertion, Object input) {
-        XPathAssertionVerificationResult result = new XPathAssertionVerificationResult();
+    public AssertionVerificationResult verify(Assertion assertion, Object input) throws Exception {
         XPathAssertionProperties otherProperties = (XPathAssertionProperties) assertion.getOtherProperties();
 
         //  validate other properties
         if (otherProperties == null || "".equals(StringUtils.trimToEmpty(otherProperties.getxPath()))) {
-            result.setError("XPath not specified");
-            result.setResult(TestResult.FAILED);
-            return result;
+            throw new IllegalArgumentException("XPath not specified");
         } else if ("".equals(StringUtils.trimToEmpty(otherProperties.getExpectedValue()))) {
-            result.setError("Expected Value not specified");
-            result.setResult(TestResult.FAILED);
-            return result;
+            throw new IllegalArgumentException("Expected Value not specified");
         }
 
+        XPathAssertionVerificationResult result = new XPathAssertionVerificationResult();
         evaluateXPathExpression((String) input, otherProperties.getxPath(),
                 otherProperties.getNamespacePrefixes(), result);
-        result.setResult(result.getError() == null &&
-                otherProperties.getExpectedValue().equals(result.getActualValue()) ?
+        result.setResult(otherProperties.getExpectedValue().equals(result.getActualValue()) ?
                 TestResult.PASSED : TestResult.FAILED);
         return result;
     }
 
     private void evaluateXPathExpression(String xmlInput, String xPathExpression,
                                          List<NamespacePrefix> namespacePrefixes,
-                                         XPathAssertionVerificationResult result) {
+                                         XPathAssertionVerificationResult result) throws TransformerException, XPathExpressionException {
         XPath xpath = XPathFactory.newInstance().newXPath();
         xpath.setNamespaceContext(new IronTestNamespaceContext(namespacePrefixes));
 
         String actualValue = null;
-        String errorMessage = null;
         try {
             InputSource inputSource = new InputSource(new StringReader(xmlInput));
             Object value = xpath.evaluate(xPathExpression, inputSource, XPathConstants.NODESET);
@@ -75,22 +70,12 @@ public class XPathAssertionVerifier implements AssertionVerifier {
                     cause.getMessage().startsWith("Can not convert") && cause.getMessage().endsWith("!")) {
                 //  The value is not of type NODESET. Swallow the exception and try STRING.
                 InputSource inputSource2 = new InputSource(new StringReader(xmlInput));
-                try {
-                    actualValue = (String) xpath.evaluate(xPathExpression, inputSource2, XPathConstants.STRING);
-                } catch (XPathExpressionException e1) {
-                    LOGGER.error("Failed to verify XPath assertion.", e);
-                    errorMessage = e.getMessage();
-                }
+                actualValue = (String) xpath.evaluate(xPathExpression, inputSource2, XPathConstants.STRING);
             } else {
-                LOGGER.error("Failed to verify XPath assertion.", e);
-                errorMessage = e.getMessage();
+                throw e;
             }
-        } catch (Exception e) {
-            LOGGER.error("Failed to verify XPath assertion.", e);
-            errorMessage = e.getMessage();
         }
 
-        result.setError(errorMessage);
         result.setActualValue(actualValue);
     }
 }

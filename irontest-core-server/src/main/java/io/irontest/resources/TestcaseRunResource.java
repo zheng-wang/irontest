@@ -112,7 +112,15 @@ public class TestcaseRunResource {
                         verification.setAssertion(assertion);
 
                         AssertionVerifier verifier = new AssertionVerifierFactory().create(assertion.getType());
-                        AssertionVerificationResult verificationResult = verifier.verify(assertion, assertionVerificationInput);
+                        AssertionVerificationResult verificationResult = null;
+                        try {
+                            verificationResult = verifier.verify(assertion, assertionVerificationInput);
+                        } catch (Exception e) {
+                            LOGGER.error("Failed to verify assertion", e);
+                            verificationResult = new AssertionVerificationResult();
+                            verificationResult.setResult(TestResult.FAILED);
+                            verificationResult.setError(e.getMessage());
+                        }
 
                         verification.setVerificationResult(verificationResult);
 

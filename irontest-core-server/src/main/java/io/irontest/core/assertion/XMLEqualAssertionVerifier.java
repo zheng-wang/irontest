@@ -5,7 +5,6 @@ import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.AssertionVerificationResult;
 import io.irontest.models.assertion.XMLEqualAssertionProperties;
 import io.irontest.models.assertion.XMLEqualAssertionVerificationResult;
-import org.xmlunit.XMLUnitException;
 import org.xmlunit.builder.DiffBuilder;
 import org.xmlunit.diff.ComparisonResult;
 import org.xmlunit.diff.Diff;
@@ -23,51 +22,42 @@ public class XMLEqualAssertionVerifier implements AssertionVerifier {
      * @param input the XML String that the assertion is verified against
      * @return
      */
-    public AssertionVerificationResult verify(Assertion assertion, Object input) {
-        XMLEqualAssertionVerificationResult result = new XMLEqualAssertionVerificationResult();
+    public AssertionVerificationResult verify(Assertion assertion, Object input) throws Exception {
         XMLEqualAssertionProperties assertionProperties = (XMLEqualAssertionProperties) assertion.getOtherProperties();
 
         //  validate arguments
         if (input == null) {
-            result.setError("Actual XML is null.");
-            result.setResult(TestResult.FAILED);
-            return result;
+            throw new IllegalArgumentException("Actual XML is null.");
         } else if (assertionProperties.getExpectedXML() == null) {
-            result.setError("Expected XML is null.");
-            result.setResult(TestResult.FAILED);
-            return result;
+            throw new IllegalArgumentException("Expected XML is null.");
         }
 
-        try {
-            Diff diff = DiffBuilder
-                    .compare(assertionProperties.getExpectedXML())
-                    .withTest(input)
-                    .normalizeWhitespace()
-                    .build();
-            if (diff.hasDifferences()) {
-                StringBuilder differencesSB = new StringBuilder();
-                Iterator it = diff.getDifferences().iterator();
-                while (it.hasNext()) {
-                    Difference difference = (Difference) it.next();
-                    if (difference.getResult() == ComparisonResult.DIFFERENT) {   //  ignore SIMILAR differences
-                        if (differencesSB.length() > 0) {
-                            differencesSB.append("\n");
-                        }
-                        differencesSB.append(difference.getComparison().toString());
+        XMLEqualAssertionVerificationResult result = new XMLEqualAssertionVerificationResult();
+        Diff diff = DiffBuilder
+                .compare(assertionProperties.getExpectedXML())
+                .withTest(input)
+                .normalizeWhitespace()
+                .build();
+        if (diff.hasDifferences()) {
+            StringBuilder differencesSB = new StringBuilder();
+            Iterator it = diff.getDifferences().iterator();
+            while (it.hasNext()) {
+                Difference difference = (Difference) it.next();
+                if (difference.getResult() == ComparisonResult.DIFFERENT) {   //  ignore SIMILAR differences
+                    if (differencesSB.length() > 0) {
+                        differencesSB.append("\n");
                     }
+                    differencesSB.append(difference.getComparison().toString());
                 }
-                if (differencesSB.length() > 0) {
-                    result.setResult(TestResult.FAILED);
-                    result.setDifferences(differencesSB.toString());
-                } else {
-                    result.setResult(TestResult.PASSED);
-                }
+            }
+            if (differencesSB.length() > 0) {
+                result.setResult(TestResult.FAILED);
+                result.setDifferences(differencesSB.toString());
             } else {
                 result.setResult(TestResult.PASSED);
             }
-        } catch (XMLUnitException e) {
-            result.setError(e.getMessage());
-            result.setResult(TestResult.FAILED);
+        } else {
+            result.setResult(TestResult.PASSED);
         }
 
         return result;

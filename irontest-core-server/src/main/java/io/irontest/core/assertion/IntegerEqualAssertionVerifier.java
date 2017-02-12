@@ -15,7 +15,7 @@ public class IntegerEqualAssertionVerifier implements AssertionVerifier {
      * @param input the Integer that the assertion is verified against
      * @return
      */
-    public AssertionVerificationResult verify(Assertion assertion, Object input) {
+    public AssertionVerificationResult verify(Assertion assertion, Object input) throws Exception {
         AssertionVerificationResult result = new AssertionVerificationResult();
         IntegerEqualAssertionProperties properties = (IntegerEqualAssertionProperties)
                 assertion.getOtherProperties();

@@ -7,3 +7,8 @@
     </textarea>
   </div>
 </div>
+<div class="form-group">
+  <div class="col-lg-offset-2 col-lg-10" ng-if="assertionsModelObj.assertionVerificationResult.error">
+    <h5 class="text-red">{{ $parent.assertionsModelObj.assertionVerificationResult.error }}</h5>
+  </div>
+</div>
