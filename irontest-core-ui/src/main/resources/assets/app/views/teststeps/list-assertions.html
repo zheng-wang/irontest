@@ -10,6 +10,7 @@
           <li role="menuitem" ng-if="teststep.type === 'SOAP'"><a ng-click="assertionsModelObj.createAssertion('Contains')" href="">Contains Assertion</a></li>
           <li role="menuitem" ng-if="teststep.type === 'SOAP'"><a ng-click="assertionsModelObj.createAssertion('XPath')" href="">XPath Assertion</a></li>
           <li role="menuitem" ng-if="teststep.type === 'DB'"><a ng-click="assertionsModelObj.createAssertion('JSONPath')" href="">JSONPath Assertion</a></li>
+          <li role="menuitem" ng-if="teststep.type === 'DB'"><a ng-click="assertionsModelObj.createAssertion('JSONPathXMLEqual')" href="">JSONPathXMLEqual Assertion</a></li>
         </ul>
       </div>
       <div class="col-lg-8">
@@ -37,6 +38,8 @@
          ng-controller="XPathAssertionController" ng-init="init()"></div>
     <div ng-if="assertionsModelObj.assertion.type === 'JSONPath'"
          ng-include="'/ui/views/teststeps/db/jsonpath-assertion-edit.html'"></div>
+    <div ng-if="assertionsModelObj.assertion.type === 'JSONPathXMLEqual'"
+         ng-include="'/ui/views/teststeps/db/jsonpath-xmlequal-assertion-edit.html'"></div>
   </div>
 </div>
 <script type="text/ng-template" id="assertionGridNameCellTemplate.html">

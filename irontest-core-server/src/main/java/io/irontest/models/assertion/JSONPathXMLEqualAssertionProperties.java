@@ -5,9 +5,11 @@ import io.irontest.models.Properties;
 /**
  * Created by zhenw9 on 13/12/2016.
  */
-public class JSONPathAssertionProperties extends Properties {
+public class JSONPathXMLEqualAssertionProperties extends Properties {
     private String jsonPath;
-    private String expectedValueJSON;
+    private String expectedXML;
+
+    public JSONPathXMLEqualAssertionProperties() {}
 
     public String getJsonPath() {
         return jsonPath;
@@ -17,11 +19,11 @@ public class JSONPathAssertionProperties extends Properties {
         this.jsonPath = jsonPath;
     }
 
-    public String getExpectedValueJSON() {
-        return expectedValueJSON;
+    public String getExpectedXML() {
+        return expectedXML;
     }
 
-    public void setExpectedValueJSON(String expectedValueJSON) {
-        this.expectedValueJSON = expectedValueJSON;
+    public void setExpectedXML(String expectedXML) {
+        this.expectedXML = expectedXML;
     }
 }
