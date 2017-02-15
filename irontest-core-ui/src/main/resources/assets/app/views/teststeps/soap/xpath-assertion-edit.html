@@ -52,7 +52,7 @@
 <script type="text/ng-template" id="namespacePrefixGridPrefixEditableCellTemplate.html">
   <div class="ui-grid-cell-contents">
     <div>
-      <input type="text" class="form-control" maxlength="200" ui-grid-editor ng-model="row.entity.prefix"
+      <input type="text" class="form-control" ui-grid-editor ng-model="row.entity.prefix"
              ng-change="grid.appScope.assertionsModelObj.autoSave(true)">
     </div>
   </div>
@@ -60,7 +60,7 @@
 <script type="text/ng-template" id="namespacePrefixGridNamespaceEditableCellTemplate.html">
   <div class="ui-grid-cell-contents">
     <div>
-      <input type="text" class="form-control" maxlength="200" ui-grid-editor ng-model="row.entity.namespace"
+      <input type="text" class="form-control" ui-grid-editor ng-model="row.entity.namespace"
              ng-change="grid.appScope.assertionsModelObj.autoSave(true)">
     </div>
   </div>

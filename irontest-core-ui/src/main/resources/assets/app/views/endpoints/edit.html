@@ -12,7 +12,7 @@
         <label for="environment" class="col-lg-2 control-label">Environment</label>
         <div class="col-lg-10">
           <input name="environment" type="text" class="form-control" ng-model="endpoint.environment.name"
-                 id="environment" maxlength="200" readonly>
+                 id="environment" readonly>
         </div>
       </div>
       <div class="form-group required" ng-class="{ 'has-error' : submitted && endpointForm.name.$invalid }">
@@ -20,7 +20,7 @@
         <div class="col-lg-10">
           <input name="name" type="text" class="form-control" ng-model="endpoint.name" id="name"
                  ng-change="autoSave(endpointForm.$valid)" placeholder="H2 Database Endpoint"
-                 irt-select="{{ endpointNewlyCreated() }}" maxlength="200" required>
+                 irt-select="{{ endpointNewlyCreated() }}" required>
           <div ng-show="submitted && endpointForm.name.$invalid" class="help-block">
             <p ng-show="endpointForm.name.$error.required">Name is required</p>
           </div>

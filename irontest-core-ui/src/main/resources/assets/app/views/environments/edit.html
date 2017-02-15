@@ -15,7 +15,7 @@
           <div class="col-lg-10">
             <input name="name" type="text" class="form-control" ng-model="environment.name"
                    irt-select="{{ activeTabIndex === 0 && environmentNewlyCreated() }}"
-                   ng-change="autoSave(environmentForm.$valid)" id="name" placeholder="Name" maxlength="200" required>
+                   ng-change="autoSave(environmentForm.$valid)" id="name" placeholder="Name" required>
             <div ng-show="submitted && environmentForm.name.$invalid" class="help-block">
               <p ng-show="environmentForm.name.$error.required">Name is required</p>
             </div>
