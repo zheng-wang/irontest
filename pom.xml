@@ -20,6 +20,7 @@
         <oracle.jdbc.driver.relativePath>lib/jdbc/oracle/ojdbc6.jar</oracle.jdbc.driver.relativePath>
         <sqlserver.jdbc.driver.relativePath>lib/jdbc/sqlserver/sqljdbc41.jar</sqlserver.jdbc.driver.relativePath>
         <distDir>dist</distDir>
+        <uberJarFileName>${project.artifactId}-${project.version}.jar</uberJarFileName>
     </properties>
 
     <profiles>
@@ -132,7 +133,7 @@
                                     <resource>
                                         <directory>target</directory>
                                         <includes>
-                                            <include>${project.artifactId}-${project.version}.jar</include>
+                                            <include>${uberJarFileName}</include>
                                         </includes>
                                     </resource>
                                     <!-- copy config.yml -->
@@ -142,9 +143,10 @@
                                             <include>config.yml</include>
                                         </includes>
                                     </resource>
-                                    <!-- create folders -->
+                                    <!-- copy files and folders -->
                                     <resource>
-                                        <directory>../irontest-core/folders</directory>
+                                        <directory>../irontest-core/files</directory>
+                                        <filtering>true</filtering>
                                     </resource>
                                 </resources>
                             </configuration>
