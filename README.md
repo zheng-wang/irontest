@@ -146,6 +146,8 @@ Click the Assertions button to open the assertions pane. In the assertions pane,
 
 For how to use JSONPath, please refer to [this page](https://github.com/jayway/JsonPath).
 
+You can also use `JSONPathXMLEqual Assertion` for verifying database table column which is either XML type (like in SQL Server) or VARCHAR/CLOB type with XML string as value. Your JSONPath must evaluate to an XML string in this case. 
+
 Click the Back link to return to the test case edit view.
 
 #### Run the Test Case
