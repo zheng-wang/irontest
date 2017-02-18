@@ -49,6 +49,8 @@ To launch Iron Test application, cd to `<IronTest_Home>` and run below command
 
 `java -jar <jarFilename> server config.yml`
 
+On Windows, alternatively you can simply run `<IronTest_Home>\start.bat`. You might want to create a shortcut of it on your Windows Desktop, Task Bar or Start Menu for more convenient launching.
+
 To verify the application is successfully launched, open a web browser, and go to Iron Test home page http://localhost:8081/ui (no ending '/'). 
 
 Though the UI is crossing browsers, Google Chrome is preferred as it is the main browser that is used to test the application.
