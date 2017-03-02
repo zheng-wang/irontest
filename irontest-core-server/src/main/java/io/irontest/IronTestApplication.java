@@ -118,6 +118,7 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         //  register REST resources
         environment.jersey().register(new EndpointResource(endpointDAO));
         environment.jersey().register(new TestcaseResource(testcaseDAO, teststepDAO));
+        environment.jersey().register(new FolderResource(folderDAO));
         environment.jersey().register(new FolderTreeNodeResource(folderTreeNodeDAO));
         environment.jersey().register(new TeststepResource(teststepDAO, utilsDAO));
         environment.jersey().register(new WSDLResource());

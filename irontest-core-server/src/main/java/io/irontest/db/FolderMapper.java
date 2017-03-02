@@ -13,6 +13,7 @@ import java.sql.SQLException;
 public class FolderMapper implements ResultSetMapper<Folder> {
     public Folder map(int index, ResultSet rs, StatementContext ctx) throws SQLException {
         Folder folder = new Folder(rs.getLong("id"), rs.getString("name"),
+                rs.getString("description"),
                 rs.getTimestamp("created"), rs.getTimestamp("updated"));
         return folder;
     }

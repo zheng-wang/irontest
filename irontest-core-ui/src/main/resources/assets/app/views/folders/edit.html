@@ -1,0 +1,20 @@
+<div ng-controller="FoldersController" ng-init="findOne()">
+  <div class="row" id="page-header">
+    <h3 class="page-header">Folder - {{folder.name}}
+      <label class="col-lg-offset-1" irt-successful-message></label>
+      <small>Last edit at {{folder.updated | date:'medium'}}</small>
+    </h3>
+  </div>
+  <div class="row">
+    <form name="folderForm" class="form-horizontal col-lg-10" role="form" novalidate>
+      <div class="form-group">
+        <label for="description" class="col-lg-2 control-label">Description</label>
+        <div class="col-lg-10">
+          <textarea name="description" ng-model="folder.description" id="description" rows="30"
+                    ng-change="autoSave(folderForm.$valid)" class="form-control"></textarea>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+

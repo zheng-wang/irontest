@@ -16,7 +16,7 @@ public abstract class FolderDAO {
 
     @SqlUpdate("CREATE TABLE IF NOT EXISTS folder (" +
             "id BIGINT DEFAULT folder_sequence.NEXTVAL PRIMARY KEY, " +
-            "name varchar(200) NOT NULL DEFAULT CURRENT_TIMESTAMP, parent_folder_id BIGINT, " +
+            "name varchar(200) NOT NULL DEFAULT CURRENT_TIMESTAMP, description CLOB, parent_folder_id BIGINT, " +
             "created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (parent_folder_id) REFERENCES folder(id), " +
@@ -35,7 +35,7 @@ public abstract class FolderDAO {
     protected abstract long updateNameForInsert(@Bind("id") long id, @Bind("name") String name);
 
     @SqlQuery("select * from folder where id = :id")
-    protected abstract Folder _findById(@Bind("id") long id);
+    public abstract Folder _findById(@Bind("id") long id);
 
     @Transaction
     public Folder insert(Long parentFolderId) {
@@ -43,4 +43,8 @@ public abstract class FolderDAO {
         updateNameForInsert(id, "Folder " + id);
         return _findById(id);
     }
+
+    @SqlUpdate("update folder set name = :name, description = :description, " +
+            "updated = CURRENT_TIMESTAMP where id = :id")
+    public abstract void update(@BindBean Folder folder);
 }

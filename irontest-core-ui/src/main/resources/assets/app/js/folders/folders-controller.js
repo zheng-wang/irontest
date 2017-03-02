@@ -1,13 +1,9 @@
 'use strict';
 
 //  This controller is for managed endpoints.
-angular.module('irontest').controller('EndpointsController', ['$scope', 'Endpoints', '$stateParams', '$state',
+angular.module('irontest').controller('FoldersController', ['$scope', 'Folders', '$stateParams', '$state',
     '$timeout', 'IronTestUtils',
-  function($scope, Endpoints, $stateParams, $state, $timeout, IronTestUtils) {
-    $scope.endpointNewlyCreated = function() {
-      return $stateParams.newlyCreated === true;
-    };
-
+  function($scope, Folders, $stateParams, $state, $timeout, IronTestUtils) {
     var timer;
     $scope.autoSave = function(isValid) {
       if (timer) $timeout.cancel(timer);
@@ -18,9 +14,9 @@ angular.module('irontest').controller('EndpointsController', ['$scope', 'Endpoin
 
     $scope.update = function(isValid) {
       if (isValid) {
-        $scope.endpoint.$update(function(response) {
+        $scope.folder.$update(function(response) {
           $scope.$broadcast('successfullySaved');
-          $scope.endpoint = response;
+          $scope.folder = response;
         }, function(response) {
           IronTestUtils.openErrorHTTPResponseModal(response);
         });
@@ -30,11 +26,10 @@ angular.module('irontest').controller('EndpointsController', ['$scope', 'Endpoin
     };
 
     $scope.findOne = function() {
-      Endpoints.get({
-        environmentId: $stateParams.environmentId,
-        endpointId: $stateParams.endpointId
-      }, function(endpoint) {
-        $scope.endpoint = endpoint;
+      Folders.get({
+        folderId: $stateParams.folderId,
+      }, function(folder) {
+        $scope.folder = folder;
       }, function(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);
       });
