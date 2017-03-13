@@ -9,6 +9,7 @@ import com.ibm.mq.headers.MQRFH2;
 import io.irontest.db.TeststepDAO;
 import io.irontest.models.MQIIBEndpointProperties;
 import io.irontest.models.MQRFH2Header;
+import io.irontest.models.teststep.MQDestinationType;
 import io.irontest.models.teststep.MQTeststepProperties;
 import io.irontest.models.teststep.Teststep;
 import org.slf4j.Logger;
@@ -37,9 +38,10 @@ public class MQTeststepRunner extends TeststepRunner {
         //  fetch request for Enqueue action with message from file
         Teststep teststep = getTeststep();
         TeststepDAO teststepDAO = getTeststepDAO();
-        if (Teststep.ACTION_ENQUEUE.equals(teststep.getAction())) {
+        if (Teststep.ACTION_ENQUEUE.equals(teststep.getAction()) ||
+                Teststep.ACTION_PUBLISH.equals(teststep.getAction())) {
             MQTeststepProperties properties = (MQTeststepProperties) teststep.getOtherProperties();
-            if (MQTeststepProperties.ENQUEUE_MESSAGE_FROM_FILE.equals(properties.getEnqueueMessageFrom())) {
+            if (MQTeststepProperties.MESSAGE_FROM_FILE.equals(properties.getMessageFrom())) {
                 teststep.setRequest(teststepDAO.getBinaryRequestById(teststep.getId()));
             }
         }
@@ -47,58 +49,36 @@ public class MQTeststepRunner extends TeststepRunner {
 
     protected BasicTeststepRun run(Teststep teststep) throws Exception {
         String action = teststep.getAction();
-        if (action == null) {
+        if (teststep.getAction() == null) {
             throw new Exception("Action not specified.");
+        }
+        MQTeststepProperties teststepProperties = (MQTeststepProperties) teststep.getOtherProperties();
+        if (teststepProperties.getDestinationType() == null) {
+            throw new Exception("Destination type not specified.");
         }
 
         BasicTeststepRun basicTeststepRun = new BasicTeststepRun();
 
         MQAPIResponse response = new MQAPIResponse();
         MQIIBEndpointProperties endpointProperties = (MQIIBEndpointProperties) teststep.getEndpoint().getOtherProperties();
-        MQTeststepProperties teststepProperties = (MQTeststepProperties) teststep.getOtherProperties();
         Hashtable qmConnProperties = new Hashtable();
         qmConnProperties.put(CMQC.HOST_NAME_PROPERTY,  endpointProperties.getHost());
         qmConnProperties.put(CMQC.PORT_PROPERTY, endpointProperties.getPort());
         qmConnProperties.put(CMQC.CHANNEL_PROPERTY, endpointProperties.getSvrConnChannelName());
         MQQueueManager queueManager = null;
-        MQQueue queue = null;
-        int openOptions = CMQC.MQOO_FAIL_IF_QUIESCING + CMQC.MQOO_INPUT_SHARED;
         try {
             //  connect to queue manager
             queueManager = new MQQueueManager(endpointProperties.getQueueManagerName(), qmConnProperties);
 
-            //  open queue
-            if (Teststep.ACTION_CHECK_DEPTH.equals(action)) {
-                openOptions += CMQC.MQOO_INQUIRE;
-            } else if (Teststep.ACTION_ENQUEUE.equals(action)) {
-                openOptions += CMQC.MQOO_OUTPUT;
-            }
-            try {
-                queue = queueManager.accessQueue(teststepProperties.getQueueName(), openOptions, null, null, null);
-            } catch (MQException mqEx) {
-                if (mqEx.getCompCode() == CMQC.MQCC_FAILED && mqEx.getReason() == CMQC.MQRC_UNKNOWN_OBJECT_NAME) {
-                    throw new Exception("Queue \"" + teststepProperties.getQueueName() + "\" not found.");
-                } else {
-                    throw mqEx;
-                }
-            }
-
-            //  do the action
-            if (Teststep.ACTION_CLEAR.equals(action)) {
-                clearQueue(queue);
-            } else if (Teststep.ACTION_CHECK_DEPTH.equals(action)) {
-                response.setValue(queue.getCurrentDepth());
-            } else if (Teststep.ACTION_DEQUEUE.equals(action)) {
-                response.setValue(dequeue(queue));
-            } else if (Teststep.ACTION_ENQUEUE.equals(action)) {
-                enqueue(queue, teststep.getRequest(), teststepProperties);
-            } else {
-                throw new Exception("Unrecognized action " + action);
+            if (MQDestinationType.QUEUE == teststepProperties.getDestinationType()) {
+                Object responseValue = doQueueAction(queueManager, teststepProperties.getQueueName(), action,
+                        teststep.getRequest(), teststepProperties.getRfh2Header());
+                response.setValue(responseValue);
+            } else if (MQDestinationType.TOPIC == teststepProperties.getDestinationType()) {
+                doTopicAction(queueManager, teststepProperties.getTopicString(), action, teststep.getRequest(),
+                        teststepProperties.getRfh2Header());
             }
         } finally {
-            if (queue != null) {
-                queue.close();
-            }
             if (queueManager != null) {
                 queueManager.disconnect();
             }
@@ -109,28 +89,95 @@ public class MQTeststepRunner extends TeststepRunner {
         return basicTeststepRun;
     }
 
-    private void enqueue(MQQueue queue, Object data, MQTeststepProperties teststepProperties) throws Exception {
+    private Object doQueueAction(MQQueueManager queueManager, String queueName, String action, Object request,
+                                 MQRFH2Header rfh2Header) throws Exception {
+        Object responseValue = null;
+        MQQueue queue = null;
+        int openOptions = CMQC.MQOO_FAIL_IF_QUIESCING + CMQC.MQOO_INPUT_SHARED;
+        try {
+            //  open queue
+            if (Teststep.ACTION_CHECK_DEPTH.equals(action)) {
+                openOptions += CMQC.MQOO_INQUIRE;
+            } else if (Teststep.ACTION_ENQUEUE.equals(action)) {
+                openOptions += CMQC.MQOO_OUTPUT;
+            }
+            try {
+                queue = queueManager.accessQueue(queueName, openOptions, null, null, null);
+            } catch (MQException mqEx) {
+                if (mqEx.getCompCode() == CMQC.MQCC_FAILED && mqEx.getReason() == CMQC.MQRC_UNKNOWN_OBJECT_NAME) {
+                    throw new Exception("Queue \"" + queueName + "\" not found.");
+                } else {
+                    throw mqEx;
+                }
+            }
+
+            //  do the action
+            if (Teststep.ACTION_CLEAR.equals(action)) {
+                clearQueue(queue);
+            } else if (Teststep.ACTION_CHECK_DEPTH.equals(action)) {
+                responseValue = queue.getCurrentDepth();
+            } else if (Teststep.ACTION_DEQUEUE.equals(action)) {
+                responseValue = dequeue(queue);
+            } else if (Teststep.ACTION_ENQUEUE.equals(action)) {
+                enqueue(queue, request, rfh2Header);
+            } else {
+                throw new Exception("Unrecognized action " + action);
+            }
+        } finally {
+            if (queue != null) {
+                queue.close();
+            }
+        }
+
+        return responseValue;
+    }
+
+    private void doTopicAction(MQQueueManager queueManager, String topicString, String action, Object data,
+                               MQRFH2Header rfh2Header) throws Exception {
+        MQTopic publisher = null;
+        try {
+            //  open topic for publish
+            publisher = queueManager.accessTopic(topicString,null, CMQC.MQTOPIC_OPEN_AS_PUBLICATION,
+                    CMQC.MQOO_OUTPUT);
+
+            if (Teststep.ACTION_PUBLISH.equals(action)) {
+                MQMessage message = buildMessage(data, rfh2Header);
+                publisher.put(message);
+            } else {
+                throw new Exception("Unrecognized action " + action);
+            }
+        } finally {
+            if (publisher != null) {
+                publisher.close();
+            }
+        }
+    }
+
+    private MQMessage buildMessage(Object data, MQRFH2Header rfh2Header) throws Exception {
         if (data == null) {
-            throw new Exception("Can not enqueue null.");
+            throw new Exception("Data can not be null.");
         }
 
         MQMessage message = null;
         if (data instanceof String) {
-            message = buildMessageFromText((String) data, teststepProperties);
+            message = buildMessageFromText((String) data, rfh2Header);
         } else {
             message = buildMessageFromFile((byte[]) data);
         }
+        return message;
+    }
 
+    private void enqueue(MQQueue queue, Object data, MQRFH2Header rfh2Header) throws Exception {
+        MQMessage message = buildMessage(data, rfh2Header);
         MQPutMessageOptions pmo = new MQPutMessageOptions();
         queue.put(message, pmo);
     }
 
-    private MQMessage buildMessageFromText(String body, MQTeststepProperties teststepProperties)
+    private MQMessage buildMessageFromText(String body, MQRFH2Header rfh2Header)
             throws IOException, MQDataException {
         MQMessage message = new MQMessage();
 
         //  add RFH2 header if included
-        MQRFH2Header rfh2Header = teststepProperties.getEnqueueMessageRFH2Header();
         if (rfh2Header.isEnabled()) {
             //  create MQMD properties on the message object (MQMD is not written into message, but is used by MQ PUT)
             MQMD mqmd = new MQMD();

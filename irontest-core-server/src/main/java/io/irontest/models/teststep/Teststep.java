@@ -31,6 +31,7 @@ public class Teststep {
     public static final String ACTION_CHECK_DEPTH = "CheckDepth";
     public static final String ACTION_DEQUEUE = "Dequeue";
     public static final String ACTION_ENQUEUE = "Enqueue";
+    public static final String ACTION_PUBLISH = "Publish";
 
     private long id;
     private long testcaseId;
@@ -164,8 +165,8 @@ public class Teststep {
         boolean result = false;
         if (otherProperties instanceof MQTeststepProperties) {
             MQTeststepProperties properties = (MQTeststepProperties) otherProperties;
-            result = ACTION_ENQUEUE.equals(action) &&
-                    MQTeststepProperties.ENQUEUE_MESSAGE_FROM_FILE.equals(properties.getEnqueueMessageFrom());
+            result = (ACTION_ENQUEUE.equals(action) || ACTION_PUBLISH.equals(action)) &&
+                    MQTeststepProperties.MESSAGE_FROM_FILE.equals(properties.getMessageFrom());
         }
         return result;
     }

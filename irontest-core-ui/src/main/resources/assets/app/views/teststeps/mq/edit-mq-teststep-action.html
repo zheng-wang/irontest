@@ -7,45 +7,59 @@
   </div>
 </div>
 <div class="form-group">
-  <label for="queueName" class="col-lg-2 control-label">Queue Name</label>
-  <div class="col-lg-7">
-    <input name="queueName" type="text" class="form-control" ng-change="autoSave(teststepForm.$valid)"
-           ng-model="teststep.otherProperties.queueName" id="queueName" spellcheck="false">
+  <label for="destinationType" class="col-lg-2 control-label">Destination Type</label>
+  <div class="col-lg-1">
+    <select name="destinationType" id="destinationType" class="form-control"
+            ng-model="teststep.otherProperties.destinationType" ng-change="destinationTypeChanged(teststepForm.$valid)"
+            ng-disabled="steprun.status === 'ongoing'">
+      <option value="Queue">Queue</option>
+      <option value="Topic">Topic</option>
+    </select>
+  </div>
+  <div ng-if="teststep.otherProperties.destinationType === 'Queue'">
+    <label for="queueName" class="col-lg-1 control-label">Queue Name</label>
+    <div class="col-lg-5">
+      <input name="queueName" type="text" class="form-control" ng-change="autoSave(teststepForm.$valid)"
+             ng-model="teststep.otherProperties.queueName" id="queueName" spellcheck="false">
+    </div>
+  </div>
+  <div ng-if="teststep.otherProperties.destinationType === 'Topic'">
+    <label for="topicString" class="col-lg-1 control-label">Topic String</label>
+    <div class="col-lg-5">
+      <input name="topicString" type="text" class="form-control" ng-change="autoSave(teststepForm.$valid)"
+             ng-model="teststep.otherProperties.topicString" id="topicString" spellcheck="false">
+    </div>
   </div>
 </div>
 <div class="form-group">
-  <label for="action" class="col-lg-2 control-label">Action</label>
+  <label for="topicString" class="col-lg-2 control-label">Action</label>
   <div class="col-lg-2">
     <select name="action" id="action" class="form-control" ng-model="teststep.action"
             ng-change="actionChanged(teststepForm.$valid)"
             ng-disabled="steprun.status === 'ongoing'">
-      <option value="Clear">Clear</option>
-      <option value="CheckDepth">Check Depth</option>
-      <option value="Dequeue">Dequeue</option>
-      <option value="Enqueue">Enqueue</option>
+      <option value="Clear" ng-if="teststep.otherProperties.destinationType === 'Queue'">Clear</option>
+      <option value="CheckDepth" ng-if="teststep.otherProperties.destinationType === 'Queue'">Check Depth</option>
+      <option value="Dequeue" ng-if="teststep.otherProperties.destinationType === 'Queue'">Dequeue</option>
+      <option value="Enqueue" ng-if="teststep.otherProperties.destinationType === 'Queue'">Enqueue</option>
+      <option value="Publish" ng-if="teststep.otherProperties.destinationType === 'Topic'">Publish</option>
     </select>
   </div>
   <div class="col-lg-1">
     <button type="button" class="btn btn-info" ng-click="doAction()"
-            ng-disabled="!teststep.endpoint.otherProperties.queueManagerName ||
-              !teststep.endpoint.otherProperties.host || !teststep.endpoint.otherProperties.port ||
-              !teststep.endpoint.otherProperties.svrConnChannelName || !teststep.otherProperties.queueName ||
-              !teststep.action || steprun.status === 'ongoing' || (teststep.action === 'Enqueue' &&
-                (teststep.otherProperties.enqueueMessageFrom === 'Text' && !teststep.request ||
-                teststep.otherProperties.enqueueMessageFrom === 'File' &&
-                  !teststep.otherProperties.enqueueMessageFilename))">Do</button>
+            ng-disabled="endpointInfoIncomplete() || actionInfoIncomplete() || steprun.status === 'ongoing'">Do</button>
   </div>
   <div class="col-lg-4">       <!-- Action run status message -->
     <h5 ng-if="teststep.action === 'Clear' && steprun.status === 'ongoing'">Clearing queue ...</h5>
     <h5 ng-if="teststep.action === 'Clear' && steprun.status === 'finished'">Queue cleared.</h5>
-    <h5 ng-if="teststep.action === 'CheckDepth' && steprun.status === 'ongoing'">
-      Checking queue depth ...</h5>
+    <h5 ng-if="teststep.action === 'CheckDepth' && steprun.status === 'ongoing'">Checking queue depth ...</h5>
     <h5 ng-if="teststep.action === 'CheckDepth' && steprun.status === 'finished'">
       Queue depth is {{ steprun.response }}</h5>
     <h5 ng-if="teststep.action === 'Dequeue' && steprun.status === 'finished'">
       {{ steprun.response ? 'Message fetched.' : 'No more message available on the queue.' }}</h5>
     <h5 ng-if="teststep.action === 'Enqueue' && steprun.status === 'ongoing'">Sending message ...</h5>
     <h5 ng-if="teststep.action === 'Enqueue' && steprun.status === 'finished'">Message sent.</h5>
+    <h5 ng-if="teststep.action === 'Publish' && steprun.status === 'ongoing'">Publishing message ...</h5>
+    <h5 ng-if="teststep.action === 'Publish' && steprun.status === 'finished'">Message published.</h5>
   </div>
 </div>
 
@@ -93,5 +107,5 @@
   </div>
 </div>
 
-<div ng-if="teststep.action === 'Enqueue'"
-     ng-include="'/ui/views/teststeps/mq/edit-mq-teststep-action-enqueue.html'"></div>
+<div ng-if="teststep.action === 'Enqueue' || teststep.action === 'Publish'"
+     ng-include="'/ui/views/teststeps/mq/edit-mq-teststep-request.html'"></div>

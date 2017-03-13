@@ -68,8 +68,11 @@ public class TeststepResource {
             teststep.setEndpoint(endpoint);
         }
 
-        //  set initial seconds for Wait test step
-        if (Teststep.TYPE_WAIT.equals(teststep.getType())) {
+        if (Teststep.TYPE_MQ.equals(teststep.getType())) {
+            //  set initial property values (default values in MQTeststepProperties)
+            teststep.setOtherProperties(new MQTeststepProperties());
+        } else if (Teststep.TYPE_WAIT.equals(teststep.getType())) {
+            //  set initial seconds for Wait test step
             teststep.setOtherProperties(new WaitTeststepProperties(1));   //  there is no point to wait for 0 seconds
         }
     }
@@ -174,7 +177,7 @@ public class TeststepResource {
         String filename = "UnknownFilename";
         if (teststep.getOtherProperties() instanceof MQTeststepProperties) {
             MQTeststepProperties properties = (MQTeststepProperties) teststep.getOtherProperties();
-            filename = properties.getEnqueueMessageFilename();
+            filename = properties.getMessageFilename();
         }
         return Response.ok(teststep.getRequest())
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")

@@ -8,7 +8,7 @@ angular.module('irontest').controller('MQTeststepController', ['$scope', 'IronTe
   function($scope, IronTestUtils, $timeout, $http, Upload, $window, Teststeps) {
     var timer;
     $scope.steprun = {};
-    $scope.enqueueMessageActiveTabIndex = 0;
+    $scope.textMessageActiveTabIndex = 0;
 
     var clearPreviousRunAndAssertionVerificationStatus = function() {
       if (timer) $timeout.cancel(timer);
@@ -16,22 +16,59 @@ angular.module('irontest').controller('MQTeststepController', ['$scope', 'IronTe
       $scope.assertionVerificationResult = null;
     };
 
+    $scope.destinationTypeChanged = function(isValid) {
+      var teststep = $scope.teststep;
+      if (teststep.otherProperties.destinationType === 'Topic') {
+        teststep.action = 'Publish';
+      } else {              //  destinationType is Queue
+        teststep.action = null;
+      }
+      $scope.actionChanged(isValid);
+    };
+
     $scope.actionChanged = function(isValid) {
       clearPreviousRunAndAssertionVerificationStatus();
 
+      var teststep = $scope.teststep;
+
       // initialize new action
-      if ($scope.teststep.action === 'Enqueue') {
-        if (!$scope.teststep.otherProperties) {
-          $scope.teststep.otherProperties = {};
-        }
-        if (!$scope.teststep.otherProperties.enqueueMessageFrom) {
-          $scope.teststep.otherProperties.enqueueMessageFrom = 'Text';
+      if (teststep.action === 'Enqueue' || teststep.action === 'Publish') {
+        if (!teststep.otherProperties.messageFrom) {
+          teststep.otherProperties.messageFrom = 'Text';
         }
       }
 
       //  save test step
       $scope.update(isValid);
     };
+
+    $scope.endpointInfoIncomplete = function() {
+      var endpointOtherProperties = $scope.teststep.endpoint.otherProperties;
+      if (endpointOtherProperties) {
+        return !endpointOtherProperties.queueManagerName || !endpointOtherProperties.host ||
+          !endpointOtherProperties.port || !endpointOtherProperties.svrConnChannelName;
+      } else {
+        return true;
+      }
+    }
+
+    $scope.actionInfoIncomplete = function() {
+      var teststep = $scope.teststep;
+      if (!teststep.action) {
+        return true;
+      } else if (teststep.otherProperties.destinationType === 'Queue') {
+        return !teststep.otherProperties.queueName || (
+          teststep.action === 'Enqueue' && (
+            teststep.otherProperties.messageFrom === 'Text' && !teststep.request ||
+            teststep.otherProperties.messageFrom === 'File' && !teststep.otherProperties.messageFilename
+          )
+        );
+      } else if (teststep.otherProperties.destinationType === 'Topic') {
+        return !teststep.otherProperties.topicString;
+      } else {
+        return true;
+      }
+    }
 
     $scope.doAction = function() {
       clearPreviousRunAndAssertionVerificationStatus();
@@ -68,30 +105,30 @@ angular.module('irontest').controller('MQTeststepController', ['$scope', 'IronTe
     };
 
     $scope.toggleRFH2Header = function(isValid) {
-      var header = $scope.teststep.otherProperties.enqueueMessageRFH2Header;
+      var header = $scope.teststep.otherProperties.rfh2Header;
       if (header.enabled === true && header.folders.length === 0) {
         $scope.addRFH2Folder(isValid);
       } else {
-        $scope.enqueueMessageTabSelected(0);
+        $scope.textMessageTabSelected(0);
         $scope.update(isValid);
       }
     };
 
     $scope.addRFH2Folder = function(isValid) {
-      var folders = $scope.teststep.otherProperties.enqueueMessageRFH2Header.folders;
+      var folders = $scope.teststep.otherProperties.rfh2Header.folders;
       folders.push({ string: '<RFH2Folder></RFH2Folder>' });
-      $scope.enqueueMessageActiveTabIndex = folders.length;
+      $scope.textMessageActiveTabIndex = folders.length;
       $scope.update(isValid);
     };
 
-    $scope.enqueueMessageTabSelected = function(index) {
-      $scope.enqueueMessageActiveTabIndex = index;
+    $scope.textMessageTabSelected = function(index) {
+      $scope.textMessageActiveTabIndex = index;
     };
 
     $scope.deleteRFH2Folder = function(isValid) {
-      var folders = $scope.teststep.otherProperties.enqueueMessageRFH2Header.folders;
-      folders.splice($scope.enqueueMessageActiveTabIndex - 1, 1);
-      $scope.enqueueMessageActiveTabIndex = $scope.enqueueMessageActiveTabIndex - 1;
+      var folders = $scope.teststep.otherProperties.rfh2Header.folders;
+      folders.splice($scope.textMessageActiveTabIndex - 1, 1);
+      $scope.textMessageActiveTabIndex = $scope.textMessageActiveTabIndex - 1;
       $scope.update(isValid);
     };
 

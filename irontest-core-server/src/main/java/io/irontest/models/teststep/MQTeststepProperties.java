@@ -7,13 +7,23 @@ import io.irontest.models.Properties;
  * Created by Zheng on 30/05/2016.
  */
 public class MQTeststepProperties extends Properties {
-    public static final String ENQUEUE_MESSAGE_FROM_TEXT = "Text";
-    public static final String ENQUEUE_MESSAGE_FROM_FILE = "File";
+    public static final String MESSAGE_FROM_TEXT = "Text";
+    public static final String MESSAGE_FROM_FILE = "File";
 
+    private MQDestinationType destinationType = MQDestinationType.QUEUE;       //  queue is the default destination type
     private String queueName;
-    private String enqueueMessageFrom; // only for Enqueue action
-    private MQRFH2Header enqueueMessageRFH2Header = new MQRFH2Header();  // only for Enqueue action with message from text
-    private String enqueueMessageFilename; // only for Enqueue action with message from file
+    private String topicString;
+    private String messageFrom; // for Enqueue action and Publish action
+    private MQRFH2Header rfh2Header = new MQRFH2Header();  // for Enqueue action and Publish action with message from text
+    private String messageFilename; // only for Enqueue action and Publish action with message from file
+
+    public MQDestinationType getDestinationType() {
+        return destinationType;
+    }
+
+    public void setDestinationType(MQDestinationType destinationType) {
+        this.destinationType = destinationType;
+    }
 
     public String getQueueName() {
         return queueName;
@@ -23,27 +33,35 @@ public class MQTeststepProperties extends Properties {
         this.queueName = queueName;
     }
 
-    public String getEnqueueMessageFrom() {
-        return enqueueMessageFrom;
+    public String getTopicString() {
+        return topicString;
     }
 
-    public void setEnqueueMessageFrom(String enqueueMessageFrom) {
-        this.enqueueMessageFrom = enqueueMessageFrom;
+    public void setTopicString(String topicString) {
+        this.topicString = topicString;
     }
 
-    public String getEnqueueMessageFilename() {
-        return enqueueMessageFilename;
+    public String getMessageFrom() {
+        return messageFrom;
     }
 
-    public void setEnqueueMessageFilename(String enqueueMessageFilename) {
-        this.enqueueMessageFilename = enqueueMessageFilename;
+    public void setMessageFrom(String messageFrom) {
+        this.messageFrom = messageFrom;
     }
 
-    public MQRFH2Header getEnqueueMessageRFH2Header() {
-        return enqueueMessageRFH2Header;
+    public String getMessageFilename() {
+        return messageFilename;
     }
 
-    public void setEnqueueMessageRFH2Header(MQRFH2Header enqueueMessageRFH2Header) {
-        this.enqueueMessageRFH2Header = enqueueMessageRFH2Header;
+    public void setMessageFilename(String messageFilename) {
+        this.messageFilename = messageFilename;
+    }
+
+    public MQRFH2Header getRfh2Header() {
+        return rfh2Header;
+    }
+
+    public void setRfh2Header(MQRFH2Header rfh2Header) {
+        this.rfh2Header = rfh2Header;
     }
 }

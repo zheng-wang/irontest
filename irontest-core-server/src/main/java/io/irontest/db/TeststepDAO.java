@@ -138,9 +138,9 @@ public abstract class TeststepDAO {
     private boolean isRequestToBeUpdatedWhenUpdatingTeststep(Teststep teststep) {
         boolean result = true;
         if (Teststep.TYPE_MQ.equals(teststep.getType()) &&
-                Teststep.ACTION_ENQUEUE.equals(teststep.getAction())) {
+                (Teststep.ACTION_ENQUEUE.equals(teststep.getAction()) || Teststep.ACTION_PUBLISH.equals(teststep.getAction()))) {
             MQTeststepProperties mqTeststepProperties = (MQTeststepProperties) teststep.getOtherProperties();
-            if (MQTeststepProperties.ENQUEUE_MESSAGE_FROM_FILE.equals(mqTeststepProperties.getEnqueueMessageFrom())) {
+            if (MQTeststepProperties.MESSAGE_FROM_FILE.equals(mqTeststepProperties.getMessageFrom())) {
                 result = false;
             }
         }
@@ -152,10 +152,12 @@ public abstract class TeststepDAO {
      * @param teststep
      */
     private void processRFH2Folders(Teststep teststep) {
-        if (Teststep.TYPE_MQ.equals(teststep.getType()) && Teststep.ACTION_ENQUEUE.equals(teststep.getAction())) {
+        if (Teststep.TYPE_MQ.equals(teststep.getType()) &&
+                (Teststep.ACTION_ENQUEUE.equals(teststep.getAction()) ||
+                        Teststep.ACTION_PUBLISH.equals(teststep.getAction()))) {
             MQTeststepProperties mqTeststepProperties = (MQTeststepProperties) teststep.getOtherProperties();
-            if (MQTeststepProperties.ENQUEUE_MESSAGE_FROM_TEXT.equals(mqTeststepProperties.getEnqueueMessageFrom())) {
-                MQRFH2Header rfh2Header = mqTeststepProperties.getEnqueueMessageRFH2Header();
+            if (MQTeststepProperties.MESSAGE_FROM_TEXT.equals(mqTeststepProperties.getMessageFrom())) {
+                MQRFH2Header rfh2Header = mqTeststepProperties.getRfh2Header();
                 if (rfh2Header.isEnabled()) {
                     List<MQRFH2Folder> rfh2Folders = rfh2Header.getFolders();
                     for (MQRFH2Folder folder : rfh2Folders) {
@@ -206,11 +208,11 @@ public abstract class TeststepDAO {
                 backupChanged = true;
             } else if (Teststep.ACTION_ENQUEUE.equals(oldAction)) {
                 MQTeststepProperties oldProperties = (MQTeststepProperties) oldTeststep.getOtherProperties();
-                if (MQTeststepProperties.ENQUEUE_MESSAGE_FROM_TEXT.equals(oldProperties.getEnqueueMessageFrom())) {
+                if (MQTeststepProperties.MESSAGE_FROM_TEXT.equals(oldProperties.getMessageFrom())) {
                     backup.setEnqueueTextMessage((String) oldTeststep.getRequest());
                     backupChanged = true;
-                } else if (MQTeststepProperties.ENQUEUE_MESSAGE_FROM_FILE.equals(
-                        oldProperties.getEnqueueMessageFrom())) {
+                } else if (MQTeststepProperties.MESSAGE_FROM_FILE.equals(
+                        oldProperties.getMessageFrom())) {
                     backup.setEnqueueBinaryMessage(getBinaryRequestById(teststepId));
                     backupChanged = true;
                 }
@@ -251,11 +253,11 @@ public abstract class TeststepDAO {
                 }
             } else if (Teststep.ACTION_ENQUEUE.equals(newAction)) {
                 MQTeststepProperties newProperties = (MQTeststepProperties) teststep.getOtherProperties();
-                if (MQTeststepProperties.ENQUEUE_MESSAGE_FROM_TEXT.equals(newProperties.getEnqueueMessageFrom())) {
+                if (MQTeststepProperties.MESSAGE_FROM_TEXT.equals(newProperties.getMessageFrom())) {
                     // restore old message
                     teststep.setRequest(oldBackup.getEnqueueTextMessage());
-                } else if (MQTeststepProperties.ENQUEUE_MESSAGE_FROM_FILE.equals(
-                        newProperties.getEnqueueMessageFrom())) {
+                } else if (MQTeststepProperties.MESSAGE_FROM_FILE.equals(
+                        newProperties.getMessageFrom())) {
                     // restore old message
                     teststep.setRequest(oldBackup.getEnqueueBinaryMessage());
                 }
@@ -272,8 +274,8 @@ public abstract class TeststepDAO {
             if (newAction != null && !newAction.equals(oldAction)) {
                 result = true;
             } else if (Teststep.ACTION_ENQUEUE.equals(oldAction) && Teststep.ACTION_ENQUEUE.equals(newAction)) {
-                String oldMessageType = ((MQTeststepProperties) oldTeststep.getOtherProperties()).getEnqueueMessageFrom();
-                String newMessageType = ((MQTeststepProperties) teststep.getOtherProperties()).getEnqueueMessageFrom();
+                String oldMessageType = ((MQTeststepProperties) oldTeststep.getOtherProperties()).getMessageFrom();
+                String newMessageType = ((MQTeststepProperties) teststep.getOtherProperties()).getMessageFrom();
                 if (!newMessageType.equals(oldMessageType)) {
                     result = true;
                 }
@@ -439,7 +441,7 @@ public abstract class TeststepDAO {
         Teststep basicTeststep = _findById(teststepId);
         if (Teststep.TYPE_MQ.equals(basicTeststep.getType())) {
             MQTeststepProperties otherProperties = (MQTeststepProperties) basicTeststep.getOtherProperties();
-            otherProperties.setEnqueueMessageFilename(fileName);
+            otherProperties.setMessageFilename(fileName);
             String otherPropertiesStr = new ObjectMapper().writeValueAsString(otherProperties);
             updateRequestAndOtherProperties(teststepId, inputStream, otherPropertiesStr);
         }
