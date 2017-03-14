@@ -30,7 +30,7 @@
       </#if>
       onto
     </#if>
-    topic with topic string "${ stepOtherProperties.topicString }"
+    topic with topic string "${ (stepOtherProperties.topicString??)?then(stepOtherProperties.topicString, 'null') }"
   </#if>
   on queue manager "${ endpointOtherProperties.queueManagerAddress }"
   through channel "${ (endpointOtherProperties.svrConnChannelName??)?then(endpointOtherProperties.svrConnChannelName, 'null') }".

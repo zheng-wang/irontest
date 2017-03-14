@@ -12,6 +12,7 @@ import io.irontest.models.MQRFH2Header;
 import io.irontest.models.teststep.MQDestinationType;
 import io.irontest.models.teststep.MQTeststepProperties;
 import io.irontest.models.teststep.Teststep;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -121,7 +122,7 @@ public class MQTeststepRunner extends TeststepRunner {
             } else if (Teststep.ACTION_ENQUEUE.equals(action)) {
                 enqueue(queue, request, rfh2Header);
             } else {
-                throw new Exception("Unrecognized action " + action);
+                throw new Exception("Unrecognized action " + action + ".");
             }
         } finally {
             if (queue != null) {
@@ -134,6 +135,10 @@ public class MQTeststepRunner extends TeststepRunner {
 
     private void doTopicAction(MQQueueManager queueManager, String topicString, String action, Object data,
                                MQRFH2Header rfh2Header) throws Exception {
+        if ("".equals(StringUtils.trimToEmpty(topicString))) {
+            throw new Exception("Topic string not specified.");
+        }
+
         MQTopic publisher = null;
         try {
             //  open topic for publish
@@ -144,7 +149,7 @@ public class MQTeststepRunner extends TeststepRunner {
                 MQMessage message = buildMessage(data, rfh2Header);
                 publisher.put(message);
             } else {
-                throw new Exception("Unrecognized action " + action);
+                throw new Exception("Unrecognized action " + action + ".");
             }
         } finally {
             if (publisher != null) {
