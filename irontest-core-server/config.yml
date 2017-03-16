@@ -17,7 +17,7 @@ server:
       - type: file
         currentLogFilename: ./logs/request.log
         maxFileSize: 1MB
-        archivedLogFilenamePattern: ./logs/request-%d-%i.log.gz
+        archivedLogFilenamePattern: ./logs/archive/request/request-%d-%i.log.gz
         archivedFileCount: 100
 
 logging:
@@ -28,14 +28,14 @@ logging:
         - type: file
           currentLogFilename: ./logs/api.log
           maxFileSize: 15MB
-          archivedLogFilenamePattern: ./logs/api-%d-%i.log.gz
+          archivedLogFilenamePattern: ./logs/archive/api/api-%d-%i.log.gz
           archivedFileCount: 200
   appenders:
     - type: console
     - type: file
       currentLogFilename: ./logs/main.log
       maxFileSize: 10MB
-      archivedLogFilenamePattern: ./logs/main-%d-%i.log.gz
+      archivedLogFilenamePattern: ./logs/archive/main/main-%d-%i.log.gz
       archivedFileCount: 200
 
 # System database settings.
