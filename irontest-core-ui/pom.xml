@@ -17,7 +17,7 @@
         <angular-ui-grid.version>4.0.2</angular-ui-grid.version>
         <angular-ui-router.version>0.3.1</angular-ui-router.version>
         <bootstrap.version>3.3.7</bootstrap.version>
-        <jquery.version>3.1.1</jquery.version>
+        <jquery.version>3.2.0</jquery.version>
         <angular-bootstrap.version>2.3.0</angular-bootstrap.version>
         <startbootstrap-sb-admin-2.version>3.3.7+1</startbootstrap-sb-admin-2.version>
         <underscore.version>1.8.3</underscore.version>
@@ -67,6 +67,11 @@
             <groupId>org.webjars.bower</groupId>
             <artifactId>bootstrap</artifactId>
             <version>${bootstrap.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars.bower</groupId>
+            <artifactId>jquery</artifactId>
+            <version>${jquery.version}</version>
         </dependency>
         <dependency>
             <groupId>org.webjars.bower</groupId>
