@@ -1,16 +1,15 @@
 # Web server settings.
 server:
+  type: ip-controlled
   # (Do not modify) Root URI for REST resources
   rootPath: '/api/*'
   registerDefaultExceptionMappers: false
   applicationConnectors:
     - type: http
       port: 8081
-      bindHost: 127.0.0.1
   adminConnectors:
     - type: http
       port: 8082
-      bindHost: 127.0.0.1
   requestLog:
     appenders:
       - type: console
@@ -19,6 +18,12 @@ server:
         maxFileSize: 1MB
         archivedLogFilenamePattern: ./logs/archive/request/request-%d-%i.log.gz
         archivedFileCount: 100
+  ipAccess:
+    # Comma separated IP addresses (hostnames not supported).
+    # For IPv4 address, pattern is supported. Refer to Jetty IPAccessHandler javadoc.
+    # For IPv6 address, only exact match is supported (pattern is not supported).
+    # An empty white list is treated as match all.
+    whiteList: 127.0.0.1, 0:0:0:0:0:0:0:1
 
 logging:
   loggers:
