@@ -1,7 +1,7 @@
 package io.irontest.resources;
 
-import io.irontest.models.SOAPOperationInfo;
 import io.irontest.models.WSDLBinding;
+import io.irontest.models.teststep.SOAPOperationInfo;
 import org.reficio.ws.builder.SoapBuilder;
 import org.reficio.ws.builder.SoapOperation;
 import org.reficio.ws.builder.core.Wsdl;

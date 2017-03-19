@@ -166,7 +166,7 @@ public class Teststep {
         if (otherProperties instanceof MQTeststepProperties) {
             MQTeststepProperties properties = (MQTeststepProperties) otherProperties;
             result = (ACTION_ENQUEUE.equals(action) || ACTION_PUBLISH.equals(action)) &&
-                    MQTeststepProperties.MESSAGE_FROM_FILE.equals(properties.getMessageFrom());
+                    MQMessageFrom.FILE == properties.getMessageFrom();
         }
         return result;
     }

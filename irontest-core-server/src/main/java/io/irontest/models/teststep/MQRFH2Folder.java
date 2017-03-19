@@ -1,4 +1,4 @@
-package io.irontest.models;
+package io.irontest.models.teststep;
 
 /**
  * Created by Zheng on 10/07/2016.

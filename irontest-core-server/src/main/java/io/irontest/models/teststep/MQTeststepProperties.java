@@ -1,19 +1,15 @@
 package io.irontest.models.teststep;
 
-import io.irontest.models.MQRFH2Header;
 import io.irontest.models.Properties;
 
 /**
  * Created by Zheng on 30/05/2016.
  */
 public class MQTeststepProperties extends Properties {
-    public static final String MESSAGE_FROM_TEXT = "Text";
-    public static final String MESSAGE_FROM_FILE = "File";
-
     private MQDestinationType destinationType = MQDestinationType.QUEUE;       //  queue is the default destination type
     private String queueName;
     private String topicString;
-    private String messageFrom; // for Enqueue action and Publish action
+    private MQMessageFrom messageFrom; // for Enqueue action and Publish action
     private MQRFH2Header rfh2Header = new MQRFH2Header();  // for Enqueue action and Publish action with message from text
     private String messageFilename; // only for Enqueue action and Publish action with message from file
 
@@ -41,11 +37,11 @@ public class MQTeststepProperties extends Properties {
         this.topicString = topicString;
     }
 
-    public String getMessageFrom() {
+    public MQMessageFrom getMessageFrom() {
         return messageFrom;
     }
 
-    public void setMessageFrom(String messageFrom) {
+    public void setMessageFrom(MQMessageFrom messageFrom) {
         this.messageFrom = messageFrom;
     }
 

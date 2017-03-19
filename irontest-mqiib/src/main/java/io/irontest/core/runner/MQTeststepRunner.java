@@ -8,10 +8,7 @@ import com.ibm.mq.headers.MQMD;
 import com.ibm.mq.headers.MQRFH2;
 import io.irontest.db.TeststepDAO;
 import io.irontest.models.MQIIBEndpointProperties;
-import io.irontest.models.MQRFH2Header;
-import io.irontest.models.teststep.MQDestinationType;
-import io.irontest.models.teststep.MQTeststepProperties;
-import io.irontest.models.teststep.Teststep;
+import io.irontest.models.teststep.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +39,7 @@ public class MQTeststepRunner extends TeststepRunner {
         if (Teststep.ACTION_ENQUEUE.equals(teststep.getAction()) ||
                 Teststep.ACTION_PUBLISH.equals(teststep.getAction())) {
             MQTeststepProperties properties = (MQTeststepProperties) teststep.getOtherProperties();
-            if (MQTeststepProperties.MESSAGE_FROM_FILE.equals(properties.getMessageFrom())) {
+            if (MQMessageFrom.FILE == properties.getMessageFrom()) {
                 teststep.setRequest(teststepDAO.getBinaryRequestById(teststep.getId()));
             }
         }

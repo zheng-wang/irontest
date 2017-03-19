@@ -4,13 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.irontest.core.TeststepActionDataBackup;
 import io.irontest.models.Endpoint;
-import io.irontest.models.MQRFH2Folder;
-import io.irontest.models.MQRFH2Header;
 import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.IntegerEqualAssertionProperties;
 import io.irontest.models.assertion.XMLEqualAssertionProperties;
-import io.irontest.models.teststep.MQTeststepProperties;
-import io.irontest.models.teststep.Teststep;
+import io.irontest.models.teststep.*;
 import io.irontest.utils.XMLUtils;
 import org.skife.jdbi.v2.sqlobject.*;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
@@ -140,7 +137,7 @@ public abstract class TeststepDAO {
         if (Teststep.TYPE_MQ.equals(teststep.getType()) &&
                 (Teststep.ACTION_ENQUEUE.equals(teststep.getAction()) || Teststep.ACTION_PUBLISH.equals(teststep.getAction()))) {
             MQTeststepProperties mqTeststepProperties = (MQTeststepProperties) teststep.getOtherProperties();
-            if (MQTeststepProperties.MESSAGE_FROM_FILE.equals(mqTeststepProperties.getMessageFrom())) {
+            if (MQMessageFrom.FILE == mqTeststepProperties.getMessageFrom()) {
                 result = false;
             }
         }
@@ -156,7 +153,7 @@ public abstract class TeststepDAO {
                 (Teststep.ACTION_ENQUEUE.equals(teststep.getAction()) ||
                         Teststep.ACTION_PUBLISH.equals(teststep.getAction()))) {
             MQTeststepProperties mqTeststepProperties = (MQTeststepProperties) teststep.getOtherProperties();
-            if (MQTeststepProperties.MESSAGE_FROM_TEXT.equals(mqTeststepProperties.getMessageFrom())) {
+            if (MQMessageFrom.TEXT == mqTeststepProperties.getMessageFrom()) {
                 MQRFH2Header rfh2Header = mqTeststepProperties.getRfh2Header();
                 if (rfh2Header.isEnabled()) {
                     List<MQRFH2Folder> rfh2Folders = rfh2Header.getFolders();
@@ -208,11 +205,10 @@ public abstract class TeststepDAO {
                 backupChanged = true;
             } else if (Teststep.ACTION_ENQUEUE.equals(oldAction)) {
                 MQTeststepProperties oldProperties = (MQTeststepProperties) oldTeststep.getOtherProperties();
-                if (MQTeststepProperties.MESSAGE_FROM_TEXT.equals(oldProperties.getMessageFrom())) {
+                if (MQMessageFrom.TEXT == oldProperties.getMessageFrom()) {
                     backup.setEnqueueTextMessage((String) oldTeststep.getRequest());
                     backupChanged = true;
-                } else if (MQTeststepProperties.MESSAGE_FROM_FILE.equals(
-                        oldProperties.getMessageFrom())) {
+                } else if (MQMessageFrom.FILE == oldProperties.getMessageFrom()) {
                     backup.setEnqueueBinaryMessage(getBinaryRequestById(teststepId));
                     backupChanged = true;
                 }
@@ -253,11 +249,10 @@ public abstract class TeststepDAO {
                 }
             } else if (Teststep.ACTION_ENQUEUE.equals(newAction)) {
                 MQTeststepProperties newProperties = (MQTeststepProperties) teststep.getOtherProperties();
-                if (MQTeststepProperties.MESSAGE_FROM_TEXT.equals(newProperties.getMessageFrom())) {
+                if (MQMessageFrom.TEXT == newProperties.getMessageFrom()) {
                     // restore old message
                     teststep.setRequest(oldBackup.getEnqueueTextMessage());
-                } else if (MQTeststepProperties.MESSAGE_FROM_FILE.equals(
-                        newProperties.getMessageFrom())) {
+                } else if (MQMessageFrom.FILE == newProperties.getMessageFrom()) {
                     // restore old message
                     teststep.setRequest(oldBackup.getEnqueueBinaryMessage());
                 }
@@ -274,9 +269,9 @@ public abstract class TeststepDAO {
             if (newAction != null && !newAction.equals(oldAction)) {
                 result = true;
             } else if (Teststep.ACTION_ENQUEUE.equals(oldAction) && Teststep.ACTION_ENQUEUE.equals(newAction)) {
-                String oldMessageType = ((MQTeststepProperties) oldTeststep.getOtherProperties()).getMessageFrom();
-                String newMessageType = ((MQTeststepProperties) teststep.getOtherProperties()).getMessageFrom();
-                if (!newMessageType.equals(oldMessageType)) {
+                MQMessageFrom oldMessageType = ((MQTeststepProperties) oldTeststep.getOtherProperties()).getMessageFrom();
+                MQMessageFrom newMessageType = ((MQTeststepProperties) teststep.getOtherProperties()).getMessageFrom();
+                if (newMessageType != oldMessageType) {
                     result = true;
                 }
             }

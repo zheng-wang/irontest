@@ -1,4 +1,4 @@
-package io.irontest.models;
+package io.irontest.models.teststep;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
