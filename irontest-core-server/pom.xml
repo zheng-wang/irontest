@@ -16,7 +16,7 @@
         <jdbi.version>2.77</jdbi.version>
         <antlr.version>3.4</antlr.version>
         <dropwizard.version>0.9.3</dropwizard.version>
-        <h2.version>1.4.191</h2.version>
+        <h2.version>1.4.194</h2.version>
     </properties>
 
     <repositories>
