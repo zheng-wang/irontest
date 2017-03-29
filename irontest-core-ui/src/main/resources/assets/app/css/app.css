@@ -36,12 +36,12 @@ body {
 /* custom sb admin 2 classes */
 @media (min-width: 1600px) {
   .sidebar {
-    width: 350px;
+    width: 21%;
   }
 }
 @media (min-width: 1600px) {
   #page-wrapper {
-    margin: 0 0 0 350px;
+    margin: 0 0 0 21%;
   }
 }
 
