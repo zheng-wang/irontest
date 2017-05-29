@@ -49,7 +49,6 @@ public class WSDLResource {
         SoapBuilder builder = wsdl.binding().localPart(bindingName).find();
         SoapOperation operation = builder.operation().name(operationName).find();
         info.setSampleRequest(builder.buildInputMessage(operation));
-        info.setSoapAction(operation.getSoapAction());
         return info;
     }
 }

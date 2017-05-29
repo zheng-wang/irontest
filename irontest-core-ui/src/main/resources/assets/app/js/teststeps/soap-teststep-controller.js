@@ -25,10 +25,6 @@ angular.module('irontest').controller('SOAPTeststepController', ['$scope', 'Test
       modalInstance.result.then(function (operationInfo) {
         //  save the generated request to teststep (in parent scope/controller)
         $scope.teststep.request = operationInfo.sampleRequest;
-        if ($scope.teststep.otherProperties === null) {
-          $scope.teststep.otherProperties = { httpHeaders: {} };
-        }
-        $scope.teststep.otherProperties.httpHeaders.SOAPAction = operationInfo.soapAction;
         $scope.update(true);  //  save immediately (no timeout)
       }, function () {
         //  Modal dismissed. Do nothing.

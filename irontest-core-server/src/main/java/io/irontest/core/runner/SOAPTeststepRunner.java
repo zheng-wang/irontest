@@ -1,7 +1,6 @@
 package io.irontest.core.runner;
 
 import io.irontest.models.Endpoint;
-import io.irontest.models.teststep.SOAPTeststepProperties;
 import io.irontest.models.teststep.Teststep;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
@@ -23,7 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.Map;
 
 /**
  * Created by Trevor Li on 7/14/15.
@@ -49,13 +47,13 @@ public class SOAPTeststepRunner extends TeststepRunner {
         CloseableHttpClient httpclient = httpClientBuilder.build();
 
         HttpPost httpPost = new HttpPost(endpoint.getUrl());
-        SOAPTeststepProperties otherProperties = (SOAPTeststepProperties) teststep.getOtherProperties();
+        /*SOAPTeststepProperties otherProperties = (SOAPTeststepProperties) teststep.getOtherProperties();
         if (otherProperties != null) {
             for (Map.Entry<String, String> httpHeader : otherProperties.getHttpHeaders().entrySet()) {
                 httpPost.setHeader(httpHeader.getKey(), httpHeader.getValue());
             }
-        }
-        httpPost.setHeader(HttpHeaders.CONTENT_TYPE, "text/xml; charset=utf-8");
+        }*/
+        httpPost.setHeader(HttpHeaders.CONTENT_TYPE, "application/soap+xml; charset=utf-8");
         httpPost.setEntity(new StringEntity((String) teststep.getRequest(),"UTF-8"));
         ResponseHandler<Void> responseHandler = new ResponseHandler<Void>() {
             public Void handleResponse(final HttpResponse httpResponse) throws IOException {
