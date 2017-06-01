@@ -10,9 +10,27 @@
     <button type="button" class="btn btn-info" ng-click="invoke()"
             ng-disabled="!teststep.request || !teststep.endpoint.url || steprun.status === 'ongoing'">Invoke</button>
   </div>
-  <div class="col-lg-offset-1 col-lg-1">
-    <button type="button" class="btn btn-info" ng-click="generateRequest()">Generate Request</button>
+  <div class="col-lg-offset-2 col-lg-1 btn-group" uib-dropdown keyboard-nav>
+    <button id="single-button" type="button" class="btn btn-primary" uib-dropdown-toggle ng-disabled="disabled">
+      <i class="fa fa-list"></i> <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu">
+      <li role="menuitem"><a ng-click="toggleHTTPHeadersArea()" href="">
+        <i class="fa {{ showHTTPHeaders ? 'fa-check-square-o' : 'fa-square-o' }}"></i> Show HTTP Headers</a>
+      </li>
+      <li class="divider"></li>
+      <li role="menuitem"><a ng-click="generateRequest()" href="">Generate Request</a></li>
+    </ul>
   </div>
+</div>
+<div class="form-group form-group-reduced-bottom-margin" ng-if="showHTTPHeaders" id="httpHeadersArea">
+  <div class="col-lg-6">
+    <div ui-grid="requestHTTPHeaderGridOptions" ui-grid-resize-columns
+         class="ui-grid http-header-grid"></div>
+  </div>
+  <div class="col-lg-6">
+  </div>
+  <div ng-init="httpHeadersAreaLoadedCallback()"></div>
 </div>
 <div class="form-group form-group-reduced-bottom-margin" height-adjustable-element-in-column="0.8">
   <div class="col-lg-6 full-height">

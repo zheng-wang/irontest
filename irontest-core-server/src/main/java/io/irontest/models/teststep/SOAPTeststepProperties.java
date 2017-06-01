@@ -2,20 +2,21 @@ package io.irontest.models.teststep;
 
 import io.irontest.models.Properties;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Zheng on 26/01/2017.
  */
 public class SOAPTeststepProperties extends Properties {
-    private Map<String, String> httpHeaders = new HashMap<String, String>();
+    //  using List instead of Map here to ease the display on ui-grid
+    private List<HTTPHeader> httpHeaders = new ArrayList<HTTPHeader>();
 
-    public Map<String, String> getHttpHeaders() {
+    public List<HTTPHeader> getHttpHeaders() {
         return httpHeaders;
     }
 
-    public void setHttpHeaders(Map<String, String> httpHeaders) {
+    public void setHttpHeaders(List<HTTPHeader> httpHeaders) {
         this.httpHeaders = httpHeaders;
     }
 }

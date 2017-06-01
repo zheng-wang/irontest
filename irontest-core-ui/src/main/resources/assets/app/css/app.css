@@ -154,6 +154,19 @@ body {
   margin-bottom: 10px;
 }
 
+.http-header-grid {
+  height: 160px;
+}
+
+.http-header-grid .ui-grid-menu-button {
+  height: 20px;
+}
+
+.http-header-grid .ui-grid-cell-contents {
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
 .xpath-assertion-namespace-prefixes-grid {
   height: 92px;
 }
