@@ -10,6 +10,13 @@ angular.module('irontest').controller('SOAPTeststepController', ['$scope', 'Test
     $scope.showHTTPHeaders = false;
 
     var createHTTPHeader = function(gridMenuEvent) {
+      if (!$scope.teststep.otherProperties) {
+        $scope.teststep.otherProperties = { httpHeaders: [] };
+      }
+      $scope.teststep.otherProperties.httpHeaders.push(
+        { name: 'name1', value: 'value1' }
+      );
+      $scope.update(true);
     };
 
     var deleteHTTPHeader = function(gridMenuEvent) {
@@ -17,7 +24,8 @@ angular.module('irontest').controller('SOAPTeststepController', ['$scope', 'Test
 
     $scope.requestHTTPHeaderGridOptions = {
       data: 'teststep.otherProperties.httpHeaders',
-      enableGridMenu: true, enableColumnMenus: false,
+      enableRowHeaderSelection: false, multiSelect: false,
+      enableGridMenu: true, enableColumnMenus: false, gridMenuShowHideColumns: false,
       rowHeight: 20, enableHorizontalScrollbar: uiGridConstants.scrollbars.NEVER,
       columnDefs: [
         {
@@ -29,8 +37,12 @@ angular.module('irontest').controller('SOAPTeststepController', ['$scope', 'Test
       ],
       gridMenuCustomItems: [
         { title: 'Create', order: 210, action: createHTTPHeader },
-        { title: 'Delete', order: 220, action: deleteHTTPHeader }
-      ]
+        { title: 'Delete', order: 220, action: deleteHTTPHeader,
+          shown: function() { return $scope.httpHeaderGridApi.selection.getSelectedRows().length === 1; } }
+      ],
+      onRegisterApi: function (gridApi) {
+        $scope.httpHeaderGridApi = gridApi;
+      }
     };
 
     $scope.toggleHTTPHeadersArea = function() {
