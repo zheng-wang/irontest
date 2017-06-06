@@ -1,32 +1,30 @@
 package io.irontest.core.runner;
 
+import io.irontest.models.teststep.HTTPHeader;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Zheng on 6/07/2016.
  */
 public class SOAPAPIResponse {
-    private String httpResponseContentType;  //  an HTTP header
-    private String httpResponseBody;
+    private List<HTTPHeader> httpHeaders = new ArrayList<HTTPHeader>();
+    private String httpBody;
 
-    public String getHttpResponseContentType() {
-        return httpResponseContentType;
+    public String getHttpBody() {
+        return httpBody;
     }
 
-    public void setHttpResponseContentType(String httpResponseContentType) {
-        this.httpResponseContentType = httpResponseContentType;
+    public void setHttpBody(String httpBody) {
+        this.httpBody = httpBody;
     }
 
-    public String getHttpResponseBody() {
-        return httpResponseBody;
+    public List<HTTPHeader> getHttpHeaders() {
+        return httpHeaders;
     }
 
-    public void setHttpResponseBody(String httpResponseBody) {
-        this.httpResponseBody = httpResponseBody;
-    }
-
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("HTTP response content type: ").append(httpResponseContentType).append(". HTTP response body: ")
-                .append(httpResponseBody);
-        return sb.toString();
+    public void setHttpHeaders(List<HTTPHeader> httpHeaders) {
+        this.httpHeaders = httpHeaders;
     }
 }

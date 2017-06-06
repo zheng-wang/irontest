@@ -1,6 +1,7 @@
 package io.irontest.utils;
 
 import io.irontest.core.runner.SQLStatementType;
+import io.irontest.models.teststep.HTTPHeader;
 import org.skife.jdbi.v2.Script;
 
 import java.lang.reflect.Constructor;
@@ -47,5 +48,14 @@ public class IronTestUtils {
             statements = (List<String>) method.invoke(script, sqlRequest);
         }
         return statements;
+    }
+
+    public static String getFirstHTTPHeaderValue(List<HTTPHeader> httpHeaders, String headerName) {
+        for (HTTPHeader header: httpHeaders) {
+            if (header.getName().toLowerCase().equals(headerName.toLowerCase())) {
+                return header.getValue();
+            }
+        }
+        return null;
     }
 }

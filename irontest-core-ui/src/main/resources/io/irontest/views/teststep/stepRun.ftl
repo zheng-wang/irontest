@@ -26,12 +26,29 @@
   </div>
 </div>
 
+<#-- Request info -->
 <#if stepRun.teststep.request??>
   <div class="form-group"></div> <!-- spacer -->
   <div class="row">
     <div class="col-lg-1">Request:</div>
     <div class="col-lg-11">
-      <textarea class="form-control" rows="8" readonly>${ stepRun.teststep.request }</textarea>
+      <#-- Extra request info for test step that has request HTTP headers -->
+      <#if (stepRun.teststep.otherProperties.httpHeaders?size > 0)>
+        <div class="row">
+          <div class="col-lg-2">HTTP Headers:</div>
+          <div class="col-lg-10">
+            <#list stepRun.teststep.otherProperties.httpHeaders as httpHeader>
+              <div class="row">
+                <div class="col-lg-1"><#escape x as x?html>${ httpHeader.name }:</#escape></div>
+                <div class="col-lg-11"><#escape x as x?html>${ httpHeader.value }</#escape></div>
+              </div>
+            </#list>
+          </div>
+        </div>
+      </#if>
+      <div class="row">
+        <textarea class="form-control" rows="8" readonly>${ stepRun.teststep.request }</textarea>
+      </div>
     </div>
   </div>
   <div class="form-group"></div> <!-- spacer -->
@@ -52,6 +69,7 @@
   </div>
 </#if>
 
+<#-- Response info -->
 <#if stepRun.response?? &&
     (stepRun.teststep.type != "MQ" || (stepRun.teststep.type == "MQ" && stepRun.response.value??))>
   <div class="row">
@@ -61,6 +79,7 @@
   <div class="form-group"></div> <!-- spacer -->
 </#if>
 
+<#-- Some additional info about the step run -->
 <#if stepRun.infoMessage??>
   <div class="row">
     <div class="col-lg-1">Info:</div>
@@ -68,6 +87,7 @@
   </div>
 </#if>
 
+<#-- Error info -->
 <#if stepRun.errorMessage??>
   <div class="row">
     <div class="col-lg-1">Error:</div>
@@ -75,6 +95,7 @@
   </div>
 </#if>
 
+<#-- Assertion verifications -->
 <#list stepRun.assertionVerifications as verification>
   <div class="row">
     <div class="col-lg-1">Assertion:</div>

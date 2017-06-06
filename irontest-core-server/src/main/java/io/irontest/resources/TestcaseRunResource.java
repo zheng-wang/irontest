@@ -93,7 +93,7 @@ public class TestcaseRunResource {
                 Object apiResponse = stepRun.getResponse();
                 Object assertionVerificationInput = null;
                 if (Teststep.TYPE_SOAP.equals(teststep.getType())) {
-                    assertionVerificationInput = ((SOAPAPIResponse) apiResponse).getHttpResponseBody();
+                    assertionVerificationInput = ((SOAPAPIResponse) apiResponse).getHttpBody();
                 } else if (Teststep.TYPE_DB.equals(teststep.getType())) {
                     assertionVerificationInput = ((DBAPIResponse) apiResponse).getRowsJSON();
                 } else if (Teststep.TYPE_MQ.equals(teststep.getType())) {

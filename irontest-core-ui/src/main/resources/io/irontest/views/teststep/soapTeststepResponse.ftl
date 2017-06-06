@@ -1,1 +1,1 @@
-<#escape x as x?html>${stepRun.response.httpResponseBody}</#escape>
+<#escape x as x?html>${stepRun.response.httpBody}</#escape>

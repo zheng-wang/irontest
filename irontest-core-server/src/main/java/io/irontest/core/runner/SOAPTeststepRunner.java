@@ -1,11 +1,12 @@
 package io.irontest.core.runner;
 
 import io.irontest.models.Endpoint;
+import io.irontest.models.teststep.HTTPHeader;
+import io.irontest.models.teststep.SOAPTeststepProperties;
 import io.irontest.models.teststep.Teststep;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -31,8 +32,6 @@ public class SOAPTeststepRunner extends TeststepRunner {
 
     protected BasicTeststepRun run(Teststep teststep) throws Exception {
         BasicTeststepRun basicTeststepRun = new BasicTeststepRun();
-        final SOAPAPIResponse apiResponse = new SOAPAPIResponse();
-
         Endpoint endpoint = teststep.getEndpoint();
 
         //  build http client instance
@@ -46,22 +45,30 @@ public class SOAPTeststepRunner extends TeststepRunner {
         }
         CloseableHttpClient httpclient = httpClientBuilder.build();
 
+        //  set request HTTP headers
         HttpPost httpPost = new HttpPost(endpoint.getUrl());
-        /*SOAPTeststepProperties otherProperties = (SOAPTeststepProperties) teststep.getOtherProperties();
+        SOAPTeststepProperties otherProperties = (SOAPTeststepProperties) teststep.getOtherProperties();
         if (otherProperties != null) {
-            for (Map.Entry<String, String> httpHeader : otherProperties.getHttpHeaders().entrySet()) {
-                httpPost.setHeader(httpHeader.getKey(), httpHeader.getValue());
+            for (HTTPHeader httpHeader : otherProperties.getHttpHeaders()) {
+                httpPost.setHeader(httpHeader.getName(), httpHeader.getValue());
             }
-        }*/
-        httpPost.setHeader(HttpHeaders.CONTENT_TYPE, "application/soap+xml; charset=utf-8");
+        }
+
+        //  set request HTTP body
         httpPost.setEntity(new StringEntity((String) teststep.getRequest(),"UTF-8"));
+
+        final SOAPAPIResponse apiResponse = new SOAPAPIResponse();
         ResponseHandler<Void> responseHandler = new ResponseHandler<Void>() {
             public Void handleResponse(final HttpResponse httpResponse) throws IOException {
                 LOGGER.info(httpResponse.toString());
-                Header contentType = httpResponse.getFirstHeader(HttpHeaders.CONTENT_TYPE);
-                apiResponse.setHttpResponseContentType(contentType == null ? null : contentType.getValue());
+                apiResponse.getHttpHeaders().add(
+                        new HTTPHeader("*Status-Line*", httpResponse.getStatusLine().toString()));
+                Header[] headers = httpResponse.getAllHeaders();
+                for (Header header: headers) {
+                    apiResponse.getHttpHeaders().add(new HTTPHeader(header.getName(), header.getValue()));
+                }
                 HttpEntity entity = httpResponse.getEntity();
-                apiResponse.setHttpResponseBody(entity != null ? EntityUtils.toString(entity) : null);
+                apiResponse.setHttpBody(entity != null ? EntityUtils.toString(entity) : null);
                 return null;
             }
         };

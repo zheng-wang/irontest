@@ -7,10 +7,7 @@ import io.irontest.core.runner.TeststepRunnerFactory;
 import io.irontest.db.TeststepDAO;
 import io.irontest.db.UtilsDAO;
 import io.irontest.models.Endpoint;
-import io.irontest.models.teststep.MQTeststepProperties;
-import io.irontest.models.teststep.Teststep;
-import io.irontest.models.teststep.TeststepWrapper;
-import io.irontest.models.teststep.WaitTeststepProperties;
+import io.irontest.models.teststep.*;
 import io.irontest.utils.IronTestUtils;
 import io.irontest.utils.XMLUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
@@ -68,11 +65,12 @@ public class TeststepResource {
             teststep.setEndpoint(endpoint);
         }
 
-        if (Teststep.TYPE_MQ.equals(teststep.getType())) {
-            //  set initial property values (default values in MQTeststepProperties)
+        //  set initial/default property values (in the Properties sub-class)
+        if (Teststep.TYPE_SOAP.equals(teststep.getType())) {
+            teststep.setOtherProperties(new SOAPTeststepProperties());
+        } else if (Teststep.TYPE_MQ.equals(teststep.getType())) {
             teststep.setOtherProperties(new MQTeststepProperties());
         } else if (Teststep.TYPE_WAIT.equals(teststep.getType())) {
-            //  set initial seconds for Wait test step
             teststep.setOtherProperties(new WaitTeststepProperties(1));   //  there is no point to wait for 0 seconds
         }
     }
@@ -134,12 +132,12 @@ public class TeststepResource {
         if (Teststep.TYPE_SOAP.equals(teststep.getType())) {
             //  for better displaying SOAP response in browser, transform XML to be pretty-printed
             SOAPAPIResponse soapAPIResponse = (SOAPAPIResponse) basicTeststepRun.getResponse();
-            String httpResponseContentType = soapAPIResponse.getHttpResponseContentType();
-            System.out.println(httpResponseContentType);
+            String httpResponseContentType = IronTestUtils.getFirstHTTPHeaderValue(
+                    soapAPIResponse.getHttpHeaders(), HttpHeaders.CONTENT_TYPE);
             if (httpResponseContentType != null &&
                     (MediaType.TEXT_XML_TYPE.isCompatible(MediaType.valueOf(httpResponseContentType)) ||
                             httpResponseContentType.contains("application/soap+xml"))) {
-                soapAPIResponse.setHttpResponseBody(XMLUtils.prettyPrintXML(soapAPIResponse.getHttpResponseBody()));
+                soapAPIResponse.setHttpBody(XMLUtils.prettyPrintXML(soapAPIResponse.getHttpBody()));
             }
         }
 

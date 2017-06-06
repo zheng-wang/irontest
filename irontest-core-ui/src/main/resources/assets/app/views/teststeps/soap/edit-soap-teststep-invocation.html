@@ -25,10 +25,11 @@
 </div>
 <div class="form-group form-group-reduced-bottom-margin" ng-if="showHTTPHeaders" id="httpHeadersArea">
   <div class="col-lg-6">
-    <div ui-grid="requestHTTPHeaderGridOptions" ui-grid-resize-columns ui-grid-selection
+    <div ui-grid="requestHTTPHeaderGridOptions" ui-grid-resize-columns ui-grid-selection ui-grid-edit
          class="ui-grid http-header-grid"></div>
   </div>
   <div class="col-lg-6">
+    <div ui-grid="responseHTTPHeaderGridOptions" ui-grid-resize-columns class="ui-grid http-header-grid"></div>
   </div>
   <div ng-init="httpHeadersAreaLoadedCallback()"></div>
 </div>
@@ -52,3 +53,20 @@
     <button type="button" class="btn btn-info" ng-click="toggleAssertionsArea()">Assertions</button>
   </div>
 </div>
+
+<script type="text/ng-template" id="httpHeaderGridNameEditableCellTemplate.html">
+  <div class="ui-grid-cell-contents">
+    <div>
+      <input type="text" class="form-control" ui-grid-editor ng-model="row.entity.name"
+             ng-change="grid.appScope.autoSave(true)">
+    </div>
+  </div>
+</script>
+<script type="text/ng-template" id="httpHeaderGridValueEditableCellTemplate.html">
+  <div class="ui-grid-cell-contents">
+    <div>
+      <input type="text" class="form-control" ui-grid-editor ng-model="row.entity.value"
+             ng-change="grid.appScope.autoSave(true)">
+    </div>
+  </div>
+</script>

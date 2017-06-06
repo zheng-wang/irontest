@@ -16,33 +16,49 @@ angular.module('irontest').controller('SOAPTeststepController', ['$scope', 'Test
       $scope.teststep.otherProperties.httpHeaders.push(
         { name: 'name1', value: 'value1' }
       );
-      $scope.update(true);
+      $scope.update(true, function selectTheNewRow() {
+        var headers = $scope.teststep.otherProperties.httpHeaders;
+        $scope.requestHTTPHeaderGridApi.grid.modifyRows(headers);
+        $scope.requestHTTPHeaderGridApi.selection.selectRow(headers[headers.length - 1]);
+      });
     };
 
     var deleteHTTPHeader = function(gridMenuEvent) {
+      var selectedRow = $scope.requestHTTPHeaderGridApi.selection.getSelectedRows()[0];
+      var httpHeaders = $scope.teststep.otherProperties.httpHeaders;
+      IronTestUtils.deleteArrayElementByProperty(httpHeaders, '$$hashKey', selectedRow.$$hashKey);
+      $scope.update(true);
     };
 
     $scope.requestHTTPHeaderGridOptions = {
       data: 'teststep.otherProperties.httpHeaders',
-      enableRowHeaderSelection: false, multiSelect: false,
+      enableSorting: false, enableRowHeaderSelection: false, multiSelect: false,
       enableGridMenu: true, enableColumnMenus: false, gridMenuShowHideColumns: false,
       rowHeight: 20, enableHorizontalScrollbar: uiGridConstants.scrollbars.NEVER,
       columnDefs: [
-        {
-          name: 'name', width: "35%"
-        },
-        {
-          name: 'value'
-        }
+        { name: 'name', width: "35%", headerTooltip: 'Double click to edit', enableCellEdit: true,
+          editableCellTemplate: 'httpHeaderGridNameEditableCellTemplate.html' },
+        { name: 'value', headerTooltip: 'Double click to edit', enableCellEdit: true,
+          editableCellTemplate: 'httpHeaderGridValueEditableCellTemplate.html' }
       ],
       gridMenuCustomItems: [
         { title: 'Create', order: 210, action: createHTTPHeader },
         { title: 'Delete', order: 220, action: deleteHTTPHeader,
-          shown: function() { return $scope.httpHeaderGridApi.selection.getSelectedRows().length === 1; } }
+          shown: function() { return $scope.requestHTTPHeaderGridApi.selection.getSelectedRows().length === 1; } }
       ],
       onRegisterApi: function (gridApi) {
-        $scope.httpHeaderGridApi = gridApi;
+        $scope.requestHTTPHeaderGridApi = gridApi;
       }
+    };
+
+    $scope.responseHTTPHeaderGridOptions = {
+      data: 'steprun.responseHttpHeaders',
+      enableSorting: false, enableColumnMenus: false,
+      rowHeight: 20, enableHorizontalScrollbar: uiGridConstants.scrollbars.NEVER,
+      columnDefs: [
+        { name: 'name', width: "35%" },
+        { name: 'value' }
+      ]
     };
 
     $scope.toggleHTTPHeadersArea = function() {
@@ -96,7 +112,8 @@ angular.module('irontest').controller('SOAPTeststepController', ['$scope', 'Test
       $scope.steprun.status = 'ongoing';
       teststep.$run(function(basicTeststepRun) {
         $scope.steprun.status = 'finished';
-        $scope.steprun.response = basicTeststepRun.response.httpResponseBody;
+        $scope.steprun.response = basicTeststepRun.response.httpBody;
+        $scope.steprun.responseHttpHeaders = basicTeststepRun.response.httpHeaders;
       }, function(error) {
         $scope.steprun.status = 'failed';
         IronTestUtils.openErrorHTTPResponseModal(error);
