@@ -17,7 +17,7 @@ angular.module('irontest').controller('XPathAssertionController', ['$scope', 'ui
       $scope.assertionsModelObj.assertion.otherProperties.namespacePrefixes.push(
         { prefix: 'ns1', namespace: 'http://com.mycompany/service1' }
       );
-      $scope.update(true, $scope.reselectCurrentAssertionInGrid);
+      $scope.update(true, $scope.assertionsModelObj.reselectCurrentAssertionInGrid);
     };
 
     var removeNamespacePrefix = function(gridMenuEvent) {
@@ -26,9 +26,12 @@ angular.module('irontest').controller('XPathAssertionController', ['$scope', 'ui
       for (var i = 0; i < selectedRows.length; i += 1) {
         IronTestUtils.deleteArrayElementByProperty(namespacePrefixes, '$$hashKey', selectedRows[i].$$hashKey);
       }
-      $scope.update(true, $scope.reselectCurrentAssertionInGrid);
+      $scope.update(true, $scope.assertionsModelObj.reselectCurrentAssertionInGrid);
     };
 
+    //  notice that when switching assertionsModelObj.assertion in parent controller, if the newly selected
+    //  assertionsModelObj.assertion has null otherProperties, the data of this grid will not update (probably due to
+    //  angularjs/ui-grid not being able to detect changes to a null's 'child object').
     $scope.assertionsModelObj.xPathNamespacePrefixesGridOptions = {
       data: 'assertionsModelObj.assertion.otherProperties.namespacePrefixes',
       enableRowHeaderSelection: false, multiSelect: false, enableGridMenu: true, enableColumnMenus: false,

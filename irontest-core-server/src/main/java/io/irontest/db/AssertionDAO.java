@@ -3,6 +3,7 @@ package io.irontest.db;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.irontest.models.assertion.Assertion;
+import io.irontest.models.assertion.XPathAssertionProperties;
 import org.skife.jdbi.v2.sqlobject.*;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 import org.skife.jdbi.v2.sqlobject.stringtemplate.UseStringTemplate3StatementLocator;
@@ -36,6 +37,12 @@ public abstract class AssertionDAO {
     protected abstract long _insert(@BindBean("a") Assertion assertion, @Bind("otherProperties") String otherProperties);
 
     public long insert_NoTransaction(Assertion assertion) throws JsonProcessingException {
+        //  set initial/default property values (in the Properties sub-class)
+        if (assertion.getOtherProperties() == null) {
+            if (Assertion.TYPE_XPATH.equals(assertion.getType())) {
+                assertion.setOtherProperties(new XPathAssertionProperties());
+            }
+        }
         return _insert(assertion, new ObjectMapper().writeValueAsString(assertion.getOtherProperties()));
     }
 

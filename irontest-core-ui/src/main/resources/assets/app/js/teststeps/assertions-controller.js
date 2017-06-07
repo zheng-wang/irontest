@@ -1,7 +1,8 @@
 'use strict';
 
 //  NOTICE:
-//    The $scope here prototypically inherits from the $scope of TeststepsController.
+//    The $scope here prototypically inherits from the $scope of the specific test step controller,
+//      such as SOAPTeststepsController or DBTeststepController.
 //    ng-include also creates a scope.
 //    If unspecified, all grid config is for the assertions grid
 angular.module('irontest').controller('AssertionsController', ['$scope', 'uiGridConstants', 'IronTestUtils', '$http',
