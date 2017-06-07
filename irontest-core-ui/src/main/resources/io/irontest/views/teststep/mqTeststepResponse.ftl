@@ -1,1 +1,1 @@
-<#escape x as x?html>${stepRun.response.value}</#escape>
+${stepRun.response.value}

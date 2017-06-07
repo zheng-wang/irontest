@@ -33,14 +33,15 @@
     <div class="col-lg-1">Request:</div>
     <div class="col-lg-11">
       <#-- Extra request info for test step that has request HTTP headers -->
-      <#if (stepRun.teststep.otherProperties.httpHeaders?size > 0)>
+      <#if stepRun.teststep.otherProperties?? && stepRun.teststep.otherProperties.httpHeaders?? &&
+          (stepRun.teststep.otherProperties.httpHeaders?size > 0)>
         <div class="row">
           <div class="col-lg-2">HTTP Headers:</div>
           <div class="col-lg-10">
             <#list stepRun.teststep.otherProperties.httpHeaders as httpHeader>
               <div class="row">
-                <div class="col-lg-1"><#escape x as x?html>${ httpHeader.name }:</#escape></div>
-                <div class="col-lg-11"><#escape x as x?html>${ httpHeader.value }</#escape></div>
+                <div class="col-lg-2"><#escape x as x?html>${ httpHeader.name }:</#escape></div>
+                <div class="col-lg-10"><#escape x as x?html>${ httpHeader.value }</#escape></div>
               </div>
             </#list>
           </div>
@@ -74,7 +75,27 @@
     (stepRun.teststep.type != "MQ" || (stepRun.teststep.type == "MQ" && stepRun.response.value??))>
   <div class="row">
     <div class="col-lg-1">Response: </div>
-    <div class="col-lg-11"><#include "${stepRun.teststep.type?lower_case}TeststepResponse.ftl"></div>
+    <div class="col-lg-11">
+      <#-- Extra response info for test step that has response HTTP headers -->
+      <#if stepRun.response.httpHeaders?? && (stepRun.response.httpHeaders?size > 0)>
+        <div class="row">
+          <div class="col-lg-2">HTTP Headers:</div>
+          <div class="col-lg-10">
+            <#list stepRun.response.httpHeaders as httpHeader>
+              <div class="row">
+                <div class="col-lg-2"><#escape x as x?html>${ httpHeader.name }:</#escape></div>
+                <div class="col-lg-10"><#escape x as x?html>${ httpHeader.value }</#escape></div>
+              </div>
+            </#list>
+          </div>
+        </div>
+      </#if>
+      <div class="row">
+        <textarea class="form-control" rows="8" readonly>
+          <#include "${stepRun.teststep.type?lower_case}TeststepResponse.ftl">
+        </textarea>
+      </div>
+    </div>
   </div>
   <div class="form-group"></div> <!-- spacer -->
 </#if>

@@ -6,8 +6,14 @@
 angular.module('irontest').controller('SOAPTeststepController', ['$scope', 'Teststeps', 'IronTestUtils', '$uibModal',
     'uiGridConstants', '$timeout',
   function($scope, Teststeps, IronTestUtils, $uibModal, uiGridConstants, $timeout) {
-    $scope.steprun = {};
+    const HTTP_HEADER_GRID_NAME_COLUMN_WIDTH = '30%';
     $scope.showHTTPHeaders = false;
+
+    var clearRunStatus = function() {
+      $scope.steprun = { responseHttpHeaders: [] };
+    };
+
+    clearRunStatus();
 
     var createHTTPHeader = function(gridMenuEvent) {
       if (!$scope.teststep.otherProperties) {
@@ -36,9 +42,10 @@ angular.module('irontest').controller('SOAPTeststepController', ['$scope', 'Test
       enableGridMenu: true, enableColumnMenus: false, gridMenuShowHideColumns: false,
       rowHeight: 20, enableHorizontalScrollbar: uiGridConstants.scrollbars.NEVER,
       columnDefs: [
-        { name: 'name', width: "35%", headerTooltip: 'Double click to edit', enableCellEdit: true,
+        { name: 'name', width: HTTP_HEADER_GRID_NAME_COLUMN_WIDTH,
+          headerTooltip: 'Double click to edit', enableCellEdit: true,
           editableCellTemplate: 'httpHeaderGridNameEditableCellTemplate.html' },
-        { name: 'value', headerTooltip: 'Double click to edit', enableCellEdit: true,
+        { name: 'value', headerTooltip: 'Double click to edit', enableCellEdit: true, cellTooltip: true,
           editableCellTemplate: 'httpHeaderGridValueEditableCellTemplate.html' }
       ],
       gridMenuCustomItems: [
@@ -56,8 +63,8 @@ angular.module('irontest').controller('SOAPTeststepController', ['$scope', 'Test
       enableSorting: false, enableColumnMenus: false,
       rowHeight: 20, enableHorizontalScrollbar: uiGridConstants.scrollbars.NEVER,
       columnDefs: [
-        { name: 'name', width: "35%" },
-        { name: 'value' }
+        { name: 'name', width: HTTP_HEADER_GRID_NAME_COLUMN_WIDTH },
+        { name: 'value', cellTooltip: true }
       ]
     };
 
@@ -101,12 +108,8 @@ angular.module('irontest').controller('SOAPTeststepController', ['$scope', 'Test
       });
     };
 
-    var clearPreviousRunStatus = function() {
-      $scope.steprun = {};
-    };
-
     $scope.invoke = function() {
-      clearPreviousRunStatus();
+      clearRunStatus();
 
       var teststep = new Teststeps($scope.teststep);
       $scope.steprun.status = 'ongoing';
