@@ -24,8 +24,8 @@ angular.module('irontest').controller('AssertionsController', ['$scope', 'uiGrid
 
     $scope.assertionsModelObj.gridOptions = {
       data: 'teststep.assertions',
-      enableRowHeaderSelection: false, multiSelect: false, noUnselect: true, enableGridMenu: true,
-      enableColumnMenus: false,
+      enableRowHeaderSelection: false, multiSelect: false, noUnselect: true,
+      enableGridMenu: true, gridMenuShowHideColumns: false, enableColumnMenus: false,
       columnDefs: [
         {
           name: 'name', width: 260, minWidth: 260, headerTooltip: 'Double click to edit',
@@ -35,7 +35,8 @@ angular.module('irontest').controller('AssertionsController', ['$scope', 'uiGrid
         { name: 'type', width: 80, minWidth: 80, enableCellEdit: false }
       ],
       gridMenuCustomItems: [
-        { title: 'Delete', order: 210, action: removeCurrentAssertion }
+        { title: 'Delete', order: 210, action: removeCurrentAssertion,
+          shown: function() { return $scope.assertionsModelObj.gridApi.selection.getSelectedRows().length === 1; } }
       ],
       onRegisterApi: function (gridApi) {
         $scope.assertionsAreaLoadedCallback();
@@ -48,14 +49,15 @@ angular.module('irontest').controller('AssertionsController', ['$scope', 'uiGrid
     };
 
     var selectAssertionInGridByProperty = function(propertyName, propertyValue) {
-      var assertion = $scope.teststep.assertions.find(
+      var assertions = $scope.teststep.assertions;
+      var assertion = assertions.find(
         function(asrt) {
           return asrt[propertyName] === propertyValue;
         }
       );
-      $timeout(function() {    //  a trick for newly loaded grid data
-        $scope.assertionsModelObj.gridApi.selection.selectRow(assertion);
-      });
+      var gridApi = $scope.assertionsModelObj.gridApi;
+      gridApi.grid.modifyRows(assertions);
+      gridApi.selection.selectRow(assertion);
     };
 
     $scope.assertionsModelObj.reselectCurrentAssertionInGrid = function() {

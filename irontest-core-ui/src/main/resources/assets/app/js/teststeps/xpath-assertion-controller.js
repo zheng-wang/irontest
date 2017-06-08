@@ -34,8 +34,8 @@ angular.module('irontest').controller('XPathAssertionController', ['$scope', 'ui
     //  angularjs/ui-grid not being able to detect changes to a null's 'child object').
     $scope.assertionsModelObj.xPathNamespacePrefixesGridOptions = {
       data: 'assertionsModelObj.assertion.otherProperties.namespacePrefixes',
-      enableRowHeaderSelection: false, multiSelect: false, enableGridMenu: true, enableColumnMenus: false,
-      rowHeight: 20, enableHorizontalScrollbar: uiGridConstants.scrollbars.NEVER,
+      enableRowHeaderSelection: false, multiSelect: false, enableGridMenu: true, gridMenuShowHideColumns: false,
+      enableColumnMenus: false, rowHeight: 20, enableHorizontalScrollbar: uiGridConstants.scrollbars.NEVER,
       columnDefs: [
         {
           name: 'prefix', width: 65, minWidth: 65, headerTooltip: 'Double click to edit',
@@ -49,7 +49,8 @@ angular.module('irontest').controller('XPathAssertionController', ['$scope', 'ui
       ],
       gridMenuCustomItems: [
         { title: 'Create', order: 210, action: createNamespacePrefix },
-        { title: 'Delete', order: 220, action: removeNamespacePrefix }
+        { title: 'Delete', order: 220, action: removeNamespacePrefix, shown: function() {
+          return $scope.assertionsModelObj.xPathNamespacePrefixGridApi.selection.getSelectedRows().length === 1; } }
       ],
       onRegisterApi: function (gridApi) {
         $scope.assertionsModelObj.xPathNamespacePrefixGridApi = gridApi;

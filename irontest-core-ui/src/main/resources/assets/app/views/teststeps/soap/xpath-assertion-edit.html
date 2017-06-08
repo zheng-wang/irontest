@@ -12,8 +12,7 @@
               ng-change="assertionsModelObj.autoSave(teststepForm.$valid)">
     </textarea>
   </div>
-  <!-- use z-index here to avoid namespace prefix grid menu to be partially overridden -->
-  <div class="col-lg-5 no-left-padding" style="z-index: 1">
+  <div class="col-lg-5 no-left-padding">
     <div ui-grid="assertionsModelObj.xPathNamespacePrefixesGridOptions" ui-grid-resize-columns ui-grid-move-columns
          ui-grid-edit ui-grid-selection class="ui-grid xpath-assertion-namespace-prefixes-grid"></div>
   </div>
