@@ -2,7 +2,7 @@ package io.irontest.core.runner;
 
 import io.irontest.db.TeststepDAO;
 import io.irontest.db.UtilsDAO;
-import io.irontest.models.Endpoint;
+import io.irontest.models.endpoint.Endpoint;
 import io.irontest.models.teststep.Teststep;
 
 /**

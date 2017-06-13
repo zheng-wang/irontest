@@ -7,7 +7,7 @@ import com.ibm.mq.headers.MQHeaderIterator;
 import com.ibm.mq.headers.MQMD;
 import com.ibm.mq.headers.MQRFH2;
 import io.irontest.db.TeststepDAO;
-import io.irontest.models.MQIIBEndpointProperties;
+import io.irontest.models.endpoint.MQIIBEndpointProperties;
 import io.irontest.models.teststep.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

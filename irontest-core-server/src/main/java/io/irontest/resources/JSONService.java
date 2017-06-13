@@ -3,11 +3,11 @@ package io.irontest.resources;
 import io.irontest.core.assertion.AssertionVerifier;
 import io.irontest.core.assertion.AssertionVerifierFactory;
 import io.irontest.db.EndpointDAO;
-import io.irontest.models.Endpoint;
 import io.irontest.models.TestResult;
 import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.AssertionVerificationRequest;
 import io.irontest.models.assertion.AssertionVerificationResult;
+import io.irontest.models.endpoint.Endpoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

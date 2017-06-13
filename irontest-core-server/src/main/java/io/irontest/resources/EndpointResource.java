@@ -2,7 +2,7 @@ package io.irontest.resources;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.irontest.db.EndpointDAO;
-import io.irontest.models.Endpoint;
+import io.irontest.models.endpoint.Endpoint;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

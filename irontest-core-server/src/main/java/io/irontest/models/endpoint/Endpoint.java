@@ -1,8 +1,10 @@
-package io.irontest.models;
+package io.irontest.models.endpoint;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import io.irontest.models.Environment;
+import io.irontest.models.Properties;
 
 import java.util.Date;
 
@@ -24,7 +26,8 @@ public class Endpoint {
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
             property = "type", visible = true, defaultImpl = Properties.class)
     @JsonSubTypes({
-            @JsonSubTypes.Type(value = MQIIBEndpointProperties.class, name = Endpoint.TYPE_MQIIB)})
+            @JsonSubTypes.Type(value = MQIIBEndpointProperties.class, name = Endpoint.TYPE_MQIIB),
+            @JsonSubTypes.Type(value = SOAPEndpointProperties.class, name = Endpoint.TYPE_SOAP)})
     private Properties otherProperties;
     private Date created;
     private Date updated;

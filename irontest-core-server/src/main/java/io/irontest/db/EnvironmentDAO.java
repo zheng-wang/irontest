@@ -1,7 +1,7 @@
 package io.irontest.db;
 
-import io.irontest.models.Endpoint;
 import io.irontest.models.Environment;
+import io.irontest.models.endpoint.Endpoint;
 import org.skife.jdbi.v2.sqlobject.*;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 

@@ -1,6 +1,6 @@
 package io.irontest.core.runner;
 
-import io.irontest.models.Endpoint;
+import io.irontest.models.endpoint.Endpoint;
 import io.irontest.models.teststep.HTTPHeader;
 import io.irontest.models.teststep.SOAPTeststepProperties;
 import io.irontest.models.teststep.Teststep;

@@ -122,5 +122,14 @@ angular.module('irontest').controller('SOAPTeststepController', ['$scope', 'Test
         IronTestUtils.openErrorHTTPResponseModal(error);
       });
     };
+
+    $scope.toggleWSDLURLByConvention = function(isValid) {
+      var endpoint = $scope.teststep.endpoint;
+      var endpointProperties = endpoint.otherProperties;
+      if (endpointProperties.wsdlURLByConvention === true) {
+        endpointProperties.wsdlURL = (endpoint.url === null ? '' : endpoint.url) + '?wsdl';
+      }
+      $scope.update(isValid);
+    };
   }
 ]);

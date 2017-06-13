@@ -1,5 +1,7 @@
 package io.irontest.models;
 
+import io.irontest.models.endpoint.Endpoint;
+
 import java.util.Date;
 import java.util.List;
 

@@ -1,7 +1,8 @@
-package io.irontest.models;
+package io.irontest.models.endpoint;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.irontest.models.Properties;
 
 /**
  * Created by Zheng on 26/05/2016.

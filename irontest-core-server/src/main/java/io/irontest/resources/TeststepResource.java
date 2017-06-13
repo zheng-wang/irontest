@@ -6,7 +6,8 @@ import io.irontest.core.runner.SOAPAPIResponse;
 import io.irontest.core.runner.TeststepRunnerFactory;
 import io.irontest.db.TeststepDAO;
 import io.irontest.db.UtilsDAO;
-import io.irontest.models.Endpoint;
+import io.irontest.models.endpoint.Endpoint;
+import io.irontest.models.endpoint.SOAPEndpointProperties;
 import io.irontest.models.teststep.*;
 import io.irontest.utils.IronTestUtils;
 import io.irontest.utils.XMLUtils;
@@ -55,6 +56,7 @@ public class TeststepResource {
             endpoint.setName("Unmanaged Endpoint");
             if (Teststep.TYPE_SOAP.equals(teststep.getType())) {
                 endpoint.setType(Endpoint.TYPE_SOAP);
+                endpoint.setOtherProperties(new SOAPEndpointProperties());
             } else if (Teststep.TYPE_DB.equals(teststep.getType())) {
                 endpoint.setType(Endpoint.TYPE_DB);
             } else if (Teststep.TYPE_IIB.equals(teststep.getType())) {
