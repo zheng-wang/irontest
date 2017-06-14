@@ -28,16 +28,19 @@ public abstract class EndpointDAO {
             "CONSTRAINT ENDPOINT_" + DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX + " UNIQUE(environment_id, name))")
     public abstract void createTableIfNotExists();
 
-    @SqlUpdate("insert into endpoint (environment_id, type) values (:evId, :type)")
+    @SqlUpdate("insert into endpoint (environment_id, type, other_properties) values (:evId, :type, :otherProperties)")
     @GetGeneratedKeys
-    protected abstract long _insertManagedEndpoint(@Bind("evId") long environmentId, @Bind("type") String type);
+    protected abstract long _insertManagedEndpoint(@Bind("evId") long environmentId, @Bind("type") String type,
+                                                   @Bind("otherProperties") String otherProperties);
 
     @SqlUpdate("update endpoint set name = :name where id = :id")
     protected abstract long updateNameForInsert(@Bind("id") long id, @Bind("name") String name);
 
     @Transaction
-    public long insertManagedEndpoint(Endpoint endpoint) {
-        long id = _insertManagedEndpoint(endpoint.getEnvironment().getId(), endpoint.getType());
+    public long insertManagedEndpoint(Endpoint endpoint) throws JsonProcessingException {
+        String otherProperties = endpoint.getOtherProperties() == null ?
+                null : new ObjectMapper().writeValueAsString(endpoint.getOtherProperties());
+        long id = _insertManagedEndpoint(endpoint.getEnvironment().getId(), endpoint.getType(), otherProperties);
         updateNameForInsert(id, "Endpoint " + id);
         return id;
     }

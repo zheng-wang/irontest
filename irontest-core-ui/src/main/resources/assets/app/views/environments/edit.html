@@ -48,9 +48,9 @@
       </div>
       <div class="form-group"></div> <!-- spacer -->
       <div class="row">
-        <div ng-if="activeTabIndex === 1" ui-grid="{paginationPageSizes: [10,20,50,100], paginationPageSize: 10,
+        <div ng-if="activeTabIndex === 1" ui-grid="{paginationPageSizes: [20,50,100], paginationPageSize: 20,
                enableFiltering: true, data: environment.endpoints, columnDefs: endpointGridColumnDefs}"
-             ui-grid-pagination ui-grid-resize-columns ui-grid-move-columns class="ui-grid"></div>
+             ui-grid-pagination ui-grid-resize-columns ui-grid-move-columns class="ui-grid endpoint-grid"></div>
       </div>
     </uib-tab>
   </uib-tabset>

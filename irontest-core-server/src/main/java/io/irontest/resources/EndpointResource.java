@@ -3,6 +3,7 @@ package io.irontest.resources;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.irontest.db.EndpointDAO;
 import io.irontest.models.endpoint.Endpoint;
+import io.irontest.models.endpoint.SOAPEndpointProperties;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -19,7 +20,10 @@ public class EndpointResource {
     }
 
     @POST
-    public Endpoint create(Endpoint endpoint) {
+    public Endpoint create(Endpoint endpoint) throws JsonProcessingException {
+        if (Endpoint.TYPE_SOAP.equals(endpoint.getType())) {
+            endpoint.setOtherProperties(new SOAPEndpointProperties());
+        }
         long id = endpointDAO.insertManagedEndpoint(endpoint);
         endpoint.setId(id);
         return endpoint;

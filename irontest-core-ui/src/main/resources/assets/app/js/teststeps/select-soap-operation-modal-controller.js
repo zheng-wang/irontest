@@ -1,14 +1,13 @@
 'use strict';
 
 angular.module('irontest').controller('SelectSOAPOperationModalController', ['$scope', '$uibModalInstance',
-    '$http', '_', 'IronTestUtils', 'soapAddress',
-  function($scope, $uibModalInstance, $http, _, IronTestUtils, soapAddress) {
-    $scope.soapAddress = soapAddress;
-    $scope.wsdlUrl = soapAddress + '?wsdl';
+    '$http', '_', 'IronTestUtils', 'wsdlURL',
+  function($scope, $uibModalInstance, $http, _, IronTestUtils, wsdlURL) {
+    $scope.wsdlURL = wsdlURL;
 
     $scope.loadWSDLBindings = function() {
       $http
-        .get('api/wsdls/' + encodeURIComponent($scope.wsdlUrl) + '/bindings')
+        .get('api/wsdls/' + encodeURIComponent($scope.wsdlURL) + '/bindings')
         .then(function successCallback(response) {
           $scope.wsdlBindings = response.data;
           $scope.wsdlBinding = $scope.wsdlBindings[0];
@@ -31,7 +30,7 @@ angular.module('irontest').controller('SelectSOAPOperationModalController', ['$s
 
     $scope.ok = function() {
       $http
-        .get('api/wsdls/' + encodeURIComponent($scope.wsdlUrl) + '/bindings/' + $scope.wsdlBinding.name +
+        .get('api/wsdls/' + encodeURIComponent($scope.wsdlURL) + '/bindings/' + $scope.wsdlBinding.name +
           '/operations/' + $scope.wsdlOperation)
         .then(function successCallback(operationInfo) {
           $uibModalInstance.close(operationInfo.data);

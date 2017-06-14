@@ -76,6 +76,10 @@ body {
   height: 500px;
 }
 
+.endpoint-grid {
+  height: 500px;
+}
+
 .ws-uiview {
   height: 800px;
 }

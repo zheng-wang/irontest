@@ -92,8 +92,8 @@ angular.module('irontest').controller('SOAPTeststepController', ['$scope', 'Test
         size: 'lg',
         windowClass: 'select-soap-operation-modal',
         resolve: {
-          soapAddress: function () {
-            return $scope.teststep.endpoint.url;
+          wsdlURL: function () {
+            return $scope.teststep.endpoint.otherProperties.wsdlURL;
           }
         }
       });
@@ -129,7 +129,22 @@ angular.module('irontest').controller('SOAPTeststepController', ['$scope', 'Test
       if (endpointProperties.wsdlURLByConvention === true) {
         endpointProperties.wsdlURL = (endpoint.url === null ? '' : endpoint.url) + '?wsdl';
       }
-      $scope.update(isValid);
+
+      if (!$scope.isInShareEndpointMode()) {
+        $scope.update(isValid);    //  save immediately (no timeout)
+      }
+    };
+
+    $scope.endpointSOAPAddressChanged = function(isValid) {
+      var endpoint = $scope.teststep.endpoint;
+      var endpointProperties = endpoint.otherProperties;
+      if (endpointProperties.wsdlURLByConvention === true) {
+        endpointProperties.wsdlURL = endpoint.url + '?wsdl';
+      }
+
+      if (!$scope.isInShareEndpointMode()) {
+        $scope.autoSave(isValid);
+      }
     };
   }
 ]);

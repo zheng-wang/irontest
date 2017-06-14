@@ -3,7 +3,7 @@
   <div class="col-lg-10">
     <input id="endpointSOAPAddress" name="endpointSOAPAddress" type="text" class="form-control"
            ng-model="teststep.endpoint.url"
-           ng-change="isInShareEndpointMode() ? angular.noop() : autoSave(teststepForm.$valid)"
+           ng-change="endpointSOAPAddressChanged(teststepForm.$valid)"
            ng-readonly="!isInShareEndpointMode() && teststep.endpoint.environment">
   </div>
 </div>
@@ -37,7 +37,8 @@
   <div class="col-lg-2 checkbox">
     <label>
       <input type="checkbox" ng-model="teststep.endpoint.otherProperties.wsdlURLByConvention"
-             ng-change="toggleWSDLURLByConvention(teststepForm.$valid)">By Convention
+             ng-change="toggleWSDLURLByConvention(teststepForm.$valid)"
+             ng-disabled="!isInShareEndpointMode() && teststep.endpoint.environment">By Convention
     </label>
   </div>
 </div>

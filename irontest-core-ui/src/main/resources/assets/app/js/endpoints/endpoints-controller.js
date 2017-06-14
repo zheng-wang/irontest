@@ -39,5 +39,25 @@ angular.module('irontest').controller('EndpointsController', ['$scope', 'Endpoin
         IronTestUtils.openErrorHTTPResponseModal(response);
       });
     };
+
+    $scope.toggleWSDLURLByConvention = function(isValid) {
+      var endpoint = $scope.endpoint;
+      var endpointProperties = endpoint.otherProperties;
+      if (endpointProperties.wsdlURLByConvention === true) {
+        endpointProperties.wsdlURL = (endpoint.url === null ? '' : endpoint.url) + '?wsdl';
+      }
+
+      $scope.update(isValid);    //  save immediately (no timeout)
+    };
+
+    $scope.soapAddressChanged = function(isValid) {
+      var endpoint = $scope.endpoint;
+      var endpointProperties = endpoint.otherProperties;
+      if (endpointProperties.wsdlURLByConvention === true) {
+        endpointProperties.wsdlURL = endpoint.url + '?wsdl';
+      }
+
+      $scope.autoSave(isValid);
+    };
   }
 ]);
