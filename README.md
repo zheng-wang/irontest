@@ -115,7 +115,7 @@ Click the name of the second test step to open its edit view.
 
 Under the Endpoint Details tab, enter SOAP Address `http://localhost:8081/soap/article` which is the address of the sample Article web service bundled with Iron Test. Ignore Username and Password fields as they are not used in this test case.
 
-Under the Invocation tab, click Generate Request button. Click Load button to load the WSDL, select WSDL Operation `updateArticleByTitle`, and click OK. A sample request is generated.
+Under the Invocation tab, click the menu dropdown button and select Generate Request. Click Load button to load the WSDL, select WSDL Operation `updateArticleByTitle`, and click OK. A sample request is generated.
      
 Modify the request for updating article2. Click the Invoke button to try it out and you'll see a SOAP response in the right pane. 
 
