@@ -7,9 +7,9 @@
   <div class="col-lg-1">Result:</div>
   <div class="col-lg-1 test-result-color-${stepRun.result}">${stepRun.result}</div>
   <div class="col-lg-1">Start Time:</div>
-  <div class="col-lg-2">${ stepRun.startTime?datetime }</div>
+  <div class="col-lg-3">${ stepRun.startTime?datetime }</div>
   <div class="col-lg-1">Duration:</div>
-  <div class="col-lg-2">${ stepRun.duration } ms</div>
+  <div class="col-lg-1">${ stepRun.duration } ms</div>
 </div>
 
 <#if stepRun.teststep.description?? && stepRun.teststep.description?has_content>
