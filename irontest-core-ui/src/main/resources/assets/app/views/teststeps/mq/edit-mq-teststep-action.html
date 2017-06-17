@@ -1,14 +1,14 @@
 <div class="form-group"></div> <!-- spacer -->
 <div class="form-group">
   <label for="queueManagerAddress" class="col-lg-2 control-label">Queue Manager Address</label>
-  <div class="col-lg-7">
+  <div class="col-lg-8">
     <input type="text" name="queueManagerAddress" id="queueManagerAddress" class="form-control" readonly
            value="{{teststep.endpoint.otherProperties.queueManagerAddress}}">
   </div>
 </div>
 <div class="form-group">
   <label for="destinationType" class="col-lg-2 control-label">Destination Type</label>
-  <div class="col-lg-1">
+  <div class="col-lg-2">
     <select name="destinationType" id="destinationType" class="form-control"
             ng-model="teststep.otherProperties.destinationType" ng-change="destinationTypeChanged(teststepForm.$valid)"
             ng-disabled="steprun.status === 'ongoing'">
@@ -17,8 +17,8 @@
     </select>
   </div>
   <div ng-if="teststep.otherProperties.destinationType === 'Queue'">
-    <label for="queueName" class="col-lg-2 control-label">Queue Name</label>
-    <div class="col-lg-4">
+    <label for="queueName" class="col-lg-1 control-label" style="padding-left:0">Queue Name</label>
+    <div class="col-lg-5">
       <input name="queueName" type="text" class="form-control" ng-change="autoSave(teststepForm.$valid)"
              ng-model="teststep.otherProperties.queueName" id="queueName" spellcheck="false">
     </div>
