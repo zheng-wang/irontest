@@ -19,7 +19,7 @@
     <#elseif teststep.action == "Dequeue">
       Dequeue message from
     </#if>
-    queue "${ stepOtherProperties.queueName }"
+    queue "${ (stepOtherProperties.queueName??)?then(stepOtherProperties.queueName, 'null') }"
   <#elseif stepOtherProperties.destinationType == "Topic">
     <#if teststep.action == "Publish">
       Publish message
