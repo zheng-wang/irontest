@@ -32,7 +32,7 @@ angular.module('irontest').controller('EnvironmentsController', ['$scope', 'Envi
 
     $scope.endpointGridColumnDefs = [
       {
-        field: 'name', width: 350, minWidth: 100,
+        field: 'name', width: 520, minWidth: 100,
         sort: {
           direction: uiGridConstants.ASC,
           priority: 1
@@ -40,7 +40,7 @@ angular.module('irontest').controller('EnvironmentsController', ['$scope', 'Envi
         cellTemplate:'endpointGridNameCellTemplate.html'
       },
       {name: 'type', width: 80, minWidth: 80},
-      {name: 'description', width: 500, minWidth: 300},
+      {name: 'description', width: 400, minWidth: 300},
       {
         name: 'delete', width: 100, minWidth: 80, enableSorting: false, enableFiltering: false,
         cellTemplate: 'endpointGridDeleteCellTemplate.html'
