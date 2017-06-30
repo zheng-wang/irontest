@@ -75,34 +75,21 @@
 </div>
 
 <div ng-if="teststep.action === 'Dequeue'">
-  <div class="form-group">
-    <label class="col-lg-2 control-label">Assertion</label>
-    <div class="col-lg-2"><h5>XML Equal</h5></div>
-  </div>
-  <div class="form-group">
-    <div class="col-lg-6">
-      <textarea name="expectedXML" ng-model="teststep.assertions[0].otherProperties.expectedXML"
-                ng-change="autoSave(teststepForm.$valid)" id="expectedXML" placeholder="Expected XML"
-                class="form-control" rows="20" spellcheck="false"></textarea>
-    </div>
-    <div class="col-lg-6">
+  <div class="form-group form-group-reduced-bottom-margin" height-adjustable-element-in-column="0.7">
+    <div class="col-lg-10 full-height">
       <textarea name="actualXML" ng-model="steprun.response" id="actualXML"
                 placeholder="{{ steprun.status === 'ongoing' ? '' : 'Actual XML' }}"
-                class="form-control" rows="20" spellcheck="false"></textarea>
+                class="form-control full-height-important" spellcheck="false"></textarea>
     </div>
   </div>
-  <div class="form-group">
-    <div class="col-lg-offset-1 col-lg-1">
-      <button type="button" class="btn btn-info" ng-click="verifyXMLEqualAssertion()"
-              ng-disabled="!teststep.assertions[0].otherProperties.expectedXML || !steprun.response">Verify</button>
+  <div class="form-group form-group-reduced-bottom-margin" id="assertionsArea">
+    <div class="mq-teststep-assertions-area-content" ng-if="showAssertionsArea"
+         ng-include="'/ui/views/teststeps/list-assertions.html'">
     </div>
-    <div class="col-lg-1">
-      <h5 ng-if="assertionVerificationResult">{{ assertionVerificationResult.result }}</h5>
-    </div>
-    <div class="col-lg-8">
-      <textarea name="verificationResult" ng-model="assertionVerificationResult.display"
-                ng-class="{ 'text-red' : assertionVerificationResult.error }"
-                id="verificationResult" class="form-control" rows="3" spellcheck="false" readonly></textarea>
+  </div>
+  <div class="form-group no-bottom-margin">
+    <div class="col-lg-2">
+      <button type="button" class="btn btn-info" ng-click="toggleAssertionsArea()">Assertions</button>
     </div>
   </div>
 </div>

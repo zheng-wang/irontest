@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.irontest.core.TeststepActionDataBackup;
 import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.IntegerEqualAssertionProperties;
-import io.irontest.models.assertion.XMLEqualAssertionProperties;
 import io.irontest.models.endpoint.Endpoint;
 import io.irontest.models.teststep.*;
 import io.irontest.utils.XMLUtils;
@@ -193,15 +192,19 @@ public abstract class TeststepDAO {
             boolean backupChanged = false;
 
             // backup old action's data
+            // for assertions, no need to backup primary keys or foreign keys
+            List<Assertion> oldAssertions = oldTeststep.getAssertions();
+            for (Assertion oldAssertion: oldAssertions) {
+                oldAssertion.setId(null);
+                oldAssertion.setTeststepId(null);
+            }
             if (Teststep.ACTION_CHECK_DEPTH.equals(oldAction)) {
-                Assertion oldAssertion = oldTeststep.getAssertions().get(0);
+                Assertion oldAssertion = oldAssertions.get(0);
                 backup.setQueueDepthAssertionProperties(
                         (IntegerEqualAssertionProperties) oldAssertion.getOtherProperties());
                 backupChanged = true;
             } else if (Teststep.ACTION_DEQUEUE.equals(oldAction)) {
-                Assertion oldAssertion = oldTeststep.getAssertions().get(0);
-                backup.setDequeueAssertionProperties(
-                        (XMLEqualAssertionProperties) oldAssertion.getOtherProperties());
+                backup.setDequeueAssertions(oldAssertions);
                 backupChanged = true;
             } else if (Teststep.ACTION_ENQUEUE.equals(oldAction)) {
                 MQTeststepProperties oldProperties = (MQTeststepProperties) oldTeststep.getOtherProperties();
@@ -236,16 +239,9 @@ public abstract class TeststepDAO {
                     assertion.setOtherProperties(new IntegerEqualAssertionProperties(0));
                 }
             } else if (Teststep.ACTION_DEQUEUE.equals(newAction)) {
-                Assertion assertion = new Assertion();
-                teststep.getAssertions().add(assertion);
-                assertion.setName("Dequeue XML Equals");
-                assertion.setType(Assertion.TYPE_XML_EQUAL);
-                // restore old assertion properties if exists
-                XMLEqualAssertionProperties oldAssertionProperties = oldBackup.getDequeueAssertionProperties();
-                if (oldAssertionProperties != null) {
-                    assertion.setOtherProperties(oldAssertionProperties);
-                } else {
-                    assertion.setOtherProperties(new XMLEqualAssertionProperties());
+                // restore old assertions if exist
+                if (oldBackup.getDequeueAssertions() != null) {
+                    teststep.getAssertions().addAll(oldBackup.getDequeueAssertions());
                 }
             } else if (Teststep.ACTION_ENQUEUE.equals(newAction)) {
                 MQTeststepProperties newProperties = (MQTeststepProperties) teststep.getOtherProperties();

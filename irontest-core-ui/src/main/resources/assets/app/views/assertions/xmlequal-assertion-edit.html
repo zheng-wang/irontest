@@ -1,0 +1,21 @@
+<div style="margin-left: 10px">
+  <div class="form-group form-group-reduced-bottom-margin">
+    <div class="col-lg-12">
+    <textarea name="expectedXML" ng-model="assertionsModelObj.assertion.otherProperties.expectedXML"
+              id="expectedXML" rows="7" class="form-control" placeholder="Expected XML"
+              ng-change="assertionsModelObj.autoSave(teststepForm.$valid)" spellcheck="false">
+    </textarea>
+    </div>
+  </div>
+  <div class="form-group form-group-reduced-bottom-margin">
+    <div class="col-lg-12">
+    <textarea name="differences" ng-class="{ 'text-red' : assertionVerificationResult.error }"
+              placeholder="Differences" id="differences" class="form-control" rows="3" spellcheck="false"
+              readonly>{{
+        $parent.assertionsModelObj.assertionVerificationResult.error ?
+        $parent.assertionsModelObj.assertionVerificationResult.error :
+        $parent.assertionsModelObj.assertionVerificationResult.differences }}
+    </textarea>
+    </div>
+  </div>
+</div>

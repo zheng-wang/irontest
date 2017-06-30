@@ -28,7 +28,7 @@ angular.module('irontest').controller('AssertionsController', ['$scope', 'uiGrid
       enableGridMenu: true, gridMenuShowHideColumns: false, enableColumnMenus: false,
       columnDefs: [
         {
-          name: 'name', width: 260, minWidth: 260, headerTooltip: 'Double click to edit',
+          name: 'name', headerTooltip: 'Double click to edit',
           sort: { direction: uiGridConstants.ASC, priority: 1 }, cellTemplate: 'assertionGridNameCellTemplate.html',
           enableCellEdit: true, editableCellTemplate: 'assertionGridNameEditableCellTemplate.html'
         },

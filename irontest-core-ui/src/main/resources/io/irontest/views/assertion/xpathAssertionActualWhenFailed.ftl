@@ -1,2 +1,2 @@
-XPath "${ verification.assertion.otherProperties.xPath }" evaluated to "${ verification.verificationResult.actualValue }".
+The XPath evaluated to "${ verification.verificationResult.actualValue }".
 

@@ -87,23 +87,6 @@ angular.module('irontest').controller('MQTeststepController', ['$scope', 'IronTe
       });
     };
 
-    $scope.verifyXMLEqualAssertion = function() {
-      var url = 'api/jsonservice/verifyassertion';
-      var assertionVerification = {
-        input: $scope.steprun.response,
-        assertion: $scope.teststep.assertions[0]
-      };
-      $http
-        .post(url, assertionVerification)
-        .then(function successCallback(response) {
-          $scope.assertionVerificationResult = response.data;
-          $scope.assertionVerificationResult.display =
-            response.data.error ? response.data.error : response.data.differences;
-        }, function errorCallback(response) {
-          IronTestUtils.openErrorHTTPResponseModal(response);
-        });
-    };
-
     $scope.toggleRFH2Header = function(isValid) {
       var header = $scope.teststep.otherProperties.rfh2Header;
       if (header.enabled === true && header.folders.length === 0) {

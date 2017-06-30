@@ -60,7 +60,6 @@ angular.module('irontest').controller('TeststepsController', ['$scope', 'Testste
       }, function (response) {
         $scope.teststep = new Teststeps(response.teststep);
         $scope.teststepParameters = response.parameters;
-        $scope.theClass = response.teststep.type === 'DB' ? 'db-teststep-assertions-grid' : 'assertions-grid';
       }, function(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);
       });

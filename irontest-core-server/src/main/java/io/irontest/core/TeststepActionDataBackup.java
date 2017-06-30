@@ -1,14 +1,16 @@
 package io.irontest.core;
 
+import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.IntegerEqualAssertionProperties;
-import io.irontest.models.assertion.XMLEqualAssertionProperties;
+
+import java.util.List;
 
 /**
  * Created by Zheng on 25/06/2016.
  */
 public class TeststepActionDataBackup {
     private IntegerEqualAssertionProperties queueDepthAssertionProperties; // only for MQ test step CheckDepth action
-    private XMLEqualAssertionProperties dequeueAssertionProperties;    // only for MQ test step Dequeue action
+    private List<Assertion> dequeueAssertions;    // only for MQ test step Dequeue action
     private String enqueueTextMessage;  // only for MQ test step Enqueue action
     private byte[] enqueueBinaryMessage;  // only for MQ test step Enqueue action
 
@@ -20,12 +22,12 @@ public class TeststepActionDataBackup {
         this.queueDepthAssertionProperties = queueDepthAssertionProperties;
     }
 
-    public XMLEqualAssertionProperties getDequeueAssertionProperties() {
-        return dequeueAssertionProperties;
+    public List<Assertion> getDequeueAssertions() {
+        return dequeueAssertions;
     }
 
-    public void setDequeueAssertionProperties(XMLEqualAssertionProperties dequeueAssertionProperties) {
-        this.dequeueAssertionProperties = dequeueAssertionProperties;
+    public void setDequeueAssertions(List<Assertion> dequeueAssertions) {
+        this.dequeueAssertions = dequeueAssertions;
     }
 
     public String getEnqueueTextMessage() {

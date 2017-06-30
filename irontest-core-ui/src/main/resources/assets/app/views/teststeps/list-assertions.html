@@ -6,10 +6,21 @@
           Create <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" uib-dropdown-menu role="menu">
-          <li role="menuitem" ng-if="teststep.type === 'SOAP'"><a ng-click="assertionsModelObj.createAssertion('Contains')" href="">Contains Assertion</a></li>
-          <li role="menuitem" ng-if="teststep.type === 'SOAP'"><a ng-click="assertionsModelObj.createAssertion('XPath')" href="">XPath Assertion</a></li>
-          <li role="menuitem" ng-if="teststep.type === 'DB'"><a ng-click="assertionsModelObj.createAssertion('JSONPath')" href="">JSONPath Assertion</a></li>
-          <li role="menuitem" ng-if="teststep.type === 'DB'"><a ng-click="assertionsModelObj.createAssertion('JSONPathXMLEqual')" href="">JSONPathXMLEqual Assertion</a></li>
+          <li role="menuitem" ng-if="teststep.type === 'SOAP'">
+            <a ng-click="assertionsModelObj.createAssertion('Contains')" href="">Contains Assertion</a>
+          </li>
+          <li role="menuitem" ng-if="teststep.type === 'MQ'">
+            <a ng-click="assertionsModelObj.createAssertion('XMLEqual')" href="">XMLEqual Assertion</a>
+          </li>
+          <li role="menuitem" ng-if="teststep.type === 'SOAP' || teststep.type === 'MQ'">
+            <a ng-click="assertionsModelObj.createAssertion('XPath')" href="">XPath Assertion</a>
+          </li>
+          <li role="menuitem" ng-if="teststep.type === 'DB'">
+            <a ng-click="assertionsModelObj.createAssertion('JSONPath')" href="">JSONPath Assertion</a>
+          </li>
+          <li role="menuitem" ng-if="teststep.type === 'DB'">
+            <a ng-click="assertionsModelObj.createAssertion('JSONPathXMLEqual')" href="">JSONPathXMLEqual Assertion</a>
+          </li>
         </ul>
       </div>
       <div class="col-lg-8">
@@ -20,7 +31,7 @@
     </div>
     <div class="form-group no-bottom-margin">
       <!-- ng-class does not work here as the grid height needs to be determined before rendering the grid -->
-      <div ng-if="teststep.type === 'SOAP'" ui-grid="assertionsModelObj.gridOptions"
+      <div ng-if="teststep.type !== 'DB'" ui-grid="assertionsModelObj.gridOptions"
            ui-grid-resize-columns ui-grid-move-columns ui-grid-selection
            ui-grid-edit class="ui-grid col-lg-12 assertions-grid"></div>
       <div ng-if="teststep.type === 'DB'" ui-grid="assertionsModelObj.gridOptions"
@@ -39,6 +50,8 @@
          ng-include="'/ui/views/teststeps/db/jsonpath-assertion-edit.html'"></div>
     <div ng-if="assertionsModelObj.assertion.type === 'JSONPathXMLEqual'"
          ng-include="'/ui/views/teststeps/db/jsonpath-xmlequal-assertion-edit.html'"></div>
+    <div ng-if="assertionsModelObj.assertion.type === 'XMLEqual'"
+         ng-include="'/ui/views/assertions/xmlequal-assertion-edit.html'"></div>
   </div>
 </div>
 <script type="text/ng-template" id="assertionGridNameCellTemplate.html">

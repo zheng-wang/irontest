@@ -116,6 +116,13 @@ body {
   border: 1px solid #ccc
 }
 
+.mq-teststep-assertions-area-content {
+  width: 81.2%;
+  margin-left: 15px;
+  padding: 10px;
+  border: 1px solid #ccc
+}
+
 .assertions-grid {
   height: 200px;
   margin-left: 15px;
