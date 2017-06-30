@@ -119,7 +119,8 @@ public class TestcaseRunResource {
                             LOGGER.error("Failed to verify assertion", e);
                             verificationResult = new AssertionVerificationResult();
                             verificationResult.setResult(TestResult.FAILED);
-                            verificationResult.setError(e.getMessage());
+                            String message = e.getMessage();
+                            verificationResult.setError(message == null ? "null" : message);  // exception message could be null (though rarely)
                         }
 
                         verification.setVerificationResult(verificationResult);

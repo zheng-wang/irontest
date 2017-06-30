@@ -128,14 +128,14 @@
         </div>
       </div>
       <div class="row">
+        <div class="col-lg-1">Expected:</div>
+        <div class="col-lg-5">
+          <#include "../assertion/${verification.assertion.type?lower_case}AssertionExpected.ftl">
+        </div>
         <#if verification.verificationResult.error??>
-          <div class="col-lg-2">Error:</div>
-          <div class="col-lg-10">${verification.verificationResult.error}</div>
+          <div class="col-lg-1">Error:</div>
+          <div class="col-lg-5">${verification.verificationResult.error}</div>
         <#else>
-          <div class="col-lg-1">Expected:</div>
-          <div class="col-lg-5">
-            <#include "../assertion/${verification.assertion.type?lower_case}AssertionExpected.ftl">
-          </div>
           <div class="col-lg-1">Actual:</div>
           <div class="col-lg-5">
             <#if verification.verificationResult.result == "Passed">
