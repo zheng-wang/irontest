@@ -7,7 +7,7 @@
     <parent>
         <artifactId>irontest-parent</artifactId>
         <groupId>io.irontest</groupId>
-        <version>0.5.6</version>
+        <version>0.5.7-SNAPSHOT</version>
     </parent>
 
     <artifactId>irontest-core-ui</artifactId>
@@ -155,19 +155,6 @@
     </dependencies>
 
     <build>
-        <plugins>
-            <!-- no need to produce dist, no matter dev or prod profile -->
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>copy-resources</id>
-                        <phase>none</phase>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-
         <resources>
             <resource>
                 <directory>src/main/resources</directory>

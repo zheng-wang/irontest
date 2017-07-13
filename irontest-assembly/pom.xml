@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>irontest-parent</artifactId>
+        <groupId>io.irontest</groupId>
+        <version>0.5.7-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>irontest-assembly</artifactId>
+
+    <properties>
+        <oracle.jdbc.driver.relativePath>lib/jdbc/oracle/ojdbc6.jar</oracle.jdbc.driver.relativePath>
+        <sqlserver.jdbc.driver.relativePath>lib/jdbc/sqlserver/sqljdbc41.jar</sqlserver.jdbc.driver.relativePath>
+        <mq.jar.com.ibm.mq.relativePath>lib/mq/com.ibm.mq.jar</mq.jar.com.ibm.mq.relativePath>
+        <mq.jar.com.ibm.mq.jmqi.relativePath>lib/mq/com.ibm.mq.jmqi.jar</mq.jar.com.ibm.mq.jmqi.relativePath>
+        <mq.jar.com.ibm.mq.commonservices.relativePath>lib/mq/com.ibm.mq.commonservices.jar</mq.jar.com.ibm.mq.commonservices.relativePath>
+        <mq.jar.com.ibm.mq.pcf.relativePath>lib/mq/com.ibm.mq.pcf.jar</mq.jar.com.ibm.mq.pcf.relativePath>
+        <mq.jar.com.ibm.mq.headers.relativePath>lib/mq/com.ibm.mq.headers.jar</mq.jar.com.ibm.mq.headers.relativePath>
+        <mq.jar.connector.relativePath>lib/mq/connector.jar</mq.jar.connector.relativePath>
+        <iib.jar.ibmjsseprovider2.relativePath>lib/iib/ibmjsseprovider2.jar</iib.jar.ibmjsseprovider2.relativePath>
+        <iib.jar.ConfigManagerProxy.relativePath>lib/iib/ConfigManagerProxy.jar</iib.jar.ConfigManagerProxy.relativePath>
+        <distDir>dist</distDir>
+        <uberJarFileName>irontest-${project.version}</uberJarFileName>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.irontest</groupId>
+            <artifactId>irontest-core-server</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.irontest</groupId>
+            <artifactId>irontest-core-ui</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+        <profile>
+            <id>prod</id>
+            <repositories>
+                <repository>
+                    <id>irontest-mvn-repo</id>
+                    <url>https://raw.github.com/zheng-wang/irontest/mvn-repo/</url>
+                    <snapshots>
+                        <enabled>true</enabled>
+                        <updatePolicy>always</updatePolicy>
+                    </snapshots>
+                </repository>
+            </repositories>
+
+            <!-- These dependencies are to be obtained from the remote Maven repository. -->
+            <dependencies>
+                <dependency>
+                    <groupId>io.irontest</groupId>
+                    <artifactId>irontest-mq</artifactId>
+                    <version>${project.version}</version>
+                    <!-- exclude transitive dependencies -->
+                    <exclusions>
+                        <exclusion>
+                            <groupId>*</groupId>
+                            <artifactId>*</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
+                <dependency>
+                    <groupId>io.irontest</groupId>
+                    <artifactId>irontest-iib</artifactId>
+                    <version>${project.version}</version>
+                    <!-- exclude transitive dependencies -->
+                    <exclusions>
+                        <exclusion>
+                            <groupId>*</groupId>
+                            <artifactId>*</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                    <!-- create uber jar -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-shade-plugin</artifactId>
+                        <version>2.3</version>
+                        <configuration>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <finalName>${uberJarFileName}</finalName>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <!-- not excluding license files, such as LICENSE, LICENSE.md and LICENSE.txt -->
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                        <exclude>META-INF/maven/**</exclude>
+                                        <exclude>META-INF/resources/webjars/*/*/src/**</exclude>
+                                        <exclude>META-INF/resources/webjars/*/*/less/**</exclude>
+                                        <exclude>META-INF/resources/webjars/*/*/scss/**</exclude>
+                                        <exclude>META-INF/resources/webjars/*/*/i18n/**</exclude>
+                                        <exclude>META-INF/resources/webjars/**/*.gz</exclude>
+                                        <exclude>META-INF/resources/webjars/**/*.gzip</exclude>
+                                        <exclude>META-INF/resources/webjars/**/*.map</exclude>
+                                        <exclude>META-INF/resources/webjars/**/*.json</exclude>
+                                        <exclude>META-INF/resources/webjars/**/*.sh</exclude>
+                                        <exclude>META-INF/resources/webjars/**/*.swf</exclude>
+                                        <exclude>META-INF/resources/webjars/**/.gitignore</exclude>
+                                        <exclude>META-INF/resources/webjars/**/.npmignore</exclude>
+                                        <exclude>META-INF/resources/webjars/**/README.md</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>shade</goal>
+                                </goals>
+                                <configuration>
+                                    <transformers>
+                                        <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                                        <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                            <manifestEntries>
+                                                <Main-Class>io.irontest.IronTestApplication</Main-Class>
+                                                <Class-Path>${oracle.jdbc.driver.relativePath} ${sqlserver.jdbc.driver.relativePath} ${mq.jar.com.ibm.mq.relativePath} ${mq.jar.com.ibm.mq.jmqi.relativePath} ${mq.jar.com.ibm.mq.commonservices.relativePath} ${mq.jar.com.ibm.mq.pcf.relativePath} ${mq.jar.com.ibm.mq.headers.relativePath} ${mq.jar.connector.relativePath} ${iib.jar.ibmjsseprovider2.relativePath} ${iib.jar.ConfigManagerProxy.relativePath}</Class-Path>
+                                            </manifestEntries>
+                                        </transformer>
+                                        <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                            <resource>META-INF/cxf/bus-extensions.txt</resource>
+                                        </transformer>
+                                    </transformers>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- produce dist -->
+                    <plugin>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <version>3.0.1</version>
+                        <executions>
+                            <execution>
+                                <id>copy-resources</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${distDir}</outputDirectory>
+                                    <resources>
+                                        <!-- copy jar -->
+                                        <resource>
+                                            <directory>target</directory>
+                                            <includes>
+                                                <include>${uberJarFileName}.jar</include>
+                                            </includes>
+                                        </resource>
+                                        <!-- copy config.yml -->
+                                        <resource>
+                                            <directory>../irontest-core-server</directory>
+                                            <includes>
+                                                <include>config.yml</include>
+                                            </includes>
+                                        </resource>
+                                        <!-- copy files and folders -->
+                                        <resource>
+                                            <directory>files</directory>
+                                            <filtering>true</filtering>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>dev</id>
+            <!-- These dependencies are to be obtained like normal (from the local Maven repository). -->
+            <dependencies>
+                <dependency>
+                    <groupId>io.irontest</groupId>
+                    <artifactId>irontest-mq</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>io.irontest</groupId>
+                    <artifactId>irontest-iib</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                    <!-- launch the application by classes (not by uber jar) -->
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.4.0</version>
+                        <executions>
+                            <execution>
+                                <id>start-dropwizard-app</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>java</goal>
+                                </goals>
+                                <configuration>
+                                    <mainClass>io.irontest.IronTestApplication</mainClass>
+                                    <additionalClasspathElements>
+                                        <additionalClasspathElement>../${oracle.jdbc.driver.relativePath}</additionalClasspathElement>
+                                        <additionalClasspathElement>../${sqlserver.jdbc.driver.relativePath}</additionalClasspathElement>
+                                    </additionalClasspathElements>
+                                    <arguments>
+                                        <argument>server</argument>
+                                        <argument>irontest-core-server/config.yml</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>

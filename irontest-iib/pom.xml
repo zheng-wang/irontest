@@ -7,13 +7,12 @@
     <parent>
         <artifactId>irontest-parent</artifactId>
         <groupId>io.irontest</groupId>
-        <version>0.5.6</version>
+        <version>0.5.7-SNAPSHOT</version>
     </parent>
 
-    <artifactId>irontest-mqiib</artifactId>
+    <artifactId>irontest-iib</artifactId>
 
     <properties>
-        <mqiib.enabled>true</mqiib.enabled>
         <mq.version>[7.5.0.1, 7.5.0.6]</mq.version>
         <iib.version>[9.0.0.3, 9.0.0.6]</iib.version>
     </properties>
@@ -22,11 +21,6 @@
         <dependency>
             <groupId>io.irontest</groupId>
             <artifactId>irontest-core-server</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.irontest</groupId>
-            <artifactId>irontest-core-ui</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -75,51 +69,12 @@
         </dependency>
     </dependencies>
 
-    <profiles>
-        <profile>
-            <id>prod</id>
-            <build>
-                <plugins>
-                    <!-- create uber jar -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-shade-plugin</artifactId>
-                    </plugin>
-
-                    <!-- produce dist -->
-                    <plugin>
-                        <artifactId>maven-resources-plugin</artifactId>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
-        <profile>
-            <id>dev</id>
-            <build>
-                <plugins>
-                    <!-- launch the application -->
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>exec-maven-plugin</artifactId>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
-
     <build>
-        <!-- filter HTML files (remember not to filter binaries, especially ttf) -->
-        <resources>
-            <resource>
-                <directory>../irontest-core-ui/src/main/resources/assets/app/views</directory>
-                <includes>
-                    <include>testcases/edit.html</include>
-                    <include>environments/edit.html</include>
-                </includes>
-                <filtering>true</filtering>
-                <targetPath>assets/app/views</targetPath>
-            </resource>
-        </resources>
+        <plugins>
+            <plugin>
+                <groupId>com.github.github</groupId>
+                <artifactId>site-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
     </build>
 </project>
