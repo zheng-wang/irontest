@@ -56,7 +56,7 @@
                         <noJekyll>true</noJekyll>
                         <outputDirectory>${project.build.directory}/mvn-repo</outputDirectory>
                         <branch>refs/heads/mvn-repo</branch>
-                        <includes><include>**/*.jar</include></includes>
+                        <includes><include>**/*</include></includes>
                         <repositoryName>irontest</repositoryName>
                         <repositoryOwner>zheng-wang</repositoryOwner>
                         <merge>true</merge>
