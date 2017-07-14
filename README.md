@@ -27,11 +27,9 @@ Prerequisites: JDK 1.7+, Maven 3.x.
 
 Download the latest Iron Test release from [here](https://github.com/zheng-wang/irontest/releases) to your local machine. Extract it, cd to the project directory (in which there is README.md), and run below Maven command
 
-`mvn clean package -pl irontest-core -am -P prod`
+`mvn clean package -pl irontest-assembly -am -P prod`
 
-This builds Iron Test without MQ/IIB testing features, and an `irontest-core/dist` folder is created containing the files and folders for deployment.
-
-To build Iron Test with MQ/IIB testing features, please refer to the [wiki page](https://github.com/zheng-wang/irontest/wiki/Build-Iron-Test-with-MQ-IIB-Testing-Features) instead.
+An `irontest-assembly/dist` folder is created containing the files and folders for deployment.
 
 Notice that if this is the first time you build Iron Test, it could take 20 minutes (depending on your network speed) for Maven to download all the dependencies. From the second time, you should see the build time decreased to around 40 seconds, as the dependencies are already in your Maven local repository.
    
@@ -40,7 +38,7 @@ Create a folder on any computer/VM that has access to the APIs you want to test.
 
 Copy all files and folders from `dist` to `<IronTest_Home>`.
 
-To enable Iron Test to interact with databases such as Oracle or SQL Server, prepare JDBC drivers as described on the [wiki page](https://github.com/zheng-wang/irontest/wiki/Interact-with-Databases).
+The build itself can interact with SOAP/HTTP web services and H2 databases. To enable interacting with other types of systems such as Oracle database or WebSphere MQ, please refer to this [wiki page](https://github.com/zheng-wang/irontest/wiki/Interact-with-Other-Systems).
 
 ## Launch
 Prerequisites: JRE 1.7+.
