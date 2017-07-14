@@ -19,7 +19,7 @@ Table of Contents:
         - [Run the Test Case](#run-the-test-case)
     - [More Usages](#more-usages)
 - [Maintain](#maintain)
-- [For Contributors](#for-contributors)
+- [For Developers](#for-developers)
 - [License](#license)
         
 ## Build
@@ -171,14 +171,17 @@ You can tune Iron Test application to suit your runtime needs by changing conten
     
 To move Iron Test to a different folder or computer/VM, just shut down the application, copy the whole `<IronTest_Home>` folder over, and launch the application from there.
 
-## For Contributors
+## For Developers
 Pull requests are welcome.
+
+If you work with irontest-mq module or irontest-iib module, use `mvn install:install-file` to install related jars into your local Maven repository. Refer to corresponding pom.xml and this [wiki page](https://github.com/zheng-wang/irontest/wiki/Interact-with-Other-Systems) for more information about the dependencies and jars.
+ 
+Otherwise, comment out the <dependencies> element under dev profile in the irontest-assembly pom.xml.
 
 To launch Iron Test in your IDE (such as IntelliJ IDEA) without producing dist files, under the project directory (in which there is README.md) run below Maven command
 
-    verify -pl irontest-core -am -P dev                 //  no MQ/IIB testing feature
-    
-    verify -pl irontest-mqiib -am -P dev                //  with MQ/IIB testing feature
+    mvn verify -pl irontest-assembly -am -P dev                 
+        
 
 ## License
 Apache License 2.0, see [LICENSE](LICENSE).
