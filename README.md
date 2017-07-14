@@ -176,7 +176,7 @@ Pull requests are welcome.
 
 If you work with irontest-mq module or irontest-iib module, use `mvn install:install-file` to install related jars into your local Maven repository. Refer to corresponding pom.xml and this [wiki page](https://github.com/zheng-wang/irontest/wiki/Interact-with-Other-Systems) for more information about the dependencies and jars.
  
-Otherwise, comment out the <dependencies> element under dev profile in the irontest-assembly pom.xml.
+Otherwise, comment out the \<dependencies> element under dev profile in the irontest-assembly pom.xml.
 
 To launch Iron Test in your IDE (such as IntelliJ IDEA) without producing dist files, under the project directory (in which there is README.md) run below Maven command
 
