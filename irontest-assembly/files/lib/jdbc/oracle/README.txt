@@ -1,1 +1,0 @@
-Put ojdbc6.jar in this folder.
