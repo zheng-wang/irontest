@@ -17,9 +17,9 @@
         <sqlserver.jdbc.driver.relativePath>lib/jdbc/sqlserver/sqljdbc41.jar</sqlserver.jdbc.driver.relativePath>
         <mq.jar.com.ibm.mq.relativePath>lib/mq/com.ibm.mq.jar</mq.jar.com.ibm.mq.relativePath>
         <mq.jar.com.ibm.mq.jmqi.relativePath>lib/mq/com.ibm.mq.jmqi.jar</mq.jar.com.ibm.mq.jmqi.relativePath>
-        <mq.jar.com.ibm.mq.commonservices.relativePath>lib/mq/com.ibm.mq.commonservices.jar</mq.jar.com.ibm.mq.commonservices.relativePath>
-        <mq.jar.com.ibm.mq.pcf.relativePath>lib/mq/com.ibm.mq.pcf.jar</mq.jar.com.ibm.mq.pcf.relativePath>
         <mq.jar.com.ibm.mq.headers.relativePath>lib/mq/com.ibm.mq.headers.jar</mq.jar.com.ibm.mq.headers.relativePath>
+        <mq.jar.com.ibm.mq.pcf.relativePath>lib/mq/com.ibm.mq.pcf.jar</mq.jar.com.ibm.mq.pcf.relativePath>
+        <mq.jar.com.ibm.mq.commonservices.relativePath>lib/mq/com.ibm.mq.commonservices.jar</mq.jar.com.ibm.mq.commonservices.relativePath>
         <mq.jar.connector.relativePath>lib/mq/connector.jar</mq.jar.connector.relativePath>
         <iib.jar.ibmjsseprovider2.relativePath>lib/iib/ibmjsseprovider2.jar</iib.jar.ibmjsseprovider2.relativePath>
         <iib.jar.ConfigManagerProxy.relativePath>lib/iib/ConfigManagerProxy.jar</iib.jar.ConfigManagerProxy.relativePath>
@@ -153,6 +153,7 @@
                                     <goal>copy-resources</goal>
                                 </goals>
                                 <configuration>
+                                    <includeEmptyDirs>true</includeEmptyDirs>
                                     <outputDirectory>${distDir}</outputDirectory>
                                     <resources>
                                         <!-- copy jar -->
@@ -185,19 +186,6 @@
 
         <profile>
             <id>dev</id>
-            <!-- These dependencies are to be obtained like normal (from the local Maven repository). -->
-            <dependencies>
-                <dependency>
-                    <groupId>io.irontest</groupId>
-                    <artifactId>irontest-mq</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>io.irontest</groupId>
-                    <artifactId>irontest-iib</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
-            </dependencies>
             <build>
                 <plugins>
                     <!-- launch the application by classes (not by uber jar) -->
@@ -228,6 +216,38 @@
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+
+        <!-- This profile is intended to be used only in combination with the dev profile -->
+        <profile>
+            <id>dev-build-with-mq-testing-capabilities</id>
+            <activation>
+                <property><name>mq.version</name></property>
+            </activation>
+            <!-- These dependencies are to be obtained like normal (from the local Maven repository). -->
+            <dependencies>
+                <dependency>
+                    <groupId>io.irontest</groupId>
+                    <artifactId>irontest-mq</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+
+        <!-- This profile is intended to be used only in combination with the dev profile -->
+        <profile>
+            <id>dev-build-with-iib-testing-capabilities</id>
+            <activation>
+                <property><name>iib.version</name></property>
+            </activation>
+            <!-- These dependencies are to be obtained like normal (from the local Maven repository). -->
+            <dependencies>
+                <dependency>
+                    <groupId>io.irontest</groupId>
+                    <artifactId>irontest-iib</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+            </dependencies>
         </profile>
     </profiles>
 </project>
