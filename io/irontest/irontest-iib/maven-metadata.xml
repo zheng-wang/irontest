@@ -3,10 +3,9 @@
   <groupId>io.irontest</groupId>
   <artifactId>irontest-iib</artifactId>
   <versioning>
-    <release>0.5.7</release>
     <versions>
-      <version>0.5.7</version>
+      <version>0.5.8-SNAPSHOT</version>
     </versions>
-    <lastUpdated>20170720110459</lastUpdated>
+    <lastUpdated>20170720111323</lastUpdated>
   </versioning>
 </metadata>
