@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>io.irontest</groupId>
+  <artifactId>irontest-iib</artifactId>
+  <versioning>
+    <release>0.5.7</release>
+    <versions>
+      <version>0.5.7</version>
+    </versions>
+    <lastUpdated>20170720110459</lastUpdated>
+  </versioning>
+</metadata>
