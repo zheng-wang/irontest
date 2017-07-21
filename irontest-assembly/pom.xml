@@ -147,6 +147,7 @@
 
                     <!-- produce dist -->
                     <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-resources-plugin</artifactId>
                         <version>3.0.1</version>
                         <executions>
@@ -184,6 +185,7 @@
                             </execution>
                         </executions>
                     </plugin>
+                    <!-- create empty folders under lib in the dist -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-antrun-plugin</artifactId>

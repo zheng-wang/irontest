@@ -13,7 +13,6 @@
     <artifactId>irontest-iib</artifactId>
 
     <properties>
-        <mq.version>[7.5.0.0, 8.0.0.50]</mq.version>
         <iib.version>[9.0.0.0, 9.0.0.50]</iib.version>
     </properties>
 
@@ -24,27 +23,8 @@
             <version>${project.version}</version>
         </dependency>
 
-        <!-- MQ dependencies -->
-        <dependency>
-            <groupId>com.ibm</groupId>
-            <artifactId>com.ibm.mq</artifactId>
-            <version>${mq.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.ibm</groupId>
-            <artifactId>com.ibm.mq.jmqi</artifactId>
-            <version>${mq.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.ibm</groupId>
-            <artifactId>com.ibm.mq.headers</artifactId>
-            <version>${mq.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.ibm</groupId>
-            <artifactId>com.ibm.mq.pcf</artifactId>
-            <version>${mq.version}</version>
-        </dependency>
+        <!-- Though at runtime IIB 9.0.0.x Integration API requires MQ libraries to connect to broker,
+        at compile time the IIBTeststepRunner class does not require MQ libraries to compile -->
 
         <!-- IIB dependencies -->
         <dependency>
@@ -58,31 +38,6 @@
             <version>${iib.version}</version>
         </dependency>
     </dependencies>
-
-    <profiles>
-        <profile>
-            <id>mq-7.5-specific-dependencies</id>
-            <activation>
-                <!-- Use this property as switch because currently Maven does not support version number range in activation, such as mq.version - [7.5.0.0,8.0.0.0) -->
-                <property>
-                    <name>mq.version.is75</name>
-                    <value>true</value>
-                </property>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>com.ibm</groupId>
-                    <artifactId>com.ibm.mq.commonservices</artifactId>
-                    <version>${mq.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>javax.resource</groupId>
-                    <artifactId>connector</artifactId>
-                    <version>1.3.0</version>
-                </dependency>
-            </dependencies>
-        </profile>
-    </profiles>
 
     <build>
         <plugins>

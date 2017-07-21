@@ -53,7 +53,6 @@
                 <!-- Use this property as switch because currently Maven does not support version number range in activation, such as mq.version - [7.5.0.0,8.0.0.0) -->
                 <property>
                     <name>mq.version.is75</name>
-                    <value>true</value>
                 </property>
             </activation>
             <dependencies>
