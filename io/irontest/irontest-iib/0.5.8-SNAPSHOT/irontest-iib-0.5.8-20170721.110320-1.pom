@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>irontest-parent</artifactId>
+        <groupId>io.irontest</groupId>
+        <version>0.5.8-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>irontest-iib</artifactId>
+
+    <properties>
+        <iib.version>[9.0.0.0, 9.0.0.50]</iib.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.irontest</groupId>
+            <artifactId>irontest-core-server</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- Though at runtime IIB 9.0.0.x Integration API requires MQ libraries to connect to broker,
+        at compile time the IIBTeststepRunner class does not require MQ libraries to compile -->
+
+        <!-- IIB dependencies -->
+        <dependency>
+            <groupId>com.ibm</groupId>
+            <artifactId>ibmjsseprovider2</artifactId>
+            <version>${iib.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ibm</groupId>
+            <artifactId>ConfigManagerProxy</artifactId>
+            <version>${iib.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.github.github</groupId>
+                <artifactId>site-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>
