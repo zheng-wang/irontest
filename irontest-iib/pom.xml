@@ -52,6 +52,7 @@
         </profile>
         <profile>
             <id>iib-10.0-specific-dependencies</id>
+            <!-- <activation> block is a list of AND -->
             <activation>
                 <!-- Use activeByDefault to keep IDE happy on compiling IIBTeststeRunner, but of course need to install IIB 10 IntegrationAPI.jar into Maven local repo -->
                 <activeByDefault>true</activeByDefault>
