@@ -13,7 +13,7 @@
     <artifactId>irontest-iib</artifactId>
 
     <properties>
-        <iib.version>[9.0.0.0, 9.0.0.50]</iib.version>
+        <iib.version>[9.0.0.0, 10.0.0.50]</iib.version>
     </properties>
 
     <dependencies>
@@ -25,19 +25,52 @@
 
         <!-- Though at runtime IIB 9.0.0.x Integration API requires MQ libraries to connect to broker,
         at compile time the IIBTeststepRunner class does not require MQ libraries to compile -->
-
-        <!-- IIB dependencies -->
-        <dependency>
-            <groupId>com.ibm</groupId>
-            <artifactId>ibmjsseprovider2</artifactId>
-            <version>${iib.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.ibm</groupId>
-            <artifactId>ConfigManagerProxy</artifactId>
-            <version>${iib.version}</version>
-        </dependency>
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>iib-9.0-specific-dependencies</id>
+            <activation>
+                <!-- Use this property as switch because currently Maven does not support version number range in activation, such as mq.version - [7.5.0.0,8.0.0.0) -->
+                <property>
+                    <name>iib.version.is90</name>
+                </property>
+            </activation>
+            <dependencies>
+                <!-- IIB dependencies -->
+                <dependency>
+                    <groupId>com.ibm</groupId>
+                    <artifactId>ibmjsseprovider2</artifactId>
+                    <version>${iib.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>com.ibm</groupId>
+                    <artifactId>ConfigManagerProxy</artifactId>
+                    <version>${iib.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>iib-10.0-specific-dependencies</id>
+            <activation>
+                <!-- Use activeByDefault to keep IDE happy on compiling IIBTeststeRunner, but of course need to install IIB 10 IntegrationAPI.jar into Maven local repo -->
+                <activeByDefault>true</activeByDefault>
+
+                <!-- Use this property as switch because currently Maven does not support version number range in activation, such as mq.version - [7.5.0.0,8.0.0.0) -->
+                <property>
+                    <name>iib.version.is100</name>
+                </property>
+            </activation>
+            <dependencies>
+                <!-- IIB dependencies -->
+                <dependency>
+                    <groupId>com.ibm</groupId>
+                    <artifactId>IntegrationAPI</artifactId>
+                    <version>${iib.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 
     <build>
         <plugins>
