@@ -1,126 +1,61 @@
 package io.irontest.core.runner;
 
-import com.ibm.broker.config.proxy.*;
 import io.irontest.models.endpoint.MQIIBEndpointProperties;
-import io.irontest.models.teststep.IIBTeststepProperties;
 import io.irontest.models.teststep.Teststep;
-import org.apache.commons.lang3.time.DateUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.Date;
+import java.io.File;
+import java.lang.reflect.Constructor;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Created by Zheng on 25/05/2016.
+ * This is actually a factory and delegator instead of the actual runner.
  */
 public class IIBTeststepRunner extends TeststepRunner {
-    private static final Logger LOGGER = LoggerFactory.getLogger(IIBTeststepRunner.class);
-    private static final int ACTIVITY_LOG_POLLING_TIMEOUT = 60;    // in seconds
+    private static IIBTeststepRunnerClassLoader iib100ClassLoader;
+    private static IIBTeststepRunnerClassLoader iib90ClassLoader;
+    static {
+        URL[] iib100URLs;
+        URL[] iib90URLs;
+        File userDir = new File(System.getProperty("user.dir"));
+        try {
+            iib100URLs = new URL[] {
+                    new File(userDir, "lib/iib/v100/IntegrationAPI.jar").toURI().toURL(),
+                    new File(userDir, "lib/iib/v100/jetty-io.jar").toURI().toURL(),
+                    new File(userDir, "lib/iib/v100/jetty-util.jar").toURI().toURL(),
+                    new File(userDir, "lib/iib/v100/websocket-api.jar").toURI().toURL(),
+                    new File(userDir, "lib/iib/v100/websocket-client.jar").toURI().toURL(),
+                    new File(userDir, "lib/iib/v100/websocket-common.jar").toURI().toURL()
+            };
+            iib90URLs = new URL[] {
+                    new File(userDir, "lib/iib/v90/ibmjsseprovider2.jar").toURI().toURL(),
+                    new File(userDir, "lib/iib/v90/ConfigManagerProxy.jar").toURI().toURL()
+            };
+        } catch (MalformedURLException e) {
+            throw new RuntimeException("Unable to initialize " + IIBTeststepRunner.class.getName(), e);
+        }
+        iib100ClassLoader = new IIBTeststepRunnerClassLoader(iib100URLs, IIBTeststepRunner.class.getClassLoader());
+        iib90ClassLoader = new IIBTeststepRunnerClassLoader(iib90URLs, IIBTeststepRunner.class.getClassLoader());
+    }
 
     protected BasicTeststepRun run(Teststep teststep) throws Exception {
-        String action = teststep.getAction();
-        if (action == null) {
-            throw new Exception("Action not specified.");
-        }
-
-        BasicTeststepRun basicTeststepRun = new BasicTeststepRun();
-
         MQIIBEndpointProperties endpointProperties = (MQIIBEndpointProperties) teststep.getEndpoint().getOtherProperties();
-        IIBTeststepProperties teststepProperties = (IIBTeststepProperties) teststep.getOtherProperties();
-        MQBrokerConnectionParameters bcp = new MQBrokerConnectionParameters(
-                endpointProperties.getHost(), endpointProperties.getPort(), endpointProperties.getQueueManagerName());
-        bcp.setAdvancedConnectionParameters(endpointProperties.getSvrConnChannelName(), null, null, -1, -1, null);
-        BrokerProxy brokerProxy = null;
-        try {
-            //  connect to the broker
-            brokerProxy = BrokerProxy.getInstance(bcp);
-            brokerProxy.setSynchronous(90 * 1000);    //  do everything synchronously
-            String integrationNodeName = brokerProxy.getName();
+        String actualRunnerClassName;
+        ClassLoader classLoader;
 
-            //  get message flow proxy
-            ExecutionGroupProxy egProxy = brokerProxy.getExecutionGroupByName(
-                    teststepProperties.getIntegrationServerName());
-            if (egProxy == null) {
-                throw new Exception("EG \"" + teststepProperties.getIntegrationServerName() +
-                        "\" not found on broker \"" + integrationNodeName + "\".");
-            } else if (!egProxy.isRunning()) {
-                throw new Exception("EG \"" + teststepProperties.getIntegrationServerName() +
-                        "\" not running.");
-            }
-            MessageFlowProxy messageFlowProxy = egProxy.getMessageFlowByName(teststepProperties.getMessageFlowName());
-            if (messageFlowProxy == null) {
-                throw new Exception("Message flow \"" + teststepProperties.getMessageFlowName() +
-                        "\" not found on EG \"" + teststepProperties.getIntegrationServerName() + "\".");
-            }
-
-            //  do the specified action
-            if (Teststep.ACTION_START.equals(action)) {
-                start(messageFlowProxy, basicTeststepRun);
-            } else if (Teststep.ACTION_STOP.equals(action)) {
-                stop(messageFlowProxy, basicTeststepRun);
-            } else if (Teststep.ACTION_WAIT_FOR_PROCESSING_COMPLETION.equals(action)) {
-                waitForProcessingCompletion(messageFlowProxy);
-            } else {
-                throw new Exception("Unrecognized action " + action);
-            }
-        } finally {
-            if (brokerProxy != null) {
-                brokerProxy.disconnect();
-            }
+        if (endpointProperties.getQueueManagerName() == null) {    //  it is an IIB 10.0 endpoint
+            actualRunnerClassName = "io.irontest.core.runner.IIB100TeststepRunner";
+            classLoader = iib100ClassLoader;
+        } else {    //  it is an IIB 9.0 endpoint
+            actualRunnerClassName = "io.irontest.core.runner.IIB90TeststepRunner";
+            classLoader = iib90ClassLoader;
         }
+        Class actualRunnerClass = Class.forName(actualRunnerClassName, false, classLoader);
+        Constructor<TeststepRunner> constructor = actualRunnerClass.getConstructor(MQIIBEndpointProperties.class);
+        TeststepRunner actualRunner = constructor.newInstance(endpointProperties);
 
-        return basicTeststepRun;
-    }
-
-    private void start(MessageFlowProxy messageFlowProxy, BasicTeststepRun basicTeststepRun) throws Exception {
-        if (messageFlowProxy.isRunning()) {
-            basicTeststepRun.setInfoMessage("Message flow is already running");
-        } else {
-            messageFlowProxy.start();
-            basicTeststepRun.setInfoMessage("Message flow started");
-        }
-    }
-
-    private void stop(MessageFlowProxy messageFlowProxy, BasicTeststepRun basicTeststepRun) throws Exception {
-        if (messageFlowProxy.isRunning()) {
-            messageFlowProxy.stop();
-            basicTeststepRun.setInfoMessage("Message flow stopped");
-        } else {
-            basicTeststepRun.setInfoMessage("Message flow is already stopped");
-        }
-    }
-
-    private void waitForProcessingCompletion(MessageFlowProxy messageFlowProxy)
-            throws Exception {
-        if (!messageFlowProxy.isRunning()) {
-            throw new Exception("Message flow not running.");
-        } else {
-            TestcaseRunContext testcaseRunContext = getTestcaseRunContext();
-            Date pollingEndTime = DateUtils.addSeconds(new Date(), ACTIVITY_LOG_POLLING_TIMEOUT);
-            ActivityLogEntry processingCompletionSignal = null;
-            while (System.currentTimeMillis() < pollingEndTime.getTime()) {
-                ActivityLogProxy activityLogProxy = messageFlowProxy.getActivityLog();
-                if (activityLogProxy != null) {
-                    for (int i = 1; i <= activityLogProxy.getSize(); i++) {
-                        ActivityLogEntry logEntry = activityLogProxy.getLogEntry(i);
-                        if (11504 == logEntry.getMessageNumber() &&
-                                logEntry.getTimestamp().after(testcaseRunContext.getTestcaseRunStartTime())) {
-                            processingCompletionSignal = logEntry;
-                            break;
-                        }
-                    }
-                }
-                if (processingCompletionSignal != null) {
-                    break;
-                } else {
-                    Thread.sleep(1000);
-                }
-            }
-            if (processingCompletionSignal == null) {
-                throw new Exception("Message flow activity log polling timeout. No processing completion signal found.");
-            } else {
-                LOGGER.info("Message flow processing completion signal found. " + processingCompletionSignal.toString());
-            }
-        }
+        actualRunner.setTestcaseRunContext(getTestcaseRunContext());
+        return actualRunner.run(teststep);
     }
 }

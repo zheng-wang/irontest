@@ -25,8 +25,6 @@
         <mq.jar.com.ibm.mq.pcf>${lib.mq}/com.ibm.mq.pcf.jar</mq.jar.com.ibm.mq.pcf>
         <mq.jar.com.ibm.mq.commonservices>${lib.mq}/com.ibm.mq.commonservices.jar</mq.jar.com.ibm.mq.commonservices>
         <mq.jar.connector>${lib.mq}/connector.jar</mq.jar.connector>
-        <iib.jar.ibmjsseprovider2>${lib.iib}/ibmjsseprovider2.jar</iib.jar.ibmjsseprovider2>
-        <iib.jar.ConfigManagerProxy>${lib.iib}/ConfigManagerProxy.jar</iib.jar.ConfigManagerProxy>
         <distDir>dist</distDir>
         <uberJarFileName>irontest-${project.version}</uberJarFileName>
     </properties>
@@ -133,7 +131,7 @@
                                         <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                             <manifestEntries>
                                                 <Main-Class>io.irontest.IronTestApplication</Main-Class>
-                                                <Class-Path>${jdbc.driver.oracle} ${jdbc.driver.sqlserver} ${mq.jar.com.ibm.mq} ${mq.jar.com.ibm.mq.jmqi} ${mq.jar.com.ibm.mq.commonservices} ${mq.jar.com.ibm.mq.pcf} ${mq.jar.com.ibm.mq.headers} ${mq.jar.connector} ${iib.jar.ibmjsseprovider2} ${iib.jar.ConfigManagerProxy}</Class-Path>
+                                                <Class-Path>${jdbc.driver.oracle} ${jdbc.driver.sqlserver} ${mq.jar.com.ibm.mq} ${mq.jar.com.ibm.mq.jmqi} ${mq.jar.com.ibm.mq.commonservices} ${mq.jar.com.ibm.mq.pcf} ${mq.jar.com.ibm.mq.headers} ${mq.jar.connector}</Class-Path>
                                             </manifestEntries>
                                         </transformer>
                                         <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
