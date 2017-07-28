@@ -33,7 +33,7 @@ public class Teststep {
     public static final String ACTION_ENQUEUE = "Enqueue";
     public static final String ACTION_PUBLISH = "Publish";
 
-    private long id;
+    private long id;   //  id being 0 means this is dynamically created test step object (no record in the Teststep database table).
     private long testcaseId;
     private short sequence;
     private String name;

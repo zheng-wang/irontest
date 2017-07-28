@@ -102,7 +102,7 @@ public class IIBTeststepRunnerBase extends TeststepRunner {
                 if (activityLogProxy != null) {
                     for (int i = 1; i <= activityLogProxy.getSize(); i++) {
                         ActivityLogEntry logEntry = activityLogProxy.getLogEntry(i);
-                        if (11504 == logEntry.getMessageNumber() &&
+                        if (11506 == logEntry.getMessageNumber() &&
                                 logEntry.getTimestamp().after(getTestcaseRunContext().getTestcaseRunStartTime())) {
                             processingCompletionSignal = logEntry;
                             break;

@@ -16,6 +16,7 @@ import io.irontest.models.assertion.AssertionVerification;
 import io.irontest.models.assertion.AssertionVerificationResult;
 import io.irontest.models.teststep.Teststep;
 import io.irontest.models.teststep.TeststepRun;
+import io.irontest.models.teststep.WaitTeststepProperties;
 import io.irontest.views.TestcaseRunView;
 import io.irontest.views.TeststepRunView;
 import org.slf4j.Logger;
@@ -49,6 +50,9 @@ public class TestcaseRunResource {
     @POST
     public TestcaseRun create(TestcaseRun testcaseRun) throws JsonProcessingException {
         Testcase testcase = testcaseDAO.findById_Complete(testcaseRun.getTestcase().getId());
+
+        preProcessingForIIBTeststep(testcase);
+
         testcaseRun.setTestcase(testcase);
 
         //  test case run starts
@@ -156,6 +160,23 @@ public class TestcaseRunResource {
         testcaseRun.setFailedTeststepIds(failedTeststepIds);
         testcaseRun.getStepRuns().clear();
         return testcaseRun;
+    }
+
+    private void preProcessingForIIBTeststep(Testcase testcase) {
+        boolean testcaseHasWaitForProcessingCompletionAction = false;
+        for (Teststep teststep : testcase.getTeststeps()) {
+            if (Teststep.TYPE_IIB.equals(teststep.getType()) &&
+                    Teststep.ACTION_WAIT_FOR_PROCESSING_COMPLETION.equals(teststep.getAction())) {
+                testcaseHasWaitForProcessingCompletionAction = true;
+            }
+        }
+        if (testcaseHasWaitForProcessingCompletionAction) {
+            Teststep waitStep = new Teststep();
+            waitStep.setName("Wait 1 second");
+            waitStep.setType(Teststep.TYPE_WAIT);
+            waitStep.setOtherProperties(new WaitTeststepProperties(1));
+            testcase.getTeststeps().add(0, waitStep);
+        }
     }
 
     @GET @Path("{testcaseRunId}/htmlreport") @Produces(MediaType.TEXT_HTML)
