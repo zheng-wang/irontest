@@ -8,6 +8,19 @@ angular.module('irontest').controller('IIBTeststepController', ['$scope', 'Tests
     var timer;
     $scope.steprun = {};
 
+    $scope.endpointTypeChanged = function(isValid) {
+      /*var endpoint = $scope.teststep.endpoint;
+      var newEndpointType = endpoint.type;
+      if (newEndpointType === 'MQ') {
+        endpoint.otherProperties = {};
+      } else if (newEndpointType === 'IIB') {
+      }*/
+      $scope.teststep.endpoint.otherProperties = null;
+
+      //  save test step immediately (so as to update endpoint)
+      $scope.update(isValid);
+    };
+
     var clearPreviousRunStatus = function() {
       if (timer) $timeout.cancel(timer);
       $scope.steprun = {};
@@ -16,7 +29,7 @@ angular.module('irontest').controller('IIBTeststepController', ['$scope', 'Tests
     $scope.actionChanged = function(isValid) {
       clearPreviousRunStatus();
 
-      //  save test step
+      //  save test step immediately
       $scope.update(isValid);
     };
 

@@ -63,8 +63,8 @@ public abstract class EndpointDAO {
         return _insertUnmanagedEndpoint(endpoint, otherProperties);
     }
 
-    @SqlUpdate("update endpoint set environment_id = :evId, name = :ep.name, description = :ep.description, " +
-            "url = :ep.url, username = :ep.username, password = CASE " +
+    @SqlUpdate("update endpoint set environment_id = :evId, name = :ep.name, type = :ep.type, " +
+            "description = :ep.description, url = :ep.url, username = :ep.username, password = CASE " +
                 "WHEN COALESCE(password, '') <> COALESCE(:ep.password, '') " + // encrypt only when password is changed
                     "THEN ENCRYPT('AES', '" + PASSWORD_ENCRYPTION_KEY + "', STRINGTOUTF8(:ep.password)) " +
                 "ELSE password END, " +

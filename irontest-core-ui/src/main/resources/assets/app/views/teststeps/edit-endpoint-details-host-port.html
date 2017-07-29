@@ -1,14 +1,4 @@
 <div class="form-group">
-  <label for="endpointQueueManagerName" class="col-lg-2 control-label">Queue Manager Name</label>
-  <div class="col-lg-10">
-    <input name="endpointQueueManagerName" type="text" class="form-control"
-           ng-model="teststep.endpoint.otherProperties.queueManagerName"
-           ng-change="isInShareEndpointMode() ? angular.noop() : autoSave(teststepForm.$valid)"
-           id="endpointQueueManagerName" spellcheck="false"
-           ng-readonly="!isInShareEndpointMode() && teststep.endpoint.environment">
-  </div>
-</div>
-<div class="form-group">
   <label for="endpointHost" class="col-lg-2 control-label">Host</label>
   <div class="col-lg-10">
     <input name="endpointHost" type="text" class="form-control" ng-model="teststep.endpoint.otherProperties.host"
@@ -26,15 +16,5 @@
     <div ng-show="savingStatus.submitted && teststepForm.endpointPort.$invalid" class="help-block">
       <p ng-show="teststepForm.endpointPort.$error.pattern">Please enter a valid port number</p>
     </div>
-  </div>
-</div>
-<div class="form-group">
-  <label for="endpointSvrConnChannelName" class="col-lg-2 control-label">SVRCONN Channel Name</label>
-  <div class="col-lg-10">
-    <input name="endpointSvrConnChannelName" type="text" class="form-control"
-           ng-model="teststep.endpoint.otherProperties.svrConnChannelName"
-           ng-change="isInShareEndpointMode() ? angular.noop() : autoSave(teststepForm.$valid)"
-           id="endpointSvrConnChannelName" spellcheck="false"
-           ng-readonly="!isInShareEndpointMode() && teststep.endpoint.environment">
   </div>
 </div>

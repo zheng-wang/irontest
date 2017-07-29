@@ -39,13 +39,14 @@
         <div class="col-lg-10">
           <div ng-include="'/ui/views/teststeps/edit-endpoint-details-basic-info.html'"></div>
 
-          <div ng-if="teststep.type === 'SOAP'"
-               ng-include="'/ui/views/teststeps/soap/edit-soap-teststep-endpoint-details.html'"
-               ng-controller="SOAPTeststepController"></div>
+          <div ng-if="teststep.type === 'SOAP'" ng-controller="SOAPTeststepController"
+               ng-include="'/ui/views/teststeps/soap/edit-soap-teststep-endpoint-details.html'"></div>
           <div ng-if="teststep.type === 'DB'"
                ng-include="'/ui/views/teststeps/db/edit-db-teststep-endpoint-details.html'"></div>
-          <div ng-if="teststep.type === 'MQ' || teststep.type === 'IIB'"
-               ng-include="'/ui/views/teststeps/edit-mq-teststep-endpoint-details.html'"></div>
+          <div ng-if="teststep.type === 'MQ'"
+               ng-include="'/ui/views/teststeps/mq/edit-mq-teststep-endpoint-details.html'"></div>
+          <div ng-if="teststep.type === 'IIB'" ng-controller="IIBTeststepController"
+               ng-include="'/ui/views/teststeps/iib/edit-iib-teststep-endpoint-details.html'"></div>
 
           <div ng-include="'/ui/views/teststeps/edit-endpoint-details-bottom-part.html'"></div>
         </div>

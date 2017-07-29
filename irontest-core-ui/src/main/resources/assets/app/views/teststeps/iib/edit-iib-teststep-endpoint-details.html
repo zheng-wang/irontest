@@ -1,0 +1,14 @@
+<div class="form-group required" ng-if="teststep.endpoint.type">
+  <label for="endpointType" class="col-lg-2 control-label">Endpoint Type</label>
+  <div class="col-lg-10">
+    <select name="endpointType" id="endpointType" class="form-control" ng-model="teststep.endpoint.type"
+            ng-change="endpointTypeChanged(teststepForm.$valid)">
+      <option value="MQ" title="for connecting to IIB 9">MQ</option>
+      <option value="IIB" title="for connecting to IIB 10">IIB</option>
+    </select>
+  </div>
+</div>
+<div ng-if="teststep.endpoint.type === 'MQ'"
+     ng-include="'/ui/views/teststeps/mq/edit-mq-teststep-endpoint-details.html'"></div>
+<div ng-if="teststep.endpoint.type === 'IIB'"
+     ng-include="'/ui/views/teststeps/edit-endpoint-details-host-port.html'"></div>
