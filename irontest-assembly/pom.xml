@@ -197,7 +197,8 @@
                                 </goals>
                                 <configuration>
                                     <target>
-                                        <mkdir dir="${distDir}/${lib.iib}"/>
+                                        <mkdir dir="${distDir}/${lib.iib}/v90"/>
+                                        <mkdir dir="${distDir}/${lib.iib}/v100"/>
                                         <mkdir dir="${distDir}/${lib.jdbc.oracle}"/>
                                         <mkdir dir="${distDir}/${lib.jdbc.sqlserver}"/>
                                         <mkdir dir="${distDir}/${lib.mq}"/>
