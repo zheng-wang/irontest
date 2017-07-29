@@ -9,12 +9,6 @@ angular.module('irontest').controller('IIBTeststepController', ['$scope', 'Tests
     $scope.steprun = {};
 
     $scope.endpointTypeChanged = function(isValid) {
-      /*var endpoint = $scope.teststep.endpoint;
-      var newEndpointType = endpoint.type;
-      if (newEndpointType === 'MQ') {
-        endpoint.otherProperties = {};
-      } else if (newEndpointType === 'IIB') {
-      }*/
       $scope.teststep.endpoint.otherProperties = null;
 
       //  save test step immediately (so as to update endpoint)
