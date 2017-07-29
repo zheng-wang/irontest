@@ -3,9 +3,10 @@
   <groupId>io.irontest</groupId>
   <artifactId>irontest-mq</artifactId>
   <versioning>
+    <release>0.5.8</release>
     <versions>
-      <version>0.5.8-SNAPSHOT</version>
+      <version>0.5.8</version>
     </versions>
-    <lastUpdated>20170729124944</lastUpdated>
+    <lastUpdated>20170729153633</lastUpdated>
   </versioning>
 </metadata>
