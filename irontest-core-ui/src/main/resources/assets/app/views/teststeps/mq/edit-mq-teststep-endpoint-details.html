@@ -1,11 +1,10 @@
 <div class="form-group">
   <label for="endpointQueueManagerName" class="col-lg-2 control-label">Queue Manager Name</label>
   <div class="col-lg-10">
-    <input name="endpointQueueManagerName" type="text" class="form-control"
+    <input id="endpointQueueManagerName" name="endpointQueueManagerName" type="text" class="form-control"
            ng-model="teststep.endpoint.otherProperties.queueManagerName"
            ng-change="isInShareEndpointMode() ? angular.noop() : autoSave(teststepForm.$valid)"
-           id="endpointQueueManagerName" spellcheck="false"
-           ng-readonly="!isInShareEndpointMode() && teststep.endpoint.environment">
+           ng-readonly="!isInShareEndpointMode() && teststep.endpoint.environment" spellcheck="false">
   </div>
 </div>
 <div ng-include="'/ui/views/teststeps/edit-endpoint-details-host-port.html'"></div>

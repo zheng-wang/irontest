@@ -11,8 +11,10 @@ angular.module('irontest').controller('IIBTeststepController', ['$scope', 'Tests
     $scope.endpointTypeChanged = function(isValid) {
       $scope.teststep.endpoint.otherProperties = null;
 
-      //  save test step immediately (so as to update endpoint)
-      $scope.update(isValid);
+      if (!$scope.isInShareEndpointMode()) {
+        //  save test step immediately (so as to update endpoint)
+        $scope.update(isValid);
+      }
     };
 
     var clearPreviousRunStatus = function() {
