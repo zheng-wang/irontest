@@ -1,5 +1,7 @@
 package io.irontest.models.endpoint;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.irontest.models.Properties;
 
 /**
@@ -23,5 +25,19 @@ public class IIBEndpointProperties extends Properties {
 
     public void setPort(Integer port) {
         this.port = port;
+    }
+
+    /**
+     * Used to unify integration node address display on test step action tab and test case run report.
+     * @return
+     */
+    @JsonProperty
+    public String getIntegrationNodeAddress() {
+        return host + ':' + port ;
+    }
+
+    @JsonIgnore
+    public void setIntegrationNodeAddress(String integrationNodeAddress) {
+        //  do nothing
     }
 }

@@ -45,6 +45,10 @@ public class MQEndpointProperties extends Properties {
         this.svrConnChannelName = svrConnChannelName;
     }
 
+    /**
+     * Used to unify queue manager address display on test step action tab and test case run report.
+     * @return
+     */
     @JsonProperty
     public String getQueueManagerAddress() {
         return host + ':' + port + '/' + queueManagerName;
