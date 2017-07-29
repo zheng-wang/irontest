@@ -7,7 +7,7 @@ import com.ibm.mq.headers.MQHeaderIterator;
 import com.ibm.mq.headers.MQMD;
 import com.ibm.mq.headers.MQRFH2;
 import io.irontest.db.TeststepDAO;
-import io.irontest.models.endpoint.MQIIBEndpointProperties;
+import io.irontest.models.endpoint.MQEndpointProperties;
 import io.irontest.models.teststep.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -58,7 +58,7 @@ public class MQTeststepRunner extends TeststepRunner {
         BasicTeststepRun basicTeststepRun = new BasicTeststepRun();
 
         MQAPIResponse response = new MQAPIResponse();
-        MQIIBEndpointProperties endpointProperties = (MQIIBEndpointProperties) teststep.getEndpoint().getOtherProperties();
+        MQEndpointProperties endpointProperties = (MQEndpointProperties) teststep.getEndpoint().getOtherProperties();
         Hashtable qmConnProperties = new Hashtable();
         qmConnProperties.put(CMQC.HOST_NAME_PROPERTY,  endpointProperties.getHost());
         qmConnProperties.put(CMQC.PORT_PROPERTY, endpointProperties.getPort());

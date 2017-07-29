@@ -39,6 +39,8 @@
            ng-include="'/ui/views/endpoints/edit-db-endpoint.html'"></div>
       <div ng-if="endpoint.type === 'MQ'"
            ng-include="'/ui/views/endpoints/edit-mq-endpoint.html'"></div>
+      <div ng-if="endpoint.type === 'IIB'"
+           ng-include="'/ui/views/endpoints/edit-iib-endpoint.html'"></div>
     </form>
   </div>
 </div>

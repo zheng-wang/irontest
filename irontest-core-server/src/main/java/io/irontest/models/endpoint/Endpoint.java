@@ -15,6 +15,7 @@ public class Endpoint {
     public static final String TYPE_SOAP = "SOAP";
     public static final String TYPE_DB = "DB";
     public static final String TYPE_MQ = "MQ";
+    public static final String TYPE_IIB = "IIB";
     private long id;
     private Environment environment;
     private String name;
@@ -26,8 +27,10 @@ public class Endpoint {
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
             property = "type", visible = true, defaultImpl = Properties.class)
     @JsonSubTypes({
-            @JsonSubTypes.Type(value = MQIIBEndpointProperties.class, name = Endpoint.TYPE_MQ),
-            @JsonSubTypes.Type(value = SOAPEndpointProperties.class, name = Endpoint.TYPE_SOAP)})
+            @JsonSubTypes.Type(value = SOAPEndpointProperties.class, name = Endpoint.TYPE_SOAP),
+            @JsonSubTypes.Type(value = MQEndpointProperties.class, name = Endpoint.TYPE_MQ),
+            @JsonSubTypes.Type(value = IIBEndpointProperties.class, name = Endpoint.TYPE_IIB)
+    })
     private Properties otherProperties;
     private Date created;
     private Date updated;

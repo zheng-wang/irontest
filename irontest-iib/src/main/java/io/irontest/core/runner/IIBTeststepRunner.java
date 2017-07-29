@@ -1,6 +1,6 @@
 package io.irontest.core.runner;
 
-import io.irontest.models.endpoint.MQIIBEndpointProperties;
+import io.irontest.models.endpoint.MQEndpointProperties;
 import io.irontest.models.teststep.Teststep;
 
 import java.io.File;
@@ -40,7 +40,7 @@ public class IIBTeststepRunner extends TeststepRunner {
     }
 
     protected BasicTeststepRun run(Teststep teststep) throws Exception {
-        MQIIBEndpointProperties endpointProperties = (MQIIBEndpointProperties) teststep.getEndpoint().getOtherProperties();
+        MQEndpointProperties endpointProperties = (MQEndpointProperties) teststep.getEndpoint().getOtherProperties();
         String actualRunnerClassName;
         ClassLoader classLoader;
 
@@ -52,7 +52,7 @@ public class IIBTeststepRunner extends TeststepRunner {
             classLoader = iib90ClassLoader;
         }
         Class actualRunnerClass = Class.forName(actualRunnerClassName, false, classLoader);
-        Constructor<TeststepRunner> constructor = actualRunnerClass.getConstructor(MQIIBEndpointProperties.class);
+        Constructor<TeststepRunner> constructor = actualRunnerClass.getConstructor(MQEndpointProperties.class);
         TeststepRunner actualRunner = constructor.newInstance(endpointProperties);
 
         actualRunner.setTestcaseRunContext(getTestcaseRunContext());
