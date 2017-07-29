@@ -14,7 +14,7 @@ import java.util.Date;
  */
 public class IIBTeststepRunnerBase extends TeststepRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(IIBTeststepRunnerBase.class);
-    private static final int ACTIVITY_LOG_POLLING_TIMEOUT = 60;    // in seconds
+    private static final int ACTIVITY_LOG_POLLING_TIMEOUT = 30;    // in seconds
     private BrokerConnectionParameters bcp;
 
     protected void setBrokerConnectionParameters(BrokerConnectionParameters bcp) {
@@ -102,7 +102,7 @@ public class IIBTeststepRunnerBase extends TeststepRunner {
                 if (activityLogProxy != null) {
                     for (int i = 1; i <= activityLogProxy.getSize(); i++) {
                         ActivityLogEntry logEntry = activityLogProxy.getLogEntry(i);
-                        if (11506 == logEntry.getMessageNumber() &&
+                        if ((11506 == logEntry.getMessageNumber() || 11504 == logEntry.getMessageNumber()) &&
                                 logEntry.getTimestamp().after(getTestcaseRunContext().getTestcaseRunStartTime())) {
                             processingCompletionSignal = logEntry;
                             break;
