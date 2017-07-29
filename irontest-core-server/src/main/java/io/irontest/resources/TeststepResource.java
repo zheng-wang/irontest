@@ -59,10 +59,10 @@ public class TeststepResource {
                 endpoint.setOtherProperties(new SOAPEndpointProperties());
             } else if (Teststep.TYPE_DB.equals(teststep.getType())) {
                 endpoint.setType(Endpoint.TYPE_DB);
-            } else if (Teststep.TYPE_IIB.equals(teststep.getType())) {
-                endpoint.setType(Endpoint.TYPE_MQIIB);
             } else if (Teststep.TYPE_MQ.equals(teststep.getType())) {
-                endpoint.setType(Endpoint.TYPE_MQIIB);
+                endpoint.setType(Endpoint.TYPE_MQ);
+            } else if (Teststep.TYPE_IIB.equals(teststep.getType())) {
+                endpoint.setType(Endpoint.TYPE_MQ);
             }
             teststep.setEndpoint(endpoint);
         }

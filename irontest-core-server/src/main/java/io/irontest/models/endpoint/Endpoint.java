@@ -14,19 +14,19 @@ import java.util.Date;
 public class Endpoint {
     public static final String TYPE_SOAP = "SOAP";
     public static final String TYPE_DB = "DB";
-    public static final String TYPE_MQIIB = "MQ/IIB";
+    public static final String TYPE_MQ = "MQ";
     private long id;
     private Environment environment;
     private String name;
     private String type;
     private String description;
-    private String url;                //  can be SOAP address, JDBC URL, etc.; not used by MQ/IIB endpoint
-    private String username;           //  not used by MQ/IIB endpoint
-    private String password;           //  not used by MQ/IIB endpoint
+    private String url;                //  can be SOAP address, JDBC URL, etc.; not used by MQ or IIB endpoint
+    private String username;
+    private String password;
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
             property = "type", visible = true, defaultImpl = Properties.class)
     @JsonSubTypes({
-            @JsonSubTypes.Type(value = MQIIBEndpointProperties.class, name = Endpoint.TYPE_MQIIB),
+            @JsonSubTypes.Type(value = MQIIBEndpointProperties.class, name = Endpoint.TYPE_MQ),
             @JsonSubTypes.Type(value = SOAPEndpointProperties.class, name = Endpoint.TYPE_SOAP)})
     private Properties otherProperties;
     private Date created;
