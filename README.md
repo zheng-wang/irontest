@@ -174,14 +174,19 @@ To move Iron Test to a different folder or computer/VM, just shut down the appli
 ## For Developers
 Pull requests are welcome.
 
-If you work with irontest-mq module or irontest-iib module, use `mvn install:install-file` to install related jars into your local Maven repository. Refer to corresponding pom.xml and this [wiki page](https://github.com/zheng-wang/irontest/wiki/Interact-with-Other-Systems) for more information about the dependencies and jars.
- 
-Otherwise, comment out the \<dependencies> element under dev profile in the irontest-assembly pom.xml.
-
 To launch Iron Test in your IDE (such as IntelliJ IDEA) without producing dist files, under the project directory (in which there is README.md) run below Maven command
 
-    mvn verify -pl irontest-assembly -am -P dev                 
-        
+    //  no MQ or IIB testing capabilities.
+    mvn verify -pl irontest-assembly -am -P dev   
+
+If you work with irontest-mq module or irontest-iib module, first use `mvn install:install-file` to install related jars into your local Maven repository. Refer to corresponding pom.xml and this [wiki page](https://github.com/zheng-wang/irontest/wiki/Interact-with-Other-Systems) for more information about the dependencies and jars. Then copy IIB jars to <Workspace_Dir>/lib/iib/v90 and/or <Workspace_Dir>/lib/iib/v100. Finally, run commands like below
+
+    //  with MQ 8.0 but no IIB testing capabilities
+    mvn verify -pl irontest-assembly -am -P dev -Dmq.version=8.0.0.7 -Dmq.version.is80
+    //  with IIB 10.0 but no MQ testing capabilities
+    mvn verify -pl irontest-assembly -am -P dev -Diib.version=10.0.0.9 -Diib.version.is100        
+    //  with MQ 7.5 and IIB 9.0 testing capabilities
+    mvn verify -pl irontest-assembly -am -P dev -Dmq.version=7.5.0.6 -Dmq.version.is75 -Diib.version=9.0.0.5 -Diib.version.is90
 
 ## License
 Apache License 2.0, see [LICENSE](LICENSE).
