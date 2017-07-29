@@ -5,17 +5,5 @@
            ng-change="autoSave(endpointForm.$valid)" placeholder="jdbc:h2:~/test;AUTO_SERVER=TRUE">
   </div>
 </div>
-<div class="form-group">
-  <label for="username" class="col-lg-2 control-label">Username</label>
-  <div class="col-lg-10">
-    <input name="username" type="text" class="form-control" ng-model="endpoint.username" id="username"
-           ng-change="autoSave(endpointForm.$valid)">
-  </div>
-</div>
-<div class="form-group">
-  <label for="password" class="col-lg-2 control-label">Password</label>
-  <div class="col-lg-10">
-    <input name="password" type="password" class="form-control" ng-model="endpoint.password" id="password"
-           ng-change="autoSave(endpointForm.$valid)">
-  </div>
-</div>
+
+<div ng-include="'/ui/views/endpoints/edit-endpoint-username-password.html'"></div>
