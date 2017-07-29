@@ -6,23 +6,9 @@
            id="endpointQueueManagerName" spellcheck="false">
   </div>
 </div>
-<div class="form-group">
-  <label for="endpointHost" class="col-lg-2 control-label">Host</label>
-  <div class="col-lg-10">
-    <input name="endpointHost" type="text" class="form-control" ng-model="endpoint.otherProperties.host"
-           ng-change="autoSave(endpointForm.$valid)" spellcheck="false" id="endpointHost">
-  </div>
-</div>
-<div class="form-group" ng-class="{ 'has-error' : submitted && endpointForm.endpointPort.$invalid }">
-  <label for="endpointPort" class="col-lg-2 control-label">Port</label>
-  <div class="col-lg-10">
-    <input name="endpointPort" type="text" class="form-control" ng-model="endpoint.otherProperties.port"
-           ng-change="autoSave(endpointForm.$valid)" id="endpointPort" maxlength="5" pattern="[1-6]\d{0,4}">
-    <div ng-show="submitted && endpointForm.endpointPort.$invalid" class="help-block">
-      <p ng-show="endpointForm.endpointPort.$error.pattern">Please enter a valid port number</p>
-    </div>
-  </div>
-</div>
+
+<div ng-include="'/ui/views/endpoints/edit-endpoint-host-port.html'"></div>
+
 <div class="form-group">
   <label for="endpointSvrConnChannelName" class="col-lg-2 control-label">SVRCONN Channel Name</label>
   <div class="col-lg-10">
