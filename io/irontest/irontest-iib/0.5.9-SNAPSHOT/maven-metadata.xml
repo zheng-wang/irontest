@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata modelVersion="1.1.0">
+  <groupId>io.irontest</groupId>
+  <artifactId>irontest-iib</artifactId>
+  <version>0.5.9-SNAPSHOT</version>
+  <versioning>
+    <snapshot>
+      <timestamp>20170731.104603</timestamp>
+      <buildNumber>1</buildNumber>
+    </snapshot>
+    <lastUpdated>20170731104603</lastUpdated>
+    <snapshotVersions>
+      <snapshotVersion>
+        <extension>jar</extension>
+        <value>0.5.9-20170731.104603-1</value>
+        <updated>20170731104603</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <extension>pom</extension>
+        <value>0.5.9-20170731.104603-1</value>
+        <updated>20170731104603</updated>
+      </snapshotVersion>
+    </snapshotVersions>
+  </versioning>
+</metadata>
