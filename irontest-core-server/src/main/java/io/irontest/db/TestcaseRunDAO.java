@@ -67,4 +67,7 @@ public abstract class TestcaseRunDAO {
 
     @SqlQuery("select * from testcase_run where id = :id")
     public abstract TestcaseRun findById(@Bind("id") long id);
+
+    @SqlQuery("select top 1 * from testcase_run where testcase_id = :testcaseId order by starttime desc")
+    public abstract TestcaseRun findLastByTestcaseId(@Bind("testcaseId") long testcaseId);
 }

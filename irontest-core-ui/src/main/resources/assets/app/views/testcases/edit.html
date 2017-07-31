@@ -51,8 +51,15 @@
                 'text-lime' : testcaseRun.result === 'Passed' }">{{testcaseRun.result}}</h4>
             </a>
           </div>
+
           <!-- for preventing button row height change when running test case -->
           <div class="col-lg-1"><h4>&nbsp;</h4></div>
+
+          <div class="col-lg-1 pull-right">
+            <a ng-href="api/testcaseruns/lastrun/htmlreport?testcaseId={{testcase.id}}" target='_blank'>
+              <h5>Last Run</h5>
+            </a>
+          </div>
         </div>
       </div>
       <div class="form-group"></div> <!-- spacer -->

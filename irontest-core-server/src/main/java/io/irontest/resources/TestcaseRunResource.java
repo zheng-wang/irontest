@@ -198,4 +198,14 @@ public class TestcaseRunResource {
         }
         return new TeststepRunView(theStepRun);
     }
+
+    @GET @Path("lastrun/htmlreport") @Produces(MediaType.TEXT_HTML)
+    public Object getTestcaseLastRunHTMLReport(@QueryParam("testcaseId") long testcaseId) {
+        TestcaseRun testcaseRun = testcaseRunDAO.findLastByTestcaseId(testcaseId);
+        if (testcaseRun == null) {
+            return "The test case has never been run.";
+        } else {
+            return new TestcaseRunView(testcaseRun);
+        }
+    }
 }
