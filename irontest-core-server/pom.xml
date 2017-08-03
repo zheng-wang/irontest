@@ -19,13 +19,6 @@
         <h2.version>1.4.194</h2.version>
     </properties>
 
-    <repositories>
-        <repository>
-            <id>reficio</id>
-            <url>http://repo.reficio.org/maven/</url>
-        </repository>
-    </repositories>
-
     <dependencies>
         <!-- These two dependencies were introduced for DB test step while keeping dropwizard version below 1.0, to avoid upgrading Java version to 1.8.
             Remove them after upgrading to dropwizard 1.0.5.
@@ -88,9 +81,9 @@
             <version>0.10.1</version>
         </dependency>
         <dependency>
-            <groupId>org.reficio</groupId>
-            <artifactId>soap-builder</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <groupId>com.predic8</groupId>
+            <artifactId>soa-model-core</artifactId>
+            <version>1.6.0</version>
         </dependency>
         <dependency>
             <groupId>org.xmlunit</groupId>
