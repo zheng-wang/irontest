@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata modelVersion="1.1.0">
+  <groupId>io.irontest</groupId>
+  <artifactId>irontest-mq</artifactId>
+  <version>0.5.10-SNAPSHOT</version>
+  <versioning>
+    <snapshot>
+      <timestamp>20170803.114611</timestamp>
+      <buildNumber>1</buildNumber>
+    </snapshot>
+    <lastUpdated>20170803114611</lastUpdated>
+    <snapshotVersions>
+      <snapshotVersion>
+        <extension>jar</extension>
+        <value>0.5.10-20170803.114611-1</value>
+        <updated>20170803114611</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <extension>pom</extension>
+        <value>0.5.10-20170803.114611-1</value>
+        <updated>20170803114611</updated>
+      </snapshotVersion>
+    </snapshotVersions>
+  </versioning>
+</metadata>
