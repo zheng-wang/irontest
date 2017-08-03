@@ -22,11 +22,6 @@
             <artifactId>irontest-core-server</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.5</version>
-        </dependency>
 
         <!-- Though at runtime IIB 9.0.0.x Integration API requires MQ libraries to connect to broker,
         at compile time the Java files in this module do not require MQ libraries to compile -->
