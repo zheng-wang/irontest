@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>irontest-parent</artifactId>
+        <groupId>io.irontest</groupId>
+        <version>0.5.9</version>
+    </parent>
+
+    <artifactId>irontest-iib</artifactId>
+
+    <properties>
+        <iib.version>[9.0.0.0, 10.0.0.50]</iib.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.irontest</groupId>
+            <artifactId>irontest-core-server</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.5</version>
+        </dependency>
+
+        <!-- Though at runtime IIB 9.0.0.x Integration API requires MQ libraries to connect to broker,
+        at compile time the Java files in this module do not require MQ libraries to compile -->
+    </dependencies>
+
+    <profiles>
+        <profile>
+            <id>iib-9.0-specific-dependencies</id>
+            <activation>
+                <!-- Use activeByDefault to keep IDE happy on compiling Java classes in this module.
+                Placing this setting in the iib-10.0-specific-dependencies profile has the same effect -->
+                <activeByDefault>true</activeByDefault>
+
+                <!-- Use this property as switch because currently Maven does not support version number range in activation, such as mq.version - [7.5.0.0,8.0.0.0) -->
+                <property>
+                    <name>iib.version.is90</name>
+                </property>
+            </activation>
+            <dependencies>
+                <!-- IIB dependencies (for compilation only) -->
+                <dependency>
+                    <groupId>com.ibm</groupId>
+                    <artifactId>ConfigManagerProxy</artifactId>
+                    <version>${iib.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>iib-10.0-specific-dependencies</id>
+            <activation>
+                <!-- Use this property as switch because currently Maven does not support version number range in activation, such as mq.version - [7.5.0.0,8.0.0.0) -->
+                <property>
+                    <name>iib.version.is100</name>
+                </property>
+            </activation>
+            <dependencies>
+                <!-- IIB dependencies (for compilation only) -->
+                <dependency>
+                    <groupId>com.ibm</groupId>
+                    <artifactId>IntegrationAPI</artifactId>
+                    <version>${iib.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.github.github</groupId>
+                <artifactId>site-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>
