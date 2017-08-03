@@ -31,7 +31,7 @@ Download the latest Iron Test release from [here](https://github.com/zheng-wang/
 
 An `irontest-assembly/dist` folder is created containing the files and folders for deployment.
 
-Notice that if this is the first time you build Iron Test, it could take 20 minutes (depending on your network speed) for Maven to download all the dependencies. From the second time, you should see the build time decreased to around 40 seconds, as the dependencies are already in your Maven local repository.
+Notice that if this is the first time you build Iron Test, it could take 10 minutes (depending on your network speed) for Maven to download all the dependencies. From the second time, you should see the build time decreased to around 40 seconds, as the dependencies are already in your Maven local repository.
    
 ## Deploy
 Create a folder on any computer/VM that has access to the APIs you want to test. This folder will be referred to as `<IronTest_Home>` hereafter.
