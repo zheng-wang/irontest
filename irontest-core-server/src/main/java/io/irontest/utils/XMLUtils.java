@@ -32,6 +32,8 @@ public class XMLUtils {
     public static String prettyPrintXML(String xml) throws TransformerException {
         Transformer transformer = TransformerFactory.newInstance().newTransformer();
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+        transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, "yes");  // add line break after xml declaration
         StreamResult result = new StreamResult(new StringWriter());
         StreamSource source = new StreamSource(new StringReader(xml));
         transformer.transform(source, result);
