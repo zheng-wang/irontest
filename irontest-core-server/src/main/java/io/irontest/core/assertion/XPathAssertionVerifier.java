@@ -38,11 +38,13 @@ public class XPathAssertionVerifier implements AssertionVerifier {
     public AssertionVerificationResult verify(Assertion assertion, Object input) throws Exception {
         XPathAssertionProperties otherProperties = (XPathAssertionProperties) assertion.getOtherProperties();
 
-        //  validate other properties
+        //  validate required parameters
         if (otherProperties == null || "".equals(StringUtils.trimToEmpty(otherProperties.getxPath()))) {
             throw new IllegalArgumentException("XPath not specified");
         } else if ("".equals(StringUtils.trimToEmpty(otherProperties.getExpectedValue()))) {
             throw new IllegalArgumentException("Expected Value not specified");
+        } else if (input == null) {
+            throw new IllegalArgumentException("XML is null");
         }
 
         XPathAssertionVerificationResult result = new XPathAssertionVerificationResult();

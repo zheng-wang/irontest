@@ -21,10 +21,10 @@ public class XMLEqualAssertionVerifier implements AssertionVerifier {
         XMLEqualAssertionProperties assertionProperties = (XMLEqualAssertionProperties) assertion.getOtherProperties();
 
         //  validate arguments
-        if (input == null) {
-            throw new IllegalArgumentException("Actual XML is null.");
-        } else if (assertionProperties.getExpectedXML() == null) {
+        if (assertionProperties == null || assertionProperties.getExpectedXML() == null) {
             throw new IllegalArgumentException("Expected XML is null.");
+        } else if (input == null) {
+            throw new IllegalArgumentException("Actual XML is null.");
         }
 
         XMLEqualAssertionVerificationResult result = new XMLEqualAssertionVerificationResult();
