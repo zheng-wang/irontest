@@ -2,7 +2,8 @@
 <div class="form-group form-group-reduced-bottom-margin">
   <label for="soapAddress" class="col-lg-2 control-label">SOAP Address</label>
   <div class="col-lg-6">
-    <input name="soapAddress" type="text" class="form-control" ng-change="autoSave(teststepForm.$valid)"
+    <input name="soapAddress" type="text" class="form-control"
+           ng-change="endpointSOAPAddressChanged(teststepForm.$valid)"
            ng-model="teststep.endpoint.url" id="soapAddress" spellcheck="false"
            ng-readonly="teststep.endpoint.environment">  <!-- readonly when it is a managed endpoint -->
   </div>
