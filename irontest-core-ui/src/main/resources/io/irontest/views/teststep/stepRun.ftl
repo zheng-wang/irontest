@@ -33,7 +33,7 @@
     <div class="col-lg-1">Request:</div>
     <div class="col-lg-11">
       <#-- Extra request info for test step that has request HTTP headers -->
-      <#if stepRun.teststep.otherProperties?? && stepRun.teststep.otherProperties.httpHeaders?? &&
+      <#if stepRun.teststep.otherProperties.httpHeaders?? &&
           (stepRun.teststep.otherProperties.httpHeaders?size > 0)>
         <div class="row">
           <div class="col-lg-2">HTTP Headers:</div>
