@@ -16,9 +16,6 @@ angular.module('irontest').controller('SOAPTeststepController', ['$scope', 'Test
     clearRunStatus();
 
     var createHTTPHeader = function(gridMenuEvent) {
-      if (!$scope.teststep.otherProperties) {
-        $scope.teststep.otherProperties = { httpHeaders: [] };
-      }
       $scope.teststep.otherProperties.httpHeaders.push(
         { name: 'name1', value: 'value1' }
       );

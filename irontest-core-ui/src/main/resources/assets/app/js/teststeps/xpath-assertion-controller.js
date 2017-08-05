@@ -5,14 +5,6 @@
 //    ng-include also creates a scope.
 angular.module('irontest').controller('XPathAssertionController', ['$scope', 'uiGridConstants', 'IronTestUtils',
   function($scope, uiGridConstants, IronTestUtils) {
-    $scope.init = function() {
-      if (!$scope.assertionsModelObj.assertion.otherProperties) {
-        $scope.assertionsModelObj.assertion.otherProperties = {
-          namespacePrefixes: []
-        };
-      }
-    };
-
     var createNamespacePrefix = function(gridMenuEvent) {
       $scope.assertionsModelObj.assertion.otherProperties.namespacePrefixes.push(
         { prefix: 'ns1', namespace: 'http://com.mycompany/service1' }

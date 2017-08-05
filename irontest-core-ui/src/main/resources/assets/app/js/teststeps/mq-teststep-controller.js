@@ -44,12 +44,8 @@ angular.module('irontest').controller('MQTeststepController', ['$scope', 'IronTe
 
     $scope.endpointInfoIncomplete = function() {
       var endpointOtherProperties = $scope.teststep.endpoint.otherProperties;
-      if (endpointOtherProperties) {
-        return !endpointOtherProperties.queueManagerName || !endpointOtherProperties.host ||
+      return !endpointOtherProperties.queueManagerName || !endpointOtherProperties.host ||
           !endpointOtherProperties.port || !endpointOtherProperties.svrConnChannelName;
-      } else {
-        return true;
-      }
     }
 
     $scope.actionInfoIncomplete = function() {
