@@ -31,7 +31,7 @@ public class Endpoint {
             @JsonSubTypes.Type(value = MQEndpointProperties.class, name = Endpoint.TYPE_MQ),
             @JsonSubTypes.Type(value = IIBEndpointProperties.class, name = Endpoint.TYPE_IIB)
     })
-    private Properties otherProperties;
+    private Properties otherProperties = new Properties();
     private Date created;
     private Date updated;
 

@@ -52,7 +52,7 @@ public class Teststep {
             @JsonSubTypes.Type(value = IIBTeststepProperties.class, name = Teststep.TYPE_IIB),
             @JsonSubTypes.Type(value = MQTeststepProperties.class, name = Teststep.TYPE_MQ),
             @JsonSubTypes.Type(value = WaitTeststepProperties.class, name = Teststep.TYPE_WAIT)})
-    private Properties otherProperties;
+    private Properties otherProperties = new Properties();
 
     public Teststep() {}
 

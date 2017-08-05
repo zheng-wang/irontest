@@ -104,7 +104,7 @@ angular.module('irontest').controller('EnvironmentsController', ['$scope', 'Envi
       var endpoint = new Endpoints({
         environment: { id: $stateParams.environmentId },
         type: type,
-        otherProperties: null  //  this is to avoid Jackson 'Missing property' error (http://stackoverflow.com/questions/28089484/deserialization-with-jsonsubtypes-for-no-value-missing-property-error)
+        otherProperties: {}  //  adding this property here to avoid Jackson 'Missing property' error (http://stackoverflow.com/questions/28089484/deserialization-with-jsonsubtypes-for-no-value-missing-property-error)
       });
       endpoint.$save(function(returnEndpoint) {
         $state.go('endpoint_edit', {environmentId: $stateParams.environmentId, endpointId: returnEndpoint.id,

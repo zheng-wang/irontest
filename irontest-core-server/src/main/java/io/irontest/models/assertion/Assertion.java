@@ -27,7 +27,7 @@ public class Assertion {
             @JsonSubTypes.Type(value = XMLEqualAssertionProperties.class, name = Assertion.TYPE_XML_EQUAL),
             @JsonSubTypes.Type(value = JSONPathAssertionProperties.class, name = Assertion.TYPE_JSONPATH),
             @JsonSubTypes.Type(value = JSONPathXMLEqualAssertionProperties.class, name = Assertion.TYPE_JSONPATH_XMLEQUAL)})
-    private Properties otherProperties;
+    private Properties otherProperties = new Properties();
 
     public Assertion() {}
 
