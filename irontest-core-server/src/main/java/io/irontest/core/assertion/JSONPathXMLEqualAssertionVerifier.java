@@ -19,7 +19,7 @@ public class JSONPathXMLEqualAssertionVerifier implements AssertionVerifier {
                 (JSONPathXMLEqualAssertionProperties) assertion.getOtherProperties();
 
         //  validate other properties
-        if (otherProperties == null || "".equals(StringUtils.trimToEmpty(otherProperties.getJsonPath()))) {
+        if ("".equals(StringUtils.trimToEmpty(otherProperties.getJsonPath()))) {
             throw new IllegalArgumentException("JSONPath not specified");
         } else if ("".equals(StringUtils.trimToEmpty(otherProperties.getExpectedXML()))) {
             throw new IllegalArgumentException("Expected XML not specified");

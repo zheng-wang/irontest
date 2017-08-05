@@ -71,10 +71,7 @@ public abstract class TeststepDAO {
         }
         Object request = teststep.getRequest() instanceof String ?
                 ((String) teststep.getRequest()).getBytes() : teststep.getRequest();
-        System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-        System.out.println(teststep.getOtherProperties());
         String otherProperties = new ObjectMapper().writeValueAsString(teststep.getOtherProperties());
-        System.out.println(otherProperties);
         long id = _insert(teststep, request, endpoint == null ? null : endpoint.getId(), otherProperties);
         teststep.setId(id);
 
@@ -113,8 +110,7 @@ public abstract class TeststepDAO {
         Endpoint oldEndpoint = oldTeststep.getEndpoint();
         Endpoint newEndpoint = teststep.getEndpoint();
         Long newEndpointId = newEndpoint == null ? null : newEndpoint.getId();
-        String otherProperties = teststep.getOtherProperties() == null ?
-                null : new ObjectMapper().writeValueAsString(teststep.getOtherProperties());
+        String otherProperties = new ObjectMapper().writeValueAsString(teststep.getOtherProperties());
 
         if (isRequestToBeUpdatedWhenUpdatingTeststep(teststep)) {
             Object request = teststep.getRequest() instanceof String ?

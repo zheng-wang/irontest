@@ -39,7 +39,7 @@ public class XPathAssertionVerifier implements AssertionVerifier {
         XPathAssertionProperties otherProperties = (XPathAssertionProperties) assertion.getOtherProperties();
 
         //  validate required parameters
-        if (otherProperties == null || "".equals(StringUtils.trimToEmpty(otherProperties.getxPath()))) {
+        if ("".equals(StringUtils.trimToEmpty(otherProperties.getxPath()))) {
             throw new IllegalArgumentException("XPath not specified");
         } else if ("".equals(StringUtils.trimToEmpty(otherProperties.getExpectedValue()))) {
             throw new IllegalArgumentException("Expected Value not specified");

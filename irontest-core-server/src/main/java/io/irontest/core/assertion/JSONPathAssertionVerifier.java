@@ -23,7 +23,7 @@ public class JSONPathAssertionVerifier implements AssertionVerifier {
                 (JSONPathAssertionProperties) assertion.getOtherProperties();
 
         //  validate other properties
-        if (otherProperties == null || "".equals(StringUtils.trimToEmpty(otherProperties.getJsonPath()))) {
+        if ("".equals(StringUtils.trimToEmpty(otherProperties.getJsonPath()))) {
             throw new IllegalArgumentException("JSONPath not specified");
         } else if ("".equals(StringUtils.trimToEmpty(otherProperties.getExpectedValueJSON()))) {
             throw new IllegalArgumentException("Expected Value not specified");

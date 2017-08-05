@@ -38,10 +38,8 @@ public abstract class AssertionDAO {
 
     public long insert_NoTransaction(Assertion assertion) throws JsonProcessingException {
         //  set initial/default property values (in the Properties sub-class)
-        if (assertion.getOtherProperties() == null) {
-            if (Assertion.TYPE_XPATH.equals(assertion.getType())) {
-                assertion.setOtherProperties(new XPathAssertionProperties());
-            }
+        if (Assertion.TYPE_XPATH.equals(assertion.getType())) {
+            assertion.setOtherProperties(new XPathAssertionProperties());
         }
         return _insert(assertion, new ObjectMapper().writeValueAsString(assertion.getOtherProperties()));
     }

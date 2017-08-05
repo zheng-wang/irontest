@@ -22,7 +22,7 @@ public class ContainsAssertionVerifier implements AssertionVerifier {
                 (ContainsAssertionProperties) assertion.getOtherProperties();
 
         //  validate other properties
-        if (otherProperties == null || "".equals(StringUtils.trimToEmpty(otherProperties.getContains()))) {
+        if ("".equals(StringUtils.trimToEmpty(otherProperties.getContains()))) {
             throw new IllegalArgumentException("Contains not specified");
         }
 

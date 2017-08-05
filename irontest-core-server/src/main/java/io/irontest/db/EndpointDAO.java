@@ -38,8 +38,7 @@ public abstract class EndpointDAO {
 
     @Transaction
     public long insertManagedEndpoint(Endpoint endpoint) throws JsonProcessingException {
-        String otherProperties = endpoint.getOtherProperties() == null ?
-                null : new ObjectMapper().writeValueAsString(endpoint.getOtherProperties());
+        String otherProperties = new ObjectMapper().writeValueAsString(endpoint.getOtherProperties());
         long id = _insertManagedEndpoint(endpoint.getEnvironment().getId(), endpoint.getType(), otherProperties);
         updateNameForInsert(id, "Endpoint " + id);
         return id;
@@ -58,8 +57,7 @@ public abstract class EndpointDAO {
                                                   @Bind("otherProperties") String otherProperties);
 
     public long insertUnmanagedEndpoint_NoTransaction(Endpoint endpoint) throws JsonProcessingException {
-        String otherProperties = endpoint.getOtherProperties() == null ?
-                null : new ObjectMapper().writeValueAsString(endpoint.getOtherProperties());
+        String otherProperties = new ObjectMapper().writeValueAsString(endpoint.getOtherProperties());
         return _insertUnmanagedEndpoint(endpoint, otherProperties);
     }
 
@@ -73,8 +71,7 @@ public abstract class EndpointDAO {
                                    @Bind("otherProperties") String otherProperties);
 
     public int update(Endpoint endpoint) throws JsonProcessingException {
-        String otherProperties = endpoint.getOtherProperties() == null ?
-                null : new ObjectMapper().writeValueAsString(endpoint.getOtherProperties());
+        String otherProperties = new ObjectMapper().writeValueAsString(endpoint.getOtherProperties());
         Long environmentId = endpoint.getEnvironment() == null ? null : endpoint.getEnvironment().getId();
         return _update(endpoint, environmentId, otherProperties);
     }
