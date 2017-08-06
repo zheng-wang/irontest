@@ -1,9 +1,7 @@
 package io.irontest.resources;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import io.irontest.core.runner.BasicTeststepRun;
-import io.irontest.core.runner.SOAPAPIResponse;
-import io.irontest.core.runner.TeststepRunnerFactory;
+import io.irontest.core.runner.*;
 import io.irontest.db.TeststepDAO;
 import io.irontest.db.UtilsDAO;
 import io.irontest.models.endpoint.Endpoint;
@@ -129,10 +127,12 @@ public class TeststepResource {
     public BasicTeststepRun run(Teststep teststep) throws Exception {
         Thread.sleep(100); // workaround for Chrome 44 to 48's 'Failed to load response data' problem (no such problem in Chrome 49)
 
-        BasicTeststepRun basicTeststepRun = TeststepRunnerFactory.getInstance().newTeststepRunner(teststep, teststepDAO, utilsDAO, null).run();
+        TeststepRunner teststepRunner = TeststepRunnerFactory.getInstance().newTeststepRunner(
+                teststep, teststepDAO, utilsDAO, null);
+        BasicTeststepRun basicTeststepRun = teststepRunner.run();
 
+        //  for better display in browser, transform XML response to be pretty-printed
         if (Teststep.TYPE_SOAP.equals(teststep.getType())) {
-            //  for better displaying SOAP response in browser, transform XML to be pretty-printed
             SOAPAPIResponse soapAPIResponse = (SOAPAPIResponse) basicTeststepRun.getResponse();
             String httpResponseContentType = IronTestUtils.getFirstHTTPHeaderValue(
                     soapAPIResponse.getHttpHeaders(), HttpHeaders.CONTENT_TYPE);
@@ -141,6 +141,10 @@ public class TeststepResource {
                             httpResponseContentType.contains("application/soap+xml"))) {
                 soapAPIResponse.setHttpBody(XMLUtils.prettyPrintXML(soapAPIResponse.getHttpBody()));
             }
+        } else if (Teststep.TYPE_MQ.equals(teststep.getType()) &&
+                Teststep.ACTION_DEQUEUE.equals(teststep.getAction())) {
+            MQAPIResponse mqAPIResponse = (MQAPIResponse) basicTeststepRun.getResponse();
+            mqAPIResponse.setValue(XMLUtils.prettyPrintXML((String) mqAPIResponse.getValue()));
         }
 
         return basicTeststepRun;
