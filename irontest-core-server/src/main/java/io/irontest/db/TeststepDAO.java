@@ -223,6 +223,7 @@ public abstract class TeststepDAO {
 
             // setup new action's data
             teststep.getAssertions().clear();
+            teststep.setRequest(null);
             if (Teststep.ACTION_CHECK_DEPTH.equals(newAction)) {
                 Assertion assertion = new Assertion();
                 teststep.getAssertions().add(assertion);
