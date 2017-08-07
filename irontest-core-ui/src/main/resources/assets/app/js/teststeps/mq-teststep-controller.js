@@ -10,10 +10,9 @@ angular.module('irontest').controller('MQTeststepController', ['$scope', 'IronTe
     $scope.steprun = {};
     $scope.textMessageActiveTabIndex = 0;
 
-    var clearPreviousRunAndAssertionVerificationStatus = function() {
+    var clearPreviousRunStatus = function() {
       if (timer) $timeout.cancel(timer);
       $scope.steprun = {};
-      $scope.assertionVerificationResult = null;
     };
 
     $scope.destinationTypeChanged = function(isValid) {
@@ -27,7 +26,7 @@ angular.module('irontest').controller('MQTeststepController', ['$scope', 'IronTe
     };
 
     $scope.actionChanged = function(isValid) {
-      clearPreviousRunAndAssertionVerificationStatus();
+      clearPreviousRunStatus();
 
       var teststep = $scope.teststep;
 
@@ -67,7 +66,7 @@ angular.module('irontest').controller('MQTeststepController', ['$scope', 'IronTe
     }
 
     $scope.doAction = function() {
-      clearPreviousRunAndAssertionVerificationStatus();
+      clearPreviousRunStatus();
 
       var teststep = new Teststeps($scope.teststep);
       $scope.steprun.status = 'ongoing';
