@@ -19,7 +19,6 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -29,10 +28,24 @@ import java.util.Iterator;
  * Created by Zheng on 28/07/2015.
  */
 public class XMLUtils {
+    /**
+     * If the input string is well formed XML, return its pretty-print format. Otherwise, return it as is.
+     * @param xml
+     * @return
+     * @throws TransformerException
+     */
     public static String prettyPrintXML(String xml) throws TransformerException {
         if (xml == null) {
             return null;
         } else {
+            Document doc = null;
+            try {
+                doc = XMLUtils.xmlStringToDOM(xml);
+            } catch (Exception e) {
+                //  the input string is not well formed XML
+                return xml;
+            }
+
             Transformer transformer = TransformerFactory.newInstance().newTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
@@ -42,7 +55,7 @@ public class XMLUtils {
                 transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
             }
             StreamResult result = new StreamResult(new StringWriter());
-            StreamSource source = new StreamSource(new StringReader(xml));
+            DOMSource source = new DOMSource(doc);
             transformer.transform(source, result);
             return result.getWriter().toString();
         }
@@ -76,6 +89,7 @@ public class XMLUtils {
     public static Document xmlStringToDOM(String xml) throws ParserConfigurationException, IOException, SAXException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
+        builder.setErrorHandler(null);  //  prevent XML parser logging
         return builder.parse(new InputSource(new StringReader(xml)));
     }
 

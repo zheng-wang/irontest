@@ -134,13 +134,7 @@ public class TeststepResource {
         //  for better display in browser, transform XML response to be pretty-printed
         if (Teststep.TYPE_SOAP.equals(teststep.getType())) {
             SOAPAPIResponse soapAPIResponse = (SOAPAPIResponse) basicTeststepRun.getResponse();
-            String httpResponseContentType = IronTestUtils.getFirstHTTPHeaderValue(
-                    soapAPIResponse.getHttpHeaders(), HttpHeaders.CONTENT_TYPE);
-            if (httpResponseContentType != null &&
-                    (MediaType.TEXT_XML_TYPE.isCompatible(MediaType.valueOf(httpResponseContentType)) ||
-                            httpResponseContentType.contains("application/soap+xml"))) {
-                soapAPIResponse.setHttpBody(XMLUtils.prettyPrintXML(soapAPIResponse.getHttpBody()));
-            }
+            soapAPIResponse.setHttpBody(XMLUtils.prettyPrintXML(soapAPIResponse.getHttpBody()));
         } else if (Teststep.TYPE_MQ.equals(teststep.getType()) &&
                 Teststep.ACTION_DEQUEUE.equals(teststep.getAction())) {
             MQAPIResponse mqAPIResponse = (MQAPIResponse) basicTeststepRun.getResponse();
