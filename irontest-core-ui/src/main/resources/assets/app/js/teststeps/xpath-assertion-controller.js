@@ -9,15 +9,15 @@ angular.module('irontest').controller('XPathAssertionController', ['$scope', 'ui
       $scope.assertionsModelObj.assertion.otherProperties.namespacePrefixes.push(
         { prefix: 'ns1', namespace: 'http://com.mycompany/service1' }
       );
+      $scope.assertionsModelObj.clearCurrentAssertionVerificationResult();
       $scope.update(true, $scope.assertionsModelObj.reselectCurrentAssertionInGrid);
     };
 
     var removeNamespacePrefix = function(gridMenuEvent) {
-      var selectedRows = $scope.assertionsModelObj.xPathNamespacePrefixGridApi.selection.getSelectedRows();
+      var selectedRow = $scope.assertionsModelObj.xPathNamespacePrefixGridApi.selection.getSelectedRows()[0];
       var namespacePrefixes = $scope.assertionsModelObj.assertion.otherProperties.namespacePrefixes;
-      for (var i = 0; i < selectedRows.length; i += 1) {
-        IronTestUtils.deleteArrayElementByProperty(namespacePrefixes, '$$hashKey', selectedRows[i].$$hashKey);
-      }
+      IronTestUtils.deleteArrayElementByProperty(namespacePrefixes, '$$hashKey', selectedRow.$$hashKey);
+      $scope.assertionsModelObj.clearCurrentAssertionVerificationResult();
       $scope.update(true, $scope.assertionsModelObj.reselectCurrentAssertionInGrid);
     };
 

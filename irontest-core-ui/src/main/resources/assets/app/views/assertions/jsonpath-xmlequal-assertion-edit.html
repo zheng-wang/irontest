@@ -39,9 +39,9 @@
   </div>
   <div class="col-lg-5 no-left-padding">
     <textarea name="actualXML" id="actualXML" rows="6" class="form-control"
-              ng-class="{ 'text-red' : assertionsModelObj.assertionVerificationResult.error }" readonly>{{
-        $parent.assertionsModelObj.assertionVerificationResult.error ?
-        $parent.assertionsModelObj.assertionVerificationResult.error :
-        $parent.assertionsModelObj.assertionVerificationResult.actualXML }}</textarea>
+              ng-class="{ 'text-red' : assertionsModelObj.assertionVerificationResults[assertionsModelObj.assertion.id].error }" readonly>{{
+        $parent.assertionsModelObj.assertionVerificationResults[$parent.assertionsModelObj.assertion.id].error ?
+        $parent.assertionsModelObj.assertionVerificationResults[$parent.assertionsModelObj.assertion.id].error :
+        $parent.assertionsModelObj.assertionVerificationResults[$parent.assertionsModelObj.assertion.id].actualXML }}</textarea>
   </div>
 </div>

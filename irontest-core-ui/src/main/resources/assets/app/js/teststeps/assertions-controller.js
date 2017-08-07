@@ -9,7 +9,13 @@ angular.module('irontest').controller('AssertionsController', ['$scope', 'uiGrid
     '$timeout',
   function($scope, uiGridConstants, IronTestUtils, $http, $timeout) {
     //  use assertionsModelObj for all variables in the scope, to avoid conflict with parent scope
-    $scope.assertionsModelObj = {};
+    $scope.assertionsModelObj = {
+      assertionVerificationResults: {}
+    };
+
+    $scope.$watch('$parent.steprun.response', function() {
+      $scope.assertionsModelObj.assertionVerificationResults = {};
+    });
 
     //  remove currently selected assertion
     var removeCurrentAssertion = function() {
@@ -43,7 +49,6 @@ angular.module('irontest').controller('AssertionsController', ['$scope', 'uiGrid
         $scope.assertionsModelObj.gridApi = gridApi;
         gridApi.selection.on.rowSelectionChanged($scope, function(row) {
           $scope.assertionsModelObj.assertion = row.entity;
-          $scope.assertionsModelObj.assertionVerificationResult = null;
         });
       }
     };
@@ -65,7 +70,12 @@ angular.module('irontest').controller('AssertionsController', ['$scope', 'uiGrid
        selectAssertionInGridByProperty('id', currentAssertionId);
     };
 
+    $scope.assertionsModelObj.clearCurrentAssertionVerificationResult = function() {
+      delete $scope.assertionsModelObj.assertionVerificationResults[$scope.assertionsModelObj.assertion.id];
+    };
+
     $scope.assertionsModelObj.autoSave = function(isValid) {
+      $scope.assertionsModelObj.clearCurrentAssertionVerificationResult();
       $scope.autoSave(isValid, $scope.assertionsModelObj.reselectCurrentAssertionInGrid);
     };
 
@@ -94,8 +104,7 @@ angular.module('irontest').controller('AssertionsController', ['$scope', 'uiGrid
         .post(url, assertionVerification)
         .then(function successCallback(response) {
           var data = response.data;
-          $scope.assertionsModelObj.assertionVerificationResult = data;
-          $scope.assertionsModelObj.assertionVerificationResult.assertionId = assertion.id;
+          $scope.assertionsModelObj.assertionVerificationResults[assertion.id] = data;
         }, function errorCallback(response) {
           IronTestUtils.openErrorHTTPResponseModal(response);
         });
