@@ -1,73 +1,86 @@
 <div ng-controller="TeststepsController" ng-init="findOne()">
-  <div class="row" id="page-header">
-    <h3 class="page-header">Test Step - {{teststep.name}}
-      <label class="col-lg-offset-1" irt-successful-message></label>
-      <small>Last edit at {{teststep.updated | date:'medium'}}</small>
-      <label class="back-link"><a ui-sref="testcase_edit({testcaseId: teststep.testcaseId})">Back</a>                    </label>
-    </h3>
+  <div class="row page-header" id="page-header">
+    <div class="col-lg-7 page-header-part1">
+      <h3><div>Test Step - {{teststep.name}}</div></h3>
+    </div>
+    <div class="col-lg-5">
+      <div class="row page-header-part2"> <!-- use another row to arrange columns in a finer way -->
+        <div class="col-lg-4">
+          <h4><label irt-successful-message></label></h4>
+        </div>
+        <div class="col-lg-2">
+          <h4><a class="back-link" ui-sref="testcase_edit({testcaseId: teststep.testcaseId})">Back</a></h4>
+        </div>
+        <div class="col-lg-6">
+          <h5>Last edit at {{teststep.updated | date:'medium'}}</h5>
+        </div>
+      </div>
+    </div>
   </div>
-  <form name="teststepForm" class="form-horizontal" role="form" novalidate>
-    <uib-tabset active="activeTabIndex">
-      <uib-tab heading="Basic Info">
-        <div class="form-group"></div> <!-- spacer -->
-        <div class="col-lg-9">
-          <div class="form-group required" ng-class="{ 'has-error' : savingStatus.submitted && teststepForm.name.$invalid }">
-            <label for="name" class="col-lg-2 control-label">Name</label>
-            <div class="col-lg-10">
-              <input name="name" type="text" class="form-control" ng-model="teststep.name"
-                     irt-select="{{ activeTabIndex === 0 && teststepNewlyCreated() }}"
-                     ng-change="autoSave(teststepForm.$valid)" id="name" placeholder="Name" required>
-              <div ng-show="savingStatus.submitted && teststepForm.name.$invalid" class="help-block">
-                <p ng-show="teststepForm.name.$error.required">Name is required</p>
+  <div class="row">
+    <form name="teststepForm" class="form-horizontal" role="form" novalidate>
+      <uib-tabset active="activeTabIndex">
+        <uib-tab heading="Basic Info">
+          <div class="form-group"></div> <!-- spacer -->
+          <div class="col-lg-9">
+            <div class="form-group required" ng-class="{ 'has-error' : savingStatus.submitted && teststepForm.name.$invalid }">
+              <label for="name" class="col-lg-2 control-label">Name</label>
+              <div class="col-lg-10">
+                <input name="name" type="text" class="form-control" ng-model="teststep.name"
+                       irt-select="{{ activeTabIndex === 0 && teststepNewlyCreated() }}"
+                       ng-change="autoSave(teststepForm.$valid)" id="name" placeholder="Name" required>
+                <div ng-show="savingStatus.submitted && teststepForm.name.$invalid" class="help-block">
+                  <p ng-show="teststepForm.name.$error.required">Name is required</p>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="description" class="col-lg-2 control-label">Description</label>
+              <div class="col-lg-10">
+              <textarea name="description" ng-model="teststep.description" ng-change="autoSave(teststepForm.$valid)"
+                        id="description" cols="30" rows="10" placeholder="Description" class="form-control"></textarea>
               </div>
             </div>
           </div>
-          <div class="form-group">
-            <label for="description" class="col-lg-2 control-label">Description</label>
-            <div class="col-lg-10">
-              <textarea name="description" ng-model="teststep.description" ng-change="autoSave(teststepForm.$valid)"
-                  id="description" cols="30" rows="10" placeholder="Description" class="form-control"></textarea>
-            </div>
+        </uib-tab>
+        <!-- can't use ng-if to replace ng-show below, as ng-if seems turning the tab index to 2 instead of 1
+        when the tab is displayed  -->
+        <uib-tab ng-show="teststep.endpoint" heading="Endpoint Details"
+                 deselect="isInShareEndpointMode() ? cancelShareEndpoint() : angular.noop()">
+          <div class="form-group"></div> <!-- spacer -->
+          <div class="col-lg-10">
+            <div ng-include="'/ui/views/teststeps/edit-endpoint-details-basic-info.html'"></div>
+
+            <div ng-if="teststep.type === 'SOAP'" ng-controller="SOAPTeststepController"
+                 ng-include="'/ui/views/teststeps/soap/edit-soap-teststep-endpoint-details.html'"></div>
+            <div ng-if="teststep.type === 'DB'"
+                 ng-include="'/ui/views/teststeps/db/edit-db-teststep-endpoint-details.html'"></div>
+            <div ng-if="teststep.type === 'MQ'"
+                 ng-include="'/ui/views/teststeps/mq/edit-mq-teststep-endpoint-details.html'"></div>
+            <div ng-if="teststep.type === 'IIB'" ng-controller="IIBTeststepController"
+                 ng-include="'/ui/views/teststeps/iib/edit-iib-teststep-endpoint-details.html'"></div>
+
+            <div ng-include="'/ui/views/teststeps/edit-endpoint-details-bottom-part.html'"></div>
           </div>
-        </div>
-      </uib-tab>
-      <!-- can't use ng-if to replace ng-show below, as ng-if seems turning the tab index to 2 instead of 1
-      when the tab is displayed  -->
-      <uib-tab ng-show="teststep.endpoint" heading="Endpoint Details"
-               deselect="isInShareEndpointMode() ? cancelShareEndpoint() : angular.noop()">
-        <div class="form-group"></div> <!-- spacer -->
-        <div class="col-lg-10">
-          <div ng-include="'/ui/views/teststeps/edit-endpoint-details-basic-info.html'"></div>
-
-          <div ng-if="teststep.type === 'SOAP'" ng-controller="SOAPTeststepController"
-               ng-include="'/ui/views/teststeps/soap/edit-soap-teststep-endpoint-details.html'"></div>
-          <div ng-if="teststep.type === 'DB'"
-               ng-include="'/ui/views/teststeps/db/edit-db-teststep-endpoint-details.html'"></div>
-          <div ng-if="teststep.type === 'MQ'"
-               ng-include="'/ui/views/teststeps/mq/edit-mq-teststep-endpoint-details.html'"></div>
-          <div ng-if="teststep.type === 'IIB'" ng-controller="IIBTeststepController"
-               ng-include="'/ui/views/teststeps/iib/edit-iib-teststep-endpoint-details.html'"></div>
-
-          <div ng-include="'/ui/views/teststeps/edit-endpoint-details-bottom-part.html'"></div>
-        </div>
-      </uib-tab>
-      <uib-tab heading="{{ teststep.type === 'MQ' || teststep.type === 'IIB' || teststep.type === 'Wait' ?
+        </uib-tab>
+        <uib-tab heading="{{ teststep.type === 'MQ' || teststep.type === 'IIB' || teststep.type === 'Wait' ?
                           'Action' : 'Invocation' }}">
-        <div ng-if="teststep.type === 'SOAP'"
-             ng-include="'/ui/views/teststeps/soap/edit-soap-teststep-invocation.html'"
-             ng-controller="SOAPTeststepController"></div>
-        <div ng-if="teststep.type === 'DB'"
-             ng-include="'/ui/views/teststeps/db/edit-db-teststep-invocation.html'"
-             ng-controller="DBTeststepController"></div>
-        <div ng-if="teststep.type === 'MQ'"
-             ng-include="'/ui/views/teststeps/mq/edit-mq-teststep-action.html'"
-             ng-controller="MQTeststepController"></div>
-        <div ng-if="teststep.type === 'IIB'"
-             ng-include="'/ui/views/teststeps/iib/edit-iib-teststep-action.html'"
-             ng-controller="IIBTeststepController"></div>
-        <div ng-if="teststep.type === 'Wait'"
-             ng-include="'/ui/views/teststeps/wait/edit-wait-teststep-action.html'"></div>
-      </uib-tab>
-    </uib-tabset>
-  </form>
+          <div ng-if="teststep.type === 'SOAP'"
+               ng-include="'/ui/views/teststeps/soap/edit-soap-teststep-invocation.html'"
+               ng-controller="SOAPTeststepController"></div>
+          <div ng-if="teststep.type === 'DB'"
+               ng-include="'/ui/views/teststeps/db/edit-db-teststep-invocation.html'"
+               ng-controller="DBTeststepController"></div>
+          <div ng-if="teststep.type === 'MQ'"
+               ng-include="'/ui/views/teststeps/mq/edit-mq-teststep-action.html'"
+               ng-controller="MQTeststepController"></div>
+          <div ng-if="teststep.type === 'IIB'"
+               ng-include="'/ui/views/teststeps/iib/edit-iib-teststep-action.html'"
+               ng-controller="IIBTeststepController"></div>
+          <div ng-if="teststep.type === 'Wait'"
+               ng-include="'/ui/views/teststeps/wait/edit-wait-teststep-action.html'"></div>
+        </uib-tab>
+      </uib-tabset>
+    </form>
+  </div>
 </div>

@@ -1,10 +1,21 @@
 <div ng-controller="EnvironmentsController" ng-init="findOne()">
-  <div class="row">
-    <h3 class="page-header">Environment - {{environment.name}}
-      <label class="col-lg-offset-1" irt-successful-message></label>
-      <small>Last edit at {{environment.updated | date:'medium'}}</small>
-      <label class="back-link"><a ui-sref="environment_all">Back</a>                    </label>
-    </h3>
+  <div class="row page-header" id="page-header">
+    <div class="col-lg-7 page-header-part1">
+      <h3><div>Environment - {{environment.name}}</div></h3>
+    </div>
+    <div class="col-lg-5">
+      <div class="row page-header-part2"> <!-- use another row to arrange columns in a finer way -->
+        <div class="col-lg-4">
+          <h4><label irt-successful-message></label></h4>
+        </div>
+        <div class="col-lg-2">
+          <h4><a class="back-link" ui-sref="environment_all">Back</a></h4>
+        </div>
+        <div class="col-lg-6">
+          <h5>Last edit at {{environment.updated | date:'medium'}}</h5>
+        </div>
+      </div>
+    </div>
   </div>
   <uib-tabset active="activeTabIndex">
     <uib-tab heading="Basic Info">

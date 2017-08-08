@@ -1,9 +1,18 @@
 <div ng-controller="TestcasesController" ng-init="findOne()">
-  <div class="row">
-    <h3 class="page-header">Test Case - {{testcase.name}}
-      <label class="col-lg-offset-1" irt-successful-message></label>
-      <small>Last edit at {{testcase.updated | date:'medium'}}</small>
-    </h3>
+  <div class="row page-header" id="page-header">
+    <div class="col-lg-7 page-header-part1">
+      <h3><div>Test Case - {{testcase.name}}</div></h3>
+    </div>
+    <div class="col-lg-5">
+      <div class="row page-header-part2"> <!-- use another row to arrange columns in a finer way -->
+        <div class="col-lg-5">
+          <h4><label irt-successful-message></label></h4>
+        </div>
+        <div class="col-lg-7">
+          <h5>Last edit at {{testcase.updated | date:'medium'}}</h5>
+        </div>
+      </div>
+    </div>
   </div>
   <uib-tabset active="activeTabIndex">
     <uib-tab heading="Basic Info">
