@@ -26,9 +26,9 @@ public class EnvironmentResource {
     }
 
     @PUT @Path("{environmentId}")
-    public Environment update(Environment environment) {
+    public Environment update_EnvironmentEditView(Environment environment) {
         environmentDAO.update(environment);
-        return environmentDAO.findById(environment.getId());
+        return environmentDAO.findById_EnvironmentEditView(environment.getId());
     }
 
     @DELETE @Path("{environmentId}")
@@ -42,7 +42,7 @@ public class EnvironmentResource {
     }
 
     @GET @Path("{environmentId}")
-    public Environment findById(@PathParam("environmentId") long environmentId) {
-        return environmentDAO.findById(environmentId);
+    public Environment findById_EnvironmentEditView(@PathParam("environmentId") long environmentId) {
+        return environmentDAO.findById_EnvironmentEditView(environmentId);
     }
 }

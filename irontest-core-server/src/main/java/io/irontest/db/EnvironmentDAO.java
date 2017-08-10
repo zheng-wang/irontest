@@ -26,7 +26,7 @@ public abstract class EnvironmentDAO {
 
     @SqlUpdate("insert into environment values ()")
     @GetGeneratedKeys
-    public abstract long _insert();
+    protected abstract long _insert();
 
     @SqlUpdate("update environment set name = :name where id = :id")
     protected abstract long updateNameForInsert(@Bind("id") long id, @Bind("name") String name);
@@ -59,9 +59,9 @@ public abstract class EnvironmentDAO {
      * @return environment with all endpoints in it
      */
     @Transaction
-    public Environment findById(long id) {
+    public Environment findById_EnvironmentEditView(long id) {
         Environment environment = _findById(id);
-        List<Endpoint> endpoints = endpointDAO().findByEnvironmentId_PrimaryProperties(id);
+        List<Endpoint> endpoints = endpointDAO().findByEnvironmentId_EnvironmentEditView(id);
         environment.setEndpoints(endpoints);
         return environment;
     }

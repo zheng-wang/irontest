@@ -89,7 +89,7 @@ public abstract class EndpointDAO {
     public abstract Endpoint findByName(@Bind("name") String name);
 
     @SqlQuery("select id, environment_id, name, type, description from endpoint where environment_id = :environmentId")
-    public abstract List<Endpoint> findByEnvironmentId_PrimaryProperties(@Bind("environmentId") long environmentId);
+    public abstract List<Endpoint> findByEnvironmentId_EnvironmentEditView(@Bind("environmentId") long environmentId);
 
     @SqlQuery(
             "select ep.id, ep.environment_id, ev.name as environment_name, ep.name, ep.type, ep.description " +
