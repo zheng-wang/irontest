@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('irontest').controller('TeststepsController', ['$scope', 'Teststeps', '$stateParams', '$timeout',
-    '$uibModal', 'IronTestUtils', '$http', 'Environments',
-  function($scope, Teststeps, $stateParams, $timeout, $uibModal, IronTestUtils, $http, Environments) {
+    '$uibModal', 'IronTestUtils', '$http', 'Environments', 'ManagedEndpoints',
+  function($scope, Teststeps, $stateParams, $timeout, $uibModal, IronTestUtils, $http, Environments, ManagedEndpoints) {
     $scope.teststep = {
       assertions: []
     };
@@ -68,10 +68,8 @@ angular.module('irontest').controller('TeststepsController', ['$scope', 'Testste
     $scope.selectManagedEndpoint = function() {
       //  find managed endpoints by type
       var endpointType = $scope.teststep.endpoint.type;
-      var url = 'api/jsonservice/findManagedEndpointsByType?type=' + endpointType;
-      $http
-        .get(url)
-        .then(function successCallback(response) {
+      ManagedEndpoints.query({ type: endpointType },
+        function successCallback(response) {
           //  open modal dialog
           var modalInstance = $uibModal.open({
             templateUrl: '/ui/views/endpoints/list-modal.html',
@@ -83,7 +81,7 @@ angular.module('irontest').controller('TeststepsController', ['$scope', 'Testste
                 return endpointType;
               },
               endpoints: function () {
-                return response.data;
+                return response;
               }
             }
           });

@@ -116,7 +116,7 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         assertionDAO.createTableIfNotExists();
 
         //  register REST resources
-        environment.jersey().register(new EndpointResource(endpointDAO));
+        environment.jersey().register(new ManagedEndpointResource(endpointDAO));
         environment.jersey().register(new TestcaseResource(testcaseDAO, teststepDAO));
         environment.jersey().register(new FolderResource(folderDAO));
         environment.jersey().register(new FolderTreeNodeResource(folderTreeNodeDAO));
@@ -126,7 +126,7 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         environment.jersey().register(new TestcaseRunResource(testcaseDAO, teststepDAO, utilsDAO, testcaseRunDAO));
 
         //  register JSON services
-        environment.jersey().register(new JSONService(new AssertionVerifierFactory(), endpointDAO));
+        environment.jersey().register(new JSONService(new AssertionVerifierFactory()));
 
         //  register jersey LoggingFilter
         environment.jersey().register(new LoggingFilter(Logger.getLogger(LoggingFilter.class.getName()), true));

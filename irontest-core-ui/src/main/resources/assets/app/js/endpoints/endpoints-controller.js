@@ -1,9 +1,9 @@
 'use strict';
 
 //  This controller is for managed endpoints.
-angular.module('irontest').controller('EndpointsController', ['$scope', 'Endpoints', '$stateParams', '$state',
+angular.module('irontest').controller('EndpointsController', ['$scope', 'ManagedEndpoints', '$stateParams', '$state',
     '$timeout', 'IronTestUtils',
-  function($scope, Endpoints, $stateParams, $state, $timeout, IronTestUtils) {
+  function($scope, ManagedEndpoints, $stateParams, $state, $timeout, IronTestUtils) {
     $scope.endpointNewlyCreated = function() {
       return $stateParams.newlyCreated === true;
     };
@@ -30,8 +30,7 @@ angular.module('irontest').controller('EndpointsController', ['$scope', 'Endpoin
     };
 
     $scope.findOne = function() {
-      Endpoints.get({
-        environmentId: $stateParams.environmentId,
+      ManagedEndpoints.get({
         endpointId: $stateParams.endpointId
       }, function(endpoint) {
         $scope.endpoint = endpoint;

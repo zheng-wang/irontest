@@ -7,15 +7,13 @@ import io.irontest.models.endpoint.SOAPEndpointProperties;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.List;
 
-/**
- * Created by Trevor Li on 6/30/15.
- */
-@Path("/environments/{environmentId}/endpoints") @Produces({ MediaType.APPLICATION_JSON })
-public class EndpointResource {
+@Path("/endpoints/managed") @Produces({ MediaType.APPLICATION_JSON })
+public class ManagedEndpointResource {
     private final EndpointDAO endpointDAO;
 
-    public EndpointResource(EndpointDAO endpointDAO) {
+    public ManagedEndpointResource(EndpointDAO endpointDAO) {
         this.endpointDAO = endpointDAO;
     }
 
@@ -44,5 +42,10 @@ public class EndpointResource {
     public Endpoint findById(@PathParam("endpointId") long endpointId) {
         Endpoint endpoint = endpointDAO.findById(endpointId);
         return endpoint;
+    }
+
+    @GET
+    public List<Endpoint> findByType(@QueryParam("type") String endpointType) {
+        return endpointDAO.findManagedEndpointsByType(endpointType);
     }
 }

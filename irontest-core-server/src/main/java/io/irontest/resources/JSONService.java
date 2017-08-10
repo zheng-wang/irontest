@@ -2,18 +2,17 @@ package io.irontest.resources;
 
 import io.irontest.core.assertion.AssertionVerifier;
 import io.irontest.core.assertion.AssertionVerifierFactory;
-import io.irontest.db.EndpointDAO;
 import io.irontest.models.TestResult;
 import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.AssertionVerificationRequest;
 import io.irontest.models.assertion.AssertionVerificationResult;
-import io.irontest.models.endpoint.Endpoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.*;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.util.List;
 
 /**
  * A pseudo JSON RPC service for hosting action oriented browser-server interactions.
@@ -24,11 +23,9 @@ import java.util.List;
 public class JSONService {
     private static final Logger LOGGER = LoggerFactory.getLogger(JSONService.class);
     private AssertionVerifierFactory assertionVerifierFactory;
-    private EndpointDAO endpointDAO;
 
-    public JSONService(AssertionVerifierFactory assertionVerifierFactory, EndpointDAO endpointDAO) {
+    public JSONService(AssertionVerifierFactory assertionVerifierFactory) {
         this.assertionVerifierFactory = assertionVerifierFactory;
-        this.endpointDAO = endpointDAO;
     }
 
     /**
@@ -53,10 +50,5 @@ public class JSONService {
             result.setError(e.getMessage());
         }
         return result;
-    }
-
-    @GET @Path("findManagedEndpointsByType")
-    public List<Endpoint> findManagedEndpointsByType(@QueryParam("type") String endpointType) {
-        return endpointDAO.findManagedEndpointsByType(endpointType);
     }
 }
