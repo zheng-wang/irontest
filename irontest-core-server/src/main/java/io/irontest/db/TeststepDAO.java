@@ -384,7 +384,7 @@ public abstract class TeststepDAO {
 
     @SqlQuery("select id, testcase_id, sequence, name, type, description from teststep " +
               "where testcase_id = :testcaseId order by sequence")
-    protected abstract List<Teststep> findByTestcaseId_PrimaryProperties(@Bind("testcaseId") long testcaseId);
+    protected abstract List<Teststep> findByTestcaseId_TestcaseEditView(@Bind("testcaseId") long testcaseId);
 
     @SqlQuery("select * from teststep where testcase_id = :testcaseId and sequence = :sequence")
     protected abstract Teststep findBySequence(@Bind("testcaseId") long testcaseId, @Bind("sequence") short sequence);

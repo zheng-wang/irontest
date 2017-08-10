@@ -68,24 +68,21 @@ public abstract class TestcaseDAO {
     @Transaction
     public void deleteById(long id) {
         TeststepDAO teststepDAO = teststepDAO();
-        List<Teststep> teststeps = teststepDAO.findByTestcaseId_PrimaryProperties(id);
+        List<Teststep> teststeps = teststepDAO.findByTestcaseId_TestcaseEditView(id);
         for (Teststep teststep: teststeps) {
             teststepDAO.deleteById_NoTransaction(teststep.getId());
         }
         _deleteById(id);
     }*/
 
-    /*@SqlQuery("select * from testcase")
-    public abstract List<Testcase> findAll();*/
-
     @SqlQuery("select * from testcase where id = :id")
     protected abstract Testcase _findById(@Bind("id") long id);
 
     @Transaction
-    public Testcase findById_Mini(long id) {
+    public Testcase findById_TestcaseEditView(long id) {
         Testcase result = _findById(id);
         if (result != null) {
-            List<Teststep> teststeps = teststepDAO().findByTestcaseId_PrimaryProperties(id);
+            List<Teststep> teststeps = teststepDAO().findByTestcaseId_TestcaseEditView(id);
             result.setTeststeps(teststeps);
         }
         return result;

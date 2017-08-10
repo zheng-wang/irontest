@@ -44,7 +44,7 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
               { sequence: info.targetRowEntity.sequence }     //  to sequence
             ]
           });
-          testcase.$update({ moveStep: true }, function(response) {
+          testcase.$moveStep(function(response) {
             $scope.$broadcast('successfullySaved');
             $scope.testcase = response;
           }, function(response) {

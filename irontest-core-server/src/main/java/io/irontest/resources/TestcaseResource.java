@@ -1,6 +1,7 @@
 package io.irontest.resources;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.dropwizard.jersey.PATCH;
 import io.irontest.db.TestcaseDAO;
 import io.irontest.db.TeststepDAO;
 import io.irontest.models.Testcase;
@@ -24,14 +25,9 @@ public class TestcaseResource {
     }
 
     @PUT @Path("{testcaseId}")
-    public Testcase update(Testcase testcase, @QueryParam("moveStep") boolean moveStep) {
-        if (moveStep) {  //  move teststep in testcase
-            List<Teststep> teststeps = testcase.getTeststeps();
-            teststepDAO.moveInTestcase(testcase.getId(), teststeps.get(0).getSequence(), teststeps.get(1).getSequence());
-        } else {         //  update testcase details
-            testcaseDAO.update(testcase);
-        }
-        return testcaseDAO.findById_Mini(testcase.getId());
+    public Testcase update_TestcaseEditView(Testcase testcase) {
+        testcaseDAO.update(testcase);
+        return testcaseDAO.findById_TestcaseEditView(testcase.getId());
     }
 
     /*@DELETE @Path("{testcaseId}")
@@ -39,14 +35,16 @@ public class TestcaseResource {
         testcaseDAO.deleteById(testcaseId);
     }*/
 
-    /*@GET
-    public List<Testcase> findAll() {
-        return testcaseDAO.findAll();
-    }*/
-
     @GET @Path("{testcaseId}")
-    public Testcase findById(@PathParam("testcaseId") long testcaseId) {
-        return testcaseDAO.findById_Mini(testcaseId);
+    public Testcase findById_TestcaseEditView(@PathParam("testcaseId") long testcaseId) {
+        return testcaseDAO.findById_TestcaseEditView(testcaseId);
+    }
+
+    @PATCH @Path("{testcaseId}/moveStep")
+    public Testcase moveStep(Testcase testcase) throws JsonProcessingException {
+        List<Teststep> teststeps = testcase.getTeststeps();
+        teststepDAO.moveInTestcase(testcase.getId(), teststeps.get(0).getSequence(), teststeps.get(1).getSequence());
+        return testcaseDAO.findById_TestcaseEditView(testcase.getId());
     }
 
     /**

@@ -14,6 +14,12 @@ angular.module('irontest').factory('Testcases', ['$resource',
         params: {
           verb: 'duplicate'
         }
+      },
+      moveStep: {
+        method: 'PATCH',
+        params: {
+          verb: 'moveStep'
+        }
       }
     });
   }
