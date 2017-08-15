@@ -77,7 +77,9 @@ public class XMLUtils {
         StringWriter writer = new StringWriter();
         if (node.getNodeType() == Node.TEXT_NODE) {
             writer.write(node.getTextContent());
-        } else {  // this block of code will always transform text node to empty string, so handle text node separately
+        } else if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
+            writer.write(node.getNodeValue());
+        } else {  // this block of code will always transform text node or attribute node to empty string, so handle them separately
             Transformer transformer = TransformerFactory.newInstance().newTransformer();
             transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
             transformer.transform(new DOMSource(node), new StreamResult(writer));
