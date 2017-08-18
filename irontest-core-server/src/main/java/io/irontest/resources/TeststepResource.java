@@ -146,6 +146,7 @@ public class TeststepResource {
 
     /**
      * Save the uploaded file as Teststep.request.
+     * Use @POST instead of @PUT because ng-file-upload seems not working with PUT.
      * @param teststepId
      * @param inputStream
      * @param contentDispositionHeader
@@ -153,9 +154,9 @@ public class TeststepResource {
      * @throws IOException
      * @throws InterruptedException
      */
-    @POST @Path("{teststepId}/uploadRequestFile")
+    @POST @Path("{teststepId}/requestFile")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public Teststep uploadRequestFile(@PathParam("teststepId") long teststepId,
+    public Teststep saveRequestFile(@PathParam("teststepId") long teststepId,
                                       @FormDataParam("file") InputStream inputStream,
                                       @FormDataParam("file") FormDataContentDisposition contentDispositionHeader)
             throws IOException, InterruptedException {
@@ -169,9 +170,9 @@ public class TeststepResource {
      * @return
      * @throws IOException
      */
-    @GET @Path("{teststepId}/downloadRequestFile")
+    @GET @Path("{teststepId}/requestFile")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public Response downloadRequestFile(@PathParam("teststepId") long teststepId) throws IOException {
+    public Response getRequestFile(@PathParam("teststepId") long teststepId) throws IOException {
         Teststep teststep = teststepDAO.findById(teststepId);
         teststep.setRequest(teststepDAO.getBinaryRequestById(teststep.getId()));
         String filename = "UnknownFilename";

@@ -10,7 +10,7 @@ angular.module('irontest').factory('Testcases', ['$resource',
         method: 'PUT'
       },
       duplicate: {
-        method: 'PUT',
+        method: 'POST',
         params: {
           verb: 'duplicate'
         }

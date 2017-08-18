@@ -122,10 +122,10 @@ public abstract class TestcaseDAO {
      * Clone the test case and its contents.
      * @param oldTestcaseId id of the test case to be cloned
      * @param targetFolderId id of the folder in which the new test case will be created
-     * @return the new test case
+     * @return ID of the new test case
      */
     @Transaction
-    public Testcase duplicate(long oldTestcaseId, long targetFolderId) throws JsonProcessingException {
+    public long duplicate(long oldTestcaseId, long targetFolderId) throws JsonProcessingException {
         Testcase oldTestcase = findById_Complete_NoTransaction(oldTestcaseId);
 
         //  resolve new test case name
@@ -186,6 +186,6 @@ public abstract class TestcaseDAO {
             }
         }
 
-        return newTestcase;
+        return newTestcase.getId();
     }
 }

@@ -112,8 +112,7 @@ angular.module('irontest').controller('MQTeststepController', ['$scope', 'IronTe
 
     $scope.uploadRequestFile = function(file) {
       if (file) {
-        var url = 'api/testcases/' + $scope.teststep.testcaseId + '/teststeps/' + $scope.teststep.id +
-          '/uploadRequestFile';
+        var url = 'api/testcases/' + $scope.teststep.testcaseId + '/teststeps/' + $scope.teststep.id + '/requestFile';
         Upload.upload({
           url: url,
           data: {file: file}
@@ -127,8 +126,7 @@ angular.module('irontest').controller('MQTeststepController', ['$scope', 'IronTe
     };
 
     $scope.downloadRequestFile = function() {
-      var url = 'api/testcases/' + $scope.teststep.testcaseId + '/teststeps/' + $scope.teststep.id +
-        '/downloadRequestFile';
+      var url = 'api/testcases/' + $scope.teststep.testcaseId + '/teststeps/' + $scope.teststep.id + '/requestFile';
       $window.open(url, '_blank', '');
     };
   }

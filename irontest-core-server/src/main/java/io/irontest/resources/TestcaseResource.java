@@ -50,11 +50,13 @@ public class TestcaseResource {
     /**
      * @param testcaseId
      * @param targetFolderId
-     * @return the new test case
+     * @return the new test case (containing ID only)
      */
-    @PUT @Path("{testcaseId}/duplicate")
+    @POST @Path("{testcaseId}/duplicate")
     public Testcase duplicate(@PathParam("testcaseId") long testcaseId,
                           @QueryParam("targetFolderId") long targetFolderId) throws JsonProcessingException {
-        return testcaseDAO.duplicate(testcaseId, targetFolderId);
+        Testcase testcase = new Testcase();
+        testcase.setId(testcaseDAO.duplicate(testcaseId, targetFolderId));
+        return testcase;
     }
 }
