@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('irontest').controller('FolderTreeController', ['$scope', '$state', 'IronTestUtils', 'FolderTreeNodes',
-    '$timeout', '$rootScope', 'Testcases',
-  function($scope, $state, IronTestUtils, FolderTreeNodes, $timeout, $rootScope, Testcases) {
+    '$timeout', '$transitions', 'Testcases',
+  function($scope, $state, IronTestUtils, FolderTreeNodes, $timeout, $transitions, Testcases) {
     var NODE_TYPE_FOLDER = 'folder';
     var NODE_TYPE_TEST_CASE = 'testcase';
     var idOfTestcaseCopied = null;
@@ -132,9 +132,9 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
       }
     };
 
-    $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
-      if (fromState.name !== '') {    //  do nothing if refreshing browser (node selection is done by the treeReady function)
-        selectNodeByUIRouterState(toState.name, toParams);
+    $transitions.onSuccess({}, function(trans) {
+      if (trans.$from().name !== '') {    //  do nothing if refreshing browser (node selection is done by the treeReady function)
+        selectNodeByUIRouterState(trans.$to().name, trans.params('to'));
       }
     });
 
