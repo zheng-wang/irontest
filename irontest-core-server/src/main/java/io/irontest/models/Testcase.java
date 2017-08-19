@@ -14,18 +14,16 @@ public class Testcase {
     private long parentFolderId;
     private String folderPath;
     private String description;
-    private Date created;
     private Date updated;
     private List<Teststep> teststeps;
 
     public Testcase() {}
 
-    public Testcase(long id, String name, String description, long parentFolderId, Date created, Date updated) {
+    public Testcase(long id, String name, String description, long parentFolderId, Date updated) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.parentFolderId = parentFolderId;
-        this.created = created;
         this.updated = updated;
     }
 
@@ -51,14 +49,6 @@ public class Testcase {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
     }
 
     public Date getUpdated() {

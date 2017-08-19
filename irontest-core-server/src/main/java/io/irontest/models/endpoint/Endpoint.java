@@ -32,7 +32,6 @@ public class Endpoint {
             @JsonSubTypes.Type(value = IIBEndpointProperties.class, name = Endpoint.TYPE_IIB)
     })
     private Properties otherProperties = new Properties();
-    private Date created;
     private Date updated;
 
     public Endpoint() {}
@@ -91,14 +90,6 @@ public class Endpoint {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
     }
 
     public Date getUpdated() {

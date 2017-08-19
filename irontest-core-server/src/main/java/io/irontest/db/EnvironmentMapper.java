@@ -13,6 +13,6 @@ import java.sql.SQLException;
 public class EnvironmentMapper implements ResultSetMapper<Environment> {
     public Environment map(int index, ResultSet rs, StatementContext ctx) throws SQLException {
         return new Environment(rs.getLong("id"), rs.getString("name"), rs.getString("description"), null,
-                rs.getTimestamp("created"), rs.getTimestamp("updated"));
+                rs.getTimestamp("updated"));
     }
 }

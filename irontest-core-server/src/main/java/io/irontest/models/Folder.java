@@ -9,16 +9,14 @@ public class Folder {
     private long id;
     private String name;
     private String description;
-    private Date created;
     private Date updated;
 
     public Folder() {}
 
-    public Folder(long id, String name, String description, Date created, Date updated) {
+    public Folder(long id, String name, String description, Date updated) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.created = created;
         this.updated = updated;
     }
 
@@ -44,14 +42,6 @@ public class Folder {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
     }
 
     public Date getUpdated() {

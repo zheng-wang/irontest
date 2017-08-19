@@ -13,17 +13,15 @@ public class Environment {
     private String name;
     private String description;
     private List<Endpoint> endpoints;
-    private Date created;
     private Date updated;
 
     public Environment() {}
 
-    public Environment(long id, String name, String description, List<Endpoint> endpoints, Date created, Date updated) {
+    public Environment(long id, String name, String description, List<Endpoint> endpoints, Date updated) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.endpoints = endpoints;
-        this.created = created;
         this.updated = updated;
     }
 
@@ -57,14 +55,6 @@ public class Environment {
 
     public void setEndpoints(List<Endpoint> endpoints) {
         this.endpoints = endpoints;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
     }
 
     public Date getUpdated() {

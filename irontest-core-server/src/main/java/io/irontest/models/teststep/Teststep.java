@@ -43,7 +43,6 @@ public class Teststep {
     private Endpoint endpoint;
     private Object request;
     private List<Assertion> assertions = new ArrayList<Assertion>();
-    private Date created;
     private Date updated;
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
             property = "type", visible = true, defaultImpl = Properties.class)
@@ -110,14 +109,6 @@ public class Teststep {
 
     public void setEndpoint(Endpoint endpoint) {
         this.endpoint = endpoint;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
     }
 
     public Date getUpdated() {

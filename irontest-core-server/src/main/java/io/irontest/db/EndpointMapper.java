@@ -40,7 +40,6 @@ public class EndpointMapper implements ResultSetMapper<Endpoint> {
         endpoint.setUrl(fields.contains("url") ? rs.getString("url") : null);
         endpoint.setUsername(fields.contains("username") ? rs.getString("username") : null);
         endpoint.setPassword(fields.contains("password") ? rs.getString("password") : null);
-        endpoint.setCreated(fields.contains("created") ? rs.getTimestamp("created") : null);
         endpoint.setUpdated(fields.contains("updated") ? rs.getTimestamp("updated") : null);
         if (fields.contains("environment_id") && rs.getObject("environment_id") != null) {
             Environment environment = new Environment();
