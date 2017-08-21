@@ -115,7 +115,7 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         assertionDAO.createSequenceIfNotExists();
         assertionDAO.createTableIfNotExists();
 
-        //  register REST resources
+        //  register APIs
         environment.jersey().register(new ManagedEndpointResource(endpointDAO));
         environment.jersey().register(new TestcaseResource(testcaseDAO, teststepDAO));
         environment.jersey().register(new FolderResource(folderDAO));
@@ -145,7 +145,7 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         //  create database tables
         articleDAO.createTableIfNotExists();
 
-        //  register REST resources
+        //  register APIs
         environment.jersey().register(new ArticleResource(articleDAO));
 
         //  register SOAP web services
