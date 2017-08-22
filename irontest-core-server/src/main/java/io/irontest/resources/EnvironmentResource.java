@@ -9,8 +9,10 @@ import java.util.List;
 
 /**
  * Created by Trevor Li on 6/30/15.
+ * Not using @Path("/environments") at class level, as the {@link ManagedEndpointResource} has a URI /environments/...
+ * JAX-RS resolves URI to root resource class first.
  */
-@Path("/environments") @Produces({ MediaType.APPLICATION_JSON })
+@Path("/") @Produces({ MediaType.APPLICATION_JSON })
 public class EnvironmentResource {
     private final EnvironmentDAO environmentDAO;
 
@@ -18,30 +20,30 @@ public class EnvironmentResource {
         this.environmentDAO = environmentDAO;
     }
 
-    @POST
+    @POST @Path("environments")
     public Environment create() {
         Environment result = new Environment();
         result.setId(environmentDAO.insert());
         return result;
     }
 
-    @PUT @Path("{environmentId}")
+    @PUT @Path("environments/{environmentId}")
     public Environment update_EnvironmentEditView(Environment environment) {
         environmentDAO.update(environment);
         return environmentDAO.findById_EnvironmentEditView(environment.getId());
     }
 
-    @DELETE @Path("{environmentId}")
+    @DELETE @Path("environments/{environmentId}")
     public void delete(@PathParam("environmentId") long environmentId) {
         environmentDAO.deleteById(environmentId);
     }
 
-    @GET
+    @GET @Path("environments")
     public List<Environment> findAll() {
         return environmentDAO.findAll();
     }
 
-    @GET @Path("{environmentId}")
+    @GET @Path("environments/{environmentId}")
     public Environment findById_EnvironmentEditView(@PathParam("environmentId") long environmentId) {
         return environmentDAO.findById_EnvironmentEditView(environmentId);
     }

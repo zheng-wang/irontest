@@ -100,13 +100,12 @@ angular.module('irontest').controller('EnvironmentsController', ['$scope', 'Envi
       });
     };
 
-    $scope.createEndpoint = function(type) {
+    $scope.createEndpoint = function(endpointType) {
       var endpoint = new ManagedEndpoints({
-        environment: { id: $stateParams.environmentId },
-        type: type,
+        type: endpointType,
         otherProperties: {}  //  adding this property here to avoid Jackson 'Missing property' error (http://stackoverflow.com/questions/28089484/deserialization-with-jsonsubtypes-for-no-value-missing-property-error)
       });
-      endpoint.$save(function(returnEndpoint) {
+      endpoint.$save({ environmentId: $stateParams.environmentId }, function(returnEndpoint) {
         $state.go('endpoint_edit', {environmentId: $stateParams.environmentId, endpointId: returnEndpoint.id,
           newlyCreated: true});
       }, function(response) {
@@ -114,9 +113,9 @@ angular.module('irontest').controller('EnvironmentsController', ['$scope', 'Envi
       });
     };
 
-    $scope.removeEndpoint = function(endpoint) {
-      var endpointService = new ManagedEndpoints(endpoint);
-      endpointService.$remove(function(response) {
+    $scope.removeEndpoint = function(endpointId) {
+      var endpoint = new ManagedEndpoints({ id: endpointId });
+      endpoint.$remove(function(response) {
         $state.go($state.current, {}, {reload: true});
       }, function(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);
