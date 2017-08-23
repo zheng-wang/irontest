@@ -49,10 +49,12 @@ public class TestcaseRunResource {
 
     @POST
     public TestcaseRun create(TestcaseRun testcaseRun) throws JsonProcessingException {
-        Testcase testcase = testcaseDAO.findById_Complete(testcaseRun.getTestcase().getId());
+        //  only testcase id is used, and any other data in the request, if exists, is discarded
+        long testcaseId = testcaseRun.getTestcase().getId();
+        testcaseRun = new TestcaseRun();
 
+        Testcase testcase = testcaseDAO.findById_Complete(testcaseId);
         preProcessingForIIBTeststep(testcase);
-
         testcaseRun.setTestcase(testcase);
 
         //  test case run starts
