@@ -2,7 +2,6 @@ package io.irontest.models;
 
 import io.irontest.models.endpoint.Endpoint;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -13,16 +12,14 @@ public class Environment {
     private String name;
     private String description;
     private List<Endpoint> endpoints;
-    private Date updated;
 
     public Environment() {}
 
-    public Environment(long id, String name, String description, List<Endpoint> endpoints, Date updated) {
+    public Environment(long id, String name, String description, List<Endpoint> endpoints) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.endpoints = endpoints;
-        this.updated = updated;
     }
 
     public long getId() {
@@ -55,13 +52,5 @@ public class Environment {
 
     public void setEndpoints(List<Endpoint> endpoints) {
         this.endpoints = endpoints;
-    }
-
-    public Date getUpdated() {
-        return updated;
-    }
-
-    public void setUpdated(Date updated) {
-        this.updated = updated;
     }
 }

@@ -3,17 +3,12 @@
     <div class="col-lg-7 page-header-part1">
       <h3><div>Test Step - {{teststep.name}}</div></h3>
     </div>
-    <div class="col-lg-5">
-      <div class="row page-header-part2"> <!-- use another row to arrange columns in a finer way -->
-        <div class="col-lg-4">
-          <h4><label irt-successful-message></label></h4>
-        </div>
-        <div class="col-lg-2">
-          <h4><a class="back-link" ui-sref="testcase_edit({testcaseId: teststep.testcaseId})">Back</a></h4>
-        </div>
-        <div class="col-lg-6">
-          <h5>Last edit at {{teststep.updated | date:'medium'}}</h5>
-        </div>
+    <div class="page-header-part2">
+      <div class="col-lg-2 text-center">
+        <h4><label irt-successful-message></label></h4>
+      </div>
+      <div class="col-lg-1 text-left">
+        <h4><a class="back-link" ui-sref="testcase_edit({testcaseId: teststep.testcaseId})">Back</a></h4>
       </div>
     </div>
   </div>

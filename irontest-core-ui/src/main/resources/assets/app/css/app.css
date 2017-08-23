@@ -22,15 +22,8 @@ body {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-.page-header-part2 {
-  margin: 25px 0px 0px 0px;
-}
-.page-header-part2 div {
-  text-align: right;
-}
-.page-header-part2 h4,
-.page-header-part2 h5 {
-  margin: 0px 0px 0px 0px;
+.page-header-part2 h4 {
+  margin: 20px 0px 0px 0px;
 }
 .page-header .back-link {
   font-size: 104%;

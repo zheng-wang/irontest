@@ -2,7 +2,6 @@ package io.irontest.models;
 
 import io.irontest.models.teststep.Teststep;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -14,17 +13,15 @@ public class Testcase {
     private long parentFolderId;
     private String folderPath;
     private String description;
-    private Date updated;
     private List<Teststep> teststeps;
 
     public Testcase() {}
 
-    public Testcase(long id, String name, String description, long parentFolderId, Date updated) {
+    public Testcase(long id, String name, String description, long parentFolderId) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.parentFolderId = parentFolderId;
-        this.updated = updated;
     }
 
     public long getId() {
@@ -49,14 +46,6 @@ public class Testcase {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Date getUpdated() {
-        return updated;
-    }
-
-    public void setUpdated(Date updated) {
-        this.updated = updated;
     }
 
     public List<Teststep> getTeststeps() {

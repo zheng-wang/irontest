@@ -1,7 +1,5 @@
 package io.irontest.models;
 
-import java.util.Date;
-
 /**
  * Created by Zheng on 17/09/2016.
  */
@@ -9,15 +7,13 @@ public class Folder {
     private long id;
     private String name;
     private String description;
-    private Date updated;
 
     public Folder() {}
 
-    public Folder(long id, String name, String description, Date updated) {
+    public Folder(long id, String name, String description) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.updated = updated;
     }
 
     public long getId() {
@@ -42,13 +38,5 @@ public class Folder {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Date getUpdated() {
-        return updated;
-    }
-
-    public void setUpdated(Date updated) {
-        this.updated = updated;
     }
 }

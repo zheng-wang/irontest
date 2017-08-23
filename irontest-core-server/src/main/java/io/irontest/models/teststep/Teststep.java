@@ -8,7 +8,6 @@ import io.irontest.models.assertion.Assertion;
 import io.irontest.models.endpoint.Endpoint;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -43,7 +42,6 @@ public class Teststep {
     private Endpoint endpoint;
     private Object request;
     private List<Assertion> assertions = new ArrayList<Assertion>();
-    private Date updated;
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
             property = "type", visible = true, defaultImpl = Properties.class)
     @JsonSubTypes({
@@ -109,14 +107,6 @@ public class Teststep {
 
     public void setEndpoint(Endpoint endpoint) {
         this.endpoint = endpoint;
-    }
-
-    public Date getUpdated() {
-        return updated;
-    }
-
-    public void setUpdated(Date updated) {
-        this.updated = updated;
     }
 
     public String getType() {

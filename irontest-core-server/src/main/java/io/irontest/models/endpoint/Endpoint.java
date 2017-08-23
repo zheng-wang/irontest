@@ -6,8 +6,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.irontest.models.Environment;
 import io.irontest.models.Properties;
 
-import java.util.Date;
-
 /**
  * Created by Trevor Li on 6/30/15.
  */
@@ -32,7 +30,6 @@ public class Endpoint {
             @JsonSubTypes.Type(value = IIBEndpointProperties.class, name = Endpoint.TYPE_IIB)
     })
     private Properties otherProperties = new Properties();
-    private Date updated;
 
     public Endpoint() {}
 
@@ -90,14 +87,6 @@ public class Endpoint {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public Date getUpdated() {
-        return updated;
-    }
-
-    public void setUpdated(Date updated) {
-        this.updated = updated;
     }
 
     public Environment getEnvironment() {
