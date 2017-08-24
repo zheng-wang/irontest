@@ -15,18 +15,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 /**
- * A pseudo JSON RPC service for hosting action oriented browser-server interactions.
- * It is not based on JSON-RPC spec, nor is it a REST resource.
  * Created by Zheng on 27/07/2015.
  */
-@Path("/jsonservice") @Produces({ MediaType.APPLICATION_JSON })
-public class JSONService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(JSONService.class);
-    private AssertionVerifierFactory assertionVerifierFactory;
-
-    public JSONService(AssertionVerifierFactory assertionVerifierFactory) {
-        this.assertionVerifierFactory = assertionVerifierFactory;
-    }
+@Path("/") @Produces({ MediaType.APPLICATION_JSON })
+public class AssertionResource {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AssertionResource.class);
 
     /**
      * This is a stateless operation, i.e. not persisting anything in database.
@@ -34,12 +27,12 @@ public class JSONService {
      * @return
      * @throws InterruptedException
      */
-    @POST @Path("verifyassertion")
-    public AssertionVerificationResult verifyAssertion(AssertionVerificationRequest assertionVerificationRequest)
+    @POST @Path("assertions/{assertionId}/verify")
+    public AssertionVerificationResult verify(AssertionVerificationRequest assertionVerificationRequest)
             throws InterruptedException {
         Thread.sleep(100);  //  workaround for Chrome 44 to 48's 'Failed to load response data' problem (no such problem in Chrome 49)
         Assertion assertion = assertionVerificationRequest.getAssertion();
-        AssertionVerifier assertionVerifier = assertionVerifierFactory.create(assertion.getType());
+        AssertionVerifier assertionVerifier = AssertionVerifierFactory.getInstance().create(assertion.getType());
         AssertionVerificationResult result = null;
         try {
             result = assertionVerifier.verify(assertion, assertionVerificationRequest.getInput());

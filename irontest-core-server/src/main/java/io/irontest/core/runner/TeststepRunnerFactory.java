@@ -10,14 +10,11 @@ import java.lang.reflect.Constructor;
  * Created by Trevor Li on 7/14/15.
  */
 public class TeststepRunnerFactory {
-    private static TeststepRunnerFactory instance;
+    private static TeststepRunnerFactory instance = new TeststepRunnerFactory();
 
     private TeststepRunnerFactory() { }
 
-    public static synchronized TeststepRunnerFactory getInstance() {
-        if ( instance == null ) {
-            instance = new TeststepRunnerFactory();
-        }
+    public static TeststepRunnerFactory getInstance() {
         return instance;
     }
 

@@ -15,7 +15,6 @@ import io.dropwizard.jdbi.DBIFactory;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.dropwizard.views.ViewBundle;
-import io.irontest.core.assertion.AssertionVerifierFactory;
 import io.irontest.db.*;
 import io.irontest.resources.*;
 import io.irontest.ws.ArticleSOAP;
@@ -124,9 +123,7 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         environment.jersey().register(new WSDLResource());
         environment.jersey().register(new EnvironmentResource(environmentDAO));
         environment.jersey().register(new TestcaseRunResource(testcaseDAO, teststepDAO, utilsDAO, testcaseRunDAO));
-
-        //  register JSON services
-        environment.jersey().register(new JSONService(new AssertionVerifierFactory()));
+        environment.jersey().register(new AssertionResource());
 
         //  register jersey LoggingFilter
         environment.jersey().register(new LoggingFilter(Logger.getLogger(LoggingFilter.class.getName()), true));

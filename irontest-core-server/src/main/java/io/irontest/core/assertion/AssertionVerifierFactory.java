@@ -6,6 +6,14 @@ import io.irontest.models.assertion.Assertion;
  * Created by Zheng on 6/08/2015.
  */
 public class AssertionVerifierFactory {
+    private static AssertionVerifierFactory instance = new AssertionVerifierFactory();
+
+    private AssertionVerifierFactory() { }
+
+    public static AssertionVerifierFactory getInstance() {
+        return instance;
+    }
+
     public AssertionVerifier create(String assertionType) {
         AssertionVerifier result = null;
         if (Assertion.TYPE_XPATH.equals(assertionType)) {
