@@ -95,7 +95,7 @@ angular.module('irontest').controller('AssertionsController', ['$scope', 'uiGrid
 
     $scope.assertionsModelObj.verifyCurrentAssertion = function() {
       var assertion = $scope.assertionsModelObj.assertion;
-      var url = 'api/jsonservice/verifyassertion';
+      var url = 'api/assertions/' + assertion.id + '/verify';
       var assertionVerification = {
         input: $scope.$parent.steprun.response,
         assertion: assertion
