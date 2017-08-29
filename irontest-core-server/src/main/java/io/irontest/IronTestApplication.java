@@ -95,6 +95,7 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         final AssertionDAO assertionDAO = jdbi.onDemand(AssertionDAO.class);
         final UtilsDAO utilsDAO = jdbi.onDemand(UtilsDAO.class);
         final FolderTreeNodeDAO folderTreeNodeDAO = jdbi.onDemand(FolderTreeNodeDAO.class);
+        final UserDefinedPropertyDAO udpDAO = jdbi.onDemand(UserDefinedPropertyDAO.class);
 
         //  create database tables
         //  order is important!!! (there are foreign keys linking them)
@@ -113,6 +114,8 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         teststepDAO.createTableIfNotExists();
         assertionDAO.createSequenceIfNotExists();
         assertionDAO.createTableIfNotExists();
+        udpDAO.createSequenceIfNotExists();
+        udpDAO.createTableIfNotExists();
 
         //  register APIs
         environment.jersey().register(new ManagedEndpointResource(endpointDAO));
