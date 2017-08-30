@@ -35,7 +35,7 @@ public abstract class UserDefinedPropertyDAO {
     @Transaction
     public UserDefinedProperty insert(long testcaseId) {
         long id = _insert(testcaseId);
-        String name = "Property " + id;
+        String name = "P" + id;
         updateNameForInsert(id, name);
         return findById(id);
     }

@@ -4,7 +4,8 @@
 //    The $scope here prototypically inherits from the $scope of TestcasesController,
 angular.module('irontest').controller('UDPsController', ['$scope', 'UDPs', 'IronTestUtils', '$stateParams', '$timeout',
   function($scope, UDPs, IronTestUtils, $stateParams, $timeout) {
-    var timer;
+    //  each UDP grid row uses its own timer, to avoid mutual interference for 'jumping' edits
+    var timerMap = {};
 
     //  user defined properties of the test case
     $scope.udps = [];
@@ -49,8 +50,8 @@ angular.module('irontest').controller('UDPsController', ['$scope', 'UDPs', 'Iron
     };
 
     $scope.udpAutoSave = function(udp) {
-      if (timer) $timeout.cancel(timer);
-      timer = $timeout(function() {
+      if (timerMap[udp.id]) $timeout.cancel(timerMap[udp.id]);
+      timerMap[udp.id] = $timeout(function() {
         udpUpdate(udp);
       }, 2000);
     };
