@@ -50,4 +50,7 @@ public abstract class UserDefinedPropertyDAO {
 
     @SqlUpdate("update udp set name = :name, value = :value where id = :id")
     public abstract void update(@BindBean UserDefinedProperty udp);
+
+    @SqlUpdate("delete from udp where id = :id")
+    public abstract void deleteById(@Bind("id") long id);
 }

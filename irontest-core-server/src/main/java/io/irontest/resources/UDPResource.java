@@ -32,4 +32,9 @@ public class UDPResource {
     public void update(UserDefinedProperty udp) throws JsonProcessingException {
         udpDAO.update(udp);
     }
+
+    @DELETE @Path("udps/{udpId}")
+    public void delete(@PathParam("udpId") long udpId) {
+        udpDAO.deleteById(udpId);
+    }
 }

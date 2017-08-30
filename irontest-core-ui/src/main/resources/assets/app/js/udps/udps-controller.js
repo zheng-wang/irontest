@@ -11,7 +11,7 @@ angular.module('irontest').controller('UDPsController', ['$scope', 'UDPs', 'Iron
     $scope.udps = [];
 
     $scope.udpGridOptions = {
-      data: 'udps', enableColumnMenus: false,
+      data: 'udps', enableFiltering: true, enableColumnMenus: false,
       columnDefs: [
         {
           name: 'name', width: '30%', headerTooltip: 'Double click to edit', enableCellEdit: true,
@@ -20,6 +20,10 @@ angular.module('irontest').controller('UDPsController', ['$scope', 'UDPs', 'Iron
         {
           name: 'value', headerTooltip: 'Double click to edit', enableCellEdit: true,
           editableCellTemplate: 'udpGridValueEditableCellTemplate.html'
+        },
+        {
+          name: 'delete', width: 80, minWidth: 60, enableSorting: false, enableFiltering: false,
+          cellTemplate: 'udpGridDeleteCellTemplate.html'
         }
       ]
     };
@@ -54,6 +58,14 @@ angular.module('irontest').controller('UDPsController', ['$scope', 'UDPs', 'Iron
       timerMap[udp.id] = $timeout(function() {
         udpUpdate(udp);
       }, 2000);
+    };
+
+    $scope.removeUDP = function(udp) {
+      udp.$remove(function(response) {
+        IronTestUtils.deleteArrayElementByProperty($scope.udps, 'id', udp.id);
+      }, function(response) {
+        IronTestUtils.openErrorHTTPResponseModal(response);
+      });
     };
   }
 ]);

@@ -8,6 +8,11 @@ angular.module('irontest').factory('UDPs', ['$resource',
         method: 'PUT',
         url: 'api/udps/:udpId',
         params: { udpId: '@id' }
+      },
+      remove: {
+        method: 'DELETE',
+        url: 'api/udps/:udpId',
+        params: { udpId: '@id' }
       }
     });
   }

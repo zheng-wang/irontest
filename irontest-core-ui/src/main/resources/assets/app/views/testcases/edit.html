@@ -94,6 +94,7 @@
   </uib-tabset>
 </div>
 
+<!-- UDP grid cell templates -->
 <script type="text/ng-template" id="udpGridNameEditableCellTemplate.html">
   <div class="ui-grid-cell-contents">
     <div>
@@ -110,6 +111,17 @@
     </div>
   </div>
 </script>
+<script type="text/ng-template" id="udpGridDeleteCellTemplate.html">
+  <div class="ui-grid-cell-contents">
+    <div>
+      <a ng-click="grid.appScope.removeUDP(row.entity)" href="">
+        <i class="glyphicon glyphicon-trash center-block text-center"></i>
+      </a>
+    </div>
+  </div>
+</script>
+
+<!-- teststep grid cell templates -->
 <script type="text/ng-template" id="teststepGridSequenceCellTemplate.html">
   <div class="ui-grid-cell-contents text-center">{{COL_FIELD}}</div>
 </script>
