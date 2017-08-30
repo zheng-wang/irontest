@@ -11,6 +11,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.sql.SQLException;
 
+import static io.irontest.IronTestConstants.DB_PROPERTY_NAME_CONSTRAINT_NAME_SUFFIX;
 import static io.irontest.IronTestConstants.DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX;
 
 /**
@@ -25,12 +26,15 @@ public class IronTestLoggingExceptionMapper extends LoggingExceptionMapper<Throw
         int status = Response.Status.INTERNAL_SERVER_ERROR.getStatusCode();
         String errorDetails = exception.getMessage();
 
-        //  change error details if the exception is DB unique-name-constraint-violation
+        //  change error details if the exception is a known DB constraint violation
         if (exception instanceof UnableToExecuteStatementException) {
             SQLException se = (SQLException) exception.getCause();
             if (se.getErrorCode() == ErrorCode.DUPLICATE_KEY_1 &&
                     se.getMessage().contains("_" + DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX)) {
                 errorDetails = "Duplicate name.";
+            } else if (se.getErrorCode() == ErrorCode.CHECK_CONSTRAINT_VIOLATED_1 &&
+                    se.getMessage().contains("_" + DB_PROPERTY_NAME_CONSTRAINT_NAME_SUFFIX)) {
+                errorDetails = "Property name can only contain letter, digit, $ and _ characters, beginning with letter, _ or $.";
             }
         }
 
