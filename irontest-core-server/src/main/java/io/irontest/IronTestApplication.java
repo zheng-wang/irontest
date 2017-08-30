@@ -127,6 +127,7 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         environment.jersey().register(new EnvironmentResource(environmentDAO));
         environment.jersey().register(new TestcaseRunResource(testcaseDAO, teststepDAO, utilsDAO, testcaseRunDAO));
         environment.jersey().register(new AssertionResource());
+        environment.jersey().register(new UDPResource(udpDAO));
 
         //  register jersey LoggingFilter
         environment.jersey().register(new LoggingFilter(Logger.getLogger(LoggingFilter.class.getName()), true));

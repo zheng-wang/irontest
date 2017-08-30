@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Created by Zheng on 1/07/2015.
  */
-@Path("/testcases") @Produces({ MediaType.APPLICATION_JSON })
+@Path("/") @Produces({ MediaType.APPLICATION_JSON })
 public class TestcaseResource {
     private final TestcaseDAO testcaseDAO;
     private final TeststepDAO teststepDAO;
@@ -24,7 +24,7 @@ public class TestcaseResource {
         this.teststepDAO = teststepDAO;
     }
 
-    @PUT @Path("{testcaseId}")
+    @PUT @Path("testcases/{testcaseId}")
     public Testcase update_TestcaseEditView(Testcase testcase) {
         testcaseDAO.update(testcase);
         return testcaseDAO.findById_TestcaseEditView(testcase.getId());
@@ -35,12 +35,12 @@ public class TestcaseResource {
         testcaseDAO.deleteById(testcaseId);
     }*/
 
-    @GET @Path("{testcaseId}")
+    @GET @Path("testcases/{testcaseId}")
     public Testcase findById_TestcaseEditView(@PathParam("testcaseId") long testcaseId) {
         return testcaseDAO.findById_TestcaseEditView(testcaseId);
     }
 
-    @PATCH @Path("{testcaseId}/moveStep")
+    @PATCH @Path("testcases/{testcaseId}/moveStep")
     public Testcase moveStep(Testcase testcase) throws JsonProcessingException {
         List<Teststep> teststeps = testcase.getTeststeps();
         teststepDAO.moveInTestcase(testcase.getId(), teststeps.get(0).getSequence(), teststeps.get(1).getSequence());
@@ -52,7 +52,7 @@ public class TestcaseResource {
      * @param targetFolderId
      * @return the new test case (containing ID only)
      */
-    @POST @Path("{testcaseId}/duplicate")
+    @POST @Path("testcases/{testcaseId}/duplicate")
     public Testcase duplicate(@PathParam("testcaseId") long testcaseId,
                           @QueryParam("targetFolderId") long targetFolderId) throws JsonProcessingException {
         Testcase testcase = new Testcase();

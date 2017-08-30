@@ -11,6 +11,9 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
       }, 2000);
     };
 
+    $scope.PROPERTIES_TAB_INDEX = 1;
+    $scope.TEST_STEPS_TAB_INDEX = 2;
+
     $scope.teststepGridOptions = {
       data: 'testcase.teststeps',
       enableSorting: false,
@@ -115,7 +118,7 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
     };
 
     $scope.findOne = function() {
-      $scope.activeTabIndex = 1;
+      $scope.activeTabIndex = $scope.TEST_STEPS_TAB_INDEX;
       Testcases.get({
         testcaseId: $stateParams.testcaseId
       }, function(testcase) {

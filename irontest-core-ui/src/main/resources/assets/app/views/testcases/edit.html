@@ -20,6 +20,23 @@
         </div>
       </form>
     </uib-tab>
+    <uib-tab heading="Properties">
+      <form name="udpsForm" class="form-horizontal col-lg-10" role="form" novalidate ng-controller="UDPsController"
+            ng-init="findByTestcaseId()">
+        <div class="form-group"></div> <!-- spacer -->
+        <div class="row">
+          <div class="form-group">
+            <div class="col-lg-1">
+              <button class="btn btn-info" ng-click="createUDP()">Create</button>
+            </div>
+          </div>
+        </div>
+        <div class="row" id="udpGrid">
+          <div ng-if="activeTabIndex === PROPERTIES_TAB_INDEX" ui-grid="udpGridOptions" ui-grid-resize-columns
+               ui-grid-edit class="ui-grid"></div>
+        </div>
+      </form>
+    </uib-tab>
     <uib-tab heading="Test Steps">
       <div class="form-group"></div> <!-- spacer -->
       <div class="row">
@@ -66,7 +83,7 @@
       </div>
       <div class="form-group"></div> <!-- spacer -->
       <div class="row" id="teststepGrid">
-        <div ng-if="activeTabIndex === 1" ui-grid="teststepGridOptions" ui-grid-resize-columns
+        <div ng-if="activeTabIndex === TEST_STEPS_TAB_INDEX" ui-grid="teststepGridOptions" ui-grid-resize-columns
              ui-grid-move-columns class="ui-grid teststep-grid" ui-grid-draggable-rows></div>
       </div>
       <div class="form-group"></div> <!-- spacer -->
@@ -75,36 +92,52 @@
       </div>
     </uib-tab>
   </uib-tabset>
-
-  <script type="text/ng-template" id="teststepGridSequenceCellTemplate.html">
-    <div class="ui-grid-cell-contents text-center">{{COL_FIELD}}</div>
-  </script>
-  <script type="text/ng-template" id="teststepGridNameCellTemplate.html">
-    <div class="ui-grid-cell-contents">
-      <div>
-        <a ui-sref="teststep_edit({ testcaseId: row.entity.testcaseId, teststepId: row.entity.id })">{{COL_FIELD}}</a>
-      </div>
-    </div>
-  </script>
-  <script type="text/ng-template" id="teststepGridDeleteCellTemplate.html">
-    <div class="ui-grid-cell-contents">
-      <div>
-        <a ng-click="grid.appScope.removeTeststep(row.entity)" href="">
-          <i class="glyphicon glyphicon-trash center-block text-center"></i>
-        </a>
-      </div>
-    </div>
-  </script>
-  <script type="text/ng-template" id="teststepGridResultCellTemplate.html">
-    <div class="ui-grid-cell-contents">
-      <div ng-if="grid.appScope.testcaseRun">
-        <a ng-click="grid.appScope.showStepRunHTMLReport(row.entity.id)" href="">
-          <div class="{{ grid.appScope.testcaseRun.failedTeststepIds.indexOf(row.entity.id) > -1 ?
-              'text-red' : 'text-lime' }}">
-            {{ grid.appScope.testcaseRun.failedTeststepIds.indexOf(row.entity.id) > -1 ? 'Failed' : 'Passed' }}
-          </div>
-        </a>
-      </div>
-    </div>
-  </script>
 </div>
+
+<script type="text/ng-template" id="udpGridNameEditableCellTemplate.html">
+  <div class="ui-grid-cell-contents">
+    <div>
+      <input type="text" class="form-control" ui-grid-editor ng-model="row.entity.name"
+             ng-change="grid.appScope.udpAutoSave(row.entity)">
+    </div>
+  </div>
+</script>
+<script type="text/ng-template" id="udpGridValueEditableCellTemplate.html">
+  <div class="ui-grid-cell-contents">
+    <div>
+      <input type="text" class="form-control" ui-grid-editor ng-model="row.entity.value"
+             ng-change="grid.appScope.udpAutoSave(row.entity)">
+    </div>
+  </div>
+</script>
+<script type="text/ng-template" id="teststepGridSequenceCellTemplate.html">
+  <div class="ui-grid-cell-contents text-center">{{COL_FIELD}}</div>
+</script>
+<script type="text/ng-template" id="teststepGridNameCellTemplate.html">
+  <div class="ui-grid-cell-contents">
+    <div>
+      <a ui-sref="teststep_edit({ testcaseId: row.entity.testcaseId, teststepId: row.entity.id })">{{COL_FIELD}}</a>
+    </div>
+  </div>
+</script>
+<script type="text/ng-template" id="teststepGridDeleteCellTemplate.html">
+  <div class="ui-grid-cell-contents">
+    <div>
+      <a ng-click="grid.appScope.removeTeststep(row.entity)" href="">
+        <i class="glyphicon glyphicon-trash center-block text-center"></i>
+      </a>
+    </div>
+  </div>
+</script>
+<script type="text/ng-template" id="teststepGridResultCellTemplate.html">
+  <div class="ui-grid-cell-contents">
+    <div ng-if="grid.appScope.testcaseRun">
+      <a ng-click="grid.appScope.showStepRunHTMLReport(row.entity.id)" href="">
+        <div class="{{ grid.appScope.testcaseRun.failedTeststepIds.indexOf(row.entity.id) > -1 ?
+              'text-red' : 'text-lime' }}">
+          {{ grid.appScope.testcaseRun.failedTeststepIds.indexOf(row.entity.id) > -1 ? 'Failed' : 'Passed' }}
+        </div>
+      </a>
+    </div>
+  </div>
+</script>
