@@ -3,7 +3,9 @@ package io.irontest.resources;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.irontest.core.runner.*;
 import io.irontest.db.TeststepDAO;
+import io.irontest.db.UserDefinedPropertyDAO;
 import io.irontest.db.UtilsDAO;
+import io.irontest.models.UserDefinedProperty;
 import io.irontest.models.endpoint.Endpoint;
 import io.irontest.models.endpoint.SOAPEndpointProperties;
 import io.irontest.models.teststep.*;
@@ -18,6 +20,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 /**
  * Created by Zheng on 11/07/2015.
@@ -25,10 +28,12 @@ import java.io.InputStream;
 @Path("/testcases/{testcaseId}/teststeps") @Produces({ MediaType.APPLICATION_JSON })
 public class TeststepResource {
     private final TeststepDAO teststepDAO;
+    private final UserDefinedPropertyDAO udpDAO;
     private final UtilsDAO utilsDAO;
 
-    public TeststepResource(TeststepDAO teststepDAO, UtilsDAO utilsDAO) {
+    public TeststepResource(TeststepDAO teststepDAO, UserDefinedPropertyDAO udpDAO, UtilsDAO utilsDAO) {
         this.teststepDAO = teststepDAO;
+        this.udpDAO = udpDAO;
         this.utilsDAO = utilsDAO;
     }
 
@@ -125,10 +130,12 @@ public class TeststepResource {
      */
     @POST @Path("{teststepId}/run")
     public BasicTeststepRun run(Teststep teststep) throws Exception {
-        Thread.sleep(100); // workaround for Chrome 44 to 48's 'Failed to load response data' problem (no such problem in Chrome 49)
+        //  get UDPs defined on the test case
+        List<UserDefinedProperty> testcaseUDPs = udpDAO.findByTestcaseId(teststep.getTestcaseId());
 
+        //  run the test step
         TeststepRunner teststepRunner = TeststepRunnerFactory.getInstance().newTeststepRunner(
-                teststep, teststepDAO, utilsDAO, null);
+                teststep, teststepDAO, utilsDAO, testcaseUDPs, null);
         BasicTeststepRun basicTeststepRun = teststepRunner.run();
 
         //  for better display in browser, transform XML response to be pretty-printed

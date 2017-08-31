@@ -22,7 +22,7 @@ angular.module('irontest').controller('UDPsController', ['$scope', 'UDPs', 'Iron
           editableCellTemplate: 'udpGridValueEditableCellTemplate.html'
         },
         {
-          name: 'delete', width: 80, minWidth: 60, enableSorting: false, enableFiltering: false,
+          name: 'delete', width: 80, minWidth: 60, enableSorting: false, enableFiltering: false, enableCellEdit: false,
           cellTemplate: 'udpGridDeleteCellTemplate.html'
         }
       ]

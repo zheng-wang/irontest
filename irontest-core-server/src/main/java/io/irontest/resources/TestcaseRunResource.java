@@ -4,13 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.irontest.core.assertion.AssertionVerifier;
 import io.irontest.core.assertion.AssertionVerifierFactory;
 import io.irontest.core.runner.*;
-import io.irontest.db.TestcaseDAO;
-import io.irontest.db.TestcaseRunDAO;
-import io.irontest.db.TeststepDAO;
-import io.irontest.db.UtilsDAO;
+import io.irontest.db.*;
 import io.irontest.models.TestResult;
 import io.irontest.models.Testcase;
 import io.irontest.models.TestcaseRun;
+import io.irontest.models.UserDefinedProperty;
 import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.AssertionVerification;
 import io.irontest.models.assertion.AssertionVerificationResult;
@@ -35,13 +33,15 @@ import java.util.List;
 public class TestcaseRunResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(TestcaseRunResource.class);
     private final TestcaseDAO testcaseDAO;
+    private final UserDefinedPropertyDAO udpDAO;
     private final TeststepDAO teststepDAO;
     private final UtilsDAO utilsDAO;
     private final TestcaseRunDAO testcaseRunDAO;
 
-    public TestcaseRunResource(TestcaseDAO testcaseDAO, TeststepDAO teststepDAO, UtilsDAO utilsDAO,
-                               TestcaseRunDAO testcaseRunDAO) {
+    public TestcaseRunResource(TestcaseDAO testcaseDAO, UserDefinedPropertyDAO udpDAO, TeststepDAO teststepDAO,
+                               UtilsDAO utilsDAO, TestcaseRunDAO testcaseRunDAO) {
         this.testcaseDAO = testcaseDAO;
+        this.udpDAO = udpDAO;
         this.teststepDAO = teststepDAO;
         this.utilsDAO = utilsDAO;
         this.testcaseRunDAO = testcaseRunDAO;
@@ -53,6 +53,7 @@ public class TestcaseRunResource {
         long testcaseId = testcaseRun.getTestcase().getId();
         testcaseRun = new TestcaseRun();
 
+        List<UserDefinedProperty> testcaseUDPs = udpDAO.findByTestcaseId(testcaseId);
         Testcase testcase = testcaseDAO.findById_Complete(testcaseId);
         preProcessingForIIBTeststep(testcase);
         testcaseRun.setTestcase(testcase);
@@ -78,7 +79,7 @@ public class TestcaseRunResource {
             boolean exceptionOccurred = false;  //  use this flag instead of checking stepRun.getErrorMessage() != null, for code clarity
             try {
                 basicTeststepRun = TeststepRunnerFactory.getInstance()
-                        .newTeststepRunner(teststep, teststepDAO, utilsDAO, testcaseRunContext).run();
+                        .newTeststepRunner(teststep, teststepDAO, utilsDAO, testcaseUDPs, testcaseRunContext).run();
                 LOGGER.info("API invocation response: " +
                         (basicTeststepRun.getResponse() == null ? null : basicTeststepRun.getResponse().toString()));
                 stepRun.importBasicTeststepRun(basicTeststepRun);

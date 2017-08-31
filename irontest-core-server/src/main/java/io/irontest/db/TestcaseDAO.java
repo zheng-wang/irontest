@@ -32,6 +32,9 @@ public abstract class TestcaseDAO {
     public abstract void createTableIfNotExists();
 
     @CreateSqlObject
+    protected abstract UserDefinedPropertyDAO udpDAO();
+
+    @CreateSqlObject
     protected abstract TeststepDAO teststepDAO();
 
     @CreateSqlObject
@@ -106,6 +109,11 @@ public abstract class TestcaseDAO {
         return findById_Complete_NoTransaction(id);
     }
 
+    /**
+     * User defined properties are not included.
+     * @param id
+     * @return
+     */
     public Testcase findById_Complete_NoTransaction(long id) {
         Testcase result = _findById(id);
         result.setFolderPath(getFolderPath(id));
@@ -145,6 +153,9 @@ public abstract class TestcaseDAO {
         newTestcase.setDescription(oldTestcase.getDescription());
         newTestcase.setParentFolderId(targetFolderId);
         newTestcase = insert_NoTransaction(newTestcase);
+
+        //  duplicate user defined properties
+        udpDAO().duplicateByTestcase(oldTestcaseId, newTestcase.getId());
 
         //  duplicate test steps
         for (Teststep oldTeststep : oldTestcase.getTeststeps()) {

@@ -30,7 +30,7 @@ public class MQTeststepRunner extends TeststepRunner {
     }
 
     @Override
-    protected void prepareTeststep() {
+    protected void prepareTeststep() throws IOException {
         super.prepareTeststep();
 
         //  fetch request for Enqueue action with message from file

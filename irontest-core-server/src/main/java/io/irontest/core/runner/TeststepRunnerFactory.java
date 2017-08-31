@@ -2,9 +2,11 @@ package io.irontest.core.runner;
 
 import io.irontest.db.TeststepDAO;
 import io.irontest.db.UtilsDAO;
+import io.irontest.models.UserDefinedProperty;
 import io.irontest.models.teststep.Teststep;
 
 import java.lang.reflect.Constructor;
+import java.util.List;
 
 /**
  * Created by Trevor Li on 7/14/15.
@@ -19,6 +21,7 @@ public class TeststepRunnerFactory {
     }
 
     public TeststepRunner newTeststepRunner(Teststep teststep, TeststepDAO teststepDAO, UtilsDAO utisDAO,
+                                            List<UserDefinedProperty> testcaseUDPs,
                                             TestcaseRunContext testcaseRunContext) {
         TeststepRunner runner = null;
         try {
@@ -28,6 +31,7 @@ public class TeststepRunnerFactory {
             runner.setTeststep(teststep);
             runner.setTeststepDAO(teststepDAO);
             runner.setUtilsDAO(utisDAO);
+            runner.setTestcaseUDPs(testcaseUDPs);
             runner.setTestcaseRunContext(testcaseRunContext);
         } catch (Exception e) {
             throw new RuntimeException("Unable to instantiate test step runner.", e);
