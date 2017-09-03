@@ -28,15 +28,6 @@ angular.module('irontest').controller('MQTeststepController', ['$scope', 'IronTe
     $scope.actionChanged = function(isValid) {
       clearPreviousRunStatus();
 
-      var teststep = $scope.teststep;
-
-      // initialize new action
-      if (teststep.action === 'Enqueue' || teststep.action === 'Publish') {
-        if (!teststep.otherProperties.messageFrom) {
-          teststep.otherProperties.messageFrom = 'Text';
-        }
-      }
-
       //  save test step
       $scope.update(isValid);
     };
@@ -54,8 +45,8 @@ angular.module('irontest').controller('MQTeststepController', ['$scope', 'IronTe
       } else if (teststep.otherProperties.destinationType === 'Queue') {
         return !teststep.otherProperties.queueName || (
           teststep.action === 'Enqueue' && (
-            teststep.otherProperties.messageFrom === 'Text' && !teststep.request ||
-            teststep.otherProperties.messageFrom === 'File' && !teststep.otherProperties.messageFilename
+            teststep.requestType === 'Text' && !teststep.request ||
+            teststep.requestType === 'File' && !teststep.requestFilename
           )
         );
       } else if (teststep.otherProperties.destinationType === 'Topic') {

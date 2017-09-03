@@ -182,11 +182,7 @@ public class TeststepResource {
     public Response getRequestFile(@PathParam("teststepId") long teststepId) throws IOException {
         Teststep teststep = teststepDAO.findById(teststepId);
         teststep.setRequest(teststepDAO.getBinaryRequestById(teststep.getId()));
-        String filename = "UnknownFilename";
-        if (teststep.getOtherProperties() instanceof MQTeststepProperties) {
-            MQTeststepProperties properties = (MQTeststepProperties) teststep.getOtherProperties();
-            filename = properties.getMessageFilename();
-        }
+        String filename = teststep.getRequestFilename() == null ? "UnknownFilename" : teststep.getRequestFilename();
         return Response.ok(teststep.getRequest())
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
                 .build();

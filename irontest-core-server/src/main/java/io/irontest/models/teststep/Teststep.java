@@ -1,6 +1,5 @@
 package io.irontest.models.teststep;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.irontest.models.Properties;
@@ -41,6 +40,8 @@ public class Teststep {
     private String action;            //  currently only used in MQ test step and IIB test step
     private Endpoint endpoint;
     private Object request;
+    private TeststepRequestType requestType;
+    private String requestFilename;
     private List<Assertion> assertions = new ArrayList<Assertion>();
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
             property = "type", visible = true, defaultImpl = Properties.class)
@@ -101,6 +102,22 @@ public class Teststep {
         this.request = request;
     }
 
+    public TeststepRequestType getRequestType() {
+        return requestType;
+    }
+
+    public void setRequestType(TeststepRequestType requestType) {
+        this.requestType = requestType;
+    }
+
+    public String getRequestFilename() {
+        return requestFilename;
+    }
+
+    public void setRequestFilename(String requestFilename) {
+        this.requestFilename = requestFilename;
+    }
+
     public Endpoint getEndpoint() {
         return endpoint;
     }
@@ -139,16 +156,5 @@ public class Teststep {
 
     public void setAction(String action) {
         this.action = action;
-    }
-
-    @JsonIgnore
-    public boolean isRequestBinary() {
-        boolean result = false;
-        if (otherProperties instanceof MQTeststepProperties) {
-            MQTeststepProperties properties = (MQTeststepProperties) otherProperties;
-            result = (ACTION_ENQUEUE.equals(action) || ACTION_PUBLISH.equals(action)) &&
-                    MQMessageFrom.FILE == properties.getMessageFrom();
-        }
-        return result;
     }
 }

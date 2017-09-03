@@ -2,13 +2,13 @@
   <label for="messageFrom" class="col-lg-2 control-label">Message From</label>
   <div class="col-lg-2">
     <select name="messageFrom" id="messageFrom" class="form-control"
-            ng-model="teststep.otherProperties.messageFrom" ng-change="update(teststepForm.$valid)"
+            ng-model="teststep.requestType" ng-change="update(teststepForm.$valid)"
             ng-disabled="steprun.status === 'ongoing'">
       <option value="Text">Text</option>
       <option value="File">File</option>
     </select>
   </div>
-  <div ng-if="teststep.otherProperties.messageFrom === 'Text'">
+  <div ng-if="teststep.requestType === 'Text'">
     <div class="col-lg-2 checkbox">
       <label>
         <input type="checkbox" ng-model="teststep.otherProperties.rfh2Header.enabled"
@@ -26,7 +26,7 @@
   </div>
 </div>
 
-<div class="form-group" ng-if="teststep.otherProperties.messageFrom === 'Text'">
+<div class="form-group" ng-if="teststep.requestType === 'Text'">
   <div class="col-lg-10">
     <ul class="nav nav-tabs">
       <li ng-class="{ 'active' : textMessageActiveTabIndex === 0 }" ng-click="textMessageTabSelected(0)">
@@ -60,7 +60,7 @@
   </div>
 </div>
 
-<div ng-if="teststep.otherProperties.messageFrom === 'File'">
+<div ng-if="teststep.requestType === 'File'">
   <div class="form-group"></div> <!-- spacer -->
   <div class="form-group"></div> <!-- spacer -->
   <div class="form-group"></div> <!-- spacer -->
@@ -69,13 +69,13 @@
       <button type="file" class="btn btn-info" ngf-select="uploadRequestFile($file)"
               ngf-max-size="30MB">Select File</button>
     </div>
-    <div class="col-lg-1" ng-if="teststep.otherProperties.messageFilename">
+    <div class="col-lg-1" ng-if="teststep.requestFilename">
       <button type="button" class="btn btn-info" ng-click="downloadRequestFile()">Download File</button>
     </div>
   </div>
   <div class="form-group">
-    <div class="col-lg-offset-2 col-lg-7" ng-if="teststep.otherProperties.messageFilename">
-      <h5>{{teststep.otherProperties.messageFilename}}</h5>
+    <div class="col-lg-offset-2 col-lg-7" ng-if="teststep.requestFilename">
+      <h5>{{teststep.requestFilename}}</h5>
     </div>
   </div>
 </div>

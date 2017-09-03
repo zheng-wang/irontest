@@ -8,10 +8,10 @@
       Clear
     <#elseif teststep.action == "Enqueue">
       Enqueue message
-      <#if stepOtherProperties.messageFrom == "Text">
+      <#if teststep.requestType == "Text">
         from text
-      <#elseif stepOtherProperties.messageFrom == "File">
-        from file "${ stepOtherProperties.messageFilename }"
+      <#elseif teststep.requestType == "File">
+        from file "${ teststep.requestFilename }"
       </#if>
       into
     <#elseif teststep.action == "CheckDepth">
@@ -23,10 +23,10 @@
   <#elseif stepOtherProperties.destinationType == "Topic">
     <#if teststep.action == "Publish">
       Publish message
-      <#if stepOtherProperties.messageFrom == "Text">
+      <#if teststep.requestType == "Text">
         from text
-      <#elseif stepOtherProperties.messageFrom == "File">
-        from file "${ stepOtherProperties.messageFilename }"
+      <#elseif teststep.requestType == "File">
+        from file "${ teststep.requestFilename }"
       </#if>
       onto
     </#if>

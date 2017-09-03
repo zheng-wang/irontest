@@ -6,9 +6,11 @@ import com.ibm.mq.headers.MQDataException;
 import com.ibm.mq.headers.MQHeaderIterator;
 import com.ibm.mq.headers.MQMD;
 import com.ibm.mq.headers.MQRFH2;
-import io.irontest.db.TeststepDAO;
 import io.irontest.models.endpoint.MQEndpointProperties;
-import io.irontest.models.teststep.*;
+import io.irontest.models.teststep.MQDestinationType;
+import io.irontest.models.teststep.MQRFH2Header;
+import io.irontest.models.teststep.MQTeststepProperties;
+import io.irontest.models.teststep.Teststep;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,22 +29,6 @@ public class MQTeststepRunner extends TeststepRunner {
     //  disable the default 2033 logging (seems not needed since IBM MQ 8.0)
     static {
         MQException.logExclude(CMQC.MQRC_NO_MSG_AVAILABLE);
-    }
-
-    @Override
-    protected void prepareTeststep() throws IOException {
-        super.prepareTeststep();
-
-        //  fetch request for Enqueue action with message from file
-        Teststep teststep = getTeststep();
-        TeststepDAO teststepDAO = getTeststepDAO();
-        if (Teststep.ACTION_ENQUEUE.equals(teststep.getAction()) ||
-                Teststep.ACTION_PUBLISH.equals(teststep.getAction())) {
-            MQTeststepProperties properties = (MQTeststepProperties) teststep.getOtherProperties();
-            if (MQMessageFrom.FILE == properties.getMessageFrom()) {
-                teststep.setRequest(teststepDAO.getBinaryRequestById(teststep.getId()));
-            }
-        }
     }
 
     protected BasicTeststepRun run(Teststep teststep) throws Exception {

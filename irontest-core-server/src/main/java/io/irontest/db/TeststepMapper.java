@@ -3,6 +3,7 @@ package io.irontest.db;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.irontest.models.endpoint.Endpoint;
 import io.irontest.models.teststep.Teststep;
+import io.irontest.models.teststep.TeststepRequestType;
 import io.irontest.utils.IronTestUtils;
 import org.skife.jdbi.v2.StatementContext;
 import org.skife.jdbi.v2.tweak.ResultSetMapper;
@@ -40,13 +41,17 @@ public class TeststepMapper implements ResultSetMapper<Teststep> {
         teststep.setType(type);
         teststep.setDescription(rs.getString("description"));
         teststep.setAction(fields.contains("action") ? rs.getString("action") : null);
+        //  this line must go before the 'if (fields.contains("request")) {' block
+        teststep.setRequestType(fields.contains("request_type") ?
+                TeststepRequestType.getByText(rs.getString("request_type")) : null);
         if (fields.contains("request")) {
-            //  no use of retrieving binary request here
-            Object request = teststep.isRequestBinary() ?
+            //  no use of retrieving request file here
+            Object request = teststep.getRequestType() == TeststepRequestType.FILE ?
                     null : rs.getBytes("request") == null ? null : new String(rs.getBytes("request"));
             teststep.setRequest(request);
         }
-
+        teststep.setRequestFilename(fields.contains("request_filename") ?
+                rs.getString("request_filename") : null);
         if (fields.contains("endpoint_id")) {
             Endpoint endpoint = new Endpoint();
             endpoint.setId(rs.getLong("endpoint_id"));

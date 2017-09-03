@@ -2,7 +2,7 @@ package io.irontest.db;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.irontest.core.TeststepActionDataBackup;
+import io.irontest.core.MQTeststepActionDataBackup;
 import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.IntegerEqualAssertionProperties;
 import io.irontest.models.endpoint.Endpoint;
@@ -31,6 +31,7 @@ public abstract class TeststepDAO {
             "id BIGINT DEFAULT teststep_sequence.NEXTVAL PRIMARY KEY, testcase_id BIGINT NOT NULL, " +
             "sequence SMALLINT NOT NULL, name VARCHAR(200) NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "type VARCHAR(20) NOT NULL, description CLOB, action VARCHAR(50), endpoint_id BIGINT, request BLOB, " +
+            "request_type VARCHAR(20) NOT NULL DEFAULT 'Text', request_filename VARCHAR(200), " +
             "other_properties CLOB, action_data_backup CLOB, " +
             "created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
@@ -84,42 +85,44 @@ public abstract class TeststepDAO {
     }
 
     @SqlUpdate("update teststep set name = :name, description = :description, action = :action, request = :request, " +
-            "endpoint_id = :endpointId, other_properties = :otherProperties, " +
+            "request_type = :requestType, endpoint_id = :endpointId, other_properties = :otherProperties, " +
             "updated = CURRENT_TIMESTAMP where id = :id")
     protected abstract int _update(@Bind("name") String name, @Bind("description") String description,
-                                   @Bind("action") String action, @Bind("request") Object request, @Bind("id") long id,
+                                   @Bind("action") String action, @Bind("request") Object request,
+                                   @Bind("requestType") String requestType, @Bind("id") long id,
                                    @Bind("endpointId") Long endpointId,
                                    @Bind("otherProperties") String otherProperties);
 
-    @SqlUpdate("update teststep set name = :name, description = :description, action = :action, " +
-            "endpoint_id = :endpointId, other_properties = :otherProperties, " +
+    @SqlUpdate("update teststep set name = :name, description = :description, request_type = :requestType, " +
+            "action = :action, endpoint_id = :endpointId, other_properties = :otherProperties, " +
             "updated = CURRENT_TIMESTAMP where id = :id")
     protected abstract int _updateWithoutRequest(@Bind("name") String name, @Bind("description") String description,
-                                   @Bind("action") String action, @Bind("id") long id,
-                                   @Bind("endpointId") Long endpointId,
-                                   @Bind("otherProperties") String otherProperties);
+                                                 @Bind("requestType") String requestType,
+                                                 @Bind("action") String action, @Bind("id") long id,
+                                                 @Bind("endpointId") Long endpointId,
+                                                 @Bind("otherProperties") String otherProperties);
 
     @Transaction
     public Teststep update(Teststep teststep) throws IOException {
         Teststep oldTeststep = findById_NoTransaction(teststep.getId());
 
-        processRFH2Folders(teststep);
-
-        backupRestoreActionData(oldTeststep, teststep);
+        if (Teststep.TYPE_MQ.equals(teststep.getType()) && teststep.getAction() != null) {   //  newly created MQ test step does not have action
+            processMQTeststep(oldTeststep, teststep);
+        }
 
         Endpoint oldEndpoint = oldTeststep.getEndpoint();
         Endpoint newEndpoint = teststep.getEndpoint();
         Long newEndpointId = newEndpoint == null ? null : newEndpoint.getId();
         String otherProperties = new ObjectMapper().writeValueAsString(teststep.getOtherProperties());
 
-        if (isRequestToBeUpdatedWhenUpdatingTeststep(teststep)) {
+        if (teststep.getRequestType() == TeststepRequestType.FILE) {    // update teststep without request
+            _updateWithoutRequest(teststep.getName(), teststep.getDescription(), teststep.getRequestType().toString(),
+                    teststep.getAction(), teststep.getId(), newEndpointId, otherProperties);
+        } else {       // update teststep with request
             Object request = teststep.getRequest() instanceof String ?
                     ((String) teststep.getRequest()).getBytes() : teststep.getRequest();
-            _update(teststep.getName(), teststep.getDescription(), teststep.getAction(), request, teststep.getId(),
-                    newEndpointId, otherProperties);
-        } else {
-            _updateWithoutRequest(teststep.getName(), teststep.getDescription(), teststep.getAction(), teststep.getId(),
-                    newEndpointId, otherProperties);
+            _update(teststep.getName(), teststep.getDescription(), teststep.getAction(), request,
+                    teststep.getRequestType().toString(), teststep.getId(), newEndpointId, otherProperties);
         }
 
         updateEndpointIfExists(oldEndpoint, newEndpoint);
@@ -129,150 +132,123 @@ public abstract class TeststepDAO {
         return findById_NoTransaction(teststep.getId());
     }
 
-    private boolean isRequestToBeUpdatedWhenUpdatingTeststep(Teststep teststep) {
-        boolean result = true;
-        if (Teststep.TYPE_MQ.equals(teststep.getType()) &&
-                (Teststep.ACTION_ENQUEUE.equals(teststep.getAction()) || Teststep.ACTION_PUBLISH.equals(teststep.getAction()))) {
-            MQTeststepProperties mqTeststepProperties = (MQTeststepProperties) teststep.getOtherProperties();
-            if (MQMessageFrom.FILE == mqTeststepProperties.getMessageFrom()) {
-                result = false;
-            }
-        }
-        return result;
-    }
-
-    /**
-     * Process MQ test step enqueue action (with message from text) RFH2 folders.
-     * @param teststep
-     */
-    private void processRFH2Folders(Teststep teststep) {
-        if (Teststep.TYPE_MQ.equals(teststep.getType()) &&
-                (Teststep.ACTION_ENQUEUE.equals(teststep.getAction()) ||
-                        Teststep.ACTION_PUBLISH.equals(teststep.getAction()))) {
-            MQTeststepProperties mqTeststepProperties = (MQTeststepProperties) teststep.getOtherProperties();
-            if (MQMessageFrom.TEXT == mqTeststepProperties.getMessageFrom()) {
-                MQRFH2Header rfh2Header = mqTeststepProperties.getRfh2Header();
-                if (rfh2Header.isEnabled()) {
-                    List<MQRFH2Folder> rfh2Folders = rfh2Header.getFolders();
-                    for (MQRFH2Folder folder : rfh2Folders) {
-                        //  validate folder string is well formed XML
-                        Document doc = null;
-                        try {
-                            doc = XMLUtils.xmlStringToDOM(folder.getString());
-                        } catch (Exception e) {
-                            throw new RuntimeException("Folder string is not a valid XML. " + folder.getString(), e);
-                        }
-
-                        //  update folder name to be the XML root element name
-                        folder.setName(doc.getDocumentElement().getTagName());
-                    }
-                }
-            }
-        }
-    }
-
-    private void backupRestoreActionData(Teststep oldTeststep, Teststep teststep) throws IOException {
-        if (needBackupRestore(oldTeststep, teststep)) {
-            long teststepId = teststep.getId();
-            String oldAction = oldTeststep.getAction();
-            String newAction = teststep.getAction();
-            String backupStr = getActionDataBackupById(teststepId);
-            TeststepActionDataBackup backup = null;
-            TeststepActionDataBackup oldBackup = null;
-            if (backupStr == null) {
-                backup = new TeststepActionDataBackup();
-                oldBackup = new TeststepActionDataBackup();
-            } else {
-                ObjectMapper mapper = new ObjectMapper();
-                backup = mapper.readValue(backupStr, TeststepActionDataBackup.class);
-                oldBackup = mapper.readValue(backupStr, TeststepActionDataBackup.class);
-            }
-            boolean backupChanged = false;
-
-            // backup old action's data
-            // for assertions, no need to backup primary keys or foreign keys
-            List<Assertion> oldAssertions = oldTeststep.getAssertions();
-            for (Assertion oldAssertion: oldAssertions) {
-                oldAssertion.setId(null);
-                oldAssertion.setTeststepId(null);
-            }
-            if (Teststep.ACTION_CHECK_DEPTH.equals(oldAction)) {
-                Assertion oldAssertion = oldAssertions.get(0);
-                backup.setQueueDepthAssertionProperties(
-                        (IntegerEqualAssertionProperties) oldAssertion.getOtherProperties());
-                backupChanged = true;
-            } else if (Teststep.ACTION_DEQUEUE.equals(oldAction)) {
-                backup.setDequeueAssertions(oldAssertions);
-                backupChanged = true;
-            } else if (Teststep.ACTION_ENQUEUE.equals(oldAction)) {
-                MQTeststepProperties oldProperties = (MQTeststepProperties) oldTeststep.getOtherProperties();
-                if (MQMessageFrom.TEXT == oldProperties.getMessageFrom()) {
-                    backup.setEnqueueTextMessage((String) oldTeststep.getRequest());
-                    backupChanged = true;
-                } else if (MQMessageFrom.FILE == oldProperties.getMessageFrom()) {
-                    backup.setEnqueueBinaryMessage(getBinaryRequestById(teststepId));
-                    backupChanged = true;
-                }
-            }
-
-            //  persist backup if changed
-            if (backupChanged) {
-                backupStr = new ObjectMapper().writeValueAsString(backup);
-                saveActionDataBackupById(teststepId, backupStr);
-            }
-
-            // setup new action's data
-            teststep.getAssertions().clear();
+    private void processMQTeststep(Teststep oldTeststep, Teststep teststep) throws IOException {
+        String newAction = teststep.getAction();
+        if (!newAction.equals(oldTeststep.getAction()) ||
+                teststep.getRequestType() != oldTeststep.getRequestType()) {    //  action or 'message from' is switched, so clear things
             teststep.setRequest(null);
-            if (Teststep.ACTION_CHECK_DEPTH.equals(newAction)) {
-                Assertion assertion = new Assertion();
-                teststep.getAssertions().add(assertion);
-                assertion.setName("MQ queue depth equals");
-                assertion.setType(Assertion.TYPE_INTEGER_EQUAL);
-                // restore old assertion properties if exists
-                IntegerEqualAssertionProperties oldAssertionProperties =
-                        oldBackup.getQueueDepthAssertionProperties();
-                if (oldAssertionProperties != null) {
-                    assertion.setOtherProperties(oldAssertionProperties);
-                } else {
-                    assertion.setOtherProperties(new IntegerEqualAssertionProperties(0));
+            teststep.setRequestFilename(null);
+            teststep.getAssertions().clear();
+            MQTeststepProperties properties = (MQTeststepProperties) teststep.getOtherProperties();
+            properties.setRfh2Header(new MQRFH2Header());
+
+            backupRestoreMQTeststepActionData(oldTeststep, teststep);
+        } else if (TeststepRequestType.TEXT == teststep.getRequestType() && (
+                Teststep.ACTION_ENQUEUE.equals(newAction) || Teststep.ACTION_PUBLISH.equals(newAction))) {
+            processMQTeststepRFH2Folders(teststep);
+        }
+    }
+
+    private void processMQTeststepRFH2Folders(Teststep teststep) {
+        MQTeststepProperties mqTeststepProperties = (MQTeststepProperties) teststep.getOtherProperties();
+        MQRFH2Header rfh2Header = mqTeststepProperties.getRfh2Header();
+        if (rfh2Header.isEnabled()) {
+            List<MQRFH2Folder> rfh2Folders = rfh2Header.getFolders();
+            for (MQRFH2Folder folder : rfh2Folders) {
+                //  validate folder string is well formed XML
+                Document doc = null;
+                try {
+                    doc = XMLUtils.xmlStringToDOM(folder.getString());
+                } catch (Exception e) {
+                    throw new RuntimeException("Folder string is not a valid XML. " + folder.getString(), e);
                 }
-            } else if (Teststep.ACTION_DEQUEUE.equals(newAction)) {
-                // restore old assertions if exist
-                if (oldBackup.getDequeueAssertions() != null) {
-                    teststep.getAssertions().addAll(oldBackup.getDequeueAssertions());
-                }
-            } else if (Teststep.ACTION_ENQUEUE.equals(newAction)) {
-                MQTeststepProperties newProperties = (MQTeststepProperties) teststep.getOtherProperties();
-                if (MQMessageFrom.TEXT == newProperties.getMessageFrom()) {
-                    // restore old message
-                    teststep.setRequest(oldBackup.getEnqueueTextMessage());
-                } else if (MQMessageFrom.FILE == newProperties.getMessageFrom()) {
-                    // restore old message
-                    teststep.setRequest(oldBackup.getEnqueueBinaryMessage());
-                }
+
+                //  update folder name to be the XML root element name
+                folder.setName(doc.getDocumentElement().getTagName());
             }
         }
     }
 
-    private boolean needBackupRestore(Teststep oldTeststep, Teststep teststep) {
-        boolean result = false;
+    private void backupRestoreMQTeststepActionData(Teststep oldTeststep, Teststep teststep) throws IOException {
+        long teststepId = teststep.getId();
+        String oldAction = oldTeststep.getAction();
+        String newAction = teststep.getAction();
+        String backupStr = getActionDataBackupById(teststepId);
+        MQTeststepActionDataBackup backup = null;
+        MQTeststepActionDataBackup oldBackup = null;
+        if (backupStr == null) {
+            backup = new MQTeststepActionDataBackup();
+            oldBackup = new MQTeststepActionDataBackup();
+        } else {
+            ObjectMapper mapper = new ObjectMapper();
+            backup = mapper.readValue(backupStr, MQTeststepActionDataBackup.class);
+            oldBackup = mapper.readValue(backupStr, MQTeststepActionDataBackup.class);
+        }
+        boolean backupChanged = false;
 
-        if (Teststep.TYPE_MQ.equals(teststep.getType())) {
-            String oldAction = oldTeststep.getAction();
-            String newAction = teststep.getAction();
-            if (newAction != null && !newAction.equals(oldAction)) {
-                result = true;
-            } else if (Teststep.ACTION_ENQUEUE.equals(oldAction) && Teststep.ACTION_ENQUEUE.equals(newAction)) {
-                MQMessageFrom oldMessageType = ((MQTeststepProperties) oldTeststep.getOtherProperties()).getMessageFrom();
-                MQMessageFrom newMessageType = ((MQTeststepProperties) teststep.getOtherProperties()).getMessageFrom();
-                if (newMessageType != oldMessageType) {
-                    result = true;
-                }
+        // backup old action's data
+        // for assertions, no need to backup primary keys or foreign keys
+        List<Assertion> oldAssertions = oldTeststep.getAssertions();
+        for (Assertion oldAssertion: oldAssertions) {
+            oldAssertion.setId(null);
+            oldAssertion.setTeststepId(null);
+        }
+        if (Teststep.ACTION_CHECK_DEPTH.equals(oldAction)) {
+            Assertion oldAssertion = oldAssertions.get(0);
+            backup.setQueueDepthAssertionProperties(
+                    (IntegerEqualAssertionProperties) oldAssertion.getOtherProperties());
+            backupChanged = true;
+        } else if (Teststep.ACTION_DEQUEUE.equals(oldAction)) {
+            backup.setDequeueAssertions(oldAssertions);
+            backupChanged = true;
+        } else if (Teststep.ACTION_ENQUEUE.equals(oldAction) || Teststep.ACTION_PUBLISH.equals(oldAction)) {
+            if (TeststepRequestType.TEXT == oldTeststep.getRequestType()) {
+                backup.setTextRequest((String) oldTeststep.getRequest());
+                backup.setRfh2Header(((MQTeststepProperties) oldTeststep.getOtherProperties()).getRfh2Header());
+                backupChanged = true;
+            } else if (TeststepRequestType.FILE == oldTeststep.getRequestType()) {
+                backup.setFileRequest(getBinaryRequestById(teststepId));
+                backup.setRequestFilename(oldTeststep.getRequestFilename());
+                backupChanged = true;
             }
         }
 
-        return result;
+        //  persist backup if changed
+        if (backupChanged) {
+            backupStr = new ObjectMapper().writeValueAsString(backup);
+            saveActionDataBackupById(teststepId, backupStr);
+        }
+
+        // setup new action's data
+        if (Teststep.ACTION_CHECK_DEPTH.equals(newAction)) {
+            Assertion assertion = new Assertion();
+            teststep.getAssertions().add(assertion);
+            assertion.setName("MQ queue depth equals");
+            assertion.setType(Assertion.TYPE_INTEGER_EQUAL);
+            // restore old assertion properties if exists
+            IntegerEqualAssertionProperties oldAssertionProperties =
+                    oldBackup.getQueueDepthAssertionProperties();
+            if (oldAssertionProperties != null) {
+                assertion.setOtherProperties(oldAssertionProperties);
+            } else {
+                assertion.setOtherProperties(new IntegerEqualAssertionProperties(0));
+            }
+        } else if (Teststep.ACTION_DEQUEUE.equals(newAction)) {
+            // restore old assertions if exist
+            if (oldBackup.getDequeueAssertions() != null) {
+                teststep.getAssertions().addAll(oldBackup.getDequeueAssertions());
+            }
+        } else if (Teststep.ACTION_ENQUEUE.equals(newAction) || Teststep.ACTION_PUBLISH.equals(newAction)) {
+            if (TeststepRequestType.TEXT == teststep.getRequestType()) {
+                // restore old message
+                teststep.setRequest(oldBackup.getTextRequest());
+                ((MQTeststepProperties) teststep.getOtherProperties()).setRfh2Header(oldBackup.getRfh2Header());
+            } else if (TeststepRequestType.FILE == teststep.getRequestType()) {
+                // restore old message
+                updateRequest(teststep.getId(), oldBackup.getFileRequest(), TeststepRequestType.FILE.toString(),
+                        oldBackup.getRequestFilename());
+            }
+        }
     }
 
     @SqlUpdate("update teststep set action_data_backup = :backupJSON, updated = CURRENT_TIMESTAMP " +
@@ -419,22 +395,16 @@ public abstract class TeststepDAO {
         }
     }
 
-    @SqlUpdate("update teststep set request = :request, other_properties = :otherProperties, " +
+    @SqlUpdate("update teststep set request = :request, request_type = :requestType, request_filename = :requestFilename, " +
             "updated = CURRENT_TIMESTAMP where id = :teststepId")
-    protected abstract int updateRequestAndOtherProperties(@Bind("teststepId") long teststepId,
+    protected abstract int updateRequest(@Bind("teststepId") long teststepId,
                                                            @Bind("request") Object request,
-                                                           @Bind("otherProperties") String otherProperties);
+                                                           @Bind("requestType") String requestType,
+                                                           @Bind("requestFilename") String requestFilename);
 
     @Transaction
-    public Teststep setRequestFile(long teststepId, String fileName, InputStream inputStream)
-            throws JsonProcessingException {
-        Teststep basicTeststep = _findById(teststepId);
-        if (Teststep.TYPE_MQ.equals(basicTeststep.getType())) {
-            MQTeststepProperties otherProperties = (MQTeststepProperties) basicTeststep.getOtherProperties();
-            otherProperties.setMessageFilename(fileName);
-            String otherPropertiesStr = new ObjectMapper().writeValueAsString(otherProperties);
-            updateRequestAndOtherProperties(teststepId, inputStream, otherPropertiesStr);
-        }
+    public Teststep setRequestFile(long teststepId, String fileName, InputStream inputStream) {
+        updateRequest(teststepId, inputStream, TeststepRequestType.FILE.toString(), fileName);
 
         return findById_NoTransaction(teststepId);
     }

@@ -6,6 +6,7 @@ import io.irontest.db.UtilsDAO;
 import io.irontest.models.UserDefinedProperty;
 import io.irontest.models.endpoint.Endpoint;
 import io.irontest.models.teststep.Teststep;
+import io.irontest.models.teststep.TeststepRequestType;
 import org.apache.commons.text.StrLookup;
 import org.apache.commons.text.StrSubstitutor;
 
@@ -30,14 +31,16 @@ public abstract class TeststepRunner {
         return run(teststep);
     }
 
-    /**
-     * Sub class can optionally override.
-     */
-    protected void prepareTeststep() throws IOException {
+    private void prepareTeststep() throws IOException {
         //  decrypt password in endpoint
         Endpoint endpoint = this.teststep.getEndpoint();
         if (endpoint != null && endpoint.getPassword() != null) {
             endpoint.setPassword(this.utilsDAO.decryptPassword(endpoint.getPassword()));
+        }
+
+        //  fetch request binary if its type is file
+        if (this.teststep.getRequestType() == TeststepRequestType.FILE) {
+            this.teststep.setRequest(this.teststepDAO.getBinaryRequestById(this.teststep.getId()));
         }
 
         //  resolve UDP references in the teststep.otherProperties
@@ -80,10 +83,6 @@ public abstract class TeststepRunner {
 
     protected Teststep getTeststep() {
         return teststep;
-    }
-
-    protected TeststepDAO getTeststepDAO() {
-        return teststepDAO;
     }
 
     protected void setUtilsDAO(UtilsDAO utilsDAO) {
