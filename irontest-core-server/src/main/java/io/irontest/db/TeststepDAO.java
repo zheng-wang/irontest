@@ -47,14 +47,17 @@ public abstract class TeststepDAO {
     @CreateSqlObject
     protected abstract AssertionDAO assertionDAO();
 
-    @SqlUpdate("insert into teststep (testcase_id, sequence, type, description, action, request, endpoint_id, other_properties) " +
-            "values (:t.testcaseId, case when :t.sequence = 0 " +
+    @SqlUpdate("insert into teststep (testcase_id, sequence, type, description, action, request, request_type, " +
+            "request_filename, endpoint_id, other_properties) values (:t.testcaseId, " +
+                "case when :t.sequence = 0 " +
                     "then (select coalesce(max(sequence), 0) + 1 from teststep where testcase_id = :t.testcaseId) " +
                     "else :t.sequence end, " +
-                ":t.type, :t.description, :t.action, :request, :endpointId, :otherProperties)")
+            ":t.type, :t.description, :t.action, :request, :requestType, :t.requestFilename, :endpointId, " +
+            ":otherProperties)")
     @GetGeneratedKeys
     protected abstract long _insert(@BindBean("t") Teststep teststep, @Bind("request") Object request,
-                                    @Bind("endpointId") Long endpointId, @Bind("otherProperties") String otherProperties);
+                                    @Bind("requestType") String requestType, @Bind("endpointId") Long endpointId,
+                                    @Bind("otherProperties") String otherProperties);
 
     @SqlUpdate("update teststep set name = :name where id = :id")
     protected abstract long updateNameForInsert(@Bind("id") long id, @Bind("name") String name);
@@ -73,7 +76,8 @@ public abstract class TeststepDAO {
         Object request = teststep.getRequest() instanceof String ?
                 ((String) teststep.getRequest()).getBytes() : teststep.getRequest();
         String otherProperties = new ObjectMapper().writeValueAsString(teststep.getOtherProperties());
-        long id = _insert(teststep, request, endpoint == null ? null : endpoint.getId(), otherProperties);
+        long id = _insert(teststep, request, teststep.getRequestType().toString(),
+                endpoint == null ? null : endpoint.getId(), otherProperties);
         teststep.setId(id);
 
         if (teststep.getName() == null) {
@@ -242,7 +246,9 @@ public abstract class TeststepDAO {
             if (TeststepRequestType.TEXT == teststep.getRequestType()) {
                 // restore old message
                 teststep.setRequest(oldBackup.getTextRequest());
-                ((MQTeststepProperties) teststep.getOtherProperties()).setRfh2Header(oldBackup.getRfh2Header());
+                //  teststep.otherProperties.rfh2Header should never be null
+                ((MQTeststepProperties) teststep.getOtherProperties()).setRfh2Header(
+                        oldBackup.getRfh2Header() == null ? new MQRFH2Header() : oldBackup.getRfh2Header());
             } else if (TeststepRequestType.FILE == teststep.getRequestType()) {
                 // restore old message
                 updateRequest(teststep.getId(), oldBackup.getFileRequest(), TeststepRequestType.FILE.toString(),

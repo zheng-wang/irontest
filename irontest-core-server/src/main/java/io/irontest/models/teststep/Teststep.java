@@ -40,7 +40,7 @@ public class Teststep {
     private String action;            //  currently only used in MQ test step and IIB test step
     private Endpoint endpoint;
     private Object request;
-    private TeststepRequestType requestType;
+    private TeststepRequestType requestType = TeststepRequestType.TEXT;
     private String requestFilename;
     private List<Assertion> assertions = new ArrayList<Assertion>();
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY,

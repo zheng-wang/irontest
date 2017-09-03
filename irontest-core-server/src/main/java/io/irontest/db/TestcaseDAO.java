@@ -5,6 +5,7 @@ import io.irontest.models.Testcase;
 import io.irontest.models.assertion.Assertion;
 import io.irontest.models.endpoint.Endpoint;
 import io.irontest.models.teststep.Teststep;
+import io.irontest.models.teststep.TeststepRequestType;
 import org.skife.jdbi.v2.sqlobject.*;
 import org.skife.jdbi.v2.sqlobject.customizers.Define;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
@@ -166,7 +167,13 @@ public abstract class TestcaseDAO {
             newTeststep.setType(oldTeststep.getType());
             newTeststep.setDescription(oldTeststep.getDescription());
             newTeststep.setAction(oldTeststep.getAction());
-            newTeststep.setRequest(oldTeststep.getRequest());
+            if (oldTeststep.getRequestType() == TeststepRequestType.TEXT) {
+                newTeststep.setRequest(oldTeststep.getRequest());
+            } else {
+                newTeststep.setRequest(teststepDAO().getBinaryRequestById(oldTeststep.getId()));
+            }
+            newTeststep.setRequestType(oldTeststep.getRequestType());
+            newTeststep.setRequestFilename(oldTeststep.getRequestFilename());
             newTeststep.setOtherProperties(oldTeststep.getOtherProperties());
             Endpoint oldEndpoint = oldTeststep.getEndpoint();
             if (oldEndpoint != null) {
