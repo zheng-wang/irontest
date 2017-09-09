@@ -2,7 +2,8 @@
   <label for="soapAddress" class="col-lg-2 control-label">SOAP Address</label>
   <div class="col-lg-10">
     <input id="soapAddress" name="soapAddress" type="text" class="form-control" ng-model="endpoint.url"
-           ng-change="soapAddressChanged(endpointForm.$valid)" placeholder="http://localhost:8081/soap/article">
+           ng-change="soapAddressChanged(endpointForm.$valid)" placeholder="http://localhost:8081/soap/article"
+           spellcheck="false">
   </div>
 </div>
 
@@ -14,7 +15,7 @@
     <input id="wsdlURL" name="wsdlURL" type="text" class="form-control"
            ng-model="endpoint.otherProperties.wsdlURL"
            ng-change="autoSave(endpointForm.$valid)"
-           ng-readonly="endpoint.otherProperties.wsdlURLByConvention">
+           ng-readonly="endpoint.otherProperties.wsdlURLByConvention" spellcheck="false">
   </div>
   <div class="col-lg-2 checkbox">
     <label>

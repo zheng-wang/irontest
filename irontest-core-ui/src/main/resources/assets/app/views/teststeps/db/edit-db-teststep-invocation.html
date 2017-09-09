@@ -5,7 +5,7 @@
     <div class="col-lg-6">
       <input name="jdbcURL" type="text" class="form-control" ng-change="autoSave(teststepForm.$valid)"
              ng-model="teststep.endpoint.url" id="jdbcURL"
-             ng-readonly="teststep.endpoint.environment">  <!-- readonly when it is a managed endpoint -->
+             ng-readonly="teststep.endpoint.environment" spellcheck="false">  <!-- readonly when it is a managed endpoint -->
     </div>
     <div class="col-lg-1">
       <button type="button" class="btn btn-info" ng-click="invoke()" ng-disabled="!teststep.endpoint ||

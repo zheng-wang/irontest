@@ -4,7 +4,7 @@
     <input id="endpointSOAPAddress" name="endpointSOAPAddress" type="text" class="form-control"
            ng-model="teststep.endpoint.url"
            ng-change="endpointSOAPAddressChanged(teststepForm.$valid)"
-           ng-readonly="!isInShareEndpointMode() && teststep.endpoint.environment">
+           ng-readonly="!isInShareEndpointMode() && teststep.endpoint.environment" spellcheck="false">
   </div>
 </div>
 
@@ -17,7 +17,7 @@
            ng-model="teststep.endpoint.otherProperties.wsdlURL"
            ng-change="isInShareEndpointMode() ? angular.noop() : autoSave(teststepForm.$valid)"
            ng-readonly="teststep.endpoint.otherProperties.wsdlURLByConvention ||
-             (!isInShareEndpointMode() && teststep.endpoint.environment)">
+             (!isInShareEndpointMode() && teststep.endpoint.environment)" spellcheck="false">
   </div>
   <div class="col-lg-2 checkbox">
     <label>
