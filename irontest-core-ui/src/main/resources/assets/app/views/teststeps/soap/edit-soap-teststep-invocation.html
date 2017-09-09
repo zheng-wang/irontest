@@ -57,17 +57,13 @@
 
 <script type="text/ng-template" id="httpHeaderGridNameEditableCellTemplate.html">
   <div class="ui-grid-cell-contents">
-    <div>
-      <input type="text" class="form-control" ui-grid-editor ng-model="row.entity.name"
-             ng-change="grid.appScope.autoSave(true)" spellcheck="false">
-    </div>
+    <input type="text" class="form-control" ui-grid-editor ng-model="row.entity.name"
+           ng-change="grid.appScope.autoSave(true)" spellcheck="false">
   </div>
 </script>
 <script type="text/ng-template" id="httpHeaderGridValueEditableCellTemplate.html">
   <div class="ui-grid-cell-contents">
-    <div>
-      <input type="text" class="form-control" ui-grid-editor ng-model="row.entity.value"
-             ng-change="grid.appScope.autoSave(true)" spellcheck="false">
-    </div>
+    <input type="text" class="form-control" ui-grid-editor ng-model="row.entity.value"
+           ng-change="grid.appScope.autoSave(true)" spellcheck="false">
   </div>
 </script>

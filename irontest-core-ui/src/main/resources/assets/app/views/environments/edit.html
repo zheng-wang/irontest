@@ -63,18 +63,14 @@
 
   <script type="text/ng-template" id="endpointGridNameCellTemplate.html">
     <div class="ui-grid-cell-contents">
-      <div>
-        <a ui-sref="endpoint_edit({ environmentId: row.entity.environment.id, endpointId: row.entity.id })">{{COL_FIELD}}</a>
-      </div>
+      <a ui-sref="endpoint_edit({ environmentId: row.entity.environment.id, endpointId: row.entity.id })">{{COL_FIELD}}</a>
     </div>
   </script>
   <script type="text/ng-template" id="endpointGridDeleteCellTemplate.html">
     <div class="ui-grid-cell-contents">
-      <div>
-        <a ng-click="grid.appScope.removeEndpoint(row.entity.id)" href="">
-          <i class="glyphicon glyphicon-trash center-block text-center"></i>
-        </a>
-      </div>
+      <a ng-click="grid.appScope.removeEndpoint(row.entity.id)" href="">
+        <i class="glyphicon glyphicon-trash center-block text-center"></i>
+      </a>
     </div>
   </script>
 </div>

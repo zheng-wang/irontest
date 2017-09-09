@@ -121,18 +121,14 @@
 </script>
 <script type="text/ng-template" id="teststepGridNameCellTemplate.html">
   <div class="ui-grid-cell-contents">
-    <div>
-      <a ui-sref="teststep_edit({ testcaseId: row.entity.testcaseId, teststepId: row.entity.id })">{{COL_FIELD}}</a>
-    </div>
+    <a ui-sref="teststep_edit({ testcaseId: row.entity.testcaseId, teststepId: row.entity.id })">{{COL_FIELD}}</a>
   </div>
 </script>
 <script type="text/ng-template" id="teststepGridDeleteCellTemplate.html">
   <div class="ui-grid-cell-contents">
-    <div>
-      <a ng-click="grid.appScope.removeTeststep(row.entity)" href="">
-        <i class="glyphicon glyphicon-trash center-block text-center"></i>
-      </a>
-    </div>
+    <a ng-click="grid.appScope.removeTeststep(row.entity)" href="">
+      <i class="glyphicon glyphicon-trash center-block text-center"></i>
+    </a>
   </div>
 </script>
 <script type="text/ng-template" id="teststepGridResultCellTemplate.html">

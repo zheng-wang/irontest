@@ -16,12 +16,12 @@
 
   <script type="text/ng-template" id="envGridNameCellTemplate.html">
     <div class="ui-grid-cell-contents">
-      <div><a ui-sref="environment_edit({ environmentId: row.entity.id })">{{COL_FIELD}}</a></div>
+      <a ui-sref="environment_edit({ environmentId: row.entity.id })">{{COL_FIELD}}</a>
     </div>
   </script>
   <script type="text/ng-template" id="envGridDeleteCellTemplate.html">
     <div class="ui-grid-cell-contents">
-      <div><a ng-click="grid.appScope.remove(row.entity)" href=""><i class="glyphicon glyphicon-trash center-block text-center"></i></a></div>
+      <a ng-click="grid.appScope.remove(row.entity)" href=""><i class="glyphicon glyphicon-trash center-block text-center"></i></a>
     </div>
   </script>
 </div>
