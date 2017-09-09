@@ -12,6 +12,7 @@ import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.jdbi.DBIFactory;
+import io.dropwizard.logging.DefaultLoggingFactory;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.dropwizard.views.ViewBundle;
@@ -129,8 +130,11 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         environment.jersey().register(new AssertionResource());
         environment.jersey().register(new UDPResource(udpDAO));
 
-        //  register jersey LoggingFilter
-        environment.jersey().register(new LoggingFilter(Logger.getLogger(LoggingFilter.class.getName()), true));
+        //  if turned on in config.yml, register jersey LoggingFilter (used for logging Iron Test resource oriented HTTP API requests and responses)
+        DefaultLoggingFactory defaultLoggingFactory = (DefaultLoggingFactory) configuration.getLoggingFactory();
+        if (defaultLoggingFactory.getLoggers().containsKey(LoggingFilter.class.getName())) {
+            environment.jersey().register(new LoggingFilter(Logger.getLogger(LoggingFilter.class.getName()), true));
+        }
 
         //  register exception mappers
         environment.jersey().register(new IronTestLoggingExceptionMapper());

@@ -26,15 +26,16 @@ server:
     whiteList: 127.0.0.1, 0:0:0:0:0:0:0:1
 
 logging:
-  loggers:
-    org.glassfish.jersey.filter.LoggingFilter:
-      additive: false
-      appenders:
-        - type: file
-          currentLogFilename: ./logs/api.log
-          maxFileSize: 15MB
-          archivedLogFilenamePattern: ./logs/archive/api/api-%d-%i.log.gz
-          archivedFileCount: 200
+  # Uncomment below logger for Iron Test resource oriented HTTP APIs request/response logging
+#  loggers:
+#    org.glassfish.jersey.filter.LoggingFilter:
+#      additive: false
+#      appenders:
+#        - type: file
+#          currentLogFilename: ./logs/api.log
+#          maxFileSize: 15MB
+#          archivedLogFilenamePattern: ./logs/archive/api/api-%d-%i.log.gz
+#          archivedFileCount: 200
   appenders:
     - type: console
     - type: file
