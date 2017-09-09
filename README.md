@@ -3,7 +3,7 @@ Iron Test is an open source tool for integration testing APIs such as SOAP web s
 
 The tool intends to provide a platform enabling integrating automated testing capabilities for all kinds of API based systems (potentially including mainframe and IOT) so that user does not need to pick up a new set of tools for testing a new type of system.    
 
-The tool is mainly designed for testers and developers, but in the same team/project BAs or architects might also benefit from it.
+The tool is designed for testers and developers, but in the same team/organization BAs or architects may also benefit from it. The thought here is that API test cases contain valuable business knowledge, and this knowledge should be shared to all roles across the team/organization and easily accessible to everyone.
 
 Table of Contents:
 
