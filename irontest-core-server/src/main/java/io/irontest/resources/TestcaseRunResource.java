@@ -80,8 +80,7 @@ public class TestcaseRunResource {
             try {
                 basicTeststepRun = TeststepRunnerFactory.getInstance()
                         .newTeststepRunner(teststep, teststepDAO, utilsDAO, testcaseUDPs, testcaseRunContext).run();
-                LOGGER.info("API invocation response: " +
-                        (basicTeststepRun.getResponse() == null ? null : basicTeststepRun.getResponse().toString()));
+                LOGGER.info("Finish running test step: " + teststep.getName());
                 stepRun.importBasicTeststepRun(basicTeststepRun);
             } catch (Exception e) {
                 exceptionOccurred = true;
