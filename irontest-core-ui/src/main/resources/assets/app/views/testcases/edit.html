@@ -33,7 +33,7 @@
         </div>
         <div class="row" id="udpGrid">
           <div ng-if="activeTabIndex === PROPERTIES_TAB_INDEX" ui-grid="udpGridOptions" ui-grid-resize-columns
-               ui-grid-edit class="ui-grid"></div>
+               ui-grid-edit ui-grid-cellNav class="ui-grid"></div>
         </div>
       </form>
     </uib-tab>
@@ -97,27 +97,21 @@
 <!-- UDP grid cell templates -->
 <script type="text/ng-template" id="udpGridNameEditableCellTemplate.html">
   <div class="ui-grid-cell-contents">
-    <div>
-      <input type="text" class="form-control" ui-grid-editor ng-model="row.entity.name"
-             ng-change="grid.appScope.udpAutoSave(row.entity)">
-    </div>
+    <input type="text" class="form-control" ui-grid-editor ng-model="row.entity.name"
+           ng-change="grid.appScope.udpAutoSave(row.entity)">
   </div>
 </script>
 <script type="text/ng-template" id="udpGridValueEditableCellTemplate.html">
-  <div class="ui-grid-cell-contents">
-    <div>
-      <input type="text" class="form-control" ui-grid-editor ng-model="row.entity.value"
-             ng-change="grid.appScope.udpAutoSave(row.entity)">
-    </div>
+  <div class="ui-grid-cell-contents" ng-dblclick="grid.appScope.valueCellDblClicked(row.entity)">
+    <input type="text" class="form-control" ui-grid-editor ng-model="row.entity.value" spellcheck="false"
+           ng-change="grid.appScope.udpAutoSave(row.entity)" ng-class="'colt' + col.uid">
   </div>
 </script>
 <script type="text/ng-template" id="udpGridDeleteCellTemplate.html">
   <div class="ui-grid-cell-contents">
-    <div>
-      <a ng-click="grid.appScope.removeUDP(row.entity)" href="">
-        <i class="glyphicon glyphicon-trash center-block text-center"></i>
-      </a>
-    </div>
+    <a ng-click="grid.appScope.removeUDP(row.entity)" href="">
+      <i class="glyphicon glyphicon-trash center-block text-center"></i>
+    </a>
   </div>
 </script>
 

@@ -206,7 +206,7 @@ body {
   top: 20%;
 }
 
-.select-managed-endpoint-modal {
+.select-managed-endpoint-modal, .udp-value-textarea-editor-modal {
   top: 15%;
 }
 

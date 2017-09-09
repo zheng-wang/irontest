@@ -77,20 +77,20 @@ angular.module('irontest').controller('TeststepsController', ['$scope', 'Testste
             size: 'lg',
             windowClass: 'select-managed-endpoint-modal',
             resolve: {
-              endpointType: function () {
+              endpointType: function() {
                 return endpointType;
               },
-              endpoints: function () {
+              endpoints: function() {
                 return response;
               }
             }
           });
 
           //  handle result from modal dialog
-          modalInstance.result.then(function (selectedEndpoint) {
+          modalInstance.result.then(function closed(selectedEndpoint) {
             $scope.teststep.endpoint = selectedEndpoint;
             $scope.update(true);  //  save immediately (no timeout)
-          }, function () {
+          }, function dismissed() {
             //  Modal dismissed. Do nothing.
           });
         }, function errorCallback(response) {

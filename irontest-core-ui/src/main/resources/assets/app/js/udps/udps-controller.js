@@ -3,7 +3,8 @@
 //  NOTICE:
 //    The $scope here prototypically inherits from the $scope of TestcasesController,
 angular.module('irontest').controller('UDPsController', ['$scope', 'UDPs', 'IronTestUtils', '$stateParams', '$timeout',
-  function($scope, UDPs, IronTestUtils, $stateParams, $timeout) {
+    '$uibModal',
+  function($scope, UDPs, IronTestUtils, $stateParams, $timeout, $uibModal) {
     //  each UDP grid row uses its own timer, to avoid mutual interference for 'jumping' edits
     var timerMap = {};
 
@@ -14,15 +15,15 @@ angular.module('irontest').controller('UDPsController', ['$scope', 'UDPs', 'Iron
       data: 'udps', enableFiltering: true, enableColumnMenus: false,
       columnDefs: [
         {
-          name: 'name', width: '30%', headerTooltip: 'Double click to edit', enableCellEdit: true,
+          name: 'name', width: '30%', enableCellEdit: true, enableCellEditOnFocus: true,
           editableCellTemplate: 'udpGridNameEditableCellTemplate.html'
         },
         {
-          name: 'value', headerTooltip: 'Double click to edit', enableCellEdit: true,
+          name: 'value', enableCellEdit: true, enableCellEditOnFocus: true,
           editableCellTemplate: 'udpGridValueEditableCellTemplate.html'
         },
         {
-          name: 'delete', width: 80, minWidth: 60, enableSorting: false, enableFiltering: false, enableCellEdit: false,
+          name: 'delete', width: 70, minWidth: 60, enableSorting: false, enableFiltering: false, enableCellEdit: false,
           cellTemplate: 'udpGridDeleteCellTemplate.html'
         }
       ]
@@ -65,6 +66,30 @@ angular.module('irontest').controller('UDPsController', ['$scope', 'UDPs', 'Iron
         IronTestUtils.deleteArrayElementByProperty($scope.udps, 'id', udp.id);
       }, function(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);
+      });
+    };
+
+    $scope.valueCellDblClicked = function(udp) {
+      var oldValue = udp.value;
+
+      //  open modal dialog
+      var modalInstance = $uibModal.open({
+        templateUrl: '/ui/views/testcases/udp-value-textarea-editor-modal.html',
+        controller: 'UDPValueTextareaEditorModalController',
+        size: 'lg',
+        windowClass: 'udp-value-textarea-editor-modal',
+        resolve: {
+          udp: function() {
+            return udp;
+          }
+        }
+      });
+
+      //  handle result from modal dialog
+      modalInstance.result.then(function closed() {}, function dismissed() {
+        if (udp.value !== oldValue) {
+          udpUpdate(udp);            //  save immediately (no timeout)
+        }
       });
     };
   }

@@ -6,8 +6,8 @@ angular.module('underscore', [])
 
 // Declare app level module dependencies
 angular.module('irontest', ['ngResource', 'ngSanitize', 'ui.router', 'ui.grid', 'ui.grid.resizeColumns',
-    'ui.grid.moveColumns', 'ui.grid.pagination', 'ui.grid.edit', 'ui.grid.selection', 'ui.bootstrap', 'underscore',
-    'ui.grid.draggable-rows', 'ngFileUpload', 'ngJsTree'])
+    'ui.grid.moveColumns', 'ui.grid.pagination', 'ui.grid.edit', 'ui.grid.cellNav', 'ui.grid.selection',
+    'ui.grid.draggable-rows', 'ui.bootstrap', 'underscore', 'ngFileUpload', 'ngJsTree'])
   .config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
     // set default (home) view for the right pane
     $urlRouterProvider.otherwise('/');
