@@ -9,7 +9,7 @@
   <div class="col-lg-6">
     <textarea name="assertionXPath" ng-model="assertionsModelObj.assertion.otherProperties.xPath"
               id="assertionXPath" rows="4" class="form-control"
-              ng-change="assertionsModelObj.autoSave(teststepForm.$valid)">
+              ng-change="assertionsModelObj.autoSave(teststepForm.$valid)" spellcheck="false">
     </textarea>
   </div>
   <div class="col-lg-5 no-left-padding">
@@ -29,7 +29,7 @@
     <div class="col-lg-5 no-right-padding">
       <textarea name="assertionXPathExpectedValue" ng-model="assertionsModelObj.assertion.otherProperties.expectedValue"
                 id="assertionXPathExpectedValue" rows="6" class="form-control"
-                ng-change="assertionsModelObj.autoSave(teststepForm.$valid)">
+                ng-change="assertionsModelObj.autoSave(teststepForm.$valid)" spellcheck="false">
       </textarea>
     </div>
   </div>

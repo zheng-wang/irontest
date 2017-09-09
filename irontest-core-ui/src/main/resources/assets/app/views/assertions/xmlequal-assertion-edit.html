@@ -11,8 +11,7 @@
     <div class="col-lg-12">
     <!-- Do not leave white space before {{ or after }}, otherwise the placeholder will not work -->
     <textarea name="differences" ng-class="{ 'text-red' : assertionsModelObj.assertionVerificationResults[assertionsModelObj.assertion.id].error }"
-              placeholder="Differences" id="differences" class="form-control" rows="3" spellcheck="false"
-              readonly>{{
+              placeholder="Differences" id="differences" class="form-control" rows="3" readonly>{{
         $parent.assertionsModelObj.assertionVerificationResults[$parent.assertionsModelObj.assertion.id].error ?
         $parent.assertionsModelObj.assertionVerificationResults[$parent.assertionsModelObj.assertion.id].error :
         $parent.assertionsModelObj.assertionVerificationResults[$parent.assertionsModelObj.assertion.id].differences }}</textarea>

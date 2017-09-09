@@ -21,7 +21,7 @@
   <div class="col-lg-12 full-height">
     <textarea name="request" ng-model="teststep.request" ng-change="autoSave(teststepForm.$valid)"
               id="request" placeholder="SQL Select/Insert/Delete/Update Statement(s)"
-              class="form-control full-height-important"></textarea>
+              class="form-control full-height-important" spellcheck="false"></textarea>
   </div>
 </div>
 
@@ -35,7 +35,7 @@
       </uib-tab>
       <uib-tab heading="JSON View">
         <div class="form-group"></div> <!-- spacer -->
-        <textarea class="form-control" rows="9" ng-model="steprun.response"></textarea>
+        <textarea class="form-control" rows="9" ng-model="steprun.response" spellcheck="false"></textarea>
       </uib-tab>
     </uib-tabset>
   </div>
