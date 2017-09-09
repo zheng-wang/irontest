@@ -48,13 +48,7 @@
         $parent.assertionsModelObj.assertionVerificationResults[$parent.assertionsModelObj.assertion.id].actualValue }}</textarea>
   </div>
 </div>
-<script type="text/ng-template" id="namespacePrefixGridPrefixEditableCellTemplate.html">
-  <div class="ui-grid-cell-contents">
-    <input type="text" class="form-control" ui-grid-editor ng-model="MODEL_COL_FIELD"
-           ng-change="grid.appScope.assertionsModelObj.autoSave(true)" spellcheck="false">
-  </div>
-</script>
-<script type="text/ng-template" id="namespacePrefixGridNamespaceEditableCellTemplate.html">
+<script type="text/ng-template" id="namespacePrefixGridEditableCellTemplate.html">
   <div class="ui-grid-cell-contents">
     <input type="text" class="form-control" ui-grid-editor ng-model="MODEL_COL_FIELD"
            ng-change="grid.appScope.assertionsModelObj.autoSave(true)" spellcheck="false">

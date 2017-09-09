@@ -32,11 +32,11 @@ angular.module('irontest').controller('XPathAssertionController', ['$scope', 'ui
         {
           name: 'prefix', width: 65, minWidth: 65, headerTooltip: 'Double click to edit',
           sort: { direction: uiGridConstants.ASC, priority: 1 }, enableCellEdit: true,
-          editableCellTemplate: 'namespacePrefixGridPrefixEditableCellTemplate.html'
+          editableCellTemplate: 'namespacePrefixGridEditableCellTemplate.html'
         },
         {
           name: 'namespace', headerTooltip: 'Double click to edit', enableCellEdit: true,
-          editableCellTemplate: 'namespacePrefixGridNamespaceEditableCellTemplate.html'
+          editableCellTemplate: 'namespacePrefixGridEditableCellTemplate.html'
         }
       ],
       gridMenuCustomItems: [

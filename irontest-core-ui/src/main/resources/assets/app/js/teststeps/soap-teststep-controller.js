@@ -41,9 +41,9 @@ angular.module('irontest').controller('SOAPTeststepController', ['$scope', 'Test
       columnDefs: [
         { name: 'name', width: HTTP_HEADER_GRID_NAME_COLUMN_WIDTH,
           headerTooltip: 'Double click to edit', enableCellEdit: true,
-          editableCellTemplate: 'httpHeaderGridNameEditableCellTemplate.html' },
+          editableCellTemplate: 'httpHeaderGridEditableCellTemplate.html' },
         { name: 'value', headerTooltip: 'Double click to edit', enableCellEdit: true, cellTooltip: true,
-          editableCellTemplate: 'httpHeaderGridValueEditableCellTemplate.html' }
+          editableCellTemplate: 'httpHeaderGridEditableCellTemplate.html' }
       ],
       gridMenuCustomItems: [
         { title: 'Create', order: 210, action: createHTTPHeader },
