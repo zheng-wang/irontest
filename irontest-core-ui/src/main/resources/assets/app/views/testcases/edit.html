@@ -103,8 +103,8 @@
 </script>
 <script type="text/ng-template" id="udpGridValueEditableCellTemplate.html">
   <div class="ui-grid-cell-contents" ng-dblclick="grid.appScope.valueCellDblClicked(row.entity)">
-    <input type="text" class="form-control" ui-grid-editor ng-model="MODEL_COL_FIELD" spellcheck="false"
-           ng-change="grid.appScope.udpAutoSave(row.entity)">
+    <textarea class="form-control udp-grid-value-editable-cell-textarea" ui-grid-editor ng-model="MODEL_COL_FIELD" spellcheck="false"
+              ng-change="grid.appScope.udpAutoSave(row.entity)"></textarea>
   </div>
 </script>
 <script type="text/ng-template" id="udpGridDeleteCellTemplate.html">

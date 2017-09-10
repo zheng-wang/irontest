@@ -226,3 +226,9 @@ body {
 .foldertree-pane ul li {
   border-bottom: 0px;     /* counter '.sidebar ul li' in the sb-admin-2.css */
 }
+
+.udp-grid-value-editable-cell-textarea {
+  overflow: hidden;
+  resize: none;
+  height: 23px !important;
+}
