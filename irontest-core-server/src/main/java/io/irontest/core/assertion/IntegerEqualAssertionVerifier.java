@@ -8,14 +8,15 @@ import io.irontest.models.assertion.IntegerEqualAssertionProperties;
 /**
  * Created by Zheng on 4/06/2016.
  */
-public class IntegerEqualAssertionVerifier implements AssertionVerifier {
+public class IntegerEqualAssertionVerifier extends AssertionVerifier {
     /**
      *
      * @param assertion
      * @param input the Integer that the assertion is verified against
      * @return
      */
-    public AssertionVerificationResult verify(Assertion assertion, Object input) throws Exception {
+    @Override
+    public AssertionVerificationResult _verify(Assertion assertion, Object input) throws Exception {
         AssertionVerificationResult result = new AssertionVerificationResult();
         IntegerEqualAssertionProperties properties = (IntegerEqualAssertionProperties)
                 assertion.getOtherProperties();

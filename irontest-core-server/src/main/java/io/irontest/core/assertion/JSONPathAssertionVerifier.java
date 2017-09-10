@@ -12,13 +12,14 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * Created by zhenw9 on 13/12/2016.
  */
-public class JSONPathAssertionVerifier implements AssertionVerifier {
+public class JSONPathAssertionVerifier extends AssertionVerifier {
     /**
      * @param assertion the assertion to be verified (against the input)
      * @param input the JSON string that the assertion is verified against
      * @return
      */
-    public AssertionVerificationResult verify(Assertion assertion, Object input) throws Exception {
+    @Override
+    public AssertionVerificationResult _verify(Assertion assertion, Object input) throws Exception {
         JSONPathAssertionProperties otherProperties =
                 (JSONPathAssertionProperties) assertion.getOtherProperties();
 

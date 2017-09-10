@@ -13,8 +13,9 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * Created by zhenw9 on 15/02/2017.
  */
-public class JSONPathXMLEqualAssertionVerifier implements AssertionVerifier {
-    public AssertionVerificationResult verify(Assertion assertion, Object input) throws Exception {
+public class JSONPathXMLEqualAssertionVerifier extends AssertionVerifier {
+    @Override
+    public AssertionVerificationResult _verify(Assertion assertion, Object input) throws Exception {
         JSONPathXMLEqualAssertionProperties otherProperties =
                 (JSONPathXMLEqualAssertionProperties) assertion.getOtherProperties();
 

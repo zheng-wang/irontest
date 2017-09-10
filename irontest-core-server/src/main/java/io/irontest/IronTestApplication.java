@@ -127,7 +127,7 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         environment.jersey().register(new WSDLResource());
         environment.jersey().register(new EnvironmentResource(environmentDAO));
         environment.jersey().register(new TestcaseRunResource(testcaseDAO, udpDAO, teststepDAO, utilsDAO, testcaseRunDAO));
-        environment.jersey().register(new AssertionResource());
+        environment.jersey().register(new AssertionResource(udpDAO));
         environment.jersey().register(new UDPResource(udpDAO));
 
         //  if turned on in config.yml, register jersey LoggingFilter (used for logging Iron Test resource oriented HTTP API requests and responses)

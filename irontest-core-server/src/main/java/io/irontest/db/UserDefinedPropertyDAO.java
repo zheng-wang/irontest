@@ -48,6 +48,9 @@ public abstract class UserDefinedPropertyDAO {
     @SqlQuery("select * from udp where testcase_id = :testcaseId")
     public abstract List<UserDefinedProperty> findByTestcaseId(@Bind("testcaseId") long testcaseId);
 
+    @SqlQuery("select u.* from udp u, teststep t where t.id = :teststepId and t.testcase_id = u.testcase_id")
+    public abstract List<UserDefinedProperty> findTestcaseUDPsByTeststepId(@Bind("teststepId") long teststepId);
+
     @SqlUpdate("update udp set name = :name, value = :value where id = :id")
     public abstract void update(@BindBean UserDefinedProperty udp);
 

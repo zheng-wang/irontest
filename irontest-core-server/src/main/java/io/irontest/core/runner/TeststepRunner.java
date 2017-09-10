@@ -1,13 +1,14 @@
 package io.irontest.core.runner;
 
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.irontest.core.UDPValueLookup;
 import io.irontest.db.TeststepDAO;
 import io.irontest.db.UtilsDAO;
 import io.irontest.models.UserDefinedProperty;
 import io.irontest.models.endpoint.Endpoint;
 import io.irontest.models.teststep.Teststep;
 import io.irontest.models.teststep.TeststepRequestType;
-import org.apache.commons.text.StrLookup;
 import org.apache.commons.text.StrSubstitutor;
 
 import java.io.IOException;
@@ -43,28 +44,35 @@ public abstract class TeststepRunner {
             this.teststep.setRequest(this.teststepDAO.getBinaryRequestById(this.teststep.getId()));
         }
 
-        //  resolve UDP references in the teststep.otherProperties
-        //  resolve as many as possible; for unresolved property references, throw exception later
-        String otherPropertiesStr = new ObjectMapper().writeValueAsString(this.teststep.getOtherProperties());
+        resolveUDPReferences();
+    }
+
+    /**
+     * Resolve as many UDP references as possible. For unresolved references, throw exception in the end.
+     * @throws IOException
+     */
+    private void resolveUDPReferences() throws IOException {
         final List<String> undefinedProperties = new ArrayList<String>();
-        StrSubstitutor sub = new StrSubstitutor(new StrLookup<String>() {
-            @Override
-            public String lookup(String key) {
-                key = key.trim();
-                for (UserDefinedProperty udp: testcaseUDPs) {
-                    if (key.equals(udp.getName())) {
-                        return udp.getValue();
-                    }
-                }
-                undefinedProperties.add(key);
-                return null;    //  returning null preserves the property reference untouched (not replaced) in the template string
-            }
-        });
-        String resolvedOtherPropertiesStr = sub.replace(otherPropertiesStr);
-        String tempStepJSON = "{\"type\":\"" + teststep.getType() + "\",\"otherProperties\":" +
-                resolvedOtherPropertiesStr + "}";
-        Teststep tempStep = new ObjectMapper().readValue(tempStepJSON, Teststep.class);
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
+
+        //  resolve UDP references in teststep.otherProperties
+        String otherPropertiesJSON = objectMapper.writeValueAsString(this.teststep.getOtherProperties());
+        UDPValueLookup propertyReferenceResolver = new UDPValueLookup(this.testcaseUDPs, true);
+        String resolvedOtherPropertiesJSON = new StrSubstitutor(propertyReferenceResolver).replace(otherPropertiesJSON);
+        undefinedProperties.addAll(propertyReferenceResolver.getUndefinedProperties());
+        String tempStepJSON = "{\"type\":\"" + this.teststep.getType() + "\",\"otherProperties\":" +
+                resolvedOtherPropertiesJSON + "}";
+        Teststep tempStep = objectMapper.readValue(tempStepJSON, Teststep.class);
         this.teststep.setOtherProperties(tempStep.getOtherProperties());
+
+        //  resolve UDP references in teststep.request (text type)
+        if (teststep.getRequestType() == TeststepRequestType.TEXT) {
+            propertyReferenceResolver = new UDPValueLookup(this.testcaseUDPs, false);
+            this.teststep.setRequest(new StrSubstitutor(propertyReferenceResolver).replace(
+                    (String) this.teststep.getRequest()));
+            undefinedProperties.addAll(propertyReferenceResolver.getUndefinedProperties());
+        }
 
         if (!undefinedProperties.isEmpty()) {
             throw new RuntimeException("Properties " + undefinedProperties + " are undefined.");

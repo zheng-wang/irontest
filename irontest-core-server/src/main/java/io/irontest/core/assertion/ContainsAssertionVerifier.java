@@ -9,14 +9,15 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * Created by Zheng on 6/08/2015.
  */
-public class ContainsAssertionVerifier implements AssertionVerifier {
+public class ContainsAssertionVerifier extends AssertionVerifier {
     /**
      *
      * @param assertion
      * @param input the String that the assertion is verified against
      * @return
      */
-    public AssertionVerificationResult verify(Assertion assertion, Object input) throws Exception {
+    @Override
+    public AssertionVerificationResult _verify(Assertion assertion, Object input) throws Exception {
         AssertionVerificationResult result = new AssertionVerificationResult();
         ContainsAssertionProperties otherProperties =
                 (ContainsAssertionProperties) assertion.getOtherProperties();

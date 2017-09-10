@@ -117,7 +117,7 @@ public class TestcaseRunResource {
                         stepRun.getAssertionVerifications().add(verification);
                         verification.setAssertion(assertion);
 
-                        AssertionVerifier verifier = AssertionVerifierFactory.getInstance().create(assertion.getType());
+                        AssertionVerifier verifier = AssertionVerifierFactory.getInstance().create(assertion.getType(), testcaseUDPs);
                         AssertionVerificationResult verificationResult = null;
                         try {
                             verificationResult = verifier.verify(assertion, assertionVerificationInput);

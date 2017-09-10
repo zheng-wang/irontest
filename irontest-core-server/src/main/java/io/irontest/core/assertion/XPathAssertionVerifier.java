@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * Created by Zheng on 6/08/2015.
  */
-public class XPathAssertionVerifier implements AssertionVerifier {
+public class XPathAssertionVerifier extends AssertionVerifier {
     private static final Logger LOGGER = LoggerFactory.getLogger(XPathAssertionVerifier.class);
 
     /**
@@ -35,7 +35,8 @@ public class XPathAssertionVerifier implements AssertionVerifier {
      * @param input the XML String that the assertion is verified against
      * @return
      */
-    public AssertionVerificationResult verify(Assertion assertion, Object input) throws Exception {
+    @Override
+    public AssertionVerificationResult _verify(Assertion assertion, Object input) throws Exception {
         XPathAssertionProperties otherProperties = (XPathAssertionProperties) assertion.getOtherProperties();
 
         //  validate required parameters
