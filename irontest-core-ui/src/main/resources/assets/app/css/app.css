@@ -72,6 +72,10 @@ body {
   to {opacity: 0;}
 }
 
+.testcase-udp-grid {
+  height: 450px;
+}
+
 .teststep-grid {
   height: 400px;
 }

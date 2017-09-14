@@ -45,7 +45,7 @@ public abstract class UserDefinedPropertyDAO {
     @SqlQuery("select * from udp where id = :id")
     protected abstract UserDefinedProperty findById(@Bind("id") long id);
 
-    @SqlQuery("select * from udp where testcase_id = :testcaseId")
+    @SqlQuery("select * from udp where testcase_id = :testcaseId order by id")
     public abstract List<UserDefinedProperty> findByTestcaseId(@Bind("testcaseId") long testcaseId);
 
     @SqlQuery("select u.* from udp u, teststep t where t.id = :teststepId and t.testcase_id = u.testcase_id")
