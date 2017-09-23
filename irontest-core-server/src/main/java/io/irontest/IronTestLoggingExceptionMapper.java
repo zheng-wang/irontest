@@ -34,7 +34,8 @@ public class IronTestLoggingExceptionMapper extends LoggingExceptionMapper<Throw
                 errorDetails = "Duplicate name.";
             } else if (se.getErrorCode() == ErrorCode.CHECK_CONSTRAINT_VIOLATED_1 &&
                     se.getMessage().contains("_" + DB_PROPERTY_NAME_CONSTRAINT_NAME_SUFFIX)) {
-                errorDetails = "Property name can only contain letter, digit, $ and _ characters, beginning with letter, _ or $.";
+                errorDetails = "Property name can not be same as preserved names and can only contain letter, digit," +
+                        " $ and _ characters, beginning with letter, _ or $.";
             }
         }
 

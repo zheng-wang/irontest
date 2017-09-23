@@ -6,8 +6,7 @@ import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
 import java.util.List;
 
-import static io.irontest.IronTestConstants.DB_PROPERTY_NAME_CONSTRAINT_NAME_SUFFIX;
-import static io.irontest.IronTestConstants.DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX;
+import static io.irontest.IronTestConstants.*;
 
 /**
  * Created by Zheng on 29/08/2017.
@@ -24,7 +23,10 @@ public abstract class UserDefinedPropertyDAO {
             "updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (testcase_id) REFERENCES testcase(id) ON DELETE CASCADE, " +
             "CONSTRAINT UDP_" + DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX + " UNIQUE(testcase_id, name)," +
-            "CONSTRAINT UDP_" + DB_PROPERTY_NAME_CONSTRAINT_NAME_SUFFIX + " CHECK(REGEXP_LIKE(name, '^[a-zA-Z_$][a-zA-Z_$0-9]*$')))")
+            "CONSTRAINT UDP_" + DB_PROPERTY_NAME_CONSTRAINT_NAME_SUFFIX + " CHECK(" +
+                "name NOT IN ('" + IMPLICIT_PROPERTY_NAME_TEST_CASE_START_TIME + "', '" +
+                    IMPLICIT_PROPERTY_NAME_TEST_STEP_START_TIME + "') AND " +
+                "REGEXP_LIKE(name, '^[a-zA-Z_$][a-zA-Z_$0-9]*$')))")
     public abstract void createTableIfNotExists();
 
     @SqlUpdate("insert into udp (testcase_id) values (:testcaseId)")
