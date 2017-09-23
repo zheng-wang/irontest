@@ -22,9 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Trevor Li on 24/07/2015.
@@ -53,6 +51,9 @@ public class TestcaseRunResource {
         long testcaseId = testcaseRun.getTestcase().getId();
         testcaseRun = new TestcaseRun();
 
+        //  get implicit properties
+        Map<String, String> implicitProperties = new HashMap<>();
+
         List<UserDefinedProperty> testcaseUDPs = udpDAO.findByTestcaseId(testcaseId);
         Testcase testcase = testcaseDAO.findById_Complete(testcaseId);
         preProcessingForIIBTeststep(testcase);
@@ -79,7 +80,7 @@ public class TestcaseRunResource {
             boolean exceptionOccurred = false;  //  use this flag instead of checking stepRun.getErrorMessage() != null, for code clarity
             try {
                 basicTeststepRun = TeststepRunnerFactory.getInstance()
-                        .newTeststepRunner(teststep, teststepDAO, utilsDAO, testcaseUDPs, testcaseRunContext).run();
+                        .newTeststepRunner(teststep, teststepDAO, utilsDAO, implicitProperties, testcaseUDPs, testcaseRunContext).run();
                 LOGGER.info("Finish running test step: " + teststep.getName());
                 stepRun.importBasicTeststepRun(basicTeststepRun);
             } catch (Exception e) {

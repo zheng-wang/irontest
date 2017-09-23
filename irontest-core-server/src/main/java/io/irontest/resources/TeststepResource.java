@@ -20,7 +20,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Zheng on 11/07/2015.
@@ -132,10 +134,12 @@ public class TeststepResource {
     public BasicTeststepRun run(Teststep teststep) throws Exception {
         //  get UDPs defined on the test case
         List<UserDefinedProperty> testcaseUDPs = udpDAO.findByTestcaseId(teststep.getTestcaseId());
+        //  get implicit properties
+        Map<String, String> implicitProperties = new HashMap<>();
 
         //  run the test step
         TeststepRunner teststepRunner = TeststepRunnerFactory.getInstance().newTeststepRunner(
-                teststep, teststepDAO, utilsDAO, testcaseUDPs, null);
+                teststep, teststepDAO, utilsDAO, implicitProperties, testcaseUDPs, null);
         BasicTeststepRun basicTeststepRun = teststepRunner.run();
 
         //  for better display in browser, transform XML response to be pretty-printed

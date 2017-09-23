@@ -2,10 +2,11 @@ package io.irontest.core.assertion;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.irontest.core.UDPValueLookup;
+import io.irontest.core.MapValueLookup;
 import io.irontest.models.UserDefinedProperty;
 import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.AssertionVerificationResult;
+import io.irontest.utils.IronTestUtils;
 import org.apache.commons.text.StrSubstitutor;
 
 import java.util.ArrayList;
@@ -28,10 +29,10 @@ public abstract class AssertionVerifier {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
         String assertionOtherPropertiesJSON =  objectMapper.writeValueAsString(assertion.getOtherProperties());
-        UDPValueLookup propertyReferenceResolver = new UDPValueLookup(this.testcaseUDPs, true);
+        MapValueLookup propertyReferenceResolver = new MapValueLookup(IronTestUtils.udpListToMap(testcaseUDPs), true);
         String resolvedAssertionOtherPropertiesJSON = new StrSubstitutor(propertyReferenceResolver)
                 .replace(assertionOtherPropertiesJSON);
-        undefinedProperties.addAll(propertyReferenceResolver.getUndefinedProperties());
+        undefinedProperties.addAll(propertyReferenceResolver.getUnfoundKeys());
         String tempAssertionJSON = "{\"type\":\"" + assertion.getType() + "\",\"otherProperties\":" +
                 resolvedAssertionOtherPropertiesJSON + "}";
         Assertion tempAssertion = objectMapper.readValue(tempAssertionJSON, Assertion.class);

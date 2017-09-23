@@ -2,18 +2,21 @@ package io.irontest.core.runner;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.irontest.core.UDPValueLookup;
+import io.irontest.core.MapValueLookup;
 import io.irontest.db.TeststepDAO;
 import io.irontest.db.UtilsDAO;
 import io.irontest.models.UserDefinedProperty;
 import io.irontest.models.endpoint.Endpoint;
 import io.irontest.models.teststep.Teststep;
 import io.irontest.models.teststep.TeststepRequestType;
+import io.irontest.utils.IronTestUtils;
 import org.apache.commons.text.StrSubstitutor;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Trevor Li on 7/14/15.
@@ -23,6 +26,7 @@ public abstract class TeststepRunner {
     private TeststepDAO teststepDAO;
     private UtilsDAO utilsDAO;
     private TestcaseRunContext testcaseRunContext;    //  only set when running test case
+    private Map<String, String> implicitProperties;   //  set when running standalone test step or test case
     private List<UserDefinedProperty> testcaseUDPs;   //  set when running standalone test step or test case
 
     protected TeststepRunner() {}
@@ -34,44 +38,47 @@ public abstract class TeststepRunner {
 
     private void prepareTeststep() throws IOException {
         //  decrypt password in endpoint
-        Endpoint endpoint = this.teststep.getEndpoint();
+        Endpoint endpoint = teststep.getEndpoint();
         if (endpoint != null && endpoint.getPassword() != null) {
-            endpoint.setPassword(this.utilsDAO.decryptPassword(endpoint.getPassword()));
+            endpoint.setPassword(utilsDAO.decryptPassword(endpoint.getPassword()));
         }
 
         //  fetch request binary if its type is file
-        if (this.teststep.getRequestType() == TeststepRequestType.FILE) {
-            this.teststep.setRequest(this.teststepDAO.getBinaryRequestById(this.teststep.getId()));
+        if (teststep.getRequestType() == TeststepRequestType.FILE) {
+            teststep.setRequest(teststepDAO.getBinaryRequestById(teststep.getId()));
         }
 
-        resolveUDPReferences();
+        resolveReferenceableProperties();
     }
 
     /**
-     * Resolve as many UDP references as possible. For unresolved references, throw exception in the end.
+     * Resolve as many property references as possible. For unresolved references, throw exception in the end.
      * @throws IOException
      */
-    private void resolveUDPReferences() throws IOException {
+    private void resolveReferenceableProperties() throws IOException {
         final List<String> undefinedProperties = new ArrayList<String>();
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
+        Map<String, String> referenceableProperties = new HashMap<String, String>();
+        referenceableProperties.putAll(implicitProperties);
+        referenceableProperties.putAll(IronTestUtils.udpListToMap(testcaseUDPs));
 
-        //  resolve UDP references in teststep.otherProperties
-        String otherPropertiesJSON = objectMapper.writeValueAsString(this.teststep.getOtherProperties());
-        UDPValueLookup propertyReferenceResolver = new UDPValueLookup(this.testcaseUDPs, true);
+        //  resolve references in teststep.otherProperties
+        String otherPropertiesJSON = objectMapper.writeValueAsString(teststep.getOtherProperties());
+        MapValueLookup propertyReferenceResolver = new MapValueLookup(referenceableProperties, true);
         String resolvedOtherPropertiesJSON = new StrSubstitutor(propertyReferenceResolver).replace(otherPropertiesJSON);
-        undefinedProperties.addAll(propertyReferenceResolver.getUndefinedProperties());
-        String tempStepJSON = "{\"type\":\"" + this.teststep.getType() + "\",\"otherProperties\":" +
+        undefinedProperties.addAll(propertyReferenceResolver.getUnfoundKeys());
+        String tempStepJSON = "{\"type\":\"" + teststep.getType() + "\",\"otherProperties\":" +
                 resolvedOtherPropertiesJSON + "}";
         Teststep tempStep = objectMapper.readValue(tempStepJSON, Teststep.class);
-        this.teststep.setOtherProperties(tempStep.getOtherProperties());
+        teststep.setOtherProperties(tempStep.getOtherProperties());
 
         //  resolve UDP references in teststep.request (text type)
         if (teststep.getRequestType() == TeststepRequestType.TEXT) {
-            propertyReferenceResolver = new UDPValueLookup(this.testcaseUDPs, false);
-            this.teststep.setRequest(new StrSubstitutor(propertyReferenceResolver).replace(
-                    (String) this.teststep.getRequest()));
-            undefinedProperties.addAll(propertyReferenceResolver.getUndefinedProperties());
+            propertyReferenceResolver = new MapValueLookup(referenceableProperties, false);
+            teststep.setRequest(new StrSubstitutor(propertyReferenceResolver).replace(
+                    (String) teststep.getRequest()));
+            undefinedProperties.addAll(propertyReferenceResolver.getUnfoundKeys());
         }
 
         if (!undefinedProperties.isEmpty()) {
@@ -107,5 +114,9 @@ public abstract class TeststepRunner {
 
     protected void setTestcaseUDPs(List<UserDefinedProperty> testcaseUDPs) {
         this.testcaseUDPs = testcaseUDPs;
+    }
+
+    protected void setImplicitProperties(Map<String, String> implicitProperties) {
+        this.implicitProperties = implicitProperties;
     }
 }

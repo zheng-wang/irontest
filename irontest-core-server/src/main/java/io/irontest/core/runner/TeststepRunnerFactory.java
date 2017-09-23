@@ -7,6 +7,7 @@ import io.irontest.models.teststep.Teststep;
 
 import java.lang.reflect.Constructor;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Trevor Li on 7/14/15.
@@ -21,6 +22,7 @@ public class TeststepRunnerFactory {
     }
 
     public TeststepRunner newTeststepRunner(Teststep teststep, TeststepDAO teststepDAO, UtilsDAO utisDAO,
+                                            Map<String, String> implicitProperties,
                                             List<UserDefinedProperty> testcaseUDPs,
                                             TestcaseRunContext testcaseRunContext) {
         TeststepRunner runner = null;
@@ -31,6 +33,7 @@ public class TeststepRunnerFactory {
             runner.setTeststep(teststep);
             runner.setTeststepDAO(teststepDAO);
             runner.setUtilsDAO(utisDAO);
+            runner.setImplicitProperties(implicitProperties);
             runner.setTestcaseUDPs(testcaseUDPs);
             runner.setTestcaseRunContext(testcaseRunContext);
         } catch (Exception e) {

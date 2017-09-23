@@ -1,6 +1,7 @@
 package io.irontest.utils;
 
 import io.irontest.core.runner.SQLStatementType;
+import io.irontest.models.UserDefinedProperty;
 import org.skife.jdbi.v2.Script;
 
 import java.lang.reflect.Constructor;
@@ -9,7 +10,9 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Zheng on 12/07/2015.
@@ -47,5 +50,13 @@ public class IronTestUtils {
             statements = (List<String>) method.invoke(script, sqlRequest);
         }
         return statements;
+    }
+
+    public static Map<String, String> udpListToMap(List<UserDefinedProperty> testcaseUDPs) {
+        Map<String, String> result = new HashMap<>();
+        for (UserDefinedProperty udp: testcaseUDPs) {
+            result.put(udp.getName(), udp.getValue());
+        }
+        return result;
     }
 }
