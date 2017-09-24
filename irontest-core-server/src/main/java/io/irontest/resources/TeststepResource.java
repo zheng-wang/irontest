@@ -111,7 +111,6 @@ public class TeststepResource {
 
     @PUT @Path("{teststepId}")
     public TeststepWrapper update(Teststep teststep) throws Exception {
-        Thread.sleep(100);  //  workaround for Chrome 44 to 48's 'Failed to load response data' problem (no such problem in Chrome 49)
         TeststepWrapper wrapper = new TeststepWrapper();
         teststep = teststepDAO.update(teststep);
         wrapper.setTeststep(teststep);
@@ -171,7 +170,6 @@ public class TeststepResource {
                                       @FormDataParam("file") InputStream inputStream,
                                       @FormDataParam("file") FormDataContentDisposition contentDispositionHeader)
             throws IOException, InterruptedException {
-        Thread.sleep(100);  //  workaround for Chrome 44 to 48's 'Failed to load response data' problem (no such problem in Chrome 49)
         return teststepDAO.setRequestFile(teststepId, contentDispositionHeader.getFileName(), inputStream);
     }
 
