@@ -20,9 +20,14 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static io.irontest.IronTestConstants.IMPLICIT_PROPERTY_DATE_TIME_FORMAT;
+import static io.irontest.IronTestConstants.IMPLICIT_PROPERTY_NAME_TEST_STEP_START_TIME;
 
 /**
  * Created by Zheng on 11/07/2015.
@@ -135,6 +140,8 @@ public class TeststepResource {
         List<UserDefinedProperty> testcaseUDPs = udpDAO.findByTestcaseId(teststep.getTestcaseId());
         //  get implicit properties
         Map<String, String> implicitProperties = new HashMap<>();
+        implicitProperties.put(IMPLICIT_PROPERTY_NAME_TEST_STEP_START_TIME,
+                new SimpleDateFormat(IMPLICIT_PROPERTY_DATE_TIME_FORMAT).format(new Date()));
 
         //  run the test step
         TeststepRunner teststepRunner = TeststepRunnerFactory.getInstance().newTeststepRunner(

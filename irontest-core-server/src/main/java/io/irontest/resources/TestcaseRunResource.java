@@ -25,8 +25,7 @@ import javax.ws.rs.core.MediaType;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static io.irontest.IronTestConstants.IMPLICIT_PROPERTY_DATE_TIME_FORMAT;
-import static io.irontest.IronTestConstants.IMPLICIT_PROPERTY_NAME_TEST_CASE_START_TIME;
+import static io.irontest.IronTestConstants.*;
 
 /**
  * Created by Trevor Li on 24/07/2015.
@@ -55,6 +54,7 @@ public class TestcaseRunResource {
         long testcaseId = testcaseRun.getTestcase().getId();
         testcaseRun = new TestcaseRun();
         Map<String, String> implicitProperties = new HashMap<>();
+        SimpleDateFormat implicitPropertyDateTimeFormat = new SimpleDateFormat(IMPLICIT_PROPERTY_DATE_TIME_FORMAT);
 
         List<UserDefinedProperty> testcaseUDPs = udpDAO.findByTestcaseId(testcaseId);
         Testcase testcase = testcaseDAO.findById_Complete(testcaseId);
@@ -63,12 +63,12 @@ public class TestcaseRunResource {
 
         //  test case run starts
         TestcaseRunContext testcaseRunContext = new TestcaseRunContext();
-        Date startTime = new Date();
+        Date testcaseRunStartTime = new Date();
         testcaseRun.setResult(TestResult.PASSED);
-        testcaseRun.setStartTime(startTime);
-        testcaseRunContext.setTestcaseRunStartTime(startTime);
+        testcaseRun.setStartTime(testcaseRunStartTime);
+        testcaseRunContext.setTestcaseRunStartTime(testcaseRunStartTime);
         implicitProperties.put(IMPLICIT_PROPERTY_NAME_TEST_CASE_START_TIME,
-                new SimpleDateFormat(IMPLICIT_PROPERTY_DATE_TIME_FORMAT).format(startTime));
+                implicitPropertyDateTimeFormat.format(testcaseRunStartTime));
 
         for (Teststep teststep : testcase.getTeststeps()) {
             TeststepRun stepRun = new TeststepRun();
@@ -76,7 +76,10 @@ public class TestcaseRunResource {
             stepRun.setTeststep(teststep);
 
             //  test step run starts
-            stepRun.setStartTime(new Date());
+            Date teststepRunStartTime = new Date();
+            stepRun.setStartTime(teststepRunStartTime);
+            implicitProperties.put(IMPLICIT_PROPERTY_NAME_TEST_STEP_START_TIME,
+                    implicitPropertyDateTimeFormat.format(teststepRunStartTime));
             LOGGER.info("Start running test step: " + teststep.getName());
 
             //  run test step
