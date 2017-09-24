@@ -4,6 +4,7 @@ import io.irontest.models.UserDefinedProperty;
 import io.irontest.models.assertion.Assertion;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Zheng on 6/08/2015.
@@ -17,7 +18,8 @@ public class AssertionVerifierFactory {
         return instance;
     }
 
-    public AssertionVerifier create(String assertionType, List<UserDefinedProperty> testcaseUDPs) {
+    public AssertionVerifier create(String assertionType, Map<String, String> implicitProperties,
+                                    List<UserDefinedProperty> testcaseUDPs) {
         AssertionVerifier result = null;
         if (Assertion.TYPE_XPATH.equals(assertionType)) {
             result = new XPathAssertionVerifier();
@@ -35,6 +37,7 @@ public class AssertionVerifierFactory {
             throw new RuntimeException("Unrecognized assertion type " + assertionType);
         }
 
+        result.setImplicitProperties(implicitProperties);
         result.setTestcaseUDPs(testcaseUDPs);
 
         return result;

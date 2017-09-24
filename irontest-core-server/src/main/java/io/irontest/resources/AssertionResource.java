@@ -15,6 +15,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -44,7 +45,8 @@ public class AssertionResource {
         //  get UDPs defined on the test case
         List<UserDefinedProperty> testcaseUDPs = udpDAO.findTestcaseUDPsByTeststepId(assertion.getTeststepId());
 
-        AssertionVerifier assertionVerifier = AssertionVerifierFactory.getInstance().create(assertion.getType(), testcaseUDPs);
+        AssertionVerifier assertionVerifier = AssertionVerifierFactory.getInstance().create(
+                assertion.getType(), new HashMap<String, String>(), testcaseUDPs);
         AssertionVerificationResult result = null;
         try {
             result = assertionVerifier.verify(assertion, assertionVerificationRequest.getInput());

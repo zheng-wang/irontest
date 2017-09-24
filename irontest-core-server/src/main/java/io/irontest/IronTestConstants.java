@@ -9,4 +9,5 @@ public interface IronTestConstants {
     String PASSWORD_ENCRYPTION_KEY = "8888";
     String IMPLICIT_PROPERTY_NAME_TEST_CASE_START_TIME = "Test_Case_Start_Time";
     String IMPLICIT_PROPERTY_NAME_TEST_STEP_START_TIME = "Test_Step_Start_Time";
+    String IMPLICIT_PROPERTY_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
 }

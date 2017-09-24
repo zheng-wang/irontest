@@ -56,7 +56,7 @@ public abstract class TeststepRunner {
      * @throws IOException
      */
     private void resolveReferenceableProperties() throws IOException {
-        final List<String> undefinedProperties = new ArrayList<String>();
+        List<String> undefinedProperties = new ArrayList<String>();
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
         Map<String, String> referenceableProperties = new HashMap<String, String>();

@@ -22,7 +22,11 @@ import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.text.SimpleDateFormat;
 import java.util.*;
+
+import static io.irontest.IronTestConstants.IMPLICIT_PROPERTY_DATE_TIME_FORMAT;
+import static io.irontest.IronTestConstants.IMPLICIT_PROPERTY_NAME_TEST_CASE_START_TIME;
 
 /**
  * Created by Trevor Li on 24/07/2015.
@@ -50,8 +54,6 @@ public class TestcaseRunResource {
         //  only testcase id is used, and any other data in the request, if exists, is discarded
         long testcaseId = testcaseRun.getTestcase().getId();
         testcaseRun = new TestcaseRun();
-
-        //  get implicit properties
         Map<String, String> implicitProperties = new HashMap<>();
 
         List<UserDefinedProperty> testcaseUDPs = udpDAO.findByTestcaseId(testcaseId);
@@ -65,6 +67,8 @@ public class TestcaseRunResource {
         testcaseRun.setResult(TestResult.PASSED);
         testcaseRun.setStartTime(startTime);
         testcaseRunContext.setTestcaseRunStartTime(startTime);
+        implicitProperties.put(IMPLICIT_PROPERTY_NAME_TEST_CASE_START_TIME,
+                new SimpleDateFormat(IMPLICIT_PROPERTY_DATE_TIME_FORMAT).format(startTime));
 
         for (Teststep teststep : testcase.getTeststeps()) {
             TeststepRun stepRun = new TeststepRun();
@@ -118,7 +122,8 @@ public class TestcaseRunResource {
                         stepRun.getAssertionVerifications().add(verification);
                         verification.setAssertion(assertion);
 
-                        AssertionVerifier verifier = AssertionVerifierFactory.getInstance().create(assertion.getType(), testcaseUDPs);
+                        AssertionVerifier verifier = AssertionVerifierFactory.getInstance().create(
+                                assertion.getType(), implicitProperties, testcaseUDPs);
                         AssertionVerificationResult verificationResult = null;
                         try {
                             verificationResult = verifier.verify(assertion, assertionVerificationInput);

@@ -9,13 +9,15 @@ import io.irontest.models.assertion.AssertionVerificationResult;
 import io.irontest.utils.IronTestUtils;
 import org.apache.commons.text.StrSubstitutor;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Zheng on 6/08/2015.
  */
 public abstract class AssertionVerifier {
+    private Map<String, String> implicitProperties;
     private List<UserDefinedProperty> testcaseUDPs;
 
     /**
@@ -24,15 +26,18 @@ public abstract class AssertionVerifier {
      * @return
      */
     public AssertionVerificationResult verify(Assertion assertion, Object input) throws Exception {
-        //  resolve UDP references in assertion.otherProperties
-        final List<String> undefinedProperties = new ArrayList<String>();
+        Map<String, String> referenceableProperties = new HashMap<String, String>();
+        referenceableProperties.putAll(implicitProperties);
+        referenceableProperties.putAll(IronTestUtils.udpListToMap(testcaseUDPs));
+
+        //  resolve property references in assertion.otherProperties
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
         String assertionOtherPropertiesJSON =  objectMapper.writeValueAsString(assertion.getOtherProperties());
-        MapValueLookup propertyReferenceResolver = new MapValueLookup(IronTestUtils.udpListToMap(testcaseUDPs), true);
+        MapValueLookup propertyReferenceResolver = new MapValueLookup(referenceableProperties, true);
         String resolvedAssertionOtherPropertiesJSON = new StrSubstitutor(propertyReferenceResolver)
                 .replace(assertionOtherPropertiesJSON);
-        undefinedProperties.addAll(propertyReferenceResolver.getUnfoundKeys());
+        List<String> undefinedProperties = propertyReferenceResolver.getUnfoundKeys();
         String tempAssertionJSON = "{\"type\":\"" + assertion.getType() + "\",\"otherProperties\":" +
                 resolvedAssertionOtherPropertiesJSON + "}";
         Assertion tempAssertion = objectMapper.readValue(tempAssertionJSON, Assertion.class);
@@ -46,6 +51,10 @@ public abstract class AssertionVerifier {
 
     protected void setTestcaseUDPs(List<UserDefinedProperty> testcaseUDPs) {
         this.testcaseUDPs = testcaseUDPs;
+    }
+
+    protected void setImplicitProperties(Map<String, String> implicitProperties) {
+        this.implicitProperties = implicitProperties;
     }
 
     public abstract AssertionVerificationResult _verify(Assertion assertion, Object input) throws Exception;
