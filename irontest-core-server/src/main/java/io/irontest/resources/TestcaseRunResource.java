@@ -58,12 +58,12 @@ public class TestcaseRunResource {
 
         List<UserDefinedProperty> testcaseUDPs = udpDAO.findByTestcaseId(testcaseId);
         Testcase testcase = testcaseDAO.findById_Complete(testcaseId);
-        preProcessingForIIBTeststep(testcase);
         testcaseRun.setTestcase(testcase);
 
         //  test case run starts
         TestcaseRunContext testcaseRunContext = new TestcaseRunContext();
         Date testcaseRunStartTime = new Date();
+        preProcessingForIIBTeststep(testcase, testcaseRunStartTime);
         testcaseRun.setResult(TestResult.PASSED);
         testcaseRun.setStartTime(testcaseRunStartTime);
         testcaseRunContext.setTestcaseRunStartTime(testcaseRunStartTime);
@@ -173,7 +173,9 @@ public class TestcaseRunResource {
         return testcaseRun;
     }
 
-    private void preProcessingForIIBTeststep(Testcase testcase) {
+    private void preProcessingForIIBTeststep(Testcase testcase, Date testcaseRunStartTime) {
+        long secondFraction = testcaseRunStartTime.getTime() % 1000;   //  milliseconds
+        long millisecondsUntilNextSecond = 1000 - secondFraction;
         boolean testcaseHasWaitForProcessingCompletionAction = false;
         for (Teststep teststep : testcase.getTeststeps()) {
             if (Teststep.TYPE_IIB.equals(teststep.getType()) &&
@@ -183,9 +185,9 @@ public class TestcaseRunResource {
         }
         if (testcaseHasWaitForProcessingCompletionAction) {
             Teststep waitStep = new Teststep();
-            waitStep.setName("Wait 1 second");
+            waitStep.setName("Wait " + millisecondsUntilNextSecond + " milliseconds");
             waitStep.setType(Teststep.TYPE_WAIT);
-            waitStep.setOtherProperties(new WaitTeststepProperties(1000));
+            waitStep.setOtherProperties(new WaitTeststepProperties(millisecondsUntilNextSecond));
             testcase.getTeststeps().add(0, waitStep);
         }
     }
