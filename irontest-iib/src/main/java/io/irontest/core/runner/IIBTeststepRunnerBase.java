@@ -111,8 +111,6 @@ public class IIBTeststepRunnerBase extends TeststepRunner {
                 }
                 if (processingCompletionSignal != null) {
                     break;
-                } else {
-                    Thread.sleep(1000);
                 }
             }
             if (processingCompletionSignal == null) {
