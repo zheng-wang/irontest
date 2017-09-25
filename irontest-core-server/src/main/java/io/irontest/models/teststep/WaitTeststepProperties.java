@@ -6,19 +6,19 @@ import io.irontest.models.Properties;
  * Created by zhenw9 on 10/06/2016.
  */
 public class WaitTeststepProperties extends Properties {
-    private int seconds;
+    private long milliseconds;
 
     public WaitTeststepProperties() {}
 
-    public WaitTeststepProperties(int seconds) {
-        this.seconds = seconds;
+    public WaitTeststepProperties(long milliseconds) {
+        this.milliseconds = milliseconds;
     }
 
-    public int getSeconds() {
-        return seconds;
+    public long getMilliseconds() {
+        return milliseconds;
     }
 
-    public void setSeconds(int seconds) {
-        this.seconds = seconds;
+    public void setMilliseconds(long milliseconds) {
+        this.milliseconds = milliseconds;
     }
 }

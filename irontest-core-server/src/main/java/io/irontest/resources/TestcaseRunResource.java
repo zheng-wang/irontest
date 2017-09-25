@@ -185,7 +185,7 @@ public class TestcaseRunResource {
             Teststep waitStep = new Teststep();
             waitStep.setName("Wait 1 second");
             waitStep.setType(Teststep.TYPE_WAIT);
-            waitStep.setOtherProperties(new WaitTeststepProperties(1));
+            waitStep.setOtherProperties(new WaitTeststepProperties(1000));
             testcase.getTeststeps().add(0, waitStep);
         }
     }

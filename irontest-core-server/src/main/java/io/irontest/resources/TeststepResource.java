@@ -83,7 +83,7 @@ public class TeststepResource {
         } else if (Teststep.TYPE_MQ.equals(teststep.getType())) {
             teststep.setOtherProperties(new MQTeststepProperties());
         } else if (Teststep.TYPE_WAIT.equals(teststep.getType())) {
-            teststep.setOtherProperties(new WaitTeststepProperties(1));   //  there is no point to wait for 0 seconds
+            teststep.setOtherProperties(new WaitTeststepProperties(1000));   //  there is no point to wait for 0 milliseconds
         }
     }
 
