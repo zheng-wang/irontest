@@ -1,5 +1,6 @@
 package io.irontest.utils;
 
+import io.irontest.core.assertion.PlaceholderDifferenceEvaluator;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -98,14 +99,15 @@ public class XMLUtils {
     /**
      * @param control
      * @param test
-     * @return differences found
+     * @return differences found, in a format for print
      */
-    public static StringBuilder compareXML(String control, String test) {
+    public static String compareXML(String control, String test) {
         StringBuilder differencesSB = new StringBuilder();
         Diff diff = DiffBuilder
                 .compare(control)
                 .withTest(test)
                 .normalizeWhitespace()
+                .withDifferenceEvaluator(new PlaceholderDifferenceEvaluator())
                 .build();
         if (diff.hasDifferences()) {
             Iterator it = diff.getDifferences().iterator();
@@ -119,6 +121,6 @@ public class XMLUtils {
                 }
             }
         }
-        return differencesSB;
+        return differencesSB.toString();
     }
 }

@@ -47,8 +47,8 @@ public class JSONPathXMLEqualAssertionVerifier extends AssertionVerifier {
         JSONPathXMLEqualAssertionVerificationResult result = new JSONPathXMLEqualAssertionVerificationResult();
         String actualXML = (String) actualValue;
         result.setActualXML(actualXML);
-        StringBuilder differencesSB = XMLUtils.compareXML(otherProperties.getExpectedXML(), actualXML);
-        result.setResult(differencesSB.length() > 0 ? TestResult.FAILED : TestResult.PASSED);
+        String differencesStr = XMLUtils.compareXML(otherProperties.getExpectedXML(), actualXML);
+        result.setResult(differencesStr.length() > 0 ? TestResult.FAILED : TestResult.PASSED);
         return result;
     }
 }

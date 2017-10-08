@@ -29,10 +29,10 @@ public class XMLEqualAssertionVerifier extends AssertionVerifier {
         }
 
         XMLEqualAssertionVerificationResult result = new XMLEqualAssertionVerificationResult();
-        StringBuilder differencesSB = XMLUtils.compareXML(assertionProperties.getExpectedXML(), (String) input);
-        if (differencesSB.length() > 0) {
+        String differencesStr = XMLUtils.compareXML(assertionProperties.getExpectedXML(), (String) input);
+        if (differencesStr.length() > 0) {
             result.setResult(TestResult.FAILED);
-            result.setDifferences(differencesSB.toString());
+            result.setDifferences(differencesStr);
         } else {
             result.setResult(TestResult.PASSED);
         }

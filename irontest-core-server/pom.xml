@@ -20,6 +20,12 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+        </dependency>
+
         <!-- These two dependencies were introduced for DB test step while keeping dropwizard version below 1.0, to avoid upgrading Java version to 1.8.
             Remove them after upgrading to dropwizard 1.0.5.
         -->
