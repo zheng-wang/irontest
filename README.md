@@ -121,7 +121,7 @@ Click the Assertions button to open the assertions pane. In the assertions pane,
 
 ![SOAP Invocation and Assertion](screenshots/integrated-soap-testing/soap-invocation-and-assertion.png)
 
-You can also create `XPath Assertion`s against the SOAP response for advanced verification.
+More information about assertions can be found on this [wiki page](https://github.com/zheng-wang/irontest/wiki/Assertions).
 
 Click the Back link to return to the test case edit view.
  
@@ -142,10 +142,6 @@ Click the Assertions button to open the assertions pane. In the assertions pane,
 
 ![Database Check Query Result and Assertion](screenshots/integrated-soap-testing/database-check-query-result-and-assertion.png)
 
-For how to use JSONPath, please refer to [this page](https://github.com/jayway/JsonPath).
-
-You can also use `JSONPathXMLEqual Assertion` for verifying database table column which is either XML type (like in SQL Server) or VARCHAR/CLOB type with XML string as value. Your JSONPath must evaluate to an XML string in this case. 
-
 Click the Back link to return to the test case edit view.
 
 #### Run the Test Case
@@ -156,7 +152,7 @@ Now we have finished editing our test case. It's time to run it. Click the Run b
 Click the result link beside the Run button to see the whole test case run report. This report can be saved as HTML file and used as test evidence in other places such as HP ALM.
 
 ### More Usages
-Please refer to the [wiki](https://github.com/zheng-wang/irontest/wiki).
+Please refer to the [wiki pages](https://github.com/zheng-wang/irontest/wiki).
 
 ## Maintain
 **It is highly recommended that you back up `<IronTest_Home>/database` folder regularly.** Remember to shut down the application before backing up.
