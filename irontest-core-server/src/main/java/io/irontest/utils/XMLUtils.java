@@ -6,6 +6,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xmlunit.XMLUnitException;
 import org.xmlunit.builder.DiffBuilder;
 import org.xmlunit.diff.ComparisonResult;
 import org.xmlunit.diff.Diff;
@@ -103,12 +104,17 @@ public class XMLUtils {
      */
     public static String compareXML(String control, String test) {
         StringBuilder differencesSB = new StringBuilder();
-        Diff diff = DiffBuilder
-                .compare(control)
-                .withTest(test)
-                .normalizeWhitespace()
-                .withDifferenceEvaluator(new PlaceholderDifferenceEvaluator())
-                .build();
+        Diff diff;
+        try {
+            diff = DiffBuilder
+                    .compare(control)
+                    .withTest(test)
+                    .normalizeWhitespace()
+                    .withDifferenceEvaluator(new PlaceholderDifferenceEvaluator())
+                    .build();
+        } catch (XMLUnitException e) {
+            throw new RuntimeException(e.getCause().getMessage());
+        }
         if (diff.hasDifferences()) {
             Iterator it = diff.getDifferences().iterator();
             while (it.hasNext()) {
