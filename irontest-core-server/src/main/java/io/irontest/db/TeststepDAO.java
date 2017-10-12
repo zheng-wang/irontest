@@ -111,7 +111,6 @@ public abstract class TeststepDAO {
         Teststep oldTeststep = findById_NoTransaction(teststep.getId());
 
         if (Teststep.TYPE_MQ.equals(teststep.getType()) && teststep.getAction() != null) {   //  newly created MQ test step does not have action and does not need the processing
-            Thread.sleep(100);  //  workaround for Chrome's 'Failed to load response data' problem (still exist in Chrome 61), as this processing seems too fast
             processMQTeststep(oldTeststep, teststep);
         }
 

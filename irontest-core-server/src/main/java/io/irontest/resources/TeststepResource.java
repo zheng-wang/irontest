@@ -116,6 +116,8 @@ public class TeststepResource {
 
     @PUT @Path("{teststepId}")
     public TeststepWrapper update(Teststep teststep) throws Exception {
+        Thread.sleep(100);  //  workaround for Chrome's 'Failed to load response data' problem (still exist in Chrome 61)
+
         TeststepWrapper wrapper = new TeststepWrapper();
         teststep = teststepDAO.update(teststep);
         wrapper.setTeststep(teststep);
