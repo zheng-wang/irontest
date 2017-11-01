@@ -3,7 +3,7 @@ Iron Test is an open source tool for integration testing APIs such as SOAP web s
 
 The tool 
 * has GUI, saving user programming skills.
-* intends to provide a platform enabling integrating automated testing capabilities for all kinds of API based systems (potentially including mainframe and IOT) so that user does not need to pick up a new set of tools for testing a new type of system.    
+* intends to provide a platform enabling integrating automated testing capabilities for all kinds of API based systems (potentially including mainframe and IOT) so that user does not have to pick up a new set of tools for testing a new type of system.    
 * is designed for testers and developers, but in the same team/organization BAs or architects may also benefit from it. The thought here is that API test cases contain valuable business knowledge, and this knowledge should be shared to all roles across the team/organization and easily accessible to everyone.
 
 Table of Contents:
@@ -54,14 +54,6 @@ To verify the application is successfully launched, open a web browser, and go t
 
 Though the UI is crossing browsers, Google Chrome is preferred as it is the main browser that is used to test the application.
 
-If this is the first time you launch the application, you will see two new folders created under `<IronTest_Home>`.
-
-    database - where system database and a sample database are located. Both are H2 databases. 
-        System database is used to store all test cases, environments, endpoints, etc. you create using Iron Test.
-        Sample database is for you to play with Iron Test basic features such as SOAP web service testing or database testing. An Article table is in it.
-    
-    logs - where Iron Test application runtime logs are located.
-    
 ## Use
 Open Iron Test home page (http://localhost:8081/ui). 
 
@@ -156,6 +148,14 @@ Click the result link beside the Run button to see the whole test case run repor
 Please refer to the [wiki pages](https://github.com/zheng-wang/irontest/wiki).
 
 ## Maintain
+The first time you launch the application, two new folders are created automatically under `<IronTest_Home>`.
+
+    database - where system database and a sample database are located. Both are H2 databases. 
+        System database is used to store all test cases, environments, endpoints, etc. you create using Iron Test.
+        Sample database is for you to play with Iron Test basic features such as SOAP web service testing or database testing. An Article table is in it.
+    
+    logs - where Iron Test application runtime logs are located.
+    
 **It is highly recommended that you back up `<IronTest_Home>/database` folder regularly.** Remember to shut down the application before backing up.
 
 To shut down the application
