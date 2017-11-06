@@ -1,6 +1,6 @@
 <#ftl encoding='UTF-8'>
 <div class="row">
-  <div class="col-lg-12"><b>${stepRun.teststep.name}</b></div>
+  <div class="col-lg-12"><h4>${stepRun.teststep.name}</h4></div>
 </div>
 
 <div class="row">
@@ -52,7 +52,6 @@
       </div>
     </div>
   </div>
-  <div class="form-group"></div> <!-- spacer -->
 </#if>
 
 <#-- Extra request info for MQ step Enqueue action with RFH2 header -->
@@ -73,6 +72,7 @@
 <#-- Response info -->
 <#if stepRun.response?? &&
     (stepRun.teststep.type != "MQ" || (stepRun.teststep.type == "MQ" && stepRun.response.value??))>
+  <div class="form-group"></div> <!-- spacer -->
   <div class="row">
     <div class="col-lg-1">Response: </div>
     <div class="col-lg-11">
@@ -97,7 +97,6 @@
       </div>
     </div>
   </div>
-  <div class="form-group"></div> <!-- spacer -->
 </#if>
 
 <#-- Some additional info about the step run -->
@@ -118,6 +117,7 @@
 
 <#-- Assertion verifications -->
 <#list stepRun.assertionVerifications as verification>
+  <div class="form-group"></div> <!-- spacer -->
   <div class="row">
     <div class="col-lg-1">Assertion:</div>
     <div class="col-lg-11">
@@ -129,15 +129,17 @@
       </div>
       <div class="row">
         <div class="col-lg-1">Expected:</div>
-        <div class="col-lg-5">
+        <div class="col-lg-11">
           <#include "../assertion/${verification.assertion.type?lower_case}AssertionExpected.ftl">
         </div>
+      </div>
+      <div class="row">
         <#if verification.verificationResult.error??>
           <div class="col-lg-1">Error:</div>
-          <div class="col-lg-5">${verification.verificationResult.error}</div>
+          <div class="col-lg-11">${verification.verificationResult.error}</div>
         <#else>
           <div class="col-lg-1">Actual:</div>
-          <div class="col-lg-5">
+          <div class="col-lg-11">
             <#if verification.verificationResult.result == "Passed">
               As expected.
             <#else>
