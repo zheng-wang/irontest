@@ -213,6 +213,9 @@
 
         <profile>
             <id>dev</id>
+            <properties>
+                <mode/>
+            </properties>
             <build>
                 <plugins>
                     <!-- launch the application by classes (not by uber jar) -->
@@ -233,10 +236,13 @@
                                         <additionalClasspathElement>../${jdbc.driver.oracle}</additionalClasspathElement>
                                         <additionalClasspathElement>../${jdbc.driver.sqlserver}</additionalClasspathElement>
                                     </additionalClasspathElements>
-                                    <arguments>
-                                        <argument>server</argument>
-                                        <argument>irontest-core-server/config.yml</argument>
-                                    </arguments>
+                                    <systemProperties>
+                                        <systemProperty>
+                                            <key>dw.mode</key>
+                                            <value>${mode}</value>
+                                        </systemProperty>
+                                    </systemProperties>
+                                    <commandlineArgs>server irontest-core-server/config.yml</commandlineArgs>
                                 </configuration>
                             </execution>
                         </executions>

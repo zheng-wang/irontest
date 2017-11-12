@@ -7,6 +7,7 @@ server:
   applicationConnectors:
     - type: http
       port: 8081
+      # bindHost will be ignored in team mode
       bindHost: 127.0.0.1
   adminConnectors:
     - type: http

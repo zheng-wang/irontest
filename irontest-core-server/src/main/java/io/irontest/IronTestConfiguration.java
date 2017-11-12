@@ -13,6 +13,8 @@ import java.util.Map;
  * Created by Zheng on 20/06/2015.
  */
 public class IronTestConfiguration extends Configuration {
+    private String mode;
+
     @Valid
     @NotNull
     private DataSourceFactory systemDatabase = new DataSourceFactory();
@@ -20,6 +22,10 @@ public class IronTestConfiguration extends Configuration {
     private DataSourceFactory sampleDatabase = new DataSourceFactory();
 
     private Map<String, Map<String, String>> viewRendererConfiguration = Collections.emptyMap();
+
+    public String getMode() {
+        return mode;
+    }
 
     public DataSourceFactory getSystemDatabase() {
         return systemDatabase;

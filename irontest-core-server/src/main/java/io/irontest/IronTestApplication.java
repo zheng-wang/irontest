@@ -12,7 +12,10 @@ import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.jdbi.DBIFactory;
+import io.dropwizard.jetty.ConnectorFactory;
+import io.dropwizard.jetty.HttpConnectorFactory;
 import io.dropwizard.logging.DefaultLoggingFactory;
+import io.dropwizard.server.DefaultServerFactory;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.dropwizard.views.ViewBundle;
@@ -23,6 +26,7 @@ import org.glassfish.jersey.filter.LoggingFilter;
 import org.skife.jdbi.v2.DBI;
 
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -31,11 +35,13 @@ import java.util.logging.Logger;
  * Created by Zheng on 20/06/2015.
  */
 public class IronTestApplication extends Application<IronTestConfiguration> {
+    private static final String INSTANCE_MODE_TEAM = "team";
+
+    private JAXWSBundle jaxWsBundle = new JAXWSBundle();
+
     public static void main(String[] args) throws Exception {
         new IronTestApplication().run(args);
     }
-
-    private JAXWSBundle jaxWsBundle = new JAXWSBundle();
 
     @Override
     public String getName() {
@@ -77,6 +83,14 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
 
     @Override
     public void run(IronTestConfiguration configuration, Environment environment) throws Exception {
+        //  ignore bindHost in team mode
+        if (INSTANCE_MODE_TEAM.equals(configuration.getMode())) {
+            DefaultServerFactory server = (DefaultServerFactory) configuration.getServerFactory();
+            List<ConnectorFactory> applicationConnectors = server.getApplicationConnectors();
+            HttpConnectorFactory factory = (HttpConnectorFactory) applicationConnectors.get(0);
+            factory.setBindHost(null);
+        }
+
         createSystemResources(configuration, environment);
         createSampleResources(configuration, environment);
     }
