@@ -72,7 +72,7 @@ public class TeststepResource {
             } else if (Teststep.TYPE_MQ.equals(teststep.getType())) {
                 endpoint.setType(Endpoint.TYPE_MQ);
             } else if (Teststep.TYPE_IIB.equals(teststep.getType())) {
-                endpoint.setType(Endpoint.TYPE_MQ);
+                endpoint.setType(Endpoint.TYPE_IIB);
             }
             teststep.setEndpoint(endpoint);
         }

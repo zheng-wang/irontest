@@ -7,6 +7,7 @@ import io.irontest.models.Properties;
  */
 public class IIBTeststepProperties extends Properties {
     private String integrationServerName;
+    private String applicationName;
     private String messageFlowName;
 
     public String getIntegrationServerName() {
@@ -15,6 +16,14 @@ public class IIBTeststepProperties extends Properties {
 
     public void setIntegrationServerName(String integrationServerName) {
         this.integrationServerName = integrationServerName;
+    }
+
+    public String getApplicationName() {
+        return applicationName;
+    }
+
+    public void setApplicationName(String applicationName) {
+        this.applicationName = applicationName;
     }
 
     public String getMessageFlowName() {

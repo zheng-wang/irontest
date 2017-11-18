@@ -3,6 +3,7 @@ package io.irontest.core.runner;
 import com.ibm.broker.config.proxy.*;
 import io.irontest.models.teststep.IIBTeststepProperties;
 import io.irontest.models.teststep.Teststep;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,23 +36,11 @@ public class IIBTeststepRunnerBase extends TeststepRunner {
             //  connect to the broker
             brokerProxy = BrokerProxy.getInstance(bcp);
             brokerProxy.setSynchronous(90 * 1000);    //  do everything synchronously
-            String integrationNodeName = brokerProxy.getName();
 
             //  get message flow proxy
-            ExecutionGroupProxy egProxy = brokerProxy.getExecutionGroupByName(
-                    teststepProperties.getIntegrationServerName());
-            if (egProxy == null) {
-                throw new Exception("Integration server \"" + teststepProperties.getIntegrationServerName() +
-                        "\" not found on integration node \"" + integrationNodeName + "\".");
-            } else if (!egProxy.isRunning()) {
-                throw new Exception("Integration server \"" + teststepProperties.getIntegrationServerName() +
-                        "\" not running.");
-            }
-            MessageFlowProxy messageFlowProxy = egProxy.getMessageFlowByName(teststepProperties.getMessageFlowName());
-            if (messageFlowProxy == null) {
-                throw new Exception("Message flow \"" + teststepProperties.getMessageFlowName() +
-                        "\" not found on integration server \"" + teststepProperties.getIntegrationServerName() + "\".");
-            }
+            MessageFlowProxy messageFlowProxy = getMessageFlowProxy(brokerProxy,
+                    teststepProperties.getIntegrationServerName(), teststepProperties.getApplicationName(),
+                    teststepProperties.getMessageFlowName());
 
             //  do the specified action
             if (Teststep.ACTION_START.equals(action)) {
@@ -70,6 +59,45 @@ public class IIBTeststepRunnerBase extends TeststepRunner {
         }
 
         return basicTeststepRun;
+    }
+
+    private MessageFlowProxy getMessageFlowProxy(BrokerProxy brokerProxy, String integrationServerName,
+                                                 String applicationName, String messageFlowName) throws Exception {
+        //  get integration server proxy
+        String integrationNodeName = brokerProxy.getName();
+        ExecutionGroupProxy integrationServerProxy = brokerProxy.getExecutionGroupByName(integrationServerName);
+        if (integrationServerProxy == null) {
+            throw new Exception("Integration server \"" + integrationServerName +
+                    "\" not found on integration node \"" + integrationNodeName + "\".");
+        } else if (!integrationServerProxy.isRunning()) {
+            throw new Exception("Integration server \"" + integrationServerName + "\" not running.");
+        }
+
+        //  get message flow proxy
+        MessageFlowProxy messageFlowProxy;
+        if ("".equals(StringUtils.trimToEmpty(applicationName))) {    //  application name not specified, message flow is at integration server level
+            messageFlowProxy = integrationServerProxy.getMessageFlowByName(messageFlowName);
+            if (messageFlowProxy == null) {
+                throw new Exception("Message flow \"" + messageFlowName +
+                        "\" not found on integration server \"" + integrationServerName + "\".");
+            }
+        } else {                       //  application name specified, message flow is at application level
+            ApplicationProxy applicationProxy = integrationServerProxy.getApplicationByName(applicationName);
+            if (applicationProxy == null) {
+                throw new Exception("Application \"" + applicationName +
+                        "\" not found on integration server \"" + integrationServerName + "\".");
+            } else if (!applicationProxy.isRunning()) {
+                throw new Exception("Application \"" + applicationName + "\" not running.");
+            } else {
+                messageFlowProxy = applicationProxy.getMessageFlowByName(messageFlowName);
+                if (messageFlowProxy == null) {
+                    throw new Exception("Message flow \"" + messageFlowName +
+                            "\" not found in application \"" + applicationName +
+                            "\" on integration server \"" + integrationServerName + "\".");
+                }
+            }
+        }
+        return messageFlowProxy;
     }
 
     private void start(MessageFlowProxy messageFlowProxy, BasicTeststepRun basicTeststepRun) throws Exception {
