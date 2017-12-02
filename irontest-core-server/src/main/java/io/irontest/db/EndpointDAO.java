@@ -25,7 +25,7 @@ public abstract class EndpointDAO {
             "created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (environment_id) REFERENCES environment(id) ON DELETE CASCADE, " +
-            "CONSTRAINT ENDPOINT_" + DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX + " UNIQUE(environment_id, name))")
+            "CONSTRAINT ENDPOINT_" + DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX + " UNIQUE(environment_id, type, name))")
     public abstract void createTableIfNotExists();
 
     @SqlUpdate("insert into endpoint (environment_id, type, other_properties) values (:evId, :type, :otherProperties)")
