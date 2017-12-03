@@ -118,7 +118,7 @@ More information about assertions can be found on this [wiki page](https://githu
 
 Click the Back link to return to the test case edit view.
  
-#### Populate the Step 3  
+#### Populate Step 3  
 Click the name of step 3 to open its edit view. 
  
 Under the Endpoint Details tab, enter exactly the same information as in step 1 because we are interacting with the same database. The information duplication can be avoided by using `managed endpoints`. Refer to this [wiki page](https://github.com/zheng-wang/irontest/wiki/Endpoints-Management) for more details.
