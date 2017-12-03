@@ -11,6 +11,7 @@ import io.irontest.models.assertion.AssertionVerificationResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.PermitAll;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -38,6 +39,7 @@ public class AssertionResource {
      * @throws InterruptedException
      */
     @POST @Path("assertions/{assertionId}/verify")
+    @PermitAll
     public AssertionVerificationResult verify(AssertionVerificationRequest assertionVerificationRequest)
             throws InterruptedException {
         Assertion assertion = assertionVerificationRequest.getAssertion();
