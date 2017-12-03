@@ -72,5 +72,15 @@ angular.module('irontest')
         });
       }
     };
-  }
-);
+  })
+  .factory('AppStatus', function() {
+    return {
+      appMode: null,
+      isInTeamMode: function() {
+        return this.appMode === 'team';
+      },
+      isUserAuthenticated: function() {
+        return false;
+      }
+    };
+  });

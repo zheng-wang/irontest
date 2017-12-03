@@ -23,10 +23,10 @@ import io.dropwizard.setup.Environment;
 import io.dropwizard.views.ViewBundle;
 import io.irontest.core.SimpleAuthenticator;
 import io.irontest.db.*;
+import io.irontest.models.AppInfo;
 import io.irontest.models.User;
 import io.irontest.resources.*;
 import io.irontest.ws.ArticleSOAP;
-import org.eclipse.jetty.server.Authentication;
 import org.glassfish.jersey.filter.LoggingFilter;
 import org.skife.jdbi.v2.DBI;
 
@@ -40,8 +40,7 @@ import java.util.logging.Logger;
  * Created by Zheng on 20/06/2015.
  */
 public class IronTestApplication extends Application<IronTestConfiguration> {
-    private static final String INSTANCE_MODE_TEAM = "team";
-
+    private AppInfo appInfo = new AppInfo();
     private JAXWSBundle jaxWsBundle = new JAXWSBundle();
 
     public static void main(String[] args) throws Exception {
@@ -89,7 +88,9 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
     @Override
     public void run(IronTestConfiguration configuration, Environment environment) throws Exception {
         // in team mode
-        if (INSTANCE_MODE_TEAM.equals(configuration.getMode())) {
+        if (AppInfo.APP_MODE_TEAM.equals(configuration.getMode())) {
+            appInfo.setAppMode(AppInfo.APP_MODE_TEAM);
+
             // ignore bindHost
             DefaultServerFactory server = (DefaultServerFactory) configuration.getServerFactory();
             List<ConnectorFactory> applicationConnectors = server.getApplicationConnectors();
@@ -143,6 +144,7 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         udpDAO.createTableIfNotExists();
 
         //  register APIs
+        environment.jersey().register(new AppInfoResource(appInfo));
         environment.jersey().register(new ManagedEndpointResource(endpointDAO));
         environment.jersey().register(new TestcaseResource(testcaseDAO, teststepDAO));
         environment.jersey().register(new FolderResource(folderDAO));
