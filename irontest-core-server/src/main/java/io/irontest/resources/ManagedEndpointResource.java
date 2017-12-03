@@ -6,6 +6,7 @@ import io.irontest.models.Environment;
 import io.irontest.models.endpoint.Endpoint;
 import io.irontest.models.endpoint.SOAPEndpointProperties;
 
+import javax.annotation.security.PermitAll;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
@@ -24,6 +25,7 @@ public class ManagedEndpointResource {
     }
 
     @POST @Path("environments/{environmentId}/endpoints")
+    @PermitAll
     public Endpoint create(@PathParam("environmentId") long environmentId, Endpoint endpoint) throws JsonProcessingException {
         Environment env = new Environment();
         env.setId(environmentId);
@@ -37,12 +39,14 @@ public class ManagedEndpointResource {
     }
 
     @PUT @Path("endpoints/{endpointId}")
+    @PermitAll
     public Endpoint update(Endpoint endpoint) throws JsonProcessingException {
         endpointDAO.update(endpoint);
         return endpointDAO.findById(endpoint.getId());
     }
 
     @DELETE @Path("endpoints/{endpointId}")
+    @PermitAll
     public void delete(@PathParam("endpointId") long endpointId) {
         endpointDAO.deleteById(endpointId);
     }

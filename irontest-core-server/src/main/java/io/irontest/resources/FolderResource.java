@@ -3,6 +3,7 @@ package io.irontest.resources;
 import io.irontest.db.FolderDAO;
 import io.irontest.models.Folder;
 
+import javax.annotation.security.PermitAll;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
@@ -18,6 +19,7 @@ public class FolderResource {
     }
 
     @PUT @Path("{folderId}")
+    @PermitAll
     public Folder update(Folder folder) {
         folderDAO.update(folder);
         return folderDAO._findById(folder.getId());

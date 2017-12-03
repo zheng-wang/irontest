@@ -14,6 +14,7 @@ import io.irontest.utils.XMLUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
+import javax.annotation.security.PermitAll;
 import javax.ws.rs.*;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -45,6 +46,7 @@ public class TeststepResource {
     }
 
     @POST
+    @PermitAll
     public Teststep create(Teststep teststep) throws JsonProcessingException {
         preCreationProcess(teststep);
 
@@ -115,6 +117,7 @@ public class TeststepResource {
     }
 
     @PUT @Path("{teststepId}")
+    @PermitAll
     public TeststepWrapper update(Teststep teststep) throws Exception {
         Thread.sleep(100);  //  workaround for Chrome's 'Failed to load response data' problem (still exist in Chrome 61)
 
@@ -127,6 +130,7 @@ public class TeststepResource {
     }
 
     @DELETE @Path("{teststepId}")
+    @PermitAll
     public void delete(@PathParam("teststepId") long teststepId) {
         teststepDAO.deleteById(teststepId);
     }
@@ -137,6 +141,7 @@ public class TeststepResource {
      * @return API response
      */
     @POST @Path("{teststepId}/run")
+    @PermitAll
     public BasicTeststepRun run(Teststep teststep) throws Exception {
         //  get UDPs defined on the test case
         List<UserDefinedProperty> testcaseUDPs = udpDAO.findByTestcaseId(teststep.getTestcaseId());
@@ -175,6 +180,7 @@ public class TeststepResource {
      */
     @POST @Path("{teststepId}/requestFile")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @PermitAll
     public Teststep saveRequestFile(@PathParam("teststepId") long teststepId,
                                       @FormDataParam("file") InputStream inputStream,
                                       @FormDataParam("file") FormDataContentDisposition contentDispositionHeader)

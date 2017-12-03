@@ -7,6 +7,7 @@ import io.irontest.db.TeststepDAO;
 import io.irontest.models.Testcase;
 import io.irontest.models.teststep.Teststep;
 
+import javax.annotation.security.PermitAll;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
@@ -25,12 +26,14 @@ public class TestcaseResource {
     }
 
     @PUT @Path("testcases/{testcaseId}")
+    @PermitAll
     public Testcase update_TestcaseEditView(Testcase testcase) {
         testcaseDAO.update(testcase);
         return testcaseDAO.findById_TestcaseEditView(testcase.getId());
     }
 
     /*@DELETE @Path("{testcaseId}")
+    @PermitAll
     public void delete(@PathParam("testcaseId") long testcaseId) {
         testcaseDAO.deleteById(testcaseId);
     }*/
@@ -41,6 +44,7 @@ public class TestcaseResource {
     }
 
     @PATCH @Path("testcases/{testcaseId}/moveStep")
+    @PermitAll
     public Testcase moveStep(Testcase testcase) throws JsonProcessingException {
         List<Teststep> teststeps = testcase.getTeststeps();
         teststepDAO.moveInTestcase(testcase.getId(), teststeps.get(0).getSequence(), teststeps.get(1).getSequence());
@@ -53,6 +57,7 @@ public class TestcaseResource {
      * @return the new test case (containing ID only)
      */
     @POST @Path("testcases/{testcaseId}/duplicate")
+    @PermitAll
     public Testcase duplicate(@PathParam("testcaseId") long testcaseId,
                           @QueryParam("targetFolderId") long targetFolderId) throws JsonProcessingException {
         Testcase testcase = new Testcase();

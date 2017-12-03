@@ -3,6 +3,7 @@ package io.irontest.resources;
 import io.irontest.db.FolderTreeNodeDAO;
 import io.irontest.models.FolderTreeNode;
 
+import javax.annotation.security.PermitAll;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
@@ -19,6 +20,7 @@ public class FolderTreeNodeResource {
     }
 
     @POST
+    @PermitAll
     public FolderTreeNode create(FolderTreeNode node) {
         return folderTreeNodeDAO.insert(node);
     }
@@ -29,6 +31,7 @@ public class FolderTreeNodeResource {
     }
 
     @PUT
+    @PermitAll
     public void update(FolderTreeNode node) {
         folderTreeNodeDAO.update(node);
     }

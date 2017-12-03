@@ -20,6 +20,7 @@ import io.irontest.views.TeststepRunView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.PermitAll;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.text.SimpleDateFormat;
@@ -49,6 +50,7 @@ public class TestcaseRunResource {
     }
 
     @POST
+    @PermitAll
     public TestcaseRun create(TestcaseRun testcaseRun) throws JsonProcessingException {
         //  only testcase id is used, and any other data in the request, if exists, is discarded
         long testcaseId = testcaseRun.getTestcase().getId();
