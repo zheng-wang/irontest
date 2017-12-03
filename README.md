@@ -14,9 +14,9 @@ Table of Contents:
 - [Use](#use)
     - [Integrated SOAP Web Service Testing](#integrated-soap-web-service-testing)
         - [Create Test Case Outline](#create-test-case-outline)
-        - [Populate the First Test Step](#populate-the-first-test-step)
-        - [Populate the Second Test Step](#populate-the-second-test-step)
-        - [Populate the Third Test Step](#populate-the-third-test-step)
+        - [Populate Step 1](#populate-step-1)
+        - [Populate Step 2](#populate-step-2)
+        - [Populate Step 3](#populate-step-3)
         - [Run the Test Case](#run-the-test-case)
     - [More Usages](#more-usages)
 - [Maintain](#maintain)
@@ -62,9 +62,9 @@ We are going to demo how to test a web service that updates an article in databa
  
 There will be three test steps 
 ```
-Set up database data
-Call the web service operation updateArticleByTitle
-Check database data to verify the article has been updated
+1. Set up database data
+2. Call the web service operation updateArticleByTitle
+3. Check database data to verify the article has been updated
 ```
 
 #### Create Test Case Outline
@@ -76,12 +76,12 @@ You can create your preferred folder structure for managing test cases, by right
 
 Now we are going to add test steps to the test case.
 
-Under the Test Steps tab, click Create dropdown button and select Database Step. Enter the name of the first test step `Set up database data`. Click Back link to return to the test case edit view. Repeat this to add the other two test steps (one SOAP Step and one Database Step). The test case outline is created as shown below.
+Under the Test Steps tab, click Create dropdown button and select Database Step. Enter the name of step 1 `Set up database data`. Click Back link to return to the test case edit view. Repeat this to add the other two test steps (one SOAP Step and one Database Step). The test case outline is created as shown below.
 
 ![Test Case Outline](screenshots/integrated-soap-testing/test-case-outline.png)
 
-#### Populate the First Test Step 
-Click the name of the first test step to open its edit view.
+#### Populate Step 1 
+Click the name of step 1 to open its edit view.
           
 Under the Endpoint Details tab, enter JDBC URL that will be used to connect to the sample database (automatically created when launching Iron Test for the first time). The format is `jdbc:h2:<IronTest_Home>/database/sample;AUTO_SERVER=TRUE`. Then enter Username and Password which can be found in `<IronTest_Home>/config.yml`.
 
@@ -101,8 +101,8 @@ Click the Invoke button to try it out (run the script), like shown below.
 
 Click the Back link to return to test case edit view.
 
-#### Populate the Second Test Step 
-Click the name of the second test step to open its edit view.
+#### Populate Step 2 
+Click the name step 2 to open its edit view.
 
 Under the Endpoint Details tab, enter SOAP Address `http://localhost:8081/soap/article` which is the address of the sample Article web service bundled with Iron Test. Ignore Username and Password fields as they are not used in this test case.
 
@@ -118,10 +118,10 @@ More information about assertions can be found on this [wiki page](https://githu
 
 Click the Back link to return to the test case edit view.
  
-#### Populate the Third Test Step  
-Click the name of the third test step to open its edit view. 
+#### Populate the Step 3  
+Click the name of step 3 to open its edit view. 
  
-Under the Endpoint Details tab, enter exactly the same information as in the first test step because we are interacting with the same database. The information duplication can be avoided by using `managed endpoints`. Refer to this [wiki page](https://github.com/zheng-wang/irontest/wiki/Endpoints-Management) for more details.
+Under the Endpoint Details tab, enter exactly the same information as in step 1 because we are interacting with the same database. The information duplication can be avoided by using `managed endpoints`. Refer to this [wiki page](https://github.com/zheng-wang/irontest/wiki/Endpoints-Management) for more details.
 
 Under the Invocation tab, enter SQL query `select title, content from article;`.
 
