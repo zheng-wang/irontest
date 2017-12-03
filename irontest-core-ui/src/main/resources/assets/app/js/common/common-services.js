@@ -80,6 +80,7 @@ angular.module('irontest')
         return this.appMode === 'team';
       },
       isUserAuthenticated: function() {
+        //  TODO
         return false;
       }
     };

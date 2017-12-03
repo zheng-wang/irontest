@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('irontest').controller('FolderTreeController', ['$scope', '$state', 'IronTestUtils', 'FolderTreeNodes',
-    '$timeout', '$transitions', 'Testcases',
-  function($scope, $state, IronTestUtils, FolderTreeNodes, $timeout, $transitions, Testcases) {
+    '$timeout', '$transitions', 'Testcases', 'AppStatus',
+  function($scope, $state, IronTestUtils, FolderTreeNodes, $timeout, $transitions, Testcases, AppStatus) {
     var NODE_TYPE_FOLDER = 'folder';
     var NODE_TYPE_TEST_CASE = 'testcase';
     var idOfTestcaseCopied = null;
@@ -61,7 +61,28 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
         },
         check_callback: true
       },
-      contextmenu: {
+      types: {
+        folder: {},
+			  testcase: {valid_children: [], icon: 'jstree-file'}
+      },
+      plugins: ['types', 'contextmenu', 'sort', 'state'],
+      version: 1          //  ngJsTree property
+    };
+
+    var makeTheTreeReadonly = function() {
+      //  empty context menu
+      $scope.treeConfig.contextmenu = { items: {} };
+
+      //  disable node moving
+      var index = $scope.treeConfig.plugins.indexOf('dnd');
+      if (index > -1) {
+        $scope.treeConfig.plugins.splice(index, 1)
+      }
+    };
+
+    var makeTheTreeWritable = function() {
+      //  populate context menu
+      $scope.treeConfig.contextmenu = {
         items: function(selectedNode) {    //  selectedNode: the node you right clicked on
           var items = {
             createTestcase: {
@@ -107,14 +128,20 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
 
           return items;
         }
-      },
-      types: {
-        folder: {},
-			  testcase: {valid_children: [], icon: 'jstree-file'}
-      },
-      plugins: ['types', 'contextmenu', 'sort', 'dnd', 'state'],
-      version: 1          //  ngJsTree property
+      }
+
+      //  enable node moving
+      var index = $scope.treeConfig.plugins.indexOf('dnd');
+      if (index === -1) {
+        $scope.treeConfig.plugins.push('dnd');
+      }
     };
+
+    if (AppStatus.isInTeamMode() && !AppStatus.isUserAuthenticated()) {
+      makeTheTreeReadonly();
+    } else {
+      makeTheTreeWritable();
+    }
 
     var selectNodeByUIRouterState = function(stateName, params) {
       var tree = $scope.treeInstance.jstree(true);
