@@ -11,6 +11,7 @@ import org.xmlunit.builder.DiffBuilder;
 import org.xmlunit.diff.ComparisonResult;
 import org.xmlunit.diff.Diff;
 import org.xmlunit.diff.Difference;
+import org.xmlunit.diff.DifferenceEvaluators;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -110,7 +111,11 @@ public class XMLUtils {
                     .compare(control)
                     .withTest(test)
                     .normalizeWhitespace()
-                    .withDifferenceEvaluator(new PlaceholderDifferenceEvaluator())
+                    //  Use custom DifferenceEvaluator in combination with the default DifferenceEvaluator, to utilize
+                    //  the default DifferenceEvaluator's feature which turns some DIFFERENT comparison results into
+                    //  SIMILAR, such as for different namespace prefixes.
+                    .withDifferenceEvaluator(DifferenceEvaluators.chain(
+                            DifferenceEvaluators.Default, new PlaceholderDifferenceEvaluator()))
                     .build();
         } catch (XMLUnitException e) {
             throw new RuntimeException(e.getCause().getMessage());
@@ -119,7 +124,7 @@ public class XMLUtils {
             Iterator it = diff.getDifferences().iterator();
             while (it.hasNext()) {
                 Difference difference = (Difference) it.next();
-                if (difference.getResult() == ComparisonResult.DIFFERENT) {   //  ignore SIMILAR differences
+                if (difference.getResult() == ComparisonResult.DIFFERENT) {   //  ignore SIMILAR comparison results
                     if (differencesSB.length() > 0) {
                         differencesSB.append("\n");
                     }
