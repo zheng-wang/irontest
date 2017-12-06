@@ -1,4 +1,22 @@
 <div class="form-group">
+  <label class="col-lg-2 control-label">Connection Mode</label>
+  <div class="col-lg-2 text-center">
+    <label class="control-label" title="Connect to queue manager on local machine">
+      <input type="radio" name="connectionMode" id="connectionModeBindings"
+             ng-model="endpoint.otherProperties.connectionMode"
+             ng-change="connectionModeChanged(endpointForm.$valid)" value="Bindings"> Bindings
+    </label>
+  </div>
+  <div class="col-lg-2 text-center">
+    <label class="control-label" title="Connect to queue manager on local or remote machine">
+      <input type="radio" name="connectionMode" id="connectionModeClient"
+             ng-model="endpoint.otherProperties.connectionMode"
+             ng-change="connectionModeChanged(endpointForm.$valid)" value="Client"> Client
+    </label>
+  </div>
+</div>
+
+<div class="form-group">
   <label for="endpointQueueManagerName" class="col-lg-2 control-label">Queue Manager Name</label>
   <div class="col-lg-10">
     <input name="endpointQueueManagerName" type="text" class="form-control"
@@ -7,9 +25,10 @@
   </div>
 </div>
 
-<div ng-include="'/ui/views/endpoints/edit-endpoint-host-port.html'"></div>
+<div ng-if="endpoint.otherProperties.connectionMode === 'Client'"
+     ng-include="'/ui/views/endpoints/edit-endpoint-host-port.html'"></div>
 
-<div class="form-group">
+<div ng-if="endpoint.otherProperties.connectionMode === 'Client'" class="form-group">
   <label for="endpointSvrConnChannelName" class="col-lg-2 control-label">SVRCONN Channel Name</label>
   <div class="col-lg-10">
     <input name="endpointSvrConnChannelName" type="text" class="form-control"

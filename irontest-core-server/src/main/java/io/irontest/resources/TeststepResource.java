@@ -5,8 +5,12 @@ import io.irontest.core.runner.*;
 import io.irontest.db.TeststepDAO;
 import io.irontest.db.UserDefinedPropertyDAO;
 import io.irontest.db.UtilsDAO;
+import io.irontest.models.AppInfo;
+import io.irontest.models.AppMode;
 import io.irontest.models.UserDefinedProperty;
 import io.irontest.models.endpoint.Endpoint;
+import io.irontest.models.endpoint.MQConnectionMode;
+import io.irontest.models.endpoint.MQEndpointProperties;
 import io.irontest.models.endpoint.SOAPEndpointProperties;
 import io.irontest.models.teststep.*;
 import io.irontest.utils.IronTestUtils;
@@ -35,11 +39,13 @@ import static io.irontest.IronTestConstants.IMPLICIT_PROPERTY_NAME_TEST_STEP_STA
  */
 @Path("/testcases/{testcaseId}/teststeps") @Produces({ MediaType.APPLICATION_JSON })
 public class TeststepResource {
+    private final AppInfo appInfo;
     private final TeststepDAO teststepDAO;
     private final UserDefinedPropertyDAO udpDAO;
     private final UtilsDAO utilsDAO;
 
-    public TeststepResource(TeststepDAO teststepDAO, UserDefinedPropertyDAO udpDAO, UtilsDAO utilsDAO) {
+    public TeststepResource(AppInfo appInfo, TeststepDAO teststepDAO, UserDefinedPropertyDAO udpDAO, UtilsDAO utilsDAO) {
+        this.appInfo = appInfo;
         this.teststepDAO = teststepDAO;
         this.udpDAO = udpDAO;
         this.utilsDAO = utilsDAO;
@@ -73,6 +79,10 @@ public class TeststepResource {
                 endpoint.setType(Endpoint.TYPE_DB);
             } else if (Teststep.TYPE_MQ.equals(teststep.getType())) {
                 endpoint.setType(Endpoint.TYPE_MQ);
+                MQEndpointProperties endpointProperties = new MQEndpointProperties();
+                endpointProperties.setConnectionMode(
+                        appInfo.getAppMode() == AppMode.LOCAL ? MQConnectionMode.BINDINGS : MQConnectionMode.CLIENT);
+                endpoint.setOtherProperties(endpointProperties);
             } else if (Teststep.TYPE_IIB.equals(teststep.getType())) {
                 endpoint.setType(Endpoint.TYPE_IIB);
             }

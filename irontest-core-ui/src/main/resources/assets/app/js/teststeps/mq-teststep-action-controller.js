@@ -3,7 +3,7 @@
 //  NOTICE:
 //    The $scope here prototypically inherits from the $scope of TeststepsController.
 //    ng-include also creates a scope.
-angular.module('irontest').controller('MQTeststepController', ['$scope', 'IronTestUtils', '$timeout', '$http',
+angular.module('irontest').controller('MQTeststepActionController', ['$scope', 'IronTestUtils', '$timeout', '$http',
     'Upload', '$window', 'Teststeps',
   function($scope, IronTestUtils, $timeout, $http, Upload, $window, Teststeps) {
     var timer;
@@ -28,7 +28,7 @@ angular.module('irontest').controller('MQTeststepController', ['$scope', 'IronTe
     $scope.actionChanged = function(isValid) {
       clearPreviousRunStatus();
 
-      //  save test step
+      //  update test step immediately (no timeout)
       $scope.update(isValid);
     };
 

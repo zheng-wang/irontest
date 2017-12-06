@@ -2,8 +2,12 @@ package io.irontest.resources;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.irontest.db.EndpointDAO;
+import io.irontest.models.AppInfo;
+import io.irontest.models.AppMode;
 import io.irontest.models.Environment;
 import io.irontest.models.endpoint.Endpoint;
+import io.irontest.models.endpoint.MQConnectionMode;
+import io.irontest.models.endpoint.MQEndpointProperties;
 import io.irontest.models.endpoint.SOAPEndpointProperties;
 
 import javax.annotation.security.PermitAll;
@@ -18,9 +22,11 @@ import java.util.List;
  */
 @Path("/") @Produces({ MediaType.APPLICATION_JSON })
 public class ManagedEndpointResource {
+    private final AppInfo appInfo;
     private final EndpointDAO endpointDAO;
 
-    public ManagedEndpointResource(EndpointDAO endpointDAO) {
+    public ManagedEndpointResource(AppInfo appInfo, EndpointDAO endpointDAO) {
+        this.appInfo = appInfo;
         this.endpointDAO = endpointDAO;
     }
 
@@ -32,6 +38,9 @@ public class ManagedEndpointResource {
         endpoint.setEnvironment(env);
         if (Endpoint.TYPE_SOAP.equals(endpoint.getType())) {
             endpoint.setOtherProperties(new SOAPEndpointProperties());
+        } else if (Endpoint.TYPE_MQ.equals(endpoint.getType())) {
+            ((MQEndpointProperties) endpoint.getOtherProperties()).setConnectionMode(
+                    appInfo.getAppMode() == AppMode.LOCAL ? MQConnectionMode.BINDINGS : MQConnectionMode.CLIENT);
         }
         long id = endpointDAO.insertManagedEndpoint(endpoint);
         endpoint.setId(id);

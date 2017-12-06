@@ -214,7 +214,7 @@
         <profile>
             <id>dev</id>
             <properties>
-                <mode/>
+                <dw.mode/>
             </properties>
             <build>
                 <plugins>
@@ -239,7 +239,7 @@
                                     <systemProperties>
                                         <systemProperty>
                                             <key>dw.mode</key>
-                                            <value>${mode}</value>
+                                            <value>${dw.mode}</value>
                                         </systemProperty>
                                     </systemProperties>
                                     <commandlineArgs>server irontest-core-server/config.yml</commandlineArgs>

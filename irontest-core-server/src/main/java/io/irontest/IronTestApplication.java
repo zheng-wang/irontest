@@ -24,6 +24,7 @@ import io.dropwizard.views.ViewBundle;
 import io.irontest.core.SimpleAuthenticator;
 import io.irontest.db.*;
 import io.irontest.models.AppInfo;
+import io.irontest.models.AppMode;
 import io.irontest.models.User;
 import io.irontest.resources.*;
 import io.irontest.ws.ArticleSOAP;
@@ -88,8 +89,8 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
     @Override
     public void run(IronTestConfiguration configuration, Environment environment) throws Exception {
         // in team mode
-        if (AppInfo.APP_MODE_TEAM.equals(configuration.getMode())) {
-            appInfo.setAppMode(AppInfo.APP_MODE_TEAM);
+        if (AppMode.TEAM.toString().equals(configuration.getMode())) {
+            appInfo.setAppMode(AppMode.TEAM);
 
             // ignore bindHost
             DefaultServerFactory server = (DefaultServerFactory) configuration.getServerFactory();
@@ -145,11 +146,11 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
 
         //  register APIs
         environment.jersey().register(new AppInfoResource(appInfo));
-        environment.jersey().register(new ManagedEndpointResource(endpointDAO));
+        environment.jersey().register(new ManagedEndpointResource(appInfo, endpointDAO));
         environment.jersey().register(new TestcaseResource(testcaseDAO, teststepDAO));
         environment.jersey().register(new FolderResource(folderDAO));
         environment.jersey().register(new FolderTreeNodeResource(folderTreeNodeDAO));
-        environment.jersey().register(new TeststepResource(teststepDAO, udpDAO, utilsDAO));
+        environment.jersey().register(new TeststepResource(appInfo, teststepDAO, udpDAO, utilsDAO));
         environment.jersey().register(new WSDLResource());
         environment.jersey().register(new EnvironmentResource(environmentDAO));
         environment.jersey().register(new TestcaseRunResource(testcaseDAO, udpDAO, teststepDAO, utilsDAO, testcaseRunDAO));

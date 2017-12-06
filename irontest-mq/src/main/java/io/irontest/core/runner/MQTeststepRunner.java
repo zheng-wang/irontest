@@ -6,6 +6,7 @@ import com.ibm.mq.headers.MQDataException;
 import com.ibm.mq.headers.MQHeaderIterator;
 import com.ibm.mq.headers.MQMD;
 import com.ibm.mq.headers.MQRFH2;
+import io.irontest.models.endpoint.MQConnectionMode;
 import io.irontest.models.endpoint.MQEndpointProperties;
 import io.irontest.models.teststep.MQDestinationType;
 import io.irontest.models.teststep.MQRFH2Header;
@@ -45,14 +46,18 @@ public class MQTeststepRunner extends TeststepRunner {
 
         MQAPIResponse response = new MQAPIResponse();
         MQEndpointProperties endpointProperties = (MQEndpointProperties) teststep.getEndpoint().getOtherProperties();
-        Hashtable qmConnProperties = new Hashtable();
-        qmConnProperties.put(CMQC.HOST_NAME_PROPERTY,  endpointProperties.getHost());
-        qmConnProperties.put(CMQC.PORT_PROPERTY, endpointProperties.getPort());
-        qmConnProperties.put(CMQC.CHANNEL_PROPERTY, endpointProperties.getSvrConnChannelName());
         MQQueueManager queueManager = null;
         try {
             //  connect to queue manager
-            queueManager = new MQQueueManager(endpointProperties.getQueueManagerName(), qmConnProperties);
+            if (endpointProperties.getConnectionMode() == MQConnectionMode.BINDINGS) {
+                queueManager = new MQQueueManager(endpointProperties.getQueueManagerName());
+            } else {
+                Hashtable qmConnProperties = new Hashtable();
+                qmConnProperties.put(CMQC.HOST_NAME_PROPERTY,  endpointProperties.getHost());
+                qmConnProperties.put(CMQC.PORT_PROPERTY, endpointProperties.getPort());
+                qmConnProperties.put(CMQC.CHANNEL_PROPERTY, endpointProperties.getSvrConnChannelName());
+                queueManager = new MQQueueManager(endpointProperties.getQueueManagerName(), qmConnProperties);
+            }
 
             if (MQDestinationType.QUEUE == teststepProperties.getDestinationType()) {
                 Object responseValue = doQueueAction(queueManager, teststepProperties.getQueueName(), action,

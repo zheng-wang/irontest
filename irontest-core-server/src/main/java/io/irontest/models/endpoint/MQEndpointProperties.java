@@ -8,10 +8,19 @@ import io.irontest.models.Properties;
  * Created by Zheng on 26/05/2016.
  */
 public class MQEndpointProperties extends Properties {
+    private MQConnectionMode connectionMode = MQConnectionMode.BINDINGS;
     private String queueManagerName;
     private String host;
     private Integer port;
     private String svrConnChannelName;
+
+    public MQConnectionMode getConnectionMode() {
+        return connectionMode;
+    }
+
+    public void setConnectionMode(MQConnectionMode connectionMode) {
+        this.connectionMode = connectionMode;
+    }
 
     public String getQueueManagerName() {
         return queueManagerName;
@@ -51,7 +60,8 @@ public class MQEndpointProperties extends Properties {
      */
     @JsonProperty
     public String getQueueManagerAddress() {
-        return host + ':' + port + '/' + queueManagerName;
+        return connectionMode == MQConnectionMode.BINDINGS ?
+                queueManagerName : host + ':' + port + '/' + queueManagerName;
     }
 
     @JsonIgnore

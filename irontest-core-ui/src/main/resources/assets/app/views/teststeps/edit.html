@@ -50,7 +50,7 @@
                  ng-include="'/ui/views/teststeps/soap/edit-soap-teststep-endpoint-details.html'"></div>
             <div ng-if="teststep.type === 'DB'"
                  ng-include="'/ui/views/teststeps/db/edit-db-teststep-endpoint-details.html'"></div>
-            <div ng-if="teststep.type === 'MQ'"
+            <div ng-if="teststep.type === 'MQ'" ng-controller="MQTeststepEndpointController"
                  ng-include="'/ui/views/teststeps/mq/edit-mq-teststep-endpoint-details.html'"></div>
             <div ng-if="teststep.type === 'IIB'" ng-controller="IIBTeststepController"
                  ng-include="'/ui/views/teststeps/iib/edit-iib-teststep-endpoint-details.html'"></div>
@@ -68,7 +68,7 @@
                ng-controller="DBTeststepController"></div>
           <div ng-if="teststep.type === 'MQ'"
                ng-include="'/ui/views/teststeps/mq/edit-mq-teststep-action.html'"
-               ng-controller="MQTeststepController"></div>
+               ng-controller="MQTeststepActionController"></div>
           <div ng-if="teststep.type === 'IIB'"
                ng-include="'/ui/views/teststeps/iib/edit-iib-teststep-action.html'"
                ng-controller="IIBTeststepController"></div>

@@ -29,6 +29,15 @@ angular.module('irontest').controller('EndpointsController', ['$scope', 'Managed
       }
     };
 
+    $scope.connectionModeChanged = function(isValid) {
+      var otherProperties = $scope.endpoint.otherProperties;
+      otherProperties.host = null;
+      otherProperties.port = null;
+      otherProperties.svrConnChannelName = null;
+
+      $scope.update(isValid);  //  update immediately (no timeout)
+    }
+
     $scope.findOne = function() {
       ManagedEndpoints.get({
         endpointId: $stateParams.endpointId
