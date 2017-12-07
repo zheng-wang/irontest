@@ -33,6 +33,8 @@ public class AssertionVerifierFactory {
             result = new JSONPathAssertionVerifier();
         } else if (Assertion.TYPE_JSONPATH_XMLEQUAL.equals(assertionType)){
             result = new JSONPathXMLEqualAssertionVerifier();
+        } else if (Assertion.TYPE_JSON_EQUAL.equals(assertionType)) {
+            result = new JSONEqualAssertionVerifier();
         } else {
             throw new RuntimeException("Unrecognized assertion type " + assertionType);
         }

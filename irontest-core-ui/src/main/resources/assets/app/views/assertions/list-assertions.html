@@ -12,6 +12,9 @@
           <li role="menuitem" ng-if="teststep.type === 'MQ'">
             <a ng-click="assertionsModelObj.createAssertion('XMLEqual')" href="">XMLEqual Assertion</a>
           </li>
+          <li role="menuitem" ng-if="teststep.type === 'MQ'">
+            <a ng-click="assertionsModelObj.createAssertion('JSONEqual')" href="">JSONEqual Assertion</a>
+          </li>
           <li role="menuitem" ng-if="teststep.type === 'SOAP' || teststep.type === 'MQ'">
             <a ng-click="assertionsModelObj.createAssertion('XPath')" href="">XPath Assertion</a>
           </li>
@@ -52,6 +55,8 @@
          ng-include="'/ui/views/assertions/jsonpath-xmlequal-assertion-edit.html'"></div>
     <div ng-if="assertionsModelObj.assertion.type === 'XMLEqual'"
          ng-include="'/ui/views/assertions/xmlequal-assertion-edit.html'"></div>
+    <div ng-if="assertionsModelObj.assertion.type === 'JSONEqual'"
+         ng-include="'/ui/views/assertions/jsonequal-assertion-edit.html'"></div>
   </div>
 </div>
 <script type="text/ng-template" id="assertionGridNameCellTemplate.html">

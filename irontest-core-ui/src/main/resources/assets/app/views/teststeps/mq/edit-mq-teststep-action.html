@@ -77,8 +77,8 @@
 <div ng-if="teststep.action === 'Dequeue'">
   <div class="form-group form-group-reduced-bottom-margin" height-adjustable-element-in-column="0.7">
     <div class="col-lg-10 full-height">
-      <textarea name="actualXML" ng-model="steprun.response" id="actualXML"
-                placeholder="{{ steprun.status === 'ongoing' ? '' : 'Actual XML' }}"
+      <textarea name="actualMessageBody" ng-model="steprun.response" id="actualMessageBody"
+                placeholder="{{ steprun.status === 'ongoing' ? '' : 'Actual Message Body' }}"
                 class="form-control full-height-important" spellcheck="false"></textarea>
     </div>
   </div>

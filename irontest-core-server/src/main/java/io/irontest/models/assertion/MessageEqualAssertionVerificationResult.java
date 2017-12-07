@@ -3,7 +3,7 @@ package io.irontest.models.assertion;
 /**
  * Created by Zheng on 4/06/2016.
  */
-public class XMLEqualAssertionVerificationResult extends AssertionVerificationResult {
+public class MessageEqualAssertionVerificationResult extends AssertionVerificationResult {
     private String differences;
 
     public String getDifferences() {

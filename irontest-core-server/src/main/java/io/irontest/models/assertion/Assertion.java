@@ -12,6 +12,7 @@ public class Assertion {
     public static final String TYPE_XPATH = "XPath";
     public static final String TYPE_INTEGER_EQUAL = "IntegerEqual";
     public static final String TYPE_XML_EQUAL = "XMLEqual";
+    public static final String TYPE_JSON_EQUAL = "JSONEqual";
     public static final String TYPE_JSONPATH = "JSONPath";
     public static final String TYPE_JSONPATH_XMLEQUAL = "JSONPathXMLEqual";
     private Long id;
@@ -25,6 +26,7 @@ public class Assertion {
             @JsonSubTypes.Type(value = IntegerEqualAssertionProperties.class,
                     name = Assertion.TYPE_INTEGER_EQUAL),
             @JsonSubTypes.Type(value = XMLEqualAssertionProperties.class, name = Assertion.TYPE_XML_EQUAL),
+            @JsonSubTypes.Type(value = JSONEqualAssertionProperties.class, name = Assertion.TYPE_JSON_EQUAL),
             @JsonSubTypes.Type(value = JSONPathAssertionProperties.class, name = Assertion.TYPE_JSONPATH),
             @JsonSubTypes.Type(value = JSONPathXMLEqualAssertionProperties.class, name = Assertion.TYPE_JSONPATH_XMLEQUAL)})
     private Properties otherProperties = new Properties();

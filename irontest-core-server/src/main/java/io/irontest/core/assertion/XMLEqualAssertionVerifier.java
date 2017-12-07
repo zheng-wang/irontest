@@ -4,7 +4,7 @@ import io.irontest.models.TestResult;
 import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.AssertionVerificationResult;
 import io.irontest.models.assertion.XMLEqualAssertionProperties;
-import io.irontest.models.assertion.XMLEqualAssertionVerificationResult;
+import io.irontest.models.assertion.MessageEqualAssertionVerificationResult;
 import io.irontest.utils.XMLUtils;
 
 /**
@@ -14,7 +14,7 @@ public class XMLEqualAssertionVerifier extends AssertionVerifier {
     /**
      *
      * @param assertion
-     * @param input the XML String that the assertion is verified against
+     * @param input the XML string that the assertion is verified against
      * @return
      */
     @Override
@@ -28,7 +28,7 @@ public class XMLEqualAssertionVerifier extends AssertionVerifier {
             throw new IllegalArgumentException("Actual XML is null.");
         }
 
-        XMLEqualAssertionVerificationResult result = new XMLEqualAssertionVerificationResult();
+        MessageEqualAssertionVerificationResult result = new MessageEqualAssertionVerificationResult();
         String differencesStr = XMLUtils.compareXML(assertionProperties.getExpectedXML(), (String) input);
         if (differencesStr.length() > 0) {
             result.setResult(TestResult.FAILED);

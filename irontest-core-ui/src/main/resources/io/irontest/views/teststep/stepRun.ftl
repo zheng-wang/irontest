@@ -127,12 +127,14 @@
             ${verification.verificationResult.result}
         </div>
       </div>
+      <div class="form-group"></div> <!-- spacer -->
       <div class="row">
         <div class="col-lg-1">Expected:</div>
         <div class="col-lg-11">
           <#include "../assertion/${verification.assertion.type?lower_case}AssertionExpected.ftl">
         </div>
       </div>
+      <div class="form-group"></div> <!-- spacer -->
       <div class="row">
         <#if verification.verificationResult.error??>
           <div class="col-lg-1">Error:</div>
