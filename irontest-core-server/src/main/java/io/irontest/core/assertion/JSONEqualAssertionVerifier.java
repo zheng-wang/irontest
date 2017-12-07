@@ -13,6 +13,9 @@ import static net.javacrumbs.jsonunit.JsonAssert.assertJsonEquals;
  * Created by Zheng on 7/12/2017.
  */
 public class JSONEqualAssertionVerifier extends AssertionVerifier {
+    private static final String JSON_UNIT_PLACEHOLDER_REGEX = "#\\{[\\s]*(json-unit\\.[^}]+)}";
+    private static final String JSON_UNIT_PLACEHOLDER_DELIMITER_REPLACEMENT = "\\${$1}";
+
     /**
      *
      * @param assertion
@@ -20,7 +23,7 @@ public class JSONEqualAssertionVerifier extends AssertionVerifier {
      * @return
      */
     @Override
-    public AssertionVerificationResult _verify(Assertion assertion, Object input) throws Exception {
+    public AssertionVerificationResult _verify(Assertion assertion, Object input) {
         JSONEqualAssertionProperties assertionProperties = (JSONEqualAssertionProperties) assertion.getOtherProperties();
 
         //  validate arguments
@@ -30,9 +33,11 @@ public class JSONEqualAssertionVerifier extends AssertionVerifier {
             throw new IllegalArgumentException("Actual JSON is null.");
         }
 
+        String expectedJSON = assertionProperties.getExpectedJSON().replaceAll(
+                JSON_UNIT_PLACEHOLDER_REGEX, JSON_UNIT_PLACEHOLDER_DELIMITER_REPLACEMENT);
         MessageEqualAssertionVerificationResult result = new MessageEqualAssertionVerificationResult();
         try {
-            assertJsonEquals(assertionProperties.getExpectedJSON(), input);
+            assertJsonEquals(expectedJSON, input);
         } catch (IllegalArgumentException e) {
             Throwable c = e.getCause();
             if (c instanceof JsonParseException) {
