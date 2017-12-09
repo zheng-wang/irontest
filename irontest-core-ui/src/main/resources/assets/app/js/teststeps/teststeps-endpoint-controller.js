@@ -73,5 +73,17 @@ angular.module('irontest').controller('TeststepsEndpointController', ['$scope',
       //  exit share-endpoint mode
       delete $scope.environments;
     };
+
+    $scope.mqEndpointConnectionModeChanged = function(isValid) {
+      var endpointProperties = $scope.teststep.endpoint.otherProperties;
+      endpointProperties.host = null;
+      endpointProperties.port = null;
+      endpointProperties.svrConnChannelName = null;
+
+      if (!$scope.isInShareEndpointMode()) {
+        //  update test step immediately (no timeout)
+        $scope.update(isValid);
+      }
+    };
   }
 ]);

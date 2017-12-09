@@ -4,14 +4,14 @@
     <label class="control-label" title="Connect to queue manager on local machine">
       <input type="radio" name="connectionMode" id="connectionModeBindings"
              ng-model="endpoint.otherProperties.connectionMode"
-             ng-change="connectionModeChanged(endpointForm.$valid)" value="Bindings"> Bindings
+             ng-change="mqEndpointConnectionModeChanged(endpointForm.$valid)" value="Bindings"> Bindings
     </label>
   </div>
   <div class="col-lg-2 text-center">
     <label class="control-label" title="Connect to queue manager on local or remote machine">
       <input type="radio" name="connectionMode" id="connectionModeClient"
              ng-model="endpoint.otherProperties.connectionMode"
-             ng-change="connectionModeChanged(endpointForm.$valid)" value="Client"> Client
+             ng-change="mqEndpointConnectionModeChanged(endpointForm.$valid)" value="Client"> Client
     </label>
   </div>
 </div>

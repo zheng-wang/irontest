@@ -4,7 +4,7 @@
     <label class="control-label" title="Connect to queue manager on local machine">
       <input type="radio" name="endpointConnectionMode" id="endpointConnectionModeBindings"
              ng-model="teststep.endpoint.otherProperties.connectionMode"
-             ng-change="connectionModeChanged(teststepForm.$valid)" value="Bindings"
+             ng-change="mqEndpointConnectionModeChanged(teststepForm.$valid)" value="Bindings"
              ng-disabled="!isInShareEndpointMode() && teststep.endpoint.environment"> Bindings
     </label>
   </div>
@@ -12,7 +12,7 @@
     <label class="control-label" title="Connect to queue manager on local or remote machine">
       <input type="radio" name="endpointConnectionMode" id="endpointConnectionModeClient"
              ng-model="teststep.endpoint.otherProperties.connectionMode"
-             ng-change="connectionModeChanged(teststepForm.$valid)" value="Client"
+             ng-change="mqEndpointConnectionModeChanged(teststepForm.$valid)" value="Client"
              ng-disabled="!isInShareEndpointMode() && teststep.endpoint.environment"> Client
     </label>
   </div>
