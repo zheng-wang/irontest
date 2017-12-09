@@ -4,6 +4,11 @@ body {
   /* zoom: 97%; */
 }
 
+/* classes from AngularJS for ngCloak directive */
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+
 /* custom bootstrap classes (for page-header) */
 .page-header {
   padding-bottom: 0px;
@@ -29,11 +34,9 @@ body {
   font-size: 104%;
 }
 
-/* custom bootstrap class (for tabs) */
-.nav>li>a {
-  position: relative;
-  display: block;
-  padding: 7px 12px;
+/* custom class for ui bootstrap tabs */
+.uib-tab a {
+  padding: 7px 12px !important;
 }
 
 /* custom jsTree contextmenu class */

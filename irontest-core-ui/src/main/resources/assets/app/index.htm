@@ -23,6 +23,7 @@
     <!-- Navigation -->
     <nav class="navbar navbar-default navbar-static-top" id="page-top-navbar" role="navigation" style="margin-bottom: 0">
       <div class="navbar-header">
+        <!-- Upper right corner button to show/hide sidebar on mobile phone -->
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
           <span class="sr-only">Toggle navigation</span>
           <span class="icon-bar"></span>
@@ -34,6 +35,29 @@
       <!-- /.navbar-header -->
 
       <div ng-include="'/ui/sidebar.html'"></div>
+
+      <ul class="nav navbar-top-links navbar-right" ng-cloak ng-if="appStatus.isInTeamMode()">
+        <li ng-if="!appStatus.isUserAuthenticated()">
+          <a href="">Sign In</a>
+        </li>
+        <li class="dropdown" ng-if="appStatus.isUserAuthenticated()">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+            <i class="fa fa-user fa-fw"></i> Zheng <i class="fa fa-caret-down"></i>
+          </a>
+          <ul class="dropdown-menu dropdown-user">
+            <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
+            </li>
+            <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
+            </li>
+            <li class="divider"></li>
+            <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+            </li>
+          </ul>
+          <!-- /.dropdown-user -->
+        </li>
+        <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>   <!-- placeholder -->
+        <!-- /.dropdown -->
+      </ul>
     </nav>
 
     <div id="page-wrapper" class="ws-uiview" ui-view></div>

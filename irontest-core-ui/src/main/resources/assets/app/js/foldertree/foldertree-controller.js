@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('irontest').controller('FolderTreeController', ['$scope', '$state', 'IronTestUtils', 'FolderTreeNodes',
-    '$timeout', '$transitions', 'Testcases', 'AppStatus',
-  function($scope, $state, IronTestUtils, FolderTreeNodes, $timeout, $transitions, Testcases, AppStatus) {
+angular.module('irontest').controller('FolderTreeController', ['$scope', '$rootScope', '$state', 'IronTestUtils', 'FolderTreeNodes',
+    '$timeout', '$transitions', 'Testcases',
+  function($scope, $rootScope, $state, IronTestUtils, FolderTreeNodes, $timeout, $transitions, Testcases) {
     var NODE_TYPE_FOLDER = 'folder';
     var NODE_TYPE_TEST_CASE = 'testcase';
     var idOfTestcaseCopied = null;
@@ -137,12 +137,6 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
       }
     };
 
-    if (AppStatus.isInTeamMode() && !AppStatus.isUserAuthenticated()) {
-      makeTheTreeReadonly();
-    } else {
-      makeTheTreeWritable();
-    }
-
     var selectNodeByUIRouterState = function(stateName, params) {
       var tree = $scope.treeInstance.jstree(true);
       tree.deselect_all();
@@ -207,9 +201,18 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$state
 
     var treeReady = function() {
       if ($scope.treeConfig.version === 1) {       //  initial tree data loading
-        $scope.reloadTreeData(function successCallback() {
-          selectNodeByUIRouterState($state.current.name, $state.params);
-        });
+        $rootScope.appStatusPromise.then(    //  ensure appStatus is ready for use before reloading the tree data
+          function() {
+            if ($rootScope.appStatus.isInTeamMode() && !$rootScope.appStatus.isUserAuthenticated()) {
+              makeTheTreeReadonly();
+            } else {
+              makeTheTreeWritable();
+            }
+            $scope.reloadTreeData(function successCallback() {
+              selectNodeByUIRouterState($state.current.name, $state.params);
+            });
+          }
+        )
       }
     };
 

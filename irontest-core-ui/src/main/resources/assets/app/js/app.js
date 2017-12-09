@@ -20,10 +20,19 @@ angular.module('irontest', ['ngResource', 'ngSanitize', 'ui.router', 'ui.grid', 
         templateUrl: '/ui/views/blank.html'
       })
   }])
-  .run(['$http', 'IronTestUtils', 'AppStatus', function($http, IronTestUtils, AppStatus) {
-    $http.get('api/appinfo')
+  .run(['$rootScope', '$http', 'IronTestUtils', function($rootScope, $http, IronTestUtils) {
+    $rootScope.appStatusPromise = $http.get('api/appinfo')
       .then(function successCallback(response) {
-        AppStatus.appMode = response.data.appMode;
+        $rootScope.appStatus = {
+          appMode: response.data.appMode,
+          isInTeamMode: function() {
+            return $rootScope.appStatus.appMode === 'team';
+          },
+          isUserAuthenticated: function() {
+            //  TODO
+            return false;
+          }
+        };
       }, function errorCallback(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);
       });
