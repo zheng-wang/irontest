@@ -20,6 +20,27 @@ angular.module('irontest').controller('IIBTeststepActionController', ['$scope', 
       $scope.update(isValid);
     };
 
+    $scope.endpointInfoIncomplete = function() {
+      var endpoint = $scope.teststep.endpoint;
+      var endpointOtherProperties = endpoint.otherProperties;
+      if (endpoint.type === 'MQ') {
+        return !endpointOtherProperties.queueManagerName ||
+          (endpointOtherProperties.connectionMode === 'Client' && (!endpointOtherProperties.host ||
+          !endpointOtherProperties.port || !endpointOtherProperties.svrConnChannelName));
+      } else {        //  endpoint type is IIB
+        return !endpointOtherProperties.host || !endpointOtherProperties.port;
+      }
+    };
+
+    $scope.actionInfoIncomplete = function() {
+      var teststep = $scope.teststep;
+      if (!teststep.action) {
+        return true;
+      } else if (teststep.otherProperties.destinationType === 'Queue') {
+        return !teststep.otherProperties.integrationServerName || !teststep.otherProperties.messageFlowName;
+      }
+    };
+
     $scope.doAction = function() {
       clearPreviousRunStatus();
 

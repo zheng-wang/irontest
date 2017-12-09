@@ -37,7 +37,7 @@ angular.module('irontest').controller('MQTeststepActionController', ['$scope', '
       return !endpointOtherProperties.queueManagerName ||
         (endpointOtherProperties.connectionMode === 'Client' && (!endpointOtherProperties.host ||
           !endpointOtherProperties.port || !endpointOtherProperties.svrConnChannelName));
-    }
+    };
 
     $scope.actionInfoIncomplete = function() {
       var teststep = $scope.teststep;
@@ -55,7 +55,7 @@ angular.module('irontest').controller('MQTeststepActionController', ['$scope', '
       } else {
         return true;
       }
-    }
+    };
 
     $scope.doAction = function() {
       clearPreviousRunStatus();
