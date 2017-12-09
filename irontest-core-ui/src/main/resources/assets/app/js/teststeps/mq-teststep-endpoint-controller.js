@@ -1,7 +1,7 @@
 'use strict';
 
 //  NOTICE:
-//    The $scope here prototypically inherits from the $scope of TeststepsController.
+//    The $scope here prototypically inherits from the $scope of TeststepsEndpointController.
 //    ng-include also creates a scope.
 angular.module('irontest').controller('MQTeststepEndpointController', ['$scope',
   function($scope) {

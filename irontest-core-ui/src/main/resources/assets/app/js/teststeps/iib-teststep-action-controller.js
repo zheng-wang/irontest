@@ -1,21 +1,12 @@
 'use strict';
 
 //  NOTICE:
-//    The $scope here prototypically inherits from the $scope of TeststepsController.
+//    The $scope here prototypically inherits from the $scope of TeststepsActionController.
 //    ng-include also creates a scope.
-angular.module('irontest').controller('IIBTeststepController', ['$scope', 'Teststeps', 'IronTestUtils', '$timeout',
+angular.module('irontest').controller('IIBTeststepActionController', ['$scope', 'Teststeps', 'IronTestUtils', '$timeout',
   function($scope, Teststeps, IronTestUtils, $timeout) {
     var timer;
     $scope.steprun = {};
-
-    $scope.endpointTypeChanged = function(isValid) {
-      $scope.teststep.endpoint.otherProperties = {};
-
-      if (!$scope.isInShareEndpointMode()) {
-        //  save test step immediately (so as to update endpoint)
-        $scope.update(isValid);
-      }
-    };
 
     var clearPreviousRunStatus = function() {
       if (timer) $timeout.cancel(timer);

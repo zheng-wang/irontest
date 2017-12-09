@@ -1,12 +1,11 @@
 'use strict';
 
 angular.module('irontest').controller('TeststepsController', ['$scope', 'Teststeps', '$stateParams', '$timeout',
-    '$uibModal', 'IronTestUtils', '$http', 'Environments', 'ManagedEndpoints',
-  function($scope, Teststeps, $stateParams, $timeout, $uibModal, IronTestUtils, $http, Environments, ManagedEndpoints) {
+    'IronTestUtils',
+  function($scope, Teststeps, $stateParams, $timeout, IronTestUtils) {
     $scope.teststep = {
       assertions: []
     };
-    $scope.showAssertionsArea = false;
 
     $scope.teststepNewlyCreated = function() {
       return $stateParams.newlyCreated === true;
@@ -63,88 +62,6 @@ angular.module('irontest').controller('TeststepsController', ['$scope', 'Testste
       }, function(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);
       });
-    };
-
-    $scope.selectManagedEndpoint = function() {
-      //  find managed endpoints by type
-      var endpointType = $scope.teststep.endpoint.type;
-      ManagedEndpoints.query({ type: endpointType },
-        function successCallback(response) {
-          //  open modal dialog
-          var modalInstance = $uibModal.open({
-            templateUrl: '/ui/views/endpoints/list-modal.html',
-            controller: 'SelectManagedEndpointModalController',
-            size: 'lg',
-            windowClass: 'select-managed-endpoint-modal',
-            resolve: {
-              endpointType: function() {
-                return endpointType;
-              },
-              endpoints: function() {
-                return response;
-              }
-            }
-          });
-
-          //  handle result from modal dialog
-          modalInstance.result.then(function closed(selectedEndpoint) {
-            $scope.teststep.endpoint = selectedEndpoint;
-            $scope.update(true);  //  save immediately (no timeout)
-          }, function dismissed() {
-            //  Modal dismissed. Do nothing.
-          });
-        }, function errorCallback(response) {
-          IronTestUtils.openErrorHTTPResponseModal(response);
-        });
-    };
-
-    $scope.enterShareEndpointMode = function() {
-      //  find all environments
-      Environments.query(function(environments) {
-        if (environments && environments.length > 0) {
-          $scope.environments = environments;
-          $scope.teststep.endpoint.environment = environments[0];
-        } else {
-          IronTestUtils.openErrorMessageModal('No environment yet.',
-              'To share the endpoint, please create an environment first.');
-        }
-      }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
-      });
-    };
-
-    $scope.isInShareEndpointMode = function() {
-      return typeof $scope.environments !== 'undefined';
-    };
-
-    $scope.shareEndpoint = function(isValid) {
-      //  if successful, this will reload the whole test step
-      $scope.update(isValid, function successCallback() {
-        //  exit share-endpoint mode
-        delete $scope.environments;
-      });
-    };
-
-    $scope.cancelShareEndpoint = function() {
-      //  reload the whole test step
-      $scope.findOne();
-
-      //  exit share-endpoint mode
-      delete $scope.environments;
-    };
-
-    $scope.toggleAssertionsArea = function() {
-      if ($scope.showAssertionsArea) {    //  for toggle off
-        var elementHeight = document.getElementById('assertionsArea').offsetHeight;
-        $scope.$broadcast('elementRemovedFromColumn', { elementHeight: elementHeight });
-      }
-
-      $scope.showAssertionsArea = !$scope.showAssertionsArea;
-    };
-
-    $scope.assertionsAreaLoadedCallback = function() {
-      var elementHeight = document.getElementById('assertionsArea').offsetHeight;
-      $scope.$broadcast('elementInsertedIntoColumn', { elementHeight: elementHeight });
     };
   }
 ]);

@@ -1,9 +1,9 @@
 'use strict';
 
 //  NOTICE:
-//    The $scope here prototypically inherits from the $scope of TeststepsController.
+//    The $scope here prototypically inherits from the $scope of TeststepsActionController.
 //    ng-include also creates a scope.
-angular.module('irontest').controller('SOAPTeststepController', ['$scope', 'Teststeps', 'IronTestUtils', '$uibModal',
+angular.module('irontest').controller('SOAPTeststepActionController', ['$scope', 'Teststeps', 'IronTestUtils', '$uibModal',
     'uiGridConstants', '$timeout',
   function($scope, Teststeps, IronTestUtils, $uibModal, uiGridConstants, $timeout) {
     const HTTP_HEADER_GRID_NAME_COLUMN_WIDTH = '30%';
@@ -118,30 +118,6 @@ angular.module('irontest').controller('SOAPTeststepController', ['$scope', 'Test
         $scope.steprun.status = 'failed';
         IronTestUtils.openErrorHTTPResponseModal(error);
       });
-    };
-
-    $scope.toggleWSDLURLByConvention = function(isValid) {
-      var endpoint = $scope.teststep.endpoint;
-      var endpointProperties = endpoint.otherProperties;
-      if (endpointProperties.wsdlURLByConvention === true) {
-        endpointProperties.wsdlURL = (endpoint.url === null ? '' : endpoint.url) + '?wsdl';
-      }
-
-      if (!$scope.isInShareEndpointMode()) {
-        $scope.update(isValid);    //  save immediately (no timeout)
-      }
-    };
-
-    $scope.endpointSOAPAddressChanged = function(isValid) {
-      var endpoint = $scope.teststep.endpoint;
-      var endpointProperties = endpoint.otherProperties;
-      if (endpointProperties.wsdlURLByConvention === true) {
-        endpointProperties.wsdlURL = endpoint.url + '?wsdl';
-      }
-
-      if (!$scope.isInShareEndpointMode()) {
-        $scope.autoSave(isValid);
-      }
     };
   }
 ]);

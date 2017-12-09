@@ -42,38 +42,42 @@
         when the tab is displayed  -->
         <uib-tab ng-show="teststep.endpoint" heading="Endpoint Details"
                  deselect="isInShareEndpointMode() ? cancelShareEndpoint() : angular.noop()">
-          <div class="form-group"></div> <!-- spacer -->
-          <div class="col-lg-10">
-            <div ng-include="'/ui/views/teststeps/edit-endpoint-details-basic-info.html'"></div>
+          <div ng-controller="TeststepsEndpointController">
+            <div class="form-group"></div> <!-- spacer -->
+            <div class="col-lg-10">
+              <div ng-include="'/ui/views/teststeps/edit-endpoint-details-basic-info.html'"></div>
 
-            <div ng-if="teststep.type === 'SOAP'" ng-controller="SOAPTeststepController"
-                 ng-include="'/ui/views/teststeps/soap/edit-soap-teststep-endpoint-details.html'"></div>
-            <div ng-if="teststep.type === 'DB'"
-                 ng-include="'/ui/views/teststeps/db/edit-db-teststep-endpoint-details.html'"></div>
-            <div ng-if="teststep.type === 'MQ'" ng-controller="MQTeststepEndpointController"
-                 ng-include="'/ui/views/teststeps/mq/edit-mq-teststep-endpoint-details.html'"></div>
-            <div ng-if="teststep.type === 'IIB'" ng-controller="IIBTeststepController"
-                 ng-include="'/ui/views/teststeps/iib/edit-iib-teststep-endpoint-details.html'"></div>
+              <div ng-if="teststep.type === 'SOAP'" ng-controller="SOAPTeststepEndpointController"
+                   ng-include="'/ui/views/teststeps/soap/edit-soap-teststep-endpoint-details.html'"></div>
+              <div ng-if="teststep.type === 'DB'"
+                   ng-include="'/ui/views/teststeps/db/edit-db-teststep-endpoint-details.html'"></div>
+              <div ng-if="teststep.type === 'MQ'" ng-controller="MQTeststepEndpointController"
+                   ng-include="'/ui/views/teststeps/mq/edit-mq-teststep-endpoint-details.html'"></div>
+              <div ng-if="teststep.type === 'IIB'" ng-controller="IIBTeststepEndpointController"
+                   ng-include="'/ui/views/teststeps/iib/edit-iib-teststep-endpoint-details.html'"></div>
 
-            <div ng-include="'/ui/views/teststeps/edit-endpoint-details-bottom-part.html'"></div>
+              <div ng-include="'/ui/views/teststeps/edit-endpoint-details-bottom-part.html'"></div>
+          </div>
           </div>
         </uib-tab>
         <uib-tab heading="{{ teststep.type === 'MQ' || teststep.type === 'IIB' || teststep.type === 'Wait' ?
                           'Action' : 'Invocation' }}">
-          <div ng-if="teststep.type === 'SOAP'"
-               ng-include="'/ui/views/teststeps/soap/edit-soap-teststep-invocation.html'"
-               ng-controller="SOAPTeststepController"></div>
-          <div ng-if="teststep.type === 'DB'"
-               ng-include="'/ui/views/teststeps/db/edit-db-teststep-invocation.html'"
-               ng-controller="DBTeststepController"></div>
-          <div ng-if="teststep.type === 'MQ'"
-               ng-include="'/ui/views/teststeps/mq/edit-mq-teststep-action.html'"
-               ng-controller="MQTeststepActionController"></div>
-          <div ng-if="teststep.type === 'IIB'"
-               ng-include="'/ui/views/teststeps/iib/edit-iib-teststep-action.html'"
-               ng-controller="IIBTeststepController"></div>
-          <div ng-if="teststep.type === 'Wait'"
-               ng-include="'/ui/views/teststeps/wait/edit-wait-teststep-action.html'"></div>
+          <div ng-controller="TeststepsActionController">
+            <div ng-if="teststep.type === 'SOAP'"
+                 ng-include="'/ui/views/teststeps/soap/edit-soap-teststep-invocation.html'"
+                 ng-controller="SOAPTeststepActionController"></div>
+            <div ng-if="teststep.type === 'DB'"
+                 ng-include="'/ui/views/teststeps/db/edit-db-teststep-invocation.html'"
+                 ng-controller="DBTeststepController"></div>
+            <div ng-if="teststep.type === 'MQ'"
+                 ng-include="'/ui/views/teststeps/mq/edit-mq-teststep-action.html'"
+                 ng-controller="MQTeststepActionController"></div>
+            <div ng-if="teststep.type === 'IIB'"
+                 ng-include="'/ui/views/teststeps/iib/edit-iib-teststep-action.html'"
+                 ng-controller="IIBTeststepActionController"></div>
+            <div ng-if="teststep.type === 'Wait'"
+                 ng-include="'/ui/views/teststeps/wait/edit-wait-teststep-action.html'"></div>
+            </div>
         </uib-tab>
       </uib-tabset>
     </form>

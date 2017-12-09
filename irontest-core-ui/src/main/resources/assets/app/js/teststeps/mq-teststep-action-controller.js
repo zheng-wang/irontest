@@ -1,7 +1,7 @@
 'use strict';
 
 //  NOTICE:
-//    The $scope here prototypically inherits from the $scope of TeststepsController.
+//    The $scope here prototypically inherits from the $scope of TeststepsActionController.
 //    ng-include also creates a scope.
 angular.module('irontest').controller('MQTeststepActionController', ['$scope', 'IronTestUtils', '$timeout', '$http',
     'Upload', '$window', 'Teststeps',
@@ -34,8 +34,9 @@ angular.module('irontest').controller('MQTeststepActionController', ['$scope', '
 
     $scope.endpointInfoIncomplete = function() {
       var endpointOtherProperties = $scope.teststep.endpoint.otherProperties;
-      return !endpointOtherProperties.queueManagerName || !endpointOtherProperties.host ||
-          !endpointOtherProperties.port || !endpointOtherProperties.svrConnChannelName;
+      return !endpointOtherProperties.queueManagerName ||
+        (endpointOtherProperties.connectionMode === 'Client' && (!endpointOtherProperties.host ||
+          !endpointOtherProperties.port || !endpointOtherProperties.svrConnChannelName));
     }
 
     $scope.actionInfoIncomplete = function() {
