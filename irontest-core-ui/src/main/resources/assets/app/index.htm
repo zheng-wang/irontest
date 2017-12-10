@@ -36,8 +36,9 @@
 
       <div ng-include="'/ui/sidebar.html'"></div>
 
-      <ul class="nav navbar-top-links navbar-right" ng-cloak ng-if="appStatus.isInTeamMode()">
-        <li ng-if="!appStatus.isUserAuthenticated()" ng-controller="UserLoginController">
+      <ul class="nav navbar-top-links navbar-right" ng-cloak ng-if="appStatus.isInTeamMode()"
+          ng-controller="AuthenticationController">
+        <li ng-if="!appStatus.isUserAuthenticated()" >
           <a ng-click="openLoginModal()" href="">Log In</a>
         </li>
         <li class="dropdown" ng-if="appStatus.isUserAuthenticated()">
@@ -45,7 +46,7 @@
             <i class="fa fa-user fa-fw"></i> {{appStatus.getUsername()}} <i class="fa fa-caret-down"></i>
           </a>
           <ul class="dropdown-menu dropdown-user">
-            <li><a href=""><i class="fa fa-sign-out fa-fw"></i> Logout</a></li>
+            <li><a ng-click="logout()" href=""><i class="fa fa-sign-out fa-fw"></i> Logout</a></li>
           </ul>
           <!-- /.dropdown-user -->
         </li>
@@ -81,8 +82,8 @@
   <script src="/ui/js/common/common-services.js"></script>
   <script src="/ui/js/common/common-directives.js"></script>
   <script src="/ui/js/common/common-controllers.js"></script>
-  <script src="/ui/js/userlogin/user-login-controller.js"></script>
-  <script src="/ui/js/userlogin/user-login-modal-controller.js"></script>
+  <script src="/ui/js/authentication/authentication-controller.js"></script>
+  <script src="/ui/js/authentication/login-modal-controller.js"></script>
   <script src="/ui/js/endpoints/endpoints-routes.js"></script>
   <script src="/ui/js/endpoints/endpoints-services.js"></script>
   <script src="/ui/js/endpoints/endpoints-controller.js"></script>

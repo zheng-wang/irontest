@@ -205,11 +205,11 @@ body {
   background-color: lime;
 }
 
-.error-message-modal, .select-soap-operation-modal, .user-login-modal {
+.error-message-modal, .select-soap-operation-modal, .login-modal {
   top: 20%;
 }
 
-.user-login-modal .modal-dialog {
+.login-modal .modal-dialog {
   width: 400px;
 }
 

@@ -12,7 +12,7 @@ angular.module('irontest').controller('UserLoginModalController', ['$scope', '$u
         .then(function successCallback(response) {
           $window.localStorage.authHeaderValue = authHeaderValue;
           $window.localStorage.username = $scope.username;
-          $http.defaults.headers.common['Authorization'] = authHeaderValue;
+          $http.defaults.headers.common.Authorization = authHeaderValue;
 
           $uibModalInstance.dismiss();
         }, function errorCallback(response) {

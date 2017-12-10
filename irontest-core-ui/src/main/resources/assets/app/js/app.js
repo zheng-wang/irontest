@@ -38,7 +38,7 @@ angular.module('irontest', ['ngResource', 'ngSanitize', 'ui.router', 'ui.grid', 
     //  keep user logged in after page refresh
     var authHeaderValue = $window.localStorage.authHeaderValue;
     if (authHeaderValue) {
-      $http.defaults.headers.common['Authorization'] = authHeaderValue;
+      $http.defaults.headers.common.Authorization = authHeaderValue;
     }
 
     //  fetch app info from server side
