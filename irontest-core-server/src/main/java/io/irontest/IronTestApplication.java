@@ -21,7 +21,6 @@ import io.dropwizard.server.DefaultServerFactory;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.dropwizard.views.ViewBundle;
-import io.irontest.core.SimpleAuthenticator;
 import io.irontest.db.*;
 import io.irontest.models.AppInfo;
 import io.irontest.models.AppMode;
@@ -100,7 +99,7 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
 
             //  turn on user authentication
             environment.jersey().register(new AuthDynamicFeature(new BasicCredentialAuthFilter.Builder<User>()
-                    .setAuthenticator(new SimpleAuthenticator()).buildAuthFilter()));
+                    .setAuthenticator(new IronTestResourceAuthenticator()).buildAuthFilter()));
         }
 
         environment.jersey().register(new IronTestContainerResponseFilter());

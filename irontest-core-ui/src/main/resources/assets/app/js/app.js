@@ -20,19 +20,31 @@ angular.module('irontest', ['ngResource', 'ngSanitize', 'ui.router', 'ui.grid', 
         templateUrl: '/ui/views/blank.html'
       })
   }])
-  .run(['$rootScope', '$http', 'IronTestUtils', function($rootScope, $http, IronTestUtils) {
+  .run(['$rootScope', '$http', '$window', 'IronTestUtils', function($rootScope, $http, $window, IronTestUtils) {
+    //  initialize appStatus
+    $rootScope.appStatus = {
+      appMode: null,
+      isInTeamMode: function() {
+        return $rootScope.appStatus.appMode === 'team';
+      },
+      isUserAuthenticated: function() {
+        return ($window.localStorage.authHeaderValue);
+      },
+      getUsername: function() {
+        return $window.localStorage.username;
+      }
+    };
+
+    //  keep user logged in after page refresh
+    var authHeaderValue = $window.localStorage.authHeaderValue;
+    if (authHeaderValue) {
+      $http.defaults.headers.common['Authorization'] = authHeaderValue;
+    }
+
+    //  fetch app info from server side
     $rootScope.appStatusPromise = $http.get('api/appinfo')
       .then(function successCallback(response) {
-        $rootScope.appStatus = {
-          appMode: response.data.appMode,
-          isInTeamMode: function() {
-            return $rootScope.appStatus.appMode === 'team';
-          },
-          isUserAuthenticated: function() {
-            //  TODO
-            return false;
-          }
-        };
+        $rootScope.appStatus.appMode = response.data.appMode;
       }, function errorCallback(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);
       });

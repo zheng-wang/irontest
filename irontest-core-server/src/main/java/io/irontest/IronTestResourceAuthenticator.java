@@ -1,4 +1,4 @@
-package io.irontest.core;
+package io.irontest;
 
 import com.google.common.base.Optional;
 import io.dropwizard.auth.AuthenticationException;
@@ -9,7 +9,7 @@ import io.irontest.models.User;
 /**
  * Created by Zheng on 2/12/2017.
  */
-public class SimpleAuthenticator implements Authenticator<BasicCredentials, User> {
+public class IronTestResourceAuthenticator implements Authenticator<BasicCredentials, User> {
     @Override
     public Optional<User> authenticate(BasicCredentials credentials) throws AuthenticationException {
         if ("secret".equals(credentials.getPassword())) {

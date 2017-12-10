@@ -1,6 +1,7 @@
 'use strict';
 
-angular.module('irontest').controller('UserLoginModalController', ['$scope', '$uibModalInstance', '$window', '$http',
+angular.module('irontest').controller('UserLoginModalController', ['$scope', '$uibModalInstance',
+    '$window', '$http',
   function($scope, $uibModalInstance, $window, $http) {
     $scope.authenticationFailed = null;
 
@@ -9,7 +10,10 @@ angular.module('irontest').controller('UserLoginModalController', ['$scope', '$u
       $http
         .get('api/authenticated', {headers: {'Authorization': authHeaderValue}})
         .then(function successCallback(response) {
-          $window.localStorage.setItem("authHeaderValue", authHeaderValue);
+          $window.localStorage.authHeaderValue = authHeaderValue;
+          $window.localStorage.username = $scope.username;
+          $http.defaults.headers.common['Authorization'] = authHeaderValue;
+
           $uibModalInstance.dismiss();
         }, function errorCallback(response) {
           $scope.authenticationFailed = true;
