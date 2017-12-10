@@ -11,7 +11,7 @@ import io.irontest.utils.XMLUtils;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * Created by zhenw9 on 15/02/2017.
+ * Created by Zheng on 15/02/2017.
  */
 public class JSONPathXMLEqualAssertionVerifier extends AssertionVerifier {
     @Override

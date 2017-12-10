@@ -3,7 +3,7 @@ package io.irontest.models.teststep;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * Created by zhenw9 on 13/03/2017.
+ * Created by Zheng on 13/03/2017.
  */
 public enum MQDestinationType {
     QUEUE("Queue"), TOPIC("Topic");

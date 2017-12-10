@@ -3,7 +3,7 @@ package io.irontest.models.assertion;
 import io.irontest.models.Properties;
 
 /**
- * Created by zhenw9 on 13/12/2016.
+ * Created by Zheng on 13/12/2016.
  */
 public class JSONPathAssertionProperties extends Properties {
     private String jsonPath;

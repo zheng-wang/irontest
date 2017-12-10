@@ -1,7 +1,7 @@
 package io.irontest.models.teststep;
 
 /**
- * Created by zhenw9 on 1/06/2017.
+ * Created by Zheng on 1/06/2017.
  */
 public class HTTPHeader {
     private String name;

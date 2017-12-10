@@ -3,7 +3,7 @@ package io.irontest.models.teststep;
 import io.irontest.models.Properties;
 
 /**
- * Created by zhenw9 on 10/06/2016.
+ * Created by Zheng on 10/06/2016.
  */
 public class WaitTeststepProperties extends Properties {
     private long milliseconds;

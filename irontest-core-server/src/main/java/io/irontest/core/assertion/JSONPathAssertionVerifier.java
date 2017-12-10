@@ -10,7 +10,7 @@ import io.irontest.models.assertion.JSONPathAssertionVerificationResult;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * Created by zhenw9 on 13/12/2016.
+ * Created by Zheng on 13/12/2016.
  */
 public class JSONPathAssertionVerifier extends AssertionVerifier {
     /**

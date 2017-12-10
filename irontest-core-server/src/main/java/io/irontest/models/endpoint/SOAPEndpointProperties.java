@@ -3,7 +3,7 @@ package io.irontest.models.endpoint;
 import io.irontest.models.Properties;
 
 /**
- * Created by zhenw9 on 13/06/2017.
+ * Created by Zheng on 13/06/2017.
  */
 public class SOAPEndpointProperties extends Properties {
     private String wsdlURL = "?wsdl";
