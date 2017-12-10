@@ -1,21 +1,20 @@
 'use strict';
 
-angular.module('irontest').controller('UserLoginModalController', ['$scope', '$uibModalInstance',
-   '$http', 'IronTestUtils',
- function($scope, $uibModalInstance, $http, IronTestUtils) {
-   $scope.ok = function() {
-     $http
-       .get('api/wsdls/' + encodeURIComponent($scope.wsdlURL) + '/bindings/' + $scope.wsdlBinding.name +
-         '/operations/' + $scope.wsdlOperation)
-       .then(function successCallback(operationInfo) {
-         $uibModalInstance.close(operationInfo.data);
-       }, function errorCallback(error) {
-         IronTestUtils.openErrorHTTPResponseModal(error);
-       });
-   };
+angular.module('irontest').controller('UserLoginModalController', ['$scope', '$uibModalInstance', '$window', '$http',
+  function($scope, $uibModalInstance, $window, $http) {
+    $scope.login = function() {
+      var auth = $window.btoa($scope.username + ':' + $scope.password);
+      $http
+        .get('api/authenticated', {headers: {'Authorization': 'Basic ' + auth}})
+        .then(function successCallback(response) {
+          console.log(response);
+        }, function errorCallback(response) {
+          console.error(response);
+        });
+    };
 
-   $scope.cancel = function () {
-     $uibModalInstance.dismiss('cancel');
-   };
- }
+    $scope.cancel = function () {
+      $uibModalInstance.dismiss('cancel');
+    };
+  }
 ]);

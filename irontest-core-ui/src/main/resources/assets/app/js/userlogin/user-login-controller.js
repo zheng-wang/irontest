@@ -13,9 +13,9 @@ angular.module('irontest').controller('UserLoginController', ['$scope', '$uibMod
 
       //  handle result from modal dialog
       modalInstance.result.then(function closed() {
-
+        //  Do nothing.
       }, function dismissed() {
-        //  Modal dismissed. Do nothing.
+        //  Do nothing.
       });
     };
   }

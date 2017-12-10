@@ -103,6 +103,8 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
                     .setAuthenticator(new SimpleAuthenticator()).buildAuthFilter()));
         }
 
+        environment.jersey().register(new IronTestContainerResponseFilter());
+
         createSystemResources(configuration, environment);
         createSampleResources(configuration, environment);
     }
@@ -145,7 +147,7 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         udpDAO.createTableIfNotExists();
 
         //  register APIs
-        environment.jersey().register(new AppInfoResource(appInfo));
+        environment.jersey().register(new SystemResource(appInfo));
         environment.jersey().register(new ManagedEndpointResource(appInfo, endpointDAO));
         environment.jersey().register(new TestcaseResource(testcaseDAO, teststepDAO));
         environment.jersey().register(new FolderResource(folderDAO));

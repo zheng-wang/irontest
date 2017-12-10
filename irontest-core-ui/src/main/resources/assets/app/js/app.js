@@ -9,7 +9,7 @@ angular.module('irontest', ['ngResource', 'ngSanitize', 'ui.router', 'ui.grid', 
     'ui.grid.moveColumns', 'ui.grid.pagination', 'ui.grid.edit', 'ui.grid.cellNav', 'ui.grid.selection',
     'ui.grid.draggable-rows', 'ui.bootstrap', 'underscore', 'ngFileUpload', 'ngJsTree'])
   .config(['$stateProvider', '$urlRouterProvider', function(
-      $stateProvider, $urlRouterProvider, $http) {
+      $stateProvider, $urlRouterProvider) {
 
     // set default (home) view for the right pane
     $urlRouterProvider.otherwise('/');
