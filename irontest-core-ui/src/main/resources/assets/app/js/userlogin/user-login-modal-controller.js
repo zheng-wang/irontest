@@ -3,12 +3,14 @@
 angular.module('irontest').controller('UserLoginModalController', ['$scope', '$uibModalInstance', '$window', '$http',
   function($scope, $uibModalInstance, $window, $http) {
     $scope.authenticationFailed = null;
+
     $scope.login = function() {
-      var auth = $window.btoa($scope.username + ':' + $scope.password);
+      var authHeaderValue = 'Basic ' + $window.btoa($scope.username + ':' + $scope.password);
       $http
-        .get('api/authenticated', {headers: {'Authorization': 'Basic ' + auth}})
+        .get('api/authenticated', {headers: {'Authorization': authHeaderValue}})
         .then(function successCallback(response) {
-          $scope.authenticationFailed = false;
+          $window.localStorage.setItem("authHeaderValue", authHeaderValue);
+          $uibModalInstance.dismiss();
         }, function errorCallback(response) {
           $scope.authenticationFailed = true;
         });
