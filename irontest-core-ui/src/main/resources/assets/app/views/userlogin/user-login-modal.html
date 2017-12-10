@@ -1,0 +1,26 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="cancel()">&times;</button>
+  <h3 class="modal-title">Log In</h3>
+</div>
+<div class="modal-body">
+  <form name="loginForm" class="form-horizontal" role="form" ng-submit="ok()">
+    <div class="form-group">
+      <div class="col-lg-12">
+        <input name="username" type="text" id="username" class="form-control" ng-model="username"
+               placeholder="Username" autofocus>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-lg-12">
+        <input name="password" type="password" id="password" class="form-control" ng-model="password"
+               placeholder="Password">
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-lg-12">
+        <button class="btn btn-info btn-group-justified" type="submit"
+                ng-disabled="!username || !password">Log In</button>
+      </div>
+    </div>
+  </form>
+</div>

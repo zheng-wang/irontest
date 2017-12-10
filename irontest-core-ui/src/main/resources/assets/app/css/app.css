@@ -34,7 +34,7 @@ body {
   font-size: 104%;
 }
 
-/* custom class for ui bootstrap tabs */
+/* custom style for ui bootstrap tabs */
 .uib-tab a {
   padding: 7px 12px !important;
 }
@@ -205,12 +205,12 @@ body {
   background-color: lime;
 }
 
-.error-message-modal {
+.error-message-modal, .select-soap-operation-modal, .user-login-modal {
   top: 20%;
 }
 
-.select-soap-operation-modal {
-  top: 20%;
+.user-login-modal .modal-dialog {
+  width: 400px;
 }
 
 .select-managed-endpoint-modal, .udp-value-textarea-editor-modal {
