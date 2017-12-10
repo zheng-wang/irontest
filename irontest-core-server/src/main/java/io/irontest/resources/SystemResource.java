@@ -27,7 +27,7 @@ public class SystemResource {
     }
 
     /**
-     * Return HTTP status code 204 if authenticated; 401 otherwise.
+     * Return HTTP 204 if user is authenticated; return 401 otherwise.
      */
     @GET @Path("authenticated")
     @PermitAll
