@@ -15,7 +15,8 @@
           <label for="description" class="col-lg-2 control-label">Description</label>
           <div class="col-lg-10">
             <textarea name="description" ng-model="testcase.description" ng-change="autoSave(testcaseForm.$valid)"
-                      id="description" rows="30" placeholder="Description" class="form-control"></textarea>
+                      id="description" rows="30" placeholder="Description" class="form-control"
+                      ng-disabled="appStatus.isForbidden()"></textarea>
           </div>
         </div>
       </form>
@@ -27,7 +28,7 @@
         <div class="row">
           <div class="form-group">
             <div class="col-lg-1">
-              <button class="btn btn-info" ng-click="createUDP()">Create</button>
+              <button class="btn btn-info" ng-click="createUDP()" ng-disabled="appStatus.isForbidden()">Create</button>
             </div>
           </div>
         </div>
@@ -109,7 +110,8 @@
 </script>
 <script type="text/ng-template" id="udpGridDeleteCellTemplate.html">
   <div class="ui-grid-cell-contents">
-    <a ng-click="grid.appScope.removeUDP(row.entity)" href="">
+    <a ng-click="grid.appScope.appStatus.isForbidden() ? angular.noop() : grid.appScope.removeUDP(row.entity)"
+       ng-class="{'no-underline' : grid.appScope.appStatus.isForbidden()}" href="">
       <i class="glyphicon glyphicon-trash center-block text-center"></i>
     </a>
   </div>

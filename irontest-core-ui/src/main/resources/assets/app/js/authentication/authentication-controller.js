@@ -15,6 +15,8 @@ angular.module('irontest').controller('AuthenticationController', ['$scope', '$u
       $window.localStorage.removeItem("authHeaderValue");
       $window.localStorage.removeItem("username");
       delete $http.defaults.headers.common.Authorization;
+
+      $scope.$emit('userLoggedOut');
     };
   }
 ]);

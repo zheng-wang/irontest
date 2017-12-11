@@ -25,10 +25,15 @@ angular.module('irontest', ['ngResource', 'ngSanitize', 'ui.router', 'ui.grid', 
     $rootScope.appStatus = {
       appMode: null,
       isInTeamMode: function() {
-        return $rootScope.appStatus.appMode === 'team';
+        return this.appMode === 'team';
       },
       isUserAuthenticated: function() {
         return ($window.localStorage.authHeaderValue);
+      },
+      //  rolesAllowed is reserved for future use
+      //  for now, the function involves authentication but not authorization
+      isForbidden: function(rolesAllowed) {
+        return this.isInTeamMode() && !this.isUserAuthenticated();
       },
       getUsername: function() {
         return $window.localStorage.username;

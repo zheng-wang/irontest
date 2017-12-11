@@ -14,6 +14,8 @@ angular.module('irontest').controller('UserLoginModalController', ['$scope', '$u
           $window.localStorage.username = $scope.username;
           $http.defaults.headers.common.Authorization = authHeaderValue;
 
+          $scope.$emit('userLoggedIn');
+
           $uibModalInstance.dismiss();
         }, function errorCallback(response) {
           $scope.authenticationFailed = true;

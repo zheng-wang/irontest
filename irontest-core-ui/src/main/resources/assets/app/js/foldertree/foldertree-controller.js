@@ -5,6 +5,7 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$rootS
   function($scope, $rootScope, $state, IronTestUtils, FolderTreeNodes, $timeout, $transitions, Testcases) {
     var NODE_TYPE_FOLDER = 'folder';
     var NODE_TYPE_TEST_CASE = 'testcase';
+    var disableContextMenuItems = false;
     var idOfTestcaseCopied = null;
 
     var createNode = function(parentFolderId, nodeType) {
@@ -61,48 +62,39 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$rootS
         },
         check_callback: true
       },
-      types: {
-        folder: {},
-			  testcase: {valid_children: [], icon: 'jstree-file'}
-      },
-      plugins: ['types', 'contextmenu', 'sort', 'state'],
-      version: 1          //  ngJsTree property
-    };
-
-    var makeTheTreeReadonly = function() {
-      //  empty context menu
-      $scope.treeConfig.contextmenu = { items: {} };
-
-      //  disable node moving
-      var index = $scope.treeConfig.plugins.indexOf('dnd');
-      if (index > -1) {
-        $scope.treeConfig.plugins.splice(index, 1)
-      }
-    };
-
-    var makeTheTreeWritable = function() {
-      //  populate context menu
-      $scope.treeConfig.contextmenu = {
+      contextmenu: {
         items: function(selectedNode) {    //  selectedNode: the node you right clicked on
           var items = {
             createTestcase: {
               separator_before: false, separator_after: false, label: 'Create Test Case',
-              action: function() { createNode(selectedNode.data.idPerType, NODE_TYPE_TEST_CASE); }
+              action: function() { createNode(selectedNode.data.idPerType, NODE_TYPE_TEST_CASE); },
+              _disabled: function() {
+                return disableContextMenuItems;
+              }
             },
             createFolder: {
               separator_before: false, separator_after: false, label: 'Create Folder',
-              action: function() { createNode(selectedNode.data.idPerType, NODE_TYPE_FOLDER); }
+              action: function() { createNode(selectedNode.data.idPerType, NODE_TYPE_FOLDER); },
+              _disabled: function() {
+                return disableContextMenuItems;
+              }
             },
             rename: {
               separator_before: false, separator_after: false, label: 'Rename',
               action: function () {
                 var tree = $scope.treeInstance.jstree(true);
                 tree.edit(selectedNode);
+              },
+              _disabled: function() {
+                return disableContextMenuItems;
               }
             },
             copyTestcase: {
               separator_before: false, separator_after: false, label: 'Copy',
-              action: function() { copyTestcase(selectedNode.data.idPerType); }
+              action: function() { copyTestcase(selectedNode.data.idPerType); },
+              _disabled: function() {
+                return disableContextMenuItems;
+              }
             },
             pasteTestcase: {
               separator_before: false, separator_after: false, label: 'Paste',
@@ -128,13 +120,13 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$rootS
 
           return items;
         }
-      }
-
-      //  enable node moving
-      var index = $scope.treeConfig.plugins.indexOf('dnd');
-      if (index === -1) {
-        $scope.treeConfig.plugins.push('dnd');
-      }
+      },
+      types: {
+        folder: {},
+			  testcase: {valid_children: [], icon: 'jstree-file'}
+      },
+      plugins: ['types', 'contextmenu', 'sort', 'state'],
+      version: 1          //  ngJsTree property
     };
 
     var selectNodeByUIRouterState = function(stateName, params) {
@@ -159,7 +151,40 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$rootS
       }
     });
 
+    var alignAccessRightOfTheTree = function() {
+      if ($rootScope.appStatus.isForbidden()) {    //  make the tree readonly
+        //  disable context menu items
+        disableContextMenuItems = true;
+
+        //  disable node moving
+        var index = $scope.treeConfig.plugins.indexOf('dnd');
+        if (index > -1) {
+          $scope.treeConfig.plugins.splice(index, 1)
+        }
+      } else {                                     // make the tree writable
+        //  enable context menu items
+        disableContextMenuItems = false;
+
+        //  enable node moving
+        var index = $scope.treeConfig.plugins.indexOf('dnd');
+        if (index === -1) {
+          $scope.treeConfig.plugins.push('dnd');
+        }
+      }
+    };
+
+    $rootScope.$on('userLoggedIn', function() {
+      alignAccessRightOfTheTree();
+      $scope.treeConfig.version++;         //  recreate the tree without reloading data from server side
+    });
+    $rootScope.$on('userLoggedOut', function() {
+      alignAccessRightOfTheTree();
+      $scope.treeConfig.version++;         //  recreate the tree without reloading data from server side
+    });
+
     $scope.reloadTreeData = function(successCallback) {
+      alignAccessRightOfTheTree();
+
       FolderTreeNodes.query(function(folderTreeNodes) {
         //  transform for default display effect (expanding Root folder) and complying with jstree format
         folderTreeNodes.forEach(function(treeNode) {
@@ -203,11 +228,6 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$rootS
       if ($scope.treeConfig.version === 1) {       //  initial tree data loading
         $rootScope.appStatusPromise.then(    //  ensure appStatus is ready for use before reloading the tree data
           function() {
-            if ($rootScope.appStatus.isInTeamMode() && !$rootScope.appStatus.isUserAuthenticated()) {
-              makeTheTreeReadonly();
-            } else {
-              makeTheTreeWritable();
-            }
             $scope.reloadTreeData(function successCallback() {
               selectNodeByUIRouterState($state.current.name, $state.params);
             });

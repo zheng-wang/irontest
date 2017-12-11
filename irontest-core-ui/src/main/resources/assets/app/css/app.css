@@ -239,3 +239,7 @@ body {
   resize: none;
   height: 23px !important;
 }
+
+.no-underline {
+  text-decoration: none !important;
+}
