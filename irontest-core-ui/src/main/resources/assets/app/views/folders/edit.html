@@ -14,7 +14,7 @@
         <div class="col-lg-10">
           <textarea name="description" ng-model="folder.description" id="description" rows="30"
                     ng-change="autoSave(folderForm.$valid)" class="form-control"
-                    ng-disabled="appStatus.isForbidden()"></textarea>
+                    ng-readonly="appStatus.isForbidden()"></textarea>
         </div>
       </div>
     </form>
