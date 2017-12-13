@@ -2,9 +2,9 @@
   <label for="endpointSOAPAddress" class="col-lg-2 control-label">SOAP Address</label>
   <div class="col-lg-10">
     <input id="endpointSOAPAddress" name="endpointSOAPAddress" type="text" class="form-control"
-           ng-model="teststep.endpoint.url"
-           ng-change="endpointSOAPAddressChanged(teststepForm.$valid)"
-           ng-readonly="!isInShareEndpointMode() && teststep.endpoint.environment" spellcheck="false">
+           ng-model="teststep.endpoint.url" ng-change="endpointSOAPAddressChanged(teststepForm.$valid)"
+           ng-readonly="appStatus.isForbidden() || (!isInShareEndpointMode() && teststep.endpoint.environment)"
+           spellcheck="false">
   </div>
 </div>
 
@@ -16,14 +16,14 @@
     <input id="endpointWSDLURL" name="endpointWSDLURL" type="text" class="form-control"
            ng-model="teststep.endpoint.otherProperties.wsdlURL"
            ng-change="isInShareEndpointMode() ? angular.noop() : autoSave(teststepForm.$valid)"
-           ng-readonly="teststep.endpoint.otherProperties.wsdlURLByConvention ||
+           ng-readonly="appStatus.isForbidden() || teststep.endpoint.otherProperties.wsdlURLByConvention ||
              (!isInShareEndpointMode() && teststep.endpoint.environment)" spellcheck="false">
   </div>
   <div class="col-lg-2 checkbox">
     <label>
       <input type="checkbox" ng-model="teststep.endpoint.otherProperties.wsdlURLByConvention"
              ng-change="toggleWSDLURLByConvention(teststepForm.$valid)"
-             ng-disabled="!isInShareEndpointMode() && teststep.endpoint.environment">By Convention
+             ng-disabled="appStatus.isForbidden() || (!isInShareEndpointMode() && teststep.endpoint.environment)">By Convention
     </label>
   </div>
 </div>

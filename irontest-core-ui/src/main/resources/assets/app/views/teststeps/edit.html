@@ -23,7 +23,8 @@
               <div class="col-lg-10">
                 <input name="name" type="text" class="form-control" ng-model="teststep.name"
                        irt-select="{{ activeTabIndex === 0 && teststepNewlyCreated() }}"
-                       ng-change="autoSave(teststepForm.$valid)" id="name" placeholder="Name" required>
+                       ng-change="autoSave(teststepForm.$valid)" id="name" placeholder="Name"
+                       ng-readonly="appStatus.isForbidden()" required>
                 <div ng-show="savingStatus.submitted && teststepForm.name.$invalid" class="help-block">
                   <p ng-show="teststepForm.name.$error.required">Name is required</p>
                 </div>
@@ -33,7 +34,8 @@
               <label for="description" class="col-lg-2 control-label">Description</label>
               <div class="col-lg-10">
               <textarea name="description" ng-model="teststep.description" ng-change="autoSave(teststepForm.$valid)"
-                        id="description" cols="30" rows="10" placeholder="Description" class="form-control"></textarea>
+                        id="description" cols="30" rows="10" placeholder="Description" class="form-control"
+                        ng-readonly="appStatus.isForbidden()"></textarea>
               </div>
             </div>
           </div>

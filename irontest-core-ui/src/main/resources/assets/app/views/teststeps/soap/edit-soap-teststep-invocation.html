@@ -5,7 +5,7 @@
     <input name="soapAddress" type="text" class="form-control"
            ng-change="endpointSOAPAddressChanged(teststepForm.$valid)"
            ng-model="teststep.endpoint.url" id="soapAddress" spellcheck="false"
-           ng-readonly="teststep.endpoint.environment">  <!-- readonly when it is a managed endpoint -->
+           ng-readonly="appStatus.isForbidden() || teststep.endpoint.environment">
   </div>
   <div class="col-lg-1">
     <button type="button" class="btn btn-info" ng-click="invoke()"
@@ -37,11 +37,12 @@
 <div class="form-group form-group-reduced-bottom-margin" height-adjustable-element-in-column="0.8">
   <div class="col-lg-6 full-height">
     <textarea name="request" ng-model="teststep.request" ng-change="autoSave(teststepForm.$valid)"
-        id="request" placeholder="Request" class="form-control full-height-important" spellcheck="false"></textarea>
+              id="request" placeholder="Request" class="form-control full-height-important" spellcheck="false"
+              ng-readonly="appStatus.isForbidden()"></textarea>
   </div>
   <div class="col-lg-6 full-height">
     <textarea name="response" ng-model="steprun.response" id="response" placeholder="Response"
-        class="form-control full-height-important" spellcheck="false"></textarea>
+        class="form-control full-height-important" spellcheck="false" ng-readonly="appStatus.isForbidden()"></textarea>
   </div>
 </div>
 <div class="form-group form-group-reduced-bottom-margin" id="assertionsArea">

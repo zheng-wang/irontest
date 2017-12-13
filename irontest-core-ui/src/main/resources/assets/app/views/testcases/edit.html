@@ -132,7 +132,8 @@
 </script>
 <script type="text/ng-template" id="teststepGridDeleteCellTemplate.html">
   <div class="ui-grid-cell-contents">
-    <a ng-click="grid.appScope.removeTeststep(row.entity)" href="">
+    <a ng-click="grid.appScope.appStatus.isForbidden() ? angular.noop() : grid.appScope.removeTeststep(row.entity)"
+       ng-class="{'no-underline' : grid.appScope.appStatus.isForbidden()}" href="">
       <i class="glyphicon glyphicon-trash center-block text-center"></i>
     </a>
   </div>
