@@ -24,7 +24,9 @@ Table of Contents:
 - [License](#license)
         
 ## Build
-Prerequisites: JDK 1.7+, Maven 3.x.
+Prerequisites: JDK 1.7.x (or 1.8.x), Maven 3.x.
+
+To let Maven use a specific version of JDK, set environment variable JAVA_HOME=<JDK_Install_Path>.
 
 Download the latest Iron Test release from [here](https://github.com/zheng-wang/irontest/releases) to your local machine. Extract it, cd to the project directory (in which there is README.md), and run below Maven command
 
@@ -42,7 +44,7 @@ Copy all files and folders from `dist` to `<IronTest_Home>`.
 The build itself can interact with SOAP/HTTP web services and H2 databases. To enable interacting with other types of systems such as Oracle database or WebSphere MQ, please refer to this [wiki page](https://github.com/zheng-wang/irontest/wiki/Interact-with-Other-Systems).
 
 ## Launch
-Prerequisites: JRE 1.7+.
+Prerequisites: JRE 1.7.x (or 1.8.x).
 
 To launch Iron Test application, cd to `<IronTest_Home>` and run below command
 
