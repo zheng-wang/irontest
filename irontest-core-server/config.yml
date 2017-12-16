@@ -9,6 +9,12 @@ server:
       port: 8081
       # bindHost will be ignored in team mode
       bindHost: 127.0.0.1
+    #- type: https
+    #  port: 8443
+    #  keyStorePath: ./keystore.jks
+    #  keyStorePassword: storepass
+    #  validateCerts: false
+    #  supportedProtocols: [TLSv1.1,TLSv1.2]
   adminConnectors:
     - type: http
       port: 8082
