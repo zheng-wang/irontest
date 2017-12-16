@@ -3,7 +3,7 @@
   <div class="col-lg-10">
     <input id="soapAddress" name="soapAddress" type="text" class="form-control" ng-model="endpoint.url"
            ng-change="soapAddressChanged(endpointForm.$valid)" placeholder="http://localhost:8081/soap/article"
-           spellcheck="false">
+           ng-readonly="appStatus.isForbidden()" spellcheck="false">
   </div>
 </div>
 
@@ -15,12 +15,13 @@
     <input id="wsdlURL" name="wsdlURL" type="text" class="form-control"
            ng-model="endpoint.otherProperties.wsdlURL"
            ng-change="autoSave(endpointForm.$valid)"
-           ng-readonly="endpoint.otherProperties.wsdlURLByConvention" spellcheck="false">
+           ng-readonly="appStatus.isForbidden() || endpoint.otherProperties.wsdlURLByConvention" spellcheck="false">
   </div>
   <div class="col-lg-2 checkbox">
     <label>
       <input type="checkbox" ng-model="endpoint.otherProperties.wsdlURLByConvention"
-             ng-change="toggleWSDLURLByConvention(endpointForm.$valid)">By Convention
+             ng-change="toggleWSDLURLByConvention(endpointForm.$valid)"
+             ng-disabled="appStatus.isForbidden()">By Convention
     </label>
   </div>
 </div>

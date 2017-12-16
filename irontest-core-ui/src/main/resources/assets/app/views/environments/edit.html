@@ -21,7 +21,8 @@
           <div class="col-lg-10">
             <input name="name" type="text" class="form-control" ng-model="environment.name"
                    irt-select="{{ activeTabIndex === 0 && environmentNewlyCreated() }}"
-                   ng-change="autoSave(environmentForm.$valid)" id="name" placeholder="Name" required>
+                   ng-change="autoSave(environmentForm.$valid)" id="name" placeholder="Name" required
+                   ng-readonly="appStatus.isForbidden()">
             <div ng-show="submitted && environmentForm.name.$invalid" class="help-block">
               <p ng-show="environmentForm.name.$error.required">Name is required</p>
             </div>
@@ -31,7 +32,8 @@
           <label for="description" class="col-lg-2 control-label">Description</label>
           <div class="col-lg-10">
             <textarea name="description" ng-model="environment.description" ng-change="autoSave(environmentForm.$valid)"
-                      id="description" cols="30" rows="10" placeholder="Description" class="form-control"></textarea>
+                      id="description" cols="30" rows="10" placeholder="Description" class="form-control"
+                      ng-readonly="appStatus.isForbidden()"></textarea>
           </div>
         </div>
       </form>
@@ -40,7 +42,8 @@
       <div class="form-group"></div> <!-- spacer -->
       <div class="row">
         <div class="btn-group col-lg-2" uib-dropdown keyboard-nav>
-          <button type="button" class="btn btn-info dropdown-toggle" uib-dropdown-toggle>
+          <button type="button" class="btn btn-info dropdown-toggle" uib-dropdown-toggle
+                  ng-disabled="appStatus.isForbidden()">
             Create <span class="caret"></span>
           </button>
           <ul class="dropdown-menu" uib-dropdown-menu role="menu">
@@ -68,7 +71,8 @@
   </script>
   <script type="text/ng-template" id="endpointGridDeleteCellTemplate.html">
     <div class="ui-grid-cell-contents">
-      <a ng-click="grid.appScope.removeEndpoint(row.entity.id)" href="">
+      <a ng-click="grid.appScope.appStatus.isForbidden() ? angular.noop() : grid.appScope.removeEndpoint(row.entity.id)"
+         ng-class="{'no-underline' : grid.appScope.appStatus.isForbidden()}" href="">
         <i class="glyphicon glyphicon-trash center-block text-center"></i>
       </a>
     </div>

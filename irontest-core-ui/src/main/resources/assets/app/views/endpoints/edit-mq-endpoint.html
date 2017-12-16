@@ -3,14 +3,14 @@
   <div class="col-lg-2 text-center">
     <label class="control-label" title="Connect to queue manager on local machine">
       <input type="radio" name="connectionMode" id="connectionModeBindings"
-             ng-model="endpoint.otherProperties.connectionMode"
+             ng-model="endpoint.otherProperties.connectionMode" ng-disabled="appStatus.isForbidden()"
              ng-change="mqEndpointConnectionModeChanged(endpointForm.$valid)" value="Bindings"> Bindings
     </label>
   </div>
   <div class="col-lg-2 text-center">
     <label class="control-label" title="Connect to queue manager on local or remote machine">
       <input type="radio" name="connectionMode" id="connectionModeClient"
-             ng-model="endpoint.otherProperties.connectionMode"
+             ng-model="endpoint.otherProperties.connectionMode" ng-disabled="appStatus.isForbidden()"
              ng-change="mqEndpointConnectionModeChanged(endpointForm.$valid)" value="Client"> Client
     </label>
   </div>
@@ -21,7 +21,7 @@
   <div class="col-lg-10">
     <input name="endpointQueueManagerName" type="text" class="form-control"
            ng-model="endpoint.otherProperties.queueManagerName" ng-change="autoSave(endpointForm.$valid)"
-           id="endpointQueueManagerName" spellcheck="false">
+           id="endpointQueueManagerName" spellcheck="false" ng-readonly="appStatus.isForbidden()">
   </div>
 </div>
 
@@ -33,6 +33,6 @@
   <div class="col-lg-10">
     <input name="endpointSvrConnChannelName" type="text" class="form-control"
            ng-model="endpoint.otherProperties.svrConnChannelName" ng-change="autoSave(endpointForm.$valid)"
-           id="endpointSvrConnChannelName" spellcheck="false">
+           id="endpointSvrConnChannelName" spellcheck="false" ng-readonly="appStatus.isForbidden()">
   </div>
 </div>

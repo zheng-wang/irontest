@@ -26,7 +26,7 @@
         <div class="col-lg-10">
           <input name="name" type="text" class="form-control" ng-model="endpoint.name" id="name"
                  ng-change="autoSave(endpointForm.$valid)" placeholder="H2 Database Endpoint"
-                 irt-select="{{ endpointNewlyCreated() }}" required>
+                 irt-select="{{ endpointNewlyCreated() }}" ng-readonly="appStatus.isForbidden()" required>
           <div ng-show="submitted && endpointForm.name.$invalid" class="help-block">
             <p ng-show="endpointForm.name.$error.required">Name is required</p>
           </div>
@@ -36,7 +36,8 @@
         <label for="description" class="col-lg-2 control-label">Description</label>
         <div class="col-lg-10">
           <textarea name="description" ng-model="endpoint.description" id="description" rows="5"
-                    ng-change="autoSave(endpointForm.$valid)" class="form-control"></textarea>
+                    ng-change="autoSave(endpointForm.$valid)" class="form-control"
+                    ng-readonly="appStatus.isForbidden()"></textarea>
         </div>
       </div>
       <div ng-if="endpoint.type === 'SOAP'"

@@ -6,7 +6,8 @@
   </div>
   <div class="row">
     <div class="col-lg-2">
-      <p><button class="btn btn-info btn-block" ng-click="create()">Create</button></p>
+      <p><button class="btn btn-info btn-block" ng-click="create()"
+                 ng-disabled="appStatus.isForbidden()">Create</button></p>
     </div>
   </div>
   <div class="row">
@@ -21,7 +22,10 @@
   </script>
   <script type="text/ng-template" id="envGridDeleteCellTemplate.html">
     <div class="ui-grid-cell-contents">
-      <a ng-click="grid.appScope.remove(row.entity)" href=""><i class="glyphicon glyphicon-trash center-block text-center"></i></a>
+      <a ng-click="grid.appScope.appStatus.isForbidden() ? angular.noop() : grid.appScope.remove(row.entity)"
+         ng-class="{'no-underline' : grid.appScope.appStatus.isForbidden()}" href="">
+        <i class="glyphicon glyphicon-trash center-block text-center"></i>
+      </a>
     </div>
   </script>
 </div>
