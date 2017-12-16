@@ -3,7 +3,8 @@
     <div class="col-lg-12">
     <textarea name="expectedXML" ng-model="assertionsModelObj.assertion.otherProperties.expectedXML"
               id="expectedXML" rows="7" class="form-control" placeholder="Expected XML"
-              ng-change="assertionsModelObj.autoSave(teststepForm.$valid)" spellcheck="false">
+              ng-change="assertionsModelObj.autoSave(teststepForm.$valid)" spellcheck="false"
+              ng-readonly="appStatus.isForbidden()">
     </textarea>
     </div>
   </div>

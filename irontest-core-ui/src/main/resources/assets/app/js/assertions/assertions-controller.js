@@ -5,9 +5,9 @@
 //      such as SOAPTeststepsController or DBTeststepController.
 //    ng-include also creates a scope.
 //    If unspecified, all grid config is for the assertions grid
-angular.module('irontest').controller('AssertionsController', ['$scope', 'uiGridConstants', 'IronTestUtils', '$http',
-    '$timeout',
-  function($scope, uiGridConstants, IronTestUtils, $http, $timeout) {
+angular.module('irontest').controller('AssertionsController', ['$scope', '$rootScope', 'uiGridConstants',
+    'IronTestUtils', '$http', '$timeout',
+  function($scope, $rootScope, uiGridConstants, IronTestUtils, $http, $timeout) {
     //  use assertionsModelObj for all variables in the scope, to avoid conflict with parent scope
     $scope.assertionsModelObj = {
       assertionVerificationResults: {}
@@ -42,7 +42,11 @@ angular.module('irontest').controller('AssertionsController', ['$scope', 'uiGrid
       ],
       gridMenuCustomItems: [
         { title: 'Delete', order: 210, action: removeCurrentAssertion,
-          shown: function() { return $scope.assertionsModelObj.gridApi.selection.getSelectedRows().length === 1; } }
+          shown: function() {
+            return !$rootScope.appStatus.isForbidden() &&
+              $scope.assertionsModelObj.gridApi.selection.getSelectedRows().length === 1;
+          }
+        }
       ],
       onRegisterApi: function (gridApi) {
         $scope.assertionsAreaLoadedCallback();

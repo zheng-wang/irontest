@@ -3,7 +3,8 @@
     <div class="col-lg-12">
     <textarea name="expectedJSON" ng-model="assertionsModelObj.assertion.otherProperties.expectedJSON"
               id="expectedJSON" rows="7" class="form-control" placeholder="Expected JSON"
-              ng-change="assertionsModelObj.autoSave(teststepForm.$valid)" spellcheck="false">
+              ng-change="assertionsModelObj.autoSave(teststepForm.$valid)" spellcheck="false"
+              ng-readonly="appStatus.isForbidden()">
     </textarea>
     </div>
   </div>

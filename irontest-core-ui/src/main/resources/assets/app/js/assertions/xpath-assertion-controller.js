@@ -3,8 +3,9 @@
 //  NOTICE:
 //    The $scope here prototypically inherits from the $scope of AssertionsController.
 //    ng-include also creates a scope.
-angular.module('irontest').controller('XPathAssertionController', ['$scope', 'uiGridConstants', 'IronTestUtils',
-  function($scope, uiGridConstants, IronTestUtils) {
+angular.module('irontest').controller('XPathAssertionController', ['$scope', '$rootScope', 'uiGridConstants',
+    'IronTestUtils',
+  function($scope, $rootScope, uiGridConstants, IronTestUtils) {
     var createNamespacePrefix = function(gridMenuEvent) {
       $scope.assertionsModelObj.assertion.otherProperties.namespacePrefixes.push(
         { prefix: 'ns1', namespace: 'http://com.mycompany/service1' }
@@ -40,9 +41,17 @@ angular.module('irontest').controller('XPathAssertionController', ['$scope', 'ui
         }
       ],
       gridMenuCustomItems: [
-        { title: 'Create', order: 210, action: createNamespacePrefix },
-        { title: 'Delete', order: 220, action: removeNamespacePrefix, shown: function() {
-          return $scope.assertionsModelObj.xPathNamespacePrefixGridApi.selection.getSelectedRows().length === 1; } }
+        { title: 'Create', order: 210, action: createNamespacePrefix,
+          shown: function() {
+            return !$rootScope.appStatus.isForbidden();
+          }
+        },
+        { title: 'Delete', order: 220, action: removeNamespacePrefix,
+          shown: function() {
+            return !$rootScope.appStatus.isForbidden() &&
+              $scope.assertionsModelObj.xPathNamespacePrefixGridApi.selection.getSelectedRows().length === 1;
+          }
+        }
       ],
       onRegisterApi: function (gridApi) {
         $scope.assertionsModelObj.xPathNamespacePrefixGridApi = gridApi;

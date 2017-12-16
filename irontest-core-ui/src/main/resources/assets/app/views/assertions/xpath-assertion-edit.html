@@ -8,7 +8,7 @@
   </div>
   <div class="col-lg-6">
     <textarea name="assertionXPath" ng-model="assertionsModelObj.assertion.otherProperties.xPath"
-              id="assertionXPath" rows="4" class="form-control"
+              id="assertionXPath" rows="4" class="form-control" ng-readonly="appStatus.isForbidden()"
               ng-change="assertionsModelObj.autoSave(teststepForm.$valid)" spellcheck="false">
     </textarea>
   </div>
@@ -28,7 +28,7 @@
     </div>
     <div class="col-lg-5 no-right-padding">
       <textarea name="assertionXPathExpectedValue" ng-model="assertionsModelObj.assertion.otherProperties.expectedValue"
-                id="assertionXPathExpectedValue" rows="6" class="form-control"
+                id="assertionXPathExpectedValue" rows="6" class="form-control" ng-readonly="appStatus.isForbidden()"
                 ng-change="assertionsModelObj.autoSave(teststepForm.$valid)" spellcheck="false">
       </textarea>
     </div>
@@ -51,6 +51,7 @@
 <script type="text/ng-template" id="namespacePrefixGridEditableCellTemplate.html">
   <div class="ui-grid-cell-contents">
     <input type="text" class="form-control" ui-grid-editor ng-model="MODEL_COL_FIELD"
-           ng-change="grid.appScope.assertionsModelObj.autoSave(true)" spellcheck="false">
+           ng-change="grid.appScope.assertionsModelObj.autoSave(true)" spellcheck="false"
+           ng-readonly="grid.appScope.appStatus.isForbidden()">
   </div>
 </script>
