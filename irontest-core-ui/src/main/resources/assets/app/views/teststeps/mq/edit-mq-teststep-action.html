@@ -11,7 +11,7 @@
   <div class="col-lg-2">
     <select name="destinationType" id="destinationType" class="form-control"
             ng-model="teststep.otherProperties.destinationType" ng-change="destinationTypeChanged(teststepForm.$valid)"
-            ng-disabled="steprun.status === 'ongoing'">
+            ng-disabled="appStatus.isForbidden() || steprun.status === 'ongoing'">
       <option value="Queue">Queue</option>
       <option value="Topic">Topic</option>
     </select>
@@ -20,14 +20,16 @@
     <label for="queueName" class="col-lg-1 control-label" style="padding-left:0">Queue Name</label>
     <div class="col-lg-5">
       <input name="queueName" type="text" class="form-control" ng-change="autoSave(teststepForm.$valid)"
-             ng-model="teststep.otherProperties.queueName" id="queueName" spellcheck="false">
+             ng-model="teststep.otherProperties.queueName" id="queueName" spellcheck="false"
+             ng-readonly="appStatus.isForbidden()">
     </div>
   </div>
   <div ng-if="teststep.otherProperties.destinationType === 'Topic'">
     <label for="topicString" class="col-lg-1 control-label">Topic String</label>
     <div class="col-lg-5">
       <input name="topicString" type="text" class="form-control" ng-change="autoSave(teststepForm.$valid)"
-             ng-model="teststep.otherProperties.topicString" id="topicString" spellcheck="false">
+             ng-model="teststep.otherProperties.topicString" id="topicString" spellcheck="false"
+             ng-readonly="appStatus.isForbidden()">
     </div>
   </div>
 </div>
@@ -36,7 +38,7 @@
   <div class="col-lg-2">
     <select name="action" id="action" class="form-control" ng-model="teststep.action"
             ng-change="actionChanged(teststepForm.$valid)"
-            ng-disabled="steprun.status === 'ongoing'">
+            ng-disabled="appStatus.isForbidden() || steprun.status === 'ongoing'">
       <option value="Clear" ng-if="teststep.otherProperties.destinationType === 'Queue'">Clear</option>
       <option value="CheckDepth" ng-if="teststep.otherProperties.destinationType === 'Queue'">Check Depth</option>
       <option value="Dequeue" ng-if="teststep.otherProperties.destinationType === 'Queue'">Dequeue</option>
@@ -46,7 +48,8 @@
   </div>
   <div class="col-lg-1">
     <button type="button" class="btn btn-info btn-block" ng-click="doAction()"
-            ng-disabled="endpointInfoIncomplete() || actionInfoIncomplete() || steprun.status === 'ongoing'">Do</button>
+            ng-disabled="appStatus.isForbidden() || endpointInfoIncomplete() || actionInfoIncomplete() ||
+              steprun.status === 'ongoing'">Do</button>
   </div>
   <div class="col-lg-4">       <!-- Action run status message -->
     <h5 ng-if="teststep.action === 'Clear' && steprun.status === 'ongoing'">Clearing queue ...</h5>
@@ -69,7 +72,8 @@
     <div class="col-lg-2"><h5>Queue depth equals</h5></div>
     <div class="col-lg-5">
       <input name="queueDepthAssertionValue" id="queueDepthAssertionValue" type="number" class="form-control"
-             ng-model="teststep.assertions[0].otherProperties.number" ng-change="autoSave(teststepForm.$valid)">
+             ng-model="teststep.assertions[0].otherProperties.number" ng-change="autoSave(teststepForm.$valid)"
+             ng-readonly="appStatus.isForbidden()">
     </div>
   </div>
 </div>
@@ -79,7 +83,8 @@
     <div class="col-lg-10 full-height">
       <textarea name="actualMessageBody" ng-model="steprun.response" id="actualMessageBody"
                 placeholder="{{ steprun.status === 'ongoing' ? '' : 'Actual Message Body' }}"
-                class="form-control full-height-important" spellcheck="false"></textarea>
+                class="form-control full-height-important" spellcheck="false"
+                ng-readonly="appStatus.isForbidden()"></textarea>
     </div>
   </div>
   <div class="form-group form-group-reduced-bottom-margin" id="assertionsArea">

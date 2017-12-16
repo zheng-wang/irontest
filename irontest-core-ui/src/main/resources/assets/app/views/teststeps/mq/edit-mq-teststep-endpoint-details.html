@@ -5,7 +5,7 @@
       <input type="radio" name="endpointConnectionMode" id="endpointConnectionModeBindings"
              ng-model="teststep.endpoint.otherProperties.connectionMode"
              ng-change="mqEndpointConnectionModeChanged(teststepForm.$valid)" value="Bindings"
-             ng-disabled="!isInShareEndpointMode() && teststep.endpoint.environment"> Bindings
+             ng-disabled="appStatus.isForbidden() || (!isInShareEndpointMode() && teststep.endpoint.environment)"> Bindings
     </label>
   </div>
   <div class="col-lg-2 text-center">
@@ -13,7 +13,7 @@
       <input type="radio" name="endpointConnectionMode" id="endpointConnectionModeClient"
              ng-model="teststep.endpoint.otherProperties.connectionMode"
              ng-change="mqEndpointConnectionModeChanged(teststepForm.$valid)" value="Client"
-             ng-disabled="!isInShareEndpointMode() && teststep.endpoint.environment"> Client
+             ng-disabled="appStatus.isForbidden() || (!isInShareEndpointMode() && teststep.endpoint.environment)"> Client
     </label>
   </div>
 </div>
@@ -21,9 +21,9 @@
   <label for="endpointQueueManagerName" class="col-lg-2 control-label">Queue Manager Name</label>
   <div class="col-lg-10">
     <input id="endpointQueueManagerName" name="endpointQueueManagerName" type="text" class="form-control"
-           ng-model="teststep.endpoint.otherProperties.queueManagerName"
+           ng-model="teststep.endpoint.otherProperties.queueManagerName" spellcheck="false"
            ng-change="isInShareEndpointMode() ? angular.noop() : autoSave(teststepForm.$valid)"
-           ng-readonly="!isInShareEndpointMode() && teststep.endpoint.environment" spellcheck="false">
+           ng-readonly="appStatus.isForbidden() || (!isInShareEndpointMode() && teststep.endpoint.environment)">
   </div>
 </div>
 
@@ -37,6 +37,6 @@
            ng-model="teststep.endpoint.otherProperties.svrConnChannelName"
            ng-change="isInShareEndpointMode() ? angular.noop() : autoSave(teststepForm.$valid)"
            id="endpointSvrConnChannelName" spellcheck="false"
-           ng-readonly="!isInShareEndpointMode() && teststep.endpoint.environment">
+           ng-readonly="appStatus.isForbidden() || (!isInShareEndpointMode() && teststep.endpoint.environment)">
   </div>
 </div>

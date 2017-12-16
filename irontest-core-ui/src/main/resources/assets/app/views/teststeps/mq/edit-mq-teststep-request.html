@@ -3,7 +3,7 @@
   <div class="col-lg-2">
     <select name="messageFrom" id="messageFrom" class="form-control"
             ng-model="teststep.requestType" ng-change="update(teststepForm.$valid)"
-            ng-disabled="steprun.status === 'ongoing'">
+            ng-disabled="appStatus.isForbidden() || steprun.status === 'ongoing'">
       <option value="Text">Text</option>
       <option value="File">File</option>
     </select>
@@ -12,15 +12,17 @@
     <div class="col-lg-2 checkbox">
       <label>
         <input type="checkbox" ng-model="teststep.otherProperties.rfh2Header.enabled"
-               ng-change="toggleRFH2Header(teststepForm.$valid)">Include RFH2 Header
+               ng-change="toggleRFH2Header(teststepForm.$valid)"
+               ng-disabled="appStatus.isForbidden()">Include RFH2 Header
       </label>
     </div>
     <div class="col-lg-2" ng-if="teststep.otherProperties.rfh2Header.enabled">
-      <button type="button" class="btn btn-info" ng-click="addRFH2Folder(teststepForm.$valid)">Add RFH2 Folder</button>
+      <button type="button" class="btn btn-info" ng-click="addRFH2Folder(teststepForm.$valid)"
+              ng-disabled="appStatus.isForbidden()">Add RFH2 Folder</button>
     </div>
     <div class="col-lg-2" ng-if="teststep.otherProperties.rfh2Header.enabled">
       <button type="button" class="btn btn-info" ng-click="deleteRFH2Folder(teststepForm.$valid)"
-              ng-disabled="textMessageActiveTabIndex === 0 ||
+              ng-disabled="appStatus.isForbidden() || textMessageActiveTabIndex === 0 ||
                 teststep.otherProperties.rfh2Header.folders.length === 1">Delete RFH2 Folder</button>
     </div>
   </div>
@@ -44,7 +46,7 @@
         <div class="form-group"></div> <!-- spacer -->
         <div class="col-lg-12">
             <textarea ng-model="teststep.request" ng-change="autoSave(teststepForm.$valid)" class="form-control"
-                      rows="23" spellcheck="false"></textarea>
+                      rows="23" spellcheck="false" ng-readonly="appStatus.isForbidden()"></textarea>
         </div>
       </div>
       <div ng-if="teststep.otherProperties.rfh2Header.enabled" id="textMessageTab{{$index + 1}}"
@@ -53,7 +55,7 @@
         <div class="form-group"></div> <!-- spacer -->
         <div class="col-lg-12">
             <textarea ng-model="folder.string" ng-change="autoSave(teststepForm.$valid)" class="form-control" rows="23"
-                      spellcheck="false"></textarea>
+                      spellcheck="false" ng-readonly="appStatus.isForbidden()"></textarea>
         </div>
       </div>
     </div>
@@ -66,8 +68,8 @@
   <div class="form-group"></div> <!-- spacer -->
   <div class="form-group">
     <div class="col-lg-offset-2 col-lg-1">
-      <button type="file" class="btn btn-info" ngf-select="uploadRequestFile($file)"
-              ngf-max-size="30MB">Select File</button>
+      <button type="file" class="btn btn-info" ngf-select="uploadRequestFile($file)" ngf-max-size="30MB"
+              ng-disabled="appStatus.isForbidden()">Select File</button>
     </div>
     <div class="col-lg-1" ng-if="teststep.requestFilename">
       <button type="button" class="btn btn-info" ng-click="downloadRequestFile()">Download File</button>

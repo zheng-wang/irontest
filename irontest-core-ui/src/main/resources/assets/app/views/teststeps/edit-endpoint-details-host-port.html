@@ -3,7 +3,8 @@
   <div class="col-lg-10">
     <input name="endpointHost" type="text" class="form-control" ng-model="teststep.endpoint.otherProperties.host"
            ng-change="isInShareEndpointMode() ? angular.noop() : autoSave(teststepForm.$valid)" spellcheck="false"
-           id="endpointHost" ng-readonly="!isInShareEndpointMode() && teststep.endpoint.environment">
+           id="endpointHost" ng-readonly="appStatus.isForbidden() ||
+             (!isInShareEndpointMode() && teststep.endpoint.environment)">
   </div>
 </div>
 <div class="form-group" ng-class="{ 'has-error' : savingStatus.submitted && teststepForm.endpointPort.$invalid }">
@@ -12,7 +13,7 @@
     <input name="endpointPort" type="text" class="form-control" ng-model="teststep.endpoint.otherProperties.port"
            ng-change="isInShareEndpointMode() ? angular.noop() : autoSave(teststepForm.$valid)"
            id="endpointPort" maxlength="5" pattern="[1-6]\d{0,4}"
-           ng-readonly="!isInShareEndpointMode() && teststep.endpoint.environment">
+           ng-readonly="appStatus.isForbidden() || (!isInShareEndpointMode() && teststep.endpoint.environment)">
     <div ng-show="savingStatus.submitted && teststepForm.endpointPort.$invalid" class="help-block">
       <p ng-show="teststepForm.endpointPort.$error.pattern">Please enter a valid port number</p>
     </div>
