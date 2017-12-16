@@ -11,28 +11,32 @@
   <label for="integrationServerName" class="col-lg-2 control-label">Integration Server</label>
   <div class="col-lg-7">
     <input name="integrationServerName" type="text" class="form-control" ng-change="autoSave(teststepForm.$valid)"
-           ng-model="teststep.otherProperties.integrationServerName" id="integrationServerName" spellcheck="false">
+           ng-model="teststep.otherProperties.integrationServerName" id="integrationServerName" spellcheck="false"
+           ng-readonly="appStatus.isForbidden()">
   </div>
 </div>
 <div class="form-group">
   <label for="applicationName" class="col-lg-2 control-label">Application</label>
   <div class="col-lg-7">
     <input name="applicationName" type="text" class="form-control" ng-change="autoSave(teststepForm.$valid)"
-           ng-model="teststep.otherProperties.applicationName" id="applicationName" spellcheck="false">
+           ng-model="teststep.otherProperties.applicationName" id="applicationName" spellcheck="false"
+           ng-readonly="appStatus.isForbidden()">
   </div>
 </div>
 <div class="form-group">
   <label for="messageFlowName" class="col-lg-2 control-label">Message Flow</label>
   <div class="col-lg-7">
     <input name="messageFlowName" type="text" class="form-control" ng-change="autoSave(teststepForm.$valid)"
-           ng-model="teststep.otherProperties.messageFlowName" id="messageFlowName" spellcheck="false">
+           ng-model="teststep.otherProperties.messageFlowName" id="messageFlowName" spellcheck="false"
+           ng-readonly="appStatus.isForbidden()">
   </div>
 </div>
 <div class="form-group">
   <label for="action" class="col-lg-2 control-label">Action</label>
   <div class="col-lg-2">
     <select name="action" id="action" class="form-control" ng-model="teststep.action"
-            ng-change="actionChanged(teststepForm.$valid)" ng-disabled="steprun.status === 'ongoing'">
+            ng-change="actionChanged(teststepForm.$valid)"
+            ng-disabled="appStatus.isForbidden() || steprun.status === 'ongoing'">
       <option value="Start">Start</option>
       <option value="Stop">Stop</option>
       <option value="WaitForProcessingCompletion">Wait For Processing Completion</option>
@@ -40,7 +44,7 @@
   </div>
   <div class="col-lg-1">
     <button type="button" class="btn btn-info btn-block" ng-click="doAction()"
-            ng-disabled="endpointInfoIncomplete() ||
+            ng-disabled="appStatus.isForbidden() || endpointInfoIncomplete() ||
               (teststep.action !== 'WaitForProcessingCompletion' && actionInfoIncomplete()) ||
               steprun.status === 'ongoing'">Do</button>
   </div>

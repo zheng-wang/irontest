@@ -3,7 +3,7 @@
   <div class="col-lg-10">
     <select id="endpointType" name="endpointType" class="form-control" ng-model="teststep.endpoint.type"
             ng-change="endpointTypeChanged(teststepForm.$valid)"
-            ng-disabled="!isInShareEndpointMode() && teststep.endpoint.environment">
+            ng-disabled="appStatus.isForbidden() || (!isInShareEndpointMode() && teststep.endpoint.environment)">
       <option value="MQ" title="for connecting to IIB 9">MQ</option>
       <option value="IIB" title="for connecting to IIB 10">IIB</option>
     </select>
