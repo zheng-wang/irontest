@@ -3,9 +3,9 @@
 //  NOTICE:
 //    The $scope here prototypically inherits from the $scope of TeststepsActionController.
 //    ng-include also creates a scope.
-angular.module('irontest').controller('SOAPTeststepActionController', ['$scope', 'Teststeps', 'IronTestUtils', '$uibModal',
+angular.module('irontest').controller('SOAPTeststepActionController', ['$scope', '$rootScope', 'Teststeps', 'IronTestUtils', '$uibModal',
     'uiGridConstants', '$timeout',
-  function($scope, Teststeps, IronTestUtils, $uibModal, uiGridConstants, $timeout) {
+  function($scope, $rootScope, Teststeps, IronTestUtils, $uibModal, uiGridConstants, $timeout) {
     const HTTP_HEADER_GRID_NAME_COLUMN_WIDTH = '30%';
     $scope.showHTTPHeaders = false;
 
@@ -46,9 +46,17 @@ angular.module('irontest').controller('SOAPTeststepActionController', ['$scope',
           editableCellTemplate: 'httpHeaderGridEditableCellTemplate.html' }
       ],
       gridMenuCustomItems: [
-        { title: 'Create', order: 210, action: createHTTPHeader },
+        { title: 'Create', order: 210, action: createHTTPHeader,
+          shown: function() {
+            return !$rootScope.appStatus.isForbidden();
+          }
+        },
         { title: 'Delete', order: 220, action: deleteHTTPHeader,
-          shown: function() { return $scope.requestHTTPHeaderGridApi.selection.getSelectedRows().length === 1; } }
+          shown: function() {
+            return !$rootScope.appStatus.isForbidden() &&
+              $scope.requestHTTPHeaderGridApi.selection.getSelectedRows().length === 1;
+          }
+        }
       ],
       onRegisterApi: function (gridApi) {
         $scope.requestHTTPHeaderGridApi = gridApi;

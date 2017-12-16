@@ -5,11 +5,12 @@
     <input name="soapAddress" type="text" class="form-control"
            ng-change="endpointSOAPAddressChanged(teststepForm.$valid)"
            ng-model="teststep.endpoint.url" id="soapAddress" spellcheck="false"
-           ng-readonly="appStatus.isForbidden() || teststep.endpoint.environment">
+           ng-readonly="appStatus.isForbidden() || teststep.endpoint.environment"> <!-- readonly when not authenticated or it is a managed endpoint -->
   </div>
   <div class="col-lg-1">
     <button type="button" class="btn btn-info" ng-click="invoke()"
-            ng-disabled="!teststep.request || !teststep.endpoint.url || steprun.status === 'ongoing'">Invoke</button>
+            ng-disabled="appStatus.isForbidden() || !teststep.request || !teststep.endpoint.url ||
+              steprun.status === 'ongoing'">Invoke</button>
   </div>
   <div class="col-lg-offset-2 col-lg-1 btn-group" uib-dropdown keyboard-nav>
     <button id="single-button" type="button" class="btn btn-primary" uib-dropdown-toggle>
@@ -20,7 +21,9 @@
         <i class="fa {{ showHTTPHeaders ? 'fa-check-square-o' : 'fa-square-o' }}"></i> Show HTTP Headers</a>
       </li>
       <li class="divider"></li>
-      <li role="menuitem"><a ng-click="generateRequest()" href="">Generate Request</a></li>
+      <li role="menuitem" ng-class="{'disabled': appStatus.isForbidden()}">
+        <a ng-click="appStatus.isForbidden() ? $event.stopPropagation() : generateRequest()" href="">Generate Request</a>
+      </li>
     </ul>
   </div>
 </div>
@@ -59,6 +62,7 @@
 <script type="text/ng-template" id="httpHeaderGridEditableCellTemplate.html">
   <div class="ui-grid-cell-contents">
     <input type="text" class="form-control" ui-grid-editor ng-model="MODEL_COL_FIELD"
-           ng-change="grid.appScope.autoSave(true)" spellcheck="false">
+           ng-change="grid.appScope.autoSave(true)" spellcheck="false"
+           ng-readonly="grid.appScope.appStatus.isForbidden()">
   </div>
 </script>

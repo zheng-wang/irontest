@@ -5,11 +5,11 @@
     <div class="col-lg-6">
       <input name="jdbcURL" type="text" class="form-control" ng-change="autoSave(teststepForm.$valid)"
              ng-model="teststep.endpoint.url" id="jdbcURL"
-             ng-readonly="teststep.endpoint.environment" spellcheck="false">  <!-- readonly when it is a managed endpoint -->
+             ng-readonly="appStatus.isForbidden() || teststep.endpoint.environment" spellcheck="false">  <!-- readonly when not authenticated or it is a managed endpoint -->
     </div>
     <div class="col-lg-1">
-      <button type="button" class="btn btn-info" ng-click="invoke()" ng-disabled="!teststep.endpoint ||
-            steprun.status === 'ongoing'">Invoke</button>
+      <button type="button" class="btn btn-info" ng-click="invoke()"
+              ng-disabled="appStatus.isForbidden() || !teststep.endpoint || steprun.status === 'ongoing'">Invoke</button>
     </div>
     <div class="col-lg-3">       <!-- Test step run status message -->
       <h5 ng-if="steprun.status === 'ongoing'">Running the statement(s) ...</h5>
@@ -21,7 +21,8 @@
   <div class="col-lg-12 full-height">
     <textarea name="request" ng-model="teststep.request" ng-change="autoSave(teststepForm.$valid)"
               id="request" placeholder="SQL Select/Insert/Delete/Update Statement(s)"
-              class="form-control full-height-important" spellcheck="false"></textarea>
+              class="form-control full-height-important" spellcheck="false"
+              ng-readonly="appStatus.isForbidden()"></textarea>
   </div>
 </div>
 
