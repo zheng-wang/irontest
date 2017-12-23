@@ -85,10 +85,14 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         });
     }
 
+    private boolean isInTeamMode(IronTestConfiguration configuration) {
+        return AppMode.TEAM.toString().equals(configuration.getMode());
+    }
+
     @Override
     public void run(IronTestConfiguration configuration, Environment environment) throws Exception {
         // in team mode
-        if (AppMode.TEAM.toString().equals(configuration.getMode())) {
+        if (isInTeamMode(configuration)) {
             appInfo.setAppMode(AppMode.TEAM);
 
             // ignore bindHost
@@ -124,6 +128,10 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         final UtilsDAO utilsDAO = jdbi.onDemand(UtilsDAO.class);
         final FolderTreeNodeDAO folderTreeNodeDAO = jdbi.onDemand(FolderTreeNodeDAO.class);
         final UserDefinedPropertyDAO udpDAO = jdbi.onDemand(UserDefinedPropertyDAO.class);
+        UserDAO userDAO = null;
+        if (isInTeamMode(configuration)) {
+            userDAO = jdbi.onDemand(UserDAO.class);
+        }
 
         //  create database tables
         //  order is important!!! (there are foreign keys linking them)
@@ -144,6 +152,11 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         assertionDAO.createTableIfNotExists();
         udpDAO.createSequenceIfNotExists();
         udpDAO.createTableIfNotExists();
+        if (isInTeamMode(configuration)) {
+            userDAO.createSequenceIfNotExists();
+            userDAO.createTableIfNotExists();
+            userDAO.insertBuiltinAdminUserIfNotExists();
+        }
 
         //  register APIs
         environment.jersey().register(new SystemResource(appInfo));

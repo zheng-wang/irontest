@@ -11,8 +11,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.sql.SQLException;
 
-import static io.irontest.IronTestConstants.DB_PROPERTY_NAME_CONSTRAINT_NAME_SUFFIX;
-import static io.irontest.IronTestConstants.DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX;
+import static io.irontest.IronTestConstants.*;
 
 /**
  * Created by Zheng on 24/04/2016.
@@ -32,10 +31,13 @@ public class IronTestLoggingExceptionMapper extends LoggingExceptionMapper<Throw
             if (se.getErrorCode() == ErrorCode.DUPLICATE_KEY_1 &&
                     se.getMessage().contains("_" + DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX)) {
                 errorDetails = "Duplicate name.";
-            } else if (se.getErrorCode() == ErrorCode.CHECK_CONSTRAINT_VIOLATED_1 &&
-                    se.getMessage().contains("_" + DB_PROPERTY_NAME_CONSTRAINT_NAME_SUFFIX)) {
-                errorDetails = "Property name can not be same as preserved names and can only contain letter, digit," +
-                        " $ and _ characters, beginning with letter, _ or $.";
+            } else if (se.getErrorCode() == ErrorCode.CHECK_CONSTRAINT_VIOLATED_1) {
+                if (se.getMessage().contains("_" + DB_PROPERTY_NAME_CONSTRAINT_NAME_SUFFIX)) {
+                    errorDetails = "Property name can not be same as preserved names and can only contain letter, digit," +
+                            " $ and _ characters, beginning with letter, _ or $.";
+                } else if (se.getMessage().contains("_" + DB_USERNAME_CONSTRAINT_NAME_SUFFIX)) {
+                    errorDetails = "Please enter a valid username: 3+ characters long, characters \"A-Za-z0-9_\".";
+                }
             }
         }
 

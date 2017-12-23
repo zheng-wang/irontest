@@ -40,7 +40,7 @@ public abstract class TeststepRunner {
         //  decrypt password in endpoint
         Endpoint endpoint = teststep.getEndpoint();
         if (endpoint != null && endpoint.getPassword() != null) {
-            endpoint.setPassword(utilsDAO.decryptPassword(endpoint.getPassword()));
+            endpoint.setPassword(utilsDAO.decryptEndpointPassword(endpoint.getPassword()));
         }
 
         //  fetch request binary if its type is file
