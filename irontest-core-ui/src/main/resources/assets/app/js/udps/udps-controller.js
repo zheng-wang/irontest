@@ -2,14 +2,19 @@
 
 //  NOTICE:
 //    The $scope here prototypically inherits from the $scope of TestcasesController,
-angular.module('irontest').controller('UDPsController', ['$scope', 'UDPs', 'IronTestUtils', '$stateParams', '$timeout',
+angular.module('irontest').controller('UDPsController', ['$scope', 'UDPs', 'IronTestUtils', '$stateParams',
     '$uibModal',
-  function($scope, UDPs, IronTestUtils, $stateParams, $timeout, $uibModal) {
-    //  each UDP grid row uses its own timer, to avoid mutual interference for 'jumping' edits
-    var timerMap = {};
-
+  function($scope, UDPs, IronTestUtils, $stateParams, $uibModal) {
     //  user defined properties of the test case
     $scope.udps = [];
+
+    var udpUpdate = function(udp) {
+      udp.$update(function(response) {
+        $scope.$emit('successfullySaved');
+      }, function(response) {
+        IronTestUtils.openErrorHTTPResponseModal(response);
+      });
+    };
 
     $scope.udpGridOptions = {
       data: 'udps', enableFiltering: true, enableColumnMenus: false,
@@ -26,7 +31,14 @@ angular.module('irontest').controller('UDPsController', ['$scope', 'UDPs', 'Iron
           name: 'delete', width: 70, minWidth: 60, enableSorting: false, enableFiltering: false, enableCellEdit: false,
           cellTemplate: 'udpGridDeleteCellTemplate.html'
         }
-      ]
+      ],
+      onRegisterApi: function(gridApi) {
+        gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue){
+          if (newValue !== oldValue) {
+            udpUpdate(rowEntity);
+          }
+        });
+      }
     };
 
     $scope.findByTestcaseId = function() {
@@ -44,21 +56,6 @@ angular.module('irontest').controller('UDPsController', ['$scope', 'UDPs', 'Iron
       }, function(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);
       });
-    };
-
-    var udpUpdate = function(udp) {
-      udp.$update(function(response) {
-        $scope.$emit('successfullySaved');
-      }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
-      });
-    };
-
-    $scope.udpAutoSave = function(udp) {
-      if (timerMap[udp.id]) $timeout.cancel(timerMap[udp.id]);
-      timerMap[udp.id] = $timeout(function() {
-        udpUpdate(udp);
-      }, 2000);
     };
 
     $scope.removeUDP = function(udp) {

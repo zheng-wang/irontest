@@ -60,6 +60,11 @@ angular.module('irontest').controller('SOAPTeststepActionController', ['$scope',
       ],
       onRegisterApi: function (gridApi) {
         $scope.requestHTTPHeaderGridApi = gridApi;
+        gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue){
+          if (newValue !== oldValue) {
+            $scope.update(true);
+          }
+        });
       }
     };
 

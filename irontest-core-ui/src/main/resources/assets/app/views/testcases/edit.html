@@ -100,16 +100,14 @@
 <!-- UDP grid cell templates -->
 <script type="text/ng-template" id="udpGridNameEditableCellTemplate.html">
   <div class="ui-grid-cell-contents">
-    <input type="text" class="form-control" ui-grid-editor ng-model="MODEL_COL_FIELD"
-           ng-change="grid.appScope.udpAutoSave(row.entity)" spellcheck="false"
+    <input type="text" class="form-control" ui-grid-editor ng-model="MODEL_COL_FIELD" spellcheck="false"
            ng-readonly="grid.appScope.appStatus.isForbidden()">
   </div>
 </script>
 <script type="text/ng-template" id="udpGridValueEditableCellTemplate.html">
   <div class="ui-grid-cell-contents" ng-dblclick="grid.appScope.valueCellDblClicked(row.entity)">
     <textarea class="form-control udp-grid-value-editable-cell-textarea" ui-grid-editor ng-model="MODEL_COL_FIELD"
-              spellcheck="false" ng-change="grid.appScope.udpAutoSave(row.entity)"
-              ng-readonly="grid.appScope.appStatus.isForbidden()"></textarea>
+              spellcheck="false" ng-readonly="grid.appScope.appStatus.isForbidden()"></textarea>
   </div>
 </script>
 <script type="text/ng-template" id="udpGridDeleteCellTemplate.html">

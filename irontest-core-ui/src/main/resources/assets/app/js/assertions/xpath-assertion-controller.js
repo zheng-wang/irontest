@@ -55,6 +55,12 @@ angular.module('irontest').controller('XPathAssertionController', ['$scope', '$r
       ],
       onRegisterApi: function (gridApi) {
         $scope.assertionsModelObj.xPathNamespacePrefixGridApi = gridApi;
+        gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue){
+          if (newValue !== oldValue) {
+            $scope.assertionsModelObj.clearCurrentAssertionVerificationResult();
+            $scope.update(true, $scope.assertionsModelObj.reselectCurrentAssertionInGrid);
+          }
+        });
       }
     };
   }

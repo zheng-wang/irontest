@@ -61,8 +61,7 @@
 
 <script type="text/ng-template" id="httpHeaderGridEditableCellTemplate.html">
   <div class="ui-grid-cell-contents">
-    <input type="text" class="form-control" ui-grid-editor ng-model="MODEL_COL_FIELD"
-           ng-change="grid.appScope.autoSave(true)" spellcheck="false"
+    <input type="text" class="form-control" ui-grid-editor ng-model="MODEL_COL_FIELD" spellcheck="false"
            ng-readonly="grid.appScope.appStatus.isForbidden()">
   </div>
 </script>

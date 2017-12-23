@@ -2,12 +2,12 @@
 
 //  NOTICE:
 //    The $scope here prototypically inherits from the $scope of the specific test step controller,
-//      such as SOAPTeststepsController or DBTeststepController.
+//      such as SOAPTeststepActionController or DBTeststepController.
 //    ng-include also creates a scope.
 //    If unspecified, all grid config is for the assertions grid
 angular.module('irontest').controller('AssertionsController', ['$scope', '$rootScope', 'uiGridConstants',
-    'IronTestUtils', '$http', '$timeout',
-  function($scope, $rootScope, uiGridConstants, IronTestUtils, $http, $timeout) {
+    'IronTestUtils', '$http',
+  function($scope, $rootScope, uiGridConstants, IronTestUtils, $http) {
     //  use assertionsModelObj for all variables in the scope, to avoid conflict with parent scope
     $scope.assertionsModelObj = {
       assertionVerificationResults: {}
@@ -53,6 +53,11 @@ angular.module('irontest').controller('AssertionsController', ['$scope', '$rootS
         $scope.assertionsModelObj.gridApi = gridApi;
         gridApi.selection.on.rowSelectionChanged($scope, function(row) {
           $scope.assertionsModelObj.assertion = row.entity;
+        });
+        gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue){
+          if (newValue !== oldValue) {
+            $scope.update(true, $scope.assertionsModelObj.reselectCurrentAssertionInGrid);
+          }
         });
       }
     };
