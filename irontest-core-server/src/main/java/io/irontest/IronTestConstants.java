@@ -12,4 +12,11 @@ public interface IronTestConstants {
     String IMPLICIT_PROPERTY_NAME_TEST_CASE_START_TIME = "Test_Case_Start_Time";
     String IMPLICIT_PROPERTY_NAME_TEST_STEP_START_TIME = "Test_Step_Start_Time";
     String IMPLICIT_PROPERTY_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
+
+    String SYSADMIN_USER = "sysadmin";
+    String SYSADMIN_USER_DEFAULT_PASSWORD = "password";
+    int PASSWORD_SALT_LENGTH_IN_BYTES = 32;
+    String PASSWORD_HASHING_ALGORITHM = "PBKDF2WithHmacSHA512";
+    int KDF_ITERATIONS = 10000;
+    int KDF_KEY_LENGTH = 256;
 }
