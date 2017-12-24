@@ -169,6 +169,9 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         environment.jersey().register(new TestcaseRunResource(testcaseDAO, udpDAO, teststepDAO, utilsDAO, testcaseRunDAO));
         environment.jersey().register(new AssertionResource(udpDAO));
         environment.jersey().register(new UDPResource(udpDAO));
+        if (isInTeamMode(configuration)) {
+            environment.jersey().register(new UserResource(userDAO));
+        }
 
         //  if turned on in config.yml, register jersey LoggingFilter (used for logging Iron Test resource oriented HTTP API requests and responses)
         DefaultLoggingFactory defaultLoggingFactory = (DefaultLoggingFactory) configuration.getLoggingFactory();

@@ -8,6 +8,8 @@ import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
+import java.util.List;
+
 import static io.irontest.IronTestConstants.*;
 
 /**
@@ -39,6 +41,9 @@ public abstract class UserDAO {
         _insertBuiltinAdminUserIfNotExists(hashedPassword.getHashedPassword(), hashedPassword.getSalt());
     }
 
-    @SqlQuery("select username, password, salt from user where username = :username")
+    @SqlQuery("select id, username, password, salt from user where username = :username")
     public abstract User findByUsername(@Bind("username") String username);
+
+    @SqlQuery("select id, username from user")
+    public abstract List<User> findAll();
 }

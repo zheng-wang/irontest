@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  * Created by Zheng on 2/12/2017.
  */
 public class User {
+    private long id;
     private String username;
     private String password;
     @JsonIgnore
@@ -13,6 +14,14 @@ public class User {
 
     public User(String username) {
         this.username = username;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getUsername() {
