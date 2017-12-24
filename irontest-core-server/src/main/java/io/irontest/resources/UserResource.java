@@ -1,12 +1,10 @@
 package io.irontest.resources;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.irontest.db.UserDAO;
 import io.irontest.models.User;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
@@ -29,5 +27,10 @@ public class UserResource {
     @GET @Path("{userId}")
     public User findById(@PathParam("userId") long userId) {
         return userDAO.findById(userId);
+    }
+
+    @POST
+    public User create() throws JsonProcessingException {
+        return userDAO.insert();
     }
 }

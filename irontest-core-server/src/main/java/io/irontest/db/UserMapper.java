@@ -17,8 +17,9 @@ public class UserMapper implements ResultSetMapper<User> {
     public User map(int index, ResultSet rs, StatementContext ctx) throws SQLException {
         List<String> fields = IronTestUtils.getFieldsPresentInResultSet(rs);
 
-        User user = new User(rs.getString("username"));
+        User user = new User();
         user.setId(rs.getLong("id"));
+        user.setUsername(rs.getString("username"));
         user.setPassword(fields.contains("password") ? rs.getString("password") : null);
         user.setSalt(fields.contains("salt") ? rs.getString("salt") : null);
 

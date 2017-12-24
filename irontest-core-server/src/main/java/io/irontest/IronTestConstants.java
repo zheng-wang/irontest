@@ -14,7 +14,7 @@ public interface IronTestConstants {
     String IMPLICIT_PROPERTY_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
 
     String SYSADMIN_USER = "sysadmin";
-    String SYSADMIN_USER_DEFAULT_PASSWORD = "password";
+    String USER_DEFAULT_PASSWORD = "password";
     int PASSWORD_SALT_LENGTH_IN_BYTES = 32;
     String DEFAULT_PASSWORD_HASHING_ALGORITHM = "PBKDF2WithHmacSHA512";
     int DEFAULT_KDF_ITERATIONS = 10000;
