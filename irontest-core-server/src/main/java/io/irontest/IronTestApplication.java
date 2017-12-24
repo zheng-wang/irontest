@@ -11,6 +11,7 @@ import com.roskart.dropwizard.jaxws.JAXWSBundle;
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.auth.AuthDynamicFeature;
+import io.dropwizard.auth.PrincipalImpl;
 import io.dropwizard.auth.basic.BasicCredentialAuthFilter;
 import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.jdbi.DBIFactory;
@@ -24,7 +25,6 @@ import io.dropwizard.views.ViewBundle;
 import io.irontest.db.*;
 import io.irontest.models.AppInfo;
 import io.irontest.models.AppMode;
-import io.irontest.models.User;
 import io.irontest.resources.*;
 import io.irontest.ws.ArticleSOAP;
 import org.glassfish.jersey.filter.LoggingFilter;
@@ -40,7 +40,6 @@ import java.util.logging.Logger;
  * Created by Zheng on 20/06/2015.
  */
 public class IronTestApplication extends Application<IronTestConfiguration> {
-    private AppInfo appInfo = new AppInfo();
     private JAXWSBundle jaxWsBundle = new JAXWSBundle();
 
     public static void main(String[] args) throws Exception {
@@ -90,31 +89,14 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
     }
 
     @Override
-    public void run(IronTestConfiguration configuration, Environment environment) throws Exception {
-        // in team mode
-        if (isInTeamMode(configuration)) {
-            appInfo.setAppMode(AppMode.TEAM);
-
-            // ignore bindHost
-            DefaultServerFactory server = (DefaultServerFactory) configuration.getServerFactory();
-            List<ConnectorFactory> applicationConnectors = server.getApplicationConnectors();
-            HttpConnectorFactory factory = (HttpConnectorFactory) applicationConnectors.get(0);
-            factory.setBindHost(null);
-
-            //  turn on user authentication
-            environment.jersey().register(new AuthDynamicFeature(new BasicCredentialAuthFilter.Builder<User>()
-                    .setAuthenticator(new IronTestResourceAuthenticator()).buildAuthFilter()));
-        }
-
-        environment.jersey().register(new IronTestContainerResponseFilter());
-
+    public void run(IronTestConfiguration configuration, Environment environment) {
         createSystemResources(configuration, environment);
         createSampleResources(configuration, environment);
     }
 
     private void createSystemResources(IronTestConfiguration configuration, Environment environment) {
-        final DBIFactory factory = new DBIFactory();
-        final DBI jdbi = factory.build(environment, configuration.getSystemDatabase(), "systemDatabase");
+        final DBIFactory dbiFactory = new DBIFactory();
+        final DBI jdbi = dbiFactory.build(environment, configuration.getSystemDatabase(), "systemDatabase");
 
         //  create DAO objects
         final FolderDAO folderDAO = jdbi.onDemand(FolderDAO.class);
@@ -131,6 +113,23 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         UserDAO userDAO = null;
         if (isInTeamMode(configuration)) {
             userDAO = jdbi.onDemand(UserDAO.class);
+        }
+
+        AppInfo appInfo = new AppInfo();
+        if (isInTeamMode(configuration)) {
+            appInfo.setAppMode(AppMode.TEAM);
+
+            // ignore bindHost
+            DefaultServerFactory server = (DefaultServerFactory) configuration.getServerFactory();
+            List<ConnectorFactory> applicationConnectors = server.getApplicationConnectors();
+            HttpConnectorFactory httpConnectorFactory = (HttpConnectorFactory) applicationConnectors.get(0);
+            httpConnectorFactory.setBindHost(null);
+
+            //  turn on user authentication
+            environment.jersey().register(new AuthDynamicFeature(new BasicCredentialAuthFilter.Builder<PrincipalImpl>()
+                    .setAuthenticator(new IronTestResourceAuthenticator(userDAO)).buildAuthFilter()));
+
+            environment.jersey().register(new IronTestContainerResponseFilter());
         }
 
         //  create database tables

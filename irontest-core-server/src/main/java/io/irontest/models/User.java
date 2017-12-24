@@ -1,34 +1,34 @@
 package io.irontest.models;
 
-import java.security.Principal;
-
 /**
  * Created by Zheng on 2/12/2017.
  */
-public class User implements Principal {
-    private final String name;
+public class User {
+    private String username;
+    private String password;
+    private String salt;
 
-//    private final Set<String> roles;
-
-    public User(String name) {
-        this.name = name;
-//        this.roles = null;
+    public User(String username) {
+        this.username = username;
     }
 
-//    public User(String name, Set<String> roles) {
-//        this.name = name;
-//        this.roles = roles;
-//    }
-
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-//    public int getId() {
-//        return (int) (Math.random() * 100);
-//    }
-//
-//    public Set<String> getRoles() {
-//        return roles;
-//    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
+    }
+
+    public String getSalt() {
+        return salt;
+    }
 }

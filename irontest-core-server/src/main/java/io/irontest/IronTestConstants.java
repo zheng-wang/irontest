@@ -16,7 +16,7 @@ public interface IronTestConstants {
     String SYSADMIN_USER = "sysadmin";
     String SYSADMIN_USER_DEFAULT_PASSWORD = "password";
     int PASSWORD_SALT_LENGTH_IN_BYTES = 32;
-    String PASSWORD_HASHING_ALGORITHM = "PBKDF2WithHmacSHA512";
-    int KDF_ITERATIONS = 10000;
+    String DEFAULT_PASSWORD_HASHING_ALGORITHM = "PBKDF2WithHmacSHA512";
+    int DEFAULT_KDF_ITERATIONS = 10000;
     int KDF_KEY_LENGTH = 256;
 }
