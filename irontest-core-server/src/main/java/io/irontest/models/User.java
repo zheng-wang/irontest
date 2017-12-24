@@ -1,11 +1,14 @@
 package io.irontest.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * Created by Zheng on 2/12/2017.
  */
 public class User {
     private String username;
     private String password;
+    @JsonIgnore
     private String salt;
 
     public User(String username) {
@@ -20,6 +23,7 @@ public class User {
         this.password = password;
     }
 
+    @JsonIgnore
     public String getPassword() {
         return password;
     }

@@ -83,7 +83,7 @@ body {
   height: 400px;
 }
 
-.environment-grid {
+.environment-grid, .user-grid {
   height: 500px;
 }
 

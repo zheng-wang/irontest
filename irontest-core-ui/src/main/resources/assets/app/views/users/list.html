@@ -1,0 +1,29 @@
+<div ng-controller="UsersController" ng-init="find()">
+  <div class="row page-header" id="page-header">
+    <div class="col-lg-7 page-header-part1">
+      <h3><div>Users</div></h3>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-2">
+      <p><button class="btn btn-info btn-block" ng-click="create()">Create</button></p>
+    </div>
+  </div>
+  <div class="row">
+    <div ui-grid="{enableFiltering: true, data: users, columnDefs: userGridColumnDefs}"
+         ui-grid-resize-columns ui-grid-move-columns class="ui-grid user-grid"></div>
+  </div>
+
+  <script type="text/ng-template" id="userGridUsernameCellTemplate.html">
+    <div class="ui-grid-cell-contents">
+      <a ui-sref="user_edit({ userId: row.entity.id })">{{COL_FIELD}}</a>
+    </div>
+  </script>
+  <script type="text/ng-template" id="userGridDeleteCellTemplate.html">
+    <div class="ui-grid-cell-contents">
+      <a ng-click="grid.appScope.remove(row.entity)" href="">
+        <i class="glyphicon glyphicon-trash center-block text-center"></i>
+      </a>
+    </div>
+  </script>
+</div>
