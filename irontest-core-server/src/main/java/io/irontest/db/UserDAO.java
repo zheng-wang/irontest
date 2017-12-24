@@ -46,4 +46,7 @@ public abstract class UserDAO {
 
     @SqlQuery("select id, username from user")
     public abstract List<User> findAll();
+
+    @SqlQuery("select id, username from user where id = :id")
+    public abstract User findById(@Bind("id") long id);
 }

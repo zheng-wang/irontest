@@ -5,6 +5,7 @@ import io.irontest.models.User;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
@@ -23,5 +24,10 @@ public class UserResource {
     @GET
     public List<User> findAll() {
         return userDAO.findAll();
+    }
+
+    @GET @Path("{userId}")
+    public User findById(@PathParam("userId") long userId) {
+        return userDAO.findById(userId);
     }
 }

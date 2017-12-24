@@ -1,80 +1,36 @@
-<div ng-controller="EnvironmentsController" ng-init="findOne()">
+<div ng-controller="UsersController" ng-init="findOne()">
   <div class="row page-header" id="page-header">
     <div class="col-lg-7 page-header-part1">
-      <h3><div>Environment - {{environment.name}}</div></h3>
+      <h3><div>User - {{user.username}}</div></h3>
     </div>
     <div class="row page-header-part2">
       <div class="col-lg-2 text-center">
         <h4><label irt-successful-message></label></h4>
       </div>
       <div class="col-lg-1 text-left">
-        <h4><a class="back-link" ui-sref="environment_all">Back</a></h4>
+        <h4><a class="back-link" ui-sref="user_all">Back</a></h4>
       </div>
     </div>
   </div>
-  <uib-tabset active="activeTabIndex">
-    <uib-tab heading="Basic Info">
-      <form name="environmentForm" class="form-horizontal col-lg-9" role="form" novalidate>
-        <div class="form-group"></div> <!-- spacer -->
-        <div class="form-group required" ng-class="{ 'has-error' : submitted && environmentForm.name.$invalid }">
-          <label for="name" class="col-lg-2 control-label">Name</label>
-          <div class="col-lg-10">
-            <input name="name" type="text" class="form-control" ng-model="environment.name"
-                   irt-select="{{ activeTabIndex === 0 && environmentNewlyCreated() }}"
-                   ng-change="autoSave(environmentForm.$valid)" id="name" placeholder="Name" required
-                   ng-readonly="appStatus.isForbidden()">
-            <div ng-show="submitted && environmentForm.name.$invalid" class="help-block">
-              <p ng-show="environmentForm.name.$error.required">Name is required</p>
-            </div>
+  <div class="row">
+    <form name="userForm" class="form-horizontal col-lg-10" role="form" novalidate>
+      <div class="form-group required" ng-class="{ 'has-error' : submitted && userForm.name.$invalid }">
+        <label for="username" class="col-lg-2 control-label">Username</label>
+        <div class="col-lg-10">
+          <input name="username" type="text" class="form-control" ng-model="user.username" id="username"
+                 ng-change="autoSave(userForm.$valid)" irt-select="{{ userNewlyCreated() }}" spellcheck="false" required>
+          <div ng-show="submitted && userForm.username.$invalid" class="help-block">
+            <p ng-show="userForm.username.$error.required">Username is required</p>
           </div>
         </div>
-        <div class="form-group">
-          <label for="description" class="col-lg-2 control-label">Description</label>
-          <div class="col-lg-10">
-            <textarea name="description" ng-model="environment.description" ng-change="autoSave(environmentForm.$valid)"
-                      id="description" cols="30" rows="10" placeholder="Description" class="form-control"
-                      ng-readonly="appStatus.isForbidden()"></textarea>
-          </div>
-        </div>
-      </form>
-    </uib-tab>
-    <uib-tab heading="Endpoints">
-      <div class="form-group"></div> <!-- spacer -->
-      <div class="row">
-        <div class="btn-group col-lg-2" uib-dropdown keyboard-nav>
-          <button type="button" class="btn btn-info dropdown-toggle" uib-dropdown-toggle
-                  ng-disabled="appStatus.isForbidden()">
-            Create <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu" uib-dropdown-menu role="menu">
-            <li role="menuitem"><a ng-click="createEndpoint('SOAP')" href="">SOAP Endpoint</a></li>
-            <li role="menuitem"><a ng-click="createEndpoint('DB')" href="">Database Endpoint</a></li>
-            <li role="menuitem"><a href="">HTTP Endpoint (TBD)</a></li>
-            <li role="menuitem"><a ng-click="createEndpoint('MQ')" href="">MQ Endpoint</a></li>
-            <li role="menuitem"><a ng-click="createEndpoint('IIB')" href="">IIB Endpoint</a></li>
-          </ul>
+      </div>
+      <div class="form-group">
+        <label for="password" class="col-lg-2 control-label">Password</label>
+        <div class="col-lg-10">
+          <input id="password" name="password" type="password" class="form-control" ng-model="user.password"
+                 ng-change="autoSave(userForm.$valid)">
         </div>
       </div>
-      <div class="form-group"></div> <!-- spacer -->
-      <div class="row">
-        <div ng-if="activeTabIndex === 1" ui-grid="{paginationPageSizes: [20,50,100], paginationPageSize: 20,
-               enableFiltering: true, data: environment.endpoints, columnDefs: endpointGridColumnDefs}"
-             ui-grid-pagination ui-grid-resize-columns ui-grid-move-columns class="ui-grid endpoint-grid"></div>
-      </div>
-    </uib-tab>
-  </uib-tabset>
-
-  <script type="text/ng-template" id="endpointGridNameCellTemplate.html">
-    <div class="ui-grid-cell-contents">
-      <a ui-sref="endpoint_edit({ environmentId: row.entity.environment.id, endpointId: row.entity.id })">{{COL_FIELD}}</a>
-    </div>
-  </script>
-  <script type="text/ng-template" id="endpointGridDeleteCellTemplate.html">
-    <div class="ui-grid-cell-contents">
-      <a ng-click="grid.appScope.appStatus.isForbidden() ? angular.noop() : grid.appScope.removeEndpoint(row.entity.id)"
-         ng-class="{'no-underline' : grid.appScope.appStatus.isForbidden()}" href="">
-        <i class="glyphicon glyphicon-trash center-block text-center"></i>
-      </a>
-    </div>
-  </script>
+    </form>
+  </div>
 </div>
