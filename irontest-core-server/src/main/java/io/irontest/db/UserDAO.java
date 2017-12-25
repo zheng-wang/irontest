@@ -19,8 +19,7 @@ public abstract class UserDAO {
     public abstract void createSequenceIfNotExists();
 
     @SqlUpdate("CREATE TABLE IF NOT EXISTS user (" +
-            "id BIGINT DEFAULT user_sequence.NEXTVAL PRIMARY KEY, " +
-            "username VARCHAR(100) NOT NULL DEFAULT DATEDIFF('ms', '1970-01-01', CURRENT_TIMESTAMP), " +
+            "id BIGINT DEFAULT user_sequence.NEXTVAL PRIMARY KEY, username VARCHAR(100) NOT NULL, " +
             "password VARCHAR(100) NOT NULL, salt VARCHAR(100) NOT NULL, " +
             "created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
@@ -49,19 +48,15 @@ public abstract class UserDAO {
     @SqlQuery("select id, username from user where id = :id")
     public abstract User findById(@Bind("id") long id);
 
-    @SqlUpdate("insert into user (password, salt) values (:password, :salt)")
+    @SqlUpdate("insert into user (username, password, salt) values (:username, :password, :salt)")
     @GetGeneratedKeys
-    protected abstract long _insert(@Bind("password") String password,
+    protected abstract long _insert(@Bind("username") String username, @Bind("password") String password,
                                     @Bind("salt") String salt);
 
-    @SqlUpdate("update user set username = :username where id = :id")
-    protected abstract long updateUsernameForInsert(@Bind("id") long id, @Bind("username") String username);
-
     @Transaction
-    public User insert() {
+    public User insert(String username) {
         HashedPassword hashedPassword = PasswordUtils.hashPassword(USER_DEFAULT_PASSWORD);
-        long id = _insert(hashedPassword.getHashedPassword(), hashedPassword.getSalt());
-        updateUsernameForInsert(id, "user" + id);
+        long id = _insert(username, hashedPassword.getHashedPassword(), hashedPassword.getSalt());
         return findById(id);
     }
 }

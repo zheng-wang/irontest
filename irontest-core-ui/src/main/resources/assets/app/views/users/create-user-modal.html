@@ -1,0 +1,18 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="cancel()">&times;</button>
+  <h3 class="modal-title">New User</h3>
+</div>
+<div class="modal-body">
+  <form name="loginForm" class="form-horizontal" role="form">
+    <div class="form-group required">
+      <label for="username" class="col-lg-2 control-label">Username</label>
+      <div class="col-lg-10">
+        <input name="username" type="text" id="username" class="form-control" ng-model="username"
+               autofocus ng-change="authenticationFailed = null">
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-info" type="button" ng-click="ok()" ng-disabled="!username">OK</button>
+</div>

@@ -1,17 +1,8 @@
 'use strict';
 
-angular.module('irontest').controller('UsersController', ['$scope', 'Users',
-    '$stateParams', '$state', 'uiGridConstants', '$timeout', 'IronTestUtils',
-  function($scope, Users, $stateParams, $state, uiGridConstants, $timeout, IronTestUtils) {
-
-    var timer;
-    $scope.autoSave = function(isValid) {
-      if (timer) $timeout.cancel(timer);
-      timer = $timeout(function() {
-        $scope.update(isValid);
-      }, 2000);
-    };
-
+angular.module('irontest').controller('UsersController', ['$scope', 'Users', '$state', 'uiGridConstants',
+    'IronTestUtils', '$uibModal',
+  function($scope, Users, $state, uiGridConstants, IronTestUtils, $uibModal) {
     $scope.userGridColumnDefs = [
       {
         name: 'username', width: 200, minWidth: 100,
@@ -28,11 +19,24 @@ angular.module('irontest').controller('UsersController', ['$scope', 'Users',
     ];
 
     $scope.create = function() {
-      var user = new Users();
-      user.$save(function(response) {
-        $state.go('user_edit', {userId: response.id, newlyCreated: true});
-      }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
+      //  open modal dialog
+      var modalInstance = $uibModal.open({
+        templateUrl: '/ui/views/users/create-user-modal.html',
+        controller: 'CreateUserModalController',
+        size: 'md',
+        windowClass: 'create-user-modal'
+      });
+
+      //  handle result from modal dialog
+      modalInstance.result.then(function closed(username) {
+        var user = new Users({ username: username});
+        user.$save(function(response) {
+          $state.go($state.current, {}, {reload: true});
+        }, function(response) {
+          IronTestUtils.openErrorHTTPResponseModal(response);
+        });
+      }, function dismissed() {
+        //  Modal dismissed. Do nothing.
       });
     };
 
@@ -63,10 +67,6 @@ angular.module('irontest').controller('UsersController', ['$scope', 'Users',
       }, function(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);
       });
-    };
-
-    $scope.userNewlyCreated = function() {
-      return $stateParams.newlyCreated === true;
     };
 
     $scope.findOne = function() {

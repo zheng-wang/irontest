@@ -30,7 +30,7 @@ public class UserResource {
     }
 
     @POST
-    public User create() throws JsonProcessingException {
-        return userDAO.insert();
+    public User create(User user) throws JsonProcessingException {
+        return userDAO.insert(user.getUsername());
     }
 }
