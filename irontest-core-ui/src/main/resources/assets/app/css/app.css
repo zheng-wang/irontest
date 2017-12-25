@@ -1,7 +1,17 @@
 body {
-  /* Commented out zoom, as there is column/header alignment issue in ui grid.
-    Refer to https://github.com/angular-ui/ui-grid/issues/4944 */
-  /* zoom: 97%; */
+  /* There is still a ui grid flaw when zoom is not 100%. When dragging column resizer, the cursor is not aligned with the long
+     vertical line. However, the benefit of zoom outweighs this flaw. */
+  zoom: 97%;
+}
+
+/* custom ui grid classes to address issue https://github.com/angular-ui/ui-grid/issues/4944 when zoom is not 100% */
+.ui-grid-header-cell {
+  float: left;
+}
+/* This is to address the further issue introduced by the custom ui-grid-header-cell class,
+   offsetting the shortened right border of Delete columns. */
+.ui-grid-column-resizer {
+  height: 60px;
 }
 
 /* classes from AngularJS for ngCloak directive */
