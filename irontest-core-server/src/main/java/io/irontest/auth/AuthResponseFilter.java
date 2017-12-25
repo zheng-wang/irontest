@@ -1,4 +1,4 @@
-package io.irontest;
+package io.irontest.auth;
 
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerResponseContext;
@@ -10,7 +10,7 @@ import javax.ws.rs.core.Response;
 /**
  * Created by Zheng on 10/12/2017.
  */
-public class IronTestContainerResponseFilter implements ContainerResponseFilter {
+public class AuthResponseFilter implements ContainerResponseFilter {
     @Override
     public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext) {
         //  this is to prevent browser native basic auth dialog from popping up on 401 response

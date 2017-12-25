@@ -20,7 +20,7 @@ public abstract class UserDAO {
 
     @SqlUpdate("CREATE TABLE IF NOT EXISTS user (" +
             "id BIGINT DEFAULT user_sequence.NEXTVAL PRIMARY KEY, username VARCHAR(100) NOT NULL, " +
-            "password VARCHAR(100) NOT NULL, salt VARCHAR(100) NOT NULL, " +
+            "password VARCHAR(100) NOT NULL, salt VARCHAR(100) NOT NULL, roles VARCHAR(500), " +
             "created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "CONSTRAINT USER_" + DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX + " UNIQUE(username)," +
@@ -28,8 +28,8 @@ public abstract class UserDAO {
                 " CHECK(LENGTH(username) >= 3 AND REGEXP_LIKE(username, '^\\w+$')))")
     public abstract void createTableIfNotExists();
 
-    @SqlUpdate("insert into user (username, password, salt) " +
-            "select '" + SYSADMIN_USER + "', :password, :salt " +
+    @SqlUpdate("insert into user (username, password, salt, roles) " +
+            "select '" + SYSADMIN_USER + "', :password, :salt, '[\"" + USER_ROLE_ADMIN + "\"]' " +
             "where not exists (select 1 from user where username = '" + SYSADMIN_USER + "')")
     protected abstract void _insertBuiltinAdminUserIfNotExists(@Bind("password") String password,
                                                             @Bind("salt") String salt);
@@ -39,7 +39,7 @@ public abstract class UserDAO {
         _insertBuiltinAdminUserIfNotExists(hashedPassword.getHashedPassword(), hashedPassword.getSalt());
     }
 
-    @SqlQuery("select id, username, password, salt from user where username = :username")
+    @SqlQuery("select id, username, password, salt, roles from user where username = :username")
     public abstract User findByUsername(@Bind("username") String username);
 
     @SqlQuery("select id, username from user")

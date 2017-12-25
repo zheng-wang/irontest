@@ -2,15 +2,21 @@ package io.irontest.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Created by Zheng on 2/12/2017.
  */
 public class User {
     private long id;
     private String username;
+    @JsonIgnore
     private String password;
     @JsonIgnore
     private String salt;
+    @JsonIgnore
+    private Set<String> roles = new HashSet<String>();
 
     public long getId() {
         return id;
@@ -32,7 +38,6 @@ public class User {
         this.password = password;
     }
 
-    @JsonIgnore
     public String getPassword() {
         return password;
     }
@@ -43,5 +48,9 @@ public class User {
 
     public String getSalt() {
         return salt;
+    }
+
+    public Set<String> getRoles() {
+        return roles;
     }
 }

@@ -19,4 +19,5 @@ public interface IronTestConstants {
     String DEFAULT_PASSWORD_HASHING_ALGORITHM = "PBKDF2WithHmacSHA512";
     int DEFAULT_KDF_ITERATIONS = 10000;
     int KDF_KEY_LENGTH = 256;
+    String USER_ROLE_ADMIN = "admin";
 }

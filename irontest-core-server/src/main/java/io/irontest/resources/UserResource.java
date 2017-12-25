@@ -4,11 +4,13 @@ import io.irontest.IronTestConstants;
 import io.irontest.db.UserDAO;
 import io.irontest.models.User;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 /**
+ * Notice that class level @RolesAllowed is supported since Dropwizard 1.0.
  * Created by Zheng on 24/12/2017.
  */
 @Path("/users") @Produces({ MediaType.APPLICATION_JSON })
@@ -20,21 +22,24 @@ public class UserResource {
     }
 
     @GET
+    @RolesAllowed("admin")
     public List<User> findAll() {
         return userDAO.findAll();
     }
 
-    @GET @Path("{userId}")
+    /*@GET @Path("{userId}")
     public User findById(@PathParam("userId") long userId) {
         return userDAO.findById(userId);
-    }
+    }*/
 
     @POST
+    @RolesAllowed("admin")
     public User create(User user) {
         return userDAO.insert(user.getUsername());
     }
 
     @DELETE @Path("{userId}")
+    @RolesAllowed("admin")
     public void delete(@PathParam("userId") long userId) {
         User user = userDAO.findById(userId);
         if (user != null && IronTestConstants.SYSADMIN_USER.equals(user.getUsername())) {
