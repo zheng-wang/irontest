@@ -1,5 +1,6 @@
 package io.irontest.resources;
 
+import io.irontest.IronTestConstants;
 import io.irontest.db.UserDAO;
 import io.irontest.models.User;
 
@@ -35,6 +36,11 @@ public class UserResource {
 
     @DELETE @Path("{userId}")
     public void delete(@PathParam("userId") long userId) {
+        User user = userDAO.findById(userId);
+        if (user != null && IronTestConstants.SYSADMIN_USER.equals(user.getUsername())) {
+            throw new RuntimeException("Can not delete " + IronTestConstants.SYSADMIN_USER);
+        }
+
         userDAO.deleteById(userId);
     }
 }

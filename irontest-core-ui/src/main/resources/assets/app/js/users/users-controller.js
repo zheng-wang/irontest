@@ -9,8 +9,7 @@ angular.module('irontest').controller('UsersController', ['$scope', 'Users', '$s
         sort: {
           direction: uiGridConstants.ASC,
           priority: 1
-        },
-        cellTemplate:'userGridUsernameCellTemplate.html'
+        }
       },
       {
         name: 'delete', width: 100, minWidth: 80, enableSorting: false, enableFiltering: false,
