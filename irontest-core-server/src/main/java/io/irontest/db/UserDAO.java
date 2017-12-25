@@ -59,4 +59,7 @@ public abstract class UserDAO {
         long id = _insert(username, hashedPassword.getHashedPassword(), hashedPassword.getSalt());
         return findById(id);
     }
+
+    @SqlUpdate("delete from user where id = :id")
+    public abstract void deleteById(@Bind("id") long id);
 }

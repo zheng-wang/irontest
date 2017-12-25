@@ -40,7 +40,7 @@ angular.module('irontest').controller('UsersController', ['$scope', 'Users', '$s
       });
     };
 
-    $scope.update = function(isValid) {
+    /*$scope.update = function(isValid) {
       if (isValid) {
         $scope.user.$update(function(response) {
           $scope.$broadcast('successfullySaved');
@@ -51,7 +51,7 @@ angular.module('irontest').controller('UsersController', ['$scope', 'Users', '$s
       } else {
         $scope.submitted = true;
       }
-    };
+    };*/
 
     $scope.remove = function(user) {
       user.$remove(function(response) {
@@ -69,7 +69,7 @@ angular.module('irontest').controller('UsersController', ['$scope', 'Users', '$s
       });
     };
 
-    $scope.findOne = function() {
+    /*$scope.findOne = function() {
       Users.get({
         userId: $stateParams.userId
       }, function(user) {
@@ -77,6 +77,6 @@ angular.module('irontest').controller('UsersController', ['$scope', 'Users', '$s
       }, function(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);
       });
-    };
+    };*/
   }
 ]);

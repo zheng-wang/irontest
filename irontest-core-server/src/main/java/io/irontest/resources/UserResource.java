@@ -1,6 +1,5 @@
 package io.irontest.resources;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.irontest.db.UserDAO;
 import io.irontest.models.User;
 
@@ -30,7 +29,12 @@ public class UserResource {
     }
 
     @POST
-    public User create(User user) throws JsonProcessingException {
+    public User create(User user) {
         return userDAO.insert(user.getUsername());
+    }
+
+    @DELETE @Path("{userId}")
+    public void delete(@PathParam("userId") long userId) {
+        userDAO.deleteById(userId);
     }
 }
