@@ -7,16 +7,18 @@
     <div class="form-group" ng-show="authenticationFailed">
       <div class="col-lg-12 text-red">Incorrect username or password.</div>
     </div>
-    <div class="form-group">
-      <div class="col-lg-12">
-        <input name="username" type="text" id="username" class="form-control" ng-model="username"
-               placeholder="Username" autofocus ng-change="authenticationFailed = null">
+    <div class="form-group required">
+      <label for="username" class="col-lg-2 control-label">Username</label>
+      <div class="col-lg-10">
+        <input name="username" type="text" id="username" class="form-control" ng-model="username" autofocus
+               ng-change="authenticationFailed = null">
       </div>
     </div>
-    <div class="form-group">
-      <div class="col-lg-12">
+    <div class="form-group required">
+      <label for="password" class="col-lg-2 control-label">Password</label>
+      <div class="col-lg-10">
         <input name="password" type="password" id="password" class="form-control" ng-model="password"
-               placeholder="Password" ng-change="authenticationFailed = null">
+               ng-change="authenticationFailed = null">
       </div>
     </div>
     <div class="form-group">

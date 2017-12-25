@@ -7,6 +7,7 @@ angular.module('irontest').controller('AuthenticationController', ['$scope', '$u
       $uibModal.open({
         templateUrl: '/ui/views/authentication/login-modal.html',
         controller: 'UserLoginModalController',
+        size: 'md',
         windowClass: 'login-modal'
       });
     };

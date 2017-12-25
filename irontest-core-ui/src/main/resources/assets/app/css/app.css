@@ -230,10 +230,6 @@ body {
   top: 20%;
 }
 
-.login-modal .modal-dialog {
-  width: 400px;
-}
-
 .select-managed-endpoint-modal, .udp-value-textarea-editor-modal {
   top: 15%;
 }
