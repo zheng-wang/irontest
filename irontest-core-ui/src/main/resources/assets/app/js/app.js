@@ -24,11 +24,15 @@ angular.module('irontest', ['ngResource', 'ngSanitize', 'ui.router', 'ui.grid', 
     //  initialize appStatus
     $rootScope.appStatus = {
       appMode: null,
+      userInfo: angular.fromJson($window.localStorage.userInfo),
       isInTeamMode: function() {
         return this.appMode === 'team';
       },
       isUserAuthenticated: function() {
-        return ($window.localStorage.authHeaderValue);
+        return (this.userInfo);
+      },
+      isAdminUser: function() {
+        return this.isUserAuthenticated() && this.userInfo.roles.indexOf("admin") > -1;
       },
       //  rolesAllowed is reserved for future use
       //  for now, the function involves authentication but not authorization
@@ -36,14 +40,13 @@ angular.module('irontest', ['ngResource', 'ngSanitize', 'ui.router', 'ui.grid', 
         return this.isInTeamMode() && !this.isUserAuthenticated();
       },
       getUsername: function() {
-        return $window.localStorage.username;
+        return this.userInfo.username;
       }
     };
 
     //  keep user logged in after page refresh
-    var authHeaderValue = $window.localStorage.authHeaderValue;
-    if (authHeaderValue) {
-      $http.defaults.headers.common.Authorization = authHeaderValue;
+    if ($rootScope.appStatus.userInfo) {
+      $http.defaults.headers.common.Authorization = $rootScope.appStatus.userInfo.authHeaderValue;
     }
 
     //  fetch app info from server side

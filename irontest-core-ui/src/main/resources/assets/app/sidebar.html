@@ -7,7 +7,7 @@
             <li>
               <a ui-sref="environment_all">Environments</a>
             </li>
-            <li>
+            <li ng-if="appStatus.isInTeamMode() && appStatus.isAdminUser()">
               <a ui-sref="user_all">Users</a>
             </li>
         </ul>

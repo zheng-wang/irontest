@@ -22,7 +22,7 @@ public class UserResource {
     }
 
     @GET
-    @RolesAllowed("admin")
+    @RolesAllowed(IronTestConstants.USER_ROLE_ADMIN)
     public List<User> findAll() {
         return userDAO.findAll();
     }
@@ -33,13 +33,13 @@ public class UserResource {
     }*/
 
     @POST
-    @RolesAllowed("admin")
+    @RolesAllowed(IronTestConstants.USER_ROLE_ADMIN)
     public User create(User user) {
         return userDAO.insert(user.getUsername());
     }
 
     @DELETE @Path("{userId}")
-    @RolesAllowed("admin")
+    @RolesAllowed(IronTestConstants.USER_ROLE_ADMIN)
     public void delete(@PathParam("userId") long userId) {
         User user = userDAO.findById(userId);
         if (user != null && IronTestConstants.SYSADMIN_USER.equals(user.getUsername())) {

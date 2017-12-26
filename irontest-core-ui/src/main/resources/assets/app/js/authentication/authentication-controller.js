@@ -1,8 +1,9 @@
 'use strict';
 
 //  This controller is for managed endpoints.
-angular.module('irontest').controller('AuthenticationController', ['$scope', '$uibModal', '$window', '$http',
-  function($scope, $uibModal, $window, $http) {
+angular.module('irontest').controller('AuthenticationController', ['$scope', '$rootScope', '$uibModal', '$window',
+    '$http',
+  function($scope, $rootScope, $uibModal, $window, $http) {
     $scope.openLoginModal = function() {
       $uibModal.open({
         templateUrl: '/ui/views/authentication/login-modal.html',
@@ -13,8 +14,8 @@ angular.module('irontest').controller('AuthenticationController', ['$scope', '$u
     };
 
     $scope.logout = function() {
-      $window.localStorage.removeItem("authHeaderValue");
-      $window.localStorage.removeItem("username");
+      $rootScope.appStatus.userInfo = null;
+      $window.localStorage.removeItem("userInfo");
       delete $http.defaults.headers.common.Authorization;
 
       $scope.$emit('userLoggedOut');
