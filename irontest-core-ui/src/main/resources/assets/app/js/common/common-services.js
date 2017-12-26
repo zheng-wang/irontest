@@ -44,7 +44,7 @@ angular.module('irontest')
           errorDetails = 'Unable to talk to Iron Test server.';
         } else if (errorHTTPResponse.status === 401) {
           errorMessage = 'User not authenticated.';
-          errorDetails = 'Please log in and do the operation again.';
+          errorDetails = 'Please log in and try the operation again.';
         } else {
           errorMessage = errorHTTPResponse.data.message;
           errorDetails = errorHTTPResponse.data.details;
