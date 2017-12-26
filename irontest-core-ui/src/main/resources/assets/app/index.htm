@@ -36,9 +36,8 @@
 
       <div ng-include="'/ui/sidebar.html'"></div>
 
-      <ul class="nav navbar-top-links navbar-right" ng-cloak ng-if="appStatus.isInTeamMode()"
-          ng-controller="AuthenticationController">
-        <li ng-if="!appStatus.isUserAuthenticated()" >
+      <ul class="nav navbar-top-links navbar-right" ng-cloak ng-if="appStatus.isInTeamMode()">
+        <li ng-if="!appStatus.isUserAuthenticated()" ng-controller="AuthenticationController">
           <a ng-click="openLoginModal()" href="">Log In</a>
         </li>
         <li class="dropdown" ng-if="appStatus.isUserAuthenticated()">

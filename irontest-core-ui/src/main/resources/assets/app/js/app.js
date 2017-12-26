@@ -8,8 +8,20 @@ angular.module('underscore', [])
 angular.module('irontest', ['ngResource', 'ngSanitize', 'ui.router', 'ui.grid', 'ui.grid.resizeColumns',
     'ui.grid.moveColumns', 'ui.grid.pagination', 'ui.grid.edit', 'ui.grid.cellNav', 'ui.grid.selection',
     'ui.grid.draggable-rows', 'ui.bootstrap', 'underscore', 'ngFileUpload', 'ngJsTree'])
-  .config(['$stateProvider', '$urlRouterProvider', function(
-      $stateProvider, $urlRouterProvider) {
+  .factory('authInterceptor', ['$q', '$rootScope', function($q, $rootScope) {
+    return {
+      responseError: function(response) {
+        if (response.status === 401){
+          $rootScope.logout();
+        }
+        return $q.reject(response);
+      }
+    };
+  }])
+  .config(['$httpProvider', '$stateProvider', '$urlRouterProvider', function(
+      $httpProvider, $stateProvider, $urlRouterProvider) {
+
+    $httpProvider.interceptors.push('authInterceptor');
 
     // set default (home) view for the right pane
     $urlRouterProvider.otherwise('/');
@@ -56,4 +68,16 @@ angular.module('irontest', ['ngResource', 'ngSanitize', 'ui.router', 'ui.grid', 
       }, function errorCallback(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);
       });
+
+    $rootScope.logout = function() {
+      //  log out only when currently logged in, to avoid unnecessary folder tree refresh
+      if ($rootScope.appStatus.userInfo || $window.localStorage.userInfo ||
+          $http.defaults.headers.common.Authorization) {
+        $rootScope.appStatus.userInfo = null;
+        $window.localStorage.removeItem("userInfo");
+        delete $http.defaults.headers.common.Authorization;
+
+        $rootScope.$emit('userLoggedOut');    //  not using broadcast, for better performance
+      }
+    };
   }]);
