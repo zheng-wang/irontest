@@ -1,8 +1,14 @@
 'use strict';
 
-angular.module('irontest').controller('UsersController', ['$scope', 'Users', '$state', 'uiGridConstants',
+angular.module('irontest').controller('UsersController', ['$scope', '$rootScope', 'Users', '$state', 'uiGridConstants',
     'IronTestUtils', '$uibModal',
-  function($scope, Users, $state, uiGridConstants, IronTestUtils, $uibModal) {
+  function($scope, $rootScope, Users, $state, uiGridConstants, IronTestUtils, $uibModal) {
+    $rootScope.$on('userLoggedOut', function() {
+      if ($state.current.name === 'user_all') {
+        $state.go('home');
+      }
+    });
+
     $scope.userGridColumnDefs = [
       {
         name: 'username', width: 200, minWidth: 100,
