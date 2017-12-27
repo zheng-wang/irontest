@@ -2,9 +2,9 @@ package io.irontest.core;
 
 import org.apache.commons.text.StrLookup;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by Zheng on 10/09/2017.
@@ -12,7 +12,7 @@ import java.util.Map;
 public class MapValueLookup extends StrLookup<String> {
     private Map<String, String> map;
     private boolean escapeForJSON;
-    private List<String> unfoundKeys = new ArrayList<String>();
+    private Set<String> unfoundKeys = new HashSet<>();
 
     public MapValueLookup(Map<String, String> map, boolean escapeForJSON) {
         this.map = map;
@@ -35,7 +35,7 @@ public class MapValueLookup extends StrLookup<String> {
         return null;    //  returning null leaves the reference untouched (not replaced) in the template string
     }
 
-    public List<String> getUnfoundKeys() {
+    public Set<String> getUnfoundKeys() {
         return unfoundKeys;
     }
 }

@@ -12,6 +12,7 @@ import org.apache.commons.text.StrSubstitutor;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by Zheng on 6/08/2015.
@@ -29,19 +30,26 @@ public abstract class AssertionVerifier {
         Map<String, String> referenceableProperties = new HashMap<String, String>();
         referenceableProperties.putAll(implicitProperties);
         referenceableProperties.putAll(IronTestUtils.udpListToMap(testcaseUDPs));
+        MapValueLookup propertyReferenceResolver = new MapValueLookup(referenceableProperties, true);
+
+        //  resolve property references in assertion.name
+        String resolvedAssertionName = new StrSubstitutor(propertyReferenceResolver)
+                .replace(assertion.getName());
+        assertion.setName(resolvedAssertionName);
+        Set<String> undefinedProperties = propertyReferenceResolver.getUnfoundKeys();
 
         //  resolve property references in assertion.otherProperties
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
         String assertionOtherPropertiesJSON =  objectMapper.writeValueAsString(assertion.getOtherProperties());
-        MapValueLookup propertyReferenceResolver = new MapValueLookup(referenceableProperties, true);
         String resolvedAssertionOtherPropertiesJSON = new StrSubstitutor(propertyReferenceResolver)
                 .replace(assertionOtherPropertiesJSON);
-        List<String> undefinedProperties = propertyReferenceResolver.getUnfoundKeys();
+        undefinedProperties.addAll(propertyReferenceResolver.getUnfoundKeys());
         String tempAssertionJSON = "{\"type\":\"" + assertion.getType() + "\",\"otherProperties\":" +
                 resolvedAssertionOtherPropertiesJSON + "}";
         Assertion tempAssertion = objectMapper.readValue(tempAssertionJSON, Assertion.class);
         assertion.setOtherProperties(tempAssertion.getOtherProperties());
+
         if (!undefinedProperties.isEmpty()) {
             throw new RuntimeException("Properties " + undefinedProperties + " are undefined.");
         }
