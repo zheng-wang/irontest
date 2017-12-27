@@ -122,6 +122,8 @@
     <div class="col-lg-1">Assertion:</div>
     <div class="col-lg-11">
       <div class="row">
+        <div class="col-lg-1">Name:</div>
+        <div class="col-lg-3">${verification.assertion.name}</div>
         <div class="col-lg-2">Verification result:</div>
         <div class="col-lg-1 test-result-color-${verification.verificationResult.result}">
             ${verification.verificationResult.result}

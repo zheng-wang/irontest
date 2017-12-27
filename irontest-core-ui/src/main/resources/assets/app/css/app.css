@@ -61,7 +61,7 @@ body {
   image-rendering: pixelated;
 }
 .jstree-ocl {
-  transform: scale(1.03093); /* 97 / 100 */
+  transform: scale(1.0311); /* a tiny bit bigger than 97 / 100 */
   image-rendering: pixelated;
 }
 
