@@ -15,7 +15,6 @@ public class User {
     private String password;
     @JsonIgnore
     private String salt;
-    @JsonIgnore
     private Set<String> roles = new HashSet<String>();
 
     public long getId() {

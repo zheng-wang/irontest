@@ -45,7 +45,7 @@ public abstract class UserDAO {
     @SqlQuery("select id, username from user")
     public abstract List<User> findAll();
 
-    @SqlQuery("select id, username from user where id = :id")
+    @SqlQuery("select id, username, salt from user where id = :id")
     public abstract User findById(@Bind("id") long id);
 
     @SqlUpdate("insert into user (username, password, salt) values (:username, :password, :salt)")
@@ -62,4 +62,13 @@ public abstract class UserDAO {
 
     @SqlUpdate("delete from user where id = :id")
     public abstract void deleteById(@Bind("id") long id);
+
+    @SqlUpdate("update user set password = :password, salt = :salt, updated = CURRENT_TIMESTAMP where id = :id")
+    protected abstract void _updatePassword(@Bind("id") long id, @Bind("password") String password,
+                                            @Bind("salt") String salt);
+
+    public void updatePassword(long userId, String newPassword) {
+        HashedPassword hashedNewPassword = PasswordUtils.hashPassword(newPassword);
+        _updatePassword(userId, hashedNewPassword.getHashedPassword(), hashedNewPassword.getSalt());
+    }
 }

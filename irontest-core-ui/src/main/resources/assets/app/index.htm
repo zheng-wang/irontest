@@ -36,8 +36,9 @@
 
       <div ng-include="'/ui/sidebar.html'"></div>
 
-      <ul class="nav navbar-top-links navbar-right" ng-cloak ng-if="appStatus.isInTeamMode()">
-        <li ng-if="!appStatus.isUserAuthenticated()" ng-controller="AuthenticationController">
+      <ul class="nav navbar-top-links navbar-right" ng-cloak ng-if="appStatus.isInTeamMode()"
+          ng-controller="UserController">
+        <li ng-if="!appStatus.isUserAuthenticated()">
           <a ng-click="openLoginModal()" href="">Log In</a>
         </li>
         <li class="dropdown" ng-if="appStatus.isUserAuthenticated()">
@@ -45,6 +46,9 @@
             <i class="fa fa-user fa-fw"></i> {{appStatus.getUsername()}} <i class="fa fa-caret-down"></i>
           </a>
           <ul class="dropdown-menu dropdown-user">
+            <li>
+              <a ng-click="openChangePasswordModal()" href=""><i class="fa fa-user fa-fw"></i> Change Password</a>
+            </li>
             <li><a ng-click="logout()" href=""><i class="fa fa-sign-out fa-fw"></i> Logout</a></li>
           </ul>
           <!-- /.dropdown-user -->
@@ -81,8 +85,9 @@
   <script src="/ui/js/common/common-services.js"></script>
   <script src="/ui/js/common/common-directives.js"></script>
   <script src="/ui/js/common/common-controllers.js"></script>
-  <script src="/ui/js/authentication/authentication-controller.js"></script>
-  <script src="/ui/js/authentication/login-modal-controller.js"></script>
+  <script src="/ui/js/user/user-controller.js"></script>
+  <script src="/ui/js/user/login-modal-controller.js"></script>
+  <script src="/ui/js/user/change-password-modal-controller.js"></script>
   <script src="/ui/js/endpoints/endpoints-routes.js"></script>
   <script src="/ui/js/endpoints/endpoints-services.js"></script>
   <script src="/ui/js/endpoints/endpoints-controller.js"></script>

@@ -8,12 +8,13 @@ angular.module('irontest').controller('UserLoginModalController', ['$scope', '$r
     $scope.login = function() {
       var authHeaderValue = 'Basic ' + $window.btoa($scope.username + ':' + $scope.password);
       $http
-        .get('api/authenticated', {headers: {'Authorization': authHeaderValue}})
+        .get('api/users/authenticated', {headers: {'Authorization': authHeaderValue}})
         .then(function successCallback(response) {
           var userInfo = {
             authHeaderValue: authHeaderValue,
+            id: response.data.id,
             username: $scope.username,
-            roles: response.data
+            roles: response.data.roles
           }
           $window.localStorage.userInfo = angular.toJson(userInfo);
           $rootScope.appStatus.userInfo = userInfo;

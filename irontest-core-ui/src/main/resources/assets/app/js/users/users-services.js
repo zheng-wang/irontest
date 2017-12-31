@@ -5,8 +5,9 @@ angular.module('irontest').factory('Users', ['$resource',
     return $resource('api/users/:userId', {
       userId: '@id'
     }, {
-      update: {
-        method: 'PUT'
+      updatePassword: {
+        method: 'PUT',
+        url: 'api/users/:userId/password'
       }
     });
   }

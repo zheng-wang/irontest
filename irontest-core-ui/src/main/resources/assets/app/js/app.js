@@ -51,6 +51,9 @@ angular.module('irontest', ['ngResource', 'ngSanitize', 'ui.router', 'ui.grid', 
       isForbidden: function(rolesAllowed) {
         return this.isInTeamMode() && !this.isUserAuthenticated();
       },
+      getUserId: function() {
+        return this.userInfo.id;
+      },
       getUsername: function() {
         return this.userInfo.username;
       }

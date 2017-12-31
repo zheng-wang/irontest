@@ -1,16 +1,19 @@
 package io.irontest.resources;
 
 import io.irontest.IronTestConstants;
+import io.irontest.auth.SimplePrincipal;
 import io.irontest.db.UserDAO;
 import io.irontest.models.User;
 
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.SecurityContext;
 import java.util.List;
 
 /**
- * Notice that class level @RolesAllowed is supported since Dropwizard 1.0.
  * Created by Zheng on 24/12/2017.
  */
 @Path("/users") @Produces({ MediaType.APPLICATION_JSON })
@@ -19,6 +22,16 @@ public class UserResource {
 
     public UserResource(UserDAO userDAO) {
         this.userDAO = userDAO;
+    }
+
+    /**
+     * Return HTTP 200 if user is authenticated; return 401 otherwise.
+     */
+    @GET @Path("authenticated")
+    @PermitAll
+    public User authenticated(@Context SecurityContext context) {
+        SimplePrincipal principal = (SimplePrincipal) context.getUserPrincipal();
+        return userDAO.findByUsername(principal.getName());
     }
 
     @GET
@@ -47,5 +60,11 @@ public class UserResource {
         }
 
         userDAO.deleteById(userId);
+    }
+
+    @PUT @Path("{userId}/password")
+    @PermitAll
+    public void updatePassword(@PathParam("userId") long userId, @QueryParam("newPassword") String newPassword) {
+        userDAO.updatePassword(userId, newPassword);
     }
 }

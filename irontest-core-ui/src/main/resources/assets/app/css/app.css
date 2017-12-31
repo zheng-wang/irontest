@@ -226,7 +226,7 @@ body {
   background-color: lime;
 }
 
-.error-message-modal, .select-soap-operation-modal, .login-modal, .create-user-modal {
+.error-message-modal, .select-soap-operation-modal, .login-modal, .create-user-modal, .change-password-modal {
   top: 20%;
 }
 
