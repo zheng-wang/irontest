@@ -1,0 +1,20 @@
+<ul class="nav navbar-top-links navbar-right" ng-cloak ng-if="appStatus.isInTeamMode()"
+    ng-controller="UserController">
+  <li ng-if="!appStatus.isUserAuthenticated()">
+    <a ng-click="openLoginModal()" href="">Log In</a>
+  </li>
+  <li class="dropdown" ng-if="appStatus.isUserAuthenticated()">
+    <a class="dropdown-toggle" data-toggle="dropdown" href="">
+      <i class="fa fa-user fa-fw"></i> {{appStatus.getUsername()}} <i class="fa fa-caret-down"></i>
+    </a>
+    <ul class="dropdown-menu dropdown-user">
+      <li>
+        <a ng-click="openChangePasswordModal()" href=""><i class="fa fa-user fa-fw"></i> Change Password</a>
+      </li>
+      <li><a ng-click="logout()" href=""><i class="fa fa-sign-out fa-fw"></i> Logout</a></li>
+    </ul>
+    <!-- /.dropdown-user -->
+  </li>
+  <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>   <!-- placeholder -->
+  <!-- /.dropdown -->
+</ul>
