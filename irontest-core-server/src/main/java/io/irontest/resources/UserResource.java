@@ -14,6 +14,7 @@ import javax.ws.rs.core.SecurityContext;
 import java.util.List;
 
 /**
+ * This resource is only registered in team mode.
  * Created by Zheng on 24/12/2017.
  */
 @Path("/users") @Produces({ MediaType.APPLICATION_JSON })
@@ -40,11 +41,6 @@ public class UserResource {
         return userDAO.findAll();
     }
 
-    /*@GET @Path("{userId}")
-    public User findById(@PathParam("userId") long userId) {
-        return userDAO.findById(userId);
-    }*/
-
     @POST
     @RolesAllowed(IronTestConstants.USER_ROLE_ADMIN)
     public User create(User user) {
@@ -64,7 +60,14 @@ public class UserResource {
 
     @PUT @Path("{userId}/password")
     @PermitAll
-    public void updatePassword(@PathParam("userId") long userId, @QueryParam("newPassword") String newPassword) {
-        userDAO.updatePassword(userId, newPassword);
+    public void updatePassword(@PathParam("userId") long userId, @QueryParam("newPassword") String newPassword,
+                               @Context SecurityContext context) {
+        SimplePrincipal principal = (SimplePrincipal) context.getUserPrincipal();
+        User user = userDAO.findByUsername(principal.getName());
+        if (user.getId() == userId) {
+            userDAO.updatePassword(userId, newPassword);
+        } else {
+            throw new RuntimeException("You can't change other user's password.");
+        }
     }
 }
