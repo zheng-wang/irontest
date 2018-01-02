@@ -91,9 +91,9 @@
         </div>
       </#if>
       <div class="row">
-        <textarea class="form-control" rows="8" readonly>
-          <#include "${stepRun.teststep.type?lower_case}TeststepResponse.ftl">
-        </textarea>
+        <#t><textarea class="form-control" rows="8" readonly>
+          <#t><#include "${stepRun.teststep.type?lower_case}TeststepResponse.ftl">
+        <#t></textarea>
       </div>
     </div>
   </div>
