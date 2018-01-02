@@ -1,8 +1,20 @@
 'use strict';
 
 angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcases', 'Teststeps', 'TestcaseRuns',
-    '$stateParams', '$state', 'uiGridConstants', '$timeout', 'IronTestUtils', '$sce',
-  function($scope, Testcases, Teststeps, TestcaseRuns, $stateParams, $state, uiGridConstants, $timeout, IronTestUtils, $sce) {
+    '$stateParams', '$state', 'uiGridConstants', '$timeout', 'IronTestUtils', '$sce', '$window',
+  function($scope, Testcases, Teststeps, TestcaseRuns, $stateParams, $state, uiGridConstants, $timeout, IronTestUtils,
+      $sce, $window) {
+    $scope.BASIC_INFO_TAB_INDEX = 0;
+    $scope.PROPERTIES_TAB_INDEX = 1;
+    $scope.TEST_STEPS_TAB_INDEX = 2;
+
+    $scope.activeTabIndex = ($window.localStorage.lastTabOnTestcaseEditView) ?
+      parseInt($window.localStorage.lastTabOnTestcaseEditView) : $scope.TEST_STEPS_TAB_INDEX;
+
+    $scope.storeTabIndex = function(tabIndex) {
+      $window.localStorage.lastTabOnTestcaseEditView = tabIndex;
+    };
+
     var timer;
     $scope.autoSave = function(isValid) {
       if (timer) $timeout.cancel(timer);
@@ -10,9 +22,6 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
         $scope.update(isValid);
       }, 2000);
     };
-
-    $scope.PROPERTIES_TAB_INDEX = 1;
-    $scope.TEST_STEPS_TAB_INDEX = 2;
 
     $scope.teststepGridOptions = {
       data: 'testcase.teststeps',
@@ -118,7 +127,6 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
     };
 
     $scope.findOne = function() {
-      $scope.activeTabIndex = $scope.TEST_STEPS_TAB_INDEX;
       Testcases.get({
         testcaseId: $stateParams.testcaseId
       }, function(testcase) {

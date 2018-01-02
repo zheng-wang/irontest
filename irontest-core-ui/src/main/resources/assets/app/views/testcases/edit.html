@@ -8,7 +8,7 @@
     </div>
   </div>
   <uib-tabset active="activeTabIndex">
-    <uib-tab heading="Basic Info">
+    <uib-tab heading="Basic Info" select="storeTabIndex(BASIC_INFO_TAB_INDEX)">
       <form name="testcaseForm" class="form-horizontal col-lg-10" role="form" novalidate>
         <div class="form-group"></div> <!-- spacer -->
         <div class="form-group">
@@ -21,7 +21,7 @@
         </div>
       </form>
     </uib-tab>
-    <uib-tab heading="Properties">
+    <uib-tab heading="Properties" select="storeTabIndex(PROPERTIES_TAB_INDEX)">
       <form name="udpsForm" class="form-horizontal col-lg-10" role="form" novalidate ng-controller="UDPsController"
             ng-init="findByTestcaseId()">
         <div class="form-group"></div> <!-- spacer -->
@@ -38,7 +38,7 @@
         </div>
       </form>
     </uib-tab>
-    <uib-tab heading="Test Steps">
+    <uib-tab heading="Test Steps" select="storeTabIndex(TEST_STEPS_TAB_INDEX)">
       <div class="form-group"></div> <!-- spacer -->
       <div class="row">
         <div class="form-group">
