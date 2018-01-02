@@ -1,21 +1,22 @@
-body {
-  /* There are some flaws when zoom < 100%.
-       1. ui-grid. When dragging column resizer, the cursor is not aligned with the long vertical line.
+/* body {
+   There are some flaws when zoom < 100%.
+       1. jstree. Moving node becomes nearly impossible. Haven't found a workaround. This is unacceptable.
        2. jstree. Though bars and icons blurring have been offset, the final images look not the same smooth as when
-          they are with zoom = 100%.
-     However, currently still feeling the benefit of zoom outweighs the flaws. */
+                 they are with zoom = 100%.
+       3. ui-grid. When dragging column resizer, the cursor is not aligned with the long vertical line.
+
   zoom: 97%;
-}
+}*/
 
 /* custom ui grid classes to address issue https://github.com/angular-ui/ui-grid/issues/4944 when zoom < 100% */
-.ui-grid-header-cell {
+/*.ui-grid-header-cell {
   float: left;
-}
-/* This is to address the further issue introduced by the custom ui-grid-header-cell class,
+}*/
+/* This is to address the further issue introduced by the custom ui-grid-header-cell class for zooming,
    offsetting the shortened right border of Delete column headers when there are filters in other column headers. */
-.ui-grid-column-resizer {
+/*.ui-grid-column-resizer {
   height: 60px;
-}
+}*/
 
 /* classes from AngularJS for ngCloak directive */
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
@@ -57,13 +58,13 @@ body {
   z-index: 1000;        /* avoid the tree context menu being partially hidden */
 }
 /* These two classes are to offset icons and bars blurring introduced by zoom < 100%. */
-.jstree-themeicon {
+/*.jstree-themeicon {
   image-rendering: pixelated;
-}
-.jstree-ocl {
-  transform: scale(1.0311); /* a tiny bit bigger than 97 / 100 */
+}*/
+/*.jstree-ocl {
+  transform: scale(1.0311);     a tiny bit bigger than 97 / 100
   image-rendering: pixelated;
-}
+}*/
 
 /* custom sb admin 2 classes */
 .sidebar {
