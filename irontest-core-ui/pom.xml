@@ -198,6 +198,7 @@
                 <filtering>true</filtering>
                 <includes>
                     <include>assets/app/index.htm</include>
+                    <include>assets/app/sidebar.html</include>
                     <include>io/irontest/views/testcaseRun.ftl</include>
                 </includes>
             </resource>
