@@ -18,6 +18,7 @@ angular.module('irontest').controller('UDPsController', ['$scope', 'UDPs', 'Iron
 
     $scope.udpGridOptions = {
       data: 'udps', enableFiltering: true, enableColumnMenus: false,
+      rowTemplate: '<div grid="grid" class="ui-grid-draggable-row" draggable="true"><div ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader, \'custom\': true }" ui-grid-cell></div></div>',
       columnDefs: [
         {
           name: 'name', width: '30%', enableCellEdit: true, enableCellEditOnFocus: true,
@@ -37,6 +38,10 @@ angular.module('irontest').controller('UDPsController', ['$scope', 'UDPs', 'Iron
           if (newValue !== oldValue) {
             udpUpdate(rowEntity);
           }
+        });
+        gridApi.draggableRows.on.rowDropped($scope, function (info, dropTarget) {
+          console.log(info);
+          console.log(dropTarget);
         });
       }
     };

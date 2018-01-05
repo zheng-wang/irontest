@@ -47,6 +47,15 @@ public abstract class TeststepDAO {
     @CreateSqlObject
     protected abstract AssertionDAO assertionDAO();
 
+    /**
+     * This method considers test step insertion from both Create (test step) button on UI and test case duplicating.
+     * @param teststep
+     * @param request
+     * @param requestType
+     * @param endpointId
+     * @param otherProperties
+     * @return
+     */
     @SqlUpdate("insert into teststep (testcase_id, sequence, type, description, action, request, request_type, " +
             "request_filename, endpoint_id, other_properties) values (:t.testcaseId, " +
                 "case when :t.sequence = 0 " +
@@ -67,6 +76,12 @@ public abstract class TeststepDAO {
         return insert_NoTransaction(teststep);
     }
 
+    /**
+     * This method considers test step insertion from both Create (test step) button on UI and test case duplicating.
+     * @param teststep
+     * @return
+     * @throws JsonProcessingException
+     */
     public Teststep insert_NoTransaction(Teststep teststep) throws JsonProcessingException {
         Endpoint endpoint = teststep.getEndpoint();
         if (endpoint != null && endpoint.getId() == 0) {

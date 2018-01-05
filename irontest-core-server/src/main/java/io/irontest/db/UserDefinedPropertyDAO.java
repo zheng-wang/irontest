@@ -1,6 +1,7 @@
 package io.irontest.db;
 
 import io.irontest.models.UserDefinedProperty;
+import io.irontest.models.teststep.Teststep;
 import org.skife.jdbi.v2.sqlobject.*;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
@@ -17,7 +18,7 @@ public abstract class UserDefinedPropertyDAO {
     public abstract void createSequenceIfNotExists();
 
     @SqlUpdate("CREATE TABLE IF NOT EXISTS udp (" +
-            "id BIGINT DEFAULT udp_sequence.NEXTVAL PRIMARY KEY, testcase_id BIGINT, " +
+            "id BIGINT DEFAULT udp_sequence.NEXTVAL PRIMARY KEY, testcase_id BIGINT, sequence SMALLINT NOT NULL, " +
             "name VARCHAR(200) NOT NULL DEFAULT 'P' || DATEDIFF('MS', '1970-01-01', CURRENT_TIMESTAMP), " +
             "value CLOB NOT NULL DEFAULT '', created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
@@ -29,7 +30,15 @@ public abstract class UserDefinedPropertyDAO {
                 "REGEXP_LIKE(name, '^[a-zA-Z_$][a-zA-Z_$0-9]*$')))")
     public abstract void createTableIfNotExists();
 
-    @SqlUpdate("insert into udp (testcase_id) values (:testcaseId)")
+    /**
+     * Unlike {@link TeststepDAO#_insert(Teststep, Object, String, Long, String)}, this method does not consider UDP
+     * insertion from test case duplicating. It is already considered by the
+     * {@link #duplicateByTestcase(long, long)} method.
+     * @param testcaseId
+     * @return
+     */
+    @SqlUpdate("insert into udp (testcase_id, sequence) values (:testcaseId, (" +
+            "select coalesce(max(sequence), 0) + 1 from udp where testcase_id = :testcaseId))")
     @GetGeneratedKeys
     protected abstract long _insert(@Bind("testcaseId") long testcaseId);
 
@@ -47,7 +56,7 @@ public abstract class UserDefinedPropertyDAO {
     @SqlQuery("select * from udp where id = :id")
     protected abstract UserDefinedProperty findById(@Bind("id") long id);
 
-    @SqlQuery("select * from udp where testcase_id = :testcaseId order by id")
+    @SqlQuery("select * from udp where testcase_id = :testcaseId order by sequence")
     public abstract List<UserDefinedProperty> findByTestcaseId(@Bind("testcaseId") long testcaseId);
 
     @SqlQuery("select u.* from udp u, teststep t where t.id = :teststepId and t.testcase_id = u.testcase_id")
