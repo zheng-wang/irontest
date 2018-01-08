@@ -23,6 +23,7 @@ public abstract class UserDefinedPropertyDAO {
             "value CLOB NOT NULL DEFAULT '', created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (testcase_id) REFERENCES testcase(id) ON DELETE CASCADE, " +
+            "CONSTRAINT UDP_UNIQUE_SEQUENCE_CONSTRAINT UNIQUE(testcase_id, sequence), " +
             "CONSTRAINT UDP_" + DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX + " UNIQUE(testcase_id, name)," +
             "CONSTRAINT UDP_" + DB_PROPERTY_NAME_CONSTRAINT_NAME_SUFFIX + " CHECK(" +
                 "name NOT IN ('" + IMPLICIT_PROPERTY_NAME_TEST_CASE_START_TIME + "', '" +
@@ -62,7 +63,7 @@ public abstract class UserDefinedPropertyDAO {
     @SqlQuery("select u.* from udp u, teststep t where t.id = :teststepId and t.testcase_id = u.testcase_id")
     public abstract List<UserDefinedProperty> findTestcaseUDPsByTeststepId(@Bind("teststepId") long teststepId);
 
-    @SqlUpdate("update udp set name = :name, value = :value where id = :id")
+    @SqlUpdate("update udp set name = :name, value = :value, updated = CURRENT_TIMESTAMP where id = :id")
     public abstract void update(@BindBean UserDefinedProperty udp);
 
     @SqlUpdate("delete from udp where id = :id")
@@ -73,7 +74,22 @@ public abstract class UserDefinedPropertyDAO {
      * @param sourceTestcaseId
      * @param targetTestcaseId
      */
-    @SqlUpdate("insert into UDP (name, value, testcase_id) select name, value, :targetTestcaseId from UDP where testcase_id = :sourceTestcaseId")
+    @SqlUpdate("insert into UDP (sequence, name, value, testcase_id) select sequence, name, value, :targetTestcaseId from UDP where testcase_id = :sourceTestcaseId")
     public abstract void duplicateByTestcase(@Bind("sourceTestcaseId") long sourceTestcaseId,
                                              @Bind("targetTestcaseId") long targetTestcaseId);
+
+    @SqlQuery("select * from udp where testcase_id = :testcaseId and sequence = :sequence")
+    protected abstract UserDefinedProperty findBySequence(@Bind("testcaseId") long testcaseId, @Bind("sequence") short sequence);
+
+    @SqlUpdate("update udp set sequence = :newSequence, updated = CURRENT_TIMESTAMP where id = :id")
+    protected abstract void updateSequenceById(@Bind("id") long id, @Bind("newSequence") short newSequence);
+
+    @Transaction
+    public void swap(long testcaseId, short sequence1, short sequence2) {
+        UserDefinedProperty udp1 = findBySequence(testcaseId, sequence1);
+        UserDefinedProperty udp2 = findBySequence(testcaseId, sequence2);
+        updateSequenceById(udp2.getId(), (short) -1);
+        updateSequenceById(udp1.getId(), sequence2);
+        updateSequenceById(udp2.getId(), sequence1);
+    }
 }

@@ -5,13 +5,15 @@ package io.irontest.models;
  */
 public class UserDefinedProperty {
     private long id;
+    private short sequence;
     private String name;
     private String value;
 
     public UserDefinedProperty() {}
 
-    public UserDefinedProperty(long id, String name, String value) {
+    public UserDefinedProperty(long id, short sequence, String name, String value) {
         this.id = id;
+        this.sequence = sequence;
         this.name = name;
         this.value = value;
     }
@@ -22,6 +24,14 @@ public class UserDefinedProperty {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public short getSequence() {
+        return sequence;
+    }
+
+    public void setSequence(short sequence) {
+        this.sequence = sequence;
     }
 
     public String getName() {

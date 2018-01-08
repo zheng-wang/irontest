@@ -12,7 +12,8 @@ import java.sql.SQLException;
  */
 public class UserDefinedPropertyMapper implements ResultSetMapper<UserDefinedProperty> {
     public UserDefinedProperty map(int index, ResultSet rs, StatementContext ctx) throws SQLException {
-        UserDefinedProperty udp = new UserDefinedProperty(rs.getLong("id"), rs.getString("name"), rs.getString("value"));
+        UserDefinedProperty udp = new UserDefinedProperty(
+                rs.getLong("id"), rs.getShort("sequence"), rs.getString("name"), rs.getString("value"));
 
         return udp;
     }

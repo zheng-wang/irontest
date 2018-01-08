@@ -392,7 +392,7 @@ public abstract class TeststepDAO {
     @SqlUpdate("update teststep set sequence = case when :direction = 'up' then sequence - 1 else sequence + 1 end, " +
             "updated = CURRENT_TIMESTAMP " +
             "where testcase_id = :testcaseId and sequence >= :firstSequence and sequence <= :lastSequence")
-    protected abstract int batchMoveOneStep(@Bind("testcaseId") long testcaseId,
+    protected abstract int batchMove(@Bind("testcaseId") long testcaseId,
                                               @Bind("firstSequence") short firstSequence,
                                               @Bind("lastSequence") short lastSequence,
                                               @Bind("direction") String direction);
@@ -406,9 +406,9 @@ public abstract class TeststepDAO {
             updateSequenceById(draggedStepId, (short) -1);
 
             if (fromSequence < toSequence) {
-                batchMoveOneStep(testcaseId, (short) (fromSequence + 1), toSequence, "up");
+                batchMove(testcaseId, (short) (fromSequence + 1), toSequence, "up");
             } else {
-                batchMoveOneStep(testcaseId, toSequence, (short) (fromSequence - 1), "down");
+                batchMove(testcaseId, toSequence, (short) (fromSequence - 1), "down");
             }
 
             //  move the dragged step last

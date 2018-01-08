@@ -13,6 +13,10 @@ angular.module('irontest').factory('UDPs', ['$resource',
         method: 'DELETE',
         url: 'api/udps/:udpId',
         params: { udpId: '@id' }
+      },
+      swap: {
+        method: 'POST',
+        url: 'api/testcases/:testcaseId/udps/swap'
       }
     });
   }

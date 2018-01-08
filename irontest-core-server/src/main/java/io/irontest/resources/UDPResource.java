@@ -41,4 +41,11 @@ public class UDPResource {
     public void delete(@PathParam("udpId") long udpId) {
         udpDAO.deleteById(udpId);
     }
+
+    @POST @Path("testcases/{testcaseId}/udps/swap")
+    @PermitAll
+    public void swap(@PathParam("testcaseId") long testcaseId,
+                     @QueryParam("sequence1") short sequence1, @QueryParam("sequence2") short sequence2) {
+        udpDAO.swap(testcaseId, sequence1, sequence2);
+    }
 }

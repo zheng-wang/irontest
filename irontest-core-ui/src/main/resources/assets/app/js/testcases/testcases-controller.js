@@ -48,7 +48,7 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
         }
       ],
       onRegisterApi: function (gridApi) {
-        gridApi.draggableRows.on.rowDropped($scope, function (info, dropTarget) {
+        gridApi.draggableRows.on.rowDropped($scope, function (info) {
           var testcase = new Testcases({
             id: $scope.testcase.id,
             teststeps: [

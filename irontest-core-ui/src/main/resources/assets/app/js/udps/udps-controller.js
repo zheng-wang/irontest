@@ -34,14 +34,25 @@ angular.module('irontest').controller('UDPsController', ['$scope', 'UDPs', 'Iron
         }
       ],
       onRegisterApi: function(gridApi) {
+        var idOfRowBeingEdited = null;
+        gridApi.edit.on.beginCellEdit ($scope, function(rowEntity, colDef){
+          idOfRowBeingEdited = rowEntity.id;
+        });
         gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue){
-          if (newValue !== oldValue) {
+          if (rowEntity.id === idOfRowBeingEdited && newValue !== oldValue) {  //  this edit is real text edit, not triggered by moving row (using the ui-grid-draggable-rows plugin)
             udpUpdate(rowEntity);
           }
         });
-        gridApi.draggableRows.on.rowDropped($scope, function (info, dropTarget) {
-          console.log(info);
-          console.log(dropTarget);
+        gridApi.draggableRows.on.rowDropped($scope, function (info) {
+          UDPs.swap({
+            testcaseId: $scope.testcase.id,
+            sequence1: info.draggedRowEntity.sequence,
+            sequence2: info.targetRowEntity.sequence
+          }, {}, function(response) {
+            $scope.$emit('successfullySaved');
+          }, function(response) {
+            IronTestUtils.openErrorHTTPResponseModal(response);
+          });
         });
       }
     };
