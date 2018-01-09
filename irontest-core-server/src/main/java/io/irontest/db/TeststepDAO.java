@@ -24,6 +24,9 @@ import static io.irontest.IronTestConstants.DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFI
  */
 @RegisterMapper(TeststepMapper.class)
 public abstract class TeststepDAO {
+    private static final String STEP_MOVE_DIRECTION_UP = "up";
+    private static final String STEP_MOVE_DIRECTION_DOWN = "down";
+
     @SqlUpdate("CREATE SEQUENCE IF NOT EXISTS teststep_sequence START WITH 1 INCREMENT BY 1 NOCACHE")
     public abstract void createSequenceIfNotExists();
 
@@ -329,7 +332,8 @@ public abstract class TeststepDAO {
     protected void deleteById_NoTransaction(long id) {
         Teststep teststep = findById_NoTransaction(id);
         _deleteById(id);
-        decrementSequenceNumbersOfNextSteps(teststep.getTestcaseId(), (short) (teststep.getSequence() + 1));
+        // decrement sequence number of all next test steps
+        batchMove(teststep.getTestcaseId(), (short) (teststep.getSequence() + 1), Short.MAX_VALUE, STEP_MOVE_DIRECTION_UP);
 
         Endpoint endpoint = teststep.getEndpoint();
         if (endpoint != null && !endpoint.isManaged()) {  //  delete the teststep's endpoint if it exists and is unmanaged
@@ -337,11 +341,6 @@ public abstract class TeststepDAO {
         }
     }
 
-    //  decrement sequence number of all next test steps
-    @SqlUpdate("update teststep set sequence = sequence - 1, updated = CURRENT_TIMESTAMP " +
-               "where testcase_id = :testcaseId and sequence >= :startSequenceNumber")
-    protected abstract int decrementSequenceNumbersOfNextSteps(@Bind("testcaseId") long testcaseId,
-                                                               @Bind("startSequenceNumber") short startSequenceNumber);
     @SqlQuery("select * from teststep where id = :id")
     protected abstract Teststep _findById(@Bind("id") long id);
 
@@ -389,7 +388,7 @@ public abstract class TeststepDAO {
     @SqlUpdate("update teststep set sequence = :newSequence, updated = CURRENT_TIMESTAMP where id = :teststepId")
     protected abstract int updateSequenceById(@Bind("teststepId") long teststepId, @Bind("newSequence") short newSequence);
 
-    @SqlUpdate("update teststep set sequence = case when :direction = 'up' then sequence - 1 else sequence + 1 end, " +
+    @SqlUpdate("update teststep set sequence = case when :direction = '" + STEP_MOVE_DIRECTION_UP + "' then sequence - 1 else sequence + 1 end, " +
             "updated = CURRENT_TIMESTAMP " +
             "where testcase_id = :testcaseId and sequence >= :firstSequence and sequence <= :lastSequence")
     protected abstract int batchMove(@Bind("testcaseId") long testcaseId,
@@ -406,9 +405,9 @@ public abstract class TeststepDAO {
             updateSequenceById(draggedStepId, (short) -1);
 
             if (fromSequence < toSequence) {
-                batchMove(testcaseId, (short) (fromSequence + 1), toSequence, "up");
+                batchMove(testcaseId, (short) (fromSequence + 1), toSequence, STEP_MOVE_DIRECTION_UP);
             } else {
-                batchMove(testcaseId, toSequence, (short) (fromSequence - 1), "down");
+                batchMove(testcaseId, toSequence, (short) (fromSequence - 1), STEP_MOVE_DIRECTION_DOWN);
             }
 
             //  move the dragged step last

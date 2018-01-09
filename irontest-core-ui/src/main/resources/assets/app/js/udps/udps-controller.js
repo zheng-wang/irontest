@@ -44,10 +44,10 @@ angular.module('irontest').controller('UDPsController', ['$scope', 'UDPs', 'Iron
           }
         });
         gridApi.draggableRows.on.rowDropped($scope, function (info) {
-          UDPs.swap({
+          UDPs.move({
             testcaseId: $scope.testcase.id,
-            sequence1: info.draggedRowEntity.sequence,
-            sequence2: info.targetRowEntity.sequence
+            fromSequence: info.draggedRowEntity.sequence,
+            toSequence: info.targetRowEntity.sequence
           }, {}, function(response) {
             $scope.$emit('successfullySaved');
           }, function(response) {

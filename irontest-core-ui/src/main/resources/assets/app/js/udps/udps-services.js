@@ -14,9 +14,9 @@ angular.module('irontest').factory('UDPs', ['$resource',
         url: 'api/udps/:udpId',
         params: { udpId: '@id' }
       },
-      swap: {
+      move: {
         method: 'POST',
-        url: 'api/testcases/:testcaseId/udps/swap'
+        url: 'api/testcases/:testcaseId/udps/move'
       }
     });
   }

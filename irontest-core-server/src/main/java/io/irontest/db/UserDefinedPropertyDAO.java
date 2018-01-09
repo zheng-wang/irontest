@@ -33,7 +33,7 @@ public abstract class UserDefinedPropertyDAO {
 
     /**
      * Unlike {@link TeststepDAO#_insert(Teststep, Object, String, Long, String)}, this method does not consider UDP
-     * insertion from test case duplicating. It is already considered by the
+     * insertion from test case duplicating. It is already considered with the
      * {@link #duplicateByTestcase(long, long)} method.
      * @param testcaseId
      * @return
@@ -84,12 +84,30 @@ public abstract class UserDefinedPropertyDAO {
     @SqlUpdate("update udp set sequence = :newSequence, updated = CURRENT_TIMESTAMP where id = :id")
     protected abstract void updateSequenceById(@Bind("id") long id, @Bind("newSequence") short newSequence);
 
+    @SqlUpdate("update udp set sequence = case when :direction = 'up' then sequence - 1 else sequence + 1 end, " +
+            "updated = CURRENT_TIMESTAMP " +
+            "where testcase_id = :testcaseId and sequence >= :firstSequence and sequence <= :lastSequence")
+    protected abstract int batchMove(@Bind("testcaseId") long testcaseId,
+                                     @Bind("firstSequence") short firstSequence,
+                                     @Bind("lastSequence") short lastSequence,
+                                     @Bind("direction") String direction);
+
     @Transaction
-    public void swap(long testcaseId, short sequence1, short sequence2) {
-        UserDefinedProperty udp1 = findBySequence(testcaseId, sequence1);
-        UserDefinedProperty udp2 = findBySequence(testcaseId, sequence2);
-        updateSequenceById(udp2.getId(), (short) -1);
-        updateSequenceById(udp1.getId(), sequence2);
-        updateSequenceById(udp2.getId(), sequence1);
+    public void moveInTestcase(long testcaseId, short fromSequence, short toSequence) {
+        if (fromSequence != toSequence) {
+            long draggedUDPId = findBySequence(testcaseId, fromSequence).getId();
+
+            //  shelve the dragged UDP first
+            updateSequenceById(draggedUDPId, (short) -1);
+
+            if (fromSequence < toSequence) {
+                batchMove(testcaseId, (short) (fromSequence + 1), toSequence, "up");
+            } else {
+                batchMove(testcaseId, toSequence, (short) (fromSequence - 1), "down");
+            }
+
+            //  move the dragged UDP last
+            updateSequenceById(draggedUDPId, toSequence);
+        }
     }
 }
