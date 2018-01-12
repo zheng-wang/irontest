@@ -44,6 +44,23 @@ angular.module('irontest').controller('UDPsController', ['$scope', 'UDPs', 'Iron
           }
         });
         gridApi.draggableRows.on.rowDropped($scope, function (info) {
+          //  get dragged cell column index
+          var draggedCellColumnName = gridApi.cellNav.getFocusedCell().col.colDef.name;
+          var draggedCellColumnIndex;
+          $scope.udpGridOptions.columnDefs.some(function(columnDef, index) {
+            if (columnDef.name === draggedCellColumnName) {
+              draggedCellColumnIndex = index;
+              return true;
+            } else {
+              return false;
+            }
+          });
+
+          //  Refocus edit to target cell. This is a hack as gridApi.grid.cellNav is non-public API.
+          gridApi.grid.cellNav.clearFocus();
+          gridApi.grid.cellNav.lastRowCol = null;
+          info.targetRow.children[draggedCellColumnIndex].children[0].click();
+
           UDPs.move({
             testcaseId: $scope.testcase.id,
             fromSequence: info.draggedRowEntity.sequence,
