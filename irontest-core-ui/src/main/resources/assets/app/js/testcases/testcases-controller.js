@@ -65,7 +65,7 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
           });
           testcase.$moveStep(function(response) {
             $scope.$broadcast('successfullySaved');
-            $scope.testcase = response;
+            $scope.testcase = response;   // this is necessary as server side will change sequence values of teststeps.
           }, function(response) {
             IronTestUtils.openErrorHTTPResponseModal(response);
           });

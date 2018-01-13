@@ -16,7 +16,8 @@ angular.module('irontest').factory('UDPs', ['$resource',
       },
       move: {
         method: 'POST',
-        url: 'api/testcases/:testcaseId/udps/move'
+        url: 'api/testcases/:testcaseId/udps/move',
+        isArray: true
       }
     });
   }

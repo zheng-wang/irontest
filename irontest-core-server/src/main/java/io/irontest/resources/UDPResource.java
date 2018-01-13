@@ -44,8 +44,9 @@ public class UDPResource {
 
     @POST @Path("testcases/{testcaseId}/udps/move")
     @PermitAll
-    public void move(@PathParam("testcaseId") long testcaseId,
+    public List<UserDefinedProperty> move(@PathParam("testcaseId") long testcaseId,
                      @QueryParam("fromSequence") short fromSequence, @QueryParam("toSequence") short toSequence) {
         udpDAO.moveInTestcase(testcaseId, fromSequence, toSequence);
+        return udpDAO.findByTestcaseId(testcaseId);
     }
 }
