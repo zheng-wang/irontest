@@ -61,10 +61,17 @@ angular.module('irontest').controller('UDPsController', ['$scope', 'UDPs', 'Iron
           gridApi.grid.cellNav.lastRowCol = null;
           info.targetRow.children[draggedCellColumnIndex].children[0].click();
 
+          var toSequence;
+          if (info.fromIndex > info.toIndex) {    // row moved up
+            toSequence = $scope.udps[info.toIndex + 1].sequence;
+          } else {                            // row moved down
+            toSequence = $scope.udps[info.toIndex - 1].sequence;
+          }
+
           UDPs.move({
             testcaseId: $scope.testcase.id,
             fromSequence: info.draggedRowEntity.sequence,
-            toSequence: info.targetRowEntity.sequence
+            toSequence: toSequence
           }, {}, function(response) {
             $scope.$emit('successfullySaved');
           }, function(response) {
