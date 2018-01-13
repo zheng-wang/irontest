@@ -49,11 +49,18 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
       ],
       onRegisterApi: function (gridApi) {
         gridApi.draggableRows.on.rowDropped($scope, function (info) {
+          var toSequence;
+          if (info.fromIndex > info.toIndex) {    // row moved up
+            toSequence = $scope.testcase.teststeps[info.toIndex + 1].sequence;
+          } else {                            // row moved down
+            toSequence = $scope.testcase.teststeps[info.toIndex - 1].sequence;
+          }
+
           var testcase = new Testcases({
             id: $scope.testcase.id,
             teststeps: [
               { sequence: info.draggedRowEntity.sequence },    //  from sequence
-              { sequence: info.targetRowEntity.sequence }     //  to sequence
+              { sequence: toSequence }     //  to sequence
             ]
           });
           testcase.$moveStep(function(response) {
