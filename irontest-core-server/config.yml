@@ -23,9 +23,9 @@ server:
       - type: console
       - type: file
         currentLogFilename: ./logs/request.log
-        maxFileSize: 1MB
+        maxFileSize: 10MB
         archivedLogFilenamePattern: ./logs/archive/request/request-%d-%i.log.gz
-        archivedFileCount: 100
+        archivedFileCount: 200
 
 logging:
   # Uncomment below logger for Iron Test resource oriented HTTP APIs request/response logging
@@ -35,14 +35,14 @@ logging:
 #      appenders:
 #        - type: file
 #          currentLogFilename: ./logs/api.log
-#          maxFileSize: 15MB
+#          maxFileSize: 20MB
 #          archivedLogFilenamePattern: ./logs/archive/api/api-%d-%i.log.gz
 #          archivedFileCount: 200
   appenders:
     - type: console
     - type: file
       currentLogFilename: ./logs/main.log
-      maxFileSize: 10MB
+      maxFileSize: 15MB
       archivedLogFilenamePattern: ./logs/archive/main/main-%d-%i.log.gz
       archivedFileCount: 200
 
