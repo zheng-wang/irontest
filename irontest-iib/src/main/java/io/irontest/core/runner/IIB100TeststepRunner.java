@@ -37,8 +37,10 @@ public class IIB100TeststepRunner extends IIBTeststepRunnerBase {
         //  for connecting to IIB 10.0 integration node
         //  use Class.forName so that the code can be compiled with either IIB 9.0 or IIB 10.0 integration API jars
         Class clazz = Class.forName("com.ibm.broker.config.proxy.IntegrationNodeConnectionParameters");
-        Constructor<BrokerConnectionParameters> constructor = clazz.getConstructor(String.class, Integer.TYPE);
-        BrokerConnectionParameters bcp = constructor.newInstance(endpointProperties.getHost(), endpointProperties.getPort());
+        Constructor<BrokerConnectionParameters> constructor = clazz.getConstructor(
+                String.class, Integer.TYPE, String.class, String.class, Boolean.TYPE);
+        BrokerConnectionParameters bcp = constructor.newInstance(
+                endpointProperties.getHost(), endpointProperties.getPort(), null, null, false);
         setBrokerConnectionParameters(bcp);
     }
 }

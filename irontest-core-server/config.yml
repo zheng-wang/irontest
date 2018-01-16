@@ -12,7 +12,7 @@ server:
     #- type: https
     #  port: 8443
     #  keyStorePath: ./keystore.jks
-    #  keyStorePassword: storepass
+    #  keyStorePassword: keystorepass
     #  validateCerts: false
     #  supportedProtocols: [TLSv1.1,TLSv1.2]
   adminConnectors:

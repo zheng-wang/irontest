@@ -75,10 +75,27 @@ angular.module('irontest').controller('TeststepsEndpointController', ['$scope',
     };
 
     $scope.mqEndpointConnectionModeChanged = function(isValid) {
+      //  clear properties for Client connection mode, to avoid saving unintended values
       var endpointProperties = $scope.teststep.endpoint.otherProperties;
       endpointProperties.host = null;
       endpointProperties.port = null;
       endpointProperties.svrConnChannelName = null;
+
+      if (!$scope.isInShareEndpointMode()) {
+        //  update test step immediately (no timeout)
+        $scope.update(isValid);
+      }
+    };
+
+    $scope.iibEndpointConnectionTypeChanged = function(isValid) {
+      //  clear properties for Remote connection type, to avoid saving unintended values
+      var endpoint = $scope.teststep.endpoint;
+      var endpointProperties = endpoint.otherProperties;
+      endpointProperties.host = null;
+      endpointProperties.port = null;
+      endpoint.username = null;
+      endpoint.password = null;
+      endpointProperties.useSSL = false;
 
       if (!$scope.isInShareEndpointMode()) {
         //  update test step immediately (no timeout)

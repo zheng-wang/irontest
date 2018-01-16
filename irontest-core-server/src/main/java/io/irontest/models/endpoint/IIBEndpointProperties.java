@@ -8,8 +8,18 @@ import io.irontest.models.Properties;
  * Created by Zheng on 29/07/2017.
  */
 public class IIBEndpointProperties extends Properties {
+    private IIBConnectionType connectionType = IIBConnectionType.LOCAL;
     private String host;
     private Integer port;
+    private boolean useSSL = false;
+
+    public IIBConnectionType getConnectionType() {
+        return connectionType;
+    }
+
+    public void setConnectionType(IIBConnectionType connectionType) {
+        this.connectionType = connectionType;
+    }
 
     public String getHost() {
         return host;
@@ -25,6 +35,14 @@ public class IIBEndpointProperties extends Properties {
 
     public void setPort(Integer port) {
         this.port = port;
+    }
+
+    public boolean isUseSSL() {
+        return useSSL;
+    }
+
+    public void setUseSSL(boolean useSSL) {
+        this.useSSL = useSSL;
     }
 
     /**
