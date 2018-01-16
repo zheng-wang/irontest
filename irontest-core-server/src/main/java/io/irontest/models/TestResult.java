@@ -11,7 +11,7 @@ public enum TestResult {
 
     private final String text;
 
-    private TestResult(String text) {
+    TestResult(String text) {
         this.text = text;
     }
 

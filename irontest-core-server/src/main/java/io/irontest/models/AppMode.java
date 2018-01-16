@@ -10,7 +10,7 @@ public enum AppMode {
 
     private final String text;
 
-    private AppMode(String text) {
+    AppMode(String text) {
         this.text = text;
     }
 

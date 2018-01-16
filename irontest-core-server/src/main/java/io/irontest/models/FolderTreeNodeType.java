@@ -10,7 +10,7 @@ public enum FolderTreeNodeType {
 
     private final String text;
 
-    private FolderTreeNodeType(String text) {
+    FolderTreeNodeType(String text) {
         this.text = text;
     }
 

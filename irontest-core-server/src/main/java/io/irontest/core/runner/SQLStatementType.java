@@ -11,7 +11,7 @@ public enum SQLStatementType {
 
     private final String text;
 
-    private SQLStatementType(String text) {
+    SQLStatementType(String text) {
         this.text = text;
     }
 

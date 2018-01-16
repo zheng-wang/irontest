@@ -10,7 +10,7 @@ public enum MQDestinationType {
 
     private final String text;
 
-    private MQDestinationType(String text) {
+    MQDestinationType(String text) {
         this.text = text;
     }
 

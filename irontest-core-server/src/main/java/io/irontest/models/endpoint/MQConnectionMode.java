@@ -10,7 +10,7 @@ public enum MQConnectionMode {
 
     private final String text;
 
-    private MQConnectionMode(String text) {
+    MQConnectionMode(String text) {
         this.text = text;
     }
 

@@ -10,7 +10,7 @@ public enum TeststepRequestType {
 
     private final String text;
 
-    private TeststepRequestType(String text) {
+    TeststepRequestType(String text) {
         this.text = text;
     }
 
