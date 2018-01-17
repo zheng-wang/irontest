@@ -25,7 +25,7 @@
   <label for="endpointName" class="col-lg-2 control-label">Name</label>
   <div class="col-lg-10">
     <input name="endpointName" type="text" class="form-control" ng-model="teststep.endpoint.name"
-           id="endpointName" ng-readonly="!isInShareEndpointMode()" required>
+           id="endpointName" ng-readonly="!isInShareEndpointMode()" spellcheck="false" required>
     <div ng-show="savingStatus.submitted && teststepForm.endpointName.$invalid" class="help-block">
       <p ng-show="teststepForm.endpointName.$error.required">Name is required</p>
     </div>

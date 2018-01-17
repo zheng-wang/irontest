@@ -86,21 +86,5 @@ angular.module('irontest').controller('TeststepsEndpointController', ['$scope',
         $scope.update(isValid);
       }
     };
-
-    $scope.iibEndpointConnectionTypeChanged = function(isValid) {
-      //  clear properties for Remote connection type, to avoid saving unintended values
-      var endpoint = $scope.teststep.endpoint;
-      var endpointProperties = endpoint.otherProperties;
-      endpointProperties.host = null;
-      endpointProperties.port = null;
-      endpoint.username = null;
-      endpoint.password = null;
-      endpointProperties.useSSL = false;
-
-      if (!$scope.isInShareEndpointMode()) {
-        //  update test step immediately (no timeout)
-        $scope.update(isValid);
-      }
-    };
   }
 ]);

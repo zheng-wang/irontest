@@ -1,39 +1,11 @@
+<div ng-include="'/ui/views/endpoints/edit-endpoint-host-port.html'"></div>
+
+<div ng-include="'/ui/views/endpoints/edit-endpoint-username-password.html'"></div>
+
 <div class="form-group">
-  <label class="col-lg-2 control-label">Connection Type</label>
-  <div class="col-lg-2 text-center">
-    <label class="control-label" title="Connect to integration node on local machine">
-      <input type="radio" name="connectionType" id="connectionTypeLocal"
-             ng-model="endpoint.otherProperties.connectionType" ng-disabled="appStatus.isForbidden()"
-             ng-change="iibEndpointConnectionTypeChanged(endpointForm.$valid)" value="Local"> Local
-    </label>
-  </div>
-  <div class="col-lg-2 text-center">
-    <label class="control-label" title="Connect to integration node on local or remote machine">
-      <input type="radio" name="connectionType" id="connectionTypeRemote"
-             ng-model="endpoint.otherProperties.connectionType" ng-disabled="appStatus.isForbidden()"
-             ng-change="iibEndpointConnectionTypeChanged(endpointForm.$valid)" value="Remote"> Remote
-    </label>
-  </div>
-</div>
-
-<div ng-if="endpoint.otherProperties.connectionType === 'Local'" class="form-group">
-  <label for="integrationNodeName" class="col-lg-2 control-label">Integration Node Name</label>
-  <div class="col-lg-10">
-    <input name="integrationNodeName" type="text" class="form-control"
-           ng-model="endpoint.otherProperties.integrationNodeName" ng-change="autoSave(endpointForm.$valid)"
-           id="integrationNodeName" spellcheck="false" ng-readonly="appStatus.isForbidden()">
-  </div>
-</div>
-
-<div ng-if="endpoint.otherProperties.connectionType === 'Remote'"
-     ng-include="'/ui/views/endpoints/edit-endpoint-host-port.html'"></div>
-
-<div ng-if="endpoint.otherProperties.connectionType === 'Remote'"
-     ng-include="'/ui/views/endpoints/edit-endpoint-username-password.html'"></div>
-
-<div ng-if="endpoint.otherProperties.connectionType === 'Remote'" class="form-group">
-  <label for="integrationNodeName" class="col-lg-2 control-label">Use SSL</label>
+  <label for="useSSL" class="col-lg-2 control-label">Use SSL</label>
   <div class="col-lg-1">
-    <input type="checkbox" ng-model="endpoint.otherProperties.useSSL" ng-disabled="appStatus.isForbidden()">
+    <input name="useSSL" id="useSSL" type="checkbox" ng-model="endpoint.otherProperties.useSSL"
+           ng-change="update(endpointForm.$valid)" ng-disabled="appStatus.isForbidden()">
   </div>
 </div>

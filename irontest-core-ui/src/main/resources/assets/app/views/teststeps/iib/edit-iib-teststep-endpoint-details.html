@@ -11,5 +11,17 @@
 </div>
 <div ng-if="teststep.endpoint.type === 'MQ'"
      ng-include="'/ui/views/teststeps/mq/edit-mq-teststep-endpoint-details.html'"></div>
+
 <div ng-if="teststep.endpoint.type === 'IIB'"
      ng-include="'/ui/views/teststeps/edit-endpoint-details-host-port.html'"></div>
+<div ng-if="teststep.endpoint.type === 'IIB'"
+     ng-include="'/ui/views/teststeps/edit-endpoint-details-username-password.html'"></div>
+
+<div ng-if="teststep.endpoint.type === 'IIB'" class="form-group">
+  <label for="useSSL" class="col-lg-2 control-label">Use SSL</label>
+  <div class="col-lg-1">
+    <input name="useSSL" id="useSSL" type="checkbox" ng-model="teststep.endpoint.otherProperties.useSSL"
+           ng-change="isInShareEndpointMode() ? angular.noop() : update(teststepForm.$valid)"
+           ng-disabled="appStatus.isForbidden() || (!isInShareEndpointMode() && teststep.endpoint.environment)">
+  </div>
+</div>

@@ -14,17 +14,23 @@ import java.util.Map;
  */
 public class IronTestConfiguration extends Configuration {
     private String mode;
-
-    @Valid
-    @NotNull
+    private String sslTrustStorePath;
+    private String sslTrustStorePassword;
+    @Valid @NotNull
     private DataSourceFactory systemDatabase = new DataSourceFactory();
-
     private DataSourceFactory sampleDatabase = new DataSourceFactory();
-
     private Map<String, Map<String, String>> viewRendererConfiguration = Collections.emptyMap();
 
     public String getMode() {
         return mode;
+    }
+
+    public String getSslTrustStorePath() {
+        return sslTrustStorePath;
+    }
+
+    public String getSslTrustStorePassword() {
+        return sslTrustStorePassword;
     }
 
     public DataSourceFactory getSystemDatabase() {

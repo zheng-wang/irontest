@@ -46,6 +46,9 @@ logging:
       archivedLogFilenamePattern: ./logs/archive/main/main-%d-%i.log.gz
       archivedFileCount: 200
 
+sslTrustStorePath: ./truststore.jks
+sslTrustStorePassword: truststorepass
+
 # System database settings.
 systemDatabase:
   # the name of your JDBC driver

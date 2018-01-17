@@ -1,8 +1,6 @@
 package io.irontest.core.runner;
 
 import io.irontest.models.endpoint.Endpoint;
-import io.irontest.models.endpoint.IIBEndpointProperties;
-import io.irontest.models.endpoint.MQEndpointProperties;
 import io.irontest.models.teststep.Teststep;
 
 import java.io.File;
@@ -49,15 +47,13 @@ public class IIBTeststepRunner extends TeststepRunner {
         if (Endpoint.TYPE_IIB.equals(endpoint.getType())) {    //  it is an IIB 10.0 endpoint
             actualRunnerClassName = "io.irontest.core.runner.IIB100TeststepRunner";
             classLoader = iib100ClassLoader;
-            endpointPropertiesClass = IIBEndpointProperties.class;
         } else {    //  it is an IIB 9.0 endpoint
             actualRunnerClassName = "io.irontest.core.runner.IIB90TeststepRunner";
             classLoader = iib90ClassLoader;
-            endpointPropertiesClass = MQEndpointProperties.class;
         }
         Class actualRunnerClass = Class.forName(actualRunnerClassName, false, classLoader);
-        Constructor<TeststepRunner> constructor = actualRunnerClass.getConstructor(endpointPropertiesClass);
-        TeststepRunner actualRunner = constructor.newInstance(endpoint.getOtherProperties());
+        Constructor<TeststepRunner> constructor = actualRunnerClass.getConstructor(Endpoint.class);
+        TeststepRunner actualRunner = constructor.newInstance(endpoint);
 
         actualRunner.setTestcaseRunContext(getTestcaseRunContext());
         return actualRunner.run(teststep);

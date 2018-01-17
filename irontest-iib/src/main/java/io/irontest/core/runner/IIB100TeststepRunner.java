@@ -1,6 +1,7 @@
 package io.irontest.core.runner;
 
 import com.ibm.broker.config.proxy.BrokerConnectionParameters;
+import io.irontest.models.endpoint.Endpoint;
 import io.irontest.models.endpoint.IIBEndpointProperties;
 import org.eclipse.jetty.util.log.Log;
 
@@ -33,14 +34,17 @@ public class IIB100TeststepRunner extends IIBTeststepRunnerBase {
         @Override public void ignore(Throwable ignored) {}
     }
 
-    public IIB100TeststepRunner(IIBEndpointProperties endpointProperties) throws Exception {
+    public IIB100TeststepRunner(Endpoint endpoint) throws Exception {
+        IIBEndpointProperties endpointProperties = (IIBEndpointProperties) endpoint.getOtherProperties();
+
         //  for connecting to IIB 10.0 integration node
         //  use Class.forName so that the code can be compiled with either IIB 9.0 or IIB 10.0 integration API jars
         Class clazz = Class.forName("com.ibm.broker.config.proxy.IntegrationNodeConnectionParameters");
         Constructor<BrokerConnectionParameters> constructor = clazz.getConstructor(
                 String.class, Integer.TYPE, String.class, String.class, Boolean.TYPE);
         BrokerConnectionParameters bcp = constructor.newInstance(
-                endpointProperties.getHost(), endpointProperties.getPort(), null, null, false);
+                    endpointProperties.getHost(), endpointProperties.getPort(), endpoint.getUsername(),
+                    endpoint.getPassword(), endpointProperties.isUseSSL());
         setBrokerConnectionParameters(bcp);
     }
 }

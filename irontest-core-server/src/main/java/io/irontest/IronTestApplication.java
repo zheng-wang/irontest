@@ -95,8 +95,8 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
     @Override
     public void run(IronTestConfiguration configuration, Environment environment) {
         // Override Java's trusted cacerts with our own trust store.
-        //System.setProperty("javax.net.ssl.trustStore", "truststore.jks");
-        //System.setProperty("javax.net.ssl.trustStorePassword", "truststorepass");
+        System.setProperty("javax.net.ssl.trustStore", configuration.getSslTrustStorePath());
+        System.setProperty("javax.net.ssl.trustStorePassword", configuration.getSslTrustStorePassword());
 
         createSystemResources(configuration, environment);
         createSampleResources(configuration, environment);
