@@ -18,7 +18,7 @@ Table of Contents:
         - [Populate Step 2](#populate-step-2)
         - [Populate Step 3](#populate-step-3)
         - [Run the Test Case](#run-the-test-case)
-    - [More Usages](#more-usages)
+    - [More Usages and Testing Practices](#more-usages-and-testing-practices)
 - [Maintain](#maintain)
 - [For Developers](#for-developers)
 - [License](#license)
@@ -144,7 +144,7 @@ Now we have finished editing our test case. It's time to run it. Click the Run b
 
 Click the result link beside the Run button to see the whole test case run report. This report can be saved as HTML file and used as test evidence in other places such as HP ALM.
 
-### More Usages
+### More Usages and Testing Practices
 Please refer to the [wiki pages](https://github.com/zheng-wang/irontest/wiki).
 
 ## Maintain
