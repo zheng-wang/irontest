@@ -33,8 +33,11 @@ angular.module('irontest').controller('SOAPTeststepActionController', ['$scope',
       $scope.update(true);
     };
 
+    $scope.$watch('teststep.otherProperties.httpHeaders', function() {
+      $scope.requestHTTPHeaderGridOptions.data = $scope.teststep.otherProperties.httpHeaders;
+    });
+
     $scope.requestHTTPHeaderGridOptions = {
-      data: 'teststep.otherProperties.httpHeaders',
       enableSorting: false, enableRowHeaderSelection: false, multiSelect: false,
       enableGridMenu: true, enableColumnMenus: false, gridMenuShowHideColumns: false,
       rowHeight: 20, enableHorizontalScrollbar: uiGridConstants.scrollbars.NEVER,
@@ -68,8 +71,11 @@ angular.module('irontest').controller('SOAPTeststepActionController', ['$scope',
       }
     };
 
+    $scope.$watch('steprun.responseHttpHeaders', function() {
+      $scope.responseHTTPHeaderGridOptions.data = $scope.steprun.responseHttpHeaders;
+    });
+
     $scope.responseHTTPHeaderGridOptions = {
-      data: 'steprun.responseHttpHeaders',
       enableSorting: false, enableColumnMenus: false,
       rowHeight: 20, enableHorizontalScrollbar: uiGridConstants.scrollbars.NEVER,
       columnDefs: [

@@ -22,11 +22,12 @@ angular.module('irontest').controller('XPathAssertionController', ['$scope', '$r
       $scope.update(true, $scope.assertionsModelObj.reselectCurrentAssertionInGrid);
     };
 
-    //  notice that when switching assertionsModelObj.assertion in parent controller, if the newly selected
-    //  assertionsModelObj.assertion has null otherProperties, the data of this grid will not update (probably due to
-    //  angularjs/ui-grid not being able to detect changes to a null's 'child object').
+    $scope.$watch('assertionsModelObj.assertion.otherProperties.namespacePrefixes', function() {
+      $scope.assertionsModelObj.xPathNamespacePrefixesGridOptions.data =
+        $scope.assertionsModelObj.assertion.otherProperties.namespacePrefixes;
+    });
+
     $scope.assertionsModelObj.xPathNamespacePrefixesGridOptions = {
-      data: 'assertionsModelObj.assertion.otherProperties.namespacePrefixes',
       enableRowHeaderSelection: false, multiSelect: false, enableGridMenu: true, gridMenuShowHideColumns: false,
       enableColumnMenus: false, rowHeight: 20, enableHorizontalScrollbar: uiGridConstants.scrollbars.NEVER,
       columnDefs: [

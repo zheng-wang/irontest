@@ -23,8 +23,13 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
       }, 2000);
     };
 
+    $scope.$watch('testcase.teststeps', function() {
+      if ($scope.testcase) {
+        $scope.teststepGridOptions.data = $scope.testcase.teststeps;
+      }
+    });
+
     $scope.teststepGridOptions = {
-      data: 'testcase.teststeps',
       enableSorting: false,
       rowTemplate: '<div grid="grid" class="ui-grid-draggable-row" draggable="true"><div ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader, \'custom\': true }" ui-grid-cell></div></div>',
       columnDefs: [

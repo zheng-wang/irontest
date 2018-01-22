@@ -28,8 +28,11 @@ angular.module('irontest').controller('AssertionsController', ['$scope', '$rootS
       }
     };
 
+    $scope.$watch('teststep.assertions', function() {
+      $scope.assertionsModelObj.gridOptions.data = $scope.teststep.assertions;
+    });
+
     $scope.assertionsModelObj.gridOptions = {
-      data: 'teststep.assertions',
       enableRowHeaderSelection: false, multiSelect: false, noUnselect: true,
       enableGridMenu: true, gridMenuShowHideColumns: false, enableColumnMenus: false,
       columnDefs: [
