@@ -63,7 +63,7 @@ public abstract class TeststepRunner {
         referenceableProperties.putAll(implicitProperties);
         referenceableProperties.putAll(IronTestUtils.udpListToMap(testcaseUDPs));
 
-        //  resolve references in teststep.otherProperties
+        //  resolve property references in teststep.otherProperties
         String otherPropertiesJSON = objectMapper.writeValueAsString(teststep.getOtherProperties());
         MapValueLookup propertyReferenceResolver = new MapValueLookup(referenceableProperties, true);
         String resolvedOtherPropertiesJSON = new StrSubstitutor(propertyReferenceResolver).replace(otherPropertiesJSON);
@@ -73,7 +73,7 @@ public abstract class TeststepRunner {
         Teststep tempStep = objectMapper.readValue(tempStepJSON, Teststep.class);
         teststep.setOtherProperties(tempStep.getOtherProperties());
 
-        //  resolve UDP references in teststep.request (text type)
+        //  resolve property references in teststep.request (text type)
         if (teststep.getRequestType() == TeststepRequestType.TEXT) {
             propertyReferenceResolver = new MapValueLookup(referenceableProperties, false);
             teststep.setRequest(new StrSubstitutor(propertyReferenceResolver).replace(
