@@ -98,13 +98,10 @@
 }
 
 /* grids */
-.testcase-udp-grid {
-  height: 450px;
-}
 .teststep-grid {
-  height: 400px;
+  height: 400px;    /* not to be too high, as there is test step run report below the grid */
 }
-.environment-grid, .user-grid, .endpoint-grid {
+.testcase-udp-grid, .environment-grid, .user-grid, .endpoint-grid {
   height: 500px;
 }
 .assertions-grid {
