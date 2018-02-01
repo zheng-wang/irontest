@@ -4,8 +4,8 @@
   <artifactId>irontest-mq</artifactId>
   <versioning>
     <versions>
-      <version>0.7.3-SNAPSHOT</version>
+      <version>0.8.0-SNAPSHOT</version>
     </versions>
-    <lastUpdated>20180117114148</lastUpdated>
+    <lastUpdated>20180201134942</lastUpdated>
   </versioning>
 </metadata>
