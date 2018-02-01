@@ -4,8 +4,8 @@
   <artifactId>irontest-iib</artifactId>
   <versioning>
     <versions>
-      <version>0.7.3-SNAPSHOT</version>
+      <version>0.8.0-SNAPSHOT</version>
     </versions>
-    <lastUpdated>20180117114236</lastUpdated>
+    <lastUpdated>20180201135029</lastUpdated>
   </versioning>
 </metadata>
