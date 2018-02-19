@@ -13,7 +13,7 @@
           <li role="menuitem" ng-if="teststep.type === 'MQ'">
             <a ng-click="assertionsModelObj.createAssertion('XMLEqual')" href="">XMLEqual Assertion</a>
           </li>
-          <li role="menuitem" ng-if="teststep.type === 'MQ'">
+          <li role="menuitem" ng-if="teststep.type === 'DB' || teststep.type === 'MQ'">
             <a ng-click="assertionsModelObj.createAssertion('JSONEqual')" href="">JSONEqual Assertion</a>
           </li>
           <li role="menuitem" ng-if="teststep.type === 'SOAP' || teststep.type === 'MQ'">
