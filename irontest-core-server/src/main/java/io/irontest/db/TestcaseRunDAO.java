@@ -2,7 +2,6 @@ package io.irontest.db;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.irontest.models.Testcase;
 import io.irontest.models.TestcaseRun;
 import io.irontest.models.endpoint.Endpoint;
 import io.irontest.models.teststep.Teststep;
@@ -59,8 +58,7 @@ public abstract class TestcaseRunDAO {
 
         //  serialize stepRuns into JSON string
         String stepRunsJSON = environmentObjectMapper.writeValueAsString(stepRuns);
-        Testcase testcase = testcaseRun.getTestcase();
-        long id = _insert(testcase.getId(), testcase.getName(), testcase.getFolderPath(), testcaseRun.getStartTime(),
+        long id = _insert(testcaseRun.getTestcaseId(), testcaseRun.getTestcaseName(), testcaseRun.getTestcaseFolderPath(), testcaseRun.getStartTime(),
                 testcaseRun.getDuration(), testcaseRun.getResult().toString(), stepRunsJSON);
         testcaseRun.setId(id);
     }

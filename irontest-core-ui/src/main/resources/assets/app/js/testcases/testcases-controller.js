@@ -104,7 +104,7 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
       $scope.testcaseRun = null;
 
       var testcaseRun = new TestcaseRuns({
-        testcase: { id: $scope.testcase.id }
+        testcaseId: $scope.testcase.id
       });
       $scope.testcaseRunStatus = 'ongoing';
       testcaseRun.$save(function(response) {

@@ -12,14 +12,18 @@ import java.util.List;
  */
 public class TestcaseRun {
     private Long id;
-    private Testcase testcase;
+    private long testcaseId;
+    private String testcaseName;
+    private String testcaseFolderPath;
     private Date startTime;
-    private long duration;              //  number of milliseconds
+    private long duration;              //  in milliseconds
     private List<TeststepRun> stepRuns = new ArrayList<TeststepRun>();
     private TestResult result;
 
     //  only used on UI
     private List<Long> failedTeststepIds = new ArrayList<Long>();
+
+    public TestcaseRun() {}
 
     public Long getId() {
         return id;
@@ -29,14 +33,28 @@ public class TestcaseRun {
         this.id = id;
     }
 
-    public TestcaseRun() {}
-
-    public Testcase getTestcase() {
-        return testcase;
+    public long getTestcaseId() {
+        return testcaseId;
     }
 
-    public void setTestcase(Testcase testcase) {
-        this.testcase = testcase;
+    public void setTestcaseId(long testcaseId) {
+        this.testcaseId = testcaseId;
+    }
+
+    public String getTestcaseName() {
+        return testcaseName;
+    }
+
+    public void setTestcaseName(String testcaseName) {
+        this.testcaseName = testcaseName;
+    }
+
+    public String getTestcaseFolderPath() {
+        return testcaseFolderPath;
+    }
+
+    public void setTestcaseFolderPath(String testcaseFolderPath) {
+        this.testcaseFolderPath = testcaseFolderPath;
     }
 
     public Date getStartTime() {

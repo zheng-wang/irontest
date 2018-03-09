@@ -9,7 +9,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Test Report - ${ testcaseRun.testcase.name }</title>
+  <title>Test Report - ${ testcaseRun.testcaseName }</title>
 
   <#-- Bootstrap CSS; ${bootstrap.version} is Maven property (for filtering) -->
   <style>
@@ -29,7 +29,7 @@
     <div class="col-lg-offset-1 col-lg-10">
 
       <div class="row">
-        <div class="col-lg-12"><h3>${ testcaseRun.testcase.folderPath }/${ testcaseRun.testcase.name }</h3></div>
+        <div class="col-lg-12"><h3>${ testcaseRun.testcaseFolderPath }/${ testcaseRun.testcaseName }</h3></div>
       </div>
 
       <div class="row">

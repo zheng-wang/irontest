@@ -15,7 +15,7 @@ import java.util.List;
 public class TeststepRun extends BasicTeststepRun {
     private Teststep teststep;
     private Date startTime;
-    private long duration;              //  number of milliseconds
+    private long duration;              //  in milliseconds
     private String errorMessage;        //  error message of running the test step (errors when verifying assertions are captured in AssertionVerification)
     private List<AssertionVerification> assertionVerifications = new ArrayList<AssertionVerification>();
     private TestResult result;

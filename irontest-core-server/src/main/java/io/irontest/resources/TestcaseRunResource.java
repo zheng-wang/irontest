@@ -53,14 +53,15 @@ public class TestcaseRunResource {
     @PermitAll
     public TestcaseRun create(TestcaseRun testcaseRun) throws JsonProcessingException {
         //  only testcase id is used, and any other data in the request, if exists, is discarded
-        long testcaseId = testcaseRun.getTestcase().getId();
+        long testcaseId = testcaseRun.getTestcaseId();
         testcaseRun = new TestcaseRun();
         Map<String, String> implicitProperties = new HashMap<>();
         SimpleDateFormat implicitPropertyDateTimeFormat = new SimpleDateFormat(IMPLICIT_PROPERTY_DATE_TIME_FORMAT);
 
         List<UserDefinedProperty> testcaseUDPs = udpDAO.findByTestcaseId(testcaseId);
         Testcase testcase = testcaseDAO.findById_Complete(testcaseId);
-        testcaseRun.setTestcase(testcase);
+        testcaseRun.setTestcaseName(testcase.getName());
+        testcaseRun.setTestcaseFolderPath(testcase.getFolderPath());
 
         //  test case run starts
         TestcaseRunContext testcaseRunContext = new TestcaseRunContext();
@@ -163,7 +164,6 @@ public class TestcaseRunResource {
         testcaseRunDAO.insert(testcaseRun);
 
         //  prepare return object for UI (reduced contents for performance)
-        testcaseRun.setTestcase(null);
         List<Long> failedTeststepIds = new ArrayList<Long>();
         for (TeststepRun stepRun : testcaseRun.getStepRuns()) {
             if (TestResult.FAILED == stepRun.getResult()) {

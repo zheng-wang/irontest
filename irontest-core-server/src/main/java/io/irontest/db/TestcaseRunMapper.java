@@ -3,7 +3,6 @@ package io.irontest.db;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.irontest.models.TestResult;
-import io.irontest.models.Testcase;
 import io.irontest.models.TestcaseRun;
 import io.irontest.models.teststep.TeststepRun;
 import org.skife.jdbi.v2.StatementContext;
@@ -22,11 +21,9 @@ public class TestcaseRunMapper implements ResultSetMapper<TestcaseRun> {
         TestcaseRun testcaseRun = new TestcaseRun();
 
         testcaseRun.setId(rs.getLong("id"));
-        Testcase testcase = new Testcase();
-        testcase.setId(rs.getLong("testcase_id"));
-        testcase.setName(rs.getString("testcase_name"));
-        testcase.setFolderPath(rs.getString("testcase_folderpath"));
-        testcaseRun.setTestcase(testcase);
+        testcaseRun.setTestcaseId(rs.getLong("testcase_id"));
+        testcaseRun.setTestcaseName(rs.getString("testcase_name"));
+        testcaseRun.setTestcaseFolderPath(rs.getString("testcase_folderpath"));
         testcaseRun.setStartTime(rs.getTimestamp("starttime"));
         testcaseRun.setDuration(rs.getLong("duration"));
         testcaseRun.setResult(TestResult.getByText(rs.getString("result")));
