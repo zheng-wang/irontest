@@ -1,7 +1,7 @@
 package io.irontest.views;
 
 import io.dropwizard.views.View;
-import io.irontest.models.TestcaseRun;
+import io.irontest.models.testrun.TestcaseRun;
 
 /**
  * Created by Zheng on 1/08/2016.

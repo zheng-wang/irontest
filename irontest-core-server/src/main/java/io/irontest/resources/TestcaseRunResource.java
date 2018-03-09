@@ -7,13 +7,14 @@ import io.irontest.core.runner.*;
 import io.irontest.db.*;
 import io.irontest.models.TestResult;
 import io.irontest.models.Testcase;
-import io.irontest.models.TestcaseRun;
 import io.irontest.models.UserDefinedProperty;
 import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.AssertionVerification;
 import io.irontest.models.assertion.AssertionVerificationResult;
+import io.irontest.models.testrun.RegularTestcaseRun;
+import io.irontest.models.testrun.TestcaseRun;
+import io.irontest.models.testrun.TeststepRun;
 import io.irontest.models.teststep.Teststep;
-import io.irontest.models.teststep.TeststepRun;
 import io.irontest.models.teststep.WaitTeststepProperties;
 import io.irontest.views.TestcaseRunView;
 import io.irontest.views.TeststepRunView;
@@ -51,21 +52,20 @@ public class TestcaseRunResource {
 
     @POST
     @PermitAll
-    public TestcaseRun create(TestcaseRun testcaseRun) throws JsonProcessingException {
-        //  only testcase id is used, and any other data in the request, if exists, is discarded
-        long testcaseId = testcaseRun.getTestcaseId();
-        testcaseRun = new TestcaseRun();
-        Map<String, String> implicitProperties = new HashMap<>();
-        SimpleDateFormat implicitPropertyDateTimeFormat = new SimpleDateFormat(IMPLICIT_PROPERTY_DATE_TIME_FORMAT);
-
+    public TestcaseRun create(@QueryParam("testcaseId") long testcaseId) throws JsonProcessingException {
+        RegularTestcaseRun testcaseRun = new RegularTestcaseRun();
+        testcaseRun.setTestcaseId(testcaseId);
         List<UserDefinedProperty> testcaseUDPs = udpDAO.findByTestcaseId(testcaseId);
         Testcase testcase = testcaseDAO.findById_Complete(testcaseId);
         testcaseRun.setTestcaseName(testcase.getName());
         testcaseRun.setTestcaseFolderPath(testcase.getFolderPath());
 
+        Map<String, String> implicitProperties = new HashMap<>();
+        SimpleDateFormat implicitPropertyDateTimeFormat = new SimpleDateFormat(IMPLICIT_PROPERTY_DATE_TIME_FORMAT);
+
         //  test case run starts
-        TestcaseRunContext testcaseRunContext = new TestcaseRunContext();
         Date testcaseRunStartTime = new Date();
+        TestcaseRunContext testcaseRunContext = new TestcaseRunContext();
         preProcessingForIIBTeststep(testcase, testcaseRunStartTime);
         testcaseRun.setResult(TestResult.PASSED);
         testcaseRun.setStartTime(testcaseRunStartTime);
@@ -92,7 +92,8 @@ public class TestcaseRunResource {
                 basicTeststepRun = TeststepRunnerFactory.getInstance()
                         .newTeststepRunner(teststep, teststepDAO, utilsDAO, implicitProperties, testcaseUDPs, testcaseRunContext).run();
                 LOGGER.info("Finish running test step: " + teststep.getName());
-                stepRun.importBasicTeststepRun(basicTeststepRun);
+                stepRun.setResponse(basicTeststepRun.getResponse());
+                stepRun.setInfoMessage(basicTeststepRun.getInfoMessage());
             } catch (Exception e) {
                 exceptionOccurred = true;
                 String message = e.getMessage();
@@ -203,7 +204,7 @@ public class TestcaseRunResource {
     @GET @Path("{testcaseRunId}/stepruns/{teststepId}/htmlreport") @Produces(MediaType.TEXT_HTML)
     public TeststepRunView getStepRunHTMLReportByTeststepId(@PathParam("testcaseRunId") long testcaseRunId,
                                                             @PathParam("teststepId") long teststepId) {
-        TestcaseRun testcaseRun = testcaseRunDAO.findById(testcaseRunId);
+        RegularTestcaseRun testcaseRun = (RegularTestcaseRun) testcaseRunDAO.findById(testcaseRunId);
         TeststepRun theStepRun = null;
         for (TeststepRun stepRun : testcaseRun.getStepRuns()) {
             if (stepRun.getTeststep().getId() == teststepId) {

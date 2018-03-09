@@ -3,8 +3,9 @@ package io.irontest.db;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.irontest.models.TestResult;
-import io.irontest.models.TestcaseRun;
-import io.irontest.models.teststep.TeststepRun;
+import io.irontest.models.testrun.RegularTestcaseRun;
+import io.irontest.models.testrun.TestcaseRun;
+import io.irontest.models.testrun.TeststepRun;
 import org.skife.jdbi.v2.StatementContext;
 import org.skife.jdbi.v2.tweak.ResultSetMapper;
 
@@ -18,7 +19,7 @@ import java.util.List;
  */
 public class TestcaseRunMapper implements ResultSetMapper<TestcaseRun> {
     public TestcaseRun map(int index, ResultSet rs, StatementContext ctx) throws SQLException {
-        TestcaseRun testcaseRun = new TestcaseRun();
+        RegularTestcaseRun testcaseRun = new RegularTestcaseRun();
 
         testcaseRun.setId(rs.getLong("id"));
         testcaseRun.setTestcaseId(rs.getLong("testcase_id"));

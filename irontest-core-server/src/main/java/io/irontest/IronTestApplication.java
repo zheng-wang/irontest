@@ -112,7 +112,6 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         final EndpointDAO endpointDAO = jdbi.onDemand(EndpointDAO.class);
         final TestcaseDAO testcaseDAO = jdbi.onDemand(TestcaseDAO.class);
         final TestcaseRunDAO testcaseRunDAO = jdbi.onDemand(TestcaseRunDAO.class);
-        testcaseRunDAO.setEnvironmentObjectMapper(environment.getObjectMapper());
         final TeststepDAO teststepDAO = jdbi.onDemand(TeststepDAO.class);
         final AssertionDAO assertionDAO = jdbi.onDemand(AssertionDAO.class);
         final UtilsDAO utilsDAO = jdbi.onDemand(UtilsDAO.class);

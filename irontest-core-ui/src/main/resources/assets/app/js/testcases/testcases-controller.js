@@ -103,11 +103,9 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
       //  clear previous run result
       $scope.testcaseRun = null;
 
-      var testcaseRun = new TestcaseRuns({
-        testcaseId: $scope.testcase.id
-      });
+      var testcaseRun = new TestcaseRuns();
       $scope.testcaseRunStatus = 'ongoing';
-      testcaseRun.$save(function(response) {
+      testcaseRun.$save({testcaseId: $scope.testcase.id }, function(response) {
         $scope.testcaseRunStatus = 'finished';
         $scope.testcaseRun = response;
       }, function(response) {

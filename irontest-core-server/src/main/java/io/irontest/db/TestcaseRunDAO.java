@@ -2,10 +2,11 @@ package io.irontest.db;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.irontest.models.TestcaseRun;
 import io.irontest.models.endpoint.Endpoint;
+import io.irontest.models.testrun.RegularTestcaseRun;
+import io.irontest.models.testrun.TestcaseRun;
+import io.irontest.models.testrun.TeststepRun;
 import io.irontest.models.teststep.Teststep;
-import io.irontest.models.teststep.TeststepRun;
 import org.skife.jdbi.v2.sqlobject.*;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
@@ -17,13 +18,6 @@ import java.util.List;
  */
 @RegisterMapper(TestcaseRunMapper.class)
 public abstract class TestcaseRunDAO {
-    //  object mapper from Dropwizard environment
-    private ObjectMapper environmentObjectMapper;
-
-    public void setEnvironmentObjectMapper(ObjectMapper environmentObjectMapper) {
-        this.environmentObjectMapper = environmentObjectMapper;
-    }
-
     @SqlUpdate("CREATE SEQUENCE IF NOT EXISTS testcase_run_sequence START WITH 1 INCREMENT BY 1 NOCACHE")
     public abstract void createSequenceIfNotExists();
 
@@ -44,7 +38,7 @@ public abstract class TestcaseRunDAO {
                                     @Bind("result") String result, @Bind("stepruns") String stepRunsJSON);
 
     @Transaction
-    public void insert(TestcaseRun testcaseRun) throws JsonProcessingException {
+    public void insert(RegularTestcaseRun testcaseRun) throws JsonProcessingException {
         //  remove contents that are not to be serialized into the stepRunsJSON
         List<TeststepRun> stepRuns = testcaseRun.getStepRuns();
         for (TeststepRun stepRun : stepRuns) {
@@ -57,7 +51,7 @@ public abstract class TestcaseRunDAO {
         }
 
         //  serialize stepRuns into JSON string
-        String stepRunsJSON = environmentObjectMapper.writeValueAsString(stepRuns);
+        String stepRunsJSON = new ObjectMapper().writeValueAsString(stepRuns);
         long id = _insert(testcaseRun.getTestcaseId(), testcaseRun.getTestcaseName(), testcaseRun.getTestcaseFolderPath(), testcaseRun.getStartTime(),
                 testcaseRun.getDuration(), testcaseRun.getResult().toString(), stepRunsJSON);
         testcaseRun.setId(id);
