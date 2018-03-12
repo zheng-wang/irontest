@@ -1,17 +1,11 @@
 package io.irontest.db;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.irontest.models.endpoint.Endpoint;
 import io.irontest.models.testrun.RegularTestcaseRun;
 import io.irontest.models.testrun.TestcaseRun;
-import io.irontest.models.testrun.TeststepRun;
-import io.irontest.models.teststep.Teststep;
 import org.skife.jdbi.v2.sqlobject.*;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by Zheng on 24/07/2016.
@@ -24,36 +18,36 @@ public abstract class TestcaseRunDAO {
     @SqlUpdate("CREATE TABLE IF NOT EXISTS testcase_run (id BIGINT DEFAULT testcase_run_sequence.NEXTVAL PRIMARY KEY, " +
             "testcase_id BIGINT NOT NULL, testcase_name varchar(200) NOT NULL, testcase_folderpath CLOB NOT NULL," +
             "starttime TIMESTAMP NOT NULL, duration BIGINT NOT NULL, result varchar(15) NOT NULL, " +
-            "stepruns CLOB NOT NULL, created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
+            "created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)")
     public abstract void createTableIfNotExists();
 
     @SqlUpdate("insert into testcase_run " +
-            "(testcase_id, testcase_name, testcase_folderpath, starttime, duration, result, stepruns) values " +
-            "(:testcase_id, :testcase_name, :testcase_folderpath, :starttime, :duration, :result, :stepruns)")
+            "(testcase_id, testcase_name, testcase_folderpath, starttime, duration, result) values " +
+            "(:testcase_id, :testcase_name, :testcase_folderpath, :starttime, :duration, :result)")
     @GetGeneratedKeys
     protected abstract long _insert(@Bind("testcase_id") long testcaseId, @Bind("testcase_name") String testcaseName,
                                     @Bind("testcase_folderpath") String testcaseFolderPath,
                                     @Bind("starttime") Date startTime, @Bind("duration") long duration,
-                                    @Bind("result") String result, @Bind("stepruns") String stepRunsJSON);
+                                    @Bind("result") String result);
 
     @Transaction
-    public void insert(RegularTestcaseRun testcaseRun) throws JsonProcessingException {
+    public void insert(RegularTestcaseRun testcaseRun) {
         //  remove contents that are not to be serialized into the stepRunsJSON
-        List<TeststepRun> stepRuns = testcaseRun.getStepRuns();
-        for (TeststepRun stepRun : stepRuns) {
-            Teststep step = stepRun.getTeststep();
-            step.getAssertions().clear();
-            Endpoint endpoint = step.getEndpoint();
-            if (endpoint != null) {
-                endpoint.setPassword(null);
-            }
-        }
+//        List<TeststepRun> stepRuns = testcaseRun.getStepRuns();
+//        for (TeststepRun stepRun : stepRuns) {
+//            Teststep step = stepRun.getTeststep();
+//            step.getAssertions().clear();
+//            Endpoint endpoint = step.getEndpoint();
+//            if (endpoint != null) {
+//                endpoint.setPassword(null);
+//            }
+//        }
 
         //  serialize stepRuns into JSON string
-        String stepRunsJSON = new ObjectMapper().writeValueAsString(stepRuns);
+//        String stepRunsJSON = new ObjectMapper().writeValueAsString(stepRuns);
         long id = _insert(testcaseRun.getTestcaseId(), testcaseRun.getTestcaseName(), testcaseRun.getTestcaseFolderPath(), testcaseRun.getStartTime(),
-                testcaseRun.getDuration(), testcaseRun.getResult().toString(), stepRunsJSON);
+                testcaseRun.getDuration(), testcaseRun.getResult().toString());
         testcaseRun.setId(id);
     }
 

@@ -1,6 +1,5 @@
 package io.irontest.resources;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.irontest.core.assertion.AssertionVerifier;
 import io.irontest.core.assertion.AssertionVerifierFactory;
 import io.irontest.core.runner.*;
@@ -52,7 +51,7 @@ public class TestcaseRunResource {
 
     @POST
     @PermitAll
-    public TestcaseRun create(@QueryParam("testcaseId") long testcaseId) throws JsonProcessingException {
+    public TestcaseRun create(@QueryParam("testcaseId") long testcaseId) {
         RegularTestcaseRun testcaseRun = new RegularTestcaseRun();
         testcaseRun.setTestcaseId(testcaseId);
         List<UserDefinedProperty> testcaseUDPs = udpDAO.findByTestcaseId(testcaseId);

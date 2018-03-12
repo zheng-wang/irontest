@@ -111,12 +111,14 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         final EnvironmentDAO environmentDAO = jdbi.onDemand(EnvironmentDAO.class);
         final EndpointDAO endpointDAO = jdbi.onDemand(EndpointDAO.class);
         final TestcaseDAO testcaseDAO = jdbi.onDemand(TestcaseDAO.class);
-        final TestcaseRunDAO testcaseRunDAO = jdbi.onDemand(TestcaseRunDAO.class);
         final TeststepDAO teststepDAO = jdbi.onDemand(TeststepDAO.class);
         final AssertionDAO assertionDAO = jdbi.onDemand(AssertionDAO.class);
         final UtilsDAO utilsDAO = jdbi.onDemand(UtilsDAO.class);
         final FolderTreeNodeDAO folderTreeNodeDAO = jdbi.onDemand(FolderTreeNodeDAO.class);
         final UserDefinedPropertyDAO udpDAO = jdbi.onDemand(UserDefinedPropertyDAO.class);
+        final TestcaseRunDAO testcaseRunDAO = jdbi.onDemand(TestcaseRunDAO.class);
+        final TestcaseIndividualRunDAO testcaseIndividualRunDAO = jdbi.onDemand(TestcaseIndividualRunDAO.class);
+        final TeststepRunDAO teststepRunDAO = jdbi.onDemand(TeststepRunDAO.class);
         UserDAO userDAO = null;
         if (isInTeamMode(configuration)) {
             userDAO = jdbi.onDemand(UserDAO.class);
@@ -153,14 +155,18 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         endpointDAO.createTableIfNotExists();
         testcaseDAO.createSequenceIfNotExists();
         testcaseDAO.createTableIfNotExists();
-        testcaseRunDAO.createSequenceIfNotExists();
-        testcaseRunDAO.createTableIfNotExists();
         teststepDAO.createSequenceIfNotExists();
         teststepDAO.createTableIfNotExists();
         assertionDAO.createSequenceIfNotExists();
         assertionDAO.createTableIfNotExists();
         udpDAO.createSequenceIfNotExists();
         udpDAO.createTableIfNotExists();
+        testcaseRunDAO.createSequenceIfNotExists();
+        testcaseRunDAO.createTableIfNotExists();
+        testcaseIndividualRunDAO.createSequenceIfNotExists();
+        testcaseIndividualRunDAO.createTableIfNotExists();
+        teststepRunDAO.createSequenceIfNotExists();
+        teststepRunDAO.createTableIfNotExists();
         if (isInTeamMode(configuration)) {
             userDAO.createSequenceIfNotExists();
             userDAO.createTableIfNotExists();
