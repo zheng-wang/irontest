@@ -1,7 +1,9 @@
 package io.irontest.db;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.irontest.models.testrun.RegularTestcaseRun;
 import io.irontest.models.testrun.TestcaseRun;
+import io.irontest.models.testrun.TeststepRun;
 import org.skife.jdbi.v2.sqlobject.*;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
@@ -22,6 +24,9 @@ public abstract class TestcaseRunDAO {
             "updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)")
     public abstract void createTableIfNotExists();
 
+    @CreateSqlObject
+    protected abstract TeststepRunDAO teststepRunDAO();
+
     @SqlUpdate("insert into testcase_run " +
             "(testcase_id, testcase_name, testcase_folderpath, starttime, duration, result) values " +
             "(:testcase_id, :testcase_name, :testcase_folderpath, :starttime, :duration, :result)")
@@ -32,28 +37,36 @@ public abstract class TestcaseRunDAO {
                                     @Bind("result") String result);
 
     @Transaction
-    public void insert(RegularTestcaseRun testcaseRun) {
-        //  remove contents that are not to be serialized into the stepRunsJSON
-//        List<TeststepRun> stepRuns = testcaseRun.getStepRuns();
-//        for (TeststepRun stepRun : stepRuns) {
-//            Teststep step = stepRun.getTeststep();
-//            step.getAssertions().clear();
-//            Endpoint endpoint = step.getEndpoint();
-//            if (endpoint != null) {
-//                endpoint.setPassword(null);
-//            }
-//        }
-
-        //  serialize stepRuns into JSON string
-//        String stepRunsJSON = new ObjectMapper().writeValueAsString(stepRuns);
-        long id = _insert(testcaseRun.getTestcaseId(), testcaseRun.getTestcaseName(), testcaseRun.getTestcaseFolderPath(), testcaseRun.getStartTime(),
-                testcaseRun.getDuration(), testcaseRun.getResult().toString());
+    public void insert(RegularTestcaseRun testcaseRun) throws JsonProcessingException {
+        long id = _insert(testcaseRun.getTestcaseId(), testcaseRun.getTestcaseName(),
+                testcaseRun.getTestcaseFolderPath(), testcaseRun.getStartTime(), testcaseRun.getDuration(),
+                testcaseRun.getResult().toString());
         testcaseRun.setId(id);
+
+        for (TeststepRun teststepRun: testcaseRun.getStepRuns()) {
+            teststepRunDAO().insert_NoTransaction(id, teststepRun);
+        }
     }
 
     @SqlQuery("select * from testcase_run where id = :id")
-    public abstract TestcaseRun findById(@Bind("id") long id);
+    public abstract TestcaseRun _findById(@Bind("id") long id);
 
     @SqlQuery("select top 1 * from testcase_run where testcase_id = :testcaseId order by starttime desc")
-    public abstract TestcaseRun findLastByTestcaseId(@Bind("testcaseId") long testcaseId);
+    public abstract TestcaseRun _findLastByTestcaseId(@Bind("testcaseId") long testcaseId);
+
+    @Transaction
+    public TestcaseRun findById(long id) {
+        RegularTestcaseRun testcaseRun = (RegularTestcaseRun) _findById(id);
+        testcaseRun.setStepRuns(teststepRunDAO().findByTestcaseRunId_NoTransaction(id));
+        return testcaseRun;
+    }
+
+    @Transaction
+    public TestcaseRun findLastByTestcaseId(long testcaseId) {
+        RegularTestcaseRun testcaseRun = (RegularTestcaseRun) _findLastByTestcaseId(testcaseId);
+        if (testcaseRun != null) {
+            testcaseRun.setStepRuns(teststepRunDAO().findByTestcaseRunId_NoTransaction(testcaseRun.getId()));
+        }
+        return testcaseRun;
+    }
 }

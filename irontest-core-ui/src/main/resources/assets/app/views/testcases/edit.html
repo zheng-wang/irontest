@@ -139,10 +139,9 @@
 <script type="text/ng-template" id="teststepGridResultCellTemplate.html">
   <div class="ui-grid-cell-contents">
     <div ng-if="grid.appScope.testcaseRun">
-      <a ng-click="grid.appScope.showStepRunHTMLReport(row.entity.id)" href="">
-        <div class="{{ grid.appScope.testcaseRun.failedTeststepIds.indexOf(row.entity.id) > -1 ?
-              'text-red' : 'text-lime' }}">
-          {{ grid.appScope.testcaseRun.failedTeststepIds.indexOf(row.entity.id) > -1 ? 'Failed' : 'Passed' }}
+      <a ng-click="grid.appScope.showStepRunHTMLReport(grid.appScope.getTeststepRun(row.entity.id).id)" href="">
+        <div class="{{ grid.appScope.getTeststepRun(row.entity.id).result === 'Failed' ? 'text-red' : 'text-lime' }}">
+          {{ grid.appScope.getTeststepRun(row.entity.id).result }}
         </div>
       </a>
     </div>

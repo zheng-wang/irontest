@@ -1,5 +1,6 @@
 package io.irontest.resources;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.irontest.core.assertion.AssertionVerifier;
 import io.irontest.core.assertion.AssertionVerifierFactory;
 import io.irontest.core.runner.*;
@@ -31,7 +32,7 @@ import static io.irontest.IronTestConstants.*;
 /**
  * Created by Trevor Li on 24/07/2015.
  */
-@Path("/testcaseruns") @Produces({ MediaType.APPLICATION_JSON })
+@Path("/") @Produces({ MediaType.APPLICATION_JSON })
 public class TestcaseRunResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(TestcaseRunResource.class);
     private final TestcaseDAO testcaseDAO;
@@ -39,19 +40,21 @@ public class TestcaseRunResource {
     private final TeststepDAO teststepDAO;
     private final UtilsDAO utilsDAO;
     private final TestcaseRunDAO testcaseRunDAO;
+    private final TeststepRunDAO teststepRunDAO;
 
     public TestcaseRunResource(TestcaseDAO testcaseDAO, UserDefinedPropertyDAO udpDAO, TeststepDAO teststepDAO,
-                               UtilsDAO utilsDAO, TestcaseRunDAO testcaseRunDAO) {
+                               UtilsDAO utilsDAO, TestcaseRunDAO testcaseRunDAO, TeststepRunDAO teststepRunDAO) {
         this.testcaseDAO = testcaseDAO;
         this.udpDAO = udpDAO;
         this.teststepDAO = teststepDAO;
         this.utilsDAO = utilsDAO;
         this.testcaseRunDAO = testcaseRunDAO;
+        this.teststepRunDAO = teststepRunDAO;
     }
 
-    @POST
+    @POST @Path("testcaseruns")
     @PermitAll
-    public TestcaseRun create(@QueryParam("testcaseId") long testcaseId) {
+    public TestcaseRun create(@QueryParam("testcaseId") long testcaseId) throws JsonProcessingException {
         RegularTestcaseRun testcaseRun = new RegularTestcaseRun();
         testcaseRun.setTestcaseId(testcaseId);
         List<UserDefinedProperty> testcaseUDPs = udpDAO.findByTestcaseId(testcaseId);
@@ -164,15 +167,21 @@ public class TestcaseRunResource {
         testcaseRunDAO.insert(testcaseRun);
 
         //  prepare return object for UI (reduced contents for performance)
-        List<Long> failedTeststepIds = new ArrayList<Long>();
+        List<TeststepRun> teststepRunsForUI = new ArrayList<>();
         for (TeststepRun stepRun : testcaseRun.getStepRuns()) {
-            if (TestResult.FAILED == stepRun.getResult()) {
-                failedTeststepIds.add(stepRun.getTeststep().getId());
-            }
+            TeststepRun teststepRunForUI = new TeststepRun();
+            teststepRunForUI.setId(stepRun.getId());
+            teststepRunForUI.setResult(stepRun.getResult());
+            Teststep teststepForUI = new Teststep();
+            teststepForUI.setId(stepRun.getTeststep().getId());
+            teststepRunForUI.setTeststep(teststepForUI);
+            teststepRunsForUI.add(teststepRunForUI);
         }
-        testcaseRun.setFailedTeststepIds(failedTeststepIds);
-        testcaseRun.getStepRuns().clear();
-        return testcaseRun;
+        RegularTestcaseRun testcaseRunForUI = new RegularTestcaseRun();
+        testcaseRunForUI.setId(testcaseRun.getId());
+        testcaseRunForUI.setResult(testcaseRun.getResult());
+        testcaseRunForUI.setStepRuns(teststepRunsForUI);
+        return testcaseRunForUI;
     }
 
     private void preProcessingForIIBTeststep(Testcase testcase, Date testcaseRunStartTime) {
@@ -194,27 +203,19 @@ public class TestcaseRunResource {
         }
     }
 
-    @GET @Path("{testcaseRunId}/htmlreport") @Produces(MediaType.TEXT_HTML)
+    @GET @Path("testcaseruns/{testcaseRunId}/htmlreport") @Produces(MediaType.TEXT_HTML)
     public TestcaseRunView getHTMLReportByTestcaseRunId(@PathParam("testcaseRunId") long testcaseRunId) {
         TestcaseRun testcaseRun = testcaseRunDAO.findById(testcaseRunId);
         return new TestcaseRunView(testcaseRun);
     }
 
-    @GET @Path("{testcaseRunId}/stepruns/{teststepId}/htmlreport") @Produces(MediaType.TEXT_HTML)
-    public TeststepRunView getStepRunHTMLReportByTeststepId(@PathParam("testcaseRunId") long testcaseRunId,
-                                                            @PathParam("teststepId") long teststepId) {
-        RegularTestcaseRun testcaseRun = (RegularTestcaseRun) testcaseRunDAO.findById(testcaseRunId);
-        TeststepRun theStepRun = null;
-        for (TeststepRun stepRun : testcaseRun.getStepRuns()) {
-            if (stepRun.getTeststep().getId() == teststepId) {
-                theStepRun = stepRun;
-                break;
-            }
-        }
-        return new TeststepRunView(theStepRun);
+    @GET @Path("teststepruns/{teststepRunId}/htmlreport") @Produces(MediaType.TEXT_HTML)
+    public TeststepRunView getStepRunHTMLReportById(@PathParam("teststepRunId") long teststepRunId) {
+        TeststepRun teststepRun = teststepRunDAO.findById(teststepRunId);
+        return new TeststepRunView(teststepRun);
     }
 
-    @GET @Path("lastrun/htmlreport") @Produces(MediaType.TEXT_HTML)
+    @GET @Path("testcaseruns/lastrun/htmlreport") @Produces(MediaType.TEXT_HTML)
     public Object getTestcaseLastRunHTMLReport(@QueryParam("testcaseId") long testcaseId) {
         TestcaseRun testcaseRun = testcaseRunDAO.findLastByTestcaseId(testcaseId);
         if (testcaseRun == null) {

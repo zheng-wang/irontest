@@ -1,6 +1,7 @@
 package io.irontest.db;
 
 import io.irontest.models.TestResult;
+import io.irontest.models.testrun.RegularTestcaseRun;
 import io.irontest.models.testrun.TestcaseRun;
 import org.skife.jdbi.v2.StatementContext;
 import org.skife.jdbi.v2.tweak.ResultSetMapper;
@@ -13,7 +14,7 @@ import java.sql.SQLException;
  */
 public class TestcaseRunMapper implements ResultSetMapper<TestcaseRun> {
     public TestcaseRun map(int index, ResultSet rs, StatementContext ctx) throws SQLException {
-        TestcaseRun testcaseRun = new TestcaseRun();
+        TestcaseRun testcaseRun = new RegularTestcaseRun();
 
         testcaseRun.setId(rs.getLong("id"));
         testcaseRun.setTestcaseId(rs.getLong("testcase_id"));
@@ -22,13 +23,6 @@ public class TestcaseRunMapper implements ResultSetMapper<TestcaseRun> {
         testcaseRun.setStartTime(rs.getTimestamp("starttime"));
         testcaseRun.setDuration(rs.getLong("duration"));
         testcaseRun.setResult(TestResult.getByText(rs.getString("result")));
-        /*List<TeststepRun> stepRuns = null;
-        try {
-            stepRuns = new ObjectMapper().readValue(rs.getString("stepruns"), new TypeReference<List<TeststepRun>>() { });
-        } catch (IOException e) {
-            throw new SQLException("Failed to deserialize stepruns JSON.", e);
-        }
-        testcaseRun.setStepRuns(stepRuns);*/
 
         return testcaseRun;
     }

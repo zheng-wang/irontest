@@ -114,11 +114,21 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
       });
     };
 
-    $scope.showStepRunHTMLReport = function(teststepId) {
-      var testcaseRun = new TestcaseRuns({
-        id: $scope.testcaseRun.id
+    $scope.getTeststepRun = function(teststepId) {
+      var teststepRun;
+      $scope.testcaseRun.stepRuns.every(function(el) {
+        if (el.teststep.id === teststepId) {
+          teststepRun = el;
+          return false;    //  terminate the loop
+        } else {
+          return true;     //  continue the loop
+        }
       });
-      testcaseRun.$getStepRunHTMLReport({ teststepId: teststepId },
+      return teststepRun;
+    };
+
+    $scope.showStepRunHTMLReport = function(teststepRunId) {
+      TestcaseRuns.getStepRunHTMLReport({ teststepRunId: teststepRunId },
         function(response) {
           //  without $sce.trustAsHtml, ngSanitize will strip elements like <textarea>
           $scope.testcaseRun.selectedStepRunReport = $sce.trustAsHtml(response.report);

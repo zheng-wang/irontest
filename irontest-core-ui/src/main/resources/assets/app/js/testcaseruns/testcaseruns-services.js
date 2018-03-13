@@ -6,7 +6,7 @@ angular.module('irontest').factory('TestcaseRuns', ['$resource',
       testcaseRunId: '@id'
     }, {
       getStepRunHTMLReport: {
-        url: 'api/testcaseruns/:testcaseRunId/stepruns/:teststepId/htmlreport',
+        url: 'api/teststepruns/:teststepRunId/htmlreport',
         method: 'GET',
         transformResponse: function (data) {  //  avoid angularjs turning response html into array of chars
           return { report: data };

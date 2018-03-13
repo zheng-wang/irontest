@@ -182,7 +182,8 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         environment.jersey().register(new TeststepResource(appInfo, teststepDAO, udpDAO, utilsDAO));
         environment.jersey().register(new WSDLResource());
         environment.jersey().register(new EnvironmentResource(environmentDAO));
-        environment.jersey().register(new TestcaseRunResource(testcaseDAO, udpDAO, teststepDAO, utilsDAO, testcaseRunDAO));
+        environment.jersey().register(new TestcaseRunResource(testcaseDAO, udpDAO, teststepDAO, utilsDAO,
+                testcaseRunDAO, teststepRunDAO));
         environment.jersey().register(new AssertionResource(udpDAO));
         environment.jersey().register(new UDPResource(udpDAO));
         if (isInTeamMode(configuration)) {

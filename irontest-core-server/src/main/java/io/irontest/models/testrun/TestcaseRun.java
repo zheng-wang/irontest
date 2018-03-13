@@ -5,20 +5,11 @@ package io.irontest.models.testrun;
  * Created by Trevor Li on 7/24/15.
  */
 public class TestcaseRun extends TestRun {
-    private Long id;
     private long testcaseId;
     private String testcaseName;
     private String testcaseFolderPath;
 
     public TestcaseRun() {}
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public long getTestcaseId() {
         return testcaseId;

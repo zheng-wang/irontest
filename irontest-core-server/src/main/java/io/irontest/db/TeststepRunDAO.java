@@ -1,10 +1,23 @@
 package io.irontest.db;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.irontest.models.endpoint.Endpoint;
+import io.irontest.models.testrun.TeststepRun;
+import io.irontest.models.teststep.Teststep;
+import org.skife.jdbi.v2.sqlobject.Bind;
+import org.skife.jdbi.v2.sqlobject.GetGeneratedKeys;
+import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
+import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Zheng on 9/03/2018.
  */
+@RegisterMapper(TeststepRunMapper.class)
 public abstract class TeststepRunDAO {
     @SqlUpdate("CREATE SEQUENCE IF NOT EXISTS teststep_run_sequence START WITH 1 INCREMENT BY 1 NOCACHE")
     public abstract void createSequenceIfNotExists();
@@ -21,4 +34,38 @@ public abstract class TeststepRunDAO {
                 "CHECK((testcase_run_id is null AND testcase_individualrun_id is not null) OR " +
                     "(testcase_run_id is not null AND testcase_individualrun_id is null)))")
     public abstract void createTableIfNotExists();
+
+    @SqlUpdate("insert into teststep_run (testcase_run_id, teststep, response, info_message, error_message, " +
+            "assertion_verifications, starttime, duration, result) values (:testcase_run_id, :teststep, :response, " +
+            ":info_message, :error_message, :assertion_verifications, :starttime, :duration, :result)")
+    @GetGeneratedKeys
+    protected abstract long _insert(@Bind("testcase_run_id") long testcaseRunId, @Bind("teststep") String teststep,
+                                    @Bind("response") String response, @Bind("info_message") String infoMessage,
+                                    @Bind("error_message") String errorMessage,
+                                    @Bind("assertion_verifications") String assertionVerifications,
+                                    @Bind("starttime") Date startTime, @Bind("duration") long duration,
+                                    @Bind("result") String result);
+
+    public void insert_NoTransaction(long testcaseRunId, TeststepRun teststepRun) throws JsonProcessingException {
+        //  remove contents that are not to be serialized into the teststep column
+        Teststep teststep = teststepRun.getTeststep();
+        teststep.getAssertions().clear();
+        Endpoint endpoint = teststep.getEndpoint();
+        if (endpoint != null) {
+            endpoint.setPassword(null);
+        }
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        long id = _insert(testcaseRunId, objectMapper.writeValueAsString(teststep),
+                objectMapper.writeValueAsString(teststepRun.getResponse()), teststepRun.getInfoMessage(),
+                teststepRun.getErrorMessage(), objectMapper.writeValueAsString(teststepRun.getAssertionVerifications()),
+                teststepRun.getStartTime(), teststepRun.getDuration(), teststepRun.getResult().toString());
+        teststepRun.setId(id);
+    }
+
+    @SqlQuery("select * from teststep_run where testcase_run_id = :testcaseRunId")
+    public abstract List<TeststepRun> findByTestcaseRunId_NoTransaction(@Bind("testcaseRunId") long testcaseRunId);
+
+    @SqlQuery("select * from teststep_run where id = :id")
+    public abstract TeststepRun findById(@Bind("id") long id);
 }
