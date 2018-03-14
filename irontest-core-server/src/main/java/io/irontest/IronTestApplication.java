@@ -116,6 +116,8 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         final UtilsDAO utilsDAO = jdbi.onDemand(UtilsDAO.class);
         final FolderTreeNodeDAO folderTreeNodeDAO = jdbi.onDemand(FolderTreeNodeDAO.class);
         final UserDefinedPropertyDAO udpDAO = jdbi.onDemand(UserDefinedPropertyDAO.class);
+        final DataTableColumnDAO dataTableColumnDAO = jdbi.onDemand(DataTableColumnDAO.class);
+        final DataTableCellDAO dataTableCellDAO = jdbi.onDemand(DataTableCellDAO.class);
         final TestcaseRunDAO testcaseRunDAO = jdbi.onDemand(TestcaseRunDAO.class);
         final TestcaseIndividualRunDAO testcaseIndividualRunDAO = jdbi.onDemand(TestcaseIndividualRunDAO.class);
         final TeststepRunDAO teststepRunDAO = jdbi.onDemand(TeststepRunDAO.class);
@@ -161,6 +163,10 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         assertionDAO.createTableIfNotExists();
         udpDAO.createSequenceIfNotExists();
         udpDAO.createTableIfNotExists();
+        dataTableColumnDAO.createSequenceIfNotExists();
+        dataTableColumnDAO.createTableIfNotExists();
+        dataTableCellDAO.createSequenceIfNotExists();
+        dataTableCellDAO.createTableIfNotExists();
         testcaseRunDAO.createSequenceIfNotExists();
         testcaseRunDAO.createTableIfNotExists();
         testcaseIndividualRunDAO.createSequenceIfNotExists();

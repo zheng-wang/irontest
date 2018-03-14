@@ -140,7 +140,8 @@
   <div class="ui-grid-cell-contents">
     <div ng-if="grid.appScope.testcaseRun">
       <a ng-click="grid.appScope.showStepRunHTMLReport(grid.appScope.getTeststepRun(row.entity.id).id)" href="">
-        <div class="{{ grid.appScope.getTeststepRun(row.entity.id).result === 'Failed' ? 'text-red' : 'text-lime' }}">
+        <div ng-class="{ 'text-red' : grid.appScope.getTeststepRun(row.entity.id).result === 'Failed',
+                'text-lime' : grid.appScope.getTeststepRun(row.entity.id).result === 'Passed' }">
           {{ grid.appScope.getTeststepRun(row.entity.id).result }}
         </div>
       </a>
