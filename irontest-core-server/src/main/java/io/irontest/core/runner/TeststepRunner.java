@@ -5,16 +5,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.irontest.core.MapValueLookup;
 import io.irontest.db.TeststepDAO;
 import io.irontest.db.UtilsDAO;
-import io.irontest.models.UserDefinedProperty;
 import io.irontest.models.endpoint.Endpoint;
 import io.irontest.models.teststep.Teststep;
 import io.irontest.models.teststep.TeststepRequestType;
-import io.irontest.utils.IronTestUtils;
 import org.apache.commons.text.StrSubstitutor;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,9 +22,8 @@ public abstract class TeststepRunner {
     private Teststep teststep;
     private TeststepDAO teststepDAO;
     private UtilsDAO utilsDAO;
-    private TestcaseRunContext testcaseRunContext;    //  only set when running test case
-    private Map<String, String> implicitProperties;   //  set when running standalone test step or test case
-    private List<UserDefinedProperty> testcaseUDPs;   //  set when running standalone test step or test case
+    private TestcaseRunContext testcaseRunContext;    //  set only when running test case
+    private Map<String, String> referenceableProperties;   //  set when running standalone test step or test case
 
     protected TeststepRunner() {}
 
@@ -59,9 +55,6 @@ public abstract class TeststepRunner {
         List<String> undefinedProperties = new ArrayList<String>();
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
-        Map<String, String> referenceableProperties = new HashMap<String, String>();
-        referenceableProperties.putAll(implicitProperties);
-        referenceableProperties.putAll(IronTestUtils.udpListToMap(testcaseUDPs));
 
         //  resolve property references in teststep.otherProperties
         String otherPropertiesJSON = objectMapper.writeValueAsString(teststep.getOtherProperties());
@@ -112,11 +105,7 @@ public abstract class TeststepRunner {
         this.testcaseRunContext = testcaseRunContext;
     }
 
-    protected void setTestcaseUDPs(List<UserDefinedProperty> testcaseUDPs) {
-        this.testcaseUDPs = testcaseUDPs;
-    }
-
-    protected void setImplicitProperties(Map<String, String> implicitProperties) {
-        this.implicitProperties = implicitProperties;
+    protected void setReferenceableProperties(Map<String, String> referenceableProperties) {
+        this.referenceableProperties = referenceableProperties;
     }
 }

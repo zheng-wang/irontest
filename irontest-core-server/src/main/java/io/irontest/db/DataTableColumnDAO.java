@@ -2,6 +2,8 @@ package io.irontest.db;
 
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 
+import static io.irontest.IronTestConstants.CUSTOM_PROPERTY_NAME_CHECK;
+import static io.irontest.IronTestConstants.DB_PROPERTY_NAME_CONSTRAINT_NAME_SUFFIX;
 import static io.irontest.IronTestConstants.DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX;
 
 /**
@@ -17,6 +19,8 @@ public abstract class DataTableColumnDAO {
             "created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (testcase_id) REFERENCES testcase(id) ON DELETE CASCADE, " +
-            "CONSTRAINT DATATABLE_COLUMN_" + DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX + " UNIQUE(testcase_id, name))")
+            "CONSTRAINT DATATABLE_COLUMN_" + DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX + " UNIQUE(testcase_id, name), " +
+            "CONSTRAINT DATATABLE_COLUMN_" + DB_PROPERTY_NAME_CONSTRAINT_NAME_SUFFIX + " CHECK(" +
+                CUSTOM_PROPERTY_NAME_CHECK + "))")
     public abstract void createTableIfNotExists();
 }

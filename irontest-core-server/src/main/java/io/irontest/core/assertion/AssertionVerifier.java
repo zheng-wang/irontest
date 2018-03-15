@@ -3,14 +3,10 @@ package io.irontest.core.assertion;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.irontest.core.MapValueLookup;
-import io.irontest.models.UserDefinedProperty;
 import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.AssertionVerificationResult;
-import io.irontest.utils.IronTestUtils;
 import org.apache.commons.text.StrSubstitutor;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -18,8 +14,7 @@ import java.util.Set;
  * Created by Zheng on 6/08/2015.
  */
 public abstract class AssertionVerifier {
-    private Map<String, String> implicitProperties;
-    private List<UserDefinedProperty> testcaseUDPs;
+    private Map<String, String> referenceableProperties;
 
     /**
      * @param assertion the assertion to be verified (against the input)
@@ -27,9 +22,6 @@ public abstract class AssertionVerifier {
      * @return
      */
     public AssertionVerificationResult verify(Assertion assertion, Object input) throws Exception {
-        Map<String, String> referenceableProperties = new HashMap<String, String>();
-        referenceableProperties.putAll(implicitProperties);
-        referenceableProperties.putAll(IronTestUtils.udpListToMap(testcaseUDPs));
         MapValueLookup propertyReferenceResolver = new MapValueLookup(referenceableProperties, true);
 
         //  resolve property references in assertion.name
@@ -57,12 +49,8 @@ public abstract class AssertionVerifier {
         return _verify(assertion, input);
     }
 
-    protected void setTestcaseUDPs(List<UserDefinedProperty> testcaseUDPs) {
-        this.testcaseUDPs = testcaseUDPs;
-    }
-
-    protected void setImplicitProperties(Map<String, String> implicitProperties) {
-        this.implicitProperties = implicitProperties;
+    protected void setReferenceableProperties(Map<String, String> referenceableProperties) {
+        this.referenceableProperties = referenceableProperties;
     }
 
     public abstract AssertionVerificationResult _verify(Assertion assertion, Object input) throws Exception;

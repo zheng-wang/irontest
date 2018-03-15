@@ -8,6 +8,7 @@ import io.irontest.models.UserDefinedProperty;
 import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.AssertionVerificationRequest;
 import io.irontest.models.assertion.AssertionVerificationResult;
+import io.irontest.utils.IronTestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,8 +17,8 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Zheng on 27/07/2015.
@@ -36,20 +37,18 @@ public class AssertionResource {
      * This is a stateless operation, i.e. not persisting anything in database.
      * @param assertionVerificationRequest
      * @return
-     * @throws InterruptedException
      */
     @POST @Path("assertions/{assertionId}/verify")
     @PermitAll
-    public AssertionVerificationResult verify(AssertionVerificationRequest assertionVerificationRequest)
-            throws InterruptedException {
+    public AssertionVerificationResult verify(AssertionVerificationRequest assertionVerificationRequest) {
         Assertion assertion = assertionVerificationRequest.getAssertion();
 
-        //  get UDPs defined on the test case
         List<UserDefinedProperty> testcaseUDPs = udpDAO.findTestcaseUDPsByTeststepId(assertion.getTeststepId());
+        Map<String, String> referenceableProperties = IronTestUtils.udpListToMap(testcaseUDPs);
 
         AssertionVerifier assertionVerifier = AssertionVerifierFactory.getInstance().create(
-                assertion.getType(), new HashMap<String, String>(), testcaseUDPs);
-        AssertionVerificationResult result = null;
+                assertion.getType(), referenceableProperties);
+        AssertionVerificationResult result;
         try {
             result = assertionVerifier.verify(assertion, assertionVerificationRequest.getInput());
         } catch (Exception e) {

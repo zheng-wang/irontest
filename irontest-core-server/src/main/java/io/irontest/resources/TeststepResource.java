@@ -23,11 +23,9 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -99,7 +97,7 @@ public class TeststepResource {
         }
     }
 
-    private void populateParametersInWrapper(TeststepWrapper wrapper) throws Exception {
+    private void populateParametersInWrapper(TeststepWrapper wrapper) {
         Teststep teststep = wrapper.getTeststep();
         if (Teststep.TYPE_DB.equals(teststep.getType())) {
             boolean isSQLRequestSingleSelectStatement;
@@ -153,16 +151,14 @@ public class TeststepResource {
     @POST @Path("{teststepId}/run")
     @PermitAll
     public BasicTeststepRun run(Teststep teststep) throws Exception {
-        //  get UDPs defined on the test case
         List<UserDefinedProperty> testcaseUDPs = udpDAO.findByTestcaseId(teststep.getTestcaseId());
-        //  get implicit properties
-        Map<String, String> implicitProperties = new HashMap<>();
-        implicitProperties.put(IMPLICIT_PROPERTY_NAME_TEST_STEP_START_TIME,
+        Map<String, String> referenceableProperties = IronTestUtils.udpListToMap(testcaseUDPs);
+        referenceableProperties.put(IMPLICIT_PROPERTY_NAME_TEST_STEP_START_TIME,
                 new SimpleDateFormat(IMPLICIT_PROPERTY_DATE_TIME_FORMAT).format(new Date()));
 
         //  run the test step
         TeststepRunner teststepRunner = TeststepRunnerFactory.getInstance().newTeststepRunner(
-                teststep, teststepDAO, utilsDAO, implicitProperties, testcaseUDPs, null);
+                teststep, teststepDAO, utilsDAO, referenceableProperties,null);
         BasicTeststepRun basicTeststepRun = teststepRunner.run();
 
         //  for better display in browser, transform XML response to be pretty-printed
@@ -185,16 +181,13 @@ public class TeststepResource {
      * @param inputStream
      * @param contentDispositionHeader
      * @return
-     * @throws IOException
-     * @throws InterruptedException
      */
     @POST @Path("{teststepId}/requestFile")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @PermitAll
     public Teststep saveRequestFile(@PathParam("teststepId") long teststepId,
                                       @FormDataParam("file") InputStream inputStream,
-                                      @FormDataParam("file") FormDataContentDisposition contentDispositionHeader)
-            throws IOException, InterruptedException {
+                                      @FormDataParam("file") FormDataContentDisposition contentDispositionHeader) {
         return teststepDAO.setRequestFile(teststepId, contentDispositionHeader.getFileName(), inputStream);
     }
 
@@ -202,11 +195,10 @@ public class TeststepResource {
      * Download Teststep.request as a file.
      * @param teststepId
      * @return
-     * @throws IOException
      */
     @GET @Path("{teststepId}/requestFile")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public Response getRequestFile(@PathParam("teststepId") long teststepId) throws IOException {
+    public Response getRequestFile(@PathParam("teststepId") long teststepId) {
         Teststep teststep = teststepDAO.findById(teststepId);
         teststep.setRequest(teststepDAO.getBinaryRequestById(teststep.getId()));
         String filename = teststep.getRequestFilename() == null ? "UnknownFilename" : teststep.getRequestFilename();

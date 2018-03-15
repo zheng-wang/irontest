@@ -24,11 +24,8 @@ public abstract class UserDefinedPropertyDAO {
             "updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (testcase_id) REFERENCES testcase(id) ON DELETE CASCADE, " +
             "CONSTRAINT UDP_UNIQUE_SEQUENCE_CONSTRAINT UNIQUE(testcase_id, sequence), " +
-            "CONSTRAINT UDP_" + DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX + " UNIQUE(testcase_id, name)," +
-            "CONSTRAINT UDP_" + DB_PROPERTY_NAME_CONSTRAINT_NAME_SUFFIX + " CHECK(" +
-                "name NOT IN ('" + IMPLICIT_PROPERTY_NAME_TEST_CASE_START_TIME + "', '" +
-                    IMPLICIT_PROPERTY_NAME_TEST_STEP_START_TIME + "') AND " +
-                "REGEXP_LIKE(name, '^[a-zA-Z_$][a-zA-Z_$0-9]*$')))")
+            "CONSTRAINT UDP_" + DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX + " UNIQUE(testcase_id, name), " +
+            "CONSTRAINT UDP_" + DB_PROPERTY_NAME_CONSTRAINT_NAME_SUFFIX + " CHECK(" + CUSTOM_PROPERTY_NAME_CHECK + "))")
     public abstract void createTableIfNotExists();
 
     /**

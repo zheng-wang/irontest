@@ -1,2 +1,2 @@
-Response did not contain "${ verification.assertion.otherProperties.contains }".
+Response did not contain the expected string.
 
