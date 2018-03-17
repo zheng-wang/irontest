@@ -9,4 +9,11 @@ import java.util.List;
 public class DataDrivenTestcaseRun extends TestcaseRun {
     private List<TestcaseIndividualRun> individualRuns = new ArrayList<>();
 
+    public List<TestcaseIndividualRun> getIndividualRuns() {
+        return individualRuns;
+    }
+
+    public void setIndividualRuns(List<TestcaseIndividualRun> individualRuns) {
+        this.individualRuns = individualRuns;
+    }
 }
