@@ -57,6 +57,7 @@ public class TeststepMapper implements ResultSetMapper<Teststep> {
             endpoint.setId(rs.getLong("endpoint_id"));
             teststep.setEndpoint(endpoint);
         }
+        teststep.setEndpointProperty(fields.contains("endpoint_property") ? rs.getString("endpoint_property") : null);
 
         return teststep;
     }

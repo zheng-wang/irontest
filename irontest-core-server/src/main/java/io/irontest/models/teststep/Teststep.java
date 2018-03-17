@@ -39,6 +39,7 @@ public class Teststep {
     private String description;
     private String action;            //  currently only used in MQ test step and IIB test step
     private Endpoint endpoint;
+    private String endpointProperty;
     private Object request;
     private TeststepRequestType requestType = TeststepRequestType.TEXT;
     private String requestFilename;
@@ -124,6 +125,14 @@ public class Teststep {
 
     public void setEndpoint(Endpoint endpoint) {
         this.endpoint = endpoint;
+    }
+
+    public String getEndpointProperty() {
+        return endpointProperty;
+    }
+
+    public void setEndpointProperty(String endpointProperty) {
+        this.endpointProperty = endpointProperty;
     }
 
     public String getType() {
