@@ -44,10 +44,10 @@ public class AssertionResource {
         Assertion assertion = assertionVerificationRequest.getAssertion();
 
         List<UserDefinedProperty> testcaseUDPs = udpDAO.findTestcaseUDPsByTeststepId(assertion.getTeststepId());
-        Map<String, String> referenceableProperties = IronTestUtils.udpListToMap(testcaseUDPs);
+        Map<String, String> referenceableStringProperties = IronTestUtils.udpListToMap(testcaseUDPs);
 
         AssertionVerifier assertionVerifier = AssertionVerifierFactory.getInstance().create(
-                assertion.getType(), referenceableProperties);
+                assertion.getType(), referenceableStringProperties);
         AssertionVerificationResult result;
         try {
             result = assertionVerifier.verify(assertion, assertionVerificationRequest.getInput());

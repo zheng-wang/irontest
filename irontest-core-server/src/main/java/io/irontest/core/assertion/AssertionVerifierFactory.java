@@ -16,7 +16,7 @@ public class AssertionVerifierFactory {
         return instance;
     }
 
-    public AssertionVerifier create(String assertionType, Map<String, String> referenceableProperties) {
+    public AssertionVerifier create(String assertionType, Map<String, String> referenceableStringProperties) {
         AssertionVerifier result;
         if (Assertion.TYPE_XPATH.equals(assertionType)) {
             result = new XPathAssertionVerifier();
@@ -36,7 +36,7 @@ public class AssertionVerifierFactory {
             throw new RuntimeException("Unrecognized assertion type " + assertionType);
         }
 
-        result.setReferenceableProperties(referenceableProperties);
+        result.setReferenceableStringProperties(referenceableStringProperties);
 
         return result;
     }

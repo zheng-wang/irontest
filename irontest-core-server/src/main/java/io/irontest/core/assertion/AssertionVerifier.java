@@ -14,7 +14,7 @@ import java.util.Set;
  * Created by Zheng on 6/08/2015.
  */
 public abstract class AssertionVerifier {
-    private Map<String, String> referenceableProperties;
+    private Map<String, String> referenceableStringProperties;
 
     /**
      * @param assertion the assertion to be verified (against the input)
@@ -22,35 +22,35 @@ public abstract class AssertionVerifier {
      * @return
      */
     public AssertionVerificationResult verify(Assertion assertion, Object input) throws Exception {
-        MapValueLookup propertyReferenceResolver = new MapValueLookup(referenceableProperties, true);
+        MapValueLookup stringPropertyReferenceResolver = new MapValueLookup(referenceableStringProperties, true);
 
-        //  resolve property references in assertion.name
-        String resolvedAssertionName = new StrSubstitutor(propertyReferenceResolver)
+        //  resolve string property references in assertion.name
+        String resolvedAssertionName = new StrSubstitutor(stringPropertyReferenceResolver)
                 .replace(assertion.getName());
         assertion.setName(resolvedAssertionName);
-        Set<String> undefinedProperties = propertyReferenceResolver.getUnfoundKeys();
+        Set<String> undefinedStringProperties = stringPropertyReferenceResolver.getUnfoundKeys();
 
-        //  resolve property references in assertion.otherProperties
+        //  resolve string property references in assertion.otherProperties
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
         String assertionOtherPropertiesJSON =  objectMapper.writeValueAsString(assertion.getOtherProperties());
-        String resolvedAssertionOtherPropertiesJSON = new StrSubstitutor(propertyReferenceResolver)
+        String resolvedAssertionOtherPropertiesJSON = new StrSubstitutor(stringPropertyReferenceResolver)
                 .replace(assertionOtherPropertiesJSON);
-        undefinedProperties.addAll(propertyReferenceResolver.getUnfoundKeys());
+        undefinedStringProperties.addAll(stringPropertyReferenceResolver.getUnfoundKeys());
         String tempAssertionJSON = "{\"type\":\"" + assertion.getType() + "\",\"otherProperties\":" +
                 resolvedAssertionOtherPropertiesJSON + "}";
         Assertion tempAssertion = objectMapper.readValue(tempAssertionJSON, Assertion.class);
         assertion.setOtherProperties(tempAssertion.getOtherProperties());
 
-        if (!undefinedProperties.isEmpty()) {
-            throw new RuntimeException("Properties " + undefinedProperties + " are undefined.");
+        if (!undefinedStringProperties.isEmpty()) {
+            throw new RuntimeException("String properties " + undefinedStringProperties + " not defined.");
         }
 
         return _verify(assertion, input);
     }
 
-    protected void setReferenceableProperties(Map<String, String> referenceableProperties) {
-        this.referenceableProperties = referenceableProperties;
+    protected void setReferenceableStringProperties(Map<String, String> referenceableStringProperties) {
+        this.referenceableStringProperties = referenceableStringProperties;
     }
 
     public abstract AssertionVerificationResult _verify(Assertion assertion, Object input) throws Exception;
