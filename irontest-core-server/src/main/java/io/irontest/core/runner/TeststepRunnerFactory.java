@@ -2,6 +2,7 @@ package io.irontest.core.runner;
 
 import io.irontest.db.TeststepDAO;
 import io.irontest.db.UtilsDAO;
+import io.irontest.models.endpoint.Endpoint;
 import io.irontest.models.teststep.Teststep;
 
 import java.lang.reflect.Constructor;
@@ -20,8 +21,8 @@ public class TeststepRunnerFactory {
     }
 
     public TeststepRunner newTeststepRunner(Teststep teststep, TeststepDAO teststepDAO, UtilsDAO utisDAO,
-                                            Map<String, String> referenceableProperties,
-                                            TestcaseRunContext testcaseRunContext) {
+                                            Map<String, String> referenceableStringProperties,
+                                            Map<String, Endpoint> referenceableEndpointProperties, TestcaseRunContext testcaseRunContext) {
         TeststepRunner runner;
         try {
             Class runnerClass = Class.forName("io.irontest.core.runner." + teststep.getType() + "TeststepRunner");
@@ -30,7 +31,8 @@ public class TeststepRunnerFactory {
             runner.setTeststep(teststep);
             runner.setTeststepDAO(teststepDAO);
             runner.setUtilsDAO(utisDAO);
-            runner.setReferenceableProperties(referenceableProperties);
+            runner.setReferenceableStringProperties(referenceableStringProperties);
+            runner.setReferenceableEndpointProperties(referenceableEndpointProperties);
             runner.setTestcaseRunContext(testcaseRunContext);
         } catch (Exception e) {
             throw new RuntimeException("Unable to instantiate test step runner.", e);

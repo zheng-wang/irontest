@@ -23,7 +23,8 @@ public abstract class TeststepRunner {
     private TeststepDAO teststepDAO;
     private UtilsDAO utilsDAO;
     private TestcaseRunContext testcaseRunContext;    //  set only when running test case
-    private Map<String, String> referenceableProperties;   //  set when running standalone test step or test case
+    private Map<String, String> referenceableStringProperties;   //  set when running standalone test step or test case
+    private Map<String, Endpoint> referenceableEndpointProperties;   //  set when running standalone test step or test case
 
     protected TeststepRunner() {}
 
@@ -44,23 +45,30 @@ public abstract class TeststepRunner {
             teststep.setRequest(teststepDAO.getBinaryRequestById(teststep.getId()));
         }
 
-        resolveReferenceableProperties();
+        resolveReferenceableStringProperties();
+
+        if (teststep.getEndpointProperty() != null) {
+            teststep.setEndpoint(referenceableEndpointProperties.get(teststep.getEndpointProperty()));
+            if (teststep.getEndpoint() == null) {
+                throw new RuntimeException("Endpoint property " + teststep.getEndpointProperty() + " not defined or is null.");
+            }
+        }
     }
 
     /**
-     * Resolve as many property references as possible. For unresolved references, throw exception in the end.
+     * Resolve as many string property references as possible. For unresolved references, throw exception in the end.
      * @throws IOException
      */
-    private void resolveReferenceableProperties() throws IOException {
-        List<String> undefinedProperties = new ArrayList<String>();
+    private void resolveReferenceableStringProperties() throws IOException {
+        List<String> undefinedStringProperties = new ArrayList<String>();
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
 
         //  resolve property references in teststep.otherProperties
         String otherPropertiesJSON = objectMapper.writeValueAsString(teststep.getOtherProperties());
-        MapValueLookup propertyReferenceResolver = new MapValueLookup(referenceableProperties, true);
+        MapValueLookup propertyReferenceResolver = new MapValueLookup(referenceableStringProperties, true);
         String resolvedOtherPropertiesJSON = new StrSubstitutor(propertyReferenceResolver).replace(otherPropertiesJSON);
-        undefinedProperties.addAll(propertyReferenceResolver.getUnfoundKeys());
+        undefinedStringProperties.addAll(propertyReferenceResolver.getUnfoundKeys());
         String tempStepJSON = "{\"type\":\"" + teststep.getType() + "\",\"otherProperties\":" +
                 resolvedOtherPropertiesJSON + "}";
         Teststep tempStep = objectMapper.readValue(tempStepJSON, Teststep.class);
@@ -68,14 +76,14 @@ public abstract class TeststepRunner {
 
         //  resolve property references in teststep.request (text type)
         if (teststep.getRequestType() == TeststepRequestType.TEXT) {
-            propertyReferenceResolver = new MapValueLookup(referenceableProperties, false);
+            propertyReferenceResolver = new MapValueLookup(referenceableStringProperties, false);
             teststep.setRequest(new StrSubstitutor(propertyReferenceResolver).replace(
                     (String) teststep.getRequest()));
-            undefinedProperties.addAll(propertyReferenceResolver.getUnfoundKeys());
+            undefinedStringProperties.addAll(propertyReferenceResolver.getUnfoundKeys());
         }
 
-        if (!undefinedProperties.isEmpty()) {
-            throw new RuntimeException("Properties " + undefinedProperties + " are undefined.");
+        if (!undefinedStringProperties.isEmpty()) {
+            throw new RuntimeException("String properties " + undefinedStringProperties + " not defined.");
         }
     }
 
@@ -105,7 +113,11 @@ public abstract class TeststepRunner {
         this.testcaseRunContext = testcaseRunContext;
     }
 
-    protected void setReferenceableProperties(Map<String, String> referenceableProperties) {
-        this.referenceableProperties = referenceableProperties;
+    protected void setReferenceableStringProperties(Map<String, String> referenceableStringProperties) {
+        this.referenceableStringProperties = referenceableStringProperties;
+    }
+
+    public void setReferenceableEndpointProperties(Map<String, Endpoint> referenceableEndpointProperties) {
+        this.referenceableEndpointProperties = referenceableEndpointProperties;
     }
 }

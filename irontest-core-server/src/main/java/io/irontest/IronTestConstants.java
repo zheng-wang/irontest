@@ -1,12 +1,15 @@
 package io.irontest;
 
+import java.text.SimpleDateFormat;
+
 /**
  * Created by Zheng on 1/05/2016.
  */
 public interface IronTestConstants {
     String IMPLICIT_PROPERTY_NAME_TEST_CASE_START_TIME = "Test_Case_Start_Time";
+    String IMPLICIT_PROPERTY_NAME_TEST_CASE_INDIVIDUAL_START_TIME = "Test_Case_Individual_Start_Time";
     String IMPLICIT_PROPERTY_NAME_TEST_STEP_START_TIME = "Test_Step_Start_Time";
-    String IMPLICIT_PROPERTY_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
+    SimpleDateFormat IMPLICIT_PROPERTY_DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
     String DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX = "UNIQUE_NAME_CONSTRAINT";
     String DB_PROPERTY_NAME_CONSTRAINT_NAME_SUFFIX = "PROPERTY_NAME_CONSTRAINT";

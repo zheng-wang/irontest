@@ -37,14 +37,17 @@ public abstract class TestcaseRunDAO {
                                     @Bind("result") String result);
 
     @Transaction
-    public void insert(RegularTestcaseRun testcaseRun) throws JsonProcessingException {
+    public void insert(TestcaseRun testcaseRun) throws JsonProcessingException {
         long id = _insert(testcaseRun.getTestcaseId(), testcaseRun.getTestcaseName(),
                 testcaseRun.getTestcaseFolderPath(), testcaseRun.getStartTime(), testcaseRun.getDuration(),
                 testcaseRun.getResult().toString());
         testcaseRun.setId(id);
 
-        for (TeststepRun teststepRun: testcaseRun.getStepRuns()) {
-            teststepRunDAO().insert_NoTransaction(id, teststepRun);
+        if (testcaseRun instanceof RegularTestcaseRun) {
+            RegularTestcaseRun regularTestcaseRun = (RegularTestcaseRun) testcaseRun;
+            for (TeststepRun teststepRun: regularTestcaseRun.getStepRuns()) {
+                teststepRunDAO().insert_NoTransaction(id, teststepRun);
+            }
         }
     }
 

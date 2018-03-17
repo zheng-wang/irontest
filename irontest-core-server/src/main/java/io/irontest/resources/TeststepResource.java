@@ -24,8 +24,8 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -146,19 +146,19 @@ public class TeststepResource {
     /**
      * Run a test step individually (not as part of test case running).
      * @param teststep
-     * @return API response
+     * @return
      */
     @POST @Path("{teststepId}/run")
     @PermitAll
     public BasicTeststepRun run(Teststep teststep) throws Exception {
         List<UserDefinedProperty> testcaseUDPs = udpDAO.findByTestcaseId(teststep.getTestcaseId());
-        Map<String, String> referenceableProperties = IronTestUtils.udpListToMap(testcaseUDPs);
-        referenceableProperties.put(IMPLICIT_PROPERTY_NAME_TEST_STEP_START_TIME,
-                new SimpleDateFormat(IMPLICIT_PROPERTY_DATE_TIME_FORMAT).format(new Date()));
+        Map<String, String> referenceableStringProperties = IronTestUtils.udpListToMap(testcaseUDPs);
+        referenceableStringProperties.put(IMPLICIT_PROPERTY_NAME_TEST_STEP_START_TIME,
+                IMPLICIT_PROPERTY_DATE_TIME_FORMAT.format(new Date()));
 
         //  run the test step
         TeststepRunner teststepRunner = TeststepRunnerFactory.getInstance().newTeststepRunner(
-                teststep, teststepDAO, utilsDAO, referenceableProperties,null);
+                teststep, teststepDAO, utilsDAO, referenceableStringProperties, new HashMap<String, Endpoint>(), null);
         BasicTeststepRun basicTeststepRun = teststepRunner.run();
 
         //  for better display in browser, transform XML response to be pretty-printed

@@ -1,10 +1,17 @@
 package io.irontest.db;
 
+import io.irontest.models.DataTableCell;
+import org.skife.jdbi.v2.sqlobject.Bind;
+import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
+import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
+
+import java.util.List;
 
 /**
  * Created by Zheng on 14/03/2018.
  */
+@RegisterMapper(DataTableCellMapper.class)
 public abstract class DataTableCellDAO {
     @SqlUpdate("CREATE SEQUENCE IF NOT EXISTS datatable_cell_sequence START WITH 1 INCREMENT BY 1 NOCACHE")
     public abstract void createSequenceIfNotExists();
@@ -19,4 +26,7 @@ public abstract class DataTableCellDAO {
             "CONSTRAINT DATATABLE_CELL_EXCLUSIVE_TYPE_CONSTRAINT CHECK(" +
                 "(value is null AND endpoint_id is not null) OR (value is not null AND endpoint_id is null)))")
     public abstract void createTableIfNotExists();
+
+    @SqlQuery("select * from datatable_cell where column_id = :columnId order by row_sequence")
+    public abstract List<DataTableCell> findByColumnId(@Bind("columnId") long columnId);
 }

@@ -5,6 +5,9 @@ import io.irontest.core.runner.DataDrivenTestcaseRunner;
 import io.irontest.core.runner.RegularTestcaseRunner;
 import io.irontest.core.runner.TestcaseRunner;
 import io.irontest.db.*;
+import io.irontest.models.DataTable;
+import io.irontest.models.Testcase;
+import io.irontest.models.UserDefinedProperty;
 import io.irontest.models.testrun.TestcaseRun;
 import io.irontest.models.testrun.TeststepRun;
 import io.irontest.views.TestcaseRunView;
@@ -13,7 +16,6 @@ import io.irontest.views.TeststepRunView;
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -41,12 +43,15 @@ public class TestcaseRunResource {
     @POST @Path("testcaseruns")
     @PermitAll
     public TestcaseRun create(@QueryParam("testcaseId") long testcaseId) throws JsonProcessingException {
-        List<LinkedHashMap<String, Object>> dataTable = utilsDAO.getTestcaseDataTable(testcaseId);
+        Testcase testcase = testcaseDAO.findById_Complete(testcaseId);
+        List<UserDefinedProperty> testcaseUDPs = udpDAO.findByTestcaseId(testcaseId);
+        DataTable dataTable = utilsDAO.getTestcaseDataTable(testcaseId);
         TestcaseRunner testcaseRunner;
-        if (dataTable.isEmpty()) {
-            testcaseRunner = new RegularTestcaseRunner(testcaseId, testcaseDAO, udpDAO, teststepDAO, utilsDAO, testcaseRunDAO);
+        if (dataTable == null || dataTable.getRows().isEmpty()) {
+            testcaseRunner = new RegularTestcaseRunner(testcase, testcaseUDPs, teststepDAO, utilsDAO, testcaseRunDAO);
         } else {
-            testcaseRunner = new DataDrivenTestcaseRunner(testcaseId, testcaseDAO, udpDAO, teststepDAO, utilsDAO, testcaseRunDAO);
+            testcaseRunner = new DataDrivenTestcaseRunner(testcase, testcaseUDPs, dataTable, teststepDAO, utilsDAO,
+                    testcaseRunDAO);
         }
         return testcaseRunner.run();
     }
