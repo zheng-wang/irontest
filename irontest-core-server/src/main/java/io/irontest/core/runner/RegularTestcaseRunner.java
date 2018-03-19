@@ -33,8 +33,16 @@ public class RegularTestcaseRunner extends TestcaseRunner {
     @Override
     public TestcaseRun run() throws JsonProcessingException {
         RegularTestcaseRun testcaseRun = new RegularTestcaseRun();
+
+        preProcessingForIIBTestcase();
         startTestcaseRun(testcaseRun);
-        preProcessingForIIBTeststep(getTestcase(), getTestcaseRunContext().getTestcaseRunStartTime());
+        if (isTestcaseHasWaitForProcessingCompletionAction()) {
+            long secondFraction = getTestcaseRunContext().getTestcaseRunStartTime().getTime() % 1000;   //  milliseconds
+            long millisecondsUntilNextSecond = 1000 - secondFraction;
+            Teststep waitStep = getTestcase().getTeststeps().get(0);
+            waitStep.setName("Wait " + millisecondsUntilNextSecond + " milliseconds");
+            waitStep.setOtherProperties(new WaitTeststepProperties(millisecondsUntilNextSecond));
+        }
 
         //  run test steps
         for (Teststep teststep : getTestcase().getTeststeps()) {
@@ -70,24 +78,5 @@ public class RegularTestcaseRunner extends TestcaseRunner {
         testcaseRunForUI.setResult(testcaseRun.getResult());
         testcaseRunForUI.setStepRuns(teststepRunsForUI);
         return testcaseRunForUI;
-    }
-
-    private void preProcessingForIIBTeststep(Testcase testcase, Date testcaseRunStartTime) {
-        long secondFraction = testcaseRunStartTime.getTime() % 1000;   //  milliseconds
-        long millisecondsUntilNextSecond = 1000 - secondFraction;
-        boolean testcaseHasWaitForProcessingCompletionAction = false;
-        for (Teststep teststep : testcase.getTeststeps()) {
-            if (Teststep.TYPE_IIB.equals(teststep.getType()) &&
-                    Teststep.ACTION_WAIT_FOR_PROCESSING_COMPLETION.equals(teststep.getAction())) {
-                testcaseHasWaitForProcessingCompletionAction = true;
-            }
-        }
-        if (testcaseHasWaitForProcessingCompletionAction) {
-            Teststep waitStep = new Teststep();
-            waitStep.setName("Wait " + millisecondsUntilNextSecond + " milliseconds");
-            waitStep.setType(Teststep.TYPE_WAIT);
-            waitStep.setOtherProperties(new WaitTeststepProperties(millisecondsUntilNextSecond));
-            testcase.getTeststeps().add(0, waitStep);
-        }
     }
 }

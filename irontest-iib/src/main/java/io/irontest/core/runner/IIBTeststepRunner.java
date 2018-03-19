@@ -43,7 +43,6 @@ public class IIBTeststepRunner extends TeststepRunner {
         Endpoint endpoint = teststep.getEndpoint();
         String actualRunnerClassName;
         ClassLoader classLoader;
-        Class endpointPropertiesClass;
         if (Endpoint.TYPE_IIB.equals(endpoint.getType())) {    //  it is an IIB 10.0 endpoint
             actualRunnerClassName = "io.irontest.core.runner.IIB100TeststepRunner";
             classLoader = iib100ClassLoader;

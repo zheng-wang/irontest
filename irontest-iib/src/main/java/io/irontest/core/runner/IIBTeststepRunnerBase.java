@@ -123,6 +123,9 @@ public class IIBTeststepRunnerBase extends TeststepRunner {
         if (!messageFlowProxy.isRunning()) {
             throw new Exception("Message flow not running.");
         } else {
+            TestcaseRunContext testcaseRunContext = getTestcaseRunContext();
+            Date referenceTime = testcaseRunContext.getTestcaseIndividualRunStartTime() == null ?
+                    testcaseRunContext.getTestcaseRunStartTime() : testcaseRunContext.getTestcaseIndividualRunStartTime();
             Date pollingEndTime = DateUtils.addSeconds(new Date(), ACTIVITY_LOG_POLLING_TIMEOUT);
             ActivityLogEntry processingCompletionSignal = null;
             while (System.currentTimeMillis() < pollingEndTime.getTime()) {
@@ -131,7 +134,7 @@ public class IIBTeststepRunnerBase extends TeststepRunner {
                     for (int i = 1; i <= activityLogProxy.getSize(); i++) {
                         ActivityLogEntry logEntry = activityLogProxy.getLogEntry(i);
                         if ((11506 == logEntry.getMessageNumber() || 11504 == logEntry.getMessageNumber()) &&
-                                logEntry.getTimestamp().after(getTestcaseRunContext().getTestcaseRunStartTime())) {
+                                logEntry.getTimestamp().after(referenceTime)) {
                             processingCompletionSignal = logEntry;
                             break;
                         }

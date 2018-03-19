@@ -45,7 +45,7 @@ public class DBTeststepRunner extends TeststepRunner {
         DBAPIResponse response = new DBAPIResponse();
         String request = (String) teststep.getRequest();
         Endpoint endpoint = teststep.getEndpoint();
-        DBI jdbi = new DBI(endpoint.getUrl(), endpoint.getUsername(), endpoint.getPassword());
+        DBI jdbi = new DBI(endpoint.getUrl(), endpoint.getUsername(), getDecryptedEndpointPassword());
 
         //  get SQL statements (trimmed and without comments) and JDBI script object
         List<String> statements = IronTestUtils.getStatements(request);

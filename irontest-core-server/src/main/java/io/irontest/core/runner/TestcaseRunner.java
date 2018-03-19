@@ -31,6 +31,7 @@ import static io.irontest.IronTestConstants.*;
  */
 public abstract class TestcaseRunner {
     private Testcase testcase;
+    private boolean testcaseHasWaitForProcessingCompletionAction = false;
     private List<UserDefinedProperty> testcaseUDPs;
     private TeststepDAO teststepDAO;
     private UtilsDAO utilsDAO;
@@ -54,6 +55,10 @@ public abstract class TestcaseRunner {
         return testcase;
     }
 
+    public boolean isTestcaseHasWaitForProcessingCompletionAction() {
+        return testcaseHasWaitForProcessingCompletionAction;
+    }
+
     protected TestcaseRunDAO getTestcaseRunDAO() {
         return testcaseRunDAO;
     }
@@ -71,6 +76,20 @@ public abstract class TestcaseRunner {
     }
 
     public abstract TestcaseRun run() throws JsonProcessingException;
+
+    protected void preProcessingForIIBTestcase() {
+        for (Teststep teststep : testcase.getTeststeps()) {
+            if (Teststep.TYPE_IIB.equals(teststep.getType()) &&
+                    Teststep.ACTION_WAIT_FOR_PROCESSING_COMPLETION.equals(teststep.getAction())) {
+                testcaseHasWaitForProcessingCompletionAction = true;
+            }
+        }
+        if (testcaseHasWaitForProcessingCompletionAction) {
+            Teststep waitStep = new Teststep();
+            waitStep.setType(Teststep.TYPE_WAIT);
+            testcase.getTeststeps().add(0, waitStep);
+        }
+    }
 
     protected void startTestcaseRun(TestcaseRun testcaseRun) {
         Date testcaseRunStartTime = new Date();

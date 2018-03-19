@@ -8,6 +8,7 @@ import java.util.Date;
  */
 public class TestcaseRunContext {
     private Date testcaseRunStartTime;
+    private Date testcaseIndividualRunStartTime;
 
     public Date getTestcaseRunStartTime() {
         return testcaseRunStartTime;
@@ -15,5 +16,13 @@ public class TestcaseRunContext {
 
     public void setTestcaseRunStartTime(Date testcaseRunStartTime) {
         this.testcaseRunStartTime = testcaseRunStartTime;
+    }
+
+    public Date getTestcaseIndividualRunStartTime() {
+        return testcaseIndividualRunStartTime;
+    }
+
+    public void setTestcaseIndividualRunStartTime(Date testcaseIndividualRunStartTime) {
+        this.testcaseIndividualRunStartTime = testcaseIndividualRunStartTime;
     }
 }

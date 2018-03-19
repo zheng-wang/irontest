@@ -20,6 +20,7 @@ import java.util.Map;
  */
 public abstract class TeststepRunner {
     private Teststep teststep;
+    private String decryptedEndpointPassword;
     private TeststepDAO teststepDAO;
     private UtilsDAO utilsDAO;
     private TestcaseRunContext testcaseRunContext;    //  set only when running test case
@@ -33,13 +34,11 @@ public abstract class TeststepRunner {
         return run(teststep);
     }
 
+    /**
+     * This method modifies the content of teststep object.
+     * @throws IOException
+     */
     private void prepareTeststep() throws IOException {
-        //  decrypt password in endpoint
-        Endpoint endpoint = teststep.getEndpoint();
-        if (endpoint != null && endpoint.getPassword() != null) {
-            endpoint.setPassword(utilsDAO.decryptEndpointPassword(endpoint.getPassword()));
-        }
-
         //  fetch request binary if its type is file
         if (teststep.getRequestType() == TeststepRequestType.FILE) {
             teststep.setRequest(teststepDAO.getBinaryRequestById(teststep.getId()));
@@ -47,11 +46,21 @@ public abstract class TeststepRunner {
 
         resolveReferenceableStringProperties();
 
+        //  resolve endpoint property if set on test step
         if (teststep.getEndpointProperty() != null) {
             teststep.setEndpoint(referenceableEndpointProperties.get(teststep.getEndpointProperty()));
             if (teststep.getEndpoint() == null) {
                 throw new RuntimeException("Endpoint property " + teststep.getEndpointProperty() + " not defined or is null.");
             }
+        }
+
+        //  decrypt password from endpoint
+        //  not modifying the endpoint object. Reasons
+        //    1. Avoid the decrypted password leaking out of this runner (moving around with the Endpoint object)
+        //    2. Avoid affecting other step runs when the endpoint object comes from a referenceable property (like from data table)
+        Endpoint endpoint = teststep.getEndpoint();
+        if (endpoint != null && endpoint.getPassword() != null) {
+            decryptedEndpointPassword = utilsDAO.decryptEndpointPassword(endpoint.getPassword());
         }
     }
 
@@ -99,6 +108,10 @@ public abstract class TeststepRunner {
 
     protected Teststep getTeststep() {
         return teststep;
+    }
+
+    protected String getDecryptedEndpointPassword() {
+        return decryptedEndpointPassword;
     }
 
     protected void setUtilsDAO(UtilsDAO utilsDAO) {

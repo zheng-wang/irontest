@@ -17,6 +17,7 @@ public abstract class AssertionVerifier {
     private Map<String, String> referenceableStringProperties;
 
     /**
+     * This method modifies the content of assertion object.
      * @param assertion the assertion to be verified (against the input)
      * @param input the object that the assertion is verified against
      * @return

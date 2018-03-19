@@ -46,7 +46,7 @@ public class SOAPTeststepRunner extends TeststepRunner {
         }
         //  set HTTP basic auth
         if (!"".equals(StringUtils.trimToEmpty(endpoint.getUsername()))) {
-            String auth = endpoint.getUsername() + ":" + endpoint.getPassword();
+            String auth = endpoint.getUsername() + ":" + getDecryptedEndpointPassword();
             String encodedAuth = Base64.encodeBase64String(auth.getBytes());
             String authHeader = "Basic " + encodedAuth;
             httpPost.setHeader(HttpHeaders.AUTHORIZATION, authHeader);

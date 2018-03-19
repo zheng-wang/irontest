@@ -127,7 +127,7 @@ public class TeststepResource {
     @PUT @Path("{teststepId}")
     @PermitAll
     public TeststepWrapper update(Teststep teststep) throws Exception {
-        Thread.sleep(100);  //  workaround for Chrome's 'Failed to load response data' problem (still exist in Chrome 61)
+        Thread.sleep(100);  //  workaround for Chrome's 'Failed to load response data' problem (still exist in Chrome 65)
 
         TeststepWrapper wrapper = new TeststepWrapper();
         teststep = teststepDAO.update(teststep);
@@ -151,6 +151,8 @@ public class TeststepResource {
     @POST @Path("{teststepId}/run")
     @PermitAll
     public BasicTeststepRun run(Teststep teststep) throws Exception {
+        Thread.sleep(100);  //  workaround for Chrome's 'Failed to load response data' problem (still exist in Chrome 65)
+
         List<UserDefinedProperty> testcaseUDPs = udpDAO.findByTestcaseId(teststep.getTestcaseId());
         Map<String, String> referenceableStringProperties = IronTestUtils.udpListToMap(testcaseUDPs);
         referenceableStringProperties.put(IMPLICIT_PROPERTY_NAME_TEST_STEP_START_TIME,

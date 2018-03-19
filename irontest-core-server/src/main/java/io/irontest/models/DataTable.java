@@ -32,7 +32,7 @@ public class DataTable {
     public String getColumnTypeByName(String columnName) {
         String columnType = null;
         for (DataTableColumn column: columns) {
-            if (column.getType().equals(columnName)) {
+            if (column.getName().equals(columnName)) {
                 columnType = column.getType();
                 break;
             }
