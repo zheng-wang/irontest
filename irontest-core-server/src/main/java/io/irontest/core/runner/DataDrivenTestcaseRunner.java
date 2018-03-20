@@ -55,6 +55,7 @@ public class DataDrivenTestcaseRunner extends TestcaseRunner {
 
             //  start test case individual run
             individualRun.setStartTime(new Date());
+            individualRun.setResult(TestResult.PASSED);
             getTestcaseRunContext().setTestcaseIndividualRunStartTime(individualRun.getStartTime());
             if (isTestcaseHasWaitForProcessingCompletionAction()) {
                 long secondFraction = individualRun.getStartTime().getTime() % 1000;   //  milliseconds
@@ -110,7 +111,7 @@ public class DataDrivenTestcaseRunner extends TestcaseRunner {
         }
 
         //  persist test case run details into database
-        //getTestcaseRunDAO().insert(testcaseRun);
+        getTestcaseRunDAO().insert(testcaseRun);
 
         return testcaseRun;
     }

@@ -1,9 +1,7 @@
 package io.irontest.db;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import io.irontest.models.testrun.RegularTestcaseRun;
-import io.irontest.models.testrun.TestcaseRun;
-import io.irontest.models.testrun.TeststepRun;
+import io.irontest.models.testrun.*;
 import org.skife.jdbi.v2.sqlobject.*;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
@@ -27,6 +25,9 @@ public abstract class TestcaseRunDAO {
     @CreateSqlObject
     protected abstract TeststepRunDAO teststepRunDAO();
 
+    @CreateSqlObject
+    protected abstract TestcaseIndividualRunDAO testcaseIndividualRunDAO();
+
     @SqlUpdate("insert into testcase_run " +
             "(testcase_id, testcase_name, testcase_folderpath, starttime, duration, result) values " +
             "(:testcase_id, :testcase_name, :testcase_folderpath, :starttime, :duration, :result)")
@@ -46,7 +47,12 @@ public abstract class TestcaseRunDAO {
         if (testcaseRun instanceof RegularTestcaseRun) {
             RegularTestcaseRun regularTestcaseRun = (RegularTestcaseRun) testcaseRun;
             for (TeststepRun teststepRun: regularTestcaseRun.getStepRuns()) {
-                teststepRunDAO().insert_NoTransaction(id, teststepRun);
+                teststepRunDAO().insert_NoTransaction(id, null, teststepRun);
+            }
+        } else if (testcaseRun instanceof DataDrivenTestcaseRun) {
+            DataDrivenTestcaseRun dataDrivenTestcaseRun = (DataDrivenTestcaseRun) testcaseRun;
+            for (TestcaseIndividualRun testcaseIndividualRun: dataDrivenTestcaseRun.getIndividualRuns()) {
+                testcaseIndividualRunDAO().insert_NoTransaction(id, testcaseIndividualRun);
             }
         }
     }

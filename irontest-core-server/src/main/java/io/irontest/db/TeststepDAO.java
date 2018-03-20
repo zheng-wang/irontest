@@ -42,6 +42,9 @@ public abstract class TeststepDAO {
             "FOREIGN KEY (testcase_id) REFERENCES testcase(id) ON DELETE CASCADE, " +
             "CONSTRAINT TESTSTEP_UNIQUE_SEQUENCE_CONSTRAINT UNIQUE(testcase_id, sequence), " +
             "CONSTRAINT TESTSTEP_" + DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX + " UNIQUE(testcase_id, name), " +
+            "CONSTRAINT TESTSTEP_MANDATORY_ENDPOINT_CONSTRAINT CHECK(" +
+                "(TYPE NOT IN ('" + Teststep.TYPE_WAIT + "') AND (ENDPOINT_ID IS NOT NULL OR ENDPOINT_PROPERTY IS NOT NULL)) OR " +
+                "TYPE IN ('" + Teststep.TYPE_WAIT + "'))," +
             "CONSTRAINT TESTSTEP_EXCLUSIVE_ENDPOINT_SOURCE_CONSTRAINT CHECK(" +
                 "endpoint_id is null OR endpoint_property is null))")
     public abstract void createTableIfNotExists();

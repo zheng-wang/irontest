@@ -42,11 +42,19 @@
         </uib-tab>
         <!-- can't use ng-if to replace ng-show below, as ng-if seems turning the tab index to 2 instead of 1
         when the tab is displayed  -->
-        <uib-tab ng-show="teststep.endpoint" heading="Endpoint Details"
+        <uib-tab ng-show="teststep.endpoint || teststep.endpointProperty" heading="Endpoint Details"
                  deselect="isInShareEndpointMode() ? cancelShareEndpoint() : angular.noop()">
           <div ng-controller="TeststepsEndpointController">
             <div class="form-group"></div> <!-- spacer -->
-            <div class="col-lg-10">
+            <div class="form-group" ng-if="teststep.type === 'DB'">
+              <div class="col-lg-2 pull-right">
+                <button ng-if="teststep.endpoint" type="button" class="btn btn-info" ng-click="useEndpointProperty()"
+                        ng-disabled="appStatus.isForbidden()">Use Endpoint Property</button>
+                <button ng-if="teststep.endpointProperty" type="button" class="btn btn-info" ng-click="useDirectEndpoint()"
+                        ng-disabled="appStatus.isForbidden()">Use Direct Endpoint</button>
+              </div>
+            </div>
+            <div class="col-lg-10" ng-if="teststep.endpoint">
               <div ng-include="'/ui/views/teststeps/edit-endpoint-details-basic-info.html'"></div>
 
               <div ng-if="teststep.type === 'SOAP'" ng-controller="SOAPTeststepEndpointController"
@@ -59,7 +67,17 @@
                    ng-include="'/ui/views/teststeps/iib/edit-iib-teststep-endpoint-details.html'"></div>
 
               <div ng-include="'/ui/views/teststeps/edit-endpoint-details-bottom-part.html'"></div>
-          </div>
+            </div>
+            <div class="col-lg-10" ng-if="teststep.endpointProperty">
+              <div class="form-group">
+                <label for="endpointProperty" class="col-lg-2 control-label">Endpoint Property</label>
+                <div class="col-lg-10">
+                  <input id="endpointProperty" name="endpointProperty" type="text" class="form-control"
+                         ng-model="teststep.endpointProperty" ng-change="autoSave(teststepForm.$valid)"
+                         ng-readonly="appStatus.isForbidden()" spellcheck="false">
+                </div>
+              </div>
+            </div>
           </div>
         </uib-tab>
         <uib-tab heading="{{ teststep.type === 'MQ' || teststep.type === 'IIB' || teststep.type === 'Wait' ?
