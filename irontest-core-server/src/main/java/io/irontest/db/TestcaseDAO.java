@@ -191,12 +191,12 @@ public abstract class TestcaseDAO {
                     newEndpoint.setOtherProperties(oldEndpoint.getOtherProperties());
                 }
             }
-            newTeststep = teststepDAO().insert_NoTransaction(newTeststep);
+            long newTeststepId = teststepDAO().insert_NoTransaction(newTeststep, null);
 
             //  duplicate assertions
             for (Assertion oldAssertion : oldTeststep.getAssertions()) {
                 Assertion newAssertion = new Assertion();
-                newAssertion.setTeststepId(newTeststep.getId());
+                newAssertion.setTeststepId(newTeststepId);
                 newAssertion.setName(oldAssertion.getName());
                 newAssertion.setType(oldAssertion.getType());
                 newAssertion.setOtherProperties(oldAssertion.getOtherProperties());

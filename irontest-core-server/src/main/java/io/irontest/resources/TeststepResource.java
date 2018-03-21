@@ -6,12 +6,8 @@ import io.irontest.db.TeststepDAO;
 import io.irontest.db.UserDefinedPropertyDAO;
 import io.irontest.db.UtilsDAO;
 import io.irontest.models.AppInfo;
-import io.irontest.models.AppMode;
 import io.irontest.models.UserDefinedProperty;
 import io.irontest.models.endpoint.Endpoint;
-import io.irontest.models.endpoint.MQConnectionMode;
-import io.irontest.models.endpoint.MQEndpointProperties;
-import io.irontest.models.endpoint.SOAPEndpointProperties;
 import io.irontest.models.teststep.*;
 import io.irontest.utils.IronTestUtils;
 import io.irontest.utils.XMLUtils;
@@ -54,7 +50,9 @@ public class TeststepResource {
     public Teststep create(Teststep teststep) throws JsonProcessingException {
         preCreationProcess(teststep);
 
-        return teststepDAO.insert(teststep);
+        long teststepId = teststepDAO.insert(teststep, appInfo.getAppMode());
+
+        return teststepDAO.findById(teststepId);
     }
 
     //  adding more info to the teststep object
@@ -65,27 +63,6 @@ public class TeststepResource {
             sampleRequest = "select * from ? where ?";
         }
         teststep.setRequest(sampleRequest);
-
-        //  create unmanaged endpoint
-        if (!Teststep.TYPE_WAIT.equals(teststep.getType())) {
-            Endpoint endpoint = new Endpoint();
-            endpoint.setName("Unmanaged Endpoint");
-            if (Teststep.TYPE_SOAP.equals(teststep.getType())) {
-                endpoint.setType(Endpoint.TYPE_SOAP);
-                endpoint.setOtherProperties(new SOAPEndpointProperties());
-            } else if (Teststep.TYPE_DB.equals(teststep.getType())) {
-                endpoint.setType(Endpoint.TYPE_DB);
-            } else if (Teststep.TYPE_MQ.equals(teststep.getType())) {
-                endpoint.setType(Endpoint.TYPE_MQ);
-                MQEndpointProperties endpointProperties = new MQEndpointProperties();
-                endpointProperties.setConnectionMode(
-                        appInfo.getAppMode() == AppMode.LOCAL ? MQConnectionMode.BINDINGS : MQConnectionMode.CLIENT);
-                endpoint.setOtherProperties(endpointProperties);
-            } else if (Teststep.TYPE_IIB.equals(teststep.getType())) {
-                endpoint.setType(Endpoint.TYPE_IIB);
-            }
-            teststep.setEndpoint(endpoint);
-        }
 
         //  set initial/default property values (in the Properties sub-class)
         if (Teststep.TYPE_SOAP.equals(teststep.getType())) {
@@ -207,5 +184,21 @@ public class TeststepResource {
         return Response.ok(teststep.getRequest())
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
                 .build();
+    }
+
+    @POST @Path("{teststepId}/useEndpointProperty")
+    @PermitAll
+    public Teststep useEndpointProperty(Teststep teststep) {
+        teststepDAO.useEndpointProperty(teststep);
+
+        return teststepDAO.findById(teststep.getId());
+    }
+
+    @POST @Path("{teststepId}/useDirectEndpoint")
+    @PermitAll
+    public Teststep useDirectEndpoint(Teststep teststep) throws JsonProcessingException {
+        teststepDAO.useDirectEndpoint(teststep, appInfo.getAppMode());
+
+        return teststepDAO.findById(teststep.getId());
     }
 }

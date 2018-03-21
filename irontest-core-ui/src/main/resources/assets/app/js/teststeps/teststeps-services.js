@@ -13,6 +13,18 @@ angular.module('irontest').factory('Teststeps', ['$resource',
         params: {
           verb: 'run'
         }
+      },
+      useEndpointProperty: {
+        method: 'POST',
+        params: {
+          verb: 'useEndpointProperty'
+        }
+      },
+      useDirectEndpoint: {
+        method: 'POST',
+        params: {
+          verb: 'useDirectEndpoint'
+        }
       }
     });
   }

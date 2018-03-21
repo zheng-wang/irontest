@@ -4,8 +4,8 @@
 //    The $scope here prototypically inherits from the $scope of TeststepsController.
 //    ng-include also creates a scope.
 angular.module('irontest').controller('TeststepsEndpointController', ['$scope',
-    '$uibModal', 'IronTestUtils', 'Environments', 'ManagedEndpoints',
-  function($scope, $uibModal, IronTestUtils, Environments, ManagedEndpoints) {
+    '$uibModal', 'IronTestUtils', 'Environments', 'ManagedEndpoints', 'Teststeps',
+  function($scope, $uibModal, IronTestUtils, Environments, ManagedEndpoints, Teststeps) {
     $scope.selectManagedEndpoint = function() {
       //  find managed endpoints by type
       var endpointType = $scope.teststep.endpoint.type;
@@ -85,6 +85,37 @@ angular.module('irontest').controller('TeststepsEndpointController', ['$scope',
         //  update test step immediately (no timeout)
         $scope.update(isValid);
       }
+    };
+
+    $scope.useEndpointProperty = function() {
+      var teststep = new Teststeps({
+        id: $scope.teststep.id,
+        testcaseId: $scope.teststep.testcaseId,
+        endpoint: { id: $scope.teststep.endpoint.id }
+      });
+      teststep.$useEndpointProperty(function(response) {
+        //  exit share-endpoint mode (if in the mode)
+        delete $scope.environments;
+        $scope.$emit('successfullySaved');
+        $scope.setTeststep(response);
+      }, function(error) {
+        IronTestUtils.openErrorHTTPResponseModal(error);
+      });
+    };
+
+    $scope.useDirectEndpoint = function() {
+      var teststep = new Teststeps({
+        id: $scope.teststep.id,
+        testcaseId: $scope.teststep.testcaseId,
+        type: $scope.teststep.type,
+        otherProperties: {}  //  adding this property here to avoid Jackson 'Missing property' error (http://stackoverflow.com/questions/28089484/deserialization-with-jsonsubtypes-for-no-value-missing-property-error)
+      });
+      teststep.$useDirectEndpoint(function(response) {
+        $scope.$emit('successfullySaved');
+        $scope.setTeststep(response);
+      }, function(error) {
+        IronTestUtils.openErrorHTTPResponseModal(error);
+      });
     };
   }
 ]);

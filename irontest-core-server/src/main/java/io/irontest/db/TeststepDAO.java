@@ -3,6 +3,7 @@ package io.irontest.db;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.irontest.core.MQTeststepActionDataBackup;
+import io.irontest.models.AppMode;
 import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.IntegerEqualAssertionProperties;
 import io.irontest.models.endpoint.Endpoint;
@@ -80,19 +81,22 @@ public abstract class TeststepDAO {
     protected abstract long updateNameForInsert(@Bind("id") long id, @Bind("name") String name);
 
     @Transaction
-    public Teststep insert(Teststep teststep) throws JsonProcessingException {
-        return insert_NoTransaction(teststep);
+    public long insert(Teststep teststep, AppMode appMode) throws JsonProcessingException {
+        return insert_NoTransaction(teststep, appMode);
     }
 
     /**
      * This method considers test step insertion from both Create (test step) button on UI and test case duplicating.
      * @param teststep
+     * @param appMode
      * @return
      * @throws JsonProcessingException
      */
-    public Teststep insert_NoTransaction(Teststep teststep) throws JsonProcessingException {
+    public long insert_NoTransaction(Teststep teststep, AppMode appMode) throws JsonProcessingException {
         Endpoint endpoint = teststep.getEndpoint();
-        if (endpoint != null && endpoint.getId() == 0) {
+        if (endpoint == null) {    //  from test step creation on UI
+            endpoint = endpointDAO().createUnmanagedEndpoint_NoTransaction(teststep.getType(), appMode);
+        } else if (endpoint.getId() == 0){          //  from test case duplicating
             long endpointId = endpointDAO().insertUnmanagedEndpoint_NoTransaction(endpoint);
             endpoint.setId(endpointId);
         }
@@ -101,32 +105,32 @@ public abstract class TeststepDAO {
         String otherProperties = new ObjectMapper().writeValueAsString(teststep.getOtherProperties());
         long id = _insert(teststep, request, teststep.getRequestType().toString(),
                 endpoint == null ? null : endpoint.getId(), otherProperties);
-        teststep.setId(id);
 
-        if (teststep.getName() == null) {
+        if (teststep.getName() == null) {    //  from test step creation on UI
             teststep.setName("Step " + id);
         }
         updateNameForInsert(id, teststep.getName());
 
-        return teststep;
+        return id;
     }
 
     @SqlUpdate("update teststep set name = :name, description = :description, action = :action, request = :request, " +
-            "request_type = :requestType, endpoint_id = :endpointId, other_properties = :otherProperties, " +
-            "updated = CURRENT_TIMESTAMP where id = :id")
+            "request_type = :requestType, endpoint_id = :endpointId, endpoint_property = :endpointProperty, " +
+            "other_properties = :otherProperties, updated = CURRENT_TIMESTAMP where id = :id")
     protected abstract int _update(@Bind("name") String name, @Bind("description") String description,
                                    @Bind("action") String action, @Bind("request") Object request,
                                    @Bind("requestType") String requestType, @Bind("id") long id,
-                                   @Bind("endpointId") Long endpointId,
+                                   @Bind("endpointId") Long endpointId, @Bind("endpointProperty") String endpointProperty,
                                    @Bind("otherProperties") String otherProperties);
 
     @SqlUpdate("update teststep set name = :name, description = :description, request_type = :requestType, " +
-            "action = :action, endpoint_id = :endpointId, other_properties = :otherProperties, " +
-            "updated = CURRENT_TIMESTAMP where id = :id")
+            "action = :action, endpoint_id = :endpointId, endpoint_property = :endpointProperty, " +
+            "other_properties = :otherProperties, updated = CURRENT_TIMESTAMP where id = :id")
     protected abstract int _updateWithoutRequest(@Bind("name") String name, @Bind("description") String description,
                                                  @Bind("requestType") String requestType,
                                                  @Bind("action") String action, @Bind("id") long id,
                                                  @Bind("endpointId") Long endpointId,
+                                                 @Bind("endpointProperty") String endpointProperty,
                                                  @Bind("otherProperties") String otherProperties);
 
     @Transaction
@@ -144,12 +148,13 @@ public abstract class TeststepDAO {
 
         if (teststep.getRequestType() == TeststepRequestType.FILE) {    // update teststep without request
             _updateWithoutRequest(teststep.getName(), teststep.getDescription(), teststep.getRequestType().toString(),
-                    teststep.getAction(), teststep.getId(), newEndpointId, otherProperties);
+                    teststep.getAction(), teststep.getId(), newEndpointId, teststep.getEndpointProperty(), otherProperties);
         } else {       // update teststep with request
             Object request = teststep.getRequest() instanceof String ?
                     ((String) teststep.getRequest()).getBytes() : teststep.getRequest();
             _update(teststep.getName(), teststep.getDescription(), teststep.getAction(), request,
-                    teststep.getRequestType().toString(), teststep.getId(), newEndpointId, otherProperties);
+                    teststep.getRequestType().toString(), teststep.getId(), newEndpointId,
+                    teststep.getEndpointProperty(), otherProperties);
         }
 
         updateEndpointIfExists(oldEndpoint, newEndpoint);
@@ -436,4 +441,25 @@ public abstract class TeststepDAO {
 
     @SqlQuery("select request from teststep where id = :teststepId")
     public abstract byte[] getBinaryRequestById(@Bind("teststepId") long teststepId);
+
+    @SqlUpdate("update teststep set endpoint_id = null, endpoint_property = 'Endpoint', " +
+            "updated = CURRENT_TIMESTAMP where id = :teststepId")
+    protected abstract int switchToEndpointProperty(@Bind("teststepId") long teststepId);
+
+    @SqlUpdate("update teststep set endpoint_id = :endpointId, endpoint_property = null, " +
+            "updated = CURRENT_TIMESTAMP where id = :teststepId")
+    protected abstract int switchToDirectEndpoint(@Bind("teststepId") long teststepId,
+                                                  @Bind("endpointId") long endpointId);
+
+    @Transaction
+    public void useEndpointProperty(Teststep teststep) {
+        switchToEndpointProperty(teststep.getId());
+        endpointDAO().deleteUnmanagedEndpointById(teststep.getEndpoint().getId());
+    }
+
+    @Transaction
+    public void useDirectEndpoint(Teststep teststep, AppMode appMode) throws JsonProcessingException {
+        Endpoint endpoint = endpointDAO().createUnmanagedEndpoint_NoTransaction(teststep.getType(), appMode);
+        switchToDirectEndpoint(teststep.getId(), endpoint.getId());
+    }
 }

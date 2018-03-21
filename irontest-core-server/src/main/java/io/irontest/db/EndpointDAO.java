@@ -2,7 +2,12 @@ package io.irontest.db;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.irontest.models.AppMode;
 import io.irontest.models.endpoint.Endpoint;
+import io.irontest.models.endpoint.MQConnectionMode;
+import io.irontest.models.endpoint.MQEndpointProperties;
+import io.irontest.models.endpoint.SOAPEndpointProperties;
+import io.irontest.models.teststep.Teststep;
 import org.skife.jdbi.v2.sqlobject.*;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
@@ -56,6 +61,32 @@ public abstract class EndpointDAO {
     protected abstract long _insertUnmanagedEndpoint(@BindBean("ep") Endpoint endpoint,
                                                   @Bind("otherProperties") String otherProperties);
 
+    public Endpoint createUnmanagedEndpoint_NoTransaction(String teststepType, AppMode appMode) throws JsonProcessingException {
+        Endpoint endpoint = null;
+        if (!Teststep.TYPE_WAIT.equals(teststepType)) {
+            endpoint = new Endpoint();
+            endpoint.setName("Unmanaged Endpoint");
+            if (Teststep.TYPE_SOAP.equals(teststepType)) {
+                endpoint.setType(Endpoint.TYPE_SOAP);
+                endpoint.setOtherProperties(new SOAPEndpointProperties());
+            } else if (Teststep.TYPE_DB.equals(teststepType)) {
+                endpoint.setType(Endpoint.TYPE_DB);
+            } else if (Teststep.TYPE_MQ.equals(teststepType)) {
+                endpoint.setType(Endpoint.TYPE_MQ);
+                MQEndpointProperties endpointProperties = new MQEndpointProperties();
+                endpointProperties.setConnectionMode(
+                        appMode == AppMode.LOCAL ? MQConnectionMode.BINDINGS : MQConnectionMode.CLIENT);
+                endpoint.setOtherProperties(endpointProperties);
+            } else if (Teststep.TYPE_IIB.equals(teststepType)) {
+                endpoint.setType(Endpoint.TYPE_IIB);
+            }
+            long id = insertUnmanagedEndpoint_NoTransaction(endpoint);
+            endpoint.setId(id);
+        }
+
+        return endpoint;
+    }
+
     public long insertUnmanagedEndpoint_NoTransaction(Endpoint endpoint) throws JsonProcessingException {
         String otherProperties = new ObjectMapper().writeValueAsString(endpoint.getOtherProperties());
         return _insertUnmanagedEndpoint(endpoint, otherProperties);
@@ -85,9 +116,6 @@ public abstract class EndpointDAO {
             "where ep.id = :id")
     public abstract Endpoint findById(@Bind("id") long id);
 
-    @SqlQuery("select * from endpoint where name = :name")
-    public abstract Endpoint findByName(@Bind("name") String name);
-
     @SqlQuery("select id, environment_id, name, type, description from endpoint where environment_id = :environmentId")
     public abstract List<Endpoint> findByEnvironmentId_EnvironmentEditView(@Bind("environmentId") long environmentId);
 
@@ -96,4 +124,7 @@ public abstract class EndpointDAO {
             "from endpoint ep left outer join environment ev on ep.environment_id = ev.id " +
             "where ep.type = :endpointType and ep.environment_id is not null")
     public abstract List<Endpoint> findManagedEndpointsByType(@Bind("endpointType") String endpointType);
+
+    @SqlUpdate("delete from endpoint where environment_id is null and id = :id")
+    public abstract void deleteUnmanagedEndpointById(@Bind("id") long id);
 }
