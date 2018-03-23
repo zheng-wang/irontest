@@ -20,7 +20,7 @@ public class TeststepRunnerFactory {
         return instance;
     }
 
-    public TeststepRunner newTeststepRunner(Teststep teststep, TeststepDAO teststepDAO, UtilsDAO utisDAO,
+    public TeststepRunner newTeststepRunner(Teststep teststep, TeststepDAO teststepDAO, UtilsDAO utilsDAO,
                                             Map<String, String> referenceableStringProperties,
                                             Map<String, Endpoint> referenceableEndpointProperties, TestcaseRunContext testcaseRunContext) {
         TeststepRunner runner;
@@ -30,7 +30,7 @@ public class TeststepRunnerFactory {
             runner = constructor.newInstance();
             runner.setTeststep(teststep);
             runner.setTeststepDAO(teststepDAO);
-            runner.setUtilsDAO(utisDAO);
+            runner.setUtilsDAO(utilsDAO);
             runner.setReferenceableStringProperties(referenceableStringProperties);
             runner.setReferenceableEndpointProperties(referenceableEndpointProperties);
             runner.setTestcaseRunContext(testcaseRunContext);

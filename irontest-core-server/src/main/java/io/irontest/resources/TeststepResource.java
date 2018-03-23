@@ -6,6 +6,7 @@ import io.irontest.db.TeststepDAO;
 import io.irontest.db.UserDefinedPropertyDAO;
 import io.irontest.db.UtilsDAO;
 import io.irontest.models.AppInfo;
+import io.irontest.models.DataTable;
 import io.irontest.models.UserDefinedProperty;
 import io.irontest.models.endpoint.Endpoint;
 import io.irontest.models.teststep.*;
@@ -122,6 +123,7 @@ public class TeststepResource {
 
     /**
      * Run a test step individually (not as part of test case running).
+     * This is a stateless operation, i.e. not persisting anything in database.
      * @param teststep
      * @return
      */
@@ -130,14 +132,21 @@ public class TeststepResource {
     public BasicTeststepRun run(Teststep teststep) throws Exception {
         Thread.sleep(100);  //  workaround for Chrome's 'Failed to load response data' problem (still exist in Chrome 65)
 
+        //  gather referenceable string properties and endpoint properties
         List<UserDefinedProperty> testcaseUDPs = udpDAO.findByTestcaseId(teststep.getTestcaseId());
         Map<String, String> referenceableStringProperties = IronTestUtils.udpListToMap(testcaseUDPs);
         referenceableStringProperties.put(IMPLICIT_PROPERTY_NAME_TEST_STEP_START_TIME,
                 IMPLICIT_PROPERTY_DATE_TIME_FORMAT.format(new Date()));
+        Map<String, Endpoint> referenceableEndpointProperties = new HashMap<>();
+        DataTable dataTable = utilsDAO.getTestcaseDataTable(teststep.getTestcaseId(), true);
+        if (dataTable != null && dataTable.getRows().size() == 1) {
+            referenceableStringProperties.putAll(dataTable.getStringPropertiesInRow(0));
+            referenceableEndpointProperties.putAll(dataTable.getEndpointPropertiesInRow(0));
+        }
 
         //  run the test step
         TeststepRunner teststepRunner = TeststepRunnerFactory.getInstance().newTeststepRunner(
-                teststep, teststepDAO, utilsDAO, referenceableStringProperties, new HashMap<String, Endpoint>(), null);
+                teststep, teststepDAO, utilsDAO, referenceableStringProperties, referenceableEndpointProperties, null);
         BasicTeststepRun basicTeststepRun = teststepRunner.run();
 
         //  for better display in browser, transform XML response to be pretty-printed

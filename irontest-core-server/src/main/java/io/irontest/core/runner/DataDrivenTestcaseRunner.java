@@ -9,7 +9,6 @@ import io.irontest.models.DataTable;
 import io.irontest.models.TestResult;
 import io.irontest.models.Testcase;
 import io.irontest.models.UserDefinedProperty;
-import io.irontest.models.endpoint.Endpoint;
 import io.irontest.models.testrun.DataDrivenTestcaseRun;
 import io.irontest.models.testrun.TestcaseIndividualRun;
 import io.irontest.models.testrun.TestcaseRun;
@@ -22,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import static io.irontest.IronTestConstants.IMPLICIT_PROPERTY_DATE_TIME_FORMAT;
 import static io.irontest.IronTestConstants.IMPLICIT_PROPERTY_NAME_TEST_CASE_INDIVIDUAL_START_TIME;
@@ -49,12 +47,14 @@ public class DataDrivenTestcaseRunner extends TestcaseRunner {
         preProcessingForIIBTestcase();
         startTestcaseRun(testcaseRun);
 
-        for (LinkedHashMap<String, Object> dataTableRow: dataTable.getRows()) {
+        for (int dataTableRowIndex = 0; dataTableRowIndex < dataTable.getRows().size(); dataTableRowIndex++) {
+            LinkedHashMap<String, Object> dataTableRow = dataTable.getRows().get(dataTableRowIndex);
             TestcaseIndividualRun individualRun = new TestcaseIndividualRun();
             testcaseRun.getIndividualRuns().add(individualRun);
 
             //  start test case individual run
             individualRun.setStartTime(new Date());
+            LOGGER.info("Start individually running test case with data table row: " + individualRun.getCaption());
             individualRun.setResult(TestResult.PASSED);
             getTestcaseRunContext().setTestcaseIndividualRunStartTime(individualRun.getStartTime());
             if (isTestcaseHasWaitForProcessingCompletionAction()) {
@@ -66,22 +66,9 @@ public class DataDrivenTestcaseRunner extends TestcaseRunner {
             }
             getReferenceableStringProperties().put(IMPLICIT_PROPERTY_NAME_TEST_CASE_INDIVIDUAL_START_TIME,
                     IMPLICIT_PROPERTY_DATE_TIME_FORMAT.format(individualRun.getStartTime()));
-            //  from data table row:
-            //    add string properties to referenceableStringProperties,
-            //    set caption to individualRun, and
-            //    add endpoint properties to referenceableEndpointProperties.
-            for (Map.Entry<String, Object> property: dataTableRow.entrySet()) {
-                if ("String".equals(dataTable.getColumnTypeByName(property.getKey()))) {
-                    if ("Caption".equals(property.getKey())) {
-                        individualRun.setCaption((String) property.getValue());
-                    } else {
-                        getReferenceableStringProperties().put(property.getKey(), (String) property.getValue());
-                    }
-                } else {
-                    getReferenceableEndpointProperties().put(property.getKey(), (Endpoint) property.getValue());
-                }
-            }
-            LOGGER.info("Start individually running test case with data table row: " + individualRun.getCaption());
+            individualRun.setCaption((String) dataTableRow.get("Caption"));
+            getReferenceableEndpointProperties().putAll(dataTable.getEndpointPropertiesInRow(dataTableRowIndex));
+            getReferenceableStringProperties().putAll(dataTable.getStringPropertiesInRow(dataTableRowIndex));
 
             //  run test steps
             for (Teststep teststep : getTestcase().getTeststeps()) {

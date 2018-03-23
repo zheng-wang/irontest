@@ -1,9 +1,12 @@
 package io.irontest.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.irontest.models.endpoint.Endpoint;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Zheng on 16/03/2018.
@@ -38,5 +41,27 @@ public class DataTable {
             }
         }
         return columnType;
+    }
+
+    public Map<String, String> getStringPropertiesInRow(int rowIndex) {
+        Map<String, String> result = new HashMap<>();
+        LinkedHashMap<String, Object> row = rows.get(rowIndex);
+        for (Map.Entry<String, Object> property: row.entrySet()) {
+            if (!"Caption".equals(property.getKey()) && "String".equals(getColumnTypeByName(property.getKey()))) {
+                result.put(property.getKey(), (String) property.getValue());
+            }
+        }
+        return result;
+    }
+
+    public Map<String, Endpoint> getEndpointPropertiesInRow(int rowIndex) {
+        Map<String, Endpoint> result = new HashMap<>();
+        LinkedHashMap<String, Object> row = rows.get(rowIndex);
+        for (Map.Entry<String, Object> property: row.entrySet()) {
+            if (!"String".equals(getColumnTypeByName(property.getKey()))) {
+                result.put(property.getKey(), (Endpoint) property.getValue());
+            }
+        }
+        return result;
     }
 }

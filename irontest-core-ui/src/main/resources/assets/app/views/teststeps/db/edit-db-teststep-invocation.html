@@ -5,11 +5,11 @@
     <div class="col-lg-6">
       <input name="jdbcURL" type="text" class="form-control" ng-change="autoSave(teststepForm.$valid)"
              ng-model="teststep.endpoint.url" id="jdbcURL"
-             ng-readonly="appStatus.isForbidden() || teststep.endpoint.environment" spellcheck="false">  <!-- readonly when not authenticated or it is a managed endpoint -->
+             ng-readonly="appStatus.isForbidden() || teststep.endpoint.environment || teststep.endpointProperty" spellcheck="false">  <!-- readonly when not authenticated, the endpoint is a managed endpoint or the endpoint is from custom property -->
     </div>
     <div class="col-lg-1">
       <button type="button" class="btn btn-info" ng-click="invoke()"
-              ng-disabled="appStatus.isForbidden() || !teststep.endpoint || steprun.status === 'ongoing'">Invoke</button>
+              ng-disabled="appStatus.isForbidden() || steprun.status === 'ongoing'">Invoke</button>
     </div>
     <div class="col-lg-3">       <!-- Test step run status message -->
       <h5 ng-if="steprun.status === 'ongoing'">Running the statement(s) ...</h5>

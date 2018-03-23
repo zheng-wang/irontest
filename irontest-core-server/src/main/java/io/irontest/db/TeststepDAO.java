@@ -354,6 +354,9 @@ public abstract class TeststepDAO {
     @SqlQuery("select * from teststep where id = :id")
     protected abstract Teststep _findById(@Bind("id") long id);
 
+    @SqlQuery("select testcase_id from teststep where id = :id")
+    public abstract long findTestcaseIdById(@Bind("id") long id);
+
     /**
      * @param id
      * @return the teststep with its associated endpoint

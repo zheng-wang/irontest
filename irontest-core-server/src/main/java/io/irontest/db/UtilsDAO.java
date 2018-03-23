@@ -30,8 +30,13 @@ public abstract class UtilsDAO {
     @CreateSqlObject
     protected abstract EndpointDAO endpointDAO();
 
+    /**
+     * @param testcaseId
+     * @param fetchFirstRowOnly if true, only the first data table row (if exists) will be fetched; if false, all rows will be fetched.
+     * @return
+     */
     @Transaction
-    public DataTable getTestcaseDataTable(long testcaseId) {
+    public DataTable getTestcaseDataTable(long testcaseId, boolean fetchFirstRowOnly) {
         DataTable dataTable = null;
 
         List<DataTableColumn> columns = dataTableColumnDAO().findByTestcaseId(testcaseId);
@@ -52,6 +57,10 @@ public abstract class UtilsDAO {
                     cellObject = endpointDAO().findById(columnCell.getEndpointId());
                 }
                 rows.get(rowSequence - 1).put(column.getName(), cellObject);
+
+                if (fetchFirstRowOnly && rows.size() == 1) {
+                    break;
+                }
             }
         }
 

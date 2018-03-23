@@ -2,7 +2,10 @@ package io.irontest.resources;
 
 import io.irontest.core.assertion.AssertionVerifier;
 import io.irontest.core.assertion.AssertionVerifierFactory;
+import io.irontest.db.TeststepDAO;
 import io.irontest.db.UserDefinedPropertyDAO;
+import io.irontest.db.UtilsDAO;
+import io.irontest.models.DataTable;
 import io.irontest.models.TestResult;
 import io.irontest.models.UserDefinedProperty;
 import io.irontest.models.assertion.Assertion;
@@ -28,9 +31,13 @@ public class AssertionResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(AssertionResource.class);
 
     private final UserDefinedPropertyDAO udpDAO;
+    private final TeststepDAO teststepDAO;
+    private final UtilsDAO utilsDAO;
 
-    public AssertionResource(UserDefinedPropertyDAO udpDAO) {
+    public AssertionResource(UserDefinedPropertyDAO udpDAO, TeststepDAO teststepDAO, UtilsDAO utilsDAO) {
         this.udpDAO = udpDAO;
+        this.teststepDAO = teststepDAO;
+        this.utilsDAO = utilsDAO;
     }
 
     /**
@@ -43,9 +50,13 @@ public class AssertionResource {
     public AssertionVerificationResult verify(AssertionVerificationRequest assertionVerificationRequest) {
         Assertion assertion = assertionVerificationRequest.getAssertion();
 
+        //  gather referenceable string properties
         List<UserDefinedProperty> testcaseUDPs = udpDAO.findTestcaseUDPsByTeststepId(assertion.getTeststepId());
         Map<String, String> referenceableStringProperties = IronTestUtils.udpListToMap(testcaseUDPs);
-
+        DataTable dataTable = utilsDAO.getTestcaseDataTable(teststepDAO.findTestcaseIdById(assertion.getTeststepId()), true);
+        if (dataTable != null && dataTable.getRows().size() == 1) {
+            referenceableStringProperties.putAll(dataTable.getStringPropertiesInRow(0));
+        }
         AssertionVerifier assertionVerifier = AssertionVerifierFactory.getInstance().create(
                 assertion.getType(), referenceableStringProperties);
         AssertionVerificationResult result;

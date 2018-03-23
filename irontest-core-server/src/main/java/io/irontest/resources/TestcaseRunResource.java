@@ -45,7 +45,7 @@ public class TestcaseRunResource {
     public TestcaseRun create(@QueryParam("testcaseId") long testcaseId) throws JsonProcessingException {
         Testcase testcase = testcaseDAO.findById_Complete(testcaseId);
         List<UserDefinedProperty> testcaseUDPs = udpDAO.findByTestcaseId(testcaseId);
-        DataTable dataTable = utilsDAO.getTestcaseDataTable(testcaseId);
+        DataTable dataTable = utilsDAO.getTestcaseDataTable(testcaseId, false);
         TestcaseRunner testcaseRunner;
         if (dataTable == null || dataTable.getRows().isEmpty()) {
             testcaseRunner = new RegularTestcaseRunner(testcase, testcaseUDPs, teststepDAO, utilsDAO, testcaseRunDAO);
