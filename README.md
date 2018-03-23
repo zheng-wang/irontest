@@ -58,9 +58,11 @@ Though the UI is crossing browsers, Google Chrome is preferred as it is the main
 Open Iron Test home page (http://localhost:8081/ui). 
 
 ### Integrated SOAP Web Service Testing
-We are going to demo how to test a web service that updates an article in database by its title.
+We are going to demo how to test a web service that updates an article in database by its title. 
+
+The web service is the sample Article web service that is bundled with Iron Test. It does CRUD operations against the Article table in a sample H2 database under `<IronTest_Home>/database` directory. The sample database is automatically created when launching Iron Test for the first time.
  
-There will be three test steps 
+We are planning to have three test steps in our test case 
 ```
 1. Set up database data
 2. Call the web service operation updateArticleByTitle
@@ -68,7 +70,7 @@ There will be three test steps
 ```
 
 #### Create Test Case Outline
-First of all, create a test case by right clicking on a folder in the tree and selecting Create Test Case. Give it a name. The test case edit view shows as below.
+First of all, create the (empty) test case by right clicking on a folder in the tree and selecting Create Test Case. Give it a name. The test case edit view shows as below.
 
 ![New Test Case](screenshots/integrated-soap-testing/new-test-case.png)
 
@@ -83,7 +85,7 @@ Under the Test Steps tab, click Create dropdown button and select Database Step.
 #### Populate Step 1 
 Click the name of step 1 to open its edit view.
           
-Under the Endpoint Details tab, enter JDBC URL that will be used to connect to the sample database (automatically created when launching Iron Test for the first time). The format is `jdbc:h2:<IronTest_Home>/database/sample;AUTO_SERVER=TRUE`. Then enter Username and Password which can be found in `<IronTest_Home>/config.yml`.
+Under the Endpoint Details tab, enter JDBC URL `jdbc:h2:./database/sample;AUTO_SERVER=TRUE` which will be used by the test step to connect to the sample database. Here `./database/sample` in the URL equals to `<IronTest_Home>/database/sample`, as Iron Test application is launched from directory `<IronTest_Home>`. Then enter Username and Password which can be found in `<IronTest_Home>/config.yml`.
 
 Under the Invocation tab, enter below SQL script.
 ```
@@ -131,7 +133,7 @@ Click the Invoke button to try it out (run the query), like shown below.
 
 Click the JSON View tab to see the JSON representation of the SQL query result set.
 
-Click the Assertions button to open the assertions pane. In the assertions pane, click Create dropdown button and select `JSONPath Assertion` to create a JSONPath assertion. We want to assert the whole result set, so enter `$` into the JSONPath field and copy the JSON string from the JSON View to the Expected Value field. Click the Verify button to verify the assertion, as shown below. 
+Click the Assertions button to open the assertions pane. In the assertions pane, click Create dropdown button and select `JSONEqual Assertion` to create a JSONEqual assertion. Copy the JSON string from the JSON View to the Expected JSON field. Click the Verify button to verify the assertion, as shown below. 
 
 ![Database Check Query Result and Assertion](screenshots/integrated-soap-testing/database-check-query-result-and-assertion.png)
 
