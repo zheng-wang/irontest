@@ -44,7 +44,7 @@ angular.module('irontest').controller('DBTeststepController', ['$scope', 'Testst
           $scope.responseOptions.columnDefs = [];
           for (var i = 0; i < response.columnNames.length; i++) {
             $scope.responseOptions.columnDefs.push({
-              field: window.btoa(response.columnNames[i]),
+              name: window.btoa(response.columnNames[i]),
               displayName: response.columnNames[i],
               // determine column min width according to the length of column name
               // assuming each character deserves 8 pixels

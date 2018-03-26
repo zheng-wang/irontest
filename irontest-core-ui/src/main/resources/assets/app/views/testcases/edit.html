@@ -94,6 +94,23 @@
         <div class="col-lg-12" ng-bind-html="testcaseRun.selectedStepRunReport"></div>
       </div>
     </uib-tab>
+    <uib-tab heading="Data Table" select="storeTabIndex(DATA_TABLE_TAB_INDEX)">
+      <form name="dataTableForm" class="form-horizontal col-lg-10" role="form" novalidate ng-controller="DataTableController"
+            ng-init="findByTestcaseId()">
+        <div class="form-group"></div> <!-- spacer -->
+        <div class="row">
+          <div class="form-group">
+            <div class="col-lg-1">
+              <button class="btn btn-info" ng-click="createUDP()" ng-disabled="appStatus.isForbidden()">Create</button>
+            </div>
+          </div>
+        </div>
+        <div class="row" id="dataTableGrid">
+          <div ng-if="activeTabIndex === DATA_TABLE_TAB_INDEX" ui-grid="dataTableGridOptions" ui-grid-resize-columns
+               ui-grid-edit ui-grid-cellNav class="ui-grid testcase-datatable-grid"></div>
+        </div>
+      </form>
+    </uib-tab>
   </uib-tabset>
 </div>
 
@@ -147,4 +164,9 @@
       </a>
     </div>
   </div>
+</script>
+
+<!-- data table grid cell templates -->
+<script type="text/ng-template" id="dataTableGridEndpointTypedCellTemplate.html">
+  <div class="ui-grid-cell-contents">{{COL_FIELD.environment.name}}#{{COL_FIELD.name}}</div>
 </script>

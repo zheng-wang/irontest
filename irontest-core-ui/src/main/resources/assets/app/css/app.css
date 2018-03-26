@@ -101,7 +101,7 @@
 .teststep-grid {
   height: 400px;    /* not to be too high, as there is test step run report below the grid */
 }
-.testcase-udp-grid, .environment-grid, .user-grid, .endpoint-grid {
+.testcase-udp-grid, .testcase-datatable-grid, .environment-grid, .user-grid, .endpoint-grid {
   height: 500px;
 }
 .assertions-grid {
