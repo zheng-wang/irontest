@@ -1,13 +1,7 @@
 package io.irontest.db;
 
-import io.irontest.models.Folder;
-import io.irontest.models.FolderTreeNode;
-import io.irontest.models.FolderTreeNodeType;
-import io.irontest.models.Testcase;
-import org.skife.jdbi.v2.sqlobject.Bind;
-import org.skife.jdbi.v2.sqlobject.CreateSqlObject;
-import org.skife.jdbi.v2.sqlobject.SqlQuery;
-import org.skife.jdbi.v2.sqlobject.SqlUpdate;
+import io.irontest.models.*;
+import org.skife.jdbi.v2.sqlobject.*;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
 import java.util.List;
@@ -22,6 +16,9 @@ public abstract class FolderTreeNodeDAO {
 
     @CreateSqlObject
     protected abstract FolderDAO folderDAO();
+
+    @CreateSqlObject
+    protected abstract DataTableColumnDAO dataTableColumnDAO();
 
     @SqlQuery("select id as id_per_type, name as text, parent_folder_id, 'folder' as type from folder " +
             "union " +
@@ -44,11 +41,17 @@ public abstract class FolderTreeNodeDAO {
         }
     }
 
+    @Transaction
     public FolderTreeNode insert(FolderTreeNode node) {
         if (node.getType() == FolderTreeNodeType.TESTCASE) {
             Testcase testcase = new Testcase();
             testcase.setParentFolderId(node.getParentFolderId());
-            testcase = testcaseDAO().insert(testcase);
+            testcase = testcaseDAO().insert_NoTransaction(testcase);
+            DataTableColumn dataTableColumn = new DataTableColumn();
+            dataTableColumn.setName(DataTableColumn.COLUMN_NAME_CAPTION);
+            dataTableColumn.setType(DataTableColumnType.STRING);
+            dataTableColumn.setSequence((short) 1);
+            dataTableColumnDAO().insert(testcase.getId(), dataTableColumn);
             node.setIdPerType(testcase.getId());
             node.setText(testcase.getName());
         } else if (node.getType() == FolderTreeNodeType.FOLDER) {

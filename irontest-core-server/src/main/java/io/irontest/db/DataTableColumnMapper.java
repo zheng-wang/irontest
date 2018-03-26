@@ -1,6 +1,7 @@
 package io.irontest.db;
 
 import io.irontest.models.DataTableColumn;
+import io.irontest.models.DataTableColumnType;
 import org.skife.jdbi.v2.StatementContext;
 import org.skife.jdbi.v2.tweak.ResultSetMapper;
 
@@ -15,7 +16,7 @@ public class DataTableColumnMapper implements ResultSetMapper<DataTableColumn> {
         DataTableColumn result = new DataTableColumn();
         result.setId(rs.getLong("id"));
         result.setName(rs.getString("name"));
-        result.setType(rs.getString("type"));
+        result.setType(DataTableColumnType.getByText(rs.getString("type")));
         return result;
     }
 }

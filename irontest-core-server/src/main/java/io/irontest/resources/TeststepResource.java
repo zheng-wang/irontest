@@ -139,7 +139,7 @@ public class TeststepResource {
                 IMPLICIT_PROPERTY_DATE_TIME_FORMAT.format(new Date()));
         Map<String, Endpoint> referenceableEndpointProperties = new HashMap<>();
         DataTable dataTable = utilsDAO.getTestcaseDataTable(teststep.getTestcaseId(), true);
-        if (dataTable != null && dataTable.getRows().size() == 1) {
+        if (dataTable.getRows().size() == 1) {
             referenceableStringProperties.putAll(dataTable.getStringPropertiesInRow(0));
             referenceableEndpointProperties.putAll(dataTable.getEndpointPropertiesInRow(0));
         }

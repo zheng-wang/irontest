@@ -5,10 +5,7 @@ import com.rits.cloning.Cloner;
 import io.irontest.db.TestcaseRunDAO;
 import io.irontest.db.TeststepDAO;
 import io.irontest.db.UtilsDAO;
-import io.irontest.models.DataTable;
-import io.irontest.models.TestResult;
-import io.irontest.models.Testcase;
-import io.irontest.models.UserDefinedProperty;
+import io.irontest.models.*;
 import io.irontest.models.testrun.DataDrivenTestcaseRun;
 import io.irontest.models.testrun.TestcaseIndividualRun;
 import io.irontest.models.testrun.TestcaseRun;
@@ -66,7 +63,7 @@ public class DataDrivenTestcaseRunner extends TestcaseRunner {
             }
             getReferenceableStringProperties().put(IMPLICIT_PROPERTY_NAME_TEST_CASE_INDIVIDUAL_START_TIME,
                     IMPLICIT_PROPERTY_DATE_TIME_FORMAT.format(individualRun.getStartTime()));
-            individualRun.setCaption((String) dataTableRow.get("Caption"));
+            individualRun.setCaption((String) dataTableRow.get(DataTableColumn.COLUMN_NAME_CAPTION));
             getReferenceableEndpointProperties().putAll(dataTable.getEndpointPropertiesInRow(dataTableRowIndex));
             getReferenceableStringProperties().putAll(dataTable.getStringPropertiesInRow(dataTableRowIndex));
 

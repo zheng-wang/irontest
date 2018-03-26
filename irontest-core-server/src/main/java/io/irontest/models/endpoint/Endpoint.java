@@ -3,8 +3,10 @@ package io.irontest.models.endpoint;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonView;
 import io.irontest.models.Environment;
 import io.irontest.models.Properties;
+import io.irontest.resources.ResourceJsonViews;
 
 /**
  * Created by Trevor Li on 6/30/15.
@@ -15,7 +17,9 @@ public class Endpoint {
     public static final String TYPE_MQ = "MQ";
     public static final String TYPE_IIB = "IIB";
     private long id;
+    @JsonView(ResourceJsonViews.DataTableUIGrid.class)
     private Environment environment;
+    @JsonView(ResourceJsonViews.DataTableUIGrid.class)
     private String name;
     private String type;
     private String description;

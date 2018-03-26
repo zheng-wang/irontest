@@ -1,6 +1,8 @@
 package io.irontest.models;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import io.irontest.models.endpoint.Endpoint;
+import io.irontest.resources.ResourceJsonViews;
 
 import java.util.List;
 
@@ -9,6 +11,7 @@ import java.util.List;
  */
 public class Environment {
     private long id;
+    @JsonView(ResourceJsonViews.DataTableUIGrid.class)
     private String name;
     private String description;
     private List<Endpoint> endpoints;

@@ -48,18 +48,13 @@ public abstract class TestcaseDAO {
     @SqlUpdate("update testcase set name = :name where id = :id")
     protected abstract long updateNameForInsert(@Bind("id") long id, @Bind("name") String name);
 
-    private Testcase insert_NoTransaction(Testcase testcase) {
+    public Testcase insert_NoTransaction(Testcase testcase) {
         long id = _insert(testcase);
         if (testcase.getName() == null) {
             testcase.setName("Case " + id);
         }
         updateNameForInsert(id, testcase.getName());
         return _findById(id);
-    }
-
-    @Transaction
-    public Testcase insert(Testcase testcase) {
-        return insert_NoTransaction(testcase);
     }
 
     @SqlUpdate("update testcase set name = :name, description = :description, " +

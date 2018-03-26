@@ -37,7 +37,7 @@ public abstract class UtilsDAO {
      */
     @Transaction
     public DataTable getTestcaseDataTable(long testcaseId, boolean fetchFirstRowOnly) {
-        DataTable dataTable = null;
+        DataTable dataTable = new DataTable();
 
         List<DataTableColumn> columns = dataTableColumnDAO().findByTestcaseId(testcaseId);
 

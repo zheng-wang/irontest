@@ -54,7 +54,7 @@ public class AssertionResource {
         List<UserDefinedProperty> testcaseUDPs = udpDAO.findTestcaseUDPsByTeststepId(assertion.getTeststepId());
         Map<String, String> referenceableStringProperties = IronTestUtils.udpListToMap(testcaseUDPs);
         DataTable dataTable = utilsDAO.getTestcaseDataTable(teststepDAO.findTestcaseIdById(assertion.getTeststepId()), true);
-        if (dataTable != null && dataTable.getRows().size() == 1) {
+        if (dataTable.getRows().size() == 1) {
             referenceableStringProperties.putAll(dataTable.getStringPropertiesInRow(0));
         }
         AssertionVerifier assertionVerifier = AssertionVerifierFactory.getInstance().create(

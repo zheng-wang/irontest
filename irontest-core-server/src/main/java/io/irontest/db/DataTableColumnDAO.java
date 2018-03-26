@@ -1,9 +1,7 @@
 package io.irontest.db;
 
 import io.irontest.models.DataTableColumn;
-import org.skife.jdbi.v2.sqlobject.Bind;
-import org.skife.jdbi.v2.sqlobject.SqlQuery;
-import org.skife.jdbi.v2.sqlobject.SqlUpdate;
+import org.skife.jdbi.v2.sqlobject.*;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
 import java.util.List;
@@ -31,4 +29,9 @@ public abstract class DataTableColumnDAO {
 
     @SqlQuery("select * from datatable_column where testcase_id = :testcaseId order by sequence")
     public abstract List<DataTableColumn> findByTestcaseId(@Bind("testcaseId") long testcaseId);
+
+    @SqlUpdate("insert into datatable_column (name, type, sequence, testcase_id) values (:c.name, :c.type, " +
+            ":c.sequence, :testcaseId)")
+    @GetGeneratedKeys
+    public abstract long insert(@Bind("testcaseId") long testcaseId, @BindBean("c") DataTableColumn dataTableColumn);
 }

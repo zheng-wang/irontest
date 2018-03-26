@@ -1,5 +1,6 @@
 package io.irontest;
 
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.Option;
 import com.jayway.jsonpath.spi.json.JacksonJsonProvider;
@@ -86,6 +87,7 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
                 return EnumSet.noneOf(Option.class);
             }
         });
+        bootstrap.getObjectMapper().disable(MapperFeature.DEFAULT_VIEW_INCLUSION);
     }
 
     private boolean isInTeamMode(IronTestConfiguration configuration) {
@@ -192,6 +194,7 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
                 testcaseRunDAO, teststepRunDAO));
         environment.jersey().register(new AssertionResource(udpDAO, teststepDAO, utilsDAO));
         environment.jersey().register(new UDPResource(udpDAO));
+        environment.jersey().register(new DataTableResource(utilsDAO));
         if (isInTeamMode(configuration)) {
             environment.jersey().register(new UserResource(userDAO));
         }

@@ -1,19 +1,20 @@
 package io.irontest.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 import io.irontest.models.endpoint.Endpoint;
+import io.irontest.resources.ResourceJsonViews;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Zheng on 16/03/2018.
  */
 public class DataTable {
-    private List<DataTableColumn> columns;
-    private List<LinkedHashMap<String, Object>> rows;
+    @JsonView(ResourceJsonViews.DataTableUIGrid.class)
+    private List<DataTableColumn> columns = new ArrayList<>();
+    @JsonView(ResourceJsonViews.DataTableUIGrid.class)
+    private List<LinkedHashMap<String, Object>> rows = new ArrayList<>();
 
     public List<DataTableColumn> getColumns() {
         return columns;
@@ -32,8 +33,8 @@ public class DataTable {
     }
 
     @JsonIgnore
-    public String getColumnTypeByName(String columnName) {
-        String columnType = null;
+    public DataTableColumnType getColumnTypeByName(String columnName) {
+        DataTableColumnType columnType = null;
         for (DataTableColumn column: columns) {
             if (column.getName().equals(columnName)) {
                 columnType = column.getType();
@@ -47,7 +48,8 @@ public class DataTable {
         Map<String, String> result = new HashMap<>();
         LinkedHashMap<String, Object> row = rows.get(rowIndex);
         for (Map.Entry<String, Object> property: row.entrySet()) {
-            if (!"Caption".equals(property.getKey()) && "String".equals(getColumnTypeByName(property.getKey()))) {
+            if (!DataTableColumn.COLUMN_NAME_CAPTION.equals(property.getKey()) &&
+                    DataTableColumnType.STRING == getColumnTypeByName(property.getKey())) {
                 result.put(property.getKey(), (String) property.getValue());
             }
         }
@@ -58,7 +60,7 @@ public class DataTable {
         Map<String, Endpoint> result = new HashMap<>();
         LinkedHashMap<String, Object> row = rows.get(rowIndex);
         for (Map.Entry<String, Object> property: row.entrySet()) {
-            if (!"String".equals(getColumnTypeByName(property.getKey()))) {
+            if (DataTableColumnType.STRING != getColumnTypeByName(property.getKey())) {
                 result.put(property.getKey(), (Endpoint) property.getValue());
             }
         }

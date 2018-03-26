@@ -47,7 +47,7 @@ public class TestcaseRunResource {
         List<UserDefinedProperty> testcaseUDPs = udpDAO.findByTestcaseId(testcaseId);
         DataTable dataTable = utilsDAO.getTestcaseDataTable(testcaseId, false);
         TestcaseRunner testcaseRunner;
-        if (dataTable == null || dataTable.getRows().isEmpty()) {
+        if (dataTable.getRows().isEmpty()) {
             testcaseRunner = new RegularTestcaseRunner(testcase, testcaseUDPs, teststepDAO, utilsDAO, testcaseRunDAO);
         } else {
             testcaseRunner = new DataDrivenTestcaseRunner(testcase, testcaseUDPs, dataTable, teststepDAO, utilsDAO,
