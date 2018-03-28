@@ -37,8 +37,7 @@ public abstract class FolderDAO {
     @SqlQuery("select * from folder where id = :id")
     public abstract Folder _findById(@Bind("id") long id);
 
-    @Transaction
-    public Folder insert(Long parentFolderId) {
+    public Folder insert_NoTransaction(Long parentFolderId) {
         long id = _insert(parentFolderId);
         updateNameForInsert(id, "Folder " + id);
         return _findById(id);

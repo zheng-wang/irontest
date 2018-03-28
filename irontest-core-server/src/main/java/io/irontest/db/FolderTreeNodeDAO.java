@@ -55,7 +55,7 @@ public abstract class FolderTreeNodeDAO {
             node.setIdPerType(testcase.getId());
             node.setText(testcase.getName());
         } else if (node.getType() == FolderTreeNodeType.FOLDER) {
-            Folder folder = folderDAO().insert(node.getParentFolderId());
+            Folder folder = folderDAO().insert_NoTransaction(node.getParentFolderId());
             node.setIdPerType(folder.getId());
             node.setText(folder.getName());
         }
