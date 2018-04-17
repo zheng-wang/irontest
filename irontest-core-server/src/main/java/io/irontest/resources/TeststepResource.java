@@ -2,6 +2,7 @@ package io.irontest.resources;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.irontest.core.runner.*;
+import io.irontest.db.DataTableDAO;
 import io.irontest.db.TeststepDAO;
 import io.irontest.db.UserDefinedPropertyDAO;
 import io.irontest.db.UtilsDAO;
@@ -38,12 +39,15 @@ public class TeststepResource {
     private final TeststepDAO teststepDAO;
     private final UserDefinedPropertyDAO udpDAO;
     private final UtilsDAO utilsDAO;
+    private final DataTableDAO dataTableDAO;
 
-    public TeststepResource(AppInfo appInfo, TeststepDAO teststepDAO, UserDefinedPropertyDAO udpDAO, UtilsDAO utilsDAO) {
+    public TeststepResource(AppInfo appInfo, TeststepDAO teststepDAO, UserDefinedPropertyDAO udpDAO, UtilsDAO utilsDAO,
+                            DataTableDAO dataTableDAO) {
         this.appInfo = appInfo;
         this.teststepDAO = teststepDAO;
         this.udpDAO = udpDAO;
         this.utilsDAO = utilsDAO;
+        this.dataTableDAO = dataTableDAO;
     }
 
     @POST
@@ -138,7 +142,7 @@ public class TeststepResource {
         referenceableStringProperties.put(IMPLICIT_PROPERTY_NAME_TEST_STEP_START_TIME,
                 IMPLICIT_PROPERTY_DATE_TIME_FORMAT.format(new Date()));
         Map<String, Endpoint> referenceableEndpointProperties = new HashMap<>();
-        DataTable dataTable = utilsDAO.getTestcaseDataTable(teststep.getTestcaseId(), true);
+        DataTable dataTable = dataTableDAO.getTestcaseDataTable(teststep.getTestcaseId(), true);
         if (dataTable.getRows().size() == 1) {
             referenceableStringProperties.putAll(dataTable.getStringPropertiesInRow(0));
             referenceableEndpointProperties.putAll(dataTable.getEndpointPropertiesInRow(0));

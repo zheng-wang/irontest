@@ -95,19 +95,26 @@
       </div>
     </uib-tab>
     <uib-tab heading="Data Table" select="storeTabIndex(DATA_TABLE_TAB_INDEX)">
-      <form name="dataTableForm" class="form-horizontal col-lg-10" role="form" novalidate ng-controller="DataTableController"
-            ng-init="findByTestcaseId()">
+      <form name="dataTableForm" class="form-horizontal col-lg-12" role="form" novalidate
+            ng-controller="DataTableController" ng-init="findByTestcaseId()">
         <div class="form-group"></div> <!-- spacer -->
         <div class="row">
           <div class="form-group">
-            <div class="col-lg-1">
-              <button class="btn btn-info" ng-click="createUDP()" ng-disabled="appStatus.isForbidden()">Create</button>
+            <div class="btn-group col-lg-2" uib-dropdown keyboard-nav>
+              <button type="button" class="btn btn-info dropdown-toggle" uib-dropdown-toggle
+                      ng-disabled="appStatus.isForbidden()">
+                Add Column <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" uib-dropdown-menu role="menu">
+                <li role="menuitem"><a ng-click="addColumn('String')" href="">String Column</a></li>
+                <li role="menuitem"><a ng-click="addColumn('DBEndpoint')" href="">DB Endpoint Column</a></li>
+              </ul>
             </div>
           </div>
         </div>
         <div class="row" id="dataTableGrid">
-          <div ng-if="activeTabIndex === DATA_TABLE_TAB_INDEX" ui-grid="dataTableGridOptions" ui-grid-resize-columns
-               ui-grid-edit ui-grid-cellNav class="ui-grid testcase-datatable-grid"></div>
+          <div ng-if="activeTabIndex === DATA_TABLE_TAB_INDEX && !dataTableGridRefresh" ui-grid="dataTableGridOptions"
+               ui-grid-resize-columns ui-grid-edit ui-grid-cellNav class="ui-grid testcase-datatable-grid"></div>
         </div>
       </form>
     </uib-tab>
@@ -167,6 +174,14 @@
 </script>
 
 <!-- data table grid cell templates -->
+<script type="text/ng-template" id="dataTableGridEditableHeaderCellTemplate.html">
+  <div class="ui-grid-cell-contents">
+    <input type="text" class="form-control" ng-model="col.name" irt-select="true"
+           ng-keypress="$event.keyCode === 13 ? grid.appScope.afterColumnNameEdit(col.colDef.name, col.name) : angular.noop()"
+           ng-keydown="$event.keyCode === 27 ? grid.appScope.afterColumnNameEdit(col.colDef.name, col.name) : angular.noop()"
+           ng-blur="grid.appScope.afterColumnNameEdit(col.colDef.name, col.name)">
+  </div>
+</script>
 <script type="text/ng-template" id="dataTableGridEndpointTypedCellTemplate.html">
   <div class="ui-grid-cell-contents">{{COL_FIELD.environment.name}}#{{COL_FIELD.name}}</div>
 </script>

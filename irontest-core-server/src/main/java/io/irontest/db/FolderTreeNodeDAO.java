@@ -51,7 +51,7 @@ public abstract class FolderTreeNodeDAO {
             dataTableColumn.setName(DataTableColumn.COLUMN_NAME_CAPTION);
             dataTableColumn.setType(DataTableColumnType.STRING);
             dataTableColumn.setSequence((short) 1);
-            dataTableColumnDAO().insert(testcase.getId(), dataTableColumn);
+            dataTableColumnDAO().insert(testcase.getId(), dataTableColumn, dataTableColumn.getType().toString());
             node.setIdPerType(testcase.getId());
             node.setText(testcase.getName());
         } else if (node.getType() == FolderTreeNodeType.FOLDER) {

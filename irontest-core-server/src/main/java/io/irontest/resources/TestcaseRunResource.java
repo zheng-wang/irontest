@@ -27,15 +27,17 @@ public class TestcaseRunResource {
     private final UserDefinedPropertyDAO udpDAO;
     private final TeststepDAO teststepDAO;
     private final UtilsDAO utilsDAO;
+    private final DataTableDAO dataTableDAO;
     private final TestcaseRunDAO testcaseRunDAO;
     private final TeststepRunDAO teststepRunDAO;
 
     public TestcaseRunResource(TestcaseDAO testcaseDAO, UserDefinedPropertyDAO udpDAO, TeststepDAO teststepDAO,
-                               UtilsDAO utilsDAO, TestcaseRunDAO testcaseRunDAO, TeststepRunDAO teststepRunDAO) {
+                               UtilsDAO utilsDAO, DataTableDAO dataTableDAO, TestcaseRunDAO testcaseRunDAO, TeststepRunDAO teststepRunDAO) {
         this.testcaseDAO = testcaseDAO;
         this.udpDAO = udpDAO;
         this.teststepDAO = teststepDAO;
         this.utilsDAO = utilsDAO;
+        this.dataTableDAO = dataTableDAO;
         this.testcaseRunDAO = testcaseRunDAO;
         this.teststepRunDAO = teststepRunDAO;
     }
@@ -45,7 +47,7 @@ public class TestcaseRunResource {
     public TestcaseRun create(@QueryParam("testcaseId") long testcaseId) throws JsonProcessingException {
         Testcase testcase = testcaseDAO.findById_Complete(testcaseId);
         List<UserDefinedProperty> testcaseUDPs = udpDAO.findByTestcaseId(testcaseId);
-        DataTable dataTable = utilsDAO.getTestcaseDataTable(testcaseId, false);
+        DataTable dataTable = dataTableDAO.getTestcaseDataTable(testcaseId, false);
         TestcaseRunner testcaseRunner;
         if (dataTable.getRows().isEmpty()) {
             testcaseRunner = new RegularTestcaseRunner(testcase, testcaseUDPs, teststepDAO, utilsDAO, testcaseRunDAO);

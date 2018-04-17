@@ -118,6 +118,7 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         final UtilsDAO utilsDAO = jdbi.onDemand(UtilsDAO.class);
         final FolderTreeNodeDAO folderTreeNodeDAO = jdbi.onDemand(FolderTreeNodeDAO.class);
         final UserDefinedPropertyDAO udpDAO = jdbi.onDemand(UserDefinedPropertyDAO.class);
+        final DataTableDAO dataTableDAO = jdbi.onDemand(DataTableDAO.class);
         final DataTableColumnDAO dataTableColumnDAO = jdbi.onDemand(DataTableColumnDAO.class);
         final DataTableCellDAO dataTableCellDAO = jdbi.onDemand(DataTableCellDAO.class);
         final TestcaseRunDAO testcaseRunDAO = jdbi.onDemand(TestcaseRunDAO.class);
@@ -187,14 +188,14 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         environment.jersey().register(new TestcaseResource(testcaseDAO, teststepDAO));
         environment.jersey().register(new FolderResource(folderDAO));
         environment.jersey().register(new FolderTreeNodeResource(folderTreeNodeDAO));
-        environment.jersey().register(new TeststepResource(appInfo, teststepDAO, udpDAO, utilsDAO));
+        environment.jersey().register(new TeststepResource(appInfo, teststepDAO, udpDAO, utilsDAO, dataTableDAO));
         environment.jersey().register(new WSDLResource());
         environment.jersey().register(new EnvironmentResource(environmentDAO));
-        environment.jersey().register(new TestcaseRunResource(testcaseDAO, udpDAO, teststepDAO, utilsDAO,
+        environment.jersey().register(new TestcaseRunResource(testcaseDAO, udpDAO, teststepDAO, utilsDAO, dataTableDAO,
                 testcaseRunDAO, teststepRunDAO));
-        environment.jersey().register(new AssertionResource(udpDAO, teststepDAO, utilsDAO));
+        environment.jersey().register(new AssertionResource(udpDAO, teststepDAO, dataTableDAO));
         environment.jersey().register(new UDPResource(udpDAO));
-        environment.jersey().register(new DataTableResource(utilsDAO));
+        environment.jersey().register(new DataTableResource(dataTableDAO));
         if (isInTeamMode(configuration)) {
             environment.jersey().register(new UserResource(userDAO));
         }

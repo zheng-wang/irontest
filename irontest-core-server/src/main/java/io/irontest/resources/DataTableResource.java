@@ -1,13 +1,10 @@
 package io.irontest.resources;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import io.irontest.db.UtilsDAO;
+import io.irontest.db.DataTableDAO;
 import io.irontest.models.DataTable;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -15,16 +12,25 @@ import javax.ws.rs.core.MediaType;
  */
 @Path("/") @Produces({ MediaType.APPLICATION_JSON })
 public class DataTableResource {
-    private UtilsDAO utilsDAO;
+    private DataTableDAO dataTableDAO;
 
-    public DataTableResource(UtilsDAO utilsDAO) {
-        this.utilsDAO = utilsDAO;
+    public DataTableResource(DataTableDAO dataTableDAO) {
+        this.dataTableDAO = dataTableDAO;
     }
 
     @GET
     @Path("testcases/{testcaseId}/datatable")
     @JsonView(ResourceJsonViews.DataTableUIGrid.class)
     public DataTable findByTestcaseId(@PathParam("testcaseId") long testcaseId) {
-        return utilsDAO.getTestcaseDataTable(testcaseId, false);
+        return dataTableDAO.getTestcaseDataTable(testcaseId, false);
+    }
+
+    @POST
+    @Path("testcases/{testcaseId}/datatable/addColumn")
+    @JsonView(ResourceJsonViews.DataTableUIGrid.class)
+    public DataTable addColumn(@PathParam("testcaseId") long testcaseId,
+                               @QueryParam("columnType") String columnType) {
+        dataTableDAO.addColumn(testcaseId, columnType);
+        return dataTableDAO.getTestcaseDataTable(testcaseId, false);
     }
 }

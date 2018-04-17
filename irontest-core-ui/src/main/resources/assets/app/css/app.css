@@ -144,6 +144,10 @@
   resize: none;
   height: 23px !important;
 }
+.testcase-datatable-grid .ui-grid-header-cell .ui-grid-cell-contents input {
+  padding: 0px;
+  height: auto;
+}
 
 .ws-uiview {
   height: 800px;
