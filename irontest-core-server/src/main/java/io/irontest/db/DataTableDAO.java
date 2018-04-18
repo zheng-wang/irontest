@@ -25,6 +25,17 @@ public abstract class DataTableDAO {
     protected abstract EndpointDAO endpointDAO();
 
     /**
+     * Caption column is the initial column in a data table.
+     * @param testcaseId
+     */
+    public void createCaptionColumn(long testcaseId) {
+        DataTableColumn dataTableColumn = new DataTableColumn();
+        dataTableColumn.setName(DataTableColumn.COLUMN_NAME_CAPTION);
+        dataTableColumn.setSequence((short) 1);
+        dataTableColumnDAO().insert(testcaseId, dataTableColumn, DataTableColumnType.STRING.toString());
+    }
+
+    /**
      * @param testcaseId
      * @param fetchFirstRowOnly if true, only the first data table row (if exists) will be fetched; if false, all rows will be fetched.
      * @return
@@ -65,10 +76,5 @@ public abstract class DataTableDAO {
         }
 
         return dataTable;
-    }
-
-    @Transaction
-    public void addColumn(long testcaseId, String columnType) {
-        dataTableColumnDAO().insert_NoTransaction(testcaseId, columnType);
     }
 }

@@ -112,8 +112,8 @@
             </div>
           </div>
         </div>
-        <div class="row" id="dataTableGrid">
-          <div ng-if="activeTabIndex === DATA_TABLE_TAB_INDEX && !dataTableGridRefresh" ui-grid="dataTableGridOptions"
+        <div class="row">
+          <div ng-if="activeTabIndex === DATA_TABLE_TAB_INDEX && dataTable" ui-grid="dataTableGridOptions"
                ui-grid-resize-columns ui-grid-edit ui-grid-cellNav class="ui-grid testcase-datatable-grid"></div>
         </div>
       </form>
@@ -177,11 +177,11 @@
 <script type="text/ng-template" id="dataTableGridEditableHeaderCellTemplate.html">
   <div class="ui-grid-cell-contents">
     <input type="text" class="form-control" ng-model="col.name" irt-select="true"
-           ng-keypress="$event.keyCode === 13 ? grid.appScope.afterColumnNameEdit(col.colDef.name, col.name) : angular.noop()"
-           ng-keydown="$event.keyCode === 27 ? grid.appScope.afterColumnNameEdit(col.colDef.name, col.name) : angular.noop()"
-           ng-blur="grid.appScope.afterColumnNameEdit(col.colDef.name, col.name)">
+           ng-keypress="$event.keyCode === 13 ? grid.appScope.afterColumnNameEdit(col) : angular.noop()"
+           ng-keydown="$event.keyCode === 27 ? grid.appScope.afterColumnNameEdit(col) : angular.noop()"
+           ng-blur="grid.appScope.afterColumnNameEdit(col)">
   </div>
 </script>
 <script type="text/ng-template" id="dataTableGridEndpointTypedCellTemplate.html">
-  <div class="ui-grid-cell-contents">{{COL_FIELD.environment.name}}#{{COL_FIELD.name}}</div>
+  <div class="ui-grid-cell-contents" ng-if="COL_FIELD">{{COL_FIELD.environment.name}}#{{COL_FIELD.name}}</div>
 </script>

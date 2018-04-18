@@ -23,10 +23,14 @@ public abstract class DataTableCellDAO {
             "updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (column_id) REFERENCES datatable_column(id), " +
             "FOREIGN KEY (endpoint_id) REFERENCES endpoint(id), " +
-            "CONSTRAINT DATATABLE_CELL_EXCLUSIVE_TYPE_CONSTRAINT CHECK(" +
-                "(value is null AND endpoint_id is not null) OR (value is not null AND endpoint_id is null)))")
+            "CONSTRAINT DATATABLE_CELL_EXCLUSIVE_TYPE_CONSTRAINT CHECK((value is null OR endpoint_id is null)))")
     public abstract void createTableIfNotExists();
 
     @SqlQuery("select * from datatable_cell where column_id = :columnId order by row_sequence")
     public abstract List<DataTableCell> findByColumnId(@Bind("columnId") long columnId);
+
+    @SqlUpdate("insert into datatable_cell (column_id, row_sequence) " +
+            "select :columnId, row_sequence from datatable_cell " +
+            "where column_id = (select id from datatable_column where testcase_id = :testcaseId and sequence = 1)")
+    public abstract void insertCellsForNewColumn(@Bind("testcaseId") long testcaseId, @Bind("columnId") long columnId);
 }

@@ -1,7 +1,6 @@
 package io.irontest.db;
 
 import io.irontest.models.DataTableColumn;
-import io.irontest.models.DataTableColumnType;
 import org.skife.jdbi.v2.sqlobject.*;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
@@ -29,6 +28,9 @@ public abstract class DataTableColumnDAO {
                 CUSTOM_PROPERTY_NAME_CHECK + "))")
     public abstract void createTableIfNotExists();
 
+    @CreateSqlObject
+    protected abstract DataTableCellDAO dataTableCellDAO();
+
     @SqlQuery("select * from datatable_column where testcase_id = :testcaseId order by sequence")
     public abstract List<DataTableColumn> findByTestcaseId(@Bind("testcaseId") long testcaseId);
 
@@ -38,7 +40,7 @@ public abstract class DataTableColumnDAO {
      * @param type for enum, name instead of value is bound by JDBI, so use a separate @Bind here instead of taking advantage of the @BindBean.
      * @return
      */
-    @SqlUpdate("insert into datatable_column (name, type, sequence, testcase_id) values (:c.name, :type, " +
+    @SqlUpdate("insert into datatable_column (name, type, sequence, testcase_id) values (:name, :type, " +
             ":c.sequence, :testcaseId)")
     @GetGeneratedKeys
     public abstract long insert(@Bind("testcaseId") long testcaseId, @BindBean("c") DataTableColumn column,
@@ -47,14 +49,20 @@ public abstract class DataTableColumnDAO {
     @SqlUpdate("insert into datatable_column (type, sequence, testcase_id) values (:type, " +
             "select max(sequence) + 1 from datatable_column where testcase_id = :testcaseId, :testcaseId)")
     @GetGeneratedKeys
-    public abstract long insert(@Bind("testcaseId") long testcaseId, @Bind("type") String type);
+    protected abstract long _insert(@Bind("testcaseId") long testcaseId, @Bind("type") String type);
 
     @SqlUpdate("update datatable_column set name = :name where id = :id")
-    protected abstract long updateNameForInsert(@Bind("id") long id, @Bind("name") String name);
+    protected abstract void updateNameForInsert(@Bind("id") long id, @Bind("name") String name);
 
-    public void insert_NoTransaction(long testcaseId, String columnType) {
-        long id = insert(testcaseId, columnType);
+    @Transaction
+    public void insert(long testcaseId, String columnType) {
+        long id = _insert(testcaseId, columnType);
         String name = "COL" + id;
         updateNameForInsert(id, name);
+
+        dataTableCellDAO().insertCellsForNewColumn(testcaseId, id);
     }
+
+    @SqlUpdate("update datatable_column set name = :name, updated = CURRENT_TIMESTAMP where id = :id")
+    public abstract void rename(@Bind("id") long id, @Bind("name") String name);
 }

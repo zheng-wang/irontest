@@ -14,7 +14,7 @@
 
     <properties>
         <angular.version>1.6.9</angular.version>
-        <angular-ui-grid.version>4.4.1</angular-ui-grid.version>
+        <angular-ui-grid.version>4.4.6</angular-ui-grid.version>
         <angular-ui-router.version>1.0.12</angular-ui-router.version>
         <bootstrap.version>3.3.7</bootstrap.version>
         <jquery.version>3.2.1</jquery.version>

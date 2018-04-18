@@ -5,24 +5,27 @@
 angular.module('irontest').controller('DataTableController', ['$scope', 'IronTestUtils', '$stateParams', 'DataTable',
     '$timeout',
   function($scope, IronTestUtils, $stateParams, DataTable, $timeout) {
-    $scope.dataTableGridRefresh = false;
     $scope.dataTableGridOptions = {
       enableSorting: false
     };
 
-    var updateDataTableGridOptions = function(dataTable, lastColumnHeaderInEditMode) {
+    var getDefaultColumnDef = function(dataTableColumnId, columnName) {
+      return {
+        dataTableColumnId: dataTableColumnId,    //  not standard ui grid property for column def
+        name: columnName,
+        displayName: columnName,  //  need this line to avoid underscore in column name is not displayed in column header
+        // determine column min width according to the length of column name
+        // assuming each character deserves 8 pixels
+        // 30 pixels for displaying grid header menu arrow
+        minWidth: columnName.length * 8 + 30
+      };
+    };
+
+    var updateDataTableGrid = function(dataTable, lastColumnHeaderInEditMode) {
       $scope.dataTableGridOptions.columnDefs = [];
       for (var i = 0; i < dataTable.columns.length; i++) {
         var dataTableColumn = dataTable.columns[i];
-        var dataTableColumnName = dataTableColumn.name;
-        var uiGridColumn = {
-          name: dataTableColumnName,
-          displayName: dataTableColumnName,  //  need this line to avoid underscore in column name is not displayed in column header
-          // determine column min width according to the length of column name
-          // assuming each character deserves 8 pixels
-          // 30 pixels for displaying grid header menu arrow
-          minWidth: dataTableColumnName.length * 8 + 30
-        };
+        var uiGridColumn = getDefaultColumnDef(dataTableColumn.id, dataTableColumn.name);
         if (lastColumnHeaderInEditMode === true && i === dataTable.columns.length - 1) {
           uiGridColumn.headerCellTemplate = 'dataTableGridEditableHeaderCellTemplate.html';
         }
@@ -34,12 +37,20 @@ angular.module('irontest').controller('DataTableController', ['$scope', 'IronTes
       $scope.dataTableGridOptions.data = dataTable.rows;
     };
 
-    $scope.findByTestcaseId = function(callbackOnSuccess) {
+    var refreshDataTableGrid = function() {
+      var dataTable = $scope.dataTable;
+      delete $scope.dataTable;
+      $timeout(function() {
+        $scope.dataTable = dataTable;
+      }, 0);
+    };
+
+    $scope.findByTestcaseId = function() {
       DataTable.get({ testcaseId: $stateParams.testcaseId }, function(dataTable) {
-        updateDataTableGridOptions(dataTable);
-        if (callbackOnSuccess) {
-          callbackOnSuccess();
-        }
+        updateDataTableGrid(dataTable);
+
+        //  show the grid
+        $scope.dataTable = dataTable;
       }, function(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);
       });
@@ -47,23 +58,29 @@ angular.module('irontest').controller('DataTableController', ['$scope', 'IronTes
 
     $scope.addColumn = function(columnType) {
       DataTable.addColumn({ testcaseId: $stateParams.testcaseId, columnType: columnType }, {}, function(dataTable) {
-        updateDataTableGridOptions(dataTable, true);
+        updateDataTableGrid(dataTable, true);
       }, function(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);
       });
     };
 
-    $scope.afterColumnNameEdit = function(originalName, newName) {
-      if (newName !== originalName) {
+    $scope.afterColumnNameEdit = function(col) {
+      var colDef = col.colDef;
+      delete colDef.headerCellTemplate;
+      var oldName = colDef.name;
+      var newName = col.name;
 
-      } else {
-        $scope.findByTestcaseId(function() {
-          //  reload the grid on UI, so that column edit mode is exited
-          $scope.dataTableGridRefresh = true;
-          $timeout(function() {
-            $scope.dataTableGridRefresh = false;
-          }, 0);
+      if (newName !== oldName) {
+        DataTable.renameColumn({ testcaseId: $stateParams.testcaseId, columnId: colDef.dataTableColumnId, newName: newName }, {},
+        function() {
+          var newColDef = getDefaultColumnDef(colDef.dataTableColumnId, newName);
+          Object.assign(colDef, newColDef);
+          refreshDataTableGrid();
+        }, function(response) {
+          IronTestUtils.openErrorHTTPResponseModal(response);
         });
+      } else {
+        refreshDataTableGrid();
       }
     };
   }

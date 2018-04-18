@@ -8,6 +8,7 @@ import io.irontest.resources.ResourceJsonViews;
  */
 public class DataTableColumn {
     public static String COLUMN_NAME_CAPTION = "Caption";
+    @JsonView(ResourceJsonViews.DataTableUIGrid.class)
     private long id;
     @JsonView(ResourceJsonViews.DataTableUIGrid.class)
     private String name;

@@ -10,6 +10,12 @@ angular.module('irontest').factory('DataTable', ['$resource',
           verb: 'addColumn'
         }
       },
+      renameColumn: {
+        method: 'POST',
+        params: {
+          verb: 'renameColumn'
+        }
+      }
     });
   }
 ]);

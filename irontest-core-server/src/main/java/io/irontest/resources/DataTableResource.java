@@ -1,9 +1,11 @@
 package io.irontest.resources;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import io.irontest.db.DataTableColumnDAO;
 import io.irontest.db.DataTableDAO;
 import io.irontest.models.DataTable;
 
+import javax.annotation.security.PermitAll;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
@@ -13,9 +15,11 @@ import javax.ws.rs.core.MediaType;
 @Path("/") @Produces({ MediaType.APPLICATION_JSON })
 public class DataTableResource {
     private DataTableDAO dataTableDAO;
+    private DataTableColumnDAO dataTableColumnDAO;
 
-    public DataTableResource(DataTableDAO dataTableDAO) {
+    public DataTableResource(DataTableDAO dataTableDAO, DataTableColumnDAO dataTableColumnDAO) {
         this.dataTableDAO = dataTableDAO;
+        this.dataTableColumnDAO = dataTableColumnDAO;
     }
 
     @GET
@@ -25,12 +29,17 @@ public class DataTableResource {
         return dataTableDAO.getTestcaseDataTable(testcaseId, false);
     }
 
-    @POST
+    @POST @PermitAll
     @Path("testcases/{testcaseId}/datatable/addColumn")
     @JsonView(ResourceJsonViews.DataTableUIGrid.class)
-    public DataTable addColumn(@PathParam("testcaseId") long testcaseId,
-                               @QueryParam("columnType") String columnType) {
-        dataTableDAO.addColumn(testcaseId, columnType);
+    public DataTable addColumn(@PathParam("testcaseId") long testcaseId, @QueryParam("columnType") String columnType) {
+        dataTableColumnDAO.insert(testcaseId, columnType);
         return dataTableDAO.getTestcaseDataTable(testcaseId, false);
+    }
+
+    @POST @PermitAll
+    @Path("testcases/{testcaseId}/datatable/renameColumn")
+    public void renameColumn(@QueryParam("columnId") long columnId, @QueryParam("newName") String newName) {
+        dataTableColumnDAO.rename(columnId, newName);
     }
 }
