@@ -83,5 +83,13 @@ angular.module('irontest').controller('DataTableController', ['$scope', 'IronTes
         refreshDataTableGrid();
       }
     };
+
+    $scope.addRow = function() {
+      DataTable.addRow({ testcaseId: $stateParams.testcaseId }, {}, function(dataTable) {
+        updateDataTableGrid(dataTable);
+      }, function(response) {
+        IronTestUtils.openErrorHTTPResponseModal(response);
+      });
+    };
   }
 ]);

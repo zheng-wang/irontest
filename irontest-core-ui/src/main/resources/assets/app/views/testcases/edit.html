@@ -110,6 +110,9 @@
                 <li role="menuitem"><a ng-click="addColumn('DBEndpoint')" href="">DB Endpoint Column</a></li>
               </ul>
             </div>
+            <div class="col-lg-2">
+              <button class="btn btn-info" ng-click="addRow()" ng-disabled="appStatus.isForbidden()">Add Row</button>
+            </div>
           </div>
         </div>
         <div class="row">

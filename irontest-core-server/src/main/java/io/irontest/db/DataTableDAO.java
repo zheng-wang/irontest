@@ -56,7 +56,7 @@ public abstract class DataTableDAO {
                     rows.add(new LinkedHashMap<String, Object>());
                 }
                 Object cellObject;
-                if (columnCell.getValue() != null) {
+                if (column.getType() == DataTableColumnType.STRING) {
                     cellObject = columnCell.getValue();
                 } else {
                     cellObject = endpointDAO().findById(columnCell.getEndpointId());

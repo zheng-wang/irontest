@@ -18,12 +18,12 @@ public abstract class DataTableCellDAO {
 
     @SqlUpdate("CREATE TABLE IF NOT EXISTS datatable_cell (" +
             "id BIGINT DEFAULT datatable_cell_sequence.NEXTVAL PRIMARY KEY, column_id BIGINT NOT NULL, " +
-            "row_sequence SMALLINT NOT NULL, value CLOB, endpoint_id BIGINT, " +
+            "row_sequence SMALLINT NOT NULL, value CLOB NOT NULL DEFAULT '', endpoint_id BIGINT, " +
             "created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (column_id) REFERENCES datatable_column(id), " +
             "FOREIGN KEY (endpoint_id) REFERENCES endpoint(id), " +
-            "CONSTRAINT DATATABLE_CELL_EXCLUSIVE_TYPE_CONSTRAINT CHECK((value is null OR endpoint_id is null)))")
+            "CONSTRAINT DATATABLE_CELL_EXCLUSIVE_TYPE_CONSTRAINT CHECK(value = '' OR endpoint_id is null))")
     public abstract void createTableIfNotExists();
 
     @SqlQuery("select * from datatable_cell where column_id = :columnId order by row_sequence")
@@ -33,4 +33,17 @@ public abstract class DataTableCellDAO {
             "select :columnId, row_sequence from datatable_cell " +
             "where column_id = (select id from datatable_column where testcase_id = :testcaseId and sequence = 1)")
     public abstract void insertCellsForNewColumn(@Bind("testcaseId") long testcaseId, @Bind("columnId") long columnId);
+
+    @SqlUpdate("insert into datatable_cell (column_id, row_sequence, value) " +
+            "with subquery1 as (" +
+                "select case when max_row_sequence is null then 1 else max_row_sequence + 1 end as new_row_sequence from (" +
+                    "select max(row_sequence) as max_row_sequence " +
+                    "from datatable_column col left outer join datatable_cell cel on cel.column_id = col.id " +
+                    "where col.testcase_id = :testcaseId and col.name = 'Caption'" +
+                ")" +
+            ")" +
+            "select col.id as column_id, subquery1.new_row_sequence as row_sequence, " +
+                "case when col.name = 'Caption' then 'Row ' || to_char(subquery1.new_row_sequence) else '' end as value " +
+            "from datatable_column col, subquery1 where col.testcase_id = :testcaseId;")
+    public abstract void addRow(@Bind("testcaseId") long testcaseId);
 }
