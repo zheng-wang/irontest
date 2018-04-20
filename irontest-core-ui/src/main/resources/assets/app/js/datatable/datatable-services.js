@@ -21,6 +21,12 @@ angular.module('irontest').factory('DataTable', ['$resource',
         params: {
           verb: 'addRow'
         }
+      },
+      updateStringCellValue: {
+        method: 'POST',
+        params: {
+          verb: 'updateStringCellValue'
+        }
       }
     });
   }

@@ -3,10 +3,36 @@
 //  NOTICE:
 //    The $scope here prototypically inherits from the $scope of TestcasesController,
 angular.module('irontest').controller('DataTableController', ['$scope', 'IronTestUtils', '$stateParams', 'DataTable',
-    '$timeout',
-  function($scope, IronTestUtils, $stateParams, DataTable, $timeout) {
+    '$timeout', '$uibModal',
+  function($scope, IronTestUtils, $stateParams, DataTable, $timeout, $uibModal) {
+    var stringCellUpdate = function(dataTableColumnId, rowIndex, newValue) {
+      DataTable.updateStringCellValue({
+        testcaseId: $stateParams.testcaseId,
+        columnId: dataTableColumnId,
+        rowIndex: rowIndex
+      }, {
+        value: newValue
+      }, function() {
+        $scope.$emit('successfullySaved');
+      }, function(response) {
+        IronTestUtils.openErrorHTTPResponseModal(response);
+      });
+    };
+
+    var getRowIndexByRowEntity = function(rowEntity) {
+      return $scope.dataTableGridOptions.data.map(function(e) { return e.$$hashKey; }).indexOf(rowEntity.$$hashKey);
+    };
+
     $scope.dataTableGridOptions = {
-      enableSorting: false
+      enableSorting: false,
+      onRegisterApi: function(gridApi) {
+        gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue){
+          if (newValue !== oldValue) {
+            var rowIndex = getRowIndexByRowEntity(rowEntity);
+            stringCellUpdate(colDef.dataTableColumnId, rowIndex, newValue);
+          }
+        });
+      }
     };
 
     var getDefaultColumnDef = function(dataTableColumnId, columnName) {
@@ -29,8 +55,13 @@ angular.module('irontest').controller('DataTableController', ['$scope', 'IronTes
         if (lastColumnHeaderInEditMode === true && i === dataTable.columns.length - 1) {
           uiGridColumn.headerCellTemplate = 'dataTableGridEditableHeaderCellTemplate.html';
         }
-        if (dataTableColumn.type !== 'String') {    //  it is an endpoint column
-          uiGridColumn.cellTemplate = 'dataTableGridEndpointTypedCellTemplate.html';
+        if (dataTableColumn.type === 'String') {    //  it is a string column
+          uiGridColumn.enableCellEdit = true;
+          uiGridColumn.enableCellEditOnFocus = true;
+          uiGridColumn.editableCellTemplate = 'dataTableGridStringEditableCellTemplate.html';
+        } else {                                    //  it is an endpoint column
+          uiGridColumn.enableCellEdit = false;
+          uiGridColumn.cellTemplate = 'dataTableGridEndpointCellTemplate.html';
         }
         $scope.dataTableGridOptions.columnDefs.push(uiGridColumn);
       }
@@ -89,6 +120,35 @@ angular.module('irontest').controller('DataTableController', ['$scope', 'IronTes
         updateDataTableGrid(dataTable);
       }, function(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);
+      });
+    };
+
+    $scope.stringCellDblClicked = function(rowEntity, col) {
+      var columnName = col.name;
+      var oldValue = rowEntity[columnName];
+
+      //  open modal dialog
+      var modalInstance = $uibModal.open({
+        templateUrl: '/ui/views/testcases/datatable-string-cell-textarea-editor-modal.html',
+        controller: 'DataTableStringCellTextareaEditorModalController',
+        size: 'lg',
+        windowClass: 'datatable-string-cell-textarea-editor-modal',
+        resolve: {
+          rowEntity: function() {
+            return rowEntity;
+          },
+          columnName: function() {
+            return columnName;
+          }
+        }
+      });
+
+      //  handle result from modal dialog
+      modalInstance.result.then(function closed() {}, function dismissed() {
+        if (rowEntity[columnName] !== oldValue) {
+          var rowIndex = getRowIndexByRowEntity(rowEntity);
+          stringCellUpdate(col.colDef.dataTableColumnId, rowIndex, rowEntity[columnName]); //  save immediately (no timeout)
+        }
       });
     };
   }

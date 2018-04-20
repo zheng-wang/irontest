@@ -185,6 +185,12 @@
            ng-blur="grid.appScope.afterColumnNameEdit(col)">
   </div>
 </script>
-<script type="text/ng-template" id="dataTableGridEndpointTypedCellTemplate.html">
+<script type="text/ng-template" id="dataTableGridStringEditableCellTemplate.html">
+  <div class="ui-grid-cell-contents" ng-dblclick="grid.appScope.stringCellDblClicked(row.entity, col)">
+    <textarea class="form-control udp-grid-string-editable-cell-textarea" ui-grid-editor ng-model="MODEL_COL_FIELD"
+              spellcheck="false" ng-readonly="grid.appScope.appStatus.isForbidden()"></textarea>
+  </div>
+</script>
+<script type="text/ng-template" id="dataTableGridEndpointCellTemplate.html">
   <div class="ui-grid-cell-contents" ng-if="COL_FIELD">{{COL_FIELD.environment.name}}#{{COL_FIELD.name}}</div>
 </script>

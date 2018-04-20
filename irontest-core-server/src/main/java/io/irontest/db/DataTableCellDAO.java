@@ -46,4 +46,21 @@ public abstract class DataTableCellDAO {
                 "case when col.name = 'Caption' then 'Row ' || to_char(subquery1.new_row_sequence) else '' end as value " +
             "from datatable_column col, subquery1 where col.testcase_id = :testcaseId;")
     public abstract void addRow(@Bind("testcaseId") long testcaseId);
+
+    /**
+     * @param columnId
+     * @param rowIndex consecutive, starting from 0.
+     * @param value
+     */
+    @SqlUpdate("update datatable_cell set value = :value, updated = CURRENT_TIMESTAMP " +
+            "where id = (" +
+                "select id from (" +
+                    "select id, (rownum() - 1) as row_index from (" +
+                        "select id, row_sequence from datatable_cell " +
+                        "where column_id = :columnId order by row_sequence asc" +
+                    ")" +
+                ") where row_index = :rowIndex" +
+            ")")
+    public abstract void updateValue(@Bind("columnId") long columnId, @Bind("rowIndex") short rowIndex,
+                                     @Bind("value") String value);
 }

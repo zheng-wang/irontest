@@ -139,7 +139,7 @@
 .xpath-assertion-namespace-prefixes-grid .ui-grid-menu-button {
   height: 20px;
 }
-.udp-grid-value-editable-cell-textarea {
+.udp-grid-value-editable-cell-textarea, .udp-grid-string-editable-cell-textarea {
   overflow: hidden;
   resize: none;
   height: 23px !important;
@@ -226,10 +226,10 @@
 .select-managed-endpoint-modal {
   top: 15%;
 }
-.udp-value-textarea-editor-modal {
+.udp-value-textarea-editor-modal, datatable-string-cell-textarea-editor-modal {
   top: 8%;
 }
-.udp-value-textarea-editor-modal .modal-dialog {
+.udp-value-textarea-editor-modal .modal-dialog, datatable-string-cell-textarea-editor-modal .modal-dialog {
   width: 60%;
 }
 

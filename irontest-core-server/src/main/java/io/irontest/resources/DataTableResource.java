@@ -5,6 +5,7 @@ import io.irontest.db.DataTableCellDAO;
 import io.irontest.db.DataTableColumnDAO;
 import io.irontest.db.DataTableDAO;
 import io.irontest.models.DataTable;
+import io.irontest.models.DataTableCell;
 
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.*;
@@ -53,5 +54,12 @@ public class DataTableResource {
     public DataTable addRow(@PathParam("testcaseId") long testcaseId) {
         dataTableCellDAO.addRow(testcaseId);
         return dataTableDAO.getTestcaseDataTable(testcaseId, false);
+    }
+
+    @POST @PermitAll
+    @Path("testcases/{testcaseId}/datatable/updateStringCellValue")
+    public void updateStringCellValue(DataTableCell dataTableCell, @QueryParam("columnId") long columnId,
+                                      @QueryParam("rowIndex") short rowIndex) {
+        dataTableCellDAO.updateValue(columnId, rowIndex, dataTableCell.getValue());
     }
 }
