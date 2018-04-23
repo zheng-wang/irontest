@@ -63,4 +63,21 @@ public abstract class DataTableCellDAO {
             ")")
     public abstract void updateValue(@Bind("columnId") long columnId, @Bind("rowIndex") short rowIndex,
                                      @Bind("value") String value);
+
+    /**
+     * @param columnId
+     * @param rowIndex consecutive, starting from 0.
+     * @param endpointId
+     */
+    @SqlUpdate("update datatable_cell set endpoint_id = :endpointId, updated = CURRENT_TIMESTAMP " +
+            "where id = (" +
+                "select id from (" +
+                    "select id, (rownum() - 1) as row_index from (" +
+                        "select id, row_sequence from datatable_cell " +
+                        "where column_id = :columnId order by row_sequence asc" +
+                    ")" +
+                ") where row_index = :rowIndex" +
+            ")")
+    public abstract void updateEndpointId(@Bind("columnId") long columnId, @Bind("rowIndex") short rowIndex,
+                                          @Bind("endpointId") long endpointId);
 }

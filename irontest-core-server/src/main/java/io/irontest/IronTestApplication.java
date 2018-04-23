@@ -168,6 +168,7 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         udpDAO.createTableIfNotExists();
         dataTableColumnDAO.createSequenceIfNotExists();
         dataTableColumnDAO.createTableIfNotExists();
+        dataTableColumnDAO.insertCaptionColumnForTestcasesWithoutDataTableColumn();
         dataTableCellDAO.createSequenceIfNotExists();
         dataTableCellDAO.createTableIfNotExists();
         testcaseRunDAO.createSequenceIfNotExists();

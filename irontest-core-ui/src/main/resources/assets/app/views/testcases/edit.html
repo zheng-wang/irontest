@@ -180,8 +180,8 @@
 <script type="text/ng-template" id="dataTableGridEditableHeaderCellTemplate.html">
   <div class="ui-grid-cell-contents">
     <input type="text" class="form-control" ng-model="col.name" irt-select="true"
-           ng-keypress="$event.keyCode === 13 ? grid.appScope.afterColumnNameEdit(col) : angular.noop()"
-           ng-keydown="$event.keyCode === 27 ? grid.appScope.afterColumnNameEdit(col) : angular.noop()"
+           ng-keypress="grid.appScope.afterColumnNameEdit(col, $event)"
+           ng-keydown="grid.appScope.afterColumnNameEdit(col, $event)"
            ng-blur="grid.appScope.afterColumnNameEdit(col)">
   </div>
 </script>
@@ -192,5 +192,8 @@
   </div>
 </script>
 <script type="text/ng-template" id="dataTableGridEndpointCellTemplate.html">
-  <div class="ui-grid-cell-contents" ng-if="COL_FIELD">{{COL_FIELD.environment.name}}#{{COL_FIELD.name}}</div>
+  <div class="ui-grid-cell-contents" ng-click="grid.appScope.appStatus.isForbidden() ?
+      angular.noop() : grid.appScope.selectManagedEndpoint(row.entity, col)">
+    {{ COL_FIELD ? COL_FIELD.environment.name + '#' + COL_FIELD.name : ''}}
+  </div>
 </script>

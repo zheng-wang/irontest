@@ -35,9 +35,10 @@ angular.module('irontest').controller('DataTableController', ['$scope', 'IronTes
       }
     };
 
-    var getDefaultColumnDef = function(dataTableColumnId, columnName) {
+    var getDefaultColumnDef = function(dataTableColumnId, columnName, dataTableColumnType) {
       return {
         dataTableColumnId: dataTableColumnId,    //  not standard ui grid property for column def
+        dataTableColumnType: dataTableColumnType,    //  not standard ui grid property for column def
         name: columnName,
         displayName: columnName,  //  need this line to avoid underscore in column name is not displayed in column header
         // determine column min width according to the length of column name
@@ -51,7 +52,7 @@ angular.module('irontest').controller('DataTableController', ['$scope', 'IronTes
       $scope.dataTableGridOptions.columnDefs = [];
       for (var i = 0; i < dataTable.columns.length; i++) {
         var dataTableColumn = dataTable.columns[i];
-        var uiGridColumn = getDefaultColumnDef(dataTableColumn.id, dataTableColumn.name);
+        var uiGridColumn = getDefaultColumnDef(dataTableColumn.id, dataTableColumn.name, dataTableColumn.type);
         if (lastColumnHeaderInEditMode === true && i === dataTable.columns.length - 1) {
           uiGridColumn.headerCellTemplate = 'dataTableGridEditableHeaderCellTemplate.html';
         }
@@ -95,7 +96,15 @@ angular.module('irontest').controller('DataTableController', ['$scope', 'IronTes
       });
     };
 
-    $scope.afterColumnNameEdit = function(col) {
+    $scope.afterColumnNameEdit = function(col, event) {
+      if (event) {
+        if (event.keyCode === 13 || event.keyCode === 27) {
+          event.preventDefault();
+        } else {                     // keys typed other than Enter and ESC do not trigger anything
+          return;
+        }
+      }
+
       var colDef = col.colDef;
       delete colDef.headerCellTemplate;
       var oldName = colDef.name;
@@ -104,7 +113,7 @@ angular.module('irontest').controller('DataTableController', ['$scope', 'IronTes
       if (newName !== oldName) {
         DataTable.renameColumn({ testcaseId: $stateParams.testcaseId, columnId: colDef.dataTableColumnId, newName: newName }, {},
         function() {
-          var newColDef = getDefaultColumnDef(colDef.dataTableColumnId, newName);
+          var newColDef = getDefaultColumnDef(colDef.dataTableColumnId, newName, colDef.dataTableColumnType);
           Object.assign(colDef, newColDef);
           refreshDataTableGrid();
         }, function(response) {
@@ -149,6 +158,48 @@ angular.module('irontest').controller('DataTableController', ['$scope', 'IronTes
           var rowIndex = getRowIndexByRowEntity(rowEntity);
           stringCellUpdate(col.colDef.dataTableColumnId, rowIndex, rowEntity[columnName]); //  save immediately (no timeout)
         }
+      });
+    };
+
+    $scope.selectManagedEndpoint = function(rowEntity, col) {
+      var colDef = col.colDef;
+      var endpointType = colDef.dataTableColumnType.replace('Endpoint', '');
+
+      //  open modal dialog
+      var modalInstance = $uibModal.open({
+        templateUrl: '/ui/views/endpoints/list-modal.html',
+        controller: 'SelectManagedEndpointModalController',
+        size: 'lg',
+        windowClass: 'select-managed-endpoint-modal',
+        resolve: {
+          endpointType: function() {
+            return endpointType;
+          },
+          titleSuffix: function() {
+            return 'for [' + rowEntity.Caption + '] > ' + col.name;
+          }
+        }
+      });
+
+      //  handle result from modal dialog
+      modalInstance.result.then(function closed(selectedEndpoint) {
+        console.log(selectedEndpoint);
+
+        var rowIndex = getRowIndexByRowEntity(rowEntity);
+        DataTable.updateEndpointCellValue({
+          testcaseId: $stateParams.testcaseId,
+          columnId: colDef.dataTableColumnId,
+          rowIndex: rowIndex,
+          newEndpointId: selectedEndpoint.id
+        }, {
+        }, function() {
+          rowEntity[col.name] = selectedEndpoint;
+          $scope.$emit('successfullySaved');
+        }, function(response) {
+          IronTestUtils.openErrorHTTPResponseModal(response);
+        });
+      }, function dismissed() {
+        //  Modal dismissed. Do nothing.
       });
     };
   }

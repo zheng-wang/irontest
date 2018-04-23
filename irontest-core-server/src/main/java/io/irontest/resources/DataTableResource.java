@@ -62,4 +62,12 @@ public class DataTableResource {
                                       @QueryParam("rowIndex") short rowIndex) {
         dataTableCellDAO.updateValue(columnId, rowIndex, dataTableCell.getValue());
     }
+
+    @POST @PermitAll
+    @Path("testcases/{testcaseId}/datatable/updateEndpointCellValue")
+    public void updateEndpointCellValue(@QueryParam("columnId") long columnId,
+                                        @QueryParam("rowIndex") short rowIndex,
+                                        @QueryParam("newEndpointId") long newEndpointId) {
+        dataTableCellDAO.updateEndpointId(columnId, rowIndex, newEndpointId);
+    }
 }

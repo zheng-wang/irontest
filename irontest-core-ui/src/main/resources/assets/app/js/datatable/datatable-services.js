@@ -27,6 +27,12 @@ angular.module('irontest').factory('DataTable', ['$resource',
         params: {
           verb: 'updateStringCellValue'
         }
+      },
+      updateEndpointCellValue: {
+        method: 'POST',
+        params: {
+          verb: 'updateEndpointCellValue'
+        }
       }
     });
   }

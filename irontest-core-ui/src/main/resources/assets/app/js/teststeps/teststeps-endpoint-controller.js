@@ -4,39 +4,34 @@
 //    The $scope here prototypically inherits from the $scope of TeststepsController.
 //    ng-include also creates a scope.
 angular.module('irontest').controller('TeststepsEndpointController', ['$scope',
-    '$uibModal', 'IronTestUtils', 'Environments', 'ManagedEndpoints', 'Teststeps',
-  function($scope, $uibModal, IronTestUtils, Environments, ManagedEndpoints, Teststeps) {
+    '$uibModal', 'IronTestUtils', 'Environments', 'Teststeps',
+  function($scope, $uibModal, IronTestUtils, Environments, Teststeps) {
     $scope.selectManagedEndpoint = function() {
-      //  find managed endpoints by type
       var endpointType = $scope.teststep.endpoint.type;
-      ManagedEndpoints.query({ type: endpointType },
-        function successCallback(response) {
-          //  open modal dialog
-          var modalInstance = $uibModal.open({
-            templateUrl: '/ui/views/endpoints/list-modal.html',
-            controller: 'SelectManagedEndpointModalController',
-            size: 'lg',
-            windowClass: 'select-managed-endpoint-modal',
-            resolve: {
-              endpointType: function() {
-                return endpointType;
-              },
-              endpoints: function() {
-                return response;
-              }
-            }
-          });
 
-          //  handle result from modal dialog
-          modalInstance.result.then(function closed(selectedEndpoint) {
-            $scope.teststep.endpoint = selectedEndpoint;
-            $scope.update(true);  //  save immediately (no timeout)
-          }, function dismissed() {
-            //  Modal dismissed. Do nothing.
-          });
-        }, function errorCallback(response) {
-          IronTestUtils.openErrorHTTPResponseModal(response);
-        });
+      //  open modal dialog
+      var modalInstance = $uibModal.open({
+        templateUrl: '/ui/views/endpoints/list-modal.html',
+        controller: 'SelectManagedEndpointModalController',
+        size: 'lg',
+        windowClass: 'select-managed-endpoint-modal',
+        resolve: {
+          endpointType: function() {
+            return endpointType;
+          },
+          titleSuffix: function() {
+            return '';
+          }
+        }
+      });
+
+      //  handle result from modal dialog
+      modalInstance.result.then(function closed(selectedEndpoint) {
+        $scope.teststep.endpoint = selectedEndpoint;
+        $scope.update(true);  //  save immediately (no timeout)
+      }, function dismissed() {
+        //  Modal dismissed. Do nothing.
+      });
     };
 
     $scope.enterShareEndpointMode = function() {

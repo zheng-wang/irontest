@@ -104,6 +104,9 @@
 .testcase-udp-grid, .testcase-datatable-grid, .environment-grid, .user-grid, .endpoint-grid {
   height: 500px;
 }
+.select-managed-endpoint-modal-grid {
+  height: 600px;
+}
 .assertions-grid {
   height: 200px;
   margin-left: 15px;
@@ -224,7 +227,7 @@
   top: 20%;
 }
 .select-managed-endpoint-modal {
-  top: 15%;
+  top: 10%;
 }
 .udp-value-textarea-editor-modal, datatable-string-cell-textarea-editor-modal {
   top: 8%;

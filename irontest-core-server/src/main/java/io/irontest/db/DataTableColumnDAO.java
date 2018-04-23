@@ -28,6 +28,11 @@ public abstract class DataTableColumnDAO {
                 CUSTOM_PROPERTY_NAME_CHECK + "))")
     public abstract void createTableIfNotExists();
 
+    @SqlUpdate("insert into datatable_column (name, type, sequence, testcase_id) " +
+            "select 'Caption', 'String', 1, id from testcase t " +
+            "where (select count(*) from datatable_column where testcase_id = t.id) = 0")
+    public abstract void insertCaptionColumnForTestcasesWithoutDataTableColumn();
+
     @CreateSqlObject
     protected abstract DataTableCellDAO dataTableCellDAO();
 
