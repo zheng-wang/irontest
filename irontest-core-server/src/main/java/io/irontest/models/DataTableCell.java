@@ -5,8 +5,8 @@ package io.irontest.models;
  */
 public class DataTableCell {
     private short rowSequence;
-    private String value;
-    private long endpointId;
+    private String value = "";
+    private Long endpointId;
 
     public short getRowSequence() {
         return rowSequence;
@@ -24,11 +24,11 @@ public class DataTableCell {
         this.value = value;
     }
 
-    public long getEndpointId() {
+    public Long getEndpointId() {
         return endpointId;
     }
 
-    public void setEndpointId(long endpointId) {
+    public void setEndpointId(Long endpointId) {
         this.endpointId = endpointId;
     }
 }

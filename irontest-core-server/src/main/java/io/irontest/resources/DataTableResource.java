@@ -57,17 +57,9 @@ public class DataTableResource {
     }
 
     @POST @PermitAll
-    @Path("testcases/{testcaseId}/datatable/updateStringCellValue")
-    public void updateStringCellValue(DataTableCell dataTableCell, @QueryParam("columnId") long columnId,
+    @Path("testcases/{testcaseId}/datatable/updateCell")
+    public void updateCell(DataTableCell dataTableCell, @QueryParam("columnId") long columnId,
                                       @QueryParam("rowIndex") short rowIndex) {
-        dataTableCellDAO.updateValue(columnId, rowIndex, dataTableCell.getValue());
-    }
-
-    @POST @PermitAll
-    @Path("testcases/{testcaseId}/datatable/updateEndpointCellValue")
-    public void updateEndpointCellValue(@QueryParam("columnId") long columnId,
-                                        @QueryParam("rowIndex") short rowIndex,
-                                        @QueryParam("newEndpointId") long newEndpointId) {
-        dataTableCellDAO.updateEndpointId(columnId, rowIndex, newEndpointId);
+        dataTableCellDAO.update(columnId, rowIndex, dataTableCell);
     }
 }

@@ -2,6 +2,7 @@ package io.irontest.db;
 
 import io.irontest.models.DataTableCell;
 import org.skife.jdbi.v2.sqlobject.Bind;
+import org.skife.jdbi.v2.sqlobject.BindBean;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
@@ -50,9 +51,9 @@ public abstract class DataTableCellDAO {
     /**
      * @param columnId
      * @param rowIndex consecutive, starting from 0.
-     * @param value
+     * @param cell
      */
-    @SqlUpdate("update datatable_cell set value = :value, updated = CURRENT_TIMESTAMP " +
+    @SqlUpdate("update datatable_cell set value = :cell.value, endpoint_id = :cell.endpointId, updated = CURRENT_TIMESTAMP " +
             "where id = (" +
                 "select id from (" +
                     "select id, (rownum() - 1) as row_index from (" +
@@ -61,23 +62,6 @@ public abstract class DataTableCellDAO {
                     ")" +
                 ") where row_index = :rowIndex" +
             ")")
-    public abstract void updateValue(@Bind("columnId") long columnId, @Bind("rowIndex") short rowIndex,
-                                     @Bind("value") String value);
-
-    /**
-     * @param columnId
-     * @param rowIndex consecutive, starting from 0.
-     * @param endpointId
-     */
-    @SqlUpdate("update datatable_cell set endpoint_id = :endpointId, updated = CURRENT_TIMESTAMP " +
-            "where id = (" +
-                "select id from (" +
-                    "select id, (rownum() - 1) as row_index from (" +
-                        "select id, row_sequence from datatable_cell " +
-                        "where column_id = :columnId order by row_sequence asc" +
-                    ")" +
-                ") where row_index = :rowIndex" +
-            ")")
-    public abstract void updateEndpointId(@Bind("columnId") long columnId, @Bind("rowIndex") short rowIndex,
-                                          @Bind("endpointId") long endpointId);
+    public abstract void update(@Bind("columnId") long columnId, @Bind("rowIndex") short rowIndex,
+                                @BindBean("cell") DataTableCell cell);
 }
