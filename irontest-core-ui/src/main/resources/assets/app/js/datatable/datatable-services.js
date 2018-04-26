@@ -10,6 +10,12 @@ angular.module('irontest').factory('DataTable', ['$resource',
           verb: 'addColumn'
         }
       },
+      deleteColumn: {
+        method: 'POST',
+        params: {
+          verb: 'deleteColumn'
+        }
+      },
       renameColumn: {
         method: 'POST',
         params: {
@@ -20,6 +26,12 @@ angular.module('irontest').factory('DataTable', ['$resource',
         method: 'POST',
         params: {
           verb: 'addRow'
+        }
+      },
+      deleteRow: {
+        method: 'POST',
+        params: {
+          verb: 'deleteRow'
         }
       },
       updateCell: {

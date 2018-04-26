@@ -7,12 +7,11 @@ angular.module('irontest').controller('DataTableController', ['$scope', 'IronTes
   function($scope, IronTestUtils, $stateParams, DataTable, $timeout, $uibModal, $rootScope) {
     var DATA_TABLE_GRID_EDITABLE_HEADER_CELL_TEMPLATE = 'dataTableGridEditableHeaderCellTemplate.html';
 
-    var stringCellUpdate = function(dataTableColumnId, rowIndex, newValue) {
+    var stringCellUpdate = function(dataTableCellId, newValue) {
       DataTable.updateCell({
-        testcaseId: $stateParams.testcaseId,
-        columnId: dataTableColumnId,
-        rowIndex: rowIndex
+        testcaseId: $stateParams.testcaseId
       }, {
+        id: dataTableCellId,
         value: newValue
       }, function() {
         $scope.$emit('successfullySaved');
@@ -21,17 +20,12 @@ angular.module('irontest').controller('DataTableController', ['$scope', 'IronTes
       });
     };
 
-    var getRowIndexByRowEntity = function(rowEntity) {
-      return $scope.dataTableGridOptions.data.map(function(e) { return e.$$hashKey; }).indexOf(rowEntity.$$hashKey);
-    };
-
     $scope.dataTableGridOptions = {
       enableSorting: false,
       onRegisterApi: function(gridApi) {
         gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue){
           if (newValue !== oldValue) {
-            var rowIndex = getRowIndexByRowEntity(rowEntity);
-            stringCellUpdate(colDef.dataTableColumnId, rowIndex, newValue);
+            stringCellUpdate(rowEntity[colDef.name].id, newValue);
           }
         });
       }
@@ -45,6 +39,15 @@ angular.module('irontest').controller('DataTableController', ['$scope', 'IronTes
       }, 0);
     };
 
+    var deleteColumn = function(columnId) {
+      DataTable.deleteColumn({ testcaseId: $stateParams.testcaseId, columnId: columnId }, {}, function(dataTable) {
+        $scope.$emit('successfullySaved');
+        updateDataTableGrid(dataTable);
+      }, function(response) {
+        IronTestUtils.openErrorHTTPResponseModal(response);
+      });
+    };
+
     var getDefaultColumnDef = function(dataTableColumnId, columnName, dataTableColumnType) {
       return {
         dataTableColumnId: dataTableColumnId,    //  not standard ui grid property for column def
@@ -55,16 +58,29 @@ angular.module('irontest').controller('DataTableController', ['$scope', 'IronTes
         // assuming each character deserves 8 pixels
         // 30 pixels for displaying grid header menu arrow
         minWidth: columnName.length * 8 + 30,
+        enableColumnMenu: columnName === 'Caption' ? false : true,
+        enableHiding: false,
         menuItems: [
           {
             title: 'Rename Column',
+            icon: 'glyphicon glyphicon-edit',
             action: function() {
               this.context.col.colDef.headerCellTemplate = DATA_TABLE_GRID_EDITABLE_HEADER_CELL_TEMPLATE;
 
               refreshDataTableGrid();
             },
             shown: function() {
-              return !$rootScope.appStatus.isForbidden() && this.context.col.colDef.name !== 'Caption';
+              return !$rootScope.appStatus.isForbidden();
+            }
+          },
+          {
+            title: 'Delete Column',
+            icon: 'glyphicon glyphicon-trash',
+            action: function() {
+              deleteColumn(this.context.col.colDef.dataTableColumnId);
+            },
+            shown: function() {
+              return !$rootScope.appStatus.isForbidden();
             }
           }
         ]
@@ -75,13 +91,16 @@ angular.module('irontest').controller('DataTableController', ['$scope', 'IronTes
       $scope.dataTableGridOptions.columnDefs = [];
       for (var i = 0; i < dataTable.columns.length; i++) {
         var dataTableColumn = dataTable.columns[i];
-        var uiGridColumn = getDefaultColumnDef(dataTableColumn.id, dataTableColumn.name, dataTableColumn.type);
+        var columnName = dataTableColumn.name;
+        var uiGridColumn = getDefaultColumnDef(dataTableColumn.id, columnName, dataTableColumn.type);
         if (lastColumnHeaderInEditMode === true && i === dataTable.columns.length - 1) {
           uiGridColumn.headerCellTemplate = DATA_TABLE_GRID_EDITABLE_HEADER_CELL_TEMPLATE;
         }
         if (dataTableColumn.type === 'String') {    //  it is a string column
           uiGridColumn.enableCellEdit = true;
           uiGridColumn.enableCellEditOnFocus = true;
+          uiGridColumn.editModelField = columnName + '.value';
+          uiGridColumn.cellTemplate = 'dataTableGridStringCellTemplate.html';
           uiGridColumn.editableCellTemplate = 'dataTableGridStringEditableCellTemplate.html';
         } else {                                    //  it is an endpoint column
           uiGridColumn.enableCellEdit = false;
@@ -89,6 +108,12 @@ angular.module('irontest').controller('DataTableController', ['$scope', 'IronTes
         }
         $scope.dataTableGridOptions.columnDefs.push(uiGridColumn);
       }
+      var deletionColumn = {
+         name: 'delete.1',  //  give this column a name that is not able to be created by user
+         displayName: 'Delete', width: 70, minWidth: 60, enableCellEdit: false, enableColumnMenu: false,
+         cellTemplate: 'dataTableGridDeleteCellTemplate.html'
+      };
+      $scope.dataTableGridOptions.columnDefs.push(deletionColumn);
       $scope.dataTableGridOptions.data = dataTable.rows;
     };
 
@@ -129,19 +154,9 @@ angular.module('irontest').controller('DataTableController', ['$scope', 'IronTes
         DataTable.renameColumn({
           testcaseId: $stateParams.testcaseId, columnId: colDef.dataTableColumnId, newName: newName
         }, {
-        }, function() {
+        }, function(dataTable) {
           $scope.$emit('successfullySaved');
-
-          //  update colDef
-          var newColDef = getDefaultColumnDef(colDef.dataTableColumnId, newName, colDef.dataTableColumnType);
-          Object.assign(colDef, newColDef);
-
-          //  update column data (this is not needed for renaming newly added column, but is needed for renaming an existing column, not sure why)
-          $scope.dataTableGridOptions.data.forEach(function(element) {
-            element[newName] = element[oldName];
-            delete element[oldName];
-          });
-
+          updateDataTableGrid(dataTable);
           refreshDataTableGrid();
         }, function(response) {
           IronTestUtils.openErrorHTTPResponseModal(response);
@@ -153,6 +168,17 @@ angular.module('irontest').controller('DataTableController', ['$scope', 'IronTes
 
     $scope.addRow = function() {
       DataTable.addRow({ testcaseId: $stateParams.testcaseId }, {}, function(dataTable) {
+        $scope.$emit('successfullySaved');
+        updateDataTableGrid(dataTable);
+      }, function(response) {
+        IronTestUtils.openErrorHTTPResponseModal(response);
+      });
+    };
+
+    $scope.deleteRow = function(rowEntity) {
+      DataTable.deleteRow({ testcaseId: $stateParams.testcaseId, rowSequence: rowEntity.Caption.rowSequence }, {
+      }, function(dataTable) {
+        $scope.$emit('successfullySaved');
         updateDataTableGrid(dataTable);
       }, function(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);
@@ -161,7 +187,7 @@ angular.module('irontest').controller('DataTableController', ['$scope', 'IronTes
 
     $scope.stringCellDblClicked = function(rowEntity, col) {
       var columnName = col.name;
-      var oldValue = rowEntity[columnName];
+      var oldValue = rowEntity[columnName].value;
 
       //  open modal dialog
       var modalInstance = $uibModal.open({
@@ -181,16 +207,16 @@ angular.module('irontest').controller('DataTableController', ['$scope', 'IronTes
 
       //  handle result from modal dialog
       modalInstance.result.then(function closed() {}, function dismissed() {
-        if (rowEntity[columnName] !== oldValue) {
-          var rowIndex = getRowIndexByRowEntity(rowEntity);
-          stringCellUpdate(col.colDef.dataTableColumnId, rowIndex, rowEntity[columnName]); //  save immediately (no timeout)
+        var newValue = rowEntity[columnName].value;
+        if (newValue !== oldValue) {
+          stringCellUpdate(rowEntity[columnName].id, newValue); //  save immediately (no timeout)
         }
       });
     };
 
     $scope.selectManagedEndpoint = function(rowEntity, col) {
-      var colDef = col.colDef;
-      var endpointType = colDef.dataTableColumnType.replace('Endpoint', '');
+      var columnName = col.name;
+      var endpointType = col.colDef.dataTableColumnType.replace('Endpoint', '');
 
       //  open modal dialog
       var modalInstance = $uibModal.open({
@@ -203,22 +229,20 @@ angular.module('irontest').controller('DataTableController', ['$scope', 'IronTes
             return endpointType;
           },
           titleSuffix: function() {
-            return 'for [' + rowEntity.Caption + '] > ' + col.name;
+            return 'for [' + rowEntity.Caption.value + '] > ' + columnName;
           }
         }
       });
 
       //  handle result from modal dialog
       modalInstance.result.then(function closed(selectedEndpoint) {
-        var rowIndex = getRowIndexByRowEntity(rowEntity);
         DataTable.updateCell({
-          testcaseId: $stateParams.testcaseId,
-          columnId: colDef.dataTableColumnId,
-          rowIndex: rowIndex
+          testcaseId: $stateParams.testcaseId
         }, {
-          endpointId: selectedEndpoint.id
+          id: rowEntity[columnName].id,
+          endpoint: { id: selectedEndpoint.id }
         }, function() {
-          rowEntity[col.name] = selectedEndpoint;
+          rowEntity[columnName].endpoint = selectedEndpoint;
           $scope.$emit('successfullySaved');
         }, function(response) {
           IronTestUtils.openErrorHTTPResponseModal(response);

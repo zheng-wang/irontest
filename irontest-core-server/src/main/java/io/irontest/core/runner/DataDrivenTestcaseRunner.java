@@ -45,7 +45,7 @@ public class DataDrivenTestcaseRunner extends TestcaseRunner {
         startTestcaseRun(testcaseRun);
 
         for (int dataTableRowIndex = 0; dataTableRowIndex < dataTable.getRows().size(); dataTableRowIndex++) {
-            LinkedHashMap<String, Object> dataTableRow = dataTable.getRows().get(dataTableRowIndex);
+            LinkedHashMap<String, DataTableCell> dataTableRow = dataTable.getRows().get(dataTableRowIndex);
             TestcaseIndividualRun individualRun = new TestcaseIndividualRun();
             testcaseRun.getIndividualRuns().add(individualRun);
 
@@ -63,7 +63,7 @@ public class DataDrivenTestcaseRunner extends TestcaseRunner {
             }
             getReferenceableStringProperties().put(IMPLICIT_PROPERTY_NAME_TEST_CASE_INDIVIDUAL_START_TIME,
                     IMPLICIT_PROPERTY_DATE_TIME_FORMAT.format(individualRun.getStartTime()));
-            individualRun.setCaption((String) dataTableRow.get(DataTableColumn.COLUMN_NAME_CAPTION));
+            individualRun.setCaption(dataTableRow.get(DataTableColumn.COLUMN_NAME_CAPTION).getValue());
             getReferenceableEndpointProperties().putAll(dataTable.getEndpointPropertiesInRow(dataTableRowIndex));
             getReferenceableStringProperties().putAll(dataTable.getStringPropertiesInRow(dataTableRowIndex));
 

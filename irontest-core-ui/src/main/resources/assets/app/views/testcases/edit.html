@@ -185,6 +185,9 @@
            ng-blur="grid.appScope.afterColumnNameEdit(col)">
   </div>
 </script>
+<script type="text/ng-template" id="dataTableGridStringCellTemplate.html">
+  <div class="ui-grid-cell-contents">{{ COL_FIELD.value }}</div>
+</script>
 <script type="text/ng-template" id="dataTableGridStringEditableCellTemplate.html">
   <div class="ui-grid-cell-contents" ng-dblclick="grid.appScope.stringCellDblClicked(row.entity, col)">
     <textarea class="form-control udp-grid-string-editable-cell-textarea" ui-grid-editor ng-model="MODEL_COL_FIELD"
@@ -194,6 +197,14 @@
 <script type="text/ng-template" id="dataTableGridEndpointCellTemplate.html">
   <div class="ui-grid-cell-contents" ng-click="grid.appScope.appStatus.isForbidden() ?
       angular.noop() : grid.appScope.selectManagedEndpoint(row.entity, col)">
-    {{ COL_FIELD ? COL_FIELD.environment.name + '#' + COL_FIELD.name : ''}}
+    {{ COL_FIELD.endpoint ? COL_FIELD.endpoint.environment.name + '#' + COL_FIELD.endpoint.name : ''}}
+  </div>
+</script>
+<script type="text/ng-template" id="dataTableGridDeleteCellTemplate.html">
+  <div class="ui-grid-cell-contents">
+    <a ng-click="grid.appScope.appStatus.isForbidden() ? angular.noop() : grid.appScope.deleteRow(row.entity)"
+       ng-class="{'no-underline' : grid.appScope.appStatus.isForbidden()}" href="">
+      <i class="glyphicon glyphicon-trash center-block text-center"></i>
+    </a>
   </div>
 </script>

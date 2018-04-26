@@ -7,9 +7,7 @@ import io.irontest.models.DataTableColumnType;
 import org.skife.jdbi.v2.sqlobject.CreateSqlObject;
 import org.skife.jdbi.v2.sqlobject.Transaction;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Zheng on 17/04/2018.
@@ -47,21 +45,23 @@ public abstract class DataTableDAO {
         List<DataTableColumn> columns = dataTableColumnDAO().findByTestcaseId(testcaseId);
 
         //  populate the data table rows Java model column by column
-        List<LinkedHashMap<String, Object>> rows = new ArrayList<>();
+        List<LinkedHashMap<String, DataTableCell>> rows = new ArrayList<>();
+        Map<Short, LinkedHashMap<String, DataTableCell>> rowSequenceMap = new HashMap<>();  //  map rowSequence to row object (because rowSequence is not consecutive)
         for (DataTableColumn column: columns) {
-            List<DataTableCell> columnCells = dataTableCellDAO().findByColumnId(column.getId());
-            for (DataTableCell columnCell: columnCells) {
-                short rowSequence = columnCell.getRowSequence();
-                if (rows.size() < rowSequence) {
-                    rows.add(new LinkedHashMap<String, Object>());
+            List<DataTableCell> cellsInColumn = dataTableCellDAO().findByColumnId(column.getId());
+            for (DataTableCell cellInColumn: cellsInColumn) {
+                short rowSequence = cellInColumn.getRowSequence();
+
+                if (column.getType() != DataTableColumnType.STRING && cellInColumn.getEndpoint() != null) {
+                    cellInColumn.setEndpoint(endpointDAO().findById(cellInColumn.getEndpoint().getId()));
                 }
-                Object cellObject;
-                if (column.getType() == DataTableColumnType.STRING) {
-                    cellObject = columnCell.getValue();
-                } else {
-                    cellObject = endpointDAO().findById(columnCell.getEndpointId());
+
+                if (!rowSequenceMap.containsKey(rowSequence)) {
+                    LinkedHashMap<String, DataTableCell> row = new LinkedHashMap<>();
+                    rowSequenceMap.put(rowSequence, row);
+                    rows.add(row);
                 }
-                rows.get(rowSequence - 1).put(column.getName(), cellObject);
+                rowSequenceMap.get(rowSequence).put(column.getName(), cellInColumn);
 
                 if (fetchFirstRowOnly && rows.size() == 1) {
                     break;

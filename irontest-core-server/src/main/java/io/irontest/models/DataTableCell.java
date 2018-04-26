@@ -1,12 +1,29 @@
 package io.irontest.models;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import io.irontest.models.endpoint.Endpoint;
+import io.irontest.resources.ResourceJsonViews;
+
 /**
  * Created by Zheng on 16/03/2018.
  */
 public class DataTableCell {
+    @JsonView(ResourceJsonViews.DataTableUIGrid.class)
+    private long id;
+    @JsonView(ResourceJsonViews.DataTableUIGrid.class)
     private short rowSequence;
+    @JsonView(ResourceJsonViews.DataTableUIGrid.class)
     private String value = "";
-    private Long endpointId;
+    @JsonView(ResourceJsonViews.DataTableUIGrid.class)
+    private Endpoint endpoint;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public short getRowSequence() {
         return rowSequence;
@@ -24,11 +41,11 @@ public class DataTableCell {
         this.value = value;
     }
 
-    public Long getEndpointId() {
-        return endpointId;
+    public Endpoint getEndpoint() {
+        return endpoint;
     }
 
-    public void setEndpointId(Long endpointId) {
-        this.endpointId = endpointId;
+    public void setEndpoint(Endpoint endpoint) {
+        this.endpoint = endpoint;
     }
 }

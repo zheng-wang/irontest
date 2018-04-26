@@ -22,8 +22,9 @@ public abstract class DataTableCellDAO {
             "row_sequence SMALLINT NOT NULL, value CLOB NOT NULL DEFAULT '', endpoint_id BIGINT, " +
             "created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
-            "FOREIGN KEY (column_id) REFERENCES datatable_column(id), " +
+            "FOREIGN KEY (column_id) REFERENCES datatable_column(id) ON DELETE CASCADE, " +
             "FOREIGN KEY (endpoint_id) REFERENCES endpoint(id), " +
+            "CONSTRAINT DATATABLE_CELL_UNIQUE_ROW_SEQUENCE_CONSTRAINT UNIQUE(column_id, row_sequence), " +
             "CONSTRAINT DATATABLE_CELL_EXCLUSIVE_TYPE_CONSTRAINT CHECK(value = '' OR endpoint_id is null))")
     public abstract void createTableIfNotExists();
 
@@ -48,20 +49,11 @@ public abstract class DataTableCellDAO {
             "from datatable_column col, subquery1 where col.testcase_id = :testcaseId;")
     public abstract void addRow(@Bind("testcaseId") long testcaseId);
 
-    /**
-     * @param columnId
-     * @param rowIndex consecutive, starting from 0.
-     * @param cell
-     */
-    @SqlUpdate("update datatable_cell set value = :cell.value, endpoint_id = :cell.endpointId, updated = CURRENT_TIMESTAMP " +
-            "where id = (" +
-                "select id from (" +
-                    "select id, (rownum() - 1) as row_index from (" +
-                        "select id, row_sequence from datatable_cell " +
-                        "where column_id = :columnId order by row_sequence asc" +
-                    ")" +
-                ") where row_index = :rowIndex" +
-            ")")
-    public abstract void update(@Bind("columnId") long columnId, @Bind("rowIndex") short rowIndex,
-                                @BindBean("cell") DataTableCell cell);
+    @SqlUpdate("delete from datatable_cell where row_sequence = :rowSequence and column_id in (" +
+            "select column_id from datatable_column where testcase_id = :testcaseId)")
+    public abstract void deleteRow(@Bind("testcaseId") long testcaseId, @Bind("rowSequence") short rowSequence);
+
+    @SqlUpdate("update datatable_cell set value = :cell.value, endpoint_id = :endpointId, updated = CURRENT_TIMESTAMP " +
+            "where id = :cell.id")
+    public abstract void update(@BindBean("cell") DataTableCell cell, @Bind("endpointId") Long endpointId);
 }

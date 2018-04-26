@@ -23,6 +23,8 @@ public abstract class DataTableColumnDAO {
             "created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (testcase_id) REFERENCES testcase(id) ON DELETE CASCADE, " +
+            "CONSTRAINT DATATABLE_COLUMN_CAPTION_COLUMN_UNRENAMEABLE_CONSTRAINT CHECK(NOT(sequence = 1 AND name <> 'Caption')), " +
+            "CONSTRAINT DATATABLE_COLUMN_UNIQUE_SEQUENCE_CONSTRAINT UNIQUE(testcase_id, sequence), " +
             "CONSTRAINT DATATABLE_COLUMN_" + DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX + " UNIQUE(testcase_id, name), " +
             "CONSTRAINT DATATABLE_COLUMN_" + DB_PROPERTY_NAME_CONSTRAINT_NAME_SUFFIX + " CHECK(" +
                 CUSTOM_PROPERTY_NAME_CHECK + "))")
@@ -70,4 +72,7 @@ public abstract class DataTableColumnDAO {
 
     @SqlUpdate("update datatable_column set name = :name, updated = CURRENT_TIMESTAMP where id = :id")
     public abstract void rename(@Bind("id") long id, @Bind("name") String name);
+
+    @SqlUpdate("delete from datatable_column where id = :id")
+    public abstract void delete(@Bind("id") long id);
 }

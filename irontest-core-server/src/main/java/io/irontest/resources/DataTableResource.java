@@ -43,9 +43,19 @@ public class DataTableResource {
     }
 
     @POST @PermitAll
+    @Path("testcases/{testcaseId}/datatable/deleteColumn")
+    @JsonView(ResourceJsonViews.DataTableUIGrid.class)
+    public DataTable deleteColumn(@PathParam("testcaseId") long testcaseId, @QueryParam("columnId") long columnId) {
+        dataTableColumnDAO.delete(columnId);
+        return dataTableDAO.getTestcaseDataTable(testcaseId, false);
+    }
+
+    @POST @PermitAll
     @Path("testcases/{testcaseId}/datatable/renameColumn")
-    public void renameColumn(@QueryParam("columnId") long columnId, @QueryParam("newName") String newName) {
+    public DataTable renameColumn(@PathParam("testcaseId") long testcaseId, @QueryParam("columnId") long columnId,
+                             @QueryParam("newName") String newName) {
         dataTableColumnDAO.rename(columnId, newName);
+        return dataTableDAO.getTestcaseDataTable(testcaseId, false);
     }
 
     @POST @PermitAll
@@ -57,9 +67,17 @@ public class DataTableResource {
     }
 
     @POST @PermitAll
+    @Path("testcases/{testcaseId}/datatable/deleteRow")
+    @JsonView(ResourceJsonViews.DataTableUIGrid.class)
+    public DataTable deleteRow(@PathParam("testcaseId") long testcaseId, @QueryParam("rowSequence") short rowSequence) {
+        dataTableCellDAO.deleteRow(testcaseId, rowSequence);
+        return dataTableDAO.getTestcaseDataTable(testcaseId, false);
+    }
+
+    @POST @PermitAll
     @Path("testcases/{testcaseId}/datatable/updateCell")
-    public void updateCell(DataTableCell dataTableCell, @QueryParam("columnId") long columnId,
-                                      @QueryParam("rowIndex") short rowIndex) {
-        dataTableCellDAO.update(columnId, rowIndex, dataTableCell);
+    public void updateCell(DataTableCell dataTableCell) {
+        dataTableCellDAO.update(dataTableCell,
+                dataTableCell.getEndpoint() == null ? null : dataTableCell.getEndpoint().getId());
     }
 }
