@@ -128,18 +128,41 @@ public class IIBTeststepRunnerBase extends TeststepRunner {
                     testcaseRunContext.getTestcaseRunStartTime() : testcaseRunContext.getTestcaseIndividualRunStartTime();
             Date pollingEndTime = DateUtils.addSeconds(new Date(), ACTIVITY_LOG_POLLING_TIMEOUT);
             ActivityLogEntry processingCompletionSignal = null;
+            ActivityLogEntry potentialProcessingCompletionSignal = null;
+            int previousNewLogsCount = 0;
+            Date noNewLogsStartTime = null;
+            boolean rollbackLogObserved = false;
             while (System.currentTimeMillis() < pollingEndTime.getTime()) {
                 ActivityLogProxy activityLogProxy = messageFlowProxy.getActivityLog();
                 if (activityLogProxy != null) {
+                    int newLogsCount = 0;            //  the number of logs after reference time
                     for (int i = 1; i <= activityLogProxy.getSize(); i++) {
                         ActivityLogEntry logEntry = activityLogProxy.getLogEntry(i);
-                        if ((11506 == logEntry.getMessageNumber() || 11504 == logEntry.getMessageNumber()) &&
-                                logEntry.getTimestamp().after(referenceTime)) {
-                            processingCompletionSignal = logEntry;
-                            break;
+                        if (logEntry.getTimestamp().after(referenceTime)) {
+                            newLogsCount++;
+                            if (11506 == logEntry.getMessageNumber()) {
+                                processingCompletionSignal = logEntry;
+                                break;
+                            } else if (11507 == logEntry.getMessageNumber()) {
+                                potentialProcessingCompletionSignal = logEntry;
+                                rollbackLogObserved = true;
+                            }
                         }
                     }
+
+                    if (newLogsCount > previousNewLogsCount) {
+                        previousNewLogsCount = newLogsCount;
+                        noNewLogsStartTime = new Date();
+                    } else if (newLogsCount < previousNewLogsCount) {
+                        throw new RuntimeException("unexpected situation");
+                    }
                 }
+
+                if (rollbackLogObserved && new Date().after(DateUtils.addSeconds(noNewLogsStartTime, 2))) {
+                    //  no new logs for 2 seconds after rollback log
+                    processingCompletionSignal = potentialProcessingCompletionSignal;
+                }
+
                 if (processingCompletionSignal != null) {
                     break;
                 }
