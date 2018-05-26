@@ -188,6 +188,12 @@
 <script type="text/ng-template" id="dataTableGridStringCellTemplate.html">
   <div class="ui-grid-cell-contents">{{ COL_FIELD.value }}</div>
 </script>
+<script type="text/ng-template" id="dataTableGridCaptionEditableCellTemplate.html">
+  <div class="ui-grid-cell-contents">
+    <input type="text" class="form-control" ui-grid-editor ng-model="MODEL_COL_FIELD"
+           ng-readonly="grid.appScope.appStatus.isForbidden()">
+  </div>
+</script>
 <script type="text/ng-template" id="dataTableGridStringEditableCellTemplate.html">
   <div class="ui-grid-cell-contents" ng-dblclick="grid.appScope.stringCellDblClicked(row.entity, col)">
     <textarea class="form-control udp-grid-string-editable-cell-textarea" ui-grid-editor ng-model="MODEL_COL_FIELD"

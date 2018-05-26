@@ -96,12 +96,17 @@ angular.module('irontest').controller('DataTableController', ['$scope', 'IronTes
         if (lastColumnHeaderInEditMode === true && i === dataTable.columns.length - 1) {
           uiGridColumn.headerCellTemplate = DATA_TABLE_GRID_EDITABLE_HEADER_CELL_TEMPLATE;
         }
+
         if (dataTableColumn.type === 'String') {    //  it is a string column
           uiGridColumn.enableCellEdit = true;
           uiGridColumn.enableCellEditOnFocus = true;
           uiGridColumn.editModelField = columnName + '.value';
           uiGridColumn.cellTemplate = 'dataTableGridStringCellTemplate.html';
-          uiGridColumn.editableCellTemplate = 'dataTableGridStringEditableCellTemplate.html';
+          if (dataTableColumn.name === 'Caption') {    //  it is the caption column
+            uiGridColumn.editableCellTemplate = 'dataTableGridCaptionEditableCellTemplate.html';
+          } else {                                     //  it is a normal string column
+            uiGridColumn.editableCellTemplate = 'dataTableGridStringEditableCellTemplate.html';
+          }
         } else {                                    //  it is an endpoint column
           uiGridColumn.enableCellEdit = false;
           uiGridColumn.cellTemplate = 'dataTableGridEndpointCellTemplate.html';
