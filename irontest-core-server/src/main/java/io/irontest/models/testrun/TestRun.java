@@ -1,6 +1,8 @@
 package io.irontest.models.testrun;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import io.irontest.models.TestResult;
+import io.irontest.resources.ResourceJsonViews;
 
 import java.util.Date;
 
@@ -8,9 +10,12 @@ import java.util.Date;
  * Created by Zheng on 9/03/2018.
  */
 public class TestRun {
+    @JsonView(ResourceJsonViews.TestcaseRunResultOnTestcaseEditView.class)
     private long id;        //  id of corresponding database record
     private Date startTime;
+    @JsonView(ResourceJsonViews.TestcaseRunResultOnTestcaseEditView.class)
     private long duration;              //  in milliseconds
+    @JsonView(ResourceJsonViews.TestcaseRunResultOnTestcaseEditView.class)
     private TestResult result;
 
     public long getId() {

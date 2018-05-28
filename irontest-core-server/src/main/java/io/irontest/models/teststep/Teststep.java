@@ -2,9 +2,11 @@ package io.irontest.models.teststep;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonView;
 import io.irontest.models.Properties;
 import io.irontest.models.assertion.Assertion;
 import io.irontest.models.endpoint.Endpoint;
+import io.irontest.resources.ResourceJsonViews;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +33,7 @@ public class Teststep {
     public static final String ACTION_ENQUEUE = "Enqueue";
     public static final String ACTION_PUBLISH = "Publish";
 
+    @JsonView(ResourceJsonViews.TestcaseRunResultOnTestcaseEditView.class)
     private long id;   //  id being 0 means this is dynamically created test step object (no record in the Teststep database table).
     private long testcaseId;
     private short sequence;

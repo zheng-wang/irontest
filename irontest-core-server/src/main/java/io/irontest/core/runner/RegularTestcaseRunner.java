@@ -15,7 +15,6 @@ import io.irontest.models.teststep.WaitTeststepProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -62,21 +61,6 @@ public class RegularTestcaseRunner extends TestcaseRunner {
         //  persist test case run details into database
         getTestcaseRunDAO().insert(testcaseRun);
 
-        //  prepare return object for UI (reduced contents for performance)
-        List<TeststepRun> teststepRunsForUI = new ArrayList<>();
-        for (TeststepRun stepRun : testcaseRun.getStepRuns()) {
-            TeststepRun teststepRunForUI = new TeststepRun();
-            teststepRunForUI.setId(stepRun.getId());
-            teststepRunForUI.setResult(stepRun.getResult());
-            Teststep teststepForUI = new Teststep();
-            teststepForUI.setId(stepRun.getTeststep().getId());
-            teststepRunForUI.setTeststep(teststepForUI);
-            teststepRunsForUI.add(teststepRunForUI);
-        }
-        RegularTestcaseRun testcaseRunForUI = new RegularTestcaseRun();
-        testcaseRunForUI.setId(testcaseRun.getId());
-        testcaseRunForUI.setResult(testcaseRun.getResult());
-        testcaseRunForUI.setStepRuns(teststepRunsForUI);
-        return testcaseRunForUI;
+        return testcaseRun;
     }
 }

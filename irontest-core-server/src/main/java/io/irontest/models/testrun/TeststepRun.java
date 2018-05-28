@@ -1,7 +1,9 @@
 package io.irontest.models.testrun;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import io.irontest.models.assertion.AssertionVerification;
 import io.irontest.models.teststep.Teststep;
+import io.irontest.resources.ResourceJsonViews;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +13,7 @@ import java.util.List;
  * Created by Zheng on 24/07/2016.
  */
 public class TeststepRun extends TestRun {
+    @JsonView(ResourceJsonViews.TestcaseRunResultOnTestcaseEditView.class)
     private Teststep teststep;
     private Object response;            //  API response (could be null when there is no endpoint, no API invocation, or API invocation response is not used)
     private String infoMessage;         //  some additional information when the test step finishes running successfully

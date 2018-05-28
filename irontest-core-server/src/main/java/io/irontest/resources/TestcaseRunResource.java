@@ -1,5 +1,6 @@
 package io.irontest.resources;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.irontest.core.runner.DataDrivenTestcaseRunner;
 import io.irontest.core.runner.RegularTestcaseRunner;
@@ -42,8 +43,8 @@ public class TestcaseRunResource {
         this.teststepRunDAO = teststepRunDAO;
     }
 
-    @POST @Path("testcaseruns")
-    @PermitAll
+    @POST @Path("testcaseruns") @PermitAll
+    @JsonView(ResourceJsonViews.TestcaseRunResultOnTestcaseEditView.class)
     public TestcaseRun create(@QueryParam("testcaseId") long testcaseId) throws JsonProcessingException {
         Testcase testcase = testcaseDAO.findById_Complete(testcaseId);
         List<UserDefinedProperty> testcaseUDPs = udpDAO.findByTestcaseId(testcaseId);
