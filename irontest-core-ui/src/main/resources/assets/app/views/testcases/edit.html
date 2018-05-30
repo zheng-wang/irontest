@@ -7,122 +7,122 @@
       <h4><label irt-successful-message></label></h4>
     </div>
   </div>
-  <uib-tabset active="activeTabIndex" id="tabs-area">
-    <uib-tab heading="Basic Info" select="storeTabIndex(BASIC_INFO_TAB_INDEX)">
-      <form name="testcaseForm" class="form-horizontal col-lg-10" role="form" novalidate>
-        <div class="form-group"></div> <!-- spacer -->
-        <div class="form-group">
-          <label for="description" class="col-lg-2 control-label">Description</label>
-          <div class="col-lg-10">
-            <textarea name="description" ng-model="testcase.description" ng-change="autoSave(testcaseForm.$valid)"
-                      id="description" rows="30" placeholder="Description" class="form-control"
-                      ng-readonly="appStatus.isForbidden()"></textarea>
-          </div>
-        </div>
-      </form>
-    </uib-tab>
-    <uib-tab heading="Properties" select="storeTabIndex(PROPERTIES_TAB_INDEX)">
-      <div ng-controller="UDPsController" ng-init="findByTestcaseId()">
-        <div class="form-group"></div> <!-- spacer -->
-        <div class="row">
-          <div class="form-group">
-            <div class="col-lg-1">
-              <button class="btn btn-info" ng-click="createUDP()" ng-disabled="appStatus.isForbidden()">Create</button>
+  <div class="row">
+    <div class="col-lg-12" id="testcase-tabs-area">
+      <uib-tabset active="activeTabIndex">
+        <uib-tab heading="Basic Info" select="storeTabIndex(BASIC_INFO_TAB_INDEX)">
+          <form name="testcaseForm" class="form-horizontal col-lg-10" role="form" novalidate>
+            <div class="form-group"></div> <!-- spacer -->
+            <div class="form-group">
+              <label for="description" class="col-lg-2 control-label">Description</label>
+              <div class="col-lg-10">
+                <textarea name="description" ng-model="testcase.description" ng-change="autoSave(testcaseForm.$valid)"
+                          id="description" rows="30" placeholder="Description" class="form-control"
+                          ng-readonly="appStatus.isForbidden()"></textarea>
+              </div>
+            </div>
+          </form>
+        </uib-tab>
+        <uib-tab heading="Properties" select="storeTabIndex(PROPERTIES_TAB_INDEX)">
+          <div ng-controller="UDPsController" ng-init="findByTestcaseId()">
+            <div class="form-group"></div> <!-- spacer -->
+            <div class="form-group">
+              <div class="col-lg-1">
+                <button class="btn btn-info" ng-click="createUDP()" ng-disabled="appStatus.isForbidden()">Create</button>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-lg-12">
+                <div ng-if="activeTabIndex === PROPERTIES_TAB_INDEX" ui-grid="udpGridOptions" ui-grid-resize-columns
+                     ui-grid-edit ui-grid-cellNav ui-grid-draggable-rows class="ui-grid" id="testcase-udp-grid"></div>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="form-group"></div> <!-- spacer -->
-        <div class="row">
-          <div ng-if="activeTabIndex === PROPERTIES_TAB_INDEX" ui-grid="udpGridOptions" ui-grid-resize-columns
-               ui-grid-edit ui-grid-cellNav ui-grid-draggable-rows class="ui-grid testcase-udp-grid"></div>
-        </div>
-      </div>
-    </uib-tab>
-    <uib-tab heading="Test Steps" select="storeTabIndex(TEST_STEPS_TAB_INDEX)">
-      <div class="form-group"></div> <!-- spacer -->
-      <div class="row">
-        <div class="form-group">
-          <div class="btn-group col-lg-2" uib-dropdown keyboard-nav>
-            <button type="button" class="btn btn-info dropdown-toggle" uib-dropdown-toggle
-                    ng-disabled="appStatus.isForbidden()">
-              Create <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" uib-dropdown-menu role="menu">
-              <li role="menuitem"><a ng-click="createTeststep('SOAP')" href="">SOAP Step</a></li>
-              <li role="menuitem"><a ng-click="createTeststep('DB')" href="">Database Step</a></li>
-              <li role="menuitem"><a href="">HTTP Step (TBD)</a></li>
-              <li role="menuitem">
-                <a ng-click="createTeststep('MQ')" href="">MQ Step</a></li>
-              <li role="menuitem">
-                <a ng-click="createTeststep('IIB')" href="">IIB Step</a></li>
-              <li role="menuitem"><a ng-click="createTeststep('Wait')" href="">Wait Step</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <div class="form-group"></div> <!-- spacer -->
-      <div class="row" id="teststepGrid">
-        <div ng-if="activeTabIndex === TEST_STEPS_TAB_INDEX" ui-grid="teststepGridOptions" ui-grid-resize-columns
-             ui-grid-move-columns class="ui-grid teststep-grid" ui-grid-draggable-rows></div>
-      </div>
-      <div class="form-group"></div> <!-- spacer -->
-      <div class="row selected-step-run-report-area" selected-step-run-report-area>
-        <div class="col-lg-12" ng-bind-html="testcaseRun.selectedStepRunReport"></div>
-      </div>
-    </uib-tab>
-    <uib-tab heading="Data Table" select="storeTabIndex(DATA_TABLE_TAB_INDEX)">
-      <div ng-controller="DataTableController" ng-init="findByTestcaseId()">
-        <div class="form-group"></div> <!-- spacer -->
-        <div class="row">
+        </uib-tab>
+        <uib-tab heading="Test Steps" select="storeTabIndex(TEST_STEPS_TAB_INDEX)">
+          <div class="form-group"></div> <!-- spacer -->
           <div class="form-group">
             <div class="btn-group col-lg-2" uib-dropdown keyboard-nav>
               <button type="button" class="btn btn-info dropdown-toggle" uib-dropdown-toggle
                       ng-disabled="appStatus.isForbidden()">
-                Add Column <span class="caret"></span>
+                Create <span class="caret"></span>
               </button>
               <ul class="dropdown-menu" uib-dropdown-menu role="menu">
-                <li role="menuitem"><a ng-click="addColumn('String')" href="">String Column</a></li>
-                <li role="menuitem"><a ng-click="addColumn('DBEndpoint')" href="">DB Endpoint Column</a></li>
+                <li role="menuitem"><a ng-click="createTeststep('SOAP')" href="">SOAP Step</a></li>
+                <li role="menuitem"><a ng-click="createTeststep('DB')" href="">Database Step</a></li>
+                <li role="menuitem"><a href="">HTTP Step (TBD)</a></li>
+                <li role="menuitem">
+                  <a ng-click="createTeststep('MQ')" href="">MQ Step</a></li>
+                <li role="menuitem">
+                  <a ng-click="createTeststep('IIB')" href="">IIB Step</a></li>
+                <li role="menuitem"><a ng-click="createTeststep('Wait')" href="">Wait Step</a></li>
               </ul>
             </div>
-            <div class="col-lg-2">
-              <button class="btn btn-info" ng-click="addRow()" ng-disabled="appStatus.isForbidden()">Add Row</button>
+          </div>
+          <div class="form-group">
+            <div class="col-lg-12" id="teststepGrid">
+              <div ng-if="activeTabIndex === TEST_STEPS_TAB_INDEX" ui-grid="teststepGridOptions" ui-grid-resize-columns
+                   ui-grid-move-columns class="ui-grid teststep-grid" ui-grid-draggable-rows></div>
             </div>
           </div>
-        </div>
-        <div class="form-group"></div> <!-- spacer -->
-        <div class="row">
-          <div ng-if="activeTabIndex === DATA_TABLE_TAB_INDEX && dataTable" ui-grid="dataTableGridOptions"
-               ui-grid-resize-columns ui-grid-edit ui-grid-cellNav class="ui-grid testcase-datatable-grid"></div>
-        </div>
-      </div>
-    </uib-tab>
+        </uib-tab>
+        <uib-tab heading="Data Table" select="storeTabIndex(DATA_TABLE_TAB_INDEX)">
+          <div ng-controller="DataTableController" ng-init="findByTestcaseId()">
+            <div class="form-group"></div> <!-- spacer -->
+            <div class="form-group">
+              <div class="btn-group col-lg-2" uib-dropdown keyboard-nav>
+                <button type="button" class="btn btn-info dropdown-toggle" uib-dropdown-toggle
+                        ng-disabled="appStatus.isForbidden()">
+                  Add Column <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" uib-dropdown-menu role="menu">
+                  <li role="menuitem"><a ng-click="addColumn('String')" href="">String Column</a></li>
+                  <li role="menuitem"><a ng-click="addColumn('DBEndpoint')" href="">DB Endpoint Column</a></li>
+                </ul>
+              </div>
+              <div class="col-lg-2">
+                <button class="btn btn-info" ng-click="addRow()" ng-disabled="appStatus.isForbidden()">Add Row</button>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-lg-12">
+                <div ng-if="activeTabIndex === DATA_TABLE_TAB_INDEX && dataTable" ui-grid="dataTableGridOptions"
+                     ui-grid-resize-columns ui-grid-edit ui-grid-cellNav class="ui-grid testcase-datatable-grid"></div>
+              </div>
+            </div>
+          </div>
+        </uib-tab>
 
-    <div class="col-lg-offset-1 col-lg-1">
-      <button class="btn btn-info" ng-click="run()"
-              ng-disabled="appStatus.isForbidden() || testcaseRunStatus === 'ongoing'">Run</button>
+        <div class="col-lg-offset-1 col-lg-1">
+          <button class="btn btn-info" ng-click="run()"
+                  ng-disabled="appStatus.isForbidden() || testcaseRunStatus === 'ongoing'">Run</button>
+        </div>
+        <!-- Test case run status message -->
+        <div class="col-lg-2 text-center">
+          <h5 ng-if="testcaseRunStatus === 'ongoing'">Running ...</h5>
+          <a ng-if="testcaseRunStatus === 'finished'" ng-href="api/testcaseruns/{{testcaseRun.id}}/htmlreport"
+             target='_blank'>
+            <h4 ng-class="{ 'text-red' : testcaseRun.result === 'Failed',
+                    'text-lime' : testcaseRun.result === 'Passed' }" class="no-bottom-margin">
+              {{ testcaseRun.result }} ({{ testcaseRun.duration | number }} ms)
+            </h4>
+          </a>
+        </div>
+        <div class="col-lg-1 pull-right">
+          <a ng-href="api/testcaseruns/lastrun/htmlreport?testcaseId={{testcase.id}}" target='_blank'>
+            <h5>Last Run</h5>
+          </a>
+        </div>
+      </uib-tabset>
     </div>
-    <!-- Test case run status message -->
-    <div class="col-lg-2 text-center">
-      <h5 ng-if="testcaseRunStatus === 'ongoing'">Running ...</h5>
-      <a ng-if="testcaseRunStatus === 'finished'" ng-href="api/testcaseruns/{{testcaseRun.id}}/htmlreport"
-         target='_blank'>
-        <h4 ng-class="{ 'text-red' : testcaseRun.result === 'Failed',
-                'text-lime' : testcaseRun.result === 'Passed' }" class="no-bottom-margin">
-          {{ testcaseRun.result }} ({{ testcaseRun.duration | number }} ms)
-        </h4>
-      </a>
-    </div>
-    <div class="col-lg-1 pull-right">
-      <a ng-href="api/testcaseruns/lastrun/htmlreport?testcaseId={{testcase.id}}" target='_blank'>
-        <h5>Last Run</h5>
-      </a>
-    </div>
-  </uib-tabset>
-  <div class="row" ng-if="testcaseRun && !testcaseRun.selectedStepRunReport">
-    <div class="col-lg-12" testcase-run-outline-area>
+  </div>
+  <div class="row" ng-if="testcaseRun" id="testcase-run-result-outline-area">
+    <div class="col-lg-12">
       ABC
+      <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+      DEF
     </div>
+    <div ng-init="testcaseRunResultOutlineAreaLoadedCallback()"></div>
   </div>
 </div>
 
@@ -163,18 +163,6 @@
        ng-class="{'no-underline' : grid.appScope.appStatus.isForbidden()}" href="">
       <i class="glyphicon glyphicon-trash center-block text-center"></i>
     </a>
-  </div>
-</script>
-<script type="text/ng-template" id="teststepGridResultCellTemplate.html">
-  <div class="ui-grid-cell-contents">
-    <div ng-if="grid.appScope.testcaseRun">
-      <a ng-click="grid.appScope.showStepRunHTMLReport(grid.appScope.getTeststepRun(row.entity.id).id)" href="">
-        <div ng-class="{ 'text-red' : grid.appScope.getTeststepRun(row.entity.id).result === 'Failed',
-                'text-lime' : grid.appScope.getTeststepRun(row.entity.id).result === 'Passed' }">
-          {{ grid.appScope.getTeststepRun(row.entity.id).result }}
-        </div>
-      </a>
-    </div>
   </div>
 </script>
 

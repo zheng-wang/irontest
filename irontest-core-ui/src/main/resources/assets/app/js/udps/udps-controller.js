@@ -34,6 +34,8 @@ angular.module('irontest').controller('UDPsController', ['$scope', 'UDPs', 'Iron
         }
       ],
       onRegisterApi: function(gridApi) {
+        $scope.gridApi = gridApi;
+
         var idOfRowBeingEdited = null;
         gridApi.edit.on.beginCellEdit ($scope, function(rowEntity, colDef){
           idOfRowBeingEdited = rowEntity.id;
@@ -81,6 +83,10 @@ angular.module('irontest').controller('UDPsController', ['$scope', 'UDPs', 'Iron
         });
       }
     };
+
+    $scope.$on('testcaseRunResultOutlineAreaShown', function() {
+      $scope.gridApi.core.handleWindowResize();
+    });
 
     $scope.findByTestcaseId = function() {
       UDPs.query({ testcaseId: $stateParams.testcaseId }, function(returnUDPs) {

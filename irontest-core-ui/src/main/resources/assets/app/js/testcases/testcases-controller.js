@@ -39,19 +39,15 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
           cellTemplate: 'teststepGridSequenceCellTemplate.html'
         },
         {
-          name: 'name', width: 520, minWidth: 100,
+          name: 'name', width: '45%', minWidth: 100,
           cellTemplate: 'teststepGridNameCellTemplate.html'
         },
-        {name: 'type', width: 80, minWidth: 80},
-        {name: 'description', width: 400, minWidth: 300},
+        { name: 'type', width: 80, minWidth: 80 },
+        { name: 'description' },
         {
           name: 'delete', width: 100, minWidth: 80, enableSorting: false, enableFiltering: false,
           cellTemplate: 'teststepGridDeleteCellTemplate.html'
         },
-        {
-          name: 'result', width: 100, minWidth: 80,
-          cellTemplate: 'teststepGridResultCellTemplate.html'
-        }
       ],
       onRegisterApi: function (gridApi) {
         gridApi.draggableRows.on.rowDropped($scope, function (info) {
@@ -115,7 +111,7 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
       });
     };
 
-    $scope.getTeststepRun = function(teststepId) {
+    /*$scope.getTeststepRun = function(teststepId) {
       var teststepRun;
       $scope.testcaseRun.stepRuns.every(function(el) {
         if (el.teststep.id === teststepId) {
@@ -126,9 +122,9 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
         }
       });
       return teststepRun;
-    };
+    };*/
 
-    $scope.showStepRunHTMLReport = function(teststepRunId) {
+    /*$scope.showStepRunHTMLReport = function(teststepRunId) {
       TestcaseRuns.getStepRunHTMLReport({ teststepRunId: teststepRunId },
         function(response) {
           //  without $sce.trustAsHtml, ngSanitize will strip elements like <textarea>
@@ -136,7 +132,7 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
         }, function(response) {
           IronTestUtils.openErrorHTTPResponseModal(response);
         });
-    };
+    };*/
 
     $scope.removeTeststep = function(teststep) {
       var teststepService = new Teststeps(teststep);
@@ -168,6 +164,35 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
         $state.go('teststep_edit', {testcaseId: $stateParams.testcaseId, teststepId: response.id, newlyCreated: true});
       }, function(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);
+      });
+    };
+
+    $scope.testcaseRunResultOutlineAreaLoadedCallback = function() {
+      $timeout(function() {
+        //  Not able to use page-wrapper node as its height is dynamically changed by
+        //  startbootstrap-sb-admin-2 javascript on window resize.
+        var pageHeaderObj = document.getElementById('page-header');
+        var pageHeaderStyle = pageHeaderObj.currentStyle || window.getComputedStyle(pageHeaderObj);
+        var topOffset = document.getElementById('page-top-navbar').offsetHeight + pageHeaderObj.offsetHeight +
+          Number(pageHeaderStyle.marginBottom.replace('px', ''));
+        //  Not using tabs area node's actual height as reference as it is different when different tab is selected.
+        var tabsAreaAvailableHeight = window.innerHeight - topOffset;
+        var testcaseRunResultOutlineAreaHeight = tabsAreaAvailableHeight * 0.4;
+//        var tabsAreaObj = document.getElementById('testcase-tabs-area');
+        var tabsAreaOldHeight = document.getElementById('testcase-tabs-area').offsetHeight;
+
+        //  adjust major element's height on currently selected tab
+        var testcaseUDPGridObj = document.getElementById('testcase-udp-grid');
+//        var newElementHeight = (testcaseUDPGridObj.offsetHeight - (tabsAreaAvailableHeight - tabsAreaObj.offsetHeight)) + 'px';
+        var newElementHeight = (testcaseUDPGridObj.offsetHeight - (tabsAreaOldHeight - testcaseRunResultOutlineAreaHeight)) + 'px';
+        angular.element(testcaseUDPGridObj).css('height', newElementHeight);
+        //$scope.testcaseUDPGridDynamicStyle = { height: newElementHeight };
+        $scope.$broadcast('testcaseRunResultOutlineAreaShown');
+        //  adjust tabs area height
+//        angular.element(tabsAreaObj).height(tabsAreaAvailableHeight - testcaseRunResultOutlineAreaHeight);
+        //angular.element(testcaseUDPGridObj.parentNode).height(testcaseUDPGridObj.offsetHeight - testcaseRunResultOutlineAreaHeight);
+        //  adjust testcase run result outline area height
+        angular.element(document.getElementById('testcase-run-result-outline-area')).height(testcaseRunResultOutlineAreaHeight);
       });
     };
   }

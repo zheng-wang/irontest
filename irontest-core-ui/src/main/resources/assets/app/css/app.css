@@ -98,10 +98,13 @@
 }
 
 /* grids */
-.teststep-grid {
-  height: 400px;    /* not to be too high, as there is test step run report below the grid */
+#testcase-udp-grid, .teststep-grid, .testcase-datatable-grid {
+  height: 600px;
+  margin-top: 10px;
+  margin-left: -15px;
+  margin-right: -15px;
 }
-.testcase-udp-grid, .testcase-datatable-grid, .environment-grid, .user-grid, .endpoint-grid {
+.environment-grid, .user-grid, .endpoint-grid {
   height: 500px;
 }
 .select-managed-endpoint-modal-grid {
@@ -241,12 +244,13 @@
   color:red;
 }
 
-.selected-step-run-report-area, .foldertree-pane {
-  overflow: auto;
+#testcase-run-result-outline-area {
+  overflow-y: auto;
 }
 
 .foldertree-pane {
   height: 800px;
+  overflow: auto;
 }
 
 .foldertree-pane ul li {
