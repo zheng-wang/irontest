@@ -168,32 +168,20 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
     };
 
     $scope.testcaseRunResultOutlineAreaLoadedCallback = function() {
-      $timeout(function() {
-        //  Not able to use page-wrapper node as its height is dynamically changed by
-        //  startbootstrap-sb-admin-2 javascript on window resize.
-        var pageHeaderObj = document.getElementById('page-header');
-        var pageHeaderStyle = pageHeaderObj.currentStyle || window.getComputedStyle(pageHeaderObj);
-        var topOffset = document.getElementById('page-top-navbar').offsetHeight + pageHeaderObj.offsetHeight +
-          Number(pageHeaderStyle.marginBottom.replace('px', ''));
-        //  Not using tabs area node's actual height as reference as it is different when different tab is selected.
-        var tabsAreaAvailableHeight = window.innerHeight - topOffset;
-        var testcaseRunResultOutlineAreaHeight = tabsAreaAvailableHeight * 0.4;
-//        var tabsAreaObj = document.getElementById('testcase-tabs-area');
-        var tabsAreaOldHeight = document.getElementById('testcase-tabs-area').offsetHeight;
+      var pageWrapperObj = document.getElementById('page-wrapper');
+      var pageWrapperHeight = pageWrapperObj.offsetHeight;
+      var testcaseUDPGridObj = document.getElementById('testcase-udp-grid');
+      var udpGridOldHeight = testcaseUDPGridObj.offsetHeight;
+      var pageWrapperHeightBelowUDPGrid = pageWrapperObj.getBoundingClientRect().bottom - testcaseUDPGridObj.getBoundingClientRect().bottom;
+      var testcaseRunResultOutlineAreaHeight = pageWrapperHeight * 0.4;
 
-        //  adjust major element's height on currently selected tab
-        var testcaseUDPGridObj = document.getElementById('testcase-udp-grid');
-//        var newElementHeight = (testcaseUDPGridObj.offsetHeight - (tabsAreaAvailableHeight - tabsAreaObj.offsetHeight)) + 'px';
-        var newElementHeight = (testcaseUDPGridObj.offsetHeight - (tabsAreaOldHeight - testcaseRunResultOutlineAreaHeight)) + 'px';
-        angular.element(testcaseUDPGridObj).css('height', newElementHeight);
-        //$scope.testcaseUDPGridDynamicStyle = { height: newElementHeight };
-        $scope.$broadcast('testcaseRunResultOutlineAreaShown');
-        //  adjust tabs area height
-//        angular.element(tabsAreaObj).height(tabsAreaAvailableHeight - testcaseRunResultOutlineAreaHeight);
-        //angular.element(testcaseUDPGridObj.parentNode).height(testcaseUDPGridObj.offsetHeight - testcaseRunResultOutlineAreaHeight);
-        //  adjust testcase run result outline area height
-        angular.element(document.getElementById('testcase-run-result-outline-area')).height(testcaseRunResultOutlineAreaHeight);
-      });
+      //  adjust major element's height on currently selected tab
+      var udpGridNewHeight = (udpGridOldHeight - (testcaseRunResultOutlineAreaHeight - pageWrapperHeightBelowUDPGrid)) + 'px';
+      angular.element(testcaseUDPGridObj).css('height', udpGridNewHeight);
+      //$scope.testcaseUDPGridDynamicStyle = { height: newElementHeight };
+      $scope.$broadcast('testcaseRunResultOutlineAreaShown');  // tried the autoResize feature, but it did not work properly (maybe due to the grid being under uib-tabset, but not sure).
+      //  adjust testcase run result outline area height
+      angular.element(document.getElementById('testcase-run-result-outline-area')).height(testcaseRunResultOutlineAreaHeight);
     };
   }
 ]);
