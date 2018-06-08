@@ -23,13 +23,23 @@ angular.module('irontest').controller('DataTableController', ['$scope', 'IronTes
     $scope.dataTableGridOptions = {
       enableSorting: false,
       onRegisterApi: function(gridApi) {
+        $scope.gridApi = gridApi;
+
         gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue){
           if (newValue !== oldValue) {
             stringCellUpdate(rowEntity[colDef.name].id, newValue);
           }
         });
+
+        $scope.$parent.handleTestcaseRunResultOutlineAreaDisplay();
       }
     };
+
+    $scope.$on('testcaseRunResultOutlineAreaShown', function() {
+      if ($scope.gridApi) {
+        $scope.gridApi.core.handleWindowResize();
+      }
+    });
 
     var refreshDataTableGrid = function() {
       var dataTable = $scope.dataTable;

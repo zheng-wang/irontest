@@ -12,8 +12,13 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
     $scope.activeTabIndex = ($window.localStorage.lastTabOnTestcaseEditView) ?
       parseInt($window.localStorage.lastTabOnTestcaseEditView) : $scope.TEST_STEPS_TAB_INDEX;
 
-    $scope.storeTabIndex = function(tabIndex) {
+    $scope.tabSelected = function(tabIndex) {
+      //  store tab index
       $window.localStorage.lastTabOnTestcaseEditView = tabIndex;
+
+      if (tabIndex === $scope.BASIC_INFO_TAB_INDEX) {
+          $scope.handleTestcaseRunResultOutlineAreaDisplay();
+      }
     };
 
     var timer;
@@ -50,6 +55,8 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
         },
       ],
       onRegisterApi: function (gridApi) {
+        $scope.teststepGridApi = gridApi;
+
         gridApi.draggableRows.on.rowDropped($scope, function (info) {
           var toSequence;
           if (info.fromIndex > info.toIndex) {    // row moved up
@@ -72,6 +79,8 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
             IronTestUtils.openErrorHTTPResponseModal(response);
           });
         });
+
+        $scope.handleTestcaseRunResultOutlineAreaDisplay();
       }
     };
 
@@ -167,21 +176,60 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
       });
     };
 
-    $scope.testcaseRunResultOutlineAreaLoadedCallback = function() {
-      var pageWrapperObj = document.getElementById('page-wrapper');
-      var pageWrapperHeight = pageWrapperObj.offsetHeight;
-      var testcaseUDPGridObj = document.getElementById('testcase-udp-grid');
-      var udpGridOldHeight = testcaseUDPGridObj.offsetHeight;
-      var pageWrapperHeightBelowUDPGrid = pageWrapperObj.getBoundingClientRect().bottom - testcaseUDPGridObj.getBoundingClientRect().bottom;
-      var testcaseRunResultOutlineAreaHeight = pageWrapperHeight * 0.4;
+    $scope.handleTestcaseRunResultOutlineAreaDisplay = function() {
+      if ($scope.testcaseRun) {
+        $timeout(function() {
+          var majorElementId;    //  currently, major element must be the last element under the selected tab, and the major element's bottom position must be same as the tabs area's bottom position.
+          switch ($scope.activeTabIndex) {
+            case $scope.BASIC_INFO_TAB_INDEX:
+              majorElementId = 'description';
+              break;
+            case $scope.PROPERTIES_TAB_INDEX:
+              majorElementId = 'testcase-udp-grid';
+              break;
+            case $scope.TEST_STEPS_TAB_INDEX:
+              majorElementId = 'teststep-grid';
+              break;
+            case $scope.DATA_TABLE_TAB_INDEX:
+              majorElementId = 'testcase-datatable-grid';
+              break;
+          }
+          var pageWrapperObj = document.getElementById('page-wrapper');
+          var pageWrapperHeight = pageWrapperObj.offsetHeight;
+          var majorElement = document.getElementById(majorElementId);
+          var majorElementOldHeight = majorElement.offsetHeight;
+          var pageWrapperHeightBelowMajorElement = pageWrapperObj.getBoundingClientRect().bottom - majorElement.getBoundingClientRect().bottom;
+          var testcaseRunResultOutlineAreaHeight = pageWrapperHeight * 0.4;
 
-      //  adjust major element's height on currently selected tab
-      var udpGridNewHeight = (udpGridOldHeight - (testcaseRunResultOutlineAreaHeight - pageWrapperHeightBelowUDPGrid)) + 'px';
-      angular.element(testcaseUDPGridObj).css('height', udpGridNewHeight);
-      //$scope.testcaseUDPGridDynamicStyle = { height: newElementHeight };
-      $scope.$broadcast('testcaseRunResultOutlineAreaShown');  // tried the autoResize feature, but it did not work properly (maybe due to the grid being under uib-tabset, but not sure).
-      //  adjust testcase run result outline area height
-      angular.element(document.getElementById('testcase-run-result-outline-area')).height(testcaseRunResultOutlineAreaHeight);
+          //  adjust major element's height on selected tab
+          var majorElementNewCSSHeight = majorElementOldHeight - (testcaseRunResultOutlineAreaHeight - pageWrapperHeightBelowMajorElement);
+          if (majorElement.hasAttribute('ui-grid')) {  // the major element is a ui grid
+            //  2 pixels (top and bottom borders) will be added by ui grid on top of its css height, ending up with offset height: cssHeight + 2.
+            //  so subtract this 2 pixels before updating the grid's css height.
+            majorElementNewCSSHeight = majorElementNewCSSHeight - 2;
+          }
+          majorElementNewCSSHeight = majorElementNewCSSHeight + 'px';
+          $scope.styleOfMajorElementOnSelectedTab = { height: majorElementNewCSSHeight };
+          //angular.element(majorElement).css('height', majorElementNewCSSHeight);  //  not using this line of code to adjust major element height, as it seems causing some flash scrollbar appearing on the wrapper element (every time a grid major element is rendered to original height first, then shortened quickly).
+          //  below block of code is needed to make grid major element height adjustment effective immediately under the selected tab on $scope.testcaseRun being available
+          //  tried the autoResize feature of ui grid, but it did not work properly (maybe due to the grid being under uib-tabset, but not sure),
+          //  so ended up calling the ui grid handleWindowResize() function.
+          $timeout(function() {
+            switch ($scope.activeTabIndex) {
+              case $scope.TEST_STEPS_TAB_INDEX:
+                $scope.teststepGridApi.core.handleWindowResize();
+                break;
+              case $scope.PROPERTIES_TAB_INDEX:
+              case $scope.DATA_TABLE_TAB_INDEX:
+                $scope.$broadcast('testcaseRunResultOutlineAreaShown');
+                break;
+            }
+          });
+
+          //  adjust testcase run result outline area height
+          angular.element(document.getElementById('testcase-run-result-outline-area')).height(testcaseRunResultOutlineAreaHeight);
+        });
+      }
     };
   }
 ]);

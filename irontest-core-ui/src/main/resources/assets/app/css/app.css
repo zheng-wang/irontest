@@ -98,7 +98,7 @@
 }
 
 /* grids */
-#testcase-udp-grid, .teststep-grid, .testcase-datatable-grid {
+#testcase-udp-grid, #teststep-grid, #testcase-datatable-grid {
   height: 600px;
   margin-top: 10px;
   margin-left: -15px;

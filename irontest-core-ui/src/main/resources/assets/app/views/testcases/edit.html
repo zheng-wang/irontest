@@ -9,20 +9,20 @@
   </div>
   <div class="row">
     <uib-tabset active="activeTabIndex">
-      <uib-tab heading="Basic Info" select="storeTabIndex(BASIC_INFO_TAB_INDEX)">
+      <uib-tab heading="Basic Info" select="tabSelected(BASIC_INFO_TAB_INDEX)">
         <form name="testcaseForm" class="form-horizontal col-lg-10" role="form" novalidate>
           <div class="form-group"></div> <!-- spacer -->
-          <div class="form-group">
+          <div class="form-group no-bottom-margin">  <!-- use no-bottom-margin class to facilitate testcase run result outline area display -->
             <label for="description" class="col-lg-2 control-label">Description</label>
             <div class="col-lg-10">
               <textarea name="description" ng-model="testcase.description" ng-change="autoSave(testcaseForm.$valid)"
                         id="description" rows="30" placeholder="Description" class="form-control"
-                        ng-readonly="appStatus.isForbidden()"></textarea>
+                        ng-readonly="appStatus.isForbidden()" ng-style="styleOfMajorElementOnSelectedTab"></textarea>
             </div>
           </div>
         </form>
       </uib-tab>
-      <uib-tab heading="Properties" select="storeTabIndex(PROPERTIES_TAB_INDEX)">
+      <uib-tab heading="Properties" select="tabSelected(PROPERTIES_TAB_INDEX)">
         <div ng-controller="UDPsController" ng-init="findByTestcaseId()">
           <div class="form-group">
             <div class="col-lg-1">
@@ -32,12 +32,13 @@
           <div class="form-group">
             <div class="col-lg-12">
               <div ng-if="activeTabIndex === PROPERTIES_TAB_INDEX" ui-grid="udpGridOptions" ui-grid-resize-columns
-                   ui-grid-edit ui-grid-cellNav ui-grid-draggable-rows class="ui-grid" id="testcase-udp-grid"></div>
+                   ui-grid-edit ui-grid-cellNav ui-grid-draggable-rows class="ui-grid" id="testcase-udp-grid"
+                   ng-style="styleOfMajorElementOnSelectedTab"></div>
             </div>
           </div>
         </div>
       </uib-tab>
-      <uib-tab heading="Test Steps" select="storeTabIndex(TEST_STEPS_TAB_INDEX)">
+      <uib-tab heading="Test Steps" select="tabSelected(TEST_STEPS_TAB_INDEX)">
         <div class="form-group">
           <div class="btn-group col-lg-2" uib-dropdown keyboard-nav>
             <button type="button" class="btn btn-info dropdown-toggle" uib-dropdown-toggle
@@ -59,11 +60,12 @@
         <div class="form-group">
           <div class="col-lg-12" id="teststepGrid">
             <div ng-if="activeTabIndex === TEST_STEPS_TAB_INDEX" ui-grid="teststepGridOptions" ui-grid-resize-columns
-                 ui-grid-move-columns class="ui-grid teststep-grid" ui-grid-draggable-rows></div>
+                 ui-grid-move-columns class="ui-grid" ui-grid-draggable-rows id="teststep-grid"
+                 ng-style="styleOfMajorElementOnSelectedTab"></div>
           </div>
         </div>
       </uib-tab>
-      <uib-tab heading="Data Table" select="storeTabIndex(DATA_TABLE_TAB_INDEX)">
+      <uib-tab heading="Data Table" select="tabSelected(DATA_TABLE_TAB_INDEX)">
         <div ng-controller="DataTableController" ng-init="findByTestcaseId()">
           <div class="form-group">
             <div class="btn-group col-lg-2" uib-dropdown keyboard-nav>
@@ -83,7 +85,8 @@
           <div class="form-group">
             <div class="col-lg-12">
               <div ng-if="activeTabIndex === DATA_TABLE_TAB_INDEX && dataTable" ui-grid="dataTableGridOptions"
-                   ui-grid-resize-columns ui-grid-edit ui-grid-cellNav class="ui-grid testcase-datatable-grid"></div>
+                   ui-grid-resize-columns ui-grid-edit ui-grid-cellNav class="ui-grid" id="testcase-datatable-grid"
+                   ng-style="styleOfMajorElementOnSelectedTab"></div>
             </div>
           </div>
         </div>
@@ -117,7 +120,7 @@
       <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
       DEF
     </div>
-    <div ng-init="testcaseRunResultOutlineAreaLoadedCallback()"></div>
+    <div ng-init="handleTestcaseRunResultOutlineAreaDisplay()"></div>
   </div>
 </div>
 

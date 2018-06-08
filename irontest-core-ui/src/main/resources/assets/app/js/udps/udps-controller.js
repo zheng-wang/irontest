@@ -81,11 +81,15 @@ angular.module('irontest').controller('UDPsController', ['$scope', 'UDPs', 'Iron
             IronTestUtils.openErrorHTTPResponseModal(response);
           });
         });
+
+        $scope.$parent.handleTestcaseRunResultOutlineAreaDisplay();
       }
     };
 
     $scope.$on('testcaseRunResultOutlineAreaShown', function() {
-      $scope.gridApi.core.handleWindowResize();
+      if ($scope.gridApi) {
+        $scope.gridApi.core.handleWindowResize();
+      }
     });
 
     $scope.findByTestcaseId = function() {
