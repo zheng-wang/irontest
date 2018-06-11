@@ -4,9 +4,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 import io.irontest.models.endpoint.Endpoint;
 import io.irontest.resources.ResourceJsonViews;
 
-/**
- * Created by Zheng on 16/03/2018.
- */
 public class DataTableCell {
     @JsonView(ResourceJsonViews.DataTableUIGrid.class)
     private long id;

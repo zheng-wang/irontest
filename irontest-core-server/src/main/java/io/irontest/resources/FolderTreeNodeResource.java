@@ -8,9 +8,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-/**
- * Created by Zheng on 10/09/2015.
- */
 @Path("/foldertreenodes") @Produces({ MediaType.APPLICATION_JSON })
 public class FolderTreeNodeResource {
     private final FolderTreeNodeDAO folderTreeNodeDAO;

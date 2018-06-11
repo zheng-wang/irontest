@@ -3,9 +3,6 @@ package io.irontest.models;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.irontest.resources.ResourceJsonViews;
 
-/**
- * Created by Zheng on 16/03/2018.
- */
 public class DataTableColumn {
     public static String COLUMN_NAME_CAPTION = "Caption";
     @JsonView(ResourceJsonViews.DataTableUIGrid.class)

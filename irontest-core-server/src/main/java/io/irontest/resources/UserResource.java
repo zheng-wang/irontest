@@ -15,7 +15,6 @@ import java.util.List;
 
 /**
  * This resource is only registered in team mode.
- * Created by Zheng on 24/12/2017.
  */
 @Path("/users") @Produces({ MediaType.APPLICATION_JSON })
 public class UserResource {

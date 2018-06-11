@@ -11,9 +11,6 @@ import javax.annotation.security.PermitAll;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
-/**
- * Created by Zheng on 26/03/2018.
- */
 @Path("/") @Produces({ MediaType.APPLICATION_JSON })
 public class DataTableResource {
     private DataTableDAO dataTableDAO;

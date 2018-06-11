@@ -2,9 +2,6 @@ package io.irontest.models.assertion;
 
 import io.irontest.models.Properties;
 
-/**
- * Created by Zheng on 13/12/2016.
- */
 public class JSONPathXMLEqualAssertionProperties extends Properties {
     private String jsonPath;
     private String expectedXML;

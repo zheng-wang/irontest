@@ -9,9 +9,6 @@ import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
 import java.util.List;
 
-/**
- * Created by Zheng on 10/09/2015.
- */
 @RegisterMapper(FolderTreeNodeMapper.class)
 public abstract class FolderTreeNodeDAO {
     @CreateSqlObject

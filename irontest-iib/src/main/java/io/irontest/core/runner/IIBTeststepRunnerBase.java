@@ -10,9 +10,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
-/**
- * Created by Zheng on 25/07/2017.
- */
 public class IIBTeststepRunnerBase extends TeststepRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(IIBTeststepRunnerBase.class);
     private static final int ACTIVITY_LOG_POLLING_TIMEOUT = 30;    // in seconds
