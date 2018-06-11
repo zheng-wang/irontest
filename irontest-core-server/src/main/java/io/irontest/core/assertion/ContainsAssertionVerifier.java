@@ -6,9 +6,6 @@ import io.irontest.models.assertion.AssertionVerificationResult;
 import io.irontest.models.assertion.ContainsAssertionProperties;
 import org.apache.commons.lang3.StringUtils;
 
-/**
- * Created by Zheng on 6/08/2015.
- */
 public class ContainsAssertionVerifier extends AssertionVerifier {
     /**
      *

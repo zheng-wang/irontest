@@ -23,9 +23,6 @@ import javax.xml.xpath.XPathFactory;
 import java.io.StringReader;
 import java.util.List;
 
-/**
- * Created by Zheng on 6/08/2015.
- */
 public class XPathAssertionVerifier extends AssertionVerifier {
     private static final Logger LOGGER = LoggerFactory.getLogger(XPathAssertionVerifier.class);
 

@@ -14,9 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by Zheng on 12/07/2015.
- */
 public class IronTestUtils {
     /**
      * @param rs

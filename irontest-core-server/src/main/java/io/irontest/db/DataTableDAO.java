@@ -9,9 +9,6 @@ import org.skife.jdbi.v2.sqlobject.Transaction;
 
 import java.util.*;
 
-/**
- * Created by Zheng on 17/04/2018.
- */
 public abstract class DataTableDAO {
     @CreateSqlObject
     protected abstract DataTableColumnDAO dataTableColumnDAO();

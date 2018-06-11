@@ -9,9 +9,6 @@ import io.irontest.models.assertion.MessageEqualAssertionVerificationResult;
 
 import static net.javacrumbs.jsonunit.JsonAssert.assertJsonEquals;
 
-/**
- * Created by Zheng on 7/12/2017.
- */
 public class JSONEqualAssertionVerifier extends AssertionVerifier {
     private static final String JSON_UNIT_PLACEHOLDER_REGEX = "#\\{[\\s]*(json-unit\\.[^}]+)}";
     private static final String JSON_UNIT_PLACEHOLDER_DELIMITER_REPLACEMENT = "\\${$1}";

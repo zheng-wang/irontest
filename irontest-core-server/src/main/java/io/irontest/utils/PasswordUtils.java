@@ -12,9 +12,6 @@ import java.security.spec.InvalidKeySpecException;
 
 import static io.irontest.IronTestConstants.*;
 
-/**
- * Created by Zheng on 24/12/2017.
- */
 public class PasswordUtils {
     private static SecureRandom random = new SecureRandom();
 

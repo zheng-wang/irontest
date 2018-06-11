@@ -10,9 +10,6 @@ import org.apache.commons.text.StrSubstitutor;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Created by Zheng on 6/08/2015.
- */
 public abstract class AssertionVerifier {
     private Map<String, String> referenceableStringProperties;
 
