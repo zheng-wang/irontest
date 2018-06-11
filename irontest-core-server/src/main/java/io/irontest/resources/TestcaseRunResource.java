@@ -19,9 +19,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-/**
- * Created by Trevor Li on 24/07/2015.
- */
 @Path("/") @Produces({ MediaType.APPLICATION_JSON })
 public class TestcaseRunResource {
     private final TestcaseDAO testcaseDAO;

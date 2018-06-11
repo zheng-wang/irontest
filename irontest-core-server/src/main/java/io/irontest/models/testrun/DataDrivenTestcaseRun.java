@@ -6,9 +6,6 @@ import io.irontest.resources.ResourceJsonViews;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Zheng on 9/03/2018.
- */
 public class DataDrivenTestcaseRun extends TestcaseRun {
     @JsonView(ResourceJsonViews.TestcaseRunResultOnTestcaseEditView.class)
     private List<TestcaseIndividualRun> individualRuns = new ArrayList<>();

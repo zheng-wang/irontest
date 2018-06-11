@@ -22,9 +22,6 @@ import java.util.List;
 import static io.irontest.IronTestConstants.IMPLICIT_PROPERTY_DATE_TIME_FORMAT;
 import static io.irontest.IronTestConstants.IMPLICIT_PROPERTY_NAME_TEST_CASE_INDIVIDUAL_START_TIME;
 
-/**
- * Created by Zheng on 15/03/2018.
- */
 public class DataDrivenTestcaseRunner extends TestcaseRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(DataDrivenTestcaseRunner.class);
 

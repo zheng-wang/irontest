@@ -11,9 +11,6 @@ import io.irontest.resources.ResourceJsonViews;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Zheng on 7/07/2015.
- */
 public class Teststep {
     public static final String TYPE_SOAP = "SOAP";
     public static final String TYPE_DB = "DB";

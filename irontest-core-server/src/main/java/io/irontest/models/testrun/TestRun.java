@@ -6,9 +6,6 @@ import io.irontest.resources.ResourceJsonViews;
 
 import java.util.Date;
 
-/**
- * Created by Zheng on 9/03/2018.
- */
 public class TestRun {
     @JsonView(ResourceJsonViews.TestcaseRunResultOnTestcaseEditView.class)
     private long id;        //  id of corresponding database record

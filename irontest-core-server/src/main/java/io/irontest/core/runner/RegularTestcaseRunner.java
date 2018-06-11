@@ -18,9 +18,6 @@ import org.slf4j.LoggerFactory;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by Zheng on 15/03/2018.
- */
 public class RegularTestcaseRunner extends TestcaseRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(RegularTestcaseRunner.class);
 

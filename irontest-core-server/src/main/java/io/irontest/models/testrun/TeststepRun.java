@@ -10,7 +10,6 @@ import java.util.List;
 
 /**
  * Used for test case running.
- * Created by Zheng on 24/07/2016.
  */
 public class TeststepRun extends TestRun {
     @JsonView(ResourceJsonViews.TestcaseRunResultOnTestcaseEditView.class)

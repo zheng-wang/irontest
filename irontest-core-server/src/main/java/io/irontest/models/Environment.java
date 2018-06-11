@@ -6,9 +6,6 @@ import io.irontest.resources.ResourceJsonViews;
 
 import java.util.List;
 
-/**
- * Created by Trevor Li on 7/5/15.
- */
 public class Environment {
     private long id;
     @JsonView(ResourceJsonViews.DataTableUIGrid.class)
