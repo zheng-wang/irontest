@@ -2,9 +2,6 @@ package io.irontest.models.endpoint;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/**
- * Created by Zheng on 6/12/2017.
- */
 public enum MQConnectionMode {
     BINDINGS("Bindings"), CLIENT("Client");
 

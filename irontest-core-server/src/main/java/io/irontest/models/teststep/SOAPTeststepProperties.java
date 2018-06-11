@@ -5,9 +5,6 @@ import io.irontest.models.Properties;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Zheng on 26/01/2017.
- */
 public class SOAPTeststepProperties extends Properties {
     //  using List instead of Map here to ease the display on ui-grid
     private List<HTTPHeader> httpHeaders = new ArrayList<HTTPHeader>();

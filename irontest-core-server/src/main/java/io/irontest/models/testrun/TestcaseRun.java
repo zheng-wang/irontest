@@ -2,7 +2,6 @@ package io.irontest.models.testrun;
 
 /**
  * Used for collecting data when running one test case.
- * Created by Trevor Li on 7/24/15.
  */
 public class TestcaseRun extends TestRun {
     private long testcaseId;

@@ -4,9 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.irontest.models.Properties;
 
-/**
- * Created by Zheng on 26/05/2016.
- */
 public class MQEndpointProperties extends Properties {
     private MQConnectionMode connectionMode = MQConnectionMode.BINDINGS;
     private String queueManagerName;

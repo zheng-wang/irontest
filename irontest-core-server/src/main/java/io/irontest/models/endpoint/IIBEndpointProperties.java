@@ -4,9 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.irontest.models.Properties;
 
-/**
- * Created by Zheng on 29/07/2017.
- */
 public class IIBEndpointProperties extends Properties {
     private String host;
     private Integer port;

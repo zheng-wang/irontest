@@ -1,8 +1,5 @@
 package io.irontest.models;
 
-/**
- * Created by Zheng on 10/09/2016.
- */
 public class FolderTreeNode {
     private Long idPerType;
     private Long parentFolderId;

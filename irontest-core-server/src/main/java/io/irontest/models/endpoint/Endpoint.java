@@ -8,9 +8,6 @@ import io.irontest.models.Environment;
 import io.irontest.models.Properties;
 import io.irontest.resources.ResourceJsonViews;
 
-/**
- * Created by Trevor Li on 6/30/15.
- */
 public class Endpoint {
     public static final String TYPE_SOAP = "SOAP";
     public static final String TYPE_DB = "DB";
