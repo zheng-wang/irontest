@@ -1,8 +1,5 @@
 package io.irontest.models;
 
-/**
- * Created by Zheng on 17/09/2016.
- */
 public class Folder {
     private long id;
     private String name;

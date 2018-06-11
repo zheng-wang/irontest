@@ -5,9 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Created by Zheng on 2/12/2017.
- */
 public class User {
     private long id;
     private String username;

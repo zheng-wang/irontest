@@ -2,9 +2,6 @@ package io.irontest.models;
 
 import java.util.Date;
 
-/**
- * Created by Zheng on 20/06/2015.
- */
 public class Article {
     private long id;
     private String title;

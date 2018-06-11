@@ -9,9 +9,6 @@ import javax.jws.WebService;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by Zheng on 30/06/2015.
- */
 @WebService
 public class ArticleSOAP {
     private final ArticleDAO dao;

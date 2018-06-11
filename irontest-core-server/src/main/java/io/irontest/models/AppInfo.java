@@ -1,8 +1,5 @@
 package io.irontest.models;
 
-/**
- * Created by Zheng on 3/12/2017.
- */
 public class AppInfo {
     private AppMode appMode = AppMode.LOCAL;
 

@@ -8,9 +8,6 @@ import org.skife.jdbi.v2.tweak.ResultSetMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/**
- * Created by Zheng on 10/09/2015.
- */
 public class FolderTreeNodeMapper implements ResultSetMapper<FolderTreeNode> {
     public FolderTreeNode map(int index, ResultSet rs, StatementContext ctx) throws SQLException {
         FolderTreeNode folderTreeNode = new FolderTreeNode(rs.getLong("id_per_type"),

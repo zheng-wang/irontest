@@ -4,9 +4,6 @@ import io.irontest.models.teststep.Teststep;
 
 import java.util.List;
 
-/**
- * Created by Zheng on 1/07/2015.
- */
 public class Testcase {
     private long id;
     private String name;

@@ -9,9 +9,6 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/**
- * Created by Zheng on 19/07/2015.
- */
 public class AssertionMapper implements ResultSetMapper<Assertion> {
     public Assertion map(int index, ResultSet rs, StatementContext ctx) throws SQLException {
         Assertion assertion = null;

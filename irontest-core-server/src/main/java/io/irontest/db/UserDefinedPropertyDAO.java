@@ -9,9 +9,6 @@ import java.util.List;
 
 import static io.irontest.IronTestConstants.*;
 
-/**
- * Created by Zheng on 29/08/2017.
- */
 @RegisterMapper(UserDefinedPropertyMapper.class)
 public abstract class UserDefinedPropertyDAO {
     @SqlUpdate("CREATE SEQUENCE IF NOT EXISTS udp_sequence START WITH 1 INCREMENT BY 1 NOCACHE")
