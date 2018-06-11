@@ -6,9 +6,6 @@ import io.irontest.models.Properties;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Zheng on 26/07/2015.
- */
 public class XPathAssertionProperties extends Properties {
     private String xPath;
     private String expectedValue;

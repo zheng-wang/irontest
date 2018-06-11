@@ -15,9 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by Trevor Li on 7/14/15.
- */
 public abstract class TeststepRunner {
     private Teststep teststep;
     private String decryptedEndpointPassword;

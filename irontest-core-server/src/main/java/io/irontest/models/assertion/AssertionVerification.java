@@ -1,8 +1,5 @@
 package io.irontest.models.assertion;
 
-/**
- * Created by Zheng on 25/07/2016.
- */
 public class AssertionVerification {
     private Assertion assertion;
     private AssertionVerificationResult verificationResult;

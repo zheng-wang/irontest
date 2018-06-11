@@ -4,9 +4,6 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.irontest.models.Properties;
 
-/**
- * Created by Zheng on 19/07/2015.
- */
 public class Assertion {
     public static final String TYPE_CONTAINS = "Contains";
     public static final String TYPE_XPATH = "XPath";

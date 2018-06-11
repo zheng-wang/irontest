@@ -8,9 +8,6 @@ import io.irontest.models.teststep.Teststep;
 import java.lang.reflect.Constructor;
 import java.util.Map;
 
-/**
- * Created by Trevor Li on 7/14/15.
- */
 public class TeststepRunnerFactory {
     private static TeststepRunnerFactory instance = new TeststepRunnerFactory();
 
