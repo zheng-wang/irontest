@@ -8,8 +8,6 @@ import java.util.List;
 
 /**
  * An individual run of a data driven test case, corresponding to one row in the data table.
- *
- * Created by Zheng on 9/03/2018.
  */
 public class TestcaseIndividualRun extends TestRun {
     @JsonView(ResourceJsonViews.TestcaseRunResultOnTestcaseEditView.class)

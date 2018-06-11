@@ -1,8 +1,5 @@
 package io.irontest.models;
 
-/**
- * Created by Zheng on 1/08/2015.
- */
 public class NamespacePrefix {
     private String prefix;
     private String namespace;

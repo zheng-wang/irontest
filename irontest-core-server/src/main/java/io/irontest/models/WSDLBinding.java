@@ -2,9 +2,6 @@ package io.irontest.models;
 
 import java.util.List;
 
-/**
- * Created by Zheng on 11/07/2015.
- */
 public class WSDLBinding {
     private String name;
     private List<String> operations;
