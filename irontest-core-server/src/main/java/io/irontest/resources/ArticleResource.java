@@ -7,9 +7,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-/**
- * Created by Zheng on 20/06/2015.
- */
 @Path("/articles") @Produces({ MediaType.APPLICATION_JSON })
 public class ArticleResource {
     private final ArticleDAO dao;

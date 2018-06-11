@@ -9,7 +9,6 @@ import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 /**
- * Created by Trevor Li on 6/30/15.
  * Not using @Path("/environments") at class level, as the {@link ManagedEndpointResource} has a URI /environments/...
  * JAX-RS resolves URI to root resource class first.
  */

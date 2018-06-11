@@ -5,7 +5,6 @@ import io.irontest.models.TestResult;
 
 /**
  * Output of assertion verifier.
- * Created by Zheng on 5/08/2015.
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.MINIMAL_CLASS, include = JsonTypeInfo.As.PROPERTY, property = "minClassName")
 public class AssertionVerificationResult {

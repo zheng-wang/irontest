@@ -20,9 +20,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Zheng on 11/07/2015.
- */
 @Path("/wsdls") @Produces({ MediaType.APPLICATION_JSON })
 public class WSDLResource {
     public WSDLResource() {}

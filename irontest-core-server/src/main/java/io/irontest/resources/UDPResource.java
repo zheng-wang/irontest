@@ -9,9 +9,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-/**
- * Created by Zheng on 30/08/2017.
- */
 @Path("/") @Produces({ MediaType.APPLICATION_JSON })
 public class UDPResource {
     private UserDefinedPropertyDAO udpDAO;
