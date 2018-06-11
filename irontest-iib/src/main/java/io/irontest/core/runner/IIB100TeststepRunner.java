@@ -7,9 +7,6 @@ import org.eclipse.jetty.util.log.Log;
 
 import java.lang.reflect.Constructor;
 
-/**
- * Created by Zheng on 25/07/2017.
- */
 public class IIB100TeststepRunner extends IIBTeststepRunnerBase {
     //  disable IIB 10 IntegrationAPI.jar's jetty logging (which pollutes StdErr)
     static {

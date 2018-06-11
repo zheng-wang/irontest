@@ -16,9 +16,6 @@ import java.util.List;
 import static io.irontest.IronTestConstants.DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX;
 import static io.irontest.IronTestConstants.ENDPOINT_PASSWORD_ENCRYPTION_KEY;
 
-/**
- * Created by Trevor Li on 6/30/15.
- */
 @RegisterMapper(EndpointMapper.class)
 public abstract class EndpointDAO {
     @SqlUpdate("CREATE SEQUENCE IF NOT EXISTS endpoint_sequence START WITH 1 INCREMENT BY 1 NOCACHE")

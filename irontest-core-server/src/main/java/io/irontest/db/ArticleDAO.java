@@ -7,9 +7,6 @@ import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by Zheng on 23/06/2015.
- */
 @RegisterMapper(ArticleMapper.class)
 public interface ArticleDAO {
     @SqlUpdate("CREATE TABLE IF NOT EXISTS article (id IDENTITY PRIMARY KEY, title varchar(50), " +

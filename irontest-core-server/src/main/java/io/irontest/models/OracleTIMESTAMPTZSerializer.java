@@ -11,7 +11,6 @@ import java.sql.Connection;
 
 /**
  * Jackson does not have a built-in serializer for oracle.sql.TIMESTAMPTZ.
- * Created by Zheng on 1/12/2016.
  */
 public class OracleTIMESTAMPTZSerializer extends JsonSerializer {
     private Class clazz;

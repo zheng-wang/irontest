@@ -13,9 +13,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-/**
- * Created by Zheng on 11/07/2015.
- */
 public class TeststepMapper implements ResultSetMapper<Teststep> {
     public Teststep map(int index, ResultSet rs, StatementContext ctx) throws SQLException {
         List<String> fields = IronTestUtils.getFieldsPresentInResultSet(rs);

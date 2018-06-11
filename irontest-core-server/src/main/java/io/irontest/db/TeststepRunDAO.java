@@ -14,9 +14,6 @@ import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by Zheng on 9/03/2018.
- */
 @RegisterMapper(TeststepRunMapper.class)
 public abstract class TeststepRunDAO {
     @SqlUpdate("CREATE SEQUENCE IF NOT EXISTS teststep_run_sequence START WITH 1 INCREMENT BY 1 NOCACHE")

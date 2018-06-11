@@ -15,9 +15,6 @@ import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-/**
- * Created by Zheng on 13/03/2018.
- */
 public class TeststepRunMapper implements ResultSetMapper<TeststepRun> {
     public TeststepRun map(int index, ResultSet rs, StatementContext ctx) throws SQLException {
         TeststepRun teststepRun = new TeststepRun();

@@ -6,9 +6,6 @@ import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
 import static io.irontest.IronTestConstants.DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX;
 
-/**
- * Created by Zheng on 10/09/2015.
- */
 @RegisterMapper(FolderMapper.class)
 public abstract class FolderDAO {
     @SqlUpdate("CREATE SEQUENCE IF NOT EXISTS folder_sequence START WITH 1 INCREMENT BY 1 NOCACHE")
