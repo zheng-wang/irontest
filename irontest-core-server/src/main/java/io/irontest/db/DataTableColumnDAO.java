@@ -8,9 +8,6 @@ import java.util.List;
 
 import static io.irontest.IronTestConstants.*;
 
-/**
- * Created by Zheng on 14/03/2018.
- */
 @RegisterMapper(DataTableColumnMapper.class)
 public abstract class DataTableColumnDAO {
     @SqlUpdate("CREATE SEQUENCE IF NOT EXISTS datatable_column_sequence START WITH 1 INCREMENT BY 1 NOCACHE")

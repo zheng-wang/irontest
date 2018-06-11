@@ -30,9 +30,6 @@ import java.util.Map;
 import static io.irontest.IronTestConstants.IMPLICIT_PROPERTY_DATE_TIME_FORMAT;
 import static io.irontest.IronTestConstants.IMPLICIT_PROPERTY_NAME_TEST_STEP_START_TIME;
 
-/**
- * Created by Zheng on 11/07/2015.
- */
 @Path("/testcases/{testcaseId}/teststeps") @Produces({ MediaType.APPLICATION_JSON })
 public class TeststepResource {
     private final AppInfo appInfo;

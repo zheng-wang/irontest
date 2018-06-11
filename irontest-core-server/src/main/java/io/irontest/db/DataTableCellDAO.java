@@ -9,9 +9,6 @@ import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
 import java.util.List;
 
-/**
- * Created by Zheng on 14/03/2018.
- */
 @RegisterMapper(DataTableCellMapper.class)
 public abstract class DataTableCellDAO {
     @SqlUpdate("CREATE SEQUENCE IF NOT EXISTS datatable_cell_sequence START WITH 1 INCREMENT BY 1 NOCACHE")

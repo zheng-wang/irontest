@@ -7,9 +7,6 @@ import io.irontest.resources.ResourceJsonViews;
 
 import java.util.*;
 
-/**
- * Created by Zheng on 16/03/2018.
- */
 public class DataTable {
     @JsonView(ResourceJsonViews.DataTableUIGrid.class)
     private List<DataTableColumn> columns = new ArrayList<>();

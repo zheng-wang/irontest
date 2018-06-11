@@ -9,8 +9,6 @@ import javax.ws.rs.core.MediaType;
 
 /**
  * A couple of system wide resource methods.
- *
- * Created by Zheng on 3/12/2017.
  */
 @Path("/") @Produces({ MediaType.APPLICATION_JSON })
 public class SystemResource {

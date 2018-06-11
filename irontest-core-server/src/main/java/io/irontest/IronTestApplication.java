@@ -41,9 +41,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
-/**
- * Created by Zheng on 20/06/2015.
- */
 public class IronTestApplication extends Application<IronTestConfiguration> {
     private JAXWSBundle jaxWsBundle = new JAXWSBundle();
 

@@ -22,9 +22,6 @@ import java.io.IOException;
 import java.util.GregorianCalendar;
 import java.util.Hashtable;
 
-/**
- * Created by Trevor Li on 7/14/15.
- */
 public class MQTeststepRunner extends TeststepRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(MQTeststepRunner.class);
     //  disable the default 2033 logging (seems not needed since IBM MQ 8.0)

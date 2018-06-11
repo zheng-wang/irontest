@@ -23,9 +23,6 @@ import javax.ws.rs.core.MediaType;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by Zheng on 27/07/2015.
- */
 @Path("/") @Produces({ MediaType.APPLICATION_JSON })
 public class AssertionResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(AssertionResource.class);
