@@ -9,9 +9,6 @@ import javax.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.Map;
 
-/**
- * Created by Zheng on 20/06/2015.
- */
 public class IronTestConfiguration extends Configuration {
     private String mode;
     private String sslTrustStorePath;

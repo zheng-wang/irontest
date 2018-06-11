@@ -7,9 +7,6 @@ import io.irontest.models.endpoint.Endpoint;
 import io.irontest.models.endpoint.MQConnectionMode;
 import io.irontest.models.endpoint.MQEndpointProperties;
 
-/**
- * Created by Zheng on 25/07/2017.
- */
 public class IIB90TeststepRunner extends IIBTeststepRunnerBase {
 
     public IIB90TeststepRunner(Endpoint endpoint) {

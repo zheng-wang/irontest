@@ -13,9 +13,6 @@ import java.sql.SQLException;
 
 import static io.irontest.IronTestConstants.*;
 
-/**
- * Created by Zheng on 24/04/2016.
- */
 public class IronTestLoggingExceptionMapper extends LoggingExceptionMapper<Throwable> {
     private static final Logger LOGGER = LoggerFactory.getLogger(IronTestLoggingExceptionMapper.class);
 

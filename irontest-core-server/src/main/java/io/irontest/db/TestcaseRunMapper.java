@@ -9,9 +9,6 @@ import org.skife.jdbi.v2.tweak.ResultSetMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/**
- * Created by Zheng on 2/08/2016.
- */
 public class TestcaseRunMapper implements ResultSetMapper<TestcaseRun> {
     public TestcaseRun map(int index, ResultSet rs, StatementContext ctx) throws SQLException {
         TestcaseRun testcaseRun = new RegularTestcaseRun();

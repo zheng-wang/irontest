@@ -9,7 +9,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- * Created by Zheng on 25/05/2016.
  * This is actually a factory and delegator instead of the actual runner.
  */
 public class IIBTeststepRunner extends TeststepRunner {

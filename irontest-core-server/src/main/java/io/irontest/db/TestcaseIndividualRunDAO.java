@@ -10,9 +10,6 @@ import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 
 import java.util.Date;
 
-/**
- * Created by Zheng on 9/03/2018.
- */
 public abstract class TestcaseIndividualRunDAO {
     @SqlUpdate("CREATE SEQUENCE IF NOT EXISTS testcase_individualrun_sequence START WITH 1 INCREMENT BY 1 NOCACHE")
     public abstract void createSequenceIfNotExists();

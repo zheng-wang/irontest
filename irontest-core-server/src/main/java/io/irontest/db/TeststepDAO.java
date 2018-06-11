@@ -20,9 +20,6 @@ import java.util.List;
 
 import static io.irontest.IronTestConstants.DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX;
 
-/**
- * Created by Zheng on 7/07/2015.
- */
 @RegisterMapper(TeststepMapper.class)
 public abstract class TeststepDAO {
     private static final String STEP_MOVE_DIRECTION_UP = "up";

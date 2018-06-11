@@ -7,9 +7,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
 
-/**
- * Created by Zheng on 25/07/2017.
- */
 public class IIBTeststepRunnerClassLoader extends URLClassLoader {
     private ClassLoader parentClassLoader;
 
