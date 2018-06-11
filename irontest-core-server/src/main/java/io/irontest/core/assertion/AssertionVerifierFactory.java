@@ -4,9 +4,6 @@ import io.irontest.models.assertion.Assertion;
 
 import java.util.Map;
 
-/**
- * Created by Zheng on 6/08/2015.
- */
 public class AssertionVerifierFactory {
     private static AssertionVerifierFactory instance = new AssertionVerifierFactory();
 

@@ -5,9 +5,6 @@ import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.AssertionVerificationResult;
 import io.irontest.models.assertion.IntegerEqualAssertionProperties;
 
-/**
- * Created by Zheng on 4/06/2016.
- */
 public class IntegerEqualAssertionVerifier extends AssertionVerifier {
     /**
      *

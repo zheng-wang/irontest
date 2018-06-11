@@ -10,9 +10,6 @@ import io.irontest.models.assertion.JSONPathXMLEqualAssertionVerificationResult;
 import io.irontest.utils.XMLUtils;
 import org.apache.commons.lang3.StringUtils;
 
-/**
- * Created by Zheng on 15/02/2017.
- */
 public class JSONPathXMLEqualAssertionVerifier extends AssertionVerifier {
     @Override
     public AssertionVerificationResult _verify(Assertion assertion, Object input) throws Exception {

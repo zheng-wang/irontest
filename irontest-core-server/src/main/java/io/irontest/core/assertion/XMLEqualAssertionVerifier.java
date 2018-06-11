@@ -7,9 +7,6 @@ import io.irontest.models.assertion.XMLEqualAssertionProperties;
 import io.irontest.models.assertion.MessageEqualAssertionVerificationResult;
 import io.irontest.utils.XMLUtils;
 
-/**
- * Created by Zheng on 4/06/2016.
- */
 public class XMLEqualAssertionVerifier extends AssertionVerifier {
     /**
      *

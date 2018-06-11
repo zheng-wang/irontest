@@ -5,9 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Zheng on 10/07/2016.
- */
 public class MQRFH2Header {
     private boolean enabled;
     private List<MQRFH2Folder> folders = new ArrayList<MQRFH2Folder>();

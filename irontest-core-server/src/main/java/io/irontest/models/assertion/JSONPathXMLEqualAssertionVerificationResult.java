@@ -1,8 +1,5 @@
 package io.irontest.models.assertion;
 
-/**
- * Created by Zheng on 27/12/2016.
- */
 public class JSONPathXMLEqualAssertionVerificationResult extends AssertionVerificationResult {
     private String actualXML;
 

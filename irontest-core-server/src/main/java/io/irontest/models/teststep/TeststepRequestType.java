@@ -2,9 +2,6 @@ package io.irontest.models.teststep;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/**
- * Created by Zheng on 2/09/2017.
- */
 public enum TeststepRequestType {
     TEXT("Text"), FILE("File");
 

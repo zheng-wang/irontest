@@ -6,9 +6,6 @@ import org.xmlunit.diff.ComparisonResult;
 import org.xmlunit.diff.ComparisonType;
 import org.xmlunit.diff.DifferenceEvaluator;
 
-/**
- * Created by Zheng on 8/10/2017.
- */
 public class PlaceholderDifferenceEvaluator implements DifferenceEvaluator {
     private static final String PLACEHOLDER_REGEX_IGNORE = "#\\{[\\s]*irontest\\.ignore[\\s]*}";
 
