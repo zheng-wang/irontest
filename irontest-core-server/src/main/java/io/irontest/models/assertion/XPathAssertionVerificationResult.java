@@ -1,8 +1,5 @@
 package io.irontest.models.assertion;
 
-/**
- * Created by Zheng on 4/06/2016.
- */
 public class XPathAssertionVerificationResult extends AssertionVerificationResult {
     private String actualValue;
 

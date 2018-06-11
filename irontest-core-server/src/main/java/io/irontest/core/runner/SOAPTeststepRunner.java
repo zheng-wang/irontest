@@ -26,9 +26,6 @@ import java.io.IOException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
-/**
- * Created by Trevor Li on 7/14/15.
- */
 public class SOAPTeststepRunner extends TeststepRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(SOAPTeststepRunner.class);
 

@@ -2,7 +2,6 @@ package io.irontest.core.runner;
 
 /**
  * Used for standalone test step running.
- * Created by Zheng on 15/01/2017.
  */
 public class BasicTeststepRun {
     private Object response;            //  API response (could be null when there is no endpoint, no API invocation, or API invocation response is not used)

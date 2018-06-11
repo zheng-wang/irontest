@@ -26,9 +26,6 @@ import java.util.Map;
 
 import static io.irontest.IronTestConstants.*;
 
-/**
- * Created by Zheng on 15/03/2018.
- */
 public abstract class TestcaseRunner {
     private Testcase testcase;
     private boolean testcaseHasWaitForProcessingCompletionAction = false;

@@ -5,9 +5,6 @@ import io.irontest.models.teststep.HTTPHeader;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Zheng on 6/07/2016.
- */
 public class SOAPAPIResponse {
     private List<HTTPHeader> httpHeaders = new ArrayList<HTTPHeader>();
     private String httpBody;

@@ -2,9 +2,6 @@ package io.irontest.core.runner;
 
 import java.util.List;
 
-/**
- * Created by Zheng on 10/04/2016.
- */
 public class DBAPIResponse {
     //  applicable only to non-select statements
     private String statementExecutionResults;

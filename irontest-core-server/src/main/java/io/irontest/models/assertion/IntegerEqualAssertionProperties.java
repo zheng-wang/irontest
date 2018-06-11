@@ -2,9 +2,6 @@ package io.irontest.models.assertion;
 
 import io.irontest.models.Properties;
 
-/**
- * Created by Zheng on 1/06/2016.
- */
 public class IntegerEqualAssertionProperties extends Properties {
     private int number;
 
