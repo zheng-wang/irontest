@@ -17,9 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by Trevor Li on 7/14/15.
- */
 public class DBTeststepRunner extends TeststepRunner {
     private static ObjectMapper jacksonObjectMapper = new ObjectMapper();
 

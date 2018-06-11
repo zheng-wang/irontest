@@ -3,9 +3,6 @@ package io.irontest.core.runner;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/**
- * Created by Zheng on 26/11/2016.
- */
 public enum SQLStatementType {
     SELECT("SELECT"), INSERT("INSERT"), UPDATE("UPDATE"), DELETE("DELETE");
 

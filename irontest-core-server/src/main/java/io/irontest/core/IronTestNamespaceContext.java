@@ -6,9 +6,6 @@ import javax.xml.namespace.NamespaceContext;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * Created by Zheng on 1/08/2015.
- */
 public class IronTestNamespaceContext implements NamespaceContext {
     private List<NamespacePrefix> namespacePrefixes;
 

@@ -8,7 +8,6 @@ import java.util.List;
 
 /**
  * Only for MQ test step.
- * Created by Zheng on 25/06/2016.
  */
 public class MQTeststepActionDataBackup {
     private IntegerEqualAssertionProperties queueDepthAssertionProperties; // only for CheckDepth action

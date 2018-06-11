@@ -7,9 +7,6 @@ import io.irontest.db.UserDAO;
 import io.irontest.models.User;
 import io.irontest.utils.PasswordUtils;
 
-/**
- * Created by Zheng on 2/12/2017.
- */
 public class ResourceAuthenticator implements Authenticator<BasicCredentials, SimplePrincipal> {
     private UserDAO userDAO;
 

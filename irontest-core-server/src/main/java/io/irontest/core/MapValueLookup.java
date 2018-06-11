@@ -6,9 +6,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Created by Zheng on 10/09/2017.
- */
 public class MapValueLookup extends StrLookup<String> {
     private Map<String, String> map;
     private boolean escapeForJSON;
