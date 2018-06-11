@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcases', 'Teststeps', 'TestcaseRuns',
-    '$stateParams', '$state', 'uiGridConstants', '$timeout', 'IronTestUtils', '$sce', '$window',
+    '$stateParams', '$state', 'uiGridConstants', '$timeout', 'IronTestUtils', '$sce', '$window', '$uibModal',
   function($scope, Testcases, Teststeps, TestcaseRuns, $stateParams, $state, uiGridConstants, $timeout, IronTestUtils,
-      $sce, $window) {
+      $sce, $window, $uibModal) {
     $scope.BASIC_INFO_TAB_INDEX = 0;
     $scope.PROPERTIES_TAB_INDEX = 1;
     $scope.TEST_STEPS_TAB_INDEX = 2;
@@ -120,28 +120,28 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
       });
     };
 
-    /*$scope.getTeststepRun = function(teststepId) {
-      var teststepRun;
-      $scope.testcaseRun.stepRuns.every(function(el) {
-        if (el.teststep.id === teststepId) {
-          teststepRun = el;
-          return false;    //  terminate the loop
-        } else {
-          return true;     //  continue the loop
-        }
-      });
-      return teststepRun;
-    };*/
-
-    /*$scope.showStepRunHTMLReport = function(teststepRunId) {
-      TestcaseRuns.getStepRunHTMLReport({ teststepRunId: teststepRunId },
+    $scope.showStepRunHTMLReport = function(stepRunId) {
+      TestcaseRuns.getStepRunHTMLReport({ stepRunId: stepRunId },
         function(response) {
           //  without $sce.trustAsHtml, ngSanitize will strip elements like <textarea>
-          $scope.testcaseRun.selectedStepRunReport = $sce.trustAsHtml(response.report);
+          var stepRunReport = $sce.trustAsHtml(response.report);
+
+          //  open modal dialog
+          var modalInstance = $uibModal.open({
+            templateUrl: '/ui/views/testcases/teststep-run-report-modal.html',
+            controller: 'TeststepRunReportModalController',
+            size: 'lg',
+            windowClass: 'teststep-run-report-modal',
+            resolve: {
+              stepRunReport: function() {
+                return stepRunReport;
+              }
+            }
+          });
         }, function(response) {
           IronTestUtils.openErrorHTTPResponseModal(response);
         });
-    };*/
+    };
 
     $scope.removeTeststep = function(teststep) {
       var teststepService = new Teststeps(teststep);
@@ -199,7 +199,7 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
           var majorElement = document.getElementById(majorElementId);
           var majorElementOldHeight = majorElement.offsetHeight;
           var pageWrapperHeightBelowMajorElement = pageWrapperObj.getBoundingClientRect().bottom - majorElement.getBoundingClientRect().bottom;
-          var testcaseRunResultOutlineAreaHeight = pageWrapperHeight * 0.4;
+          var testcaseRunResultOutlineAreaHeight = pageWrapperHeight * 0.33;
 
           //  adjust major element's height on selected tab
           var majorElementNewCSSHeight = majorElementOldHeight - (testcaseRunResultOutlineAreaHeight - pageWrapperHeightBelowMajorElement);

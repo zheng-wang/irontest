@@ -53,6 +53,17 @@
   padding: 7px 12px !important;
 }
 
+/* custom style for ui bootstrap accordion */
+.panel-default .panel-heading {
+  padding: 5px 7px;
+}
+.panel-default h5 {
+  margin: 0px;
+}
+.panel-group .panel {
+  margin-top: 5px;
+}
+
 /* custom jsTree contextmenu class */
 .vakata-context {
   z-index: 1000;        /* avoid the tree context menu being partially hidden */
@@ -232,10 +243,17 @@
 .select-managed-endpoint-modal {
   top: 10%;
 }
-.udp-value-textarea-editor-modal, datatable-string-cell-textarea-editor-modal {
+.teststep-run-report-modal .modal-dialog {
+  width: 65%;
+}
+.teststep-run-report-modal .modal-content {
+  height: 700px;
+  overflow-y: auto;
+}
+.udp-value-textarea-editor-modal, .datatable-string-cell-textarea-editor-modal, .teststep-run-report-modal {
   top: 8%;
 }
-.udp-value-textarea-editor-modal .modal-dialog, datatable-string-cell-textarea-editor-modal .modal-dialog {
+.udp-value-textarea-editor-modal .modal-dialog, .datatable-string-cell-textarea-editor-modal .modal-dialog {
   width: 60%;
 }
 

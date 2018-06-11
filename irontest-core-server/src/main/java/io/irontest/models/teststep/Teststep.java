@@ -33,10 +33,10 @@ public class Teststep {
     public static final String ACTION_ENQUEUE = "Enqueue";
     public static final String ACTION_PUBLISH = "Publish";
 
-    @JsonView(ResourceJsonViews.TestcaseRunResultOnTestcaseEditView.class)
     private long id;   //  id being 0 means this is dynamically created test step object (no record in the Teststep database table).
     private long testcaseId;
     private short sequence;
+    @JsonView(ResourceJsonViews.TestcaseRunResultOnTestcaseEditView.class)
     private String name;
     private String type;
     private String description;

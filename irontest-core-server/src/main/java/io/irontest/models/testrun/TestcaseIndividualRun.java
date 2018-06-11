@@ -1,5 +1,8 @@
 package io.irontest.models.testrun;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import io.irontest.resources.ResourceJsonViews;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +12,9 @@ import java.util.List;
  * Created by Zheng on 9/03/2018.
  */
 public class TestcaseIndividualRun extends TestRun {
+    @JsonView(ResourceJsonViews.TestcaseRunResultOnTestcaseEditView.class)
     private String caption;      //  caption of the data table row
+    @JsonView(ResourceJsonViews.TestcaseRunResultOnTestcaseEditView.class)
     private List<TeststepRun> stepRuns = new ArrayList<>();
 
     public String getCaption() {

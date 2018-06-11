@@ -65,10 +65,10 @@ public class TestcaseRunResource {
         return new TestcaseRunView(testcaseRun);
     }
 
-    @GET @Path("teststepruns/{teststepRunId}/htmlreport") @Produces(MediaType.TEXT_HTML)
-    public TeststepRunView getStepRunHTMLReportById(@PathParam("teststepRunId") long teststepRunId) {
-        TeststepRun teststepRun = teststepRunDAO.findById(teststepRunId);
-        return new TeststepRunView(teststepRun);
+    @GET @Path("teststepruns/{stepRunId}/htmlreport") @Produces(MediaType.TEXT_HTML)
+    public TeststepRunView getStepRunHTMLReportById(@PathParam("stepRunId") long stepRunId) {
+        TeststepRun sstepRun = teststepRunDAO.findById(stepRunId);
+        return new TeststepRunView(sstepRun);
     }
 
     @GET @Path("testcaseruns/lastrun/htmlreport") @Produces(MediaType.TEXT_HTML)
