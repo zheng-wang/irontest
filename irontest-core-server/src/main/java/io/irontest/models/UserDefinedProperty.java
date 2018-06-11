@@ -1,8 +1,5 @@
 package io.irontest.models;
 
-/**
- * Created by Zheng on 29/08/2017.
- */
 public class UserDefinedProperty {
     private long id;
     private short sequence;

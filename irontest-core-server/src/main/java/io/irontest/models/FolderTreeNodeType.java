@@ -2,9 +2,6 @@ package io.irontest.models;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/**
- * Created by Zheng on 10/09/2016.
- */
 public enum FolderTreeNodeType {
     FOLDER("folder"), TESTCASE("testcase");
 

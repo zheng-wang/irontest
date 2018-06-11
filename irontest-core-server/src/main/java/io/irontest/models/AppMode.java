@@ -2,9 +2,6 @@ package io.irontest.models;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/**
- * Created by Zheng on 6/12/2017.
- */
 public enum AppMode {
     LOCAL("local"), TEAM("team");
 

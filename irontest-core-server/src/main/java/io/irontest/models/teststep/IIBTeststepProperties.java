@@ -2,9 +2,6 @@ package io.irontest.models.teststep;
 
 import io.irontest.models.Properties;
 
-/**
- * Created by Zheng on 28/05/2016.
- */
 public class IIBTeststepProperties extends Properties {
     private String integrationServerName;
     private String applicationName;

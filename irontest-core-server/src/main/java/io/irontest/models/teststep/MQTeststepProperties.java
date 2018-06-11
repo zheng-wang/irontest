@@ -2,9 +2,6 @@ package io.irontest.models.teststep;
 
 import io.irontest.models.Properties;
 
-/**
- * Created by Zheng on 30/05/2016.
- */
 public class MQTeststepProperties extends Properties {
     private MQDestinationType destinationType = MQDestinationType.QUEUE;       //  queue is the default destination type
     private String queueName;
