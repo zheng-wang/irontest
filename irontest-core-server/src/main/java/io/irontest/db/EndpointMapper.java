@@ -12,9 +12,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-/**
- * Created by Trevor Li on 6/30/15.
- */
 public class EndpointMapper implements ResultSetMapper<Endpoint> {
     public Endpoint map(int index, ResultSet rs, StatementContext ctx) throws SQLException {
         List<String> fields = IronTestUtils.getFieldsPresentInResultSet(rs);

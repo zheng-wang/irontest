@@ -7,9 +7,6 @@ import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
 import java.util.Date;
 
-/**
- * Created by Zheng on 24/07/2016.
- */
 @RegisterMapper(TestcaseRunMapper.class)
 public abstract class TestcaseRunDAO {
     @SqlUpdate("CREATE SEQUENCE IF NOT EXISTS testcase_run_sequence START WITH 1 INCREMENT BY 1 NOCACHE")

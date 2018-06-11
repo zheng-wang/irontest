@@ -12,9 +12,6 @@ import java.util.List;
 
 import static io.irontest.IronTestConstants.DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX;
 
-/**
- * Created by Zheng on 19/07/2015.
- */
 @UseStringTemplate3StatementLocator
 @RegisterMapper(AssertionMapper.class)
 public abstract class AssertionDAO {

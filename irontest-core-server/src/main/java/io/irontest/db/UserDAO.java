@@ -10,9 +10,6 @@ import java.util.List;
 
 import static io.irontest.IronTestConstants.*;
 
-/**
- * Created by Zheng on 23/12/2017.
- */
 @RegisterMapper(UserMapper.class)
 public abstract class UserDAO {
     @SqlUpdate("CREATE SEQUENCE IF NOT EXISTS user_sequence START WITH 1 INCREMENT BY 1 NOCACHE")

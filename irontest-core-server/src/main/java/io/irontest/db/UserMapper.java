@@ -12,9 +12,6 @@ import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.List;
 
-/**
- * Created by Zheng on 24/12/2017.
- */
 public class UserMapper implements ResultSetMapper<User> {
     @Override
     public User map(int index, ResultSet rs, StatementContext ctx) throws SQLException {

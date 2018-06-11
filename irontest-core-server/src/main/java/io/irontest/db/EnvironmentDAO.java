@@ -9,9 +9,6 @@ import java.util.List;
 
 import static io.irontest.IronTestConstants.DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX;
 
-/**
- * Created by Trevor Li on 7/5/15.
- */
 @RegisterMapper(EnvironmentMapper.class)
 public abstract class EnvironmentDAO {
     @SqlUpdate("CREATE SEQUENCE IF NOT EXISTS environment_sequence START WITH 1 INCREMENT BY 1 NOCACHE")
