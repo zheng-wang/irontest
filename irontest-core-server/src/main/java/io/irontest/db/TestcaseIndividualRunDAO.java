@@ -3,13 +3,13 @@ package io.irontest.db;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.irontest.models.testrun.TestcaseIndividualRun;
 import io.irontest.models.testrun.TeststepRun;
-import org.skife.jdbi.v2.sqlobject.Bind;
-import org.skife.jdbi.v2.sqlobject.CreateSqlObject;
-import org.skife.jdbi.v2.sqlobject.GetGeneratedKeys;
-import org.skife.jdbi.v2.sqlobject.SqlUpdate;
+import org.skife.jdbi.v2.sqlobject.*;
+import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
 import java.util.Date;
+import java.util.List;
 
+@RegisterMapper(TestcaseIndividualRunMapper.class)
 public abstract class TestcaseIndividualRunDAO {
     @SqlUpdate("CREATE SEQUENCE IF NOT EXISTS testcase_individualrun_sequence START WITH 1 INCREMENT BY 1 NOCACHE")
     public abstract void createSequenceIfNotExists();
@@ -40,5 +40,16 @@ public abstract class TestcaseIndividualRunDAO {
         for (TeststepRun teststepRun: testcaseIndividualRun.getStepRuns()) {
             teststepRunDAO().insert_NoTransaction(testcaseRunId, id, teststepRun);
         }
+    }
+
+    @SqlQuery("select * from testcase_individualrun where testcase_run_id = :testcaseRunId")
+    public abstract List<TestcaseIndividualRun> _findByTestcaseRunId(@Bind("testcaseRunId") long testcaseRunId);
+
+    public List<TestcaseIndividualRun> findByTestcaseRunId_NoTransaction(long testcaseRunId) {
+        List<TestcaseIndividualRun> individualRuns = _findByTestcaseRunId(testcaseRunId);
+        for (TestcaseIndividualRun individualRun: individualRuns) {
+            individualRun.setStepRuns(teststepRunDAO().findByTestcaseIndividualRunId(individualRun.getId()));
+        }
+        return individualRuns;
     }
 }

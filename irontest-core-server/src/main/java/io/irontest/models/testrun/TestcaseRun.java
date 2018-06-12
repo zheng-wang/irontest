@@ -10,6 +10,16 @@ public class TestcaseRun extends TestRun {
 
     public TestcaseRun() {}
 
+    public TestcaseRun(TestcaseRun testcaseRun) {
+        super.setId(testcaseRun.getId());
+        super.setResult(testcaseRun.getResult());
+        super.setStartTime(testcaseRun.getStartTime());
+        super.setDuration(testcaseRun.getDuration());
+        this.testcaseId = testcaseRun.getTestcaseId();
+        this.testcaseName = testcaseRun.getTestcaseName();
+        this.testcaseFolderPath = testcaseRun.getTestcaseFolderPath();
+    }
+
     public long getTestcaseId() {
         return testcaseId;
     }

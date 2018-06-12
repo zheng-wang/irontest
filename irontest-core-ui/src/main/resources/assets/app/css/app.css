@@ -54,14 +54,24 @@
 }
 
 /* custom style for ui bootstrap accordion */
-.panel-default .panel-heading {
+#testcase-run-result-outline-area .panel-group .panel {
+  margin-top: 5px;
+}
+#testcase-run-result-outline-area .panel-heading {
   padding: 5px 7px;
 }
-.panel-default h5 {
-  margin: 0px;
+#testcase-run-result-outline-area .panel-body {
+  padding-top: 8px;
+  padding-bottom: 3px;    /* plus margin-bottom of '.panel-default h5' should be same as padding-top */
+  padding-left: 15px;
+  padding-right: 15px;
 }
-.panel-group .panel {
-  margin-top: 5px;
+#testcase-run-result-outline-area .panel-group .list-unstyled {
+  margin-bottom: 0px;
+}
+#testcase-run-result-outline-area .panel-default h5 {
+  margin-top: 0px;
+  margin-bottom: 5px;
 }
 
 /* custom jsTree contextmenu class */

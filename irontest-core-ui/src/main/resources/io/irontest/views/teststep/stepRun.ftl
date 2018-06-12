@@ -1,6 +1,9 @@
 <#ftl encoding='UTF-8'>
-<div class="row">
-  <div class="col-lg-12"><h4>${stepRun.teststep.name}</h4></div>
+<div class="row" id="step-run-${ stepRun.id?string.computer }">
+  <div class="col-lg-11"><h4>${ stepRun.teststep.name }</h4></div>
+  <#if testcaseRun??>
+    <div class="col-lg-1"><a href="#page-top">Top</a></div>
+  </#if>
 </div>
 
 <div class="row">

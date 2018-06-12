@@ -10,6 +10,12 @@ public class DataDrivenTestcaseRun extends TestcaseRun {
     @JsonView(ResourceJsonViews.TestcaseRunResultOnTestcaseEditView.class)
     private List<TestcaseIndividualRun> individualRuns = new ArrayList<>();
 
+    public DataDrivenTestcaseRun() {}
+
+    public DataDrivenTestcaseRun(TestcaseRun testcaseRun) {
+        super(testcaseRun);
+    }
+
     public List<TestcaseIndividualRun> getIndividualRuns() {
         return individualRuns;
     }

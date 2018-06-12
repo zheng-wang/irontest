@@ -6,6 +6,7 @@ import org.skife.jdbi.v2.sqlobject.*;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
 import java.util.Date;
+import java.util.List;
 
 @RegisterMapper(TestcaseRunMapper.class)
 public abstract class TestcaseRunDAO {
@@ -62,8 +63,18 @@ public abstract class TestcaseRunDAO {
 
     @Transaction
     public TestcaseRun findById(long id) {
-        RegularTestcaseRun testcaseRun = (RegularTestcaseRun) _findById(id);
-        testcaseRun.setStepRuns(teststepRunDAO().findByTestcaseRunId_NoTransaction(id));
+        TestcaseRun testcaseRun = _findById(id);
+        List<TestcaseIndividualRun> individualRuns = testcaseIndividualRunDAO().findByTestcaseRunId_NoTransaction(id);
+        if (individualRuns.size() > 0) {     //  it is a data driven test case run
+            DataDrivenTestcaseRun dataDrivenTestcaseRun = new DataDrivenTestcaseRun(testcaseRun);
+            dataDrivenTestcaseRun.setIndividualRuns(individualRuns);
+            testcaseRun = dataDrivenTestcaseRun;
+        } else {                             //  it is a regular test case run
+            RegularTestcaseRun regularTestcaseRun = new RegularTestcaseRun(testcaseRun);
+            regularTestcaseRun.setStepRuns(teststepRunDAO().findByTestcaseRunId_NoTransaction(id));
+            testcaseRun = regularTestcaseRun;
+        }
+
         return testcaseRun;
     }
 

@@ -1,7 +1,6 @@
 package io.irontest.db;
 
 import io.irontest.models.TestResult;
-import io.irontest.models.testrun.RegularTestcaseRun;
 import io.irontest.models.testrun.TestcaseRun;
 import org.skife.jdbi.v2.StatementContext;
 import org.skife.jdbi.v2.tweak.ResultSetMapper;
@@ -11,7 +10,7 @@ import java.sql.SQLException;
 
 public class TestcaseRunMapper implements ResultSetMapper<TestcaseRun> {
     public TestcaseRun map(int index, ResultSet rs, StatementContext ctx) throws SQLException {
-        TestcaseRun testcaseRun = new RegularTestcaseRun();
+        TestcaseRun testcaseRun = new TestcaseRun();
 
         testcaseRun.setId(rs.getLong("id"));
         testcaseRun.setTestcaseId(rs.getLong("testcase_id"));

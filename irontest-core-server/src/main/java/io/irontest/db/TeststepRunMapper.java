@@ -20,6 +20,7 @@ public class TeststepRunMapper implements ResultSetMapper<TeststepRun> {
         TeststepRun teststepRun = new TeststepRun();
         ObjectMapper objectMapper = new ObjectMapper();
 
+        teststepRun.setId(rs.getLong("id"));
         teststepRun.setStartTime(rs.getTimestamp("starttime"));
         teststepRun.setDuration(rs.getLong("duration"));
         teststepRun.setResult(TestResult.getByText(rs.getString("result")));

@@ -10,6 +10,12 @@ public class RegularTestcaseRun extends TestcaseRun {
     @JsonView(ResourceJsonViews.TestcaseRunResultOnTestcaseEditView.class)
     private List<TeststepRun> stepRuns = new ArrayList<>();
 
+    public RegularTestcaseRun() {}
+
+    public RegularTestcaseRun(TestcaseRun testcaseRun) {
+        super(testcaseRun);
+    }
+
     public List<TeststepRun> getStepRuns() {
         return stepRuns;
     }

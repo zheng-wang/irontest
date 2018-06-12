@@ -5,8 +5,3 @@
 .test-result-color-Failed {
   color: red;
 }
-
-/* used to wrap long unspaced word such as base64 encoding of file contents */
-.word-wrap {
-  word-wrap: break-word;
-}

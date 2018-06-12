@@ -28,7 +28,7 @@
   <div class="row">
     <div class="col-lg-offset-1 col-lg-10">
 
-      <div class="row">
+      <div class="row" id="page-top">
         <div class="col-lg-12"><h3>${ testcaseRun.testcaseFolderPath }/${ testcaseRun.testcaseName }</h3></div>
       </div>
 
@@ -43,12 +43,12 @@
 
       <div class="row">&nbsp;</div>
 
-      <#list testcaseRun.stepRuns as stepRun>
-        <#include "teststep/stepRun.ftl">
-        <div class="row">&nbsp;</div>
-      </#list>
+      <#if testcaseRun.stepRuns??>
+        <#include "regularTestcaseRun.ftl">
+      <#elseif testcaseRun.individualRuns??>
+        <#include "dataDrivenTestcaseRun.ftl">
+      </#if>
     </div>
-
   </div>
 </div>
 </body>

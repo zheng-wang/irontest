@@ -65,4 +65,7 @@ public abstract class TeststepRunDAO {
 
     @SqlQuery("select * from teststep_run where id = :id")
     public abstract TeststepRun findById(@Bind("id") long id);
+
+    @SqlQuery("select * from teststep_run where testcase_individualrun_id = :testcaseIndividualRunId")
+    public abstract List<TeststepRun> findByTestcaseIndividualRunId(@Bind("testcaseIndividualRunId") long testcaseIndividualRunId);
 }
