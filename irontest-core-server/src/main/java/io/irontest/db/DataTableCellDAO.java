@@ -53,4 +53,9 @@ public abstract class DataTableCellDAO {
     @SqlUpdate("update datatable_cell set value = :cell.value, endpoint_id = :endpointId, updated = CURRENT_TIMESTAMP " +
             "where id = :cell.id")
     public abstract void update(@BindBean("cell") DataTableCell cell, @Bind("endpointId") Long endpointId);
+
+    @SqlUpdate("insert into datatable_cell (column_id, row_sequence, value, endpoint_id) " +
+            "select :targetColumnId, row_sequence, value, endpoint_id from datatable_cell where column_id = :sourceColumnId")
+    public abstract void duplicateByColumn(@Bind("sourceColumnId") long sourceColumnId,
+                                           @Bind("targetColumnId") long targetColumnId);
 }

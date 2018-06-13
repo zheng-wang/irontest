@@ -44,7 +44,7 @@ public abstract class DataTableColumnDAO {
      * @param type for enum, name instead of value is bound by JDBI, so use a separate @Bind here instead of taking advantage of the @BindBean.
      * @return
      */
-    @SqlUpdate("insert into datatable_column (name, type, sequence, testcase_id) values (:name, :type, " +
+    @SqlUpdate("insert into datatable_column (name, type, sequence, testcase_id) values (:c.name, :type, " +
             ":c.sequence, :testcaseId)")
     @GetGeneratedKeys
     public abstract long insert(@Bind("testcaseId") long testcaseId, @BindBean("c") DataTableColumn column,
@@ -72,4 +72,9 @@ public abstract class DataTableColumnDAO {
 
     @SqlUpdate("delete from datatable_column where id = :id")
     public abstract void delete(@Bind("id") long id);
+
+    @SqlUpdate("insert into datatable_column (name, type, sequence, testcase_id) " +
+            "select name, type, sequence, :targetTestcaseId from datatable_column where testcase_id = :sourceTestcaseId")
+    public abstract void duplicateByTestcase(@Bind("sourceTestcaseId") long sourceTestcaseId,
+                                             @Bind("targetTestcaseId") long targetTestcaseId);
 }

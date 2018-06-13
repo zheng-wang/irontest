@@ -5,3 +5,13 @@
 .test-result-color-Failed {
   color: red;
 }
+
+.separator {
+  margin-top: 15px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid black;
+}
+
+.data-driven-testcase-step-list {
+  padding-left: 20px;
+}

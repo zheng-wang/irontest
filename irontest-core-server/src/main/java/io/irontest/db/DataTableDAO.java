@@ -74,4 +74,20 @@ public abstract class DataTableDAO {
 
         return dataTable;
     }
+
+    public void duplicateByTestcase_NoTransaction(long sourceTestcaseId, long targetTestcaseId) {
+        dataTableColumnDAO().duplicateByTestcase(sourceTestcaseId, targetTestcaseId);
+        List<DataTableColumn> sourceColumns = dataTableColumnDAO().findByTestcaseId(sourceTestcaseId);
+        List<DataTableColumn> targetColumns = dataTableColumnDAO().findByTestcaseId(targetTestcaseId);
+        for (DataTableColumn targetColumn: targetColumns) {
+            long sourceColumnId = -1;
+            for (DataTableColumn sourceColumn: sourceColumns) {
+                if (sourceColumn.getName().equals(targetColumn.getName())) {
+                    sourceColumnId = sourceColumn.getId();
+                    break;
+                }
+            }
+            dataTableCellDAO().duplicateByColumn(sourceColumnId, targetColumn.getId());
+        }
+    }
 }

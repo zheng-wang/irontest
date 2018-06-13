@@ -63,12 +63,12 @@ public abstract class TeststepDAO {
      * @return
      */
     @SqlUpdate("insert into teststep (testcase_id, sequence, type, description, action, request, request_type, " +
-            "request_filename, endpoint_id, other_properties) values (:t.testcaseId, " +
+            "request_filename, endpoint_id, endpoint_property, other_properties) values (:t.testcaseId, " +
                 "case when :t.sequence = 0 " +
                     "then (select coalesce(max(sequence), 0) + 1 from teststep where testcase_id = :t.testcaseId) " +
                     "else :t.sequence end, " +
             ":t.type, :t.description, :t.action, :request, :requestType, :t.requestFilename, :endpointId, " +
-            ":otherProperties)")
+            ":t.endpointProperty, :otherProperties)")
     @GetGeneratedKeys
     protected abstract long _insert(@BindBean("t") Teststep teststep, @Bind("request") Object request,
                                     @Bind("requestType") String requestType, @Bind("endpointId") Long endpointId,
@@ -91,9 +91,9 @@ public abstract class TeststepDAO {
      */
     public long insert_NoTransaction(Teststep teststep, AppMode appMode) throws JsonProcessingException {
         Endpoint endpoint = teststep.getEndpoint();
-        if (endpoint == null) {    //  from test step creation on UI
+        if (endpoint == null && teststep.getEndpointProperty() == null) {    //  from test step creation on UI
             endpoint = endpointDAO().createUnmanagedEndpoint_NoTransaction(teststep.getType(), appMode);
-        } else if (endpoint.getId() == 0){          //  from test case duplicating
+        } else if (endpoint != null && endpoint.getId() == 0){          //  from test case duplicating, and old endpoint is unmanaged
             long endpointId = endpointDAO().insertUnmanagedEndpoint_NoTransaction(endpoint);
             endpoint.setId(endpointId);
         }

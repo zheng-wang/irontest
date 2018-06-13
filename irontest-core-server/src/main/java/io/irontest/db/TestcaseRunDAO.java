@@ -64,26 +64,30 @@ public abstract class TestcaseRunDAO {
     @Transaction
     public TestcaseRun findById(long id) {
         TestcaseRun testcaseRun = _findById(id);
-        List<TestcaseIndividualRun> individualRuns = testcaseIndividualRunDAO().findByTestcaseRunId_NoTransaction(id);
-        if (individualRuns.size() > 0) {     //  it is a data driven test case run
-            DataDrivenTestcaseRun dataDrivenTestcaseRun = new DataDrivenTestcaseRun(testcaseRun);
-            dataDrivenTestcaseRun.setIndividualRuns(individualRuns);
-            testcaseRun = dataDrivenTestcaseRun;
-        } else {                             //  it is a regular test case run
-            RegularTestcaseRun regularTestcaseRun = new RegularTestcaseRun(testcaseRun);
-            regularTestcaseRun.setStepRuns(teststepRunDAO().findByTestcaseRunId_NoTransaction(id));
-            testcaseRun = regularTestcaseRun;
-        }
-
-        return testcaseRun;
+        return resolveTestcaseRun(testcaseRun);
     }
 
     @Transaction
     public TestcaseRun findLastByTestcaseId(long testcaseId) {
-        RegularTestcaseRun testcaseRun = (RegularTestcaseRun) _findLastByTestcaseId(testcaseId);
+        TestcaseRun testcaseRun = _findLastByTestcaseId(testcaseId);
+        return resolveTestcaseRun(testcaseRun);
+    }
+
+    private TestcaseRun resolveTestcaseRun(TestcaseRun testcaseRun) {
         if (testcaseRun != null) {
-            testcaseRun.setStepRuns(teststepRunDAO().findByTestcaseRunId_NoTransaction(testcaseRun.getId()));
+            long runId = testcaseRun.getId();
+            List<TestcaseIndividualRun> individualRuns = testcaseIndividualRunDAO().findByTestcaseRunId_NoTransaction(runId);
+            if (individualRuns.size() > 0) {     //  it is a data driven test case run
+                DataDrivenTestcaseRun dataDrivenTestcaseRun = new DataDrivenTestcaseRun(testcaseRun);
+                dataDrivenTestcaseRun.setIndividualRuns(individualRuns);
+                testcaseRun = dataDrivenTestcaseRun;
+            } else {                             //  it is a regular test case run
+                RegularTestcaseRun regularTestcaseRun = new RegularTestcaseRun(testcaseRun);
+                regularTestcaseRun.setStepRuns(teststepRunDAO().findByTestcaseRunId_NoTransaction(runId));
+                testcaseRun = regularTestcaseRun;
+            }
         }
+
         return testcaseRun;
     }
 }

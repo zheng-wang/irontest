@@ -14,11 +14,7 @@
   </div>
 </div>
 
-<div class="row">
-  <div class="col-lg-12">
-    <div style="border-bottom: 1px solid black">&nbsp;</div>
-  </div>
-</div>
+<div class="separator"></div>
 
 <#list testcaseRun.stepRuns as stepRun>
   <#include "teststep/stepRun.ftl">

@@ -36,6 +36,9 @@ public abstract class TestcaseDAO {
     protected abstract TeststepDAO teststepDAO();
 
     @CreateSqlObject
+    protected abstract DataTableDAO dataTableDAO();
+
+    @CreateSqlObject
     protected abstract AssertionDAO assertionDAO();
 
     @SqlUpdate("insert into testcase (description, parent_folder_id) values (:description, :parentFolderId)")
@@ -183,6 +186,7 @@ public abstract class TestcaseDAO {
                     newEndpoint.setOtherProperties(oldEndpoint.getOtherProperties());
                 }
             }
+            newTeststep.setEndpointProperty(oldTeststep.getEndpointProperty());
             long newTeststepId = teststepDAO().insert_NoTransaction(newTeststep, null);
 
             //  duplicate assertions
@@ -195,6 +199,9 @@ public abstract class TestcaseDAO {
                 assertionDAO().insert_NoTransaction(newAssertion);
             }
         }
+
+        //  duplicate data table
+        dataTableDAO().duplicateByTestcase_NoTransaction(oldTestcaseId, newTestcase.getId());
 
         return newTestcase.getId();
     }

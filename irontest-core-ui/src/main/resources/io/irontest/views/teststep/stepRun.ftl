@@ -50,7 +50,7 @@
           </div>
         </div>
       </#if>
-      <div class="row">
+      <div class="form-group">
         <textarea class="form-control" rows="8" readonly>${ stepRun.teststep.request }</textarea>
       </div>
     </div>
@@ -93,7 +93,7 @@
           </div>
         </div>
       </#if>
-      <div class="row">
+      <div class="form-group">
         <#t><textarea class="form-control" rows="8" readonly>
           <#t><#include "${stepRun.teststep.type?lower_case}TeststepResponse.ftl">
         <#t></textarea>
@@ -136,7 +136,9 @@
       <div class="row">
         <div class="col-lg-1">Expected:</div>
         <div class="col-lg-11">
-          <#include "../assertion/${verification.assertion.type?lower_case}AssertionExpected.ftl">
+          <div class="form-group">
+            <#include "../assertion/${verification.assertion.type?lower_case}AssertionExpected.ftl">
+          </div>
         </div>
       </div>
       <div class="form-group"></div> <!-- spacer -->
