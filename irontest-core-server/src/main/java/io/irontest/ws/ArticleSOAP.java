@@ -18,14 +18,14 @@ public class ArticleSOAP {
     }
 
     @WebMethod
-    public List<Article> findAll() {
+    public List<Article> findAllArticles() {
         return dao.findAll();
     }
 
     @WebMethod
-    public List<Article> findByCreationTime(@WebParam(name = "startTime") Date startTime,
+    public List<Article> findArticlesByCreationTimeRange(@WebParam(name = "startTime") Date startTime,
                                             @WebParam(name = "endTime") Date endTime) {
-        return dao.findByCreationTime(startTime, endTime);
+        return dao.findByCreationTimeRange(startTime, endTime);
     }
 
     @WebMethod
@@ -38,5 +38,10 @@ public class ArticleSOAP {
     @WebMethod
     public int updateArticleByTitle(@WebParam(name = "title") String title, @WebParam(name = "content") String content) {
         return dao.updateByTitle(title, content);
+    }
+
+    @WebMethod
+    public int deleteArticleById(@WebParam(name = "id") long id) {
+        return dao.deleteById(id);
     }
 }

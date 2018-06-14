@@ -22,7 +22,7 @@ public interface ArticleDAO {
     int update(@BindBean Article article);
 
     @SqlUpdate("delete from article where id = :id")
-    void deleteById(@Bind("id") long id);
+    int deleteById(@Bind("id") long id);
 
     @SqlQuery("select * from article")
     List<Article> findAll();
@@ -31,7 +31,7 @@ public interface ArticleDAO {
     Article findById(@Bind("id") long id);
 
     @SqlQuery("select * from article where created >= :startTime and created <= :endTime")
-    List<Article> findByCreationTime(@Bind("startTime") Date startTime, @Bind("endTime") Date endTime);
+    List<Article> findByCreationTimeRange(@Bind("startTime") Date startTime, @Bind("endTime") Date endTime);
 
     @SqlUpdate("update article set content = :content, updated = CURRENT_TIMESTAMP where title = :title")
     int updateByTitle(@Bind("title") String title, @Bind("content") String content);

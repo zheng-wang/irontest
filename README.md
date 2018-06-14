@@ -140,7 +140,11 @@ Click the Assertions button to open the assertions pane. In the assertions pane,
 Click the Back link to return to the test case edit view.
 
 #### Run the Test Case
-Now we have finished editing our test case. It's time to run it. Click the Run button, and you'll see the result for both the test case and each test step. Click the result link for a test step to see its run report, like shown below.
+Now we have finished editing our test case. It's time to run it. Click the Run button, and you'll see the result for the whole test case beside the Run button, and in the bottom pane an outline of result for all test steps, like shown below. Passed test step is indicated by green color and failed test step by red color.
+
+![Test Case Run Result](screenshots/integrated-soap-testing/test-case-run-result.png)
+
+Click the link for a test step in the bottom pane to open a modal and see the step run report, like shown below.
 
 ![Test Step Run Report](screenshots/integrated-soap-testing/test-step-run-report.png)
 
