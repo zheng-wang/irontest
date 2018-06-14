@@ -22,10 +22,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.InputStream;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static io.irontest.IronTestConstants.IMPLICIT_PROPERTY_DATE_TIME_FORMAT;
 import static io.irontest.IronTestConstants.IMPLICIT_PROPERTY_NAME_TEST_STEP_START_TIME;
@@ -136,11 +133,13 @@ public class TeststepResource {
         //  gather referenceable string properties and endpoint properties
         List<UserDefinedProperty> testcaseUDPs = udpDAO.findByTestcaseId(teststep.getTestcaseId());
         Map<String, String> referenceableStringProperties = IronTestUtils.udpListToMap(testcaseUDPs);
+        Set<String> udpNames = referenceableStringProperties.keySet();
         referenceableStringProperties.put(IMPLICIT_PROPERTY_NAME_TEST_STEP_START_TIME,
                 IMPLICIT_PROPERTY_DATE_TIME_FORMAT.format(new Date()));
-        Map<String, Endpoint> referenceableEndpointProperties = new HashMap<>();
         DataTable dataTable = dataTableDAO.getTestcaseDataTable(teststep.getTestcaseId(), true);
-        if (dataTable.getRows().size() == 1) {
+        Map<String, Endpoint> referenceableEndpointProperties = new HashMap<>();
+        if (dataTable.getRows().size() > 0) {
+            IronTestUtils.checkDuplicatePropertyNameBetweenDataTableAndUPDs(udpNames, dataTable);
             referenceableStringProperties.putAll(dataTable.getStringPropertiesInRow(0));
             referenceableEndpointProperties.putAll(dataTable.getEndpointPropertiesInRow(0));
         }

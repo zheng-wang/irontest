@@ -22,6 +22,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Path("/") @Produces({ MediaType.APPLICATION_JSON })
 public class AssertionResource {
@@ -50,8 +51,10 @@ public class AssertionResource {
         //  gather referenceable string properties
         List<UserDefinedProperty> testcaseUDPs = udpDAO.findTestcaseUDPsByTeststepId(assertion.getTeststepId());
         Map<String, String> referenceableStringProperties = IronTestUtils.udpListToMap(testcaseUDPs);
+        Set<String> udpNames = referenceableStringProperties.keySet();
         DataTable dataTable = dataTableDAO.getTestcaseDataTable(teststepDAO.findTestcaseIdById(assertion.getTeststepId()), true);
-        if (dataTable.getRows().size() == 1) {
+        if (dataTable.getRows().size() > 0) {
+            IronTestUtils.checkDuplicatePropertyNameBetweenDataTableAndUPDs(udpNames, dataTable);
             referenceableStringProperties.putAll(dataTable.getStringPropertiesInRow(0));
         }
         AssertionVerifier assertionVerifier = AssertionVerifierFactory.getInstance().create(

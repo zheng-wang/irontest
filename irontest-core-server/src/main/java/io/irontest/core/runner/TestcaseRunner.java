@@ -19,10 +19,7 @@ import io.irontest.models.teststep.Teststep;
 import io.irontest.utils.IronTestUtils;
 import org.slf4j.Logger;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static io.irontest.IronTestConstants.*;
 
@@ -35,6 +32,7 @@ public abstract class TestcaseRunner {
     private TestcaseRunDAO testcaseRunDAO;
     private Logger LOGGER;
     private TestcaseRunContext testcaseRunContext = new TestcaseRunContext();
+    private Set<String> udpNames;
     private Map<String, String> referenceableStringProperties = new HashMap<>();
     private Map<String, Endpoint> referenceableEndpointProperties = new HashMap<>();
 
@@ -63,6 +61,8 @@ public abstract class TestcaseRunner {
     protected TestcaseRunContext getTestcaseRunContext() {
         return testcaseRunContext;
     }
+
+    protected Set<String> getUdpNames() { return udpNames; }
 
     protected Map<String, String> getReferenceableStringProperties() {
         return referenceableStringProperties;
@@ -100,6 +100,7 @@ public abstract class TestcaseRunner {
         testcaseRunContext.setTestcaseRunStartTime(testcaseRunStartTime);
 
         referenceableStringProperties = IronTestUtils.udpListToMap(testcaseUDPs);
+        udpNames = referenceableStringProperties.keySet();
         referenceableStringProperties.put(IMPLICIT_PROPERTY_NAME_TEST_CASE_START_TIME,
                 IMPLICIT_PROPERTY_DATE_TIME_FORMAT.format(testcaseRunStartTime));
     }

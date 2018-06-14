@@ -1,6 +1,8 @@
 package io.irontest.utils;
 
 import io.irontest.core.runner.SQLStatementType;
+import io.irontest.models.DataTable;
+import io.irontest.models.DataTableColumn;
 import io.irontest.models.UserDefinedProperty;
 import org.skife.jdbi.v2.Script;
 
@@ -9,10 +11,7 @@ import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class IronTestUtils {
     /**
@@ -55,5 +54,15 @@ public class IronTestUtils {
             result.put(udp.getName(), udp.getValue());
         }
         return result;
+    }
+
+    public static void checkDuplicatePropertyNameBetweenDataTableAndUPDs(Set<String> udpNames, DataTable dataTable) {
+        Set<String> set = new HashSet<>();
+        set.addAll(udpNames);
+        for (DataTableColumn dataTableColumn : dataTable.getColumns()) {
+            if (!set.add(dataTableColumn.getName())) {
+                throw new RuntimeException("Duplicate property name between data table and UDPs: " + dataTableColumn.getName());
+            }
+        }
     }
 }

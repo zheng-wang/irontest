@@ -12,12 +12,11 @@ import io.irontest.models.testrun.TestcaseRun;
 import io.irontest.models.testrun.TeststepRun;
 import io.irontest.models.teststep.Teststep;
 import io.irontest.models.teststep.WaitTeststepProperties;
+import io.irontest.utils.IronTestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 import static io.irontest.IronTestConstants.IMPLICIT_PROPERTY_DATE_TIME_FORMAT;
 import static io.irontest.IronTestConstants.IMPLICIT_PROPERTY_NAME_TEST_CASE_INDIVIDUAL_START_TIME;
@@ -40,6 +39,8 @@ public class DataDrivenTestcaseRunner extends TestcaseRunner {
 
         preProcessingForIIBTestcase();
         startTestcaseRun(testcaseRun);
+
+        IronTestUtils.checkDuplicatePropertyNameBetweenDataTableAndUPDs(getUdpNames(), dataTable);
 
         for (int dataTableRowIndex = 0; dataTableRowIndex < dataTable.getRows().size(); dataTableRowIndex++) {
             LinkedHashMap<String, DataTableCell> dataTableRow = dataTable.getRows().get(dataTableRowIndex);
