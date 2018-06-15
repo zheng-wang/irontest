@@ -93,8 +93,8 @@ Under the Invocation tab, enter below SQL script.
 delete from article;
 
 -- Create two article records
-insert into article (title, content) values ('article1', 'content1');
-insert into article (title, content) values ('article2', 'content2');
+insert into article (id, title, content) values (1, 'article1', 'content1');
+insert into article (id, title, content) values (2, 'article2', 'content2');
 ```
 
 Click the Invoke button to try it out (run the script), like shown below.
@@ -125,7 +125,7 @@ Click the name of step 3 to open its edit view.
  
 Under the Endpoint Details tab, enter exactly the same information as in step 1 because we are interacting with the same database. The information duplication can be avoided by using `managed endpoints`. Refer to this [wiki page](https://github.com/zheng-wang/irontest/wiki/Endpoints-Management) for more details.
 
-Under the Invocation tab, enter SQL query `select title, content from article;`.
+Under the Invocation tab, enter SQL query `select id, title, content from article;`.
 
 Click the Invoke button to try it out (run the query), like shown below.
 
