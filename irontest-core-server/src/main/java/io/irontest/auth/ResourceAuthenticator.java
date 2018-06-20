@@ -1,11 +1,12 @@
 package io.irontest.auth;
 
-import com.google.common.base.Optional;
 import io.dropwizard.auth.Authenticator;
 import io.dropwizard.auth.basic.BasicCredentials;
 import io.irontest.db.UserDAO;
 import io.irontest.models.User;
 import io.irontest.utils.PasswordUtils;
+
+import java.util.Optional;
 
 public class ResourceAuthenticator implements Authenticator<BasicCredentials, SimplePrincipal> {
     private UserDAO userDAO;
@@ -23,6 +24,6 @@ public class ResourceAuthenticator implements Authenticator<BasicCredentials, Si
             principal.getRoles().addAll(user.getRoles());
             return Optional.of(principal);
         }
-        return Optional.absent();
+        return Optional.empty();
     }
 }

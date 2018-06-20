@@ -3,6 +3,18 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <parent>
         <artifactId>irontest-parent</artifactId>
@@ -13,7 +25,7 @@
     <artifactId>irontest-core-server</artifactId>
 
     <properties>
-        <dropwizard.version>0.9.3</dropwizard.version>
+        <dropwizard.version>1.3.4</dropwizard.version>
     </properties>
 
     <dependencies>
@@ -23,21 +35,6 @@
             <version>4.12</version>
             <scope>test</scope>
         </dependency>
-
-        <!-- These two dependencies were introduced for DB test step while keeping dropwizard version below 1.0, to avoid upgrading Java version to 1.8.
-            Remove them after upgrading to dropwizard 1.0.5.
-        -->
-        <dependency>
-            <groupId>org.antlr</groupId>
-            <artifactId>antlr-runtime</artifactId>
-            <version>3.4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jdbi</groupId>
-            <artifactId>jdbi</artifactId>
-            <version>2.77</version>
-        </dependency>
-
         <dependency>
             <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-core</artifactId>
@@ -80,6 +77,7 @@
             <artifactId>stringtemplate</artifactId>
             <version>3.2.1</version>
         </dependency>
+
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
@@ -88,7 +86,7 @@
         <dependency>
             <groupId>com.github.roskart.dropwizard-jaxws</groupId>
             <artifactId>dropwizard-jaxws</artifactId>
-            <version>0.10.2</version>
+            <version>1.0.4</version>
         </dependency>
         <dependency>
             <groupId>com.predic8</groupId>
@@ -129,6 +127,38 @@
             <groupId>uk.com.robust-it</groupId>
             <artifactId>cloning</artifactId>
             <version>1.9.9</version>
+        </dependency>
+
+        <!-- for Java 9+ (backward compatible with Java 1.8) -->
+        <dependency>
+            <groupId>javax.xml.ws</groupId>
+            <artifactId>jaxws-api</artifactId>
+            <version>2.2.12</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.javaee-api</groupId>
+            <artifactId>javax.jws</artifactId>
+            <version>3.1.2.2</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+            <version>2.3.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-core</artifactId>
+            <version>2.3.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+            <version>1.1.1</version>
         </dependency>
     </dependencies>
 </project>
