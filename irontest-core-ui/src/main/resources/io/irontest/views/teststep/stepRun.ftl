@@ -43,8 +43,8 @@
           <div class="col-lg-10">
             <#list stepRun.teststep.otherProperties.httpHeaders as httpHeader>
               <div class="row">
-                <div class="col-lg-2"><#escape x as x?html>${ httpHeader.name }:</#escape></div>
-                <div class="col-lg-10"><#escape x as x?html>${ httpHeader.value }</#escape></div>
+                <div class="col-lg-2">${ httpHeader.name }:</div>
+                <div class="col-lg-10">${ httpHeader.value }</div>
               </div>
             </#list>
           </div>
@@ -65,7 +65,7 @@
     <div class="col-lg-10">
       <#list stepRun.teststep.otherProperties.rfh2Header.folders as rfh2Folder>
         <div class="row">
-          <div class="col-lg-12"><#escape x as x?html>${ rfh2Folder.string }</#escape></div>
+          <div class="col-lg-12">${ rfh2Folder.string }</div>
         </div>
       </#list>
     </div>
@@ -86,8 +86,8 @@
           <div class="col-lg-10">
             <#list stepRun.response.httpHeaders as httpHeader>
               <div class="row">
-                <div class="col-lg-2"><#escape x as x?html>${ httpHeader.name }:</#escape></div>
-                <div class="col-lg-10"><#escape x as x?html>${ httpHeader.value }</#escape></div>
+                <div class="col-lg-2">${ httpHeader.name }:</div>
+                <div class="col-lg-10">${ httpHeader.value }</div>
               </div>
             </#list>
           </div>

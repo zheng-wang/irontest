@@ -1,1 +1,1 @@
-Response contains "<#escape x as x?html>${ verification.assertion.otherProperties.contains }</#escape>".
+Response contains "${ verification.assertion.otherProperties.contains }".
