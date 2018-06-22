@@ -3,7 +3,7 @@ package io.irontest;
 import io.dropwizard.jersey.errors.ErrorMessage;
 import io.dropwizard.jersey.errors.LoggingExceptionMapper;
 import org.h2.api.ErrorCode;
-import org.skife.jdbi.v2.exceptions.UnableToExecuteStatementException;
+import org.jdbi.v3.core.statement.UnableToExecuteStatementException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

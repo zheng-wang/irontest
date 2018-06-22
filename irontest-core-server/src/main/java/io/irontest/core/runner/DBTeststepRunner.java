@@ -6,8 +6,13 @@ import io.irontest.models.OracleTIMESTAMPTZSerializer;
 import io.irontest.models.endpoint.Endpoint;
 import io.irontest.models.teststep.Teststep;
 import io.irontest.utils.IronTestUtils;
-import org.skife.jdbi.v2.*;
-import org.skife.jdbi.v2.tweak.BaseStatementCustomizer;
+import org.jdbi.v3.core.Handle;
+import org.jdbi.v3.core.Jdbi;
+import org.jdbi.v3.core.result.ResultIterable;
+import org.jdbi.v3.core.statement.Query;
+import org.jdbi.v3.core.statement.Script;
+import org.jdbi.v3.core.statement.StatementContext;
+import org.jdbi.v3.core.statement.StatementCustomizer;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSetMetaData;
@@ -42,20 +47,23 @@ public class DBTeststepRunner extends TeststepRunner {
         DBAPIResponse response = new DBAPIResponse();
         String request = (String) teststep.getRequest();
         Endpoint endpoint = teststep.getEndpoint();
-        DBI jdbi = new DBI(endpoint.getUrl(), endpoint.getUsername(), getDecryptedEndpointPassword());
+        Jdbi jdbi = Jdbi.create(endpoint.getUrl(), endpoint.getUsername(), getDecryptedEndpointPassword());
+        Handle handle = jdbi.open();
 
         //  get SQL statements (trimmed and without comments) and JDBI script object
-        List<String> statements = IronTestUtils.getStatements(request);
+//        List<String> statements = IronTestUtils.getStatements(request);
+        Script script = handle.createScript(request);
+        List<String> statements = script.getStatements();
         sanityCheckTheStatements(statements);
 
-        Handle handle = jdbi.open();
         if (SQLStatementType.isSelectStatement(statements.get(0))) {    //  the request is a select statement
             RetainingColumnOrderResultSetMapper resultSetMapper = new RetainingColumnOrderResultSetMapper();
             //  use statements.get(0) instead of the raw request, as Oracle does not support trailing semicolon in select statement
-            Query<Map<String, Object>> query = handle.createQuery(statements.get(0)).map(resultSetMapper);
+            Query query = handle.createQuery(statements.get(0))
+                    .setMaxRows(5000);          //  limit the number of returned rows
             //  obtain columnNames in case the query returns no row
             final List<String> columnNames = new ArrayList<String>();
-            query.addStatementCustomizer(new BaseStatementCustomizer() {
+            query.addCustomizer(new StatementCustomizer() {
                 public void afterExecution(PreparedStatement stmt, StatementContext ctx) throws SQLException {
                     ResultSetMetaData metaData = stmt.getMetaData();
                     for (int i = 1; i <= metaData.getColumnCount(); i++) {
@@ -63,11 +71,12 @@ public class DBTeststepRunner extends TeststepRunner {
                     }
                 }
             });
-            List<Map<String, Object>> rows = query.list(5000);    //  limit the number of returned rows
+
+            List<Map<String, Object>> rows = query.map(resultSetMapper).list();
             response.setColumnNames(columnNames);
             response.setRowsJSON(jacksonObjectMapper.writeValueAsString(rows));
         } else {                                          //  the request is one or more non-select statements
-            Script script = handle.createScript(request);
+//            Script script = handle.createScript(request);
             int[] returnValues = script.execute();
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < returnValues.length; i++) {

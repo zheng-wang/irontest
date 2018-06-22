@@ -12,7 +12,7 @@ import java.security.spec.InvalidKeySpecException;
 
 import static io.irontest.IronTestConstants.*;
 
-public class PasswordUtils {
+public final class PasswordUtils {
     private static SecureRandom random = new SecureRandom();
 
     /**

@@ -9,8 +9,13 @@ import io.irontest.models.assertion.IntegerEqualAssertionProperties;
 import io.irontest.models.endpoint.Endpoint;
 import io.irontest.models.teststep.*;
 import io.irontest.utils.XMLUtils;
-import org.skife.jdbi.v2.sqlobject.*;
-import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
+import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
+import org.jdbi.v3.sqlobject.customizer.Bind;
+import org.jdbi.v3.sqlobject.customizer.BindBean;
+import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
+import org.jdbi.v3.sqlobject.statement.SqlQuery;
+import org.jdbi.v3.sqlobject.statement.SqlUpdate;
+import org.jdbi.v3.sqlobject.transaction.Transaction;
 import org.w3c.dom.Document;
 
 import java.io.IOException;
@@ -20,13 +25,13 @@ import java.util.List;
 
 import static io.irontest.IronTestConstants.DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX;
 
-@RegisterMapper(TeststepMapper.class)
-public abstract class TeststepDAO {
-    private static final String STEP_MOVE_DIRECTION_UP = "up";
-    private static final String STEP_MOVE_DIRECTION_DOWN = "down";
+@RegisterRowMapper(TeststepMapper.class)
+public interface TeststepDAO extends CrossReferenceDAO {
+    String STEP_MOVE_DIRECTION_UP = "up";
+    String STEP_MOVE_DIRECTION_DOWN = "down";
 
     @SqlUpdate("CREATE SEQUENCE IF NOT EXISTS teststep_sequence START WITH 1 INCREMENT BY 1 NOCACHE")
-    public abstract void createSequenceIfNotExists();
+    void createSequenceIfNotExists();
 
     @SqlUpdate("CREATE TABLE IF NOT EXISTS teststep (" +
             "id BIGINT DEFAULT teststep_sequence.NEXTVAL PRIMARY KEY, testcase_id BIGINT NOT NULL, " +
@@ -45,13 +50,7 @@ public abstract class TeststepDAO {
                 "TYPE IN ('" + Teststep.TYPE_WAIT + "'))," +
             "CONSTRAINT TESTSTEP_EXCLUSIVE_ENDPOINT_SOURCE_CONSTRAINT CHECK(" +
                 "endpoint_id is null OR endpoint_property is null))")
-    public abstract void createTableIfNotExists();
-
-    @CreateSqlObject
-    protected abstract EndpointDAO endpointDAO();
-
-    @CreateSqlObject
-    protected abstract AssertionDAO assertionDAO();
+    void createTableIfNotExists();
 
     /**
      * This method considers test step insertion from both Create (test step) button on UI and test case duplicating.
@@ -70,17 +69,12 @@ public abstract class TeststepDAO {
             ":t.type, :t.description, :t.action, :request, :requestType, :t.requestFilename, :endpointId, " +
             ":t.endpointProperty, :otherProperties)")
     @GetGeneratedKeys
-    protected abstract long _insert(@BindBean("t") Teststep teststep, @Bind("request") Object request,
-                                    @Bind("requestType") String requestType, @Bind("endpointId") Long endpointId,
-                                    @Bind("otherProperties") String otherProperties);
+    long _insert(@BindBean("t") Teststep teststep, @Bind("request") Object request,
+                 @Bind("requestType") String requestType, @Bind("endpointId") Long endpointId,
+                 @Bind("otherProperties") String otherProperties);
 
     @SqlUpdate("update teststep set name = :name where id = :id")
-    protected abstract long updateNameForInsert(@Bind("id") long id, @Bind("name") String name);
-
-    @Transaction
-    public long insert(Teststep teststep, AppMode appMode) throws JsonProcessingException {
-        return insert_NoTransaction(teststep, appMode);
-    }
+    void updateNameForInsert(@Bind("id") long id, @Bind("name") String name);
 
     /**
      * This method considers test step insertion from both Create (test step) button on UI and test case duplicating.
@@ -89,12 +83,13 @@ public abstract class TeststepDAO {
      * @return
      * @throws JsonProcessingException
      */
-    public long insert_NoTransaction(Teststep teststep, AppMode appMode) throws JsonProcessingException {
+    @Transaction
+    default long insert(Teststep teststep, AppMode appMode) throws JsonProcessingException {
         Endpoint endpoint = teststep.getEndpoint();
         if (endpoint == null && teststep.getEndpointProperty() == null) {    //  from test step creation on UI
-            endpoint = endpointDAO().createUnmanagedEndpoint_NoTransaction(teststep.getType(), appMode);
+            endpoint = endpointDAO().createUnmanagedEndpoint(teststep.getType(), appMode);
         } else if (endpoint != null && endpoint.getId() == 0){          //  from test case duplicating, and old endpoint is unmanaged
-            long endpointId = endpointDAO().insertUnmanagedEndpoint_NoTransaction(endpoint);
+            long endpointId = endpointDAO().insertUnmanagedEndpoint(endpoint);
             endpoint.setId(endpointId);
         }
         Object request = teststep.getRequest() instanceof String ?
@@ -114,25 +109,25 @@ public abstract class TeststepDAO {
     @SqlUpdate("update teststep set name = :name, description = :description, action = :action, request = :request, " +
             "request_type = :requestType, endpoint_id = :endpointId, endpoint_property = :endpointProperty, " +
             "other_properties = :otherProperties, updated = CURRENT_TIMESTAMP where id = :id")
-    protected abstract int _update(@Bind("name") String name, @Bind("description") String description,
-                                   @Bind("action") String action, @Bind("request") Object request,
-                                   @Bind("requestType") String requestType, @Bind("id") long id,
-                                   @Bind("endpointId") Long endpointId, @Bind("endpointProperty") String endpointProperty,
-                                   @Bind("otherProperties") String otherProperties);
+    void _update(@Bind("name") String name, @Bind("description") String description,
+                @Bind("action") String action, @Bind("request") Object request,
+                @Bind("requestType") String requestType, @Bind("id") long id,
+                @Bind("endpointId") Long endpointId, @Bind("endpointProperty") String endpointProperty,
+                @Bind("otherProperties") String otherProperties);
 
     @SqlUpdate("update teststep set name = :name, description = :description, request_type = :requestType, " +
             "action = :action, endpoint_id = :endpointId, endpoint_property = :endpointProperty, " +
             "other_properties = :otherProperties, updated = CURRENT_TIMESTAMP where id = :id")
-    protected abstract int _updateWithoutRequest(@Bind("name") String name, @Bind("description") String description,
-                                                 @Bind("requestType") String requestType,
-                                                 @Bind("action") String action, @Bind("id") long id,
-                                                 @Bind("endpointId") Long endpointId,
-                                                 @Bind("endpointProperty") String endpointProperty,
-                                                 @Bind("otherProperties") String otherProperties);
+    void _updateWithoutRequest(@Bind("name") String name, @Bind("description") String description,
+                              @Bind("requestType") String requestType,
+                              @Bind("action") String action, @Bind("id") long id,
+                              @Bind("endpointId") Long endpointId,
+                              @Bind("endpointProperty") String endpointProperty,
+                              @Bind("otherProperties") String otherProperties);
 
     @Transaction
-    public Teststep update(Teststep teststep) throws Exception {
-        Teststep oldTeststep = findById_NoTransaction(teststep.getId());
+    default Teststep update(Teststep teststep) throws Exception {
+        Teststep oldTeststep = findById(teststep.getId());
 
         if (Teststep.TYPE_MQ.equals(teststep.getType()) && teststep.getAction() != null) {   //  newly created MQ test step does not have action and does not need the processing
             processMQTeststep(oldTeststep, teststep);
@@ -158,10 +153,10 @@ public abstract class TeststepDAO {
 
         updateAssertions(teststep);
 
-        return findById_NoTransaction(teststep.getId());
+        return findById(teststep.getId());
     }
 
-    private void processMQTeststep(Teststep oldTeststep, Teststep teststep) throws IOException {
+    default void processMQTeststep(Teststep oldTeststep, Teststep teststep) throws IOException {
         String newAction = teststep.getAction();
         if (!newAction.equals(oldTeststep.getAction()) ||
                 teststep.getRequestType() != oldTeststep.getRequestType()) {    //  action or 'message from' is switched, so clear things
@@ -178,7 +173,7 @@ public abstract class TeststepDAO {
         }
     }
 
-    private void processMQTeststepRFH2Folders(Teststep teststep) {
+    default void processMQTeststepRFH2Folders(Teststep teststep) {
         MQTeststepProperties mqTeststepProperties = (MQTeststepProperties) teststep.getOtherProperties();
         MQRFH2Header rfh2Header = mqTeststepProperties.getRfh2Header();
         if (rfh2Header.isEnabled()) {
@@ -198,7 +193,7 @@ public abstract class TeststepDAO {
         }
     }
 
-    private void backupRestoreMQTeststepActionData(Teststep oldTeststep, Teststep teststep) throws IOException {
+    default void backupRestoreMQTeststepActionData(Teststep oldTeststep, Teststep teststep) throws IOException {
         long teststepId = teststep.getId();
         String oldAction = oldTeststep.getAction();
         String newAction = teststep.getAction();
@@ -284,22 +279,23 @@ public abstract class TeststepDAO {
 
     @SqlUpdate("update teststep set action_data_backup = :backupJSON, updated = CURRENT_TIMESTAMP " +
             "where id = :teststepId")
-    protected abstract int saveActionDataBackupById(@Bind("teststepId") long teststepId,
-                                                    @Bind("backupJSON") String backupJSON);
+    void saveActionDataBackupById(@Bind("teststepId") long teststepId,
+                                 @Bind("backupJSON") String backupJSON);
 
     @SqlQuery("select action_data_backup from teststep where id = :teststepId")
-    protected abstract String getActionDataBackupById(@Bind("teststepId") long teststepId);
+    String getActionDataBackupById(@Bind("teststepId") long teststepId);
 
-    private void updateAssertions(Teststep teststep) throws JsonProcessingException {
+    @Transaction
+    default void updateAssertions(Teststep teststep) throws JsonProcessingException {
         AssertionDAO assertionDAO = assertionDAO();
         List<Long> newAssertionIds = new ArrayList<Long>();
         for (Assertion assertion: teststep.getAssertions()) {
             if (assertion.getId() == null) {    //  insert the assertion
                 assertion.setTeststepId(teststep.getId());
-                newAssertionIds.add(assertionDAO.insert_NoTransaction(assertion));
+                newAssertionIds.add(assertionDAO.insert(assertion));
             } else {                            //  update the assertion
                 newAssertionIds.add(assertion.getId());
-                assertionDAO.update_NoTransaction(assertion);
+                assertionDAO.update(assertion);
             }
         }
         //  delete assertions whose id is not in the newAssertionIds list;
@@ -308,7 +304,7 @@ public abstract class TeststepDAO {
         assertionDAO.deleteByTeststepIdIfIdNotIn(teststep.getId(), newAssertionIds);
     }
 
-    private void updateEndpointIfExists(Endpoint oldEndpoint, Endpoint newEndpoint) throws JsonProcessingException {
+    default void updateEndpointIfExists(Endpoint oldEndpoint, Endpoint newEndpoint) throws JsonProcessingException {
         if (newEndpoint != null) {
             if (newEndpoint.isManaged()) {
                 if (oldEndpoint.isManaged()) {
@@ -329,15 +325,11 @@ public abstract class TeststepDAO {
     }
 
     @SqlUpdate("delete from teststep where id = :id")
-    protected abstract void _deleteById(@Bind("id") long id);
+    void _deleteById(@Bind("id") long id);
 
     @Transaction
-    public void deleteById(long id) {
-        deleteById_NoTransaction(id);
-    }
-
-    protected void deleteById_NoTransaction(long id) {
-        Teststep teststep = findById_NoTransaction(id);
+    default void deleteById(long id) {
+        Teststep teststep = findById(id);
         _deleteById(id);
         // decrement sequence number of all next test steps
         batchMove(teststep.getTestcaseId(), (short) (teststep.getSequence() + 1), Short.MAX_VALUE, STEP_MOVE_DIRECTION_UP);
@@ -349,27 +341,24 @@ public abstract class TeststepDAO {
     }
 
     @SqlQuery("select * from teststep where id = :id")
-    protected abstract Teststep _findById(@Bind("id") long id);
+    Teststep _findById(@Bind("id") long id);
 
     @SqlQuery("select testcase_id from teststep where id = :id")
-    public abstract long findTestcaseIdById(@Bind("id") long id);
+    long findTestcaseIdById(@Bind("id") long id);
+
+    @Transaction
+    default void populateTeststepWithMoreInfo(Teststep teststep) {
+        Endpoint endpoint = endpointDAO().findById(teststep.getEndpoint().getId());
+        teststep.setEndpoint(endpoint);
+        teststep.setAssertions(assertionDAO().findByTeststepId(teststep.getId()));
+    }
 
     /**
      * @param id
      * @return the teststep with its associated endpoint
      */
     @Transaction
-    public Teststep findById(long id) {
-        return findById_NoTransaction(id);
-    }
-
-    private void populateTeststepWithMoreInfo(Teststep teststep) {
-        Endpoint endpoint = endpointDAO().findById(teststep.getEndpoint().getId());
-        teststep.setEndpoint(endpoint);
-        teststep.setAssertions(assertionDAO().findByTeststepId(teststep.getId()));
-    }
-
-    private Teststep findById_NoTransaction(long id) {
+    default Teststep findById(long id) {
         Teststep teststep = _findById(id);
         if (teststep != null) {
             populateTeststepWithMoreInfo(teststep);
@@ -378,9 +367,9 @@ public abstract class TeststepDAO {
     }
 
     @SqlQuery("select * from teststep where testcase_id = :testcaseId order by sequence")
-    protected abstract List<Teststep> _findByTestcaseId(@Bind("testcaseId") long testcaseId);
+    List<Teststep> _findByTestcaseId(@Bind("testcaseId") long testcaseId);
 
-    protected List<Teststep> findByTestcaseId(long testcaseId) {
+    default List<Teststep> findByTestcaseId(long testcaseId) {
         List<Teststep> teststeps = _findByTestcaseId(testcaseId);
         for (Teststep teststep: teststeps) {
             populateTeststepWithMoreInfo(teststep);
@@ -390,24 +379,24 @@ public abstract class TeststepDAO {
 
     @SqlQuery("select id, testcase_id, sequence, name, type, description from teststep " +
               "where testcase_id = :testcaseId order by sequence")
-    protected abstract List<Teststep> findByTestcaseId_TestcaseEditView(@Bind("testcaseId") long testcaseId);
+    List<Teststep> findByTestcaseId_TestcaseEditView(@Bind("testcaseId") long testcaseId);
 
     @SqlQuery("select * from teststep where testcase_id = :testcaseId and sequence = :sequence")
-    protected abstract Teststep findBySequence(@Bind("testcaseId") long testcaseId, @Bind("sequence") short sequence);
+    Teststep findBySequence(@Bind("testcaseId") long testcaseId, @Bind("sequence") short sequence);
 
     @SqlUpdate("update teststep set sequence = :newSequence, updated = CURRENT_TIMESTAMP where id = :teststepId")
-    protected abstract int updateSequenceById(@Bind("teststepId") long teststepId, @Bind("newSequence") short newSequence);
+    void updateSequenceById(@Bind("teststepId") long teststepId, @Bind("newSequence") short newSequence);
 
     @SqlUpdate("update teststep set sequence = case when :direction = '" + STEP_MOVE_DIRECTION_UP + "' then sequence - 1 else sequence + 1 end, " +
             "updated = CURRENT_TIMESTAMP " +
             "where testcase_id = :testcaseId and sequence >= :firstSequence and sequence <= :lastSequence")
-    protected abstract int batchMove(@Bind("testcaseId") long testcaseId,
-                                              @Bind("firstSequence") short firstSequence,
-                                              @Bind("lastSequence") short lastSequence,
-                                              @Bind("direction") String direction);
+    void batchMove(@Bind("testcaseId") long testcaseId,
+                  @Bind("firstSequence") short firstSequence,
+                  @Bind("lastSequence") short lastSequence,
+                  @Bind("direction") String direction);
 
     @Transaction
-    public void moveInTestcase(long testcaseId, short fromSequence, short toSequence) {
+    default void moveInTestcase(long testcaseId, short fromSequence, short toSequence) {
         if (fromSequence != toSequence) {
             long draggedStepId = findBySequence(testcaseId, fromSequence).getId();
 
@@ -427,39 +416,39 @@ public abstract class TeststepDAO {
 
     @SqlUpdate("update teststep set request = :request, request_type = :requestType, request_filename = :requestFilename, " +
             "updated = CURRENT_TIMESTAMP where id = :teststepId")
-    protected abstract int updateRequest(@Bind("teststepId") long teststepId,
-                                                           @Bind("request") Object request,
-                                                           @Bind("requestType") String requestType,
-                                                           @Bind("requestFilename") String requestFilename);
+    void updateRequest(@Bind("teststepId") long teststepId,
+                      @Bind("request") Object request,
+                      @Bind("requestType") String requestType,
+                      @Bind("requestFilename") String requestFilename);
 
     @Transaction
-    public Teststep setRequestFile(long teststepId, String fileName, InputStream inputStream) {
+    default Teststep setRequestFile(long teststepId, String fileName, InputStream inputStream) {
         updateRequest(teststepId, inputStream, TeststepRequestType.FILE.toString(), fileName);
 
-        return findById_NoTransaction(teststepId);
+        return findById(teststepId);
     }
 
     @SqlQuery("select request from teststep where id = :teststepId")
-    public abstract byte[] getBinaryRequestById(@Bind("teststepId") long teststepId);
+    byte[] getBinaryRequestById(@Bind("teststepId") long teststepId);
 
     @SqlUpdate("update teststep set endpoint_id = null, endpoint_property = 'Endpoint', " +
             "updated = CURRENT_TIMESTAMP where id = :teststepId")
-    protected abstract int switchToEndpointProperty(@Bind("teststepId") long teststepId);
+    void switchToEndpointProperty(@Bind("teststepId") long teststepId);
 
     @SqlUpdate("update teststep set endpoint_id = :endpointId, endpoint_property = null, " +
             "updated = CURRENT_TIMESTAMP where id = :teststepId")
-    protected abstract int switchToDirectEndpoint(@Bind("teststepId") long teststepId,
-                                                  @Bind("endpointId") long endpointId);
+    void switchToDirectEndpoint(@Bind("teststepId") long teststepId,
+                               @Bind("endpointId") long endpointId);
 
     @Transaction
-    public void useEndpointProperty(Teststep teststep) {
+    default void useEndpointProperty(Teststep teststep) {
         switchToEndpointProperty(teststep.getId());
         endpointDAO().deleteUnmanagedEndpointById(teststep.getEndpoint().getId());
     }
 
     @Transaction
-    public void useDirectEndpoint(Teststep teststep, AppMode appMode) throws JsonProcessingException {
-        Endpoint endpoint = endpointDAO().createUnmanagedEndpoint_NoTransaction(teststep.getType(), appMode);
+    default void useDirectEndpoint(Teststep teststep, AppMode appMode) throws JsonProcessingException {
+        Endpoint endpoint = endpointDAO().createUnmanagedEndpoint(teststep.getType(), appMode);
         switchToDirectEndpoint(teststep.getId(), endpoint.getId());
     }
 }

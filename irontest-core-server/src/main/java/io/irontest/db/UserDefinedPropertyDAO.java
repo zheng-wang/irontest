@@ -2,17 +2,22 @@ package io.irontest.db;
 
 import io.irontest.models.UserDefinedProperty;
 import io.irontest.models.teststep.Teststep;
-import org.skife.jdbi.v2.sqlobject.*;
-import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
+import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
+import org.jdbi.v3.sqlobject.customizer.Bind;
+import org.jdbi.v3.sqlobject.customizer.BindBean;
+import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
+import org.jdbi.v3.sqlobject.statement.SqlQuery;
+import org.jdbi.v3.sqlobject.statement.SqlUpdate;
+import org.jdbi.v3.sqlobject.transaction.Transaction;
 
 import java.util.List;
 
 import static io.irontest.IronTestConstants.*;
 
-@RegisterMapper(UserDefinedPropertyMapper.class)
-public abstract class UserDefinedPropertyDAO {
+@RegisterRowMapper(UserDefinedPropertyMapper.class)
+public interface UserDefinedPropertyDAO {
     @SqlUpdate("CREATE SEQUENCE IF NOT EXISTS udp_sequence START WITH 1 INCREMENT BY 1 NOCACHE")
-    public abstract void createSequenceIfNotExists();
+    void createSequenceIfNotExists();
 
     @SqlUpdate("CREATE TABLE IF NOT EXISTS udp (" +
             "id BIGINT DEFAULT udp_sequence.NEXTVAL PRIMARY KEY, testcase_id BIGINT, sequence SMALLINT NOT NULL, " +
@@ -23,7 +28,7 @@ public abstract class UserDefinedPropertyDAO {
             "CONSTRAINT UDP_UNIQUE_SEQUENCE_CONSTRAINT UNIQUE(testcase_id, sequence), " +
             "CONSTRAINT UDP_" + DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX + " UNIQUE(testcase_id, name), " +
             "CONSTRAINT UDP_" + DB_PROPERTY_NAME_CONSTRAINT_NAME_SUFFIX + " CHECK(" + CUSTOM_PROPERTY_NAME_CHECK + "))")
-    public abstract void createTableIfNotExists();
+    void createTableIfNotExists();
 
     /**
      * Unlike {@link TeststepDAO#_insert(Teststep, Object, String, Long, String)}, this method does not consider UDP
@@ -35,13 +40,13 @@ public abstract class UserDefinedPropertyDAO {
     @SqlUpdate("insert into udp (testcase_id, sequence) values (:testcaseId, (" +
             "select coalesce(max(sequence), 0) + 1 from udp where testcase_id = :testcaseId))")
     @GetGeneratedKeys
-    protected abstract long _insert(@Bind("testcaseId") long testcaseId);
+    long _insert(@Bind("testcaseId") long testcaseId);
 
     @SqlUpdate("update udp set name = :name where id = :id")
-    protected abstract long updateNameForInsert(@Bind("id") long id, @Bind("name") String name);
+    void updateNameForInsert(@Bind("id") long id, @Bind("name") String name);
 
     @Transaction
-    public UserDefinedProperty insert(long testcaseId) {
+    default UserDefinedProperty insert(long testcaseId) {
         long id = _insert(testcaseId);
         String name = "P" + id;
         updateNameForInsert(id, name);
@@ -49,19 +54,19 @@ public abstract class UserDefinedPropertyDAO {
     }
 
     @SqlQuery("select * from udp where id = :id")
-    protected abstract UserDefinedProperty findById(@Bind("id") long id);
+    UserDefinedProperty findById(@Bind("id") long id);
 
     @SqlQuery("select * from udp where testcase_id = :testcaseId order by sequence")
-    public abstract List<UserDefinedProperty> findByTestcaseId(@Bind("testcaseId") long testcaseId);
+    List<UserDefinedProperty> findByTestcaseId(@Bind("testcaseId") long testcaseId);
 
     @SqlQuery("select u.* from udp u, teststep t where t.id = :teststepId and t.testcase_id = u.testcase_id")
-    public abstract List<UserDefinedProperty> findTestcaseUDPsByTeststepId(@Bind("teststepId") long teststepId);
+    List<UserDefinedProperty> findTestcaseUDPsByTeststepId(@Bind("teststepId") long teststepId);
 
     @SqlUpdate("update udp set name = :name, value = :value, updated = CURRENT_TIMESTAMP where id = :id")
-    public abstract void update(@BindBean UserDefinedProperty udp);
+    void update(@BindBean UserDefinedProperty udp);
 
     @SqlUpdate("delete from udp where id = :id")
-    public abstract void deleteById(@Bind("id") long id);
+    void deleteById(@Bind("id") long id);
 
     /**
      * Copy user defined properties from source test case to target test case.
@@ -69,25 +74,25 @@ public abstract class UserDefinedPropertyDAO {
      * @param targetTestcaseId
      */
     @SqlUpdate("insert into UDP (sequence, name, value, testcase_id) select sequence, name, value, :targetTestcaseId from UDP where testcase_id = :sourceTestcaseId")
-    public abstract void duplicateByTestcase(@Bind("sourceTestcaseId") long sourceTestcaseId,
-                                             @Bind("targetTestcaseId") long targetTestcaseId);
+    void duplicateByTestcase(@Bind("sourceTestcaseId") long sourceTestcaseId,
+                             @Bind("targetTestcaseId") long targetTestcaseId);
 
     @SqlQuery("select * from udp where testcase_id = :testcaseId and sequence = :sequence")
-    protected abstract UserDefinedProperty findBySequence(@Bind("testcaseId") long testcaseId, @Bind("sequence") short sequence);
+    UserDefinedProperty findBySequence(@Bind("testcaseId") long testcaseId, @Bind("sequence") short sequence);
 
     @SqlUpdate("update udp set sequence = :newSequence, updated = CURRENT_TIMESTAMP where id = :id")
-    protected abstract void updateSequenceById(@Bind("id") long id, @Bind("newSequence") short newSequence);
+    void updateSequenceById(@Bind("id") long id, @Bind("newSequence") short newSequence);
 
     @SqlUpdate("update udp set sequence = case when :direction = 'up' then sequence - 1 else sequence + 1 end, " +
             "updated = CURRENT_TIMESTAMP " +
             "where testcase_id = :testcaseId and sequence >= :firstSequence and sequence <= :lastSequence")
-    protected abstract int batchMove(@Bind("testcaseId") long testcaseId,
-                                     @Bind("firstSequence") short firstSequence,
-                                     @Bind("lastSequence") short lastSequence,
-                                     @Bind("direction") String direction);
+    void batchMove(@Bind("testcaseId") long testcaseId,
+                  @Bind("firstSequence") short firstSequence,
+                  @Bind("lastSequence") short lastSequence,
+                  @Bind("direction") String direction);
 
     @Transaction
-    public void moveInTestcase(long testcaseId, short fromSequence, short toSequence) {
+    default void moveInTestcase(long testcaseId, short fromSequence, short toSequence) {
         if (fromSequence != toSequence) {
             long draggedUDPId = findBySequence(testcaseId, fromSequence).getId();
 

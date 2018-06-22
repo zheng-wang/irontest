@@ -6,20 +6,23 @@ import io.irontest.models.assertion.Assertion;
 import io.irontest.models.endpoint.Endpoint;
 import io.irontest.models.teststep.Teststep;
 import io.irontest.models.teststep.TeststepRequestType;
-import org.skife.jdbi.v2.sqlobject.*;
-import org.skife.jdbi.v2.sqlobject.customizers.Define;
-import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
-import org.skife.jdbi.v2.sqlobject.stringtemplate.UseStringTemplate3StatementLocator;
+import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
+import org.jdbi.v3.sqlobject.customizer.Bind;
+import org.jdbi.v3.sqlobject.customizer.BindBean;
+import org.jdbi.v3.sqlobject.customizer.Define;
+import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
+import org.jdbi.v3.sqlobject.statement.SqlQuery;
+import org.jdbi.v3.sqlobject.statement.SqlUpdate;
+import org.jdbi.v3.sqlobject.transaction.Transaction;
 
 import java.util.List;
 
 import static io.irontest.IronTestConstants.DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX;
 
-@UseStringTemplate3StatementLocator
-@RegisterMapper(TestcaseMapper.class)
-public abstract class TestcaseDAO {
+@RegisterRowMapper(TestcaseMapper.class)
+public interface TestcaseDAO extends CrossReferenceDAO {
     @SqlUpdate("CREATE SEQUENCE IF NOT EXISTS testcase_sequence START WITH 1 INCREMENT BY 1 NOCACHE")
-    public abstract void createSequenceIfNotExists();
+    void createSequenceIfNotExists();
 
     @SqlUpdate("CREATE TABLE IF NOT EXISTS testcase (id BIGINT DEFAULT testcase_sequence.NEXTVAL PRIMARY KEY, " +
             "name varchar(200) NOT NULL DEFAULT CURRENT_TIMESTAMP, description CLOB, " +
@@ -27,28 +30,17 @@ public abstract class TestcaseDAO {
             "updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (parent_folder_id) REFERENCES folder(id), " +
             "CONSTRAINT TESTCASE_" + DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX + " UNIQUE(parent_folder_id, name))")
-    public abstract void createTableIfNotExists();
-
-    @CreateSqlObject
-    protected abstract UserDefinedPropertyDAO udpDAO();
-
-    @CreateSqlObject
-    protected abstract TeststepDAO teststepDAO();
-
-    @CreateSqlObject
-    protected abstract DataTableDAO dataTableDAO();
-
-    @CreateSqlObject
-    protected abstract AssertionDAO assertionDAO();
+    void createTableIfNotExists();
 
     @SqlUpdate("insert into testcase (description, parent_folder_id) values (:description, :parentFolderId)")
     @GetGeneratedKeys
-    protected abstract long _insert(@BindBean Testcase testcase);
+    long _insert(@BindBean Testcase testcase);
 
     @SqlUpdate("update testcase set name = :name where id = :id")
-    protected abstract long updateNameForInsert(@Bind("id") long id, @Bind("name") String name);
+    void updateNameForInsert(@Bind("id") long id, @Bind("name") String name);
 
-    public Testcase insert_NoTransaction(Testcase testcase) {
+    @Transaction
+    default Testcase insert(Testcase testcase) {
         long id = _insert(testcase);
         if (testcase.getName() == null) {
             testcase.setName("Case " + id);
@@ -59,26 +51,13 @@ public abstract class TestcaseDAO {
 
     @SqlUpdate("update testcase set name = :name, description = :description, " +
             "updated = CURRENT_TIMESTAMP where id = :id")
-    public abstract int update(@BindBean Testcase testcase);
-
-    /*@SqlUpdate("delete from testcase where id = :id")
-    public abstract void _deleteById(@Bind("id") long id);
-
-    @Transaction
-    public void deleteById(long id) {
-        TeststepDAO teststepDAO = teststepDAO();
-        List<Teststep> teststeps = teststepDAO.findByTestcaseId_TestcaseEditView(id);
-        for (Teststep teststep: teststeps) {
-            teststepDAO.deleteById_NoTransaction(teststep.getId());
-        }
-        _deleteById(id);
-    }*/
+    void update(@BindBean Testcase testcase);
 
     @SqlQuery("select * from testcase where id = :id")
-    protected abstract Testcase _findById(@Bind("id") long id);
+    Testcase _findById(@Bind("id") long id);
 
     @Transaction
-    public Testcase findById_TestcaseEditView(long id) {
+    default Testcase findById_TestcaseEditView(long id) {
         Testcase result = _findById(id);
         if (result != null) {
             List<Teststep> teststeps = teststepDAO().findByTestcaseId_TestcaseEditView(id);
@@ -98,19 +77,10 @@ public abstract class TestcaseDAO {
                   "SELECT T2.parent_folder_id, (T2.name || '/' || T.path) AS path " +
                   "FROM T INNER JOIN folder AS T2 ON T.parent_folder_id = T2.id " +
               ") SELECT path FROM T WHERE parent_folder_id IS NULL")
-    protected abstract String getFolderPath(@Define("testcaseId") long testcaseId);
+    String getFolderPath(@Define("testcaseId") long testcaseId);
 
     @Transaction
-    public Testcase findById_Complete(long id) {
-        return findById_Complete_NoTransaction(id);
-    }
-
-    /**
-     * User defined properties are not included.
-     * @param id
-     * @return
-     */
-    public Testcase findById_Complete_NoTransaction(long id) {
+    default Testcase findById_Complete(long id) {
         Testcase result = _findById(id);
         result.setFolderPath(getFolderPath(id));
         List<Teststep> teststeps = teststepDAO().findByTestcaseId(id);
@@ -119,8 +89,8 @@ public abstract class TestcaseDAO {
     }
 
     @SqlQuery("select count(*) = 1 from testcase where name = :name and parent_folder_id = :parentFolderId")
-    protected abstract boolean _nameExistsInFolder(@Bind("name") String name,
-                                                   @Bind("parentFolderId") long parentFolderId);
+    boolean _nameExistsInFolder(@Bind("name") String name,
+                                @Bind("parentFolderId") long parentFolderId);
 
     /**
      * Clone the test case and its contents.
@@ -129,8 +99,8 @@ public abstract class TestcaseDAO {
      * @return ID of the new test case
      */
     @Transaction
-    public long duplicate(long oldTestcaseId, long targetFolderId) throws JsonProcessingException {
-        Testcase oldTestcase = findById_Complete_NoTransaction(oldTestcaseId);
+    default long duplicate(long oldTestcaseId, long targetFolderId) throws JsonProcessingException {
+        Testcase oldTestcase = findById_Complete(oldTestcaseId);
 
         //  resolve new test case name
         String newTestcaseName = oldTestcase.getName();
@@ -148,7 +118,7 @@ public abstract class TestcaseDAO {
         newTestcase.setName(newTestcaseName);
         newTestcase.setDescription(oldTestcase.getDescription());
         newTestcase.setParentFolderId(targetFolderId);
-        newTestcase = insert_NoTransaction(newTestcase);
+        newTestcase = insert(newTestcase);
 
         //  duplicate user defined properties
         udpDAO().duplicateByTestcase(oldTestcaseId, newTestcase.getId());
@@ -187,7 +157,7 @@ public abstract class TestcaseDAO {
                 }
             }
             newTeststep.setEndpointProperty(oldTeststep.getEndpointProperty());
-            long newTeststepId = teststepDAO().insert_NoTransaction(newTeststep, null);
+            long newTeststepId = teststepDAO().insert(newTeststep, null);
 
             //  duplicate assertions
             for (Assertion oldAssertion : oldTeststep.getAssertions()) {
@@ -196,12 +166,12 @@ public abstract class TestcaseDAO {
                 newAssertion.setName(oldAssertion.getName());
                 newAssertion.setType(oldAssertion.getType());
                 newAssertion.setOtherProperties(oldAssertion.getOtherProperties());
-                assertionDAO().insert_NoTransaction(newAssertion);
+                assertionDAO().insert(newAssertion);
             }
         }
 
         //  duplicate data table
-        dataTableDAO().duplicateByTestcase_NoTransaction(oldTestcaseId, newTestcase.getId());
+        dataTableDAO().duplicateByTestcase(oldTestcaseId, newTestcase.getId());
 
         return newTestcase.getId();
     }

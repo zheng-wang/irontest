@@ -1,13 +1,17 @@
 package io.irontest.db;
 
 import io.irontest.models.Article;
-import org.skife.jdbi.v2.sqlobject.*;
-import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
+import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
+import org.jdbi.v3.sqlobject.customizer.Bind;
+import org.jdbi.v3.sqlobject.customizer.BindBean;
+import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
+import org.jdbi.v3.sqlobject.statement.SqlQuery;
+import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 import java.util.Date;
 import java.util.List;
 
-@RegisterMapper(ArticleMapper.class)
+@RegisterRowMapper(ArticleMapper.class)
 public interface ArticleDAO {
     @SqlUpdate("CREATE TABLE IF NOT EXISTS article (id IDENTITY PRIMARY KEY, title varchar(50), " +
             "content varchar(500), created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +

@@ -2,14 +2,14 @@ package io.irontest.db;
 
 import io.irontest.models.DataTableCell;
 import io.irontest.models.endpoint.Endpoint;
-import org.skife.jdbi.v2.StatementContext;
-import org.skife.jdbi.v2.tweak.ResultSetMapper;
+import org.jdbi.v3.core.mapper.RowMapper;
+import org.jdbi.v3.core.statement.StatementContext;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class DataTableCellMapper implements ResultSetMapper<DataTableCell> {
-    public DataTableCell map(int index, ResultSet rs, StatementContext ctx) throws SQLException {
+public class DataTableCellMapper implements RowMapper<DataTableCell> {
+    public DataTableCell map(ResultSet rs, StatementContext ctx) throws SQLException {
         DataTableCell result = new DataTableCell();
         result.setId(rs.getLong("id"));
         result.setRowSequence(rs.getShort("row_sequence"));

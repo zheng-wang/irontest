@@ -2,15 +2,15 @@ package io.irontest.db;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.irontest.models.assertion.Assertion;
-import org.skife.jdbi.v2.StatementContext;
-import org.skife.jdbi.v2.tweak.ResultSetMapper;
+import org.jdbi.v3.core.mapper.RowMapper;
+import org.jdbi.v3.core.statement.StatementContext;
 
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class AssertionMapper implements ResultSetMapper<Assertion> {
-    public Assertion map(int index, ResultSet rs, StatementContext ctx) throws SQLException {
+public class AssertionMapper implements RowMapper<Assertion> {
+    public Assertion map(ResultSet rs, StatementContext ctx) throws SQLException {
         Assertion assertion = null;
         String type = rs.getString("type");
         String tempAssertionJSON = "{\"type\":\"" + type + "\",\"otherProperties\":" +

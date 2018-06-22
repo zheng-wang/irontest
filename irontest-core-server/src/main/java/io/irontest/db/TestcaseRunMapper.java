@@ -2,14 +2,14 @@ package io.irontest.db;
 
 import io.irontest.models.TestResult;
 import io.irontest.models.testrun.TestcaseRun;
-import org.skife.jdbi.v2.StatementContext;
-import org.skife.jdbi.v2.tweak.ResultSetMapper;
+import org.jdbi.v3.core.mapper.RowMapper;
+import org.jdbi.v3.core.statement.StatementContext;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class TestcaseRunMapper implements ResultSetMapper<TestcaseRun> {
-    public TestcaseRun map(int index, ResultSet rs, StatementContext ctx) throws SQLException {
+public class TestcaseRunMapper implements RowMapper<TestcaseRun> {
+    public TestcaseRun map(ResultSet rs, StatementContext ctx) throws SQLException {
         TestcaseRun testcaseRun = new TestcaseRun();
 
         testcaseRun.setId(rs.getLong("id"));

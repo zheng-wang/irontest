@@ -3,16 +3,20 @@ package io.irontest.db;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.irontest.models.testrun.TestcaseIndividualRun;
 import io.irontest.models.testrun.TeststepRun;
-import org.skife.jdbi.v2.sqlobject.*;
-import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
+import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
+import org.jdbi.v3.sqlobject.customizer.Bind;
+import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
+import org.jdbi.v3.sqlobject.statement.SqlQuery;
+import org.jdbi.v3.sqlobject.statement.SqlUpdate;
+import org.jdbi.v3.sqlobject.transaction.Transaction;
 
 import java.util.Date;
 import java.util.List;
 
-@RegisterMapper(TestcaseIndividualRunMapper.class)
-public abstract class TestcaseIndividualRunDAO {
+@RegisterRowMapper(TestcaseIndividualRunMapper.class)
+public interface TestcaseIndividualRunDAO extends CrossReferenceDAO {
     @SqlUpdate("CREATE SEQUENCE IF NOT EXISTS testcase_individualrun_sequence START WITH 1 INCREMENT BY 1 NOCACHE")
-    public abstract void createSequenceIfNotExists();
+    void createSequenceIfNotExists();
 
     @SqlUpdate("CREATE TABLE IF NOT EXISTS testcase_individualrun (" +
             "id BIGINT DEFAULT testcase_individualrun_sequence.NEXTVAL PRIMARY KEY, " +
@@ -21,31 +25,30 @@ public abstract class TestcaseIndividualRunDAO {
             "created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (testcase_run_id) REFERENCES testcase_run(id) ON DELETE CASCADE)")
-    public abstract void createTableIfNotExists();
-
-    @CreateSqlObject
-    protected abstract TeststepRunDAO teststepRunDAO();
+    void createTableIfNotExists();
 
     @SqlUpdate("insert into testcase_individualrun (testcase_run_id, caption, starttime, duration, result) values (" +
             ":testcaseRunId, :caption, :startTime, :duration, :result)")
     @GetGeneratedKeys
-    protected abstract long _insert(@Bind("testcaseRunId") long testcaseRunId, @Bind("caption") String caption,
-                                    @Bind("startTime") Date startTime, @Bind("duration") long duration,
-                                    @Bind("result") String result);
+    long _insert(@Bind("testcaseRunId") long testcaseRunId, @Bind("caption") String caption,
+                 @Bind("startTime") Date startTime, @Bind("duration") long duration,
+                 @Bind("result") String result);
 
-    public void insert_NoTransaction(long testcaseRunId, TestcaseIndividualRun testcaseIndividualRun) throws JsonProcessingException {
+    @Transaction
+    default void insert(long testcaseRunId, TestcaseIndividualRun testcaseIndividualRun) throws JsonProcessingException {
         long id = _insert(testcaseRunId, testcaseIndividualRun.getCaption(), testcaseIndividualRun.getStartTime(),
                 testcaseIndividualRun.getDuration(), testcaseIndividualRun.getResult().toString());
 
         for (TeststepRun teststepRun: testcaseIndividualRun.getStepRuns()) {
-            teststepRunDAO().insert_NoTransaction(testcaseRunId, id, teststepRun);
+            teststepRunDAO().insert(testcaseRunId, id, teststepRun);
         }
     }
 
     @SqlQuery("select * from testcase_individualrun where testcase_run_id = :testcaseRunId")
-    public abstract List<TestcaseIndividualRun> _findByTestcaseRunId(@Bind("testcaseRunId") long testcaseRunId);
+    List<TestcaseIndividualRun> _findByTestcaseRunId(@Bind("testcaseRunId") long testcaseRunId);
 
-    public List<TestcaseIndividualRun> findByTestcaseRunId_NoTransaction(long testcaseRunId) {
+    @Transaction
+    default List<TestcaseIndividualRun> findByTestcaseRunId(long testcaseRunId) {
         List<TestcaseIndividualRun> individualRuns = _findByTestcaseRunId(testcaseRunId);
         for (TestcaseIndividualRun individualRun: individualRuns) {
             individualRun.setStepRuns(teststepRunDAO().findByTestcaseIndividualRunId(individualRun.getId()));

@@ -4,26 +4,16 @@ import io.irontest.models.DataTable;
 import io.irontest.models.DataTableCell;
 import io.irontest.models.DataTableColumn;
 import io.irontest.models.DataTableColumnType;
-import org.skife.jdbi.v2.sqlobject.CreateSqlObject;
-import org.skife.jdbi.v2.sqlobject.Transaction;
+import org.jdbi.v3.sqlobject.transaction.Transaction;
 
 import java.util.*;
 
-public abstract class DataTableDAO {
-    @CreateSqlObject
-    protected abstract DataTableColumnDAO dataTableColumnDAO();
-
-    @CreateSqlObject
-    protected abstract DataTableCellDAO dataTableCellDAO();
-
-    @CreateSqlObject
-    protected abstract EndpointDAO endpointDAO();
-
+public interface DataTableDAO extends CrossReferenceDAO {
     /**
      * Caption column is the initial column in a data table.
      * @param testcaseId
      */
-    public void createCaptionColumn(long testcaseId) {
+    default void createCaptionColumn(long testcaseId) {
         DataTableColumn dataTableColumn = new DataTableColumn();
         dataTableColumn.setName(DataTableColumn.COLUMN_NAME_CAPTION);
         dataTableColumn.setSequence((short) 1);
@@ -36,7 +26,7 @@ public abstract class DataTableDAO {
      * @return
      */
     @Transaction
-    public DataTable getTestcaseDataTable(long testcaseId, boolean fetchFirstRowOnly) {
+    default DataTable getTestcaseDataTable(long testcaseId, boolean fetchFirstRowOnly) {
         DataTable dataTable = new DataTable();
 
         List<DataTableColumn> columns = dataTableColumnDAO().findByTestcaseId(testcaseId);
@@ -75,7 +65,8 @@ public abstract class DataTableDAO {
         return dataTable;
     }
 
-    public void duplicateByTestcase_NoTransaction(long sourceTestcaseId, long targetTestcaseId) {
+    @Transaction
+    default void duplicateByTestcase(long sourceTestcaseId, long targetTestcaseId) {
         dataTableColumnDAO().duplicateByTestcase(sourceTestcaseId, targetTestcaseId);
         List<DataTableColumn> sourceColumns = dataTableColumnDAO().findByTestcaseId(sourceTestcaseId);
         List<DataTableColumn> targetColumns = dataTableColumnDAO().findByTestcaseId(targetTestcaseId);

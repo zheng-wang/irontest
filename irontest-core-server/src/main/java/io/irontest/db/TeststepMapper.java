@@ -5,16 +5,16 @@ import io.irontest.models.endpoint.Endpoint;
 import io.irontest.models.teststep.Teststep;
 import io.irontest.models.teststep.TeststepRequestType;
 import io.irontest.utils.IronTestUtils;
-import org.skife.jdbi.v2.StatementContext;
-import org.skife.jdbi.v2.tweak.ResultSetMapper;
+import org.jdbi.v3.core.mapper.RowMapper;
+import org.jdbi.v3.core.statement.StatementContext;
 
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-public class TeststepMapper implements ResultSetMapper<Teststep> {
-    public Teststep map(int index, ResultSet rs, StatementContext ctx) throws SQLException {
+public class TeststepMapper implements RowMapper<Teststep> {
+    public Teststep map(ResultSet rs, StatementContext ctx) throws SQLException {
         List<String> fields = IronTestUtils.getFieldsPresentInResultSet(rs);
 
         Teststep teststep = null;

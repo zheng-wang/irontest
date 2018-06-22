@@ -27,7 +27,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Iterator;
 
-public class XMLUtils {
+public final class XMLUtils {
     /**
      * If the input string is well formed XML, return its pretty-print format. Otherwise, return it as is.
      * @param xml

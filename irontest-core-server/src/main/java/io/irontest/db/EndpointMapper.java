@@ -4,16 +4,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.irontest.models.Environment;
 import io.irontest.models.endpoint.Endpoint;
 import io.irontest.utils.IronTestUtils;
-import org.skife.jdbi.v2.StatementContext;
-import org.skife.jdbi.v2.tweak.ResultSetMapper;
+import org.jdbi.v3.core.mapper.RowMapper;
+import org.jdbi.v3.core.statement.StatementContext;
 
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-public class EndpointMapper implements ResultSetMapper<Endpoint> {
-    public Endpoint map(int index, ResultSet rs, StatementContext ctx) throws SQLException {
+public class EndpointMapper implements RowMapper<Endpoint> {
+    public Endpoint map(ResultSet rs, StatementContext ctx) throws SQLException {
         List<String> fields = IronTestUtils.getFieldsPresentInResultSet(rs);
 
         Endpoint endpoint = null;

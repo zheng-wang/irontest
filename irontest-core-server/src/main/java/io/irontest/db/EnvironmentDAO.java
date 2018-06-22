@@ -2,53 +2,55 @@ package io.irontest.db;
 
 import io.irontest.models.Environment;
 import io.irontest.models.endpoint.Endpoint;
-import org.skife.jdbi.v2.sqlobject.*;
-import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
+import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
+import org.jdbi.v3.sqlobject.customizer.Bind;
+import org.jdbi.v3.sqlobject.customizer.BindBean;
+import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
+import org.jdbi.v3.sqlobject.statement.SqlQuery;
+import org.jdbi.v3.sqlobject.statement.SqlUpdate;
+import org.jdbi.v3.sqlobject.transaction.Transaction;
 
 import java.util.List;
 
 import static io.irontest.IronTestConstants.DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX;
 
-@RegisterMapper(EnvironmentMapper.class)
-public abstract class EnvironmentDAO {
+@RegisterRowMapper(EnvironmentMapper.class)
+public interface EnvironmentDAO extends CrossReferenceDAO {
     @SqlUpdate("CREATE SEQUENCE IF NOT EXISTS environment_sequence START WITH 1 INCREMENT BY 1 NOCACHE")
-    public abstract void createSequenceIfNotExists();
+    void createSequenceIfNotExists();
 
     @SqlUpdate("CREATE TABLE IF NOT EXISTS environment (id BIGINT DEFAULT environment_sequence.NEXTVAL PRIMARY KEY, " +
             "name varchar(200) NOT NULL DEFAULT CURRENT_TIMESTAMP, description CLOB," +
             "created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "CONSTRAINT ENVIRONMENT_" + DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX + " UNIQUE(name))")
-    public abstract void createTableIfNotExists();
+    void createTableIfNotExists();
 
     @SqlUpdate("insert into environment values ()")
     @GetGeneratedKeys
-    protected abstract long _insert();
+    long _insert();
 
     @SqlUpdate("update environment set name = :name where id = :id")
-    protected abstract long updateNameForInsert(@Bind("id") long id, @Bind("name") String name);
+    void updateNameForInsert(@Bind("id") long id, @Bind("name") String name);
 
     @Transaction
-    public long insert() {
+    default long insert() {
         long id = _insert();
         updateNameForInsert(id, "Environment " + id);
         return id;
     }
 
     @SqlUpdate("update environment set name = :name, description = :description, updated = CURRENT_TIMESTAMP where id = :id")
-    public abstract int update(@BindBean Environment environment);
+    void update(@BindBean Environment environment);
 
     @SqlUpdate("delete from environment where id = :id")
-    public abstract void deleteById(@Bind("id") long id);
+    void deleteById(@Bind("id") long id);
 
     @SqlQuery("select * from environment")
-    public abstract List<Environment> findAll();
+    List<Environment> findAll();
 
     @SqlQuery("select * from environment where id = :id")
-    protected abstract Environment _findById(@Bind("id") long id);
-
-    @CreateSqlObject
-    protected abstract EndpointDAO endpointDAO();
+    Environment _findById(@Bind("id") long id);
 
     /**
      *
@@ -56,7 +58,7 @@ public abstract class EnvironmentDAO {
      * @return environment with all endpoints in it
      */
     @Transaction
-    public Environment findById_EnvironmentEditView(long id) {
+    default Environment findById_EnvironmentEditView(long id) {
         Environment environment = _findById(id);
         List<Endpoint> endpoints = endpointDAO().findByEnvironmentId_EnvironmentEditView(id);
         environment.setEndpoints(endpoints);

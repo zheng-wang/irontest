@@ -6,8 +6,8 @@ import io.irontest.models.TestResult;
 import io.irontest.models.assertion.AssertionVerification;
 import io.irontest.models.testrun.TeststepRun;
 import io.irontest.models.teststep.Teststep;
-import org.skife.jdbi.v2.StatementContext;
-import org.skife.jdbi.v2.tweak.ResultSetMapper;
+import org.jdbi.v3.core.mapper.RowMapper;
+import org.jdbi.v3.core.statement.StatementContext;
 
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -15,8 +15,8 @@ import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-public class TeststepRunMapper implements ResultSetMapper<TeststepRun> {
-    public TeststepRun map(int index, ResultSet rs, StatementContext ctx) throws SQLException {
+public class TeststepRunMapper implements RowMapper<TeststepRun> {
+    public TeststepRun map(ResultSet rs, StatementContext ctx) throws SQLException {
         TeststepRun teststepRun = new TeststepRun();
         ObjectMapper objectMapper = new ObjectMapper();
 

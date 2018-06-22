@@ -3,8 +3,8 @@ package io.irontest.db;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.irontest.models.User;
 import io.irontest.utils.IronTestUtils;
-import org.skife.jdbi.v2.StatementContext;
-import org.skife.jdbi.v2.tweak.ResultSetMapper;
+import org.jdbi.v3.core.mapper.RowMapper;
+import org.jdbi.v3.core.statement.StatementContext;
 
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -12,9 +12,9 @@ import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.List;
 
-public class UserMapper implements ResultSetMapper<User> {
+public class UserMapper implements RowMapper<User> {
     @Override
-    public User map(int index, ResultSet rs, StatementContext ctx) throws SQLException {
+    public User map(ResultSet rs, StatementContext ctx) throws SQLException {
         List<String> fields = IronTestUtils.getFieldsPresentInResultSet(rs);
 
         User user = new User();

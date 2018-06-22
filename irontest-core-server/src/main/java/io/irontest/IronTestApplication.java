@@ -14,7 +14,7 @@ import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.auth.basic.BasicCredentialAuthFilter;
 import io.dropwizard.forms.MultiPartBundle;
-import io.dropwizard.jdbi.DBIFactory;
+import io.dropwizard.jdbi3.JdbiFactory;
 import io.dropwizard.jetty.ConnectorFactory;
 import io.dropwizard.jetty.HttpConnectorFactory;
 import io.dropwizard.logging.DefaultLoggingFactory;
@@ -33,7 +33,7 @@ import io.irontest.resources.*;
 import io.irontest.ws.ArticleSOAP;
 import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
-import org.skife.jdbi.v2.DBI;
+import org.jdbi.v3.core.Jdbi;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -102,8 +102,8 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
     }
 
     private void createSystemResources(IronTestConfiguration configuration, Environment environment) {
-        final DBIFactory dbiFactory = new DBIFactory();
-        final DBI jdbi = dbiFactory.build(environment, configuration.getSystemDatabase(), "systemDatabase");
+        final JdbiFactory jdbiFactory = new JdbiFactory();
+        final Jdbi jdbi = jdbiFactory.build(environment, configuration.getSystemDatabase(), "systemDatabase");
 
         //  create DAO objects
         final FolderDAO folderDAO = jdbi.onDemand(FolderDAO.class);
@@ -209,8 +209,8 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
     }
 
     private void createSampleResources(IronTestConfiguration configuration, Environment environment) {
-        final DBIFactory factory = new DBIFactory();
-        final DBI jdbi = factory.build(environment, configuration.getSampleDatabase(), "sampleDatabase");
+        final JdbiFactory jdbiFactory = new JdbiFactory();
+        final Jdbi jdbi = jdbiFactory.build(environment, configuration.getSampleDatabase(), "sampleDatabase");
 
         //  create DAO objects
         final ArticleDAO articleDAO = jdbi.onDemand(ArticleDAO.class);
