@@ -97,14 +97,6 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
       }
     };
 
-    /*$scope.remove = function(testcase) {
-      testcase.$remove(function(response) {
-        $state.go($state.current, {}, {reload: true});
-      }, function(response) {
-        IronTestUtils.openErrorHTTPResponseModal(response);
-      });
-    };*/
-
     $scope.run = function() {
       //  clear previous run result
       $scope.testcaseRun = null;

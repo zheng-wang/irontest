@@ -29,12 +29,6 @@ public class TestcaseResource {
         return testcaseDAO.findById_TestcaseEditView(testcase.getId());
     }
 
-    /*@DELETE @Path("{testcaseId}")
-    @PermitAll
-    public void delete(@PathParam("testcaseId") long testcaseId) {
-        testcaseDAO.deleteById(testcaseId);
-    }*/
-
     @GET @Path("testcases/{testcaseId}")
     public Testcase findById_TestcaseEditView(@PathParam("testcaseId") long testcaseId) {
         return testcaseDAO.findById_TestcaseEditView(testcaseId);
