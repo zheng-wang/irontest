@@ -4,7 +4,8 @@ import io.irontest.core.runner.SQLStatementType;
 import io.irontest.models.DataTable;
 import io.irontest.models.DataTableColumn;
 import io.irontest.models.UserDefinedProperty;
-import org.jdbi.v3.core.statement.Script;
+import org.antlr.runtime.ANTLRStringStream;
+import org.jdbi.v3.core.internal.SqlScriptParser;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -31,14 +32,20 @@ public final class IronTestUtils {
         return statements.size() == 1 && SQLStatementType.isSelectStatement(statements.get(0));
     }
 
+    /**
+     * Parse the sqlRequest to get SQL statements, trimmed and without comments.
+     * @param sqlRequest
+     * @return
+     */
     public static List<String> getStatements(String sqlRequest) {
-        List<String> statements = null;
-//        if ("".equals(sqlRequest)) {      //  if passing "" to handle.createScript(), script.getStatements() returns unexpected values
-//            statements = new ArrayList<String>();
-//        } else {                          //  parse the SQL script
-            Script script = new Script(null, sqlRequest);
-            statements = script.getStatements();
-//        }
+        final List<String> statements = new ArrayList<>();
+        String lastStatement = new SqlScriptParser((t, sb) -> {
+            statements.add(sb.toString().trim());
+            sb.setLength(0);
+        }).parse(new ANTLRStringStream(sqlRequest));
+        statements.add(lastStatement.trim());
+        statements.removeAll(Collections.singleton(""));   //  remove all empty statements
+
         return statements;
     }
 

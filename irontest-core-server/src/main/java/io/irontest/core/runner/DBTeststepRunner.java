@@ -8,7 +8,6 @@ import io.irontest.models.teststep.Teststep;
 import io.irontest.utils.IronTestUtils;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
-import org.jdbi.v3.core.result.ResultIterable;
 import org.jdbi.v3.core.statement.Query;
 import org.jdbi.v3.core.statement.Script;
 import org.jdbi.v3.core.statement.StatementContext;
@@ -46,16 +45,13 @@ public class DBTeststepRunner extends TeststepRunner {
         BasicTeststepRun basicTeststepRun = new BasicTeststepRun();
         DBAPIResponse response = new DBAPIResponse();
         String request = (String) teststep.getRequest();
+
+        List<String> statements = IronTestUtils.getStatements(request);
+        sanityCheckTheStatements(statements);
+
         Endpoint endpoint = teststep.getEndpoint();
         Jdbi jdbi = Jdbi.create(endpoint.getUrl(), endpoint.getUsername(), getDecryptedEndpointPassword());
         Handle handle = jdbi.open();
-
-        //  get SQL statements (trimmed and without comments) and JDBI script object
-//        List<String> statements = IronTestUtils.getStatements(request);
-        Script script = handle.createScript(request);
-        List<String> statements = script.getStatements();
-        sanityCheckTheStatements(statements);
-
         if (SQLStatementType.isSelectStatement(statements.get(0))) {    //  the request is a select statement
             RetainingColumnOrderResultSetMapper resultSetMapper = new RetainingColumnOrderResultSetMapper();
             //  use statements.get(0) instead of the raw request, as Oracle does not support trailing semicolon in select statement
@@ -76,7 +72,7 @@ public class DBTeststepRunner extends TeststepRunner {
             response.setColumnNames(columnNames);
             response.setRowsJSON(jacksonObjectMapper.writeValueAsString(rows));
         } else {                                          //  the request is one or more non-select statements
-//            Script script = handle.createScript(request);
+            Script script = handle.createScript(request);
             int[] returnValues = script.execute();
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < returnValues.length; i++) {

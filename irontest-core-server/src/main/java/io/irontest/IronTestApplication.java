@@ -35,6 +35,7 @@ import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.jdbi.v3.core.Jdbi;
 
+import java.io.File;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
@@ -93,9 +94,14 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
 
     @Override
     public void run(IronTestConfiguration configuration, Environment environment) {
-        // Override Java's trusted cacerts with our own trust store.
-        System.setProperty("javax.net.ssl.trustStore", configuration.getSslTrustStorePath());
-        System.setProperty("javax.net.ssl.trustStorePassword", configuration.getSslTrustStorePassword());
+        //  Override Java's trusted cacerts with our own trust store if available.
+        //  Notice that setting the properties without the trust store being existing could cause unexpected result
+        //  at runtime with Java 10 (Java 1.8 does not have the issue), such as failure of SOAP test step run (caused
+        //  by 'new SSLContextBuilder().loadTrustMaterial').
+        if (new File(configuration.getSslTrustStorePath()).exists()) {
+            System.setProperty("javax.net.ssl.trustStore", configuration.getSslTrustStorePath());
+            System.setProperty("javax.net.ssl.trustStorePassword", configuration.getSslTrustStorePassword());
+        }
 
         createSystemResources(configuration, environment);
         createSampleResources(configuration, environment);
