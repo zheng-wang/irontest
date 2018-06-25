@@ -1,1 +1,0 @@
-Column "${ verification.assertion.otherProperties.field }" contains "${ verification.assertion.otherProperties.value }".

@@ -110,7 +110,9 @@
             <version>1.9.9</version>
         </dependency>
 
-        <!-- for Java 9+ (backward compatible with Java 1.8) -->
+        <!-- For Java 9+ (backward compatible with Java 1.8).
+            Refer to https://stackoverflow.com/questions/43574426/how-to-resolve-java-lang-noclassdeffounderror-javax-xml-bind-jaxbexception-in-j
+        -->
         <dependency>
             <groupId>javax.xml.ws</groupId>
             <artifactId>jaxws-api</artifactId>
