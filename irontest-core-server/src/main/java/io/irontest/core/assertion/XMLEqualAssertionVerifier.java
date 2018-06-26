@@ -3,11 +3,14 @@ package io.irontest.core.assertion;
 import io.irontest.models.TestResult;
 import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.AssertionVerificationResult;
-import io.irontest.models.assertion.XMLEqualAssertionProperties;
 import io.irontest.models.assertion.MessageEqualAssertionVerificationResult;
+import io.irontest.models.assertion.XMLEqualAssertionProperties;
 import io.irontest.utils.XMLUtils;
 
 public class XMLEqualAssertionVerifier extends AssertionVerifier {
+    private static final String XML_UNIT_PLACEHOLDER_REGEX = "#\\{[\\s]*(xmlunit\\.[^}]+)}";
+    private static final String XML_UNIT_PLACEHOLDER_DELIMITER_REPLACEMENT = "\\${$1}";
+
     /**
      *
      * @param assertion
@@ -15,7 +18,7 @@ public class XMLEqualAssertionVerifier extends AssertionVerifier {
      * @return
      */
     @Override
-    public AssertionVerificationResult _verify(Assertion assertion, Object input) throws Exception {
+    public AssertionVerificationResult _verify(Assertion assertion, Object input) {
         XMLEqualAssertionProperties assertionProperties = (XMLEqualAssertionProperties) assertion.getOtherProperties();
 
         //  validate arguments
@@ -25,8 +28,10 @@ public class XMLEqualAssertionVerifier extends AssertionVerifier {
             throw new IllegalArgumentException("Actual XML is null.");
         }
 
+        String expectedXML = assertionProperties.getExpectedXML().replaceAll(
+                XML_UNIT_PLACEHOLDER_REGEX, XML_UNIT_PLACEHOLDER_DELIMITER_REPLACEMENT);
         MessageEqualAssertionVerificationResult result = new MessageEqualAssertionVerificationResult();
-        String differencesStr = XMLUtils.compareXML(assertionProperties.getExpectedXML(), (String) input);
+        String differencesStr = XMLUtils.compareXML(expectedXML, (String) input);
         if (differencesStr.length() > 0) {
             result.setResult(TestResult.FAILED);
             result.setDifferences(differencesStr);

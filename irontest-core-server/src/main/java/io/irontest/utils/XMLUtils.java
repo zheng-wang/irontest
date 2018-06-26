@@ -1,6 +1,5 @@
 package io.irontest.utils;
 
-import io.irontest.core.assertion.PlaceholderDifferenceEvaluator;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -12,6 +11,7 @@ import org.xmlunit.diff.ComparisonResult;
 import org.xmlunit.diff.Diff;
 import org.xmlunit.diff.Difference;
 import org.xmlunit.diff.DifferenceEvaluators;
+import org.xmlunit.placeholder.PlaceholderDifferenceEvaluator;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
