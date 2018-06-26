@@ -24,7 +24,7 @@ Table of Contents:
 - [License](#license)
         
 ## Build
-Prerequisites: JDK 1.7.x (or 1.8.x), Maven 3.x. JDK 9 is not supported for now. To let Maven use a specific version of JDK installed on the machine, set environment variable JAVA_HOME=<JDK_Install_Path>.
+Prerequisites: JDK (Java SE Development Kit) 8 or above, Apache Maven 3.3 or above.
 
 Download the latest Iron Test release from [here](https://github.com/zheng-wang/irontest/releases) to your local machine. Extract it, cd to the project directory (in which there is README.md), and run below Maven command
 
@@ -42,7 +42,7 @@ Copy all files and folders from `dist` to `<IronTest_Home>`.
 The build itself can interact with SOAP/HTTP web services and H2 databases. To enable interacting with other types of systems such as Oracle database or WebSphere MQ, please refer to this [wiki page](https://github.com/zheng-wang/irontest/wiki/Interact-with-Other-Systems).
 
 ## Launch
-Prerequisites: JRE 1.7.x (or 1.8.x). JRE 9 is not supported for now.
+Prerequisites: JRE (Java SE Runtime Environment) 8 or above.
 
 To launch Iron Test application, cd to `<IronTest_Home>` and run below command
 
@@ -170,7 +170,7 @@ To shut down the application
     
     On Linux/Unix: kill -SIGINT <pid>
     
-You can tune Iron Test application to suit your runtime needs by changing contents of the config.yml under `<IronTest_Home>`. Refer to [Dropwizard doc](http://www.dropwizard.io/0.9.3/docs/manual/configuration.html) for how to do it. Re-launch the application for the changes to take effect.
+You can tune Iron Test application to suit your runtime needs by changing contents of the config.yml under `<IronTest_Home>`. Refer to [Dropwizard doc](https://www.dropwizard.io/1.3.4/docs/manual/configuration.html) for how to do it. Re-launch the application for the changes to take effect.
     
 To move Iron Test to a different folder or computer/VM, just shut down the application, copy the whole `<IronTest_Home>` folder over, and launch the application from there.
 
