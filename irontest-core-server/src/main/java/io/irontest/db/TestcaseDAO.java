@@ -9,7 +9,6 @@ import io.irontest.models.teststep.TeststepRequestType;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
-import org.jdbi.v3.sqlobject.customizer.Define;
 import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
@@ -72,12 +71,12 @@ public interface TestcaseDAO extends CrossReferenceDAO {
      */
     @SqlQuery("WITH RECURSIVE T(parent_folder_id, path) AS (" +
                   "SELECT parent_folder_id, name AS path " +
-                  "FROM folder WHERE id = (SELECT parent_folder_id FROM testcase WHERE id = <testcaseId>) " +
+                  "FROM folder WHERE id = (SELECT parent_folder_id FROM testcase WHERE id = :testcaseId) " +
                   "UNION ALL " +
                   "SELECT T2.parent_folder_id, (T2.name || '/' || T.path) AS path " +
                   "FROM T INNER JOIN folder AS T2 ON T.parent_folder_id = T2.id " +
               ") SELECT path FROM T WHERE parent_folder_id IS NULL")
-    String getFolderPath(@Define("testcaseId") long testcaseId);
+    String getFolderPath(@Bind("testcaseId") long testcaseId);
 
     @Transaction
     default Testcase findById_Complete(long id) {
