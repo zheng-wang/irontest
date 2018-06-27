@@ -73,7 +73,8 @@ public class DataTableResource {
 
     @POST @PermitAll
     @Path("testcases/{testcaseId}/datatable/updateCell")
-    public void updateCell(DataTableCell dataTableCell) {
+    public void updateCell(DataTableCell dataTableCell) throws InterruptedException {
+        Thread.sleep(100);  //  workaround for Chrome's 'Failed to load response data' problem (still exist in Chrome 65)
         dataTableCellDAO.update(dataTableCell,
                 dataTableCell.getEndpoint() == null ? null : dataTableCell.getEndpoint().getId());
     }

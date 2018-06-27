@@ -8,9 +8,6 @@ import io.irontest.models.assertion.XMLEqualAssertionProperties;
 import io.irontest.utils.XMLUtils;
 
 public class XMLEqualAssertionVerifier extends AssertionVerifier {
-    private static final String XML_UNIT_PLACEHOLDER_REGEX = "#\\{[\\s]*(xmlunit\\.[^}]+)}";
-    private static final String XML_UNIT_PLACEHOLDER_DELIMITER_REPLACEMENT = "\\${$1}";
-
     /**
      *
      * @param assertion
@@ -28,10 +25,8 @@ public class XMLEqualAssertionVerifier extends AssertionVerifier {
             throw new IllegalArgumentException("Actual XML is null.");
         }
 
-        String expectedXML = assertionProperties.getExpectedXML().replaceAll(
-                XML_UNIT_PLACEHOLDER_REGEX, XML_UNIT_PLACEHOLDER_DELIMITER_REPLACEMENT);
         MessageEqualAssertionVerificationResult result = new MessageEqualAssertionVerificationResult();
-        String differencesStr = XMLUtils.compareXML(expectedXML, (String) input);
+        String differencesStr = XMLUtils.compareXML(assertionProperties.getExpectedXML(), (String) input);
         if (differencesStr.length() > 0) {
             result.setResult(TestResult.FAILED);
             result.setDifferences(differencesStr);

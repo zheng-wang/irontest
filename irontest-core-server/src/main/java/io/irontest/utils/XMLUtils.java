@@ -112,7 +112,7 @@ public final class XMLUtils {
                     //  the default DifferenceEvaluator's feature which turns some DIFFERENT comparison results into
                     //  SIMILAR, such as for different namespace prefixes.
                     .withDifferenceEvaluator(DifferenceEvaluators.chain(
-                            DifferenceEvaluators.Default, new PlaceholderDifferenceEvaluator()))
+                            DifferenceEvaluators.Default, new PlaceholderDifferenceEvaluator("#\\{", null)))
                     .build();
         } catch (XMLUnitException e) {
             throw new RuntimeException(e.getCause().getMessage());
