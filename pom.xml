@@ -9,27 +9,47 @@
     <packaging>pom</packaging>
     <version>0.8.2-SNAPSHOT</version>
 
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>A web app for API test automation</description>
+    <url>https://github.com/zheng-wang/irontest</url>
+
     <modules>
         <module>irontest-core-server</module>
         <module>irontest-core-ui</module>
         <module>irontest-assembly</module>
     </modules>
 
-    <properties>
-        <github.global.server>github</github.global.server>
-    </properties>
+    <developers>
+        <developer>
+            <name>Zheng Wang</name>
+            <email>zhengwang666@gmail.com</email>
+        </developer>
+    </developers>
 
-    <distributionManagement>
-        <repository>
-            <id>internal.repo</id>
-            <name>Temporary Staging Repository</name>
-            <url>file://${project.build.directory}/mvn-repo</url>
-        </repository>
-    </distributionManagement>
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:git://github.com/zheng-wang/irontest.git</connection>
+        <developerConnection>scm:git:git@github.com:zheng-wang/irontest.git</developerConnection>
+        <url>https://github.com/zheng-wang/irontest</url>
+    </scm>
+
+    <properties>
+        <maven.install.skip>true</maven.install.skip>  <!-- Avoid installing Iron Test jars to Maven local repository -->
+    </properties>
 
     <profiles>
         <profile>
             <id>dev</id>
+            <properties>
+                <maven.source.skip>true</maven.source.skip>
+                <maven.javadoc.skip>true</maven.javadoc.skip>
+            </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
@@ -45,34 +65,6 @@
     </profiles>
 
     <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>com.github.github</groupId>
-                    <artifactId>site-maven-plugin</artifactId>
-                    <version>0.12</version>
-                    <configuration>
-                        <message>Maven artifact for ${project.version}</message>
-                        <noJekyll>true</noJekyll>
-                        <outputDirectory>${project.build.directory}/mvn-repo</outputDirectory>
-                        <branch>refs/heads/mvn-repo</branch>
-                        <includes><include>**/*</include></includes>
-                        <repositoryName>irontest</repositoryName>
-                        <repositoryOwner>zheng-wang</repositoryOwner>
-                        <merge>true</merge>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <goals>
-                                <goal>site</goal>
-                            </goals>
-                            <phase>deploy</phase>
-                        </execution>
-                    </executions>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -83,15 +75,45 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
-
-            <!-- Avoid installing Iron Test jars to Maven local repository -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-install-plugin</artifactId>
-                <version>2.5.2</version>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.0.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

@@ -45,18 +45,8 @@
     <profiles>
         <profile>
             <id>prod</id>
-            <repositories>
-                <repository>
-                    <id>irontest-mvn-repo</id>
-                    <url>https://raw.github.com/zheng-wang/irontest/mvn-repo/</url>
-                    <snapshots>
-                        <enabled>true</enabled>
-                        <updatePolicy>always</updatePolicy>
-                    </snapshots>
-                </repository>
-            </repositories>
 
-            <!-- These dependencies are to be obtained from the remote Maven repository. -->
+            <!-- These dependencies are to be obtained from Maven Central. -->
             <dependencies>
                 <dependency>
                     <groupId>io.irontest</groupId>
@@ -257,7 +247,7 @@
             <activation>
                 <property><name>mq.version</name></property>
             </activation>
-            <!-- These dependencies are to be obtained like normal (from the local Maven repository). -->
+            <!-- These dependencies are to be obtained from the build target folders. -->
             <dependencies>
                 <dependency>
                     <groupId>io.irontest</groupId>
@@ -273,7 +263,7 @@
             <activation>
                 <property><name>iib.version</name></property>
             </activation>
-            <!-- These dependencies are to be obtained like normal (from the local Maven repository). -->
+            <!-- These dependencies are to be obtained from the build target folders. -->
             <dependencies>
                 <dependency>
                     <groupId>io.irontest</groupId>
