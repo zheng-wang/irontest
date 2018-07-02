@@ -1,6 +1,5 @@
 package io.irontest.core.assertion;
 
-import com.sun.org.apache.xpath.internal.XPathException;
 import io.irontest.core.IronTestNamespaceContext;
 import io.irontest.models.NamespacePrefix;
 import io.irontest.models.TestResult;
@@ -10,8 +9,6 @@ import io.irontest.models.assertion.XPathAssertionProperties;
 import io.irontest.models.assertion.XPathAssertionVerificationResult;
 import io.irontest.utils.XMLUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
@@ -24,8 +21,6 @@ import java.io.StringReader;
 import java.util.List;
 
 public class XPathAssertionVerifier extends AssertionVerifier {
-    private static final Logger LOGGER = LoggerFactory.getLogger(XPathAssertionVerifier.class);
-
     /**
      *
      * @param assertion
@@ -59,23 +54,9 @@ public class XPathAssertionVerifier extends AssertionVerifier {
         XPath xpath = XPathFactory.newInstance().newXPath();
         xpath.setNamespaceContext(new IronTestNamespaceContext(namespacePrefixes));
 
-        String actualValue = null;
-        try {
-            InputSource inputSource = new InputSource(new StringReader(xmlInput));
-            Object value = xpath.evaluate(xPathExpression, inputSource, XPathConstants.NODESET);
-            actualValue = XMLUtils.domNodeListToString((NodeList) value);
-        } catch (XPathExpressionException e) {
-            Throwable cause = e.getCause();
-            if (cause instanceof XPathException &&
-                    cause.getMessage().startsWith("Can not convert") && cause.getMessage().endsWith("!")) {
-                //  The value is not of type NODESET. Swallow the exception and try STRING.
-                InputSource inputSource2 = new InputSource(new StringReader(xmlInput));
-                actualValue = (String) xpath.evaluate(xPathExpression, inputSource2, XPathConstants.STRING);
-            } else {
-                throw e;
-            }
-        }
+        InputSource inputSource = new InputSource(new StringReader(xmlInput));
+        Object value = xpath.evaluate(xPathExpression, inputSource, XPathConstants.NODESET);
 
-        result.setActualValue(actualValue);
+        result.setActualValue(XMLUtils.domNodeListToString((NodeList) value));
     }
 }
