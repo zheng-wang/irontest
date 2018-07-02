@@ -46,7 +46,7 @@
         <profile>
             <id>prod</id>
 
-            <!-- These dependencies are to be obtained from Maven Central. -->
+            <!-- These dependencies are to be obtained from Maven Central (for release) or from the sonatype nexus snapshot repository (for SNAPSHOT). -->
             <dependencies>
                 <dependency>
                     <groupId>io.irontest</groupId>

@@ -13,12 +13,6 @@
     <description>A web app for API test automation</description>
     <url>https://github.com/zheng-wang/irontest</url>
 
-    <modules>
-        <module>irontest-core-server</module>
-        <module>irontest-core-ui</module>
-        <module>irontest-assembly</module>
-    </modules>
-
     <developers>
         <developer>
             <name>Zheng Wang</name>
@@ -39,6 +33,17 @@
         <url>https://github.com/zheng-wang/irontest</url>
     </scm>
 
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
     <properties>
         <maven.install.skip>true</maven.install.skip>  <!-- Avoid installing Iron Test jars to Maven local repository -->
     </properties>
@@ -50,17 +55,84 @@
                 <maven.source.skip>true</maven.source.skip>
                 <maven.javadoc.skip>true</maven.javadoc.skip>
             </properties>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
             <modules>
+                <module>irontest-core-server</module>
+                <module>irontest-core-ui</module>
+                <module>irontest-assembly</module>
                 <module>irontest-iib</module>
                 <module>irontest-mq</module>
             </modules>
         </profile>
-        <!-- This empty profile is only for the activeByDefault in the dev profile above to work when prod profile is used in mvn command -->
         <profile>
             <id>prod</id>
+            <modules>
+                <module>irontest-core-server</module>
+                <module>irontest-core-ui</module>
+                <module>irontest-assembly</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>sonatype-ossrh</id>
+            <modules>
+                <module>irontest-core-server</module>
+                <module>irontest-iib</module>
+                <module>irontest-mq</module>
+            </modules>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>3.0.1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>3.0.1</version>
+                        <configuration>
+                            <additionalOptions>-Xdoclint:none</additionalOptions>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.6</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                                <configuration>
+                                    <gpgArguments>
+                                        <!-- This arg is used to prevent GPG signing prompt, so that gpg.passphrase
+                                        property in settings.xml is picked up -->
+                                        <arg>--pinentry-mode</arg>
+                                        <arg>loopback</arg>
+                                    </gpgArguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
 
@@ -74,46 +146,6 @@
                     <source>1.8</source>
                     <target>1.8</target>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>3.0.1</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.0.1</version>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.6</version>
-                <executions>
-                    <execution>
-                        <id>sign-artifacts</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
