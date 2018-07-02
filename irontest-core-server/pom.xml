@@ -13,9 +13,6 @@
     <artifactId>irontest-core-server</artifactId>
 
     <properties>
-        <maven.source.skip>true</maven.source.skip>
-        <maven.javadoc.skip>true</maven.javadoc.skip>
-        <gpg.skip>true</gpg.skip>
         <dropwizard.version>1.3.4</dropwizard.version>
     </properties>
 
