@@ -24,7 +24,7 @@ Table of Contents:
 - [License](#license)
         
 ## Build
-Prerequisites: JDK (Java SE Development Kit) 8 or above, Apache Maven 3.3 or above.
+Prerequisites: JDK (Java SE Development Kit) 8+, Apache Maven 3.3+.
 
 Download the latest Iron Test release from [here](https://github.com/zheng-wang/irontest/releases) to your local machine. Extract it, cd to the project directory (in which there is README.md), and run below Maven command
 
@@ -42,7 +42,7 @@ Copy all files and folders from `dist` to `<IronTest_Home>`.
 The build itself can interact with SOAP/HTTP web services and H2 databases. To enable interacting with other types of systems such as Oracle database or WebSphere MQ, please refer to this [wiki page](https://github.com/zheng-wang/irontest/wiki/Interact-with-Other-Systems).
 
 ## Launch
-Prerequisites: JRE (Java SE Runtime Environment) 8 or above.
+Prerequisites: JRE (Java SE Runtime Environment) or JDK 8+.
 
 To launch Iron Test application, cd to `<IronTest_Home>` and run below command
 
