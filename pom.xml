@@ -7,7 +7,7 @@
     <groupId>io.irontest</groupId>
     <artifactId>irontest-parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.8.2-SNAPSHOT</version>
+    <version>0.8.2</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>A web app for API test automation</description>
@@ -50,11 +50,20 @@
 
     <profiles>
         <profile>
+            <id>default</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>irontest-core-server</module>
+                <module>irontest-core-ui</module>
+                <module>irontest-assembly</module>
+                <module>irontest-iib</module>
+                <module>irontest-mq</module>
+            </modules>
+        </profile>
+        <profile>
             <id>dev</id>
-            <properties>
-                <maven.source.skip>true</maven.source.skip>
-                <maven.javadoc.skip>true</maven.javadoc.skip>
-            </properties>
             <modules>
                 <module>irontest-core-server</module>
                 <module>irontest-core-ui</module>
