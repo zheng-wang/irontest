@@ -23,7 +23,8 @@
             <version>${project.version}</version>
         </dependency>
 
-        <!-- MQ dependencies -->
+        <!-- MQ dependencies. artifactId has 'com.ibm' (duplicate with groupId), only to be consistent with an old version in
+        Maven Central https://search.maven.org/#artifactdetails%7Ccom.ibm%7Ccom.ibm.mq%7C5.3.07%7Cjar. -->
         <dependency>
             <groupId>com.ibm</groupId>
             <artifactId>com.ibm.mq</artifactId>
