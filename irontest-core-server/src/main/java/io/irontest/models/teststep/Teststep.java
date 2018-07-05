@@ -14,6 +14,7 @@ import java.util.List;
 public class Teststep {
     public static final String TYPE_SOAP = "SOAP";
     public static final String TYPE_DB = "DB";
+    public static final String TYPE_HTTP = "HTTP";
     public static final String TYPE_IIB = "IIB";
     public static final String TYPE_MQ = "MQ";
     public static final String TYPE_WAIT = "Wait";
@@ -48,6 +49,7 @@ public class Teststep {
             property = "type", visible = true, defaultImpl = Properties.class)
     @JsonSubTypes({
             @JsonSubTypes.Type(value = SOAPTeststepProperties.class, name = Teststep.TYPE_SOAP),
+            @JsonSubTypes.Type(value = HTTPTeststepProperties.class, name = Teststep.TYPE_HTTP),
             @JsonSubTypes.Type(value = IIBTeststepProperties.class, name = Teststep.TYPE_IIB),
             @JsonSubTypes.Type(value = MQTeststepProperties.class, name = Teststep.TYPE_MQ),
             @JsonSubTypes.Type(value = WaitTeststepProperties.class, name = Teststep.TYPE_WAIT)})

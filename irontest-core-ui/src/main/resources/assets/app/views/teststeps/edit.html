@@ -61,6 +61,8 @@
                    ng-include="'/ui/views/teststeps/soap/edit-soap-teststep-endpoint-details.html'"></div>
               <div ng-if="teststep.type === 'DB'"
                    ng-include="'/ui/views/teststeps/db/edit-db-teststep-endpoint-details.html'"></div>
+              <div ng-if="teststep.type === 'HTTP'"
+                   ng-include="'/ui/views/teststeps/http/edit-http-teststep-endpoint-details.html'"></div>
               <div ng-if="teststep.type === 'MQ'"
                    ng-include="'/ui/views/teststeps/mq/edit-mq-teststep-endpoint-details.html'"></div>
               <div ng-if="teststep.type === 'IIB'" ng-controller="IIBTeststepEndpointController"

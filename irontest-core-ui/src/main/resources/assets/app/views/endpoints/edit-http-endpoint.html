@@ -1,0 +1,9 @@
+<div class="form-group">
+  <label for="url" class="col-lg-2 control-label">URL</label>
+  <div class="col-lg-10">
+    <input id="url" name="url" type="text" class="form-control" ng-model="endpoint.url"
+           ng-change="autoSave(endpointForm.$valid)" ng-readonly="appStatus.isForbidden()" spellcheck="false">
+  </div>
+</div>
+
+<div ng-include="'/ui/views/endpoints/edit-endpoint-username-password.html'"></div>

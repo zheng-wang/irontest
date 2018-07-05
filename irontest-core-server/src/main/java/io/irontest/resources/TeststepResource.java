@@ -8,6 +8,7 @@ import io.irontest.db.UserDefinedPropertyDAO;
 import io.irontest.db.UtilsDAO;
 import io.irontest.models.AppInfo;
 import io.irontest.models.DataTable;
+import io.irontest.models.Properties;
 import io.irontest.models.UserDefinedProperty;
 import io.irontest.models.endpoint.Endpoint;
 import io.irontest.models.teststep.*;
@@ -64,13 +65,24 @@ public class TeststepResource {
         teststep.setRequest(sampleRequest);
 
         //  set initial/default property values (in the Properties sub-class)
-        if (Teststep.TYPE_SOAP.equals(teststep.getType())) {
-            teststep.setOtherProperties(new SOAPTeststepProperties());
-        } else if (Teststep.TYPE_MQ.equals(teststep.getType())) {
-            teststep.setOtherProperties(new MQTeststepProperties());
-        } else if (Teststep.TYPE_WAIT.equals(teststep.getType())) {
-            teststep.setOtherProperties(new WaitTeststepProperties(1000));   //  there is no point to wait for 0 milliseconds
+        Properties otherProperties = new Properties();
+        switch (teststep.getType()) {
+            case Teststep.TYPE_SOAP:
+                otherProperties = new SOAPTeststepProperties();
+                break;
+            case Teststep.TYPE_HTTP:
+                otherProperties = new HTTPTeststepProperties();
+                break;
+            case Teststep.TYPE_MQ:
+                otherProperties = new MQTeststepProperties();
+                break;
+            case Teststep.TYPE_WAIT:
+                otherProperties = new WaitTeststepProperties(1000);  //  there is no point to wait for 0 milliseconds
+                break;
+            default:
+                break;
         }
+        teststep.setOtherProperties(otherProperties);
     }
 
     private void populateParametersInWrapper(TeststepWrapper wrapper) {

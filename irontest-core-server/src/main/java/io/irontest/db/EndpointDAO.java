@@ -3,10 +3,7 @@ package io.irontest.db;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.irontest.models.AppMode;
-import io.irontest.models.endpoint.Endpoint;
-import io.irontest.models.endpoint.MQConnectionMode;
-import io.irontest.models.endpoint.MQEndpointProperties;
-import io.irontest.models.endpoint.SOAPEndpointProperties;
+import io.irontest.models.endpoint.*;
 import io.irontest.models.teststep.Teststep;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
@@ -68,20 +65,32 @@ public interface EndpointDAO {
         if (!Teststep.TYPE_WAIT.equals(teststepType)) {
             endpoint = new Endpoint();
             endpoint.setName("Unmanaged Endpoint");
-            if (Teststep.TYPE_SOAP.equals(teststepType)) {
-                endpoint.setType(Endpoint.TYPE_SOAP);
-                endpoint.setOtherProperties(new SOAPEndpointProperties());
-            } else if (Teststep.TYPE_DB.equals(teststepType)) {
-                endpoint.setType(Endpoint.TYPE_DB);
-            } else if (Teststep.TYPE_MQ.equals(teststepType)) {
-                endpoint.setType(Endpoint.TYPE_MQ);
-                MQEndpointProperties endpointProperties = new MQEndpointProperties();
-                endpointProperties.setConnectionMode(
-                        appMode == AppMode.LOCAL ? MQConnectionMode.BINDINGS : MQConnectionMode.CLIENT);
-                endpoint.setOtherProperties(endpointProperties);
-            } else if (Teststep.TYPE_IIB.equals(teststepType)) {
-                endpoint.setType(Endpoint.TYPE_IIB);
+            switch (teststepType) {
+                case Teststep.TYPE_SOAP:
+                    endpoint.setType(Endpoint.TYPE_SOAP);
+                    endpoint.setOtherProperties(new SOAPEndpointProperties());
+                    break;
+                case Teststep.TYPE_HTTP:
+                    endpoint.setType(Endpoint.TYPE_HTTP);
+                    endpoint.setOtherProperties(new HTTPEndpointProperties());
+                    break;
+                case Teststep.TYPE_DB:
+                    endpoint.setType(Endpoint.TYPE_DB);
+                    break;
+                case Teststep.TYPE_MQ:
+                    endpoint.setType(Endpoint.TYPE_MQ);
+                    MQEndpointProperties endpointProperties = new MQEndpointProperties();
+                    endpointProperties.setConnectionMode(
+                            appMode == AppMode.LOCAL ? MQConnectionMode.BINDINGS : MQConnectionMode.CLIENT);
+                    endpoint.setOtherProperties(endpointProperties);
+                    break;
+                case Teststep.TYPE_IIB:
+                    endpoint.setType(Endpoint.TYPE_IIB);
+                    break;
+                default:
+                    break;
             }
+
             long id = insertUnmanagedEndpoint(endpoint);
             endpoint.setId(id);
         }
@@ -101,7 +110,7 @@ public interface EndpointDAO {
                 "ELSE password END, " +
             "other_properties = :otherProperties, updated = CURRENT_TIMESTAMP where id = :ep.id")
     void _update(@BindBean("ep") Endpoint endpoint, @Bind("evId") Long environmentId,
-                @Bind("otherProperties") String otherProperties);
+                 @Bind("otherProperties") String otherProperties);
 
     default void update(Endpoint endpoint) throws JsonProcessingException {
         String otherProperties = new ObjectMapper().writeValueAsString(endpoint.getOtherProperties());

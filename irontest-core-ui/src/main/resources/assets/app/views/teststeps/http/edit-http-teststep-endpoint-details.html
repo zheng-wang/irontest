@@ -1,0 +1,11 @@
+<div class="form-group">
+  <label for="endpointURL" class="col-lg-2 control-label">URL</label>
+  <div class="col-lg-10">
+    <input id="endpointURL" name="endpointURL" type="text" class="form-control" ng-model="teststep.endpoint.url"
+           ng-change="isInShareEndpointMode() ? angular.noop() : autoSave(teststepForm.$valid)"
+           ng-readonly="appStatus.isForbidden() || (!isInShareEndpointMode() && teststep.endpoint.environment)"
+           spellcheck="false">
+  </div>
+</div>
+
+<div ng-include="'/ui/views/teststeps/edit-endpoint-details-username-password.html'"></div>
