@@ -88,9 +88,9 @@
         <uib-tab heading="{{ teststep.type === 'MQ' || teststep.type === 'IIB' || teststep.type === 'Wait' ?
                           'Action' : 'Invocation' }}">
           <div ng-controller="TeststepsActionController">
-            <div ng-if="teststep.type === 'SOAP'"
-                 ng-include="'/ui/views/teststeps/soap/edit-soap-teststep-invocation.html'"
-                 ng-controller="SOAPTeststepActionController"></div>
+            <div ng-if="teststep.type === 'SOAP' || teststep.type === 'HTTP'"
+                 ng-include="'/ui/views/teststeps/edit-invocation-details-http.html'"
+                 ng-controller="TeststepHTTPActionController"></div>
             <div ng-if="teststep.type === 'DB'"
                  ng-include="'/ui/views/teststeps/db/edit-db-teststep-invocation.html'"
                  ng-controller="DBTeststepController"></div>

@@ -1,7 +1,7 @@
 package io.irontest.models;
 
 public enum HTTPMethod {
-    POST("POST");
+    GET("GET"), POST("POST"), PUT("PUT"), DELETE("DELETE");
 
     private final String text;
 

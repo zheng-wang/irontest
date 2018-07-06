@@ -1,19 +1,33 @@
 'use strict';
 
+//  This controller is shared between SOAP test step and HTTP test step.
 //  NOTICE:
 //    The $scope here prototypically inherits from the $scope of TeststepsActionController.
 //    ng-include also creates a scope.
-angular.module('irontest').controller('SOAPTeststepActionController', ['$scope', '$rootScope', 'Teststeps', 'IronTestUtils', '$uibModal',
-    'uiGridConstants', '$timeout',
-  function($scope, $rootScope, Teststeps, IronTestUtils, $uibModal, uiGridConstants, $timeout) {
+angular.module('irontest').controller('TeststepHTTPActionController', ['$scope', '$rootScope', 'Teststeps',
+    'IronTestUtils', '$uibModal', 'uiGridConstants', '$timeout', '$window',
+  function($scope, $rootScope, Teststeps, IronTestUtils, $uibModal, uiGridConstants, $timeout, $window) {
     const HTTP_HEADER_GRID_NAME_COLUMN_WIDTH = '30%';
-    $scope.showHTTPHeaders = false;
+    switch ($scope.teststep.type) {
+      case 'SOAP':
+        $scope.showHTTPHeaders = ($window.localStorage.showHTTPHeadersOnSOAPTeststepEditView === 'true');
+        break;
+      case 'HTTP':
+        $scope.showHTTPHeaders = ($window.localStorage.showHTTPHeadersOnHTTPTeststepEditView === 'true');
+        break;
+    }
 
     var clearRunStatus = function() {
       $scope.steprun = { responseHttpHeaders: [] };
     };
 
     clearRunStatus();
+
+    $scope.showRequestArea = function() {
+      var teststep = $scope.teststep;
+      return teststep.type === 'SOAP' || (teststep.type === 'HTTP' && (!teststep.otherProperties.httpMethod ||
+        teststep.otherProperties.httpMethod === 'POST' || teststep.otherProperties.httpMethod === 'PUT'));
+    };
 
     var createHTTPHeader = function(gridMenuEvent) {
       $scope.teststep.otherProperties.httpHeaders.push(
@@ -91,6 +105,15 @@ angular.module('irontest').controller('SOAPTeststepActionController', ['$scope',
         $scope.$broadcast('elementRemovedFromColumn', { elementHeight: elementHeight });
       }
       $scope.showHTTPHeaders = !$scope.showHTTPHeaders;
+
+      switch ($scope.teststep.type) {
+        case 'SOAP':
+          $window.localStorage.showHTTPHeadersOnSOAPTeststepEditView = $scope.showHTTPHeaders;
+          break;
+        case 'HTTP':
+          $window.localStorage.showHTTPHeadersOnHTTPTeststepEditView = $scope.showHTTPHeaders;
+          break;
+      }
     };
 
     $scope.httpHeadersAreaLoadedCallback = function() {
@@ -100,7 +123,7 @@ angular.module('irontest').controller('SOAPTeststepActionController', ['$scope',
       });
     };
 
-    $scope.generateRequest = function() {
+    $scope.generateSOAPRequest = function() {
       //  open modal dialog
       var modalInstance = $uibModal.open({
         templateUrl: '/ui/views/teststeps/soap/select-soap-operation-modal.html',

@@ -5,7 +5,10 @@ import io.irontest.models.teststep.HTTPHeader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SOAPAPIResponse {
+/**
+ * Used for both SOAP API and generic HTTP API.
+ */
+public class HTTPAPIResponse {
     private List<HTTPHeader> httpHeaders = new ArrayList<HTTPHeader>();
     private String httpBody;
 
