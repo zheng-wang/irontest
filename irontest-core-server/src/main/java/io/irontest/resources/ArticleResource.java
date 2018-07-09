@@ -17,15 +17,14 @@ public class ArticleResource {
 
     @POST
     public Article create(Article article) {
-        long id = dao.insert(article);
-        article.setId(id);
-        return article;
+        long articleId = dao.insert(article);
+        return findById(articleId);
     }
 
     @PUT @Path("{articleId}")
-    public Article update(Article article) {
+    public Article update(Article article, @PathParam("articleId") long articleId) {
         dao.update(article);
-        return article;
+        return findById(articleId);
     }
 
     @DELETE @Path("{articleId}")

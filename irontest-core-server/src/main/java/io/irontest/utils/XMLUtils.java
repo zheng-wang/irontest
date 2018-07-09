@@ -30,26 +30,27 @@ import java.util.Iterator;
 public final class XMLUtils {
     /**
      * If the input string is well formed XML, return its pretty-print format. Otherwise, return it as is.
-     * @param xml
+     * If the input is null, return null.
+     * @param input
      * @return
      * @throws TransformerException
      */
-    public static String prettyPrintXML(String xml) throws TransformerException {
-        if (xml == null) {
+    public static String prettyPrintXML(String input) throws TransformerException {
+        if (input == null) {
             return null;
         } else {
             Document doc = null;
             try {
-                doc = XMLUtils.xmlStringToDOM(xml);
+                doc = XMLUtils.xmlStringToDOM(input);
             } catch (Exception e) {
                 //  the input string is not well formed XML
-                return xml;
+                return input;
             }
 
             Transformer transformer = TransformerFactory.newInstance().newTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-            if (xml.startsWith("<?xml")) {
+            if (input.startsWith("<?xml")) {
                 transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, "yes");  // add line break after xml declaration
             } else {
                 transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");

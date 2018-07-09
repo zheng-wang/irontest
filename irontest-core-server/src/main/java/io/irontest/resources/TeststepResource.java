@@ -161,14 +161,24 @@ public class TeststepResource {
                 teststep, teststepDAO, utilsDAO, referenceableStringProperties, referenceableEndpointProperties, null);
         BasicTeststepRun basicTeststepRun = teststepRunner.run();
 
-        //  for better display in browser, transform XML response to be pretty-printed
-        if (Teststep.TYPE_SOAP.equals(teststep.getType())) {
-            HTTPAPIResponse soapAPIResponse = (HTTPAPIResponse) basicTeststepRun.getResponse();
-            soapAPIResponse.setHttpBody(XMLUtils.prettyPrintXML(soapAPIResponse.getHttpBody()));
-        } else if (Teststep.TYPE_MQ.equals(teststep.getType()) &&
-                Teststep.ACTION_DEQUEUE.equals(teststep.getAction())) {
-            MQAPIResponse mqAPIResponse = (MQAPIResponse) basicTeststepRun.getResponse();
-            mqAPIResponse.setValue(XMLUtils.prettyPrintXML((String) mqAPIResponse.getValue()));
+        //  for better display in browser, transform JSON/XML response to be pretty-printed
+        switch (teststep.getType()) {
+            case Teststep.TYPE_SOAP:
+                HTTPAPIResponse soapAPIResponse = (HTTPAPIResponse) basicTeststepRun.getResponse();
+                soapAPIResponse.setHttpBody(XMLUtils.prettyPrintXML(soapAPIResponse.getHttpBody()));
+                break;
+            case Teststep.TYPE_HTTP:
+                HTTPAPIResponse httpAPIResponse = (HTTPAPIResponse) basicTeststepRun.getResponse();
+                httpAPIResponse.setHttpBody(IronTestUtils.prettyPrintJSONOrXML(httpAPIResponse.getHttpBody()));
+                break;
+            case Teststep.TYPE_MQ:
+                if (Teststep.ACTION_DEQUEUE.equals(teststep.getAction())) {
+                    MQAPIResponse mqAPIResponse = (MQAPIResponse) basicTeststepRun.getResponse();
+                    mqAPIResponse.setValue(IronTestUtils.prettyPrintJSONOrXML((String) mqAPIResponse.getValue()));
+                }
+                break;
+            default:
+                break;
         }
 
         return basicTeststepRun;
