@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.irontest.core.MQTeststepActionDataBackup;
 import io.irontest.models.AppMode;
+import io.irontest.models.HTTPMethod;
 import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.IntegerEqualAssertionProperties;
 import io.irontest.models.endpoint.Endpoint;
@@ -38,7 +39,7 @@ public interface TeststepDAO extends CrossReferenceDAO {
             "sequence SMALLINT NOT NULL, name VARCHAR(200) NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "type VARCHAR(20) NOT NULL, description CLOB, action VARCHAR(50), endpoint_id BIGINT, " +
             "endpoint_property VARCHAR(200), request BLOB, request_type VARCHAR(20) NOT NULL DEFAULT 'Text', " +
-            "request_filename VARCHAR(200), other_properties CLOB, action_data_backup CLOB, " +
+            "request_filename VARCHAR(200), other_properties CLOB, step_data_backup CLOB, " +
             "created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (endpoint_id) REFERENCES endpoint(id), " +
@@ -110,24 +111,28 @@ public interface TeststepDAO extends CrossReferenceDAO {
             "request_type = :requestType, endpoint_id = :endpointId, endpoint_property = :endpointProperty, " +
             "other_properties = :otherProperties, updated = CURRENT_TIMESTAMP where id = :id")
     void _update(@Bind("name") String name, @Bind("description") String description,
-                @Bind("action") String action, @Bind("request") Object request,
-                @Bind("requestType") String requestType, @Bind("id") long id,
-                @Bind("endpointId") Long endpointId, @Bind("endpointProperty") String endpointProperty,
-                @Bind("otherProperties") String otherProperties);
+                 @Bind("action") String action, @Bind("request") Object request,
+                 @Bind("requestType") String requestType, @Bind("id") long id,
+                 @Bind("endpointId") Long endpointId, @Bind("endpointProperty") String endpointProperty,
+                 @Bind("otherProperties") String otherProperties);
 
     @SqlUpdate("update teststep set name = :name, description = :description, request_type = :requestType, " +
             "action = :action, endpoint_id = :endpointId, endpoint_property = :endpointProperty, " +
             "other_properties = :otherProperties, updated = CURRENT_TIMESTAMP where id = :id")
     void _updateWithoutRequest(@Bind("name") String name, @Bind("description") String description,
-                              @Bind("requestType") String requestType,
-                              @Bind("action") String action, @Bind("id") long id,
-                              @Bind("endpointId") Long endpointId,
-                              @Bind("endpointProperty") String endpointProperty,
-                              @Bind("otherProperties") String otherProperties);
+                               @Bind("requestType") String requestType,
+                               @Bind("action") String action, @Bind("id") long id,
+                               @Bind("endpointId") Long endpointId,
+                               @Bind("endpointProperty") String endpointProperty,
+                               @Bind("otherProperties") String otherProperties);
 
     @Transaction
     default Teststep update(Teststep teststep) throws Exception {
         Teststep oldTeststep = findById(teststep.getId());
+
+        if (Teststep.TYPE_HTTP.equals(teststep.getType())) {
+            processHTTPTeststepBackupRestore(oldTeststep, teststep);
+        }
 
         if (Teststep.TYPE_MQ.equals(teststep.getType()) && teststep.getAction() != null) {   //  newly created MQ test step does not have action and does not need the processing
             processMQTeststep(oldTeststep, teststep);
@@ -154,6 +159,20 @@ public interface TeststepDAO extends CrossReferenceDAO {
         updateAssertions(teststep);
 
         return findById(teststep.getId());
+    }
+
+    default void processHTTPTeststepBackupRestore(Teststep oldTeststep, Teststep teststep) {
+        HTTPMethod oldHTTPMethod = ((HTTPTeststepProperties) oldTeststep.getOtherProperties()).getHttpMethod();
+        HTTPMethod newHTTPMethod = ((HTTPTeststepProperties) teststep.getOtherProperties()).getHttpMethod();
+        if ((oldHTTPMethod == HTTPMethod.POST || oldHTTPMethod == HTTPMethod.PUT) &&
+                (newHTTPMethod == HTTPMethod.GET || newHTTPMethod == HTTPMethod.DELETE)) {  // backup and then clear request
+            saveStepDataBackupById(teststep.getId(), (String) teststep.getRequest());
+            teststep.setRequest(null);
+        } else if ((oldHTTPMethod == HTTPMethod.GET || oldHTTPMethod == HTTPMethod.DELETE) &&
+                (newHTTPMethod == HTTPMethod.POST || newHTTPMethod == HTTPMethod.PUT)) {  // restore request and then clear backup which is no longer useful
+            teststep.setRequest(getStepDataBackupById(teststep.getId()));
+            saveStepDataBackupById(teststep.getId(), null);
+        }
     }
 
     default void processMQTeststep(Teststep oldTeststep, Teststep teststep) throws IOException {
@@ -197,7 +216,7 @@ public interface TeststepDAO extends CrossReferenceDAO {
         long teststepId = teststep.getId();
         String oldAction = oldTeststep.getAction();
         String newAction = teststep.getAction();
-        String backupStr = getActionDataBackupById(teststepId);
+        String backupStr = getStepDataBackupById(teststepId);
         MQTeststepActionDataBackup backup = null;
         MQTeststepActionDataBackup oldBackup = null;
         if (backupStr == null) {
@@ -240,7 +259,7 @@ public interface TeststepDAO extends CrossReferenceDAO {
         //  persist backup if changed
         if (backupChanged) {
             backupStr = new ObjectMapper().writeValueAsString(backup);
-            saveActionDataBackupById(teststepId, backupStr);
+            saveStepDataBackupById(teststepId, backupStr);
         }
 
         // setup new action's data
@@ -277,13 +296,13 @@ public interface TeststepDAO extends CrossReferenceDAO {
         }
     }
 
-    @SqlUpdate("update teststep set action_data_backup = :backupJSON, updated = CURRENT_TIMESTAMP " +
+    @SqlUpdate("update teststep set step_data_backup = :backupData, updated = CURRENT_TIMESTAMP " +
             "where id = :teststepId")
-    void saveActionDataBackupById(@Bind("teststepId") long teststepId,
-                                 @Bind("backupJSON") String backupJSON);
+    void saveStepDataBackupById(@Bind("teststepId") long teststepId,
+                                @Bind("backupData") String backupData);
 
-    @SqlQuery("select action_data_backup from teststep where id = :teststepId")
-    String getActionDataBackupById(@Bind("teststepId") long teststepId);
+    @SqlQuery("select step_data_backup from teststep where id = :teststepId")
+    String getStepDataBackupById(@Bind("teststepId") long teststepId);
 
     @Transaction
     default void updateAssertions(Teststep teststep) throws JsonProcessingException {
@@ -391,9 +410,9 @@ public interface TeststepDAO extends CrossReferenceDAO {
             "updated = CURRENT_TIMESTAMP " +
             "where testcase_id = :testcaseId and sequence >= :firstSequence and sequence <= :lastSequence")
     void batchMove(@Bind("testcaseId") long testcaseId,
-                  @Bind("firstSequence") short firstSequence,
-                  @Bind("lastSequence") short lastSequence,
-                  @Bind("direction") String direction);
+                   @Bind("firstSequence") short firstSequence,
+                   @Bind("lastSequence") short lastSequence,
+                   @Bind("direction") String direction);
 
     @Transaction
     default void moveInTestcase(long testcaseId, short fromSequence, short toSequence) {
@@ -417,9 +436,9 @@ public interface TeststepDAO extends CrossReferenceDAO {
     @SqlUpdate("update teststep set request = :request, request_type = :requestType, request_filename = :requestFilename, " +
             "updated = CURRENT_TIMESTAMP where id = :teststepId")
     void updateRequest(@Bind("teststepId") long teststepId,
-                      @Bind("request") Object request,
-                      @Bind("requestType") String requestType,
-                      @Bind("requestFilename") String requestFilename);
+                       @Bind("request") Object request,
+                       @Bind("requestType") String requestType,
+                       @Bind("requestFilename") String requestFilename);
 
     @Transaction
     default Teststep setRequestFile(long teststepId, String fileName, InputStream inputStream) {
@@ -438,7 +457,7 @@ public interface TeststepDAO extends CrossReferenceDAO {
     @SqlUpdate("update teststep set endpoint_id = :endpointId, endpoint_property = null, " +
             "updated = CURRENT_TIMESTAMP where id = :teststepId")
     void switchToDirectEndpoint(@Bind("teststepId") long teststepId,
-                               @Bind("endpointId") long endpointId);
+                                @Bind("endpointId") long endpointId);
 
     @Transaction
     default void useEndpointProperty(Teststep teststep) {

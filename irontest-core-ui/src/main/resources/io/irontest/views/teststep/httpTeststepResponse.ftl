@@ -1,0 +1,1 @@
+${ (stepRun.response.httpBody??)?then(stepRun.response.httpBody, '') }

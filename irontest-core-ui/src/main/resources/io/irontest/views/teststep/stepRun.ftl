@@ -30,7 +30,8 @@
 </div>
 
 <#-- Request info -->
-<#if stepRun.teststep.request??>
+<#if stepRun.teststep.request?? || (stepRun.teststep.otherProperties.httpHeaders?? &&
+    stepRun.teststep.otherProperties.httpHeaders?size > 0)>
   <div class="form-group"></div> <!-- spacer -->
   <div class="row">
     <div class="col-lg-1">Request:</div>
@@ -50,9 +51,11 @@
           </div>
         </div>
       </#if>
-      <div class="form-group">
-        <textarea class="form-control" rows="8" readonly>${ stepRun.teststep.request }</textarea>
-      </div>
+      <#if stepRun.teststep.request??>
+        <div class="form-group">
+          <textarea class="form-control" rows="8" readonly>${ stepRun.teststep.request }</textarea>
+        </div>
+      </#if>
     </div>
   </div>
 </#if>

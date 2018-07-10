@@ -15,7 +15,9 @@ public class AssertionVerifierFactory {
 
     public AssertionVerifier create(String assertionType, Map<String, String> referenceableStringProperties) {
         AssertionVerifier result;
-        if (Assertion.TYPE_XPATH.equals(assertionType)) {
+        if (Assertion.TYPE_STATUS_CODE_EQUAL.equals(assertionType)) {
+            result = new StatusCodeEqualAssertionVerifier();
+        } else if (Assertion.TYPE_XPATH.equals(assertionType)) {
             result = new XPathAssertionVerifier();
         } else if (Assertion.TYPE_CONTAINS.equals(assertionType)) {
             result = new ContainsAssertionVerifier();

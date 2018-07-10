@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.irontest.models.Properties;
 
 public class Assertion {
+    public static final String TYPE_STATUS_CODE_EQUAL = "StatusCodeEqual";
     public static final String TYPE_CONTAINS = "Contains";
     public static final String TYPE_XPATH = "XPath";
     public static final String TYPE_INTEGER_EQUAL = "IntegerEqual";
@@ -18,10 +19,10 @@ public class Assertion {
     private String type;
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY, property = "type")
     @JsonSubTypes({
+            @JsonSubTypes.Type(value = StatusCodeEqualAssertionProperties.class, name = Assertion.TYPE_STATUS_CODE_EQUAL),
             @JsonSubTypes.Type(value = ContainsAssertionProperties.class, name = Assertion.TYPE_CONTAINS),
             @JsonSubTypes.Type(value = XPathAssertionProperties.class, name = Assertion.TYPE_XPATH),
-            @JsonSubTypes.Type(value = IntegerEqualAssertionProperties.class,
-                    name = Assertion.TYPE_INTEGER_EQUAL),
+            @JsonSubTypes.Type(value = IntegerEqualAssertionProperties.class, name = Assertion.TYPE_INTEGER_EQUAL),
             @JsonSubTypes.Type(value = XMLEqualAssertionProperties.class, name = Assertion.TYPE_XML_EQUAL),
             @JsonSubTypes.Type(value = JSONEqualAssertionProperties.class, name = Assertion.TYPE_JSON_EQUAL),
             @JsonSubTypes.Type(value = JSONPathAssertionProperties.class, name = Assertion.TYPE_JSONPATH),
