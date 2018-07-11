@@ -126,6 +126,7 @@ public final class IronTestUtils {
 
         final HTTPAPIResponse apiResponse = new HTTPAPIResponse();
         ResponseHandler<Void> responseHandler = httpResponse -> {
+            apiResponse.setStatusCode(httpResponse.getStatusLine().getStatusCode());
             apiResponse.getHttpHeaders().add(
                     new HTTPHeader("*Status-Line*", httpResponse.getStatusLine().toString()));
             Header[] headers = httpResponse.getAllHeaders();

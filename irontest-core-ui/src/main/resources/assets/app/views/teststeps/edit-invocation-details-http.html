@@ -32,7 +32,7 @@
   <div class="col-lg-1">
     <button type="button" class="btn btn-info" ng-click="invoke()"
             ng-disabled="appStatus.isForbidden() || !teststep.endpoint.url ||
-              ($scope.showRequestArea() && !teststep.request) || steprun.status === 'ongoing'">Invoke</button>
+              ($scope.showRequestBodyArea() && !teststep.request) || steprun.status === 'ongoing'">Invoke</button>
   </div>
   <div class="col-lg-1 pull-right btn-group" uib-dropdown keyboard-nav>
     <button id="single-button" type="button" class="btn btn-primary" uib-dropdown-toggle>
@@ -50,7 +50,11 @@
   </div>
 </div>
 
-<div class="form-group form-group-reduced-bottom-margin" ng-if="showHTTPHeaders" id="httpHeadersArea">
+<!-- the activeTabIndex === INVOCATION_TAB_INDEX condition is required to avoid 0 initial height of the httpHeadersArea
+in the httpHeadersAreaLoadedCallback method when a SOAP or HTTP test step is newly created (hence the Basic Info tab is
+selected by default). -->
+<div id="httpHeadersArea" class="form-group form-group-reduced-bottom-margin"
+     ng-if="activeTabIndex === INVOCATION_TAB_INDEX && showHTTPHeaders">
   <div class="col-lg-6">
     <div ui-grid="requestHTTPHeaderGridOptions" ui-grid-resize-columns ui-grid-selection ui-grid-edit
          class="ui-grid http-header-grid"></div>
@@ -58,17 +62,16 @@
   <div class="col-lg-6">
     <div ui-grid="responseHTTPHeaderGridOptions" ui-grid-resize-columns class="ui-grid http-header-grid"></div>
   </div>
-  <div ng-init="httpHeadersAreaLoadedCallback()"></div>
 </div>
 
 <div class="form-group form-group-reduced-bottom-margin" height-adjustable-element-in-column="0.8">
   <div class="col-lg-6 full-height">
-    <textarea name="request" ng-model="teststep.request" ng-change="autoSave(teststepForm.$valid)"
-              id="request" placeholder="Request" class="form-control full-height-important" spellcheck="false"
-              ng-readonly="appStatus.isForbidden()" ng-show="showRequestArea()"></textarea>
+    <textarea id="requestBody" name="requestBody" ng-model="teststep.request" ng-change="autoSave(teststepForm.$valid)"
+              placeholder="Request Body" class="form-control full-height-important" spellcheck="false"
+              ng-readonly="appStatus.isForbidden()" ng-show="showRequestBodyArea()"></textarea>
   </div>
   <div class="col-lg-6 full-height">
-    <textarea name="response" ng-model="steprun.response" id="response" placeholder="Response"
+    <textarea id="responseBody" name="responseBody" ng-model="steprun.response.httpBody" placeholder="Response Body"
         class="form-control full-height-important" spellcheck="false" ng-readonly="appStatus.isForbidden()"></textarea>
   </div>
 </div>

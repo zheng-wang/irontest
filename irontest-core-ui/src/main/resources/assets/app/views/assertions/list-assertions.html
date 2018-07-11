@@ -7,12 +7,16 @@
           Create <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" uib-dropdown-menu role="menu">
-          <li class="text-center" ng-if="teststep.type === 'HTTP'"><hr class="divider-left">On Headers<hr class="divider-right"></li>
-          <li role="menuitem" ng-if="teststep.type === 'HTTP'">
+          <li class="text-center" ng-if="teststep.type === 'HTTP' || teststep.type === 'SOAP'">
+            <hr class="divider-left">On Headers<hr class="divider-right">
+          </li>
+          <li role="menuitem" ng-if="teststep.type === 'HTTP' || teststep.type === 'SOAP'">
             <a ng-click="assertionsModelObj.createAssertion('StatusCodeEqual')" href="">StatusCodeEqual Assertion</a>
           </li>
 
-          <li class="text-center" ng-if="teststep.type === 'HTTP'"><hr class="divider-left">On Body<hr class="divider-right"></li>
+          <li class="text-center" ng-if="teststep.type === 'HTTP' || teststep.type === 'SOAP'">
+            <hr class="divider-left">On Body<hr class="divider-right">
+          </li>
           <li role="menuitem" ng-if="teststep.type === 'SOAP' || teststep.type === 'HTTP'">
             <a ng-click="assertionsModelObj.createAssertion('Contains')" href="">Contains Assertion</a>
           </li>

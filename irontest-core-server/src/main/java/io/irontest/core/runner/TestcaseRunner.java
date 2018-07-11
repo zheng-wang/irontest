@@ -139,17 +139,19 @@ public abstract class TestcaseRunner {
         } else {
             teststepRun.setResult(TestResult.PASSED);
 
-            //  get input for assertion verifications
+            //  initially resolve assertion input (based on test step type)
             Object apiResponse = teststepRun.getResponse();
             Object assertionVerificationInput;
-            if (Teststep.TYPE_SOAP.equals(teststep.getType())) {
-                assertionVerificationInput = ((HTTPAPIResponse) apiResponse).getHttpBody();
-            } else if (Teststep.TYPE_DB.equals(teststep.getType())) {
-                assertionVerificationInput = ((DBAPIResponse) apiResponse).getRowsJSON();
-            } else if (Teststep.TYPE_MQ.equals(teststep.getType())) {
-                assertionVerificationInput = ((MQAPIResponse) apiResponse).getValue();
-            } else {
-                assertionVerificationInput = apiResponse;
+            switch (teststep.getType()) {
+                case Teststep.TYPE_DB:
+                    assertionVerificationInput = ((DBAPIResponse) apiResponse).getRowsJSON();
+                    break;
+                case Teststep.TYPE_MQ:
+                    assertionVerificationInput = ((MQAPIResponse) apiResponse).getValue();
+                    break;
+                default:
+                    assertionVerificationInput = apiResponse;
+                    break;
             }
 
             if (Teststep.TYPE_DB.equals(teststep.getType()) && assertionVerificationInput == null) {
@@ -157,6 +159,13 @@ public abstract class TestcaseRunner {
             } else {
                 //  verify assertions against the input
                 for (Assertion assertion : teststep.getAssertions()) {
+                    //  further resolve assertion input (based on test step type and assertion type)
+                    if (Assertion.TYPE_STATUS_CODE_EQUAL.equals(assertion.getType())) {
+                        assertionVerificationInput = ((HTTPAPIResponse) apiResponse).getStatusCode();
+                    } else if (Teststep.TYPE_SOAP.equals(teststep.getType()) || Teststep.TYPE_HTTP.equals(teststep.getType())) {
+                        assertionVerificationInput = ((HTTPAPIResponse) apiResponse).getHttpBody();
+                    }
+
                     AssertionVerification verification = new AssertionVerification();
                     teststepRun.getAssertionVerifications().add(verification);
                     verification.setAssertion(assertion);

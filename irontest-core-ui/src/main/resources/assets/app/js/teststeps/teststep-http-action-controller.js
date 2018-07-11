@@ -18,12 +18,12 @@ angular.module('irontest').controller('TeststepHTTPActionController', ['$scope',
     }
 
     var clearRunStatus = function() {
-      $scope.steprun = { responseHttpHeaders: [] };
+      $scope.steprun = {};
     };
 
     clearRunStatus();
 
-    $scope.showRequestArea = function() {
+    $scope.showRequestBodyArea = function() {
       var teststep = $scope.teststep;
       return teststep.type === 'SOAP' || (teststep.type === 'HTTP' && (!teststep.otherProperties.httpMethod ||
         teststep.otherProperties.httpMethod === 'POST' || teststep.otherProperties.httpMethod === 'PUT'));
@@ -85,8 +85,10 @@ angular.module('irontest').controller('TeststepHTTPActionController', ['$scope',
       }
     };
 
-    $scope.$watch('steprun.responseHttpHeaders', function() {
-      $scope.responseHTTPHeaderGridOptions.data = $scope.steprun.responseHttpHeaders;
+    $scope.$watch('steprun.response.httpHeaders', function() {
+      if ($scope.steprun.response) {
+        $scope.responseHTTPHeaderGridOptions.data = $scope.steprun.response.httpHeaders;
+      }
     });
 
     $scope.responseHTTPHeaderGridOptions = {
@@ -95,7 +97,10 @@ angular.module('irontest').controller('TeststepHTTPActionController', ['$scope',
       columnDefs: [
         { name: 'name', width: HTTP_HEADER_GRID_NAME_COLUMN_WIDTH },
         { name: 'value', cellTooltip: true }
-      ]
+      ],
+      onRegisterApi: function (gridApi) {
+        $scope.httpHeadersAreaLoadedCallback();
+      }
     };
 
     $scope.toggleHTTPHeadersArea = function() {
@@ -119,6 +124,8 @@ angular.module('irontest').controller('TeststepHTTPActionController', ['$scope',
     $scope.httpHeadersAreaLoadedCallback = function() {
       $timeout(function() {
         var elementHeight = document.getElementById('httpHeadersArea').offsetHeight;
+        //  the heightAdjustableElementInColumn (request response area) is always loaded before the httpHeadersArea is
+        //  loaded, no matter on Invocation tab newly loaded, or on httpHeadersArea toggled on.
         $scope.$broadcast('elementInsertedIntoColumn', { elementHeight: elementHeight });
       });
     };
@@ -154,8 +161,7 @@ angular.module('irontest').controller('TeststepHTTPActionController', ['$scope',
       $scope.steprun.status = 'ongoing';
       teststep.$run(function(basicTeststepRun) {
         $scope.steprun.status = 'finished';
-        $scope.steprun.response = basicTeststepRun.response.httpBody;
-        $scope.steprun.responseHttpHeaders = basicTeststepRun.response.httpHeaders;
+        $scope.steprun.response = basicTeststepRun.response;
       }, function(error) {
         $scope.steprun.status = 'failed';
         IronTestUtils.openErrorHTTPResponseModal(error);

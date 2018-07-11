@@ -3,6 +3,8 @@
 angular.module('irontest').controller('TeststepsController', ['$scope', 'Teststeps', '$stateParams', '$timeout',
     'IronTestUtils',
   function($scope, Teststeps, $stateParams, $timeout, IronTestUtils) {
+    $scope.INVOCATION_TAB_INDEX = 2;
+
     $scope.teststep = {
       assertions: []
     };

@@ -107,13 +107,22 @@ angular.module('irontest').controller('AssertionsController', ['$scope', '$rootS
 
     $scope.assertionsModelObj.verifyCurrentAssertion = function() {
       var assertion = $scope.assertionsModelObj.assertion;
+
+      //  resolve assertion input
+      var input;
+      var apiResponse = $scope.$parent.steprun.response;
+      if (assertion.type === 'StatusCodeEqual') {
+        input = apiResponse.statusCode;
+      } else if ($scope.teststep.type === 'SOAP' || $scope.teststep.type === 'HTTP') {
+        input = apiResponse.httpBody;
+      } else {
+        input = apiResponse;
+      }
+
       var url = 'api/assertions/' + assertion.id + '/verify';
-      var assertionVerification = {
-        input: $scope.$parent.steprun.response,
-        assertion: assertion
-      };
+      var assertionVerificationRequest = { input: input, assertion: assertion };
       $http
-        .post(url, assertionVerification)
+        .post(url, assertionVerificationRequest)
         .then(function successCallback(response) {
           var data = response.data;
           $scope.assertionsModelObj.assertionVerificationResults[assertion.id] = data;
