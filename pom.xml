@@ -71,6 +71,24 @@
                 <module>irontest-iib</module>
                 <module>irontest-mq</module>
             </modules>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <!-- avoid creating any jar -->
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-jar-plugin</artifactId>
+                            <version>3.1.0</version>
+                            <executions>
+                                <execution>
+                                    <id>default-jar</id> <!-- the id must be default-jar so as to override the default execution of the plugin -->
+                                    <phase>none</phase>
+                                </execution>
+                            </executions>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
         </profile>
         <profile>
             <id>prod</id>
