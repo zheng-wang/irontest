@@ -9,7 +9,6 @@ import java.sql.SQLException;
 
 public class ArticleMapper implements RowMapper<Article> {
     public Article map(ResultSet rs, StatementContext ctx) throws SQLException {
-        return new Article(rs.getLong("id"), rs.getString("title"), rs.getString("content"),
-                rs.getTimestamp("created"), rs.getTimestamp("updated"));
+        return new Article(rs.getLong("id"), rs.getString("title"), rs.getString("content"));
     }
 }
