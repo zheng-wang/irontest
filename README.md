@@ -1,10 +1,12 @@
 # Iron Test
-Iron Test is an open source tool for integration testing APIs such as SOAP web services, databases (Oracle, SQL Server, etc.), WebSphere MQ, IBM Integration Bus (IIB), HTTP APIs (TBD), JMS (TBD), etc. with automation. It is suitable for Integration, ESB, SOA and Microservices(TBD) testing. It supports neither performance testing (for now) nor GUI testing.
+Iron Test is an open source tool for integration testing APIs such as HTTP APIs (including RESTful APIs), SOAP web services, relational databases, JMS APIs (TBD), WebSphere MQ, IBM Integration Bus (IIB), etc. It is suitable for Integration, ESB, Microservices and SOA testing.
 
 The tool 
 * has GUI, saving user programming skills.
-* intends to provide a platform enabling integrating automated testing capabilities for all kinds of API based systems (potentially including mainframe and IOT) so that user does not have to pick up a new set of tools for testing a new type of system.    
-* is designed for testers and developers, but in the same team/organization BAs or architects may also benefit from it. The thought here is that API test cases contain valuable business knowledge, and this knowledge should be shared to all roles across the team/organization and easily accessible to everyone.
+* supports both manual testing and automated testing.
+* intends to provide a platform enabling integrating testing capabilities for all types of APIs (potentially including mainframe and IOT) so that user does not have to pick up a new set of tools for testing a new type of API.
+* is designed for testers and developers, but in the same team/organization BAs or architects may also benefit from it. The thought here is that API test cases contain valuable business knowledge, and this knowledge should be shared and easily accessible to everyone in the team/organization.
+* does not support performance testing (for now).
 
 Table of Contents:
 
@@ -12,7 +14,7 @@ Table of Contents:
 - [Deploy](#deploy)
 - [Launch](#launch)
 - [Use](#use)
-    - [Integrated SOAP Web Service Testing](#integrated-soap-web-service-testing)
+    - [Integrated JSON HTTP API Testing](#integrated-json-http-api-testing)
         - [Create Test Case Outline](#create-test-case-outline)
         - [Populate Step 1](#populate-step-1)
         - [Populate Step 2](#populate-step-2)
@@ -39,7 +41,7 @@ Create a folder on any computer/VM that has access to the APIs you want to test.
 
 Copy all files and folders from `dist` to `<IronTest_Home>`.
 
-The build itself can interact with SOAP/HTTP web services and H2 databases. To enable interacting with other types of systems such as Oracle database or WebSphere MQ, please refer to this [wiki page](https://github.com/zheng-wang/irontest/wiki/Interact-with-Other-Systems).
+The build itself can interact with HTTP APIs, SOAP web services and open source databases (like H2). To enable interacting with other types of APIs or systems such as Oracle database or WebSphere MQ, refer to this [wiki page](https://github.com/zheng-wang/irontest/wiki/Interact-with-Other-Systems).
 
 ## Launch
 Prerequisites: JRE (Java SE Runtime Environment) or JDK 8+.
@@ -57,30 +59,30 @@ Though the UI is crossing browsers, Google Chrome is preferred as it is the main
 ## Use
 Open Iron Test home page (http://localhost:8081/ui). 
 
-### Integrated SOAP Web Service Testing
-We are going to demo how to test a web service that updates an article in database by its title. 
+### Integrated JSON HTTP API Testing
+We are going to demo how to test a JSON HTTP API that updates an article in database. 
 
-The web service is the sample Article web service that is bundled with Iron Test. It does CRUD operations against the Article table in a sample H2 database under `<IronTest_Home>/database` directory. The sample database is automatically created when launching Iron Test for the first time.
+The API is the sample Article API that is bundled with Iron Test. It does CRUD operations against the Article table in a sample H2 database. The sample database is automatically created under `<IronTest_Home>/database` when Iron Test is launched for the first time.
  
 We are planning to have three test steps in our test case 
 ```
 1. Set up database data
-2. Call the web service operation updateArticleByTitle
-3. Check database data to verify the article has been updated
+2. Invoke the API to update article
+3. Check database data
 ```
 
 #### Create Test Case Outline
 First of all, create the (empty) test case by right clicking on a folder in the tree and selecting Create Test Case. Give it a name. The test case edit view shows as below.
 
-![New Test Case](screenshots/integrated-soap-testing/new-test-case.png)
+![New Test Case](screenshots/basic-use/new-test-case.png)
 
 You can create your preferred folder structure for managing test cases, by right clicking on folder and selecting needed context menu item.
 
-Now we are going to add test steps to the test case.
+Now we can add test steps to the test case.
 
-Under the Test Steps tab, click Create dropdown button and select Database Step. Enter the name of step 1 `Set up database data`. Click Back link to return to the test case edit view. Repeat this to add the other two test steps (one SOAP Step and one Database Step). The test case outline is created as shown below.
+Under the Test Steps tab, click Create dropdown button and select Database Step. Enter the name of step 1 `Set up database data`. Click Back link to return to the test case edit view. Repeat this to add the other two test steps (one HTTP Step and one Database Step). The test case outline is created as shown below.
 
-![Test Case Outline](screenshots/integrated-soap-testing/test-case-outline.png)
+![Test Case Outline](screenshots/basic-use/test-case-outline.png)
 
 #### Populate Step 1 
 Click the name of step 1 to open its edit view.
@@ -99,27 +101,29 @@ insert into article (id, title, content) values (2, 'article2', 'content2');
 
 Click the Invoke button to try it out (run the script), like shown below.
 
-![Database Setup](screenshots/integrated-soap-testing/database-setup.png)
+![Database Setup](screenshots/basic-use/database-setup.png)
 
 Click the Back link to return to test case edit view.
 
 #### Populate Step 2 
-Click the name step 2 to open its edit view.
+Click the name of step 2 to open its edit view.
 
-Under the Endpoint Details tab, enter SOAP Address `http://localhost:8081/soap/article` which is the address of the sample Article web service bundled with Iron Test. Ignore Username and Password fields as they are not used in this test case.
+Under the Endpoint Details tab, enter URL `http://localhost:8081/api/articles/2`. Ignore Username and Password fields as they are not used in this demo.
 
-Under the Invocation tab, click the menu dropdown button and select Generate Request. Click Load button to load the WSDL, select WSDL Operation `updateArticleByTitle`, and click OK. A sample request is generated.
+Under the Invocation tab, select `PUT` from the Method dropdown list, click the menu dropdown button and select `Show HTTP Headers`.
+
+In the grid above the Request Body text area, add a request HTTP header `Content-Type: application/json` using the Create item in the grid menu (located in the top right corner of the grid). We need this header in the request because the Article API requires it. If it is not provided, the invocation will see error response. 
      
-Modify the request for updating article2. Click the Invoke button to try it out and you'll see a SOAP response in the right pane. 
+Modify the request body for updating article 2. Click the Invoke button to try it out and you'll see a successful response in the right pane. 
 
-Click the Assertions button to open the assertions pane. In the assertions pane, click Create dropdown button and select `Contains Assertion` to create a Contains assertion. Enter the expected string, and click the Verify button to verify the assertion (the SOAP response contains the expected string), as shown below.
+Click the Assertions button to open the assertions pane. In the assertions pane, click Create dropdown button and select `StatusCodeEqual Assertion` to create a StatusCodeEqual assertion. Enter the expected HTTP response status code (here 200), and click the Verify button to verify the assertion, as shown below.
 
-![SOAP Invocation and Assertion](screenshots/integrated-soap-testing/soap-invocation-and-assertion.png)
+![HTTP Invocation and Assertion](screenshots/basic-use/http-invocation-and-assertion.png)
 
 More information about assertions can be found on this [wiki page](https://github.com/zheng-wang/irontest/wiki/Assertions).
 
 Click the Back link to return to the test case edit view.
- 
+
 #### Populate Step 3  
 Click the name of step 3 to open its edit view. 
  
@@ -129,36 +133,36 @@ Under the Invocation tab, enter SQL query `select id, title, content from articl
 
 Click the Invoke button to try it out (run the query), like shown below.
 
-![Database Check Query Result](screenshots/integrated-soap-testing/database-check-query-result.png)
+![Database Check Query Result](screenshots/basic-use/database-check-query-result.png)
 
 Click the JSON View tab to see the JSON representation of the SQL query result set.
 
 Click the Assertions button to open the assertions pane. In the assertions pane, click Create dropdown button and select `JSONEqual Assertion` to create a JSONEqual assertion. Copy the JSON string from the JSON View to the Expected JSON field. Click the Verify button to verify the assertion, as shown below. 
 
-![Database Check Query Result and Assertion](screenshots/integrated-soap-testing/database-check-query-result-and-assertion.png)
+![Database Check Query Result and Assertion](screenshots/basic-use/database-check-query-result-and-assertion.png)
 
 Click the Back link to return to the test case edit view.
 
 #### Run the Test Case
 Now we have finished editing our test case. It's time to run it. Click the Run button, and you'll see the result for the whole test case beside the Run button, and in the bottom pane an outline of result for all test steps, like shown below. Passed test step is indicated by green color and failed test step by red color.
 
-![Test Case Run Result](screenshots/integrated-soap-testing/test-case-run-result.png)
+![Test Case Run Result](screenshots/basic-use/test-case-run-result.png)
 
 Click the link for a test step in the bottom pane to open a modal and see the step run report, like shown below.
 
-![Test Step Run Report](screenshots/integrated-soap-testing/test-step-run-report.png)
+![Test Step Run Report](screenshots/basic-use/test-step-run-report.png)
 
 Click the result link beside the Run button to see the whole test case run report. This report can be saved as HTML file and used as test evidence in other places such as HP ALM.
 
 ### More Usages and Testing Practices
-Please refer to the [wiki pages](https://github.com/zheng-wang/irontest/wiki).
+Refer to the [wiki pages](https://github.com/zheng-wang/irontest/wiki).
 
 ## Maintain
 The first time you launch the application, two new folders are created automatically under `<IronTest_Home>`.
 
     database - where system database and a sample database are located. Both are H2 databases. 
         System database is used to store all test cases, environments, endpoints, etc. you create using Iron Test.
-        Sample database is for you to play with Iron Test basic features such as SOAP web service testing or database testing. An Article table is in it.
+        Sample database is for you to play with Iron Test basic features such as JSON HTTP API testing or database testing. An Article table is in it.
     
     logs - where Iron Test application runtime logs are located.
     
