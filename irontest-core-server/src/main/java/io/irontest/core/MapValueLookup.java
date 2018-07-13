@@ -22,8 +22,9 @@ public class MapValueLookup extends StrLookup<String> {
         for (Map.Entry<String, String> entry: map.entrySet()) {
             if (key.equals(entry.getKey())) {
                 String value = entry.getValue();
-                if (escapeForJSON) {
-                    value = value.replace("\"", "\\\"");   //  replace " with \" for the result to be used in JSON string
+                if (escapeForJSON) {  //  replace \ and " with \\ and \" for the result to be used in JSON string
+                    value = value.replace("\\", "\\\\");
+                    value = value.replace("\"", "\\\"");
                 }
                 return value;
             }
