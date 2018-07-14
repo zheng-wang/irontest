@@ -114,7 +114,17 @@ Under the Invocation tab, select `PUT` from the Method dropdown list, click the 
 
 In the grid above the Request Body text area, add a request HTTP header `Content-Type: application/json` using the Create item in the grid menu (located in the top right corner of the grid). We need this header in the request because the Article API requires it. If it is not provided, the invocation will see error response. 
      
-Modify the request body for updating article 2. Click the Invoke button to try it out and you'll see a successful response in the right pane. 
+Input the request body for updating article 2.
+
+```
+{
+  "id": 2,
+  "title": "article2",
+  "content": "Once upon a time ..."
+}
+```
+
+Click the Invoke button to try it out and you'll see a successful response in the right pane. 
 
 Click the Assertions button to open the assertions pane. In the assertions pane, click Create dropdown button and select `StatusCodeEqual Assertion` to create a StatusCodeEqual assertion. Enter the expected HTTP response status code (here 200), and click the Verify button to verify the assertion, as shown below.
 
