@@ -55,8 +55,21 @@ public class XPathAssertionVerifier extends AssertionVerifier {
         xpath.setNamespaceContext(new IronTestNamespaceContext(namespacePrefixes));
 
         InputSource inputSource = new InputSource(new StringReader(xmlInput));
-        Object value = xpath.evaluate(xPathExpression, inputSource, XPathConstants.NODESET);
 
-        result.setActualValue(XMLUtils.domNodeListToString((NodeList) value));
+        String actualValue;
+        try {
+            Object value = xpath.evaluate(xPathExpression, inputSource, XPathConstants.NODESET);
+            actualValue = XMLUtils.domNodeListToString((NodeList) value);
+        } catch (XPathExpressionException e) {
+            if (e.getMessage().contains("Can not convert") && e.getMessage().endsWith("to a NodeList!")) {
+                //  The value is not of type NODESET. Swallow the exception and try STRING.
+                InputSource inputSource2 = new InputSource(new StringReader(xmlInput));
+                actualValue = (String) xpath.evaluate(xPathExpression, inputSource2, XPathConstants.STRING);
+            } else {
+              throw e;
+            }
+        }
+
+        result.setActualValue(actualValue);
     }
 }
