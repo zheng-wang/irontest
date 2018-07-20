@@ -34,11 +34,8 @@ angular.module('irontest').controller('IIBTeststepActionController', ['$scope', 
 
     $scope.actionInfoIncomplete = function() {
       var teststep = $scope.teststep;
-      if (!teststep.action) {
-        return true;
-      } else if (teststep.otherProperties.destinationType === 'Queue') {
-        return !teststep.otherProperties.integrationServerName || !teststep.otherProperties.messageFlowName;
-      }
+      return !teststep.action || !teststep.otherProperties.integrationServerName ||
+        !teststep.otherProperties.messageFlowName;
     };
 
     $scope.doAction = function() {
