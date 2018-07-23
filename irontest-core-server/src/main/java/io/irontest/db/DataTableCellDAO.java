@@ -47,7 +47,7 @@ public interface DataTableCellDAO {
     void addRow(@Bind("testcaseId") long testcaseId);
 
     @SqlUpdate("delete from datatable_cell where row_sequence = :rowSequence and column_id in (" +
-            "select column_id from datatable_column where testcase_id = :testcaseId)")
+            "select id from datatable_column where testcase_id = :testcaseId)")
     void deleteRow(@Bind("testcaseId") long testcaseId, @Bind("rowSequence") short rowSequence);
 
     @SqlUpdate("update datatable_cell set value = :cell.value, endpoint_id = :endpointId, updated = CURRENT_TIMESTAMP " +
