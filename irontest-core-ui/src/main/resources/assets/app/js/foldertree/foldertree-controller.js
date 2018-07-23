@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('irontest').controller('FolderTreeController', ['$scope', '$rootScope', '$state', 'IronTestUtils', 'FolderTreeNodes',
-    '$timeout', '$transitions', 'Testcases',
-  function($scope, $rootScope, $state, IronTestUtils, FolderTreeNodes, $timeout, $transitions, Testcases) {
+    '$timeout', '$transitions', 'Testcases', '$window',
+  function($scope, $rootScope, $state, IronTestUtils, FolderTreeNodes, $timeout, $transitions, Testcases, $window) {
     var NODE_TYPE_FOLDER = 'folder';
     var NODE_TYPE_TEST_CASE = 'testcase';
     var disableContextMenuItems = false;
@@ -52,6 +52,11 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$rootS
       });
     };
 
+    var exportTestcase = function(testcaseId) {
+      var url = 'api/testcases/' + testcaseId + "/export";
+      $window.open(url, '_blank', '');
+    };
+
     $scope.treeData = [];
 
     $scope.treeConfig = {
@@ -99,6 +104,13 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$rootS
             pasteTestcase: {
               separator_before: false, separator_after: false, label: 'Paste',
               action: function() { pasteTestcase(selectedNode.data.idPerType); }
+            },
+            exportTestcase: {
+              separator_before: false, separator_after: false, label: 'Export',
+              action: function() { exportTestcase(selectedNode.data.idPerType); },
+              _disabled: function() {
+                return disableContextMenuItems;
+              }
             }
           };
 
@@ -113,6 +125,7 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$rootS
               if (!idOfTestcaseCopied) {
                 delete items.pasteTestcase;
               }
+              delete items.exportTestcase;
               break;
             default:
               break;

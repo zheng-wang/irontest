@@ -1,11 +1,14 @@
 package io.irontest.models.teststep;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import io.irontest.models.HTTPMethod;
 import io.irontest.models.Properties;
+import io.irontest.resources.ResourceJsonViews;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonView(ResourceJsonViews.TestcaseExport.class)
 public class HTTPTeststepProperties extends Properties {
     private HTTPMethod httpMethod;
 

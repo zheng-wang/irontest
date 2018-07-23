@@ -1,10 +1,13 @@
 package io.irontest.models.teststep;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
+import io.irontest.resources.ResourceJsonViews;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonView(ResourceJsonViews.TestcaseExport.class)
 public class MQRFH2Header {
     private boolean enabled;
     private List<MQRFH2Folder> folders = new ArrayList<MQRFH2Folder>();

@@ -33,18 +33,29 @@ public class Teststep {
 
     private long id;   //  id being 0 means this is dynamically created test step object (no record in the Teststep database table).
     private long testcaseId;
+    @JsonView(ResourceJsonViews.TestcaseExport.class)
     private short sequence;
-    @JsonView(ResourceJsonViews.TestcaseRunResultOnTestcaseEditView.class)
+    @JsonView({ResourceJsonViews.TestcaseRunResultOnTestcaseEditView.class, ResourceJsonViews.TestcaseExport.class})
     private String name;
+    @JsonView(ResourceJsonViews.TestcaseExport.class)
     private String type;
+    @JsonView(ResourceJsonViews.TestcaseExport.class)
     private String description;
+    @JsonView(ResourceJsonViews.TestcaseExport.class)
     private String action;            //  currently only used in MQ test step and IIB test step
+    @JsonView(ResourceJsonViews.TestcaseExport.class)
     private Endpoint endpoint;
+    @JsonView(ResourceJsonViews.TestcaseExport.class)
     private String endpointProperty;
+    @JsonView(ResourceJsonViews.TestcaseExport.class)
     private Object request;
+    @JsonView(ResourceJsonViews.TestcaseExport.class)
     private TeststepRequestType requestType = TeststepRequestType.TEXT;
+    @JsonView(ResourceJsonViews.TestcaseExport.class)
     private String requestFilename;
+    @JsonView(ResourceJsonViews.TestcaseExport.class)
     private List<Assertion> assertions = new ArrayList<Assertion>();
+    @JsonView(ResourceJsonViews.TestcaseExport.class)
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
             property = "type", visible = true, defaultImpl = Properties.class)
     @JsonSubTypes({

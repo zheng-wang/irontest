@@ -1,5 +1,9 @@
 package io.irontest.models;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import io.irontest.resources.ResourceJsonViews;
+
+@JsonView(ResourceJsonViews.TestcaseExport.class)
 public class NamespacePrefix {
     private String prefix;
     private String namespace;

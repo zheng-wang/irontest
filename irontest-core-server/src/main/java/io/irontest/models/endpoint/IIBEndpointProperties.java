@@ -2,8 +2,11 @@ package io.irontest.models.endpoint;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 import io.irontest.models.Properties;
+import io.irontest.resources.ResourceJsonViews;
 
+@JsonView(ResourceJsonViews.TestcaseExport.class)
 public class IIBEndpointProperties extends Properties {
     private String host;
     private Integer port;

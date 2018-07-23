@@ -1,7 +1,10 @@
 package io.irontest.models.assertion;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import io.irontest.models.Properties;
+import io.irontest.resources.ResourceJsonViews;
 
+@JsonView(ResourceJsonViews.TestcaseExport.class)
 public class IntegerEqualAssertionProperties extends Properties {
     private int number;
 

@@ -1,7 +1,10 @@
 package io.irontest.models.teststep;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import io.irontest.models.Properties;
+import io.irontest.resources.ResourceJsonViews;
 
+@JsonView(ResourceJsonViews.TestcaseExport.class)
 public class MQTeststepProperties extends Properties {
     private MQDestinationType destinationType = MQDestinationType.QUEUE;       //  queue is the default destination type
     private String queueName;

@@ -1,5 +1,6 @@
 package io.irontest.resources;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.dropwizard.jersey.PATCH;
 import io.irontest.db.TestcaseDAO;
@@ -34,9 +35,15 @@ public class TestcaseResource {
         return testcaseDAO.findById_TestcaseEditView(testcaseId);
     }
 
+    @GET @Path("testcases/{testcaseId}/export")
+    @JsonView(ResourceJsonViews.TestcaseExport.class)
+    public Testcase export(@PathParam("testcaseId") long testcaseId) {
+        return testcaseDAO.findById_Complete(testcaseId);
+    }
+
     @PATCH @Path("testcases/{testcaseId}/moveStep")
     @PermitAll
-    public Testcase moveStep(Testcase testcase) throws JsonProcessingException {
+    public Testcase moveStep(Testcase testcase) {
         List<Teststep> teststeps = testcase.getTeststeps();
         teststepDAO.moveInTestcase(testcase.getId(), teststeps.get(0).getSequence(), teststeps.get(1).getSequence());
         return testcaseDAO.findById_TestcaseEditView(testcase.getId());

@@ -1,15 +1,20 @@
 package io.irontest.models;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import io.irontest.models.teststep.Teststep;
+import io.irontest.resources.ResourceJsonViews;
 
 import java.util.List;
 
 public class Testcase {
     private long id;
+    @JsonView(ResourceJsonViews.TestcaseExport.class)
     private String name;
     private long parentFolderId;
     private String folderPath;
+    @JsonView(ResourceJsonViews.TestcaseExport.class)
     private String description;
+    @JsonView(ResourceJsonViews.TestcaseExport.class)
     private List<Teststep> teststeps;
 
     public Testcase() {}

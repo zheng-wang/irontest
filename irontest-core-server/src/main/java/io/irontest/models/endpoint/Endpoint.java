@@ -17,13 +17,18 @@ public class Endpoint {
     private long id;
     @JsonView(ResourceJsonViews.DataTableUIGrid.class)
     private Environment environment;
-    @JsonView(ResourceJsonViews.DataTableUIGrid.class)
+    @JsonView({ResourceJsonViews.DataTableUIGrid.class, ResourceJsonViews.TestcaseExport.class})
     private String name;
+    @JsonView(ResourceJsonViews.TestcaseExport.class)
     private String type;
+    @JsonView(ResourceJsonViews.TestcaseExport.class)
     private String description;
+    @JsonView(ResourceJsonViews.TestcaseExport.class)
     private String url;                //  can be SOAP address, JDBC URL, etc.; not used by MQ or IIB endpoint
+    @JsonView(ResourceJsonViews.TestcaseExport.class)
     private String username;
     private String password;
+    @JsonView(ResourceJsonViews.TestcaseExport.class)
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
             property = "type", visible = true, defaultImpl = Properties.class)
     @JsonSubTypes({

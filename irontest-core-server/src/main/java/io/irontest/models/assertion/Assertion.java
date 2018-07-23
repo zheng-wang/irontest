@@ -2,7 +2,9 @@ package io.irontest.models.assertion;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonView;
 import io.irontest.models.Properties;
+import io.irontest.resources.ResourceJsonViews;
 
 public class Assertion {
     public static final String TYPE_STATUS_CODE_EQUAL = "StatusCodeEqual";
@@ -15,8 +17,11 @@ public class Assertion {
     public static final String TYPE_JSONPATH_XMLEQUAL = "JSONPathXMLEqual";
     private Long id;
     private Long teststepId;
+    @JsonView(ResourceJsonViews.TestcaseExport.class)
     private String name;
+    @JsonView(ResourceJsonViews.TestcaseExport.class)
     private String type;
+    @JsonView(ResourceJsonViews.TestcaseExport.class)
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY, property = "type")
     @JsonSubTypes({
             @JsonSubTypes.Type(value = StatusCodeEqualAssertionProperties.class, name = Assertion.TYPE_STATUS_CODE_EQUAL),

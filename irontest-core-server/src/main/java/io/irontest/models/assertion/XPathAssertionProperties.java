@@ -1,11 +1,14 @@
 package io.irontest.models.assertion;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import io.irontest.models.NamespacePrefix;
 import io.irontest.models.Properties;
+import io.irontest.resources.ResourceJsonViews;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonView(ResourceJsonViews.TestcaseExport.class)
 public class XPathAssertionProperties extends Properties {
     private String xPath;
     private String expectedValue;
