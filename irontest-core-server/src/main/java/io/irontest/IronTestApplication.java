@@ -190,7 +190,7 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         environment.jersey().register(new SystemResource(appInfo));
         environment.jersey().register(new ManagedEndpointResource(appInfo, endpointDAO));
         environment.jersey().register(new TestcaseResource(testcaseDAO, teststepDAO));
-        environment.jersey().register(new FolderResource(folderDAO));
+        environment.jersey().register(new FolderResource(folderDAO, testcaseDAO));
         environment.jersey().register(new FolderTreeNodeResource(folderTreeNodeDAO));
         environment.jersey().register(new TeststepResource(appInfo, teststepDAO, udpDAO, utilsDAO, dataTableDAO));
         environment.jersey().register(new WSDLResource());

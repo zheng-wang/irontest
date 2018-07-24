@@ -1,7 +1,9 @@
 package io.irontest.db;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.irontest.models.DataTable;
 import io.irontest.models.Testcase;
+import io.irontest.models.UserDefinedProperty;
 import io.irontest.models.assertion.Assertion;
 import io.irontest.models.endpoint.Endpoint;
 import io.irontest.models.teststep.Teststep;
@@ -33,14 +35,18 @@ public interface TestcaseDAO extends CrossReferenceDAO {
 
     @SqlUpdate("insert into testcase (description, parent_folder_id) values (:description, :parentFolderId)")
     @GetGeneratedKeys
-    long _insert(@BindBean Testcase testcase);
+    long _insertWithoutName(@BindBean Testcase testcase);
+
+    @SqlUpdate("insert into testcase (name, description, parent_folder_id) values (:name, :description, :parentFolderId)")
+    @GetGeneratedKeys
+    long _insertWithName(@BindBean Testcase testcase);
 
     @SqlUpdate("update testcase set name = :name where id = :id")
     void updateNameForInsert(@Bind("id") long id, @Bind("name") String name);
 
     @Transaction
     default Testcase insert(Testcase testcase) {
-        long id = _insert(testcase);
+        long id = _insertWithoutName(testcase);
         if (testcase.getName() == null) {
             testcase.setName("Case " + id);
         }
@@ -81,9 +87,18 @@ public interface TestcaseDAO extends CrossReferenceDAO {
     @Transaction
     default Testcase findById_Complete(long id) {
         Testcase result = _findById(id);
+
         result.setFolderPath(getFolderPath(id));
+
+        List<UserDefinedProperty> udps = udpDAO().findByTestcaseId(id);
+        result.setUdps(udps);
+
         List<Teststep> teststeps = teststepDAO().findByTestcaseId(id);
         result.setTeststeps(teststeps);
+
+        DataTable dataTable = dataTableDAO().getTestcaseDataTable(id, false);
+        result.setDataTable(dataTable);
+
         return result;
     }
 
@@ -173,5 +188,73 @@ public interface TestcaseDAO extends CrossReferenceDAO {
         dataTableDAO().duplicateByTestcase(oldTestcaseId, newTestcase.getId());
 
         return newTestcase.getId();
+    }
+
+    @Transaction
+    default long createByImport(Testcase testcase, long targetFolderId) {
+        if (_nameExistsInFolder(testcase.getName(), targetFolderId)) {
+            throw new RuntimeException("Duplicate test case name: " + testcase.getName());
+        }
+
+        //  insert the test case record
+        testcase.setParentFolderId(targetFolderId);
+        long testcaseId = _insertWithName(testcase);
+
+        //  insert UDPs
+        for (UserDefinedProperty udp: testcase.getUdps()) {
+            udpDAO()._insertWithName(testcaseId, udp.getName(), udp.getValue());
+        }
+
+        //  insert test steps
+//        for (Teststep oldTeststep : oldTestcase.getTeststeps()) {
+//            Teststep newTeststep = new Teststep();
+//            newTeststep.setName(oldTeststep.getName());
+//            newTeststep.setTestcaseId(newTestcase.getId());
+//            newTeststep.setSequence(oldTeststep.getSequence());
+//            newTeststep.setType(oldTeststep.getType());
+//            newTeststep.setDescription(oldTeststep.getDescription());
+//            newTeststep.setAction(oldTeststep.getAction());
+//            if (oldTeststep.getRequestType() == TeststepRequestType.TEXT) {
+//                newTeststep.setRequest(oldTeststep.getRequest());
+//            } else {
+//                newTeststep.setRequest(teststepDAO().getBinaryRequestById(oldTeststep.getId()));
+//            }
+//            newTeststep.setRequestType(oldTeststep.getRequestType());
+//            newTeststep.setRequestFilename(oldTeststep.getRequestFilename());
+//            newTeststep.setOtherProperties(oldTeststep.getOtherProperties());
+//            Endpoint oldEndpoint = oldTeststep.getEndpoint();
+//            if (oldEndpoint != null) {
+//                Endpoint newEndpoint = new Endpoint();
+//                newTeststep.setEndpoint(newEndpoint);
+//                if (oldEndpoint.isManaged()) {
+//                    newEndpoint.setId(oldEndpoint.getId());
+//                } else {
+//                    newEndpoint.setName(oldEndpoint.getName());
+//                    newEndpoint.setType(oldEndpoint.getType());
+//                    newEndpoint.setDescription(oldEndpoint.getDescription());
+//                    newEndpoint.setUrl(oldEndpoint.getUrl());
+//                    newEndpoint.setUsername(oldEndpoint.getUsername());
+//                    newEndpoint.setPassword(oldEndpoint.getPassword());
+//                    newEndpoint.setOtherProperties(oldEndpoint.getOtherProperties());
+//                }
+//            }
+//            newTeststep.setEndpointProperty(oldTeststep.getEndpointProperty());
+//            long newTeststepId = teststepDAO().insert(newTeststep, null);
+//
+//            //  duplicate assertions
+//            for (Assertion oldAssertion : oldTeststep.getAssertions()) {
+//                Assertion newAssertion = new Assertion();
+//                newAssertion.setTeststepId(newTeststepId);
+//                newAssertion.setName(oldAssertion.getName());
+//                newAssertion.setType(oldAssertion.getType());
+//                newAssertion.setOtherProperties(oldAssertion.getOtherProperties());
+//                assertionDAO().insert(newAssertion);
+//            }
+//        }
+//
+//        //  duplicate data table
+//        dataTableDAO().duplicateByTestcase(oldTestcaseId, newTestcase.getId());
+
+        return testcaseId;
     }
 }

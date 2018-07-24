@@ -247,7 +247,8 @@
 }
 
 /* modals */
-.error-message-modal, .select-soap-operation-modal, .login-modal, .create-user-modal, .change-password-modal {
+.error-message-modal, .select-soap-operation-modal, .login-modal, .create-user-modal, .change-password-modal,
+    .import-testcase-modal {
   top: 20%;
 }
 .select-managed-endpoint-modal {

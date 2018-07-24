@@ -40,14 +40,19 @@ public interface UserDefinedPropertyDAO {
     @SqlUpdate("insert into udp (testcase_id, sequence) values (:testcaseId, (" +
             "select coalesce(max(sequence), 0) + 1 from udp where testcase_id = :testcaseId))")
     @GetGeneratedKeys
-    long _insert(@Bind("testcaseId") long testcaseId);
+    long _insertWithoutName(@Bind("testcaseId") long testcaseId);
+
+    @SqlUpdate("insert into udp (testcase_id, sequence, name, value) values (:testcaseId, (" +
+            "select coalesce(max(sequence), 0) + 1 from udp where testcase_id = :testcaseId), :name, :value)")
+    @GetGeneratedKeys
+    long _insertWithName(@Bind("testcaseId") long testcaseId, @Bind("name") String name, @Bind("value") String value);
 
     @SqlUpdate("update udp set name = :name where id = :id")
     void updateNameForInsert(@Bind("id") long id, @Bind("name") String name);
 
     @Transaction
     default UserDefinedProperty insert(long testcaseId) {
-        long id = _insert(testcaseId);
+        long id = _insertWithoutName(testcaseId);
         String name = "P" + id;
         updateNameForInsert(id, name);
         return findById(id);
@@ -87,9 +92,9 @@ public interface UserDefinedPropertyDAO {
             "updated = CURRENT_TIMESTAMP " +
             "where testcase_id = :testcaseId and sequence >= :firstSequence and sequence <= :lastSequence")
     void batchMove(@Bind("testcaseId") long testcaseId,
-                  @Bind("firstSequence") short firstSequence,
-                  @Bind("lastSequence") short lastSequence,
-                  @Bind("direction") String direction);
+                   @Bind("firstSequence") short firstSequence,
+                   @Bind("lastSequence") short lastSequence,
+                   @Bind("direction") String direction);
 
     @Transaction
     default void moveInTestcase(long testcaseId, short fromSequence, short toSequence) {

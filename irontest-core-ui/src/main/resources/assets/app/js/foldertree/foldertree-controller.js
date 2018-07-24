@@ -1,8 +1,9 @@
 'use strict';
 
-angular.module('irontest').controller('FolderTreeController', ['$scope', '$rootScope', '$state', 'IronTestUtils', 'FolderTreeNodes',
-    '$timeout', '$transitions', 'Testcases', '$window',
-  function($scope, $rootScope, $state, IronTestUtils, FolderTreeNodes, $timeout, $transitions, Testcases, $window) {
+angular.module('irontest').controller('FolderTreeController', ['$scope', '$rootScope', '$state', 'IronTestUtils',
+    'FolderTreeNodes', '$timeout', '$transitions', 'Testcases', '$window', '$uibModal', 'Upload',
+  function($scope, $rootScope, $state, IronTestUtils, FolderTreeNodes, $timeout, $transitions, Testcases, $window,
+      $uibModal, Upload) {
     var NODE_TYPE_FOLDER = 'folder';
     var NODE_TYPE_TEST_CASE = 'testcase';
     var disableContextMenuItems = false;
@@ -55,6 +56,46 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$rootS
     var exportTestcase = function(testcaseId) {
       var url = 'api/testcases/' + testcaseId + "/export";
       $window.open(url, '_blank', '');
+    };
+
+    var importTestcase = function(folderId) {
+      //  open modal dialog
+      var modalInstance = $uibModal.open({
+        templateUrl: '/ui/views/foldertree/import-testcase-modal.html',
+        controller: 'ImportTestcaseModalController',
+        size: 'sm',
+        windowClass: 'import-testcase-modal'
+      });
+
+      //  handle result from modal dialog
+      modalInstance.result.then(function closed(file) {
+        if (file) {
+          var url = 'api/folders/' + folderId + '/importTestcase';
+          Upload.upload({ url: url, data: {file: file}}
+          ).then(function successCallback(response) {
+            var testcaseId = response.data.id;
+
+            //  reload the tree (a chance to sync between users in a team)
+            $scope.reloadTreeData(function successCallback() {
+              var newNodeId = NODE_TYPE_TEST_CASE + testcaseId;
+              var tree = $scope.treeInstance.jstree(true);
+
+              //  switch the selection from the folder to the newly created test case,
+              //  so that the state plugin can remember this status.
+              var parentNodeId = NODE_TYPE_FOLDER + folderId;
+              tree.deselect_node(parentNodeId);
+              tree.select_node(newNodeId);
+
+              //  open the new node's URL
+              displayNodeDetails(NODE_TYPE_TEST_CASE, testcaseId);
+            });
+          }, function errorCallback(response) {
+            IronTestUtils.openErrorHTTPResponseModal(response);
+          });
+        }
+      }, function dismissed() {
+        //  Modal dismissed. Do nothing.
+      });
     };
 
     $scope.treeData = [];
@@ -111,6 +152,13 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$rootS
               _disabled: function() {
                 return disableContextMenuItems;
               }
+            },
+            importTestcase: {
+              separator_before: false, separator_after: false, label: 'Import Test Case',
+              action: function() { importTestcase(selectedNode.data.idPerType); },
+              _disabled: function() {
+                return disableContextMenuItems;
+              }
             }
           };
 
@@ -119,6 +167,7 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$rootS
               delete items.createTestcase;
               delete items.createFolder;
               delete items.pasteTestcase;
+              delete items.importTestcase;
               break;
             case NODE_TYPE_FOLDER:
               delete items.copyTestcase;
