@@ -8,7 +8,6 @@ import io.irontest.db.TeststepDAO;
 import io.irontest.db.UtilsDAO;
 import io.irontest.models.TestResult;
 import io.irontest.models.Testcase;
-import io.irontest.models.UserDefinedProperty;
 import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.AssertionVerification;
 import io.irontest.models.assertion.AssertionVerificationResult;
@@ -19,14 +18,16 @@ import io.irontest.models.teststep.Teststep;
 import io.irontest.utils.IronTestUtils;
 import org.slf4j.Logger;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import static io.irontest.IronTestConstants.*;
 
 public abstract class TestcaseRunner {
     private Testcase testcase;
     private boolean testcaseHasWaitForProcessingCompletionAction = false;
-    private List<UserDefinedProperty> testcaseUDPs;
     private TeststepDAO teststepDAO;
     private UtilsDAO utilsDAO;
     private TestcaseRunDAO testcaseRunDAO;
@@ -36,10 +37,9 @@ public abstract class TestcaseRunner {
     private Map<String, String> referenceableStringProperties = new HashMap<>();
     private Map<String, Endpoint> referenceableEndpointProperties = new HashMap<>();
 
-    protected TestcaseRunner(Testcase testcase, List<UserDefinedProperty> testcaseUDPs, TeststepDAO teststepDAO,
-                             UtilsDAO utilsDAO, TestcaseRunDAO testcaseRunDAO, Logger LOGGER) {
+    protected TestcaseRunner(Testcase testcase, TeststepDAO teststepDAO, UtilsDAO utilsDAO,
+                             TestcaseRunDAO testcaseRunDAO, Logger LOGGER) {
         this.testcase = testcase;
-        this.testcaseUDPs = testcaseUDPs;
         this.teststepDAO = teststepDAO;
         this.utilsDAO = utilsDAO;
         this.testcaseRunDAO = testcaseRunDAO;
@@ -99,7 +99,7 @@ public abstract class TestcaseRunner {
         testcaseRun.setStartTime(testcaseRunStartTime);
         testcaseRunContext.setTestcaseRunStartTime(testcaseRunStartTime);
 
-        referenceableStringProperties = IronTestUtils.udpListToMap(testcaseUDPs);
+        referenceableStringProperties = IronTestUtils.udpListToMap(testcase.getUdps());
         udpNames = referenceableStringProperties.keySet();
         referenceableStringProperties.put(IMPLICIT_PROPERTY_NAME_TEST_CASE_START_TIME,
                 IMPLICIT_PROPERTY_DATE_TIME_FORMAT.format(testcaseRunStartTime));

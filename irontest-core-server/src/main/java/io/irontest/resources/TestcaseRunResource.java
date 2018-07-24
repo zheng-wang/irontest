@@ -6,9 +6,7 @@ import io.irontest.core.runner.DataDrivenTestcaseRunner;
 import io.irontest.core.runner.RegularTestcaseRunner;
 import io.irontest.core.runner.TestcaseRunner;
 import io.irontest.db.*;
-import io.irontest.models.DataTable;
 import io.irontest.models.Testcase;
-import io.irontest.models.UserDefinedProperty;
 import io.irontest.models.testrun.TestcaseRun;
 import io.irontest.models.testrun.TeststepRun;
 import io.irontest.views.TestcaseRunView;
@@ -17,7 +15,6 @@ import io.irontest.views.TeststepRunView;
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.util.List;
 
 @Path("/") @Produces({ MediaType.APPLICATION_JSON })
 public class TestcaseRunResource {
@@ -44,14 +41,11 @@ public class TestcaseRunResource {
     @JsonView(ResourceJsonViews.TestcaseRunResultOnTestcaseEditView.class)
     public TestcaseRun create(@QueryParam("testcaseId") long testcaseId) throws JsonProcessingException {
         Testcase testcase = testcaseDAO.findById_Complete(testcaseId);
-        List<UserDefinedProperty> testcaseUDPs = udpDAO.findByTestcaseId(testcaseId);
-        DataTable dataTable = dataTableDAO.getTestcaseDataTable(testcaseId, false);
         TestcaseRunner testcaseRunner;
-        if (dataTable.getRows().isEmpty()) {
-            testcaseRunner = new RegularTestcaseRunner(testcase, testcaseUDPs, teststepDAO, utilsDAO, testcaseRunDAO);
+        if (testcase.getDataTable().getRows().isEmpty()) {
+            testcaseRunner = new RegularTestcaseRunner(testcase, teststepDAO, utilsDAO, testcaseRunDAO);
         } else {
-            testcaseRunner = new DataDrivenTestcaseRunner(testcase, testcaseUDPs, dataTable, teststepDAO, utilsDAO,
-                    testcaseRunDAO);
+            testcaseRunner = new DataDrivenTestcaseRunner(testcase, teststepDAO, utilsDAO, testcaseRunDAO);
         }
         return testcaseRunner.run();
     }

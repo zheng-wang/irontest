@@ -41,6 +41,7 @@ public class IIBEndpointProperties extends Properties {
      * @return
      */
     @JsonProperty
+    @JsonView(ResourceJsonViews.None.class)
     public String getIntegrationNodeAddress() {
         return (isUseSSL() ? "https" : "http") + "://" + host + ":" + port ;
     }

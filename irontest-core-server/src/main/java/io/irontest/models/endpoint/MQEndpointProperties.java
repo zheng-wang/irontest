@@ -59,6 +59,7 @@ public class MQEndpointProperties extends Properties {
      * @return
      */
     @JsonProperty
+    @JsonView(ResourceJsonViews.None.class)
     public String getQueueManagerAddress() {
         return connectionMode == MQConnectionMode.BINDINGS ?
                 queueManagerName : host + ':' + port + '/' + queueManagerName;

@@ -15,7 +15,11 @@ public class Testcase {
     @JsonView(ResourceJsonViews.TestcaseExport.class)
     private String description;
     @JsonView(ResourceJsonViews.TestcaseExport.class)
+    private List<UserDefinedProperty> udps;
+    @JsonView(ResourceJsonViews.TestcaseExport.class)
     private List<Teststep> teststeps;
+    @JsonView(ResourceJsonViews.TestcaseExport.class)
+    private DataTable dataTable;
 
     public Testcase() {}
 
@@ -50,6 +54,14 @@ public class Testcase {
         this.description = description;
     }
 
+    public List<UserDefinedProperty> getUdps() {
+        return udps;
+    }
+
+    public void setUdps(List<UserDefinedProperty> udps) {
+        this.udps = udps;
+    }
+
     public List<Teststep> getTeststeps() {
         return teststeps;
     }
@@ -72,5 +84,13 @@ public class Testcase {
 
     public void setFolderPath(String folderPath) {
         this.folderPath = folderPath;
+    }
+
+    public DataTable getDataTable() {
+        return dataTable;
+    }
+
+    public void setDataTable(DataTable dataTable) {
+        this.dataTable = dataTable;
     }
 }

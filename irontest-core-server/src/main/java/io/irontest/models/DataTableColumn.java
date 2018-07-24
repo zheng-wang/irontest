@@ -7,9 +7,9 @@ public class DataTableColumn {
     public static String COLUMN_NAME_CAPTION = "Caption";
     @JsonView(ResourceJsonViews.DataTableUIGrid.class)
     private long id;
-    @JsonView(ResourceJsonViews.DataTableUIGrid.class)
+    @JsonView({ResourceJsonViews.DataTableUIGrid.class, ResourceJsonViews.TestcaseExport.class})
     private String name;
-    @JsonView(ResourceJsonViews.DataTableUIGrid.class)
+    @JsonView({ResourceJsonViews.DataTableUIGrid.class, ResourceJsonViews.TestcaseExport.class})
     private DataTableColumnType type;
     private short sequence;
 

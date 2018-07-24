@@ -7,10 +7,9 @@ import io.irontest.resources.ResourceJsonViews;
 
 import java.util.*;
 
+@JsonView({ResourceJsonViews.DataTableUIGrid.class, ResourceJsonViews.TestcaseExport.class})
 public class DataTable {
-    @JsonView(ResourceJsonViews.DataTableUIGrid.class)
     private List<DataTableColumn> columns = new ArrayList<>();
-    @JsonView(ResourceJsonViews.DataTableUIGrid.class)
     private List<LinkedHashMap<String, DataTableCell>> rows = new ArrayList<>();
 
     public List<DataTableColumn> getColumns() {

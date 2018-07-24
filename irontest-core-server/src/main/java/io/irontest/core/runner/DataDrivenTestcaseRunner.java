@@ -16,7 +16,8 @@ import io.irontest.utils.IronTestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.Date;
+import java.util.LinkedHashMap;
 
 import static io.irontest.IronTestConstants.IMPLICIT_PROPERTY_DATE_TIME_FORMAT;
 import static io.irontest.IronTestConstants.IMPLICIT_PROPERTY_NAME_TEST_CASE_INDIVIDUAL_START_TIME;
@@ -24,12 +25,9 @@ import static io.irontest.IronTestConstants.IMPLICIT_PROPERTY_NAME_TEST_CASE_IND
 public class DataDrivenTestcaseRunner extends TestcaseRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(DataDrivenTestcaseRunner.class);
 
-    private DataTable dataTable;
-
-    public DataDrivenTestcaseRunner(Testcase testcase, List<UserDefinedProperty> testcaseUDPs, DataTable dataTable,
-                                    TeststepDAO teststepDAO, UtilsDAO utilsDAO, TestcaseRunDAO testcaseRunDAO) {
-        super(testcase, testcaseUDPs, teststepDAO, utilsDAO, testcaseRunDAO, LOGGER);
-        this.dataTable = dataTable;
+    public DataDrivenTestcaseRunner(Testcase testcase, TeststepDAO teststepDAO, UtilsDAO utilsDAO,
+                                    TestcaseRunDAO testcaseRunDAO) {
+        super(testcase, teststepDAO, utilsDAO, testcaseRunDAO, LOGGER);
     }
 
     @Override
@@ -39,6 +37,8 @@ public class DataDrivenTestcaseRunner extends TestcaseRunner {
 
         preProcessingForIIBTestcase();
         startTestcaseRun(testcaseRun);
+
+        DataTable dataTable = getTestcase().getDataTable();
 
         IronTestUtils.checkDuplicatePropertyNameBetweenDataTableAndUPDs(getUdpNames(), dataTable);
 

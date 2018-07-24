@@ -1,9 +1,14 @@
 package io.irontest.models;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import io.irontest.resources.ResourceJsonViews;
+
 public class UserDefinedProperty {
     private long id;
     private short sequence;
+    @JsonView(ResourceJsonViews.TestcaseExport.class)
     private String name;
+    @JsonView(ResourceJsonViews.TestcaseExport.class)
     private String value;
 
     public UserDefinedProperty() {}

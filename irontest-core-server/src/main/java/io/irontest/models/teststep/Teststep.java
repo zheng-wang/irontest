@@ -33,7 +33,6 @@ public class Teststep {
 
     private long id;   //  id being 0 means this is dynamically created test step object (no record in the Teststep database table).
     private long testcaseId;
-    @JsonView(ResourceJsonViews.TestcaseExport.class)
     private short sequence;
     @JsonView({ResourceJsonViews.TestcaseRunResultOnTestcaseEditView.class, ResourceJsonViews.TestcaseExport.class})
     private String name;

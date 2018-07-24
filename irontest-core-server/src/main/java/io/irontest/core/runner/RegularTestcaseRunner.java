@@ -6,7 +6,6 @@ import io.irontest.db.TeststepDAO;
 import io.irontest.db.UtilsDAO;
 import io.irontest.models.TestResult;
 import io.irontest.models.Testcase;
-import io.irontest.models.UserDefinedProperty;
 import io.irontest.models.testrun.RegularTestcaseRun;
 import io.irontest.models.testrun.TestcaseRun;
 import io.irontest.models.testrun.TeststepRun;
@@ -16,14 +15,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
-import java.util.List;
 
 public class RegularTestcaseRunner extends TestcaseRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(RegularTestcaseRunner.class);
 
-    public RegularTestcaseRunner(Testcase testcase, List<UserDefinedProperty> testcaseUDPs, TeststepDAO teststepDAO,
+    public RegularTestcaseRunner(Testcase testcase, TeststepDAO teststepDAO,
                                  UtilsDAO utilsDAO, TestcaseRunDAO testcaseRunDAO) {
-        super(testcase, testcaseUDPs, teststepDAO, utilsDAO, testcaseRunDAO, LOGGER);
+        super(testcase, teststepDAO, utilsDAO, testcaseRunDAO, LOGGER);
     }
 
     @Override

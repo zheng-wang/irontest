@@ -7,11 +7,11 @@ import io.irontest.resources.ResourceJsonViews;
 public class DataTableCell {
     @JsonView(ResourceJsonViews.DataTableUIGrid.class)
     private long id;
-    @JsonView(ResourceJsonViews.DataTableUIGrid.class)
+    @JsonView({ResourceJsonViews.DataTableUIGrid.class, ResourceJsonViews.TestcaseExport.class})
     private short rowSequence;
-    @JsonView(ResourceJsonViews.DataTableUIGrid.class)
+    @JsonView({ResourceJsonViews.DataTableUIGrid.class, ResourceJsonViews.TestcaseExport.class})
     private String value = "";
-    @JsonView(ResourceJsonViews.DataTableUIGrid.class)
+    @JsonView({ResourceJsonViews.DataTableUIGrid.class, ResourceJsonViews.TestcaseExport.class})
     private Endpoint endpoint;
 
     public long getId() {
