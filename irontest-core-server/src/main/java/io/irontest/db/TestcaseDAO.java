@@ -191,7 +191,7 @@ public interface TestcaseDAO extends CrossReferenceDAO {
     }
 
     @Transaction
-    default long createByImport(Testcase testcase, long targetFolderId) {
+    default long createByImport(Testcase testcase, long targetFolderId) throws JsonProcessingException {
         if (_nameExistsInFolder(testcase.getName(), targetFolderId)) {
             throw new RuntimeException("Duplicate test case name: " + testcase.getName());
         }
@@ -206,54 +206,13 @@ public interface TestcaseDAO extends CrossReferenceDAO {
         }
 
         //  insert test steps
-//        for (Teststep oldTeststep : oldTestcase.getTeststeps()) {
-//            Teststep newTeststep = new Teststep();
-//            newTeststep.setName(oldTeststep.getName());
-//            newTeststep.setTestcaseId(newTestcase.getId());
-//            newTeststep.setSequence(oldTeststep.getSequence());
-//            newTeststep.setType(oldTeststep.getType());
-//            newTeststep.setDescription(oldTeststep.getDescription());
-//            newTeststep.setAction(oldTeststep.getAction());
-//            if (oldTeststep.getRequestType() == TeststepRequestType.TEXT) {
-//                newTeststep.setRequest(oldTeststep.getRequest());
-//            } else {
-//                newTeststep.setRequest(teststepDAO().getBinaryRequestById(oldTeststep.getId()));
-//            }
-//            newTeststep.setRequestType(oldTeststep.getRequestType());
-//            newTeststep.setRequestFilename(oldTeststep.getRequestFilename());
-//            newTeststep.setOtherProperties(oldTeststep.getOtherProperties());
-//            Endpoint oldEndpoint = oldTeststep.getEndpoint();
-//            if (oldEndpoint != null) {
-//                Endpoint newEndpoint = new Endpoint();
-//                newTeststep.setEndpoint(newEndpoint);
-//                if (oldEndpoint.isManaged()) {
-//                    newEndpoint.setId(oldEndpoint.getId());
-//                } else {
-//                    newEndpoint.setName(oldEndpoint.getName());
-//                    newEndpoint.setType(oldEndpoint.getType());
-//                    newEndpoint.setDescription(oldEndpoint.getDescription());
-//                    newEndpoint.setUrl(oldEndpoint.getUrl());
-//                    newEndpoint.setUsername(oldEndpoint.getUsername());
-//                    newEndpoint.setPassword(oldEndpoint.getPassword());
-//                    newEndpoint.setOtherProperties(oldEndpoint.getOtherProperties());
-//                }
-//            }
-//            newTeststep.setEndpointProperty(oldTeststep.getEndpointProperty());
-//            long newTeststepId = teststepDAO().insert(newTeststep, null);
-//
-//            //  duplicate assertions
-//            for (Assertion oldAssertion : oldTeststep.getAssertions()) {
-//                Assertion newAssertion = new Assertion();
-//                newAssertion.setTeststepId(newTeststepId);
-//                newAssertion.setName(oldAssertion.getName());
-//                newAssertion.setType(oldAssertion.getType());
-//                newAssertion.setOtherProperties(oldAssertion.getOtherProperties());
-//                assertionDAO().insert(newAssertion);
-//            }
-//        }
-//
-//        //  duplicate data table
-//        dataTableDAO().duplicateByTestcase(oldTestcaseId, newTestcase.getId());
+        for (Teststep teststep : testcase.getTeststeps()) {
+            teststep.setTestcaseId(testcaseId);
+            teststepDAO().insertByImport(teststep);
+        }
+
+        //  insert data table
+        dataTableDAO().insertByImport(testcaseId, testcase.getDataTable());
 
         return testcaseId;
     }

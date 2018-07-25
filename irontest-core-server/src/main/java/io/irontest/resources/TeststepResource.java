@@ -22,6 +22,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
@@ -196,8 +197,8 @@ public class TeststepResource {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @PermitAll
     public Teststep saveRequestFile(@PathParam("teststepId") long teststepId,
-                                      @FormDataParam("file") InputStream inputStream,
-                                      @FormDataParam("file") FormDataContentDisposition contentDispositionHeader) {
+                                    @FormDataParam("file") InputStream inputStream,
+                                    @FormDataParam("file") FormDataContentDisposition contentDispositionHeader) throws IOException {
         return teststepDAO.setRequestFile(teststepId, contentDispositionHeader.getFileName(), inputStream);
     }
 

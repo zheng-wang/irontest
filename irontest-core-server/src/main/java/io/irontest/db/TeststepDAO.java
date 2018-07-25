@@ -10,6 +10,8 @@ import io.irontest.models.assertion.IntegerEqualAssertionProperties;
 import io.irontest.models.endpoint.Endpoint;
 import io.irontest.models.teststep.*;
 import io.irontest.utils.XMLUtils;
+import org.apache.commons.io.IOUtils;
+import org.jdbi.v3.sqlobject.config.RegisterColumnMapper;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
@@ -64,15 +66,25 @@ public interface TeststepDAO extends CrossReferenceDAO {
      */
     @SqlUpdate("insert into teststep (testcase_id, sequence, type, description, action, request, request_type, " +
             "request_filename, endpoint_id, endpoint_property, other_properties) values (:t.testcaseId, " +
-                "case when :t.sequence = 0 " +
-                    "then (select coalesce(max(sequence), 0) + 1 from teststep where testcase_id = :t.testcaseId) " +
-                    "else :t.sequence end, " +
+            "case when :t.sequence = 0 " +
+            "then (select coalesce(max(sequence), 0) + 1 from teststep where testcase_id = :t.testcaseId) " +
+            "else :t.sequence end, " +
             ":t.type, :t.description, :t.action, :request, :requestType, :t.requestFilename, :endpointId, " +
             ":t.endpointProperty, :otherProperties)")
     @GetGeneratedKeys
-    long _insert(@BindBean("t") Teststep teststep, @Bind("request") Object request,
-                 @Bind("requestType") String requestType, @Bind("endpointId") Long endpointId,
-                 @Bind("otherProperties") String otherProperties);
+    long _insertWithoutName(@BindBean("t") Teststep teststep, @Bind("request") Object request,
+                            @Bind("requestType") String requestType, @Bind("endpointId") Long endpointId,
+                            @Bind("otherProperties") String otherProperties);
+
+    @SqlUpdate("insert into teststep (testcase_id, sequence, name, type, description, action, request, request_type, " +
+            "request_filename, endpoint_id, endpoint_property, other_properties) values (:t.testcaseId, " +
+            "select coalesce(max(sequence), 0) + 1 from teststep where testcase_id = :t.testcaseId, :t.name, " +
+            ":t.type, :t.description, :t.action, :request, :requestType, :t.requestFilename, :endpointId, " +
+            ":t.endpointProperty, :otherProperties)")
+    @GetGeneratedKeys
+    long _insertWithName(@BindBean("t") Teststep teststep, @Bind("request") Object request,
+                         @Bind("requestType") String requestType, @Bind("endpointId") Long endpointId,
+                         @Bind("otherProperties") String otherProperties);
 
     @SqlUpdate("update teststep set name = :name where id = :id")
     void updateNameForInsert(@Bind("id") long id, @Bind("name") String name);
@@ -96,7 +108,7 @@ public interface TeststepDAO extends CrossReferenceDAO {
         Object request = teststep.getRequest() instanceof String ?
                 ((String) teststep.getRequest()).getBytes() : teststep.getRequest();
         String otherProperties = new ObjectMapper().writeValueAsString(teststep.getOtherProperties());
-        long id = _insert(teststep, request, teststep.getRequestType().toString(),
+        long id = _insertWithoutName(teststep, request, teststep.getRequestType().toString(),
                 endpoint == null ? null : endpoint.getId(), otherProperties);
 
         if (teststep.getName() == null) {    //  from test step creation on UI
@@ -105,6 +117,25 @@ public interface TeststepDAO extends CrossReferenceDAO {
         updateNameForInsert(id, teststep.getName());
 
         return id;
+    }
+
+    @Transaction
+    default long insertByImport(Teststep teststep) throws JsonProcessingException {
+        Long endpointId = null;
+        if (teststep.getEndpoint() != null) {
+            endpointId = endpointDAO().insertUnmanagedEndpoint(teststep.getEndpoint());
+        }
+        Object request = teststep.getRequest() instanceof String ?
+                ((String) teststep.getRequest()).getBytes() : teststep.getRequest();
+        String otherProperties = new ObjectMapper().writeValueAsString(teststep.getOtherProperties());
+        long teststepId = _insertWithName(teststep, request, teststep.getRequestType().toString(), endpointId, otherProperties);
+
+        for (Assertion assertion : teststep.getAssertions()) {
+            assertion.setTeststepId(teststepId);
+            assertionDAO().insert(assertion);
+        }
+
+        return teststepId;
     }
 
     @SqlUpdate("update teststep set name = :name, description = :description, action = :action, request = :request, " +
@@ -250,7 +281,7 @@ public interface TeststepDAO extends CrossReferenceDAO {
                 backup.setRfh2Header(((MQTeststepProperties) oldTeststep.getOtherProperties()).getRfh2Header());
                 backupChanged = true;
             } else if (TeststepRequestType.FILE == oldTeststep.getRequestType()) {
-                backup.setFileRequest(getBinaryRequestById(teststepId));
+                backup.setFileRequest((byte[]) getBinaryRequestById(teststepId));
                 backup.setRequestFilename(oldTeststep.getRequestFilename());
                 backupChanged = true;
             }
@@ -436,19 +467,28 @@ public interface TeststepDAO extends CrossReferenceDAO {
     @SqlUpdate("update teststep set request = :request, request_type = :requestType, request_filename = :requestFilename, " +
             "updated = CURRENT_TIMESTAMP where id = :teststepId")
     void updateRequest(@Bind("teststepId") long teststepId,
-                       @Bind("request") Object request,
+                       @Bind("request") byte[] request,   //  InputStream used to work here with jdbi v2, but it is not working with jdbi v3
                        @Bind("requestType") String requestType,
                        @Bind("requestFilename") String requestFilename);
 
     @Transaction
-    default Teststep setRequestFile(long teststepId, String fileName, InputStream inputStream) {
-        updateRequest(teststepId, inputStream, TeststepRequestType.FILE.toString(), fileName);
+    default Teststep setRequestFile(long teststepId, String fileName, InputStream inputStream) throws IOException {
+        byte[] fileBytes;
+        try {
+            fileBytes = IOUtils.toByteArray(inputStream);
+        } finally {
+            inputStream.close();
+        }
+        updateRequest(teststepId, fileBytes, TeststepRequestType.FILE.toString(), fileName);
 
         return findById(teststepId);
     }
 
+    //  byte[] return type used to work in jdbi v2, but it is not working in jdbi v3
+    //  in jdbi v3, ColumnMapper<byte[]> is not working here
     @SqlQuery("select request from teststep where id = :teststepId")
-    byte[] getBinaryRequestById(@Bind("teststepId") long teststepId);
+    @RegisterColumnMapper(ObjectColumnMapper.class)
+    Object getBinaryRequestById(@Bind("teststepId") long teststepId);
 
     @SqlUpdate("update teststep set endpoint_id = null, endpoint_property = 'Endpoint', " +
             "updated = CURRENT_TIMESTAMP where id = :teststepId")

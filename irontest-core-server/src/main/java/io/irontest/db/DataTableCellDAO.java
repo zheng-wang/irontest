@@ -1,16 +1,18 @@
 package io.irontest.db;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.irontest.models.DataTableCell;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
+import org.jdbi.v3.sqlobject.transaction.Transaction;
 
 import java.util.List;
 
 @RegisterRowMapper(DataTableCellMapper.class)
-public interface DataTableCellDAO {
+public interface DataTableCellDAO extends CrossReferenceDAO {
     @SqlUpdate("CREATE SEQUENCE IF NOT EXISTS datatable_cell_sequence START WITH 1 INCREMENT BY 1 NOCACHE")
     void createSequenceIfNotExists();
 
@@ -57,4 +59,17 @@ public interface DataTableCellDAO {
     @SqlUpdate("insert into datatable_cell (column_id, row_sequence, value, endpoint_id) " +
             "select :targetColumnId, row_sequence, value, endpoint_id from datatable_cell where column_id = :sourceColumnId")
     void duplicateByColumn(@Bind("sourceColumnId") long sourceColumnId, @Bind("targetColumnId") long targetColumnId);
+
+    @SqlUpdate("insert into datatable_cell (column_id, row_sequence, value, endpoint_id) values (:columnId, " +
+            ":cell.rowSequence, :cell.value, :endpointId)")
+    void _insert(@Bind("columnId") long columnId, @BindBean("cell") DataTableCell cell, @Bind("endpointId") Long endpointId);
+
+    @Transaction
+    default void insert(long columnId, DataTableCell cell) throws JsonProcessingException {
+        Long endpointId = null;
+        if (cell.getEndpoint() != null) {
+            endpointId = endpointDAO().insertUnmanagedEndpoint(cell.getEndpoint());
+        }
+        _insert(columnId, cell, endpointId);
+    }
 }

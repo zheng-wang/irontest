@@ -1,5 +1,6 @@
 package io.irontest.db;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.irontest.models.DataTable;
 import io.irontest.models.DataTableCell;
 import io.irontest.models.DataTableColumn;
@@ -79,6 +80,21 @@ public interface DataTableDAO extends CrossReferenceDAO {
                 }
             }
             dataTableCellDAO().duplicateByColumn(sourceColumnId, targetColumn.getId());
+        }
+    }
+
+    @Transaction
+    default void insertByImport(long testcaseId, DataTable dataTable) throws JsonProcessingException {
+        for (DataTableColumn column: dataTable.getColumns()) {
+            long columnId = dataTableColumnDAO().insert(testcaseId, column.getName(), column.getType().toString());
+            for (LinkedHashMap<String, DataTableCell> row: dataTable.getRows()) {
+                for (Map.Entry<String, DataTableCell> cellEntry: row.entrySet()) {
+                    if (cellEntry.getKey().equals(column.getName())) {
+                        dataTableCellDAO().insert(columnId, cellEntry.getValue());
+                        break;
+                    }
+                }
+            }
         }
     }
 }
