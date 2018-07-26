@@ -2,6 +2,8 @@ package io.irontest.resources;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.jaxrs.annotation.JacksonFeatures;
 import io.dropwizard.jersey.PATCH;
 import io.irontest.db.TestcaseDAO;
 import io.irontest.db.TeststepDAO;
@@ -37,6 +39,7 @@ public class TestcaseResource {
 
     @GET @Path("testcases/{testcaseId}/export")
     @JsonView(ResourceJsonViews.TestcaseExport.class)
+    @JacksonFeatures(serializationEnable = { SerializationFeature.INDENT_OUTPUT })
     public Testcase export(@PathParam("testcaseId") long testcaseId) {
         return testcaseDAO.findById_Complete(testcaseId);
     }

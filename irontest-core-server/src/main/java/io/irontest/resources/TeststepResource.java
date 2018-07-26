@@ -53,7 +53,7 @@ public class TeststepResource {
 
         long teststepId = teststepDAO.insert(teststep, appInfo.getAppMode());
 
-        return teststepDAO.findById(teststepId);
+        return teststepDAO.findById_NoRequest(teststepId);
     }
 
     //  adding more info to the teststep object
@@ -104,9 +104,15 @@ public class TeststepResource {
     }
 
     @GET @Path("{teststepId}")
-    public TeststepWrapper findById(@PathParam("teststepId") long teststepId) throws Exception {
+    public TeststepWrapper findById(@PathParam("teststepId") long teststepId) {
         TeststepWrapper wrapper = new TeststepWrapper();
-        Teststep teststep = teststepDAO.findById(teststepId);
+        Teststep teststep;
+        TeststepRequestType requestType = teststepDAO.findRequestTypeById(teststepId);
+        if (requestType == TeststepRequestType.FILE) {
+            teststep = teststepDAO.findById_NoRequest(teststepId);
+        } else {
+            teststep = teststepDAO.findById_Complete(teststepId);
+        }
         wrapper.setTeststep(teststep);
         populateParametersInWrapper(wrapper);
 
@@ -118,9 +124,12 @@ public class TeststepResource {
     public TeststepWrapper update(Teststep teststep) throws Exception {
         Thread.sleep(100);  //  workaround for Chrome's 'Failed to load response data' problem (still exist in Chrome 65)
 
+        teststepDAO.update(teststep);
+
         TeststepWrapper wrapper = new TeststepWrapper();
-        teststep = teststepDAO.update(teststep);
-        wrapper.setTeststep(teststep);
+        Teststep newTeststep = teststep.getRequestType() == TeststepRequestType.FILE ?
+                teststepDAO.findById_NoRequest(teststep.getId()) : teststepDAO.findById_Complete(teststep.getId());
+        wrapper.setTeststep(newTeststep);
         populateParametersInWrapper(wrapper);
 
         return wrapper;
@@ -143,6 +152,11 @@ public class TeststepResource {
     public BasicTeststepRun run(Teststep teststep) throws Exception {
         Thread.sleep(100);  //  workaround for Chrome's 'Failed to load response data' problem (still exist in Chrome 65)
 
+        //  fetch request binary if its type is file
+        if (teststep.getRequestType() == TeststepRequestType.FILE) {
+            teststep.setRequest(teststepDAO.getBinaryRequestById(teststep.getId()));
+        }
+
         //  gather referenceable string properties and endpoint properties
         List<UserDefinedProperty> testcaseUDPs = udpDAO.findByTestcaseId(teststep.getTestcaseId());
         Map<String, String> referenceableStringProperties = IronTestUtils.udpListToMap(testcaseUDPs);
@@ -159,7 +173,7 @@ public class TeststepResource {
 
         //  run the test step
         TeststepRunner teststepRunner = TeststepRunnerFactory.getInstance().newTeststepRunner(
-                teststep, teststepDAO, utilsDAO, referenceableStringProperties, referenceableEndpointProperties, null);
+                teststep, utilsDAO, referenceableStringProperties, referenceableEndpointProperties, null);
         BasicTeststepRun basicTeststepRun = teststepRunner.run();
 
         //  for better display in browser, transform JSON/XML response to be pretty-printed
@@ -210,7 +224,7 @@ public class TeststepResource {
     @GET @Path("{teststepId}/requestFile")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response getRequestFile(@PathParam("teststepId") long teststepId) {
-        Teststep teststep = teststepDAO.findById(teststepId);
+        Teststep teststep = teststepDAO.findById_NoRequest(teststepId);
         teststep.setRequest(teststepDAO.getBinaryRequestById(teststep.getId()));
         String filename = teststep.getRequestFilename() == null ? "UnknownFilename" : teststep.getRequestFilename();
         return Response.ok(teststep.getRequest())
@@ -223,7 +237,7 @@ public class TeststepResource {
     public Teststep useEndpointProperty(Teststep teststep) {
         teststepDAO.useEndpointProperty(teststep);
 
-        return teststepDAO.findById(teststep.getId());
+        return teststepDAO.findById_NoRequest(teststep.getId());
     }
 
     @POST @Path("{teststepId}/useDirectEndpoint")
@@ -231,6 +245,6 @@ public class TeststepResource {
     public Teststep useDirectEndpoint(Teststep teststep) throws JsonProcessingException {
         teststepDAO.useDirectEndpoint(teststep, appInfo.getAppMode());
 
-        return teststepDAO.findById(teststep.getId());
+        return teststepDAO.findById_NoRequest(teststep.getId());
     }
 }

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.irontest.core.assertion.AssertionVerifier;
 import io.irontest.core.assertion.AssertionVerifierFactory;
 import io.irontest.db.TestcaseRunDAO;
-import io.irontest.db.TeststepDAO;
 import io.irontest.db.UtilsDAO;
 import io.irontest.models.TestResult;
 import io.irontest.models.Testcase;
@@ -28,7 +27,6 @@ import static io.irontest.IronTestConstants.*;
 public abstract class TestcaseRunner {
     private Testcase testcase;
     private boolean testcaseHasWaitForProcessingCompletionAction = false;
-    private TeststepDAO teststepDAO;
     private UtilsDAO utilsDAO;
     private TestcaseRunDAO testcaseRunDAO;
     private Logger LOGGER;
@@ -37,10 +35,8 @@ public abstract class TestcaseRunner {
     private Map<String, String> referenceableStringProperties = new HashMap<>();
     private Map<String, Endpoint> referenceableEndpointProperties = new HashMap<>();
 
-    protected TestcaseRunner(Testcase testcase, TeststepDAO teststepDAO, UtilsDAO utilsDAO,
-                             TestcaseRunDAO testcaseRunDAO, Logger LOGGER) {
+    TestcaseRunner(Testcase testcase, UtilsDAO utilsDAO, TestcaseRunDAO testcaseRunDAO, Logger LOGGER) {
         this.testcase = testcase;
-        this.teststepDAO = teststepDAO;
         this.utilsDAO = utilsDAO;
         this.testcaseRunDAO = testcaseRunDAO;
         this.LOGGER = LOGGER;
@@ -50,31 +46,31 @@ public abstract class TestcaseRunner {
         return testcase;
     }
 
-    public boolean isTestcaseHasWaitForProcessingCompletionAction() {
+    boolean isTestcaseHasWaitForProcessingCompletionAction() {
         return testcaseHasWaitForProcessingCompletionAction;
     }
 
-    protected TestcaseRunDAO getTestcaseRunDAO() {
+    TestcaseRunDAO getTestcaseRunDAO() {
         return testcaseRunDAO;
     }
 
-    protected TestcaseRunContext getTestcaseRunContext() {
+    TestcaseRunContext getTestcaseRunContext() {
         return testcaseRunContext;
     }
 
-    protected Set<String> getUdpNames() { return udpNames; }
+    Set<String> getUdpNames() { return udpNames; }
 
-    protected Map<String, String> getReferenceableStringProperties() {
+    Map<String, String> getReferenceableStringProperties() {
         return referenceableStringProperties;
     }
 
-    protected Map<String, Endpoint> getReferenceableEndpointProperties() {
+    Map<String, Endpoint> getReferenceableEndpointProperties() {
         return referenceableEndpointProperties;
     }
 
     public abstract TestcaseRun run() throws JsonProcessingException;
 
-    protected void preProcessingForIIBTestcase() {
+    void preProcessingForIIBTestcase() {
         for (Teststep teststep : testcase.getTeststeps()) {
             if (Teststep.TYPE_IIB.equals(teststep.getType()) &&
                     Teststep.ACTION_WAIT_FOR_PROCESSING_COMPLETION.equals(teststep.getAction())) {
@@ -88,7 +84,7 @@ public abstract class TestcaseRunner {
         }
     }
 
-    protected void startTestcaseRun(TestcaseRun testcaseRun) {
+    void startTestcaseRun(TestcaseRun testcaseRun) {
         Date testcaseRunStartTime = new Date();
         LOGGER.info("Start running test case: " + testcase.getName());
 
@@ -105,7 +101,7 @@ public abstract class TestcaseRunner {
                 IMPLICIT_PROPERTY_DATE_TIME_FORMAT.format(testcaseRunStartTime));
     }
 
-    protected TeststepRun runTeststep(Teststep teststep) {
+    TeststepRun runTeststep(Teststep teststep) {
         TeststepRun teststepRun = new TeststepRun();
         teststepRun.setTeststep(teststep);
 
@@ -121,7 +117,7 @@ public abstract class TestcaseRunner {
         boolean exceptionOccurred = false;  //  use this flag instead of checking stepRun.getErrorMessage() != null, for code clarity
         try {
             basicTeststepRun = TeststepRunnerFactory.getInstance().newTeststepRunner(
-                    teststep, teststepDAO, utilsDAO, referenceableStringProperties, referenceableEndpointProperties,
+                    teststep, utilsDAO, referenceableStringProperties, referenceableEndpointProperties,
                     testcaseRunContext).run();
             LOGGER.info("Finish running test step: " + teststep.getName());
             teststepRun.setResponse(basicTeststepRun.getResponse());

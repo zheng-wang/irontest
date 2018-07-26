@@ -5,7 +5,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.irontest.core.runner.DataDrivenTestcaseRunner;
 import io.irontest.core.runner.RegularTestcaseRunner;
 import io.irontest.core.runner.TestcaseRunner;
-import io.irontest.db.*;
+import io.irontest.db.TestcaseDAO;
+import io.irontest.db.TestcaseRunDAO;
+import io.irontest.db.TeststepRunDAO;
+import io.irontest.db.UtilsDAO;
 import io.irontest.models.Testcase;
 import io.irontest.models.testrun.TestcaseRun;
 import io.irontest.models.testrun.TeststepRun;
@@ -19,20 +22,14 @@ import javax.ws.rs.core.MediaType;
 @Path("/") @Produces({ MediaType.APPLICATION_JSON })
 public class TestcaseRunResource {
     private final TestcaseDAO testcaseDAO;
-    private final UserDefinedPropertyDAO udpDAO;
-    private final TeststepDAO teststepDAO;
     private final UtilsDAO utilsDAO;
-    private final DataTableDAO dataTableDAO;
     private final TestcaseRunDAO testcaseRunDAO;
     private final TeststepRunDAO teststepRunDAO;
 
-    public TestcaseRunResource(TestcaseDAO testcaseDAO, UserDefinedPropertyDAO udpDAO, TeststepDAO teststepDAO,
-                               UtilsDAO utilsDAO, DataTableDAO dataTableDAO, TestcaseRunDAO testcaseRunDAO, TeststepRunDAO teststepRunDAO) {
+    public TestcaseRunResource(TestcaseDAO testcaseDAO, UtilsDAO utilsDAO, TestcaseRunDAO testcaseRunDAO,
+                               TeststepRunDAO teststepRunDAO) {
         this.testcaseDAO = testcaseDAO;
-        this.udpDAO = udpDAO;
-        this.teststepDAO = teststepDAO;
         this.utilsDAO = utilsDAO;
-        this.dataTableDAO = dataTableDAO;
         this.testcaseRunDAO = testcaseRunDAO;
         this.teststepRunDAO = teststepRunDAO;
     }
@@ -43,9 +40,9 @@ public class TestcaseRunResource {
         Testcase testcase = testcaseDAO.findById_Complete(testcaseId);
         TestcaseRunner testcaseRunner;
         if (testcase.getDataTable().getRows().isEmpty()) {
-            testcaseRunner = new RegularTestcaseRunner(testcase, teststepDAO, utilsDAO, testcaseRunDAO);
+            testcaseRunner = new RegularTestcaseRunner(testcase, utilsDAO, testcaseRunDAO);
         } else {
-            testcaseRunner = new DataDrivenTestcaseRunner(testcase, teststepDAO, utilsDAO, testcaseRunDAO);
+            testcaseRunner = new DataDrivenTestcaseRunner(testcase, utilsDAO, testcaseRunDAO);
         }
         return testcaseRunner.run();
     }

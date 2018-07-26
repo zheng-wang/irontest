@@ -3,7 +3,6 @@ package io.irontest.core.runner;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.irontest.core.MapValueLookup;
-import io.irontest.db.TeststepDAO;
 import io.irontest.db.UtilsDAO;
 import io.irontest.models.endpoint.Endpoint;
 import io.irontest.models.teststep.Teststep;
@@ -18,7 +17,6 @@ import java.util.Map;
 public abstract class TeststepRunner {
     private Teststep teststep;
     private String decryptedEndpointPassword;
-    private TeststepDAO teststepDAO;
     private UtilsDAO utilsDAO;
     private TestcaseRunContext testcaseRunContext;    //  set only when running test case
     private Map<String, String> referenceableStringProperties;   //  set when running standalone test step or test case
@@ -36,11 +34,6 @@ public abstract class TeststepRunner {
      * @throws IOException
      */
     private void prepareTeststep() throws IOException {
-        //  fetch request binary if its type is file
-        if (teststep.getRequestType() == TeststepRequestType.FILE) {
-            teststep.setRequest(teststepDAO.getBinaryRequestById(teststep.getId()));
-        }
-
         resolveReferenceableStringProperties();
 
         //  resolve endpoint property if set on test step
@@ -66,7 +59,7 @@ public abstract class TeststepRunner {
      * @throws IOException
      */
     private void resolveReferenceableStringProperties() throws IOException {
-        List<String> undefinedStringProperties = new ArrayList<String>();
+        List<String> undefinedStringProperties = new ArrayList<>();
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
 
@@ -99,10 +92,6 @@ public abstract class TeststepRunner {
         this.teststep = teststep;
     }
 
-    protected void setTeststepDAO(TeststepDAO teststepDAO) {
-        this.teststepDAO = teststepDAO;
-    }
-
     protected Teststep getTeststep() {
         return teststep;
     }
@@ -111,7 +100,7 @@ public abstract class TeststepRunner {
         return decryptedEndpointPassword;
     }
 
-    protected void setUtilsDAO(UtilsDAO utilsDAO) {
+    void setUtilsDAO(UtilsDAO utilsDAO) {
         this.utilsDAO = utilsDAO;
     }
 
@@ -119,15 +108,15 @@ public abstract class TeststepRunner {
         return testcaseRunContext;
     }
 
-    protected void setTestcaseRunContext(TestcaseRunContext testcaseRunContext) {
+    void setTestcaseRunContext(TestcaseRunContext testcaseRunContext) {
         this.testcaseRunContext = testcaseRunContext;
     }
 
-    protected void setReferenceableStringProperties(Map<String, String> referenceableStringProperties) {
+    void setReferenceableStringProperties(Map<String, String> referenceableStringProperties) {
         this.referenceableStringProperties = referenceableStringProperties;
     }
 
-    public void setReferenceableEndpointProperties(Map<String, Endpoint> referenceableEndpointProperties) {
+    void setReferenceableEndpointProperties(Map<String, Endpoint> referenceableEndpointProperties) {
         this.referenceableEndpointProperties = referenceableEndpointProperties;
     }
 }

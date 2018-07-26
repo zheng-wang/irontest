@@ -47,10 +47,7 @@ public interface TestcaseDAO extends CrossReferenceDAO {
     @Transaction
     default Testcase insert(Testcase testcase) {
         long id = _insertWithoutName(testcase);
-        if (testcase.getName() == null) {
-            testcase.setName("Case " + id);
-        }
-        updateNameForInsert(id, testcase.getName());
+        updateNameForInsert(id, "Case " + id);
         return _findById(id);
     }
 
@@ -93,7 +90,7 @@ public interface TestcaseDAO extends CrossReferenceDAO {
         List<UserDefinedProperty> udps = udpDAO().findByTestcaseId(id);
         result.setUdps(udps);
 
-        List<Teststep> teststeps = teststepDAO().findByTestcaseId(id);
+        List<Teststep> teststeps = teststepDAO().findByTestcaseId_Complete(id);
         result.setTeststeps(teststeps);
 
         DataTable dataTable = dataTableDAO().getTestcaseDataTable(id, false);
@@ -106,15 +103,21 @@ public interface TestcaseDAO extends CrossReferenceDAO {
     boolean _nameExistsInFolder(@Bind("name") String name,
                                 @Bind("parentFolderId") long parentFolderId);
 
+    @SqlUpdate("insert into testcase (name, description, parent_folder_id) " +
+            "select :name, description, :parentFolderId from testcase where id = :sourceTestcaseId")
+    @GetGeneratedKeys
+    long duplicateById(@Bind("name") String name, @Bind("parentFolderId") long parentFolderId,
+                       @Bind("sourceTestcaseId") long sourceTestcaseId);
+
     /**
      * Clone the test case and its contents.
-     * @param oldTestcaseId id of the test case to be cloned
+     * @param sourceTestcaseId id of the test case to be cloned
      * @param targetFolderId id of the folder in which the new test case will be created
      * @return ID of the new test case
      */
     @Transaction
-    default long duplicate(long oldTestcaseId, long targetFolderId) throws JsonProcessingException {
-        Testcase oldTestcase = findById_Complete(oldTestcaseId);
+    default long duplicate(long sourceTestcaseId, long targetFolderId) throws JsonProcessingException {
+        Testcase oldTestcase = findById_Complete(sourceTestcaseId);
 
         //  resolve new test case name
         String newTestcaseName = oldTestcase.getName();
@@ -128,20 +131,16 @@ public interface TestcaseDAO extends CrossReferenceDAO {
         }
 
         //  duplicate the test case record
-        Testcase newTestcase = new Testcase();
-        newTestcase.setName(newTestcaseName);
-        newTestcase.setDescription(oldTestcase.getDescription());
-        newTestcase.setParentFolderId(targetFolderId);
-        newTestcase = insert(newTestcase);
+        long newTestcaseId = duplicateById(newTestcaseName, targetFolderId, sourceTestcaseId);
 
         //  duplicate user defined properties
-        udpDAO().duplicateByTestcase(oldTestcaseId, newTestcase.getId());
+        udpDAO().duplicateByTestcase(sourceTestcaseId, newTestcaseId);
 
         //  duplicate test steps
         for (Teststep oldTeststep : oldTestcase.getTeststeps()) {
             Teststep newTeststep = new Teststep();
             newTeststep.setName(oldTeststep.getName());
-            newTeststep.setTestcaseId(newTestcase.getId());
+            newTeststep.setTestcaseId(newTestcaseId);
             newTeststep.setSequence(oldTeststep.getSequence());
             newTeststep.setType(oldTeststep.getType());
             newTeststep.setDescription(oldTeststep.getDescription());
@@ -185,9 +184,9 @@ public interface TestcaseDAO extends CrossReferenceDAO {
         }
 
         //  duplicate data table
-        dataTableDAO().duplicateByTestcase(oldTestcaseId, newTestcase.getId());
+        dataTableDAO().duplicateByTestcase(sourceTestcaseId, newTestcaseId);
 
-        return newTestcase.getId();
+        return newTestcaseId;
     }
 
     @Transaction

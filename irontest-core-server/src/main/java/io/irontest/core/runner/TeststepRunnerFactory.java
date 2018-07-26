@@ -1,6 +1,5 @@
 package io.irontest.core.runner;
 
-import io.irontest.db.TeststepDAO;
 import io.irontest.db.UtilsDAO;
 import io.irontest.models.endpoint.Endpoint;
 import io.irontest.models.teststep.Teststep;
@@ -17,7 +16,7 @@ public class TeststepRunnerFactory {
         return instance;
     }
 
-    public TeststepRunner newTeststepRunner(Teststep teststep, TeststepDAO teststepDAO, UtilsDAO utilsDAO,
+    public TeststepRunner newTeststepRunner(Teststep teststep, UtilsDAO utilsDAO,
                                             Map<String, String> referenceableStringProperties,
                                             Map<String, Endpoint> referenceableEndpointProperties, TestcaseRunContext testcaseRunContext) {
         TeststepRunner runner;
@@ -26,7 +25,6 @@ public class TeststepRunnerFactory {
             Constructor<TeststepRunner> constructor = runnerClass.getConstructor();
             runner = constructor.newInstance();
             runner.setTeststep(teststep);
-            runner.setTeststepDAO(teststepDAO);
             runner.setUtilsDAO(utilsDAO);
             runner.setReferenceableStringProperties(referenceableStringProperties);
             runner.setReferenceableEndpointProperties(referenceableEndpointProperties);

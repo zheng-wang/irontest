@@ -17,7 +17,7 @@ public class TeststepMapper implements RowMapper<Teststep> {
     public Teststep map(ResultSet rs, StatementContext ctx) throws SQLException {
         List<String> fields = IronTestUtils.getFieldsPresentInResultSet(rs);
 
-        Teststep teststep = null;
+        Teststep teststep;
         String type = rs.getString("type");
         if (fields.contains("other_properties") && rs.getString("other_properties") != null) {
             String tempTeststepJSON = "{\"type\":\"" + type + "\",\"otherProperties\":" +
@@ -42,10 +42,12 @@ public class TeststepMapper implements RowMapper<Teststep> {
         teststep.setRequestType(fields.contains("request_type") ?
                 TeststepRequestType.getByText(rs.getString("request_type")) : null);
         if (fields.contains("request")) {
-            //  no use of retrieving request file here
-            Object request = teststep.getRequestType() == TeststepRequestType.FILE ?
-                    null : rs.getBytes("request") == null ? null : new String(rs.getBytes("request"));
-            teststep.setRequest(request);
+            byte[] requestBytes = rs.getBytes("request");
+            if (requestBytes != null) {
+                Object request = teststep.getRequestType() == TeststepRequestType.FILE ?
+                        requestBytes : new String(requestBytes);
+                teststep.setRequest(request);
+            }
         }
         teststep.setRequestFilename(fields.contains("request_filename") ?
                 rs.getString("request_filename") : null);

@@ -2,7 +2,6 @@ package io.irontest.core.runner;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.irontest.db.TestcaseRunDAO;
-import io.irontest.db.TeststepDAO;
 import io.irontest.db.UtilsDAO;
 import io.irontest.models.TestResult;
 import io.irontest.models.Testcase;
@@ -19,9 +18,8 @@ import java.util.Date;
 public class RegularTestcaseRunner extends TestcaseRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(RegularTestcaseRunner.class);
 
-    public RegularTestcaseRunner(Testcase testcase, TeststepDAO teststepDAO,
-                                 UtilsDAO utilsDAO, TestcaseRunDAO testcaseRunDAO) {
-        super(testcase, teststepDAO, utilsDAO, testcaseRunDAO, LOGGER);
+    public RegularTestcaseRunner(Testcase testcase, UtilsDAO utilsDAO, TestcaseRunDAO testcaseRunDAO) {
+        super(testcase, utilsDAO, testcaseRunDAO, LOGGER);
     }
 
     @Override

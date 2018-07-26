@@ -24,6 +24,7 @@ import org.w3c.dom.Document;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import static io.irontest.IronTestConstants.DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX;
@@ -82,7 +83,7 @@ public interface TeststepDAO extends CrossReferenceDAO {
             ":t.type, :t.description, :t.action, :request, :requestType, :t.requestFilename, :endpointId, " +
             ":t.endpointProperty, :otherProperties)")
     @GetGeneratedKeys
-    long _insertWithName(@BindBean("t") Teststep teststep, @Bind("request") Object request,
+    long _insertWithName(@BindBean("t") Teststep teststep, @Bind("request") byte[] request,
                          @Bind("requestType") String requestType, @Bind("endpointId") Long endpointId,
                          @Bind("otherProperties") String otherProperties);
 
@@ -120,32 +121,35 @@ public interface TeststepDAO extends CrossReferenceDAO {
     }
 
     @Transaction
-    default long insertByImport(Teststep teststep) throws JsonProcessingException {
+    default void insertByImport(Teststep teststep) throws JsonProcessingException {
         Long endpointId = null;
         if (teststep.getEndpoint() != null) {
             endpointId = endpointDAO().insertUnmanagedEndpoint(teststep.getEndpoint());
         }
-        Object request = teststep.getRequest() instanceof String ?
-                ((String) teststep.getRequest()).getBytes() : teststep.getRequest();
+        String requestString = (String) teststep.getRequest();
+        byte[] request = null;
+        if (requestString != null) {
+            request = teststep.getRequestType() == TeststepRequestType.FILE ?
+                    Base64.getDecoder().decode(requestString) : requestString.getBytes();
+        }
         String otherProperties = new ObjectMapper().writeValueAsString(teststep.getOtherProperties());
-        long teststepId = _insertWithName(teststep, request, teststep.getRequestType().toString(), endpointId, otherProperties);
+        long teststepId = _insertWithName(teststep, request, teststep.getRequestType().toString(), endpointId,
+                otherProperties);
 
         for (Assertion assertion : teststep.getAssertions()) {
             assertion.setTeststepId(teststepId);
             assertionDAO().insert(assertion);
         }
-
-        return teststepId;
     }
 
     @SqlUpdate("update teststep set name = :name, description = :description, action = :action, request = :request, " +
             "request_type = :requestType, endpoint_id = :endpointId, endpoint_property = :endpointProperty, " +
             "other_properties = :otherProperties, updated = CURRENT_TIMESTAMP where id = :id")
-    void _update(@Bind("name") String name, @Bind("description") String description,
-                 @Bind("action") String action, @Bind("request") Object request,
-                 @Bind("requestType") String requestType, @Bind("id") long id,
-                 @Bind("endpointId") Long endpointId, @Bind("endpointProperty") String endpointProperty,
-                 @Bind("otherProperties") String otherProperties);
+    void _updateWithStringRequest(@Bind("name") String name, @Bind("description") String description,
+                                  @Bind("action") String action, @Bind("request") Object request,
+                                  @Bind("requestType") String requestType, @Bind("id") long id,
+                                  @Bind("endpointId") Long endpointId, @Bind("endpointProperty") String endpointProperty,
+                                  @Bind("otherProperties") String otherProperties);
 
     @SqlUpdate("update teststep set name = :name, description = :description, request_type = :requestType, " +
             "action = :action, endpoint_id = :endpointId, endpoint_property = :endpointProperty, " +
@@ -158,8 +162,8 @@ public interface TeststepDAO extends CrossReferenceDAO {
                                @Bind("otherProperties") String otherProperties);
 
     @Transaction
-    default Teststep update(Teststep teststep) throws Exception {
-        Teststep oldTeststep = findById(teststep.getId());
+    default void update(Teststep teststep) throws Exception {
+        Teststep oldTeststep = findById_NoRequest(teststep.getId());
 
         if (Teststep.TYPE_HTTP.equals(teststep.getType())) {
             processHTTPTeststepBackupRestore(oldTeststep, teststep);
@@ -177,10 +181,9 @@ public interface TeststepDAO extends CrossReferenceDAO {
         if (teststep.getRequestType() == TeststepRequestType.FILE) {    // update teststep without request
             _updateWithoutRequest(teststep.getName(), teststep.getDescription(), teststep.getRequestType().toString(),
                     teststep.getAction(), teststep.getId(), newEndpointId, teststep.getEndpointProperty(), otherProperties);
-        } else {       // update teststep with request
-            Object request = teststep.getRequest() instanceof String ?
-                    ((String) teststep.getRequest()).getBytes() : teststep.getRequest();
-            _update(teststep.getName(), teststep.getDescription(), teststep.getAction(), request,
+        } else {       // update teststep with string request
+            Object request = teststep.getRequest() == null ? null : ((String) teststep.getRequest()).getBytes();
+            _updateWithStringRequest(teststep.getName(), teststep.getDescription(), teststep.getAction(), request,
                     teststep.getRequestType().toString(), teststep.getId(), newEndpointId,
                     teststep.getEndpointProperty(), otherProperties);
         }
@@ -188,8 +191,6 @@ public interface TeststepDAO extends CrossReferenceDAO {
         updateEndpointIfExists(oldEndpoint, newEndpoint);
 
         updateAssertions(teststep);
-
-        return findById(teststep.getId());
     }
 
     default void processHTTPTeststepBackupRestore(Teststep oldTeststep, Teststep teststep) {
@@ -230,7 +231,7 @@ public interface TeststepDAO extends CrossReferenceDAO {
             List<MQRFH2Folder> rfh2Folders = rfh2Header.getFolders();
             for (MQRFH2Folder folder : rfh2Folders) {
                 //  validate folder string is well formed XML
-                Document doc = null;
+                Document doc;
                 try {
                     doc = XMLUtils.xmlStringToDOM(folder.getString());
                 } catch (Exception e) {
@@ -248,8 +249,8 @@ public interface TeststepDAO extends CrossReferenceDAO {
         String oldAction = oldTeststep.getAction();
         String newAction = teststep.getAction();
         String backupStr = getStepDataBackupById(teststepId);
-        MQTeststepActionDataBackup backup = null;
-        MQTeststepActionDataBackup oldBackup = null;
+        MQTeststepActionDataBackup backup;
+        MQTeststepActionDataBackup oldBackup;
         if (backupStr == null) {
             backup = new MQTeststepActionDataBackup();
             oldBackup = new MQTeststepActionDataBackup();
@@ -338,7 +339,7 @@ public interface TeststepDAO extends CrossReferenceDAO {
     @Transaction
     default void updateAssertions(Teststep teststep) throws JsonProcessingException {
         AssertionDAO assertionDAO = assertionDAO();
-        List<Long> newAssertionIds = new ArrayList<Long>();
+        List<Long> newAssertionIds = new ArrayList<>();
         for (Assertion assertion: teststep.getAssertions()) {
             if (assertion.getId() == null) {    //  insert the assertion
                 assertion.setTeststepId(teststep.getId());
@@ -379,7 +380,7 @@ public interface TeststepDAO extends CrossReferenceDAO {
 
     @Transaction
     default void deleteById(long id) {
-        Teststep teststep = findById(id);
+        Teststep teststep = findById_NoRequest(id);
         _deleteById(id);
         // decrement sequence number of all next test steps
         batchMove(teststep.getTestcaseId(), (short) (teststep.getSequence() + 1), Short.MAX_VALUE, STEP_MOVE_DIRECTION_UP);
@@ -390,39 +391,49 @@ public interface TeststepDAO extends CrossReferenceDAO {
         }
     }
 
+    @SqlQuery("select id, testcase_id, sequence, name, type, description, action, endpoint_id, endpoint_property, " +
+            "request_type, request_filename, other_properties, step_data_backup from teststep where id = :id")
+    Teststep _findById_NoRequest(@Bind("id") long id);
+
     @SqlQuery("select * from teststep where id = :id")
-    Teststep _findById(@Bind("id") long id);
+    Teststep _findById_Complete(@Bind("id") long id);
 
     @SqlQuery("select testcase_id from teststep where id = :id")
     long findTestcaseIdById(@Bind("id") long id);
 
     @Transaction
-    default void populateTeststepWithMoreInfo(Teststep teststep) {
+    default void populateTeststepWithEndpointAndAssertions(Teststep teststep) {
         Endpoint endpoint = endpointDAO().findById(teststep.getEndpoint().getId());
         teststep.setEndpoint(endpoint);
         teststep.setAssertions(assertionDAO().findByTeststepId(teststep.getId()));
     }
 
-    /**
-     * @param id
-     * @return the teststep with its associated endpoint
-     */
     @Transaction
-    default Teststep findById(long id) {
-        Teststep teststep = _findById(id);
+    default Teststep findById_NoRequest(long id) {
+        Teststep teststep = _findById_NoRequest(id);
         if (teststep != null) {
-            populateTeststepWithMoreInfo(teststep);
+            populateTeststepWithEndpointAndAssertions(teststep);
+        }
+        return teststep;
+    }
+
+
+    @Transaction
+    default Teststep findById_Complete(long id) {
+        Teststep teststep = _findById_Complete(id);
+        if (teststep != null) {
+            populateTeststepWithEndpointAndAssertions(teststep);
         }
         return teststep;
     }
 
     @SqlQuery("select * from teststep where testcase_id = :testcaseId order by sequence")
-    List<Teststep> _findByTestcaseId(@Bind("testcaseId") long testcaseId);
+    List<Teststep> _findByTestcaseId_Complete(@Bind("testcaseId") long testcaseId);
 
-    default List<Teststep> findByTestcaseId(long testcaseId) {
-        List<Teststep> teststeps = _findByTestcaseId(testcaseId);
+    default List<Teststep> findByTestcaseId_Complete(long testcaseId) {
+        List<Teststep> teststeps = _findByTestcaseId_Complete(testcaseId);
         for (Teststep teststep: teststeps) {
-            populateTeststepWithMoreInfo(teststep);
+            populateTeststepWithEndpointAndAssertions(teststep);
         }
         return teststeps;
     }
@@ -431,8 +442,11 @@ public interface TeststepDAO extends CrossReferenceDAO {
               "where testcase_id = :testcaseId order by sequence")
     List<Teststep> findByTestcaseId_TestcaseEditView(@Bind("testcaseId") long testcaseId);
 
-    @SqlQuery("select * from teststep where testcase_id = :testcaseId and sequence = :sequence")
-    Teststep findBySequence(@Bind("testcaseId") long testcaseId, @Bind("sequence") short sequence);
+    @SqlQuery("select id from teststep where testcase_id = :testcaseId and sequence = :sequence")
+    long findIdBySequence(@Bind("testcaseId") long testcaseId, @Bind("sequence") short sequence);
+
+    @SqlQuery("select request_type from teststep where id = :teststepId")
+    TeststepRequestType findRequestTypeById(@Bind("teststepId") long teststepId);
 
     @SqlUpdate("update teststep set sequence = :newSequence, updated = CURRENT_TIMESTAMP where id = :teststepId")
     void updateSequenceById(@Bind("teststepId") long teststepId, @Bind("newSequence") short newSequence);
@@ -448,7 +462,7 @@ public interface TeststepDAO extends CrossReferenceDAO {
     @Transaction
     default void moveInTestcase(long testcaseId, short fromSequence, short toSequence) {
         if (fromSequence != toSequence) {
-            long draggedStepId = findBySequence(testcaseId, fromSequence).getId();
+            long draggedStepId = findIdBySequence(testcaseId, fromSequence);
 
             //  shelve the dragged step first
             updateSequenceById(draggedStepId, (short) -1);
@@ -481,7 +495,7 @@ public interface TeststepDAO extends CrossReferenceDAO {
         }
         updateRequest(teststepId, fileBytes, TeststepRequestType.FILE.toString(), fileName);
 
-        return findById(teststepId);
+        return findById_NoRequest(teststepId);
     }
 
     //  byte[] return type used to work in jdbi v2, but it is not working in jdbi v3
