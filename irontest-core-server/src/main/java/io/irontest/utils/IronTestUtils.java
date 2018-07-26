@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.*;
@@ -143,7 +144,11 @@ public final class IronTestUtils {
         HttpClient httpClient = HttpClients.custom().setSSLContext(sslContext).build();
 
         //  invoke the API
-        httpClient.execute(httpRequest, responseHandler);
+        try {
+            httpClient.execute(httpRequest, responseHandler);
+        } catch (ClientProtocolException e) {
+            throw new RuntimeException(e.getCause().getMessage(), e);
+        }
 
         return apiResponse;
     }

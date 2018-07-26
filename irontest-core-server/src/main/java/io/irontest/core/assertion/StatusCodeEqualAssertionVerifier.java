@@ -2,7 +2,7 @@ package io.irontest.core.assertion;
 
 import io.irontest.models.TestResult;
 import io.irontest.models.assertion.Assertion;
-import io.irontest.models.assertion.AssertionVerificationResult;
+import io.irontest.models.assertion.AssertionVerificationResultWithActualValue;
 import io.irontest.models.assertion.StatusCodeEqualAssertionProperties;
 
 public class StatusCodeEqualAssertionVerifier extends AssertionVerifier {
@@ -13,8 +13,8 @@ public class StatusCodeEqualAssertionVerifier extends AssertionVerifier {
      * @return
      */
     @Override
-    public AssertionVerificationResult _verify(Assertion assertion, Object statusCode) {
-        AssertionVerificationResult result = new AssertionVerificationResult();
+    public AssertionVerificationResultWithActualValue _verify(Assertion assertion, Object statusCode) {
+        AssertionVerificationResultWithActualValue result = new AssertionVerificationResultWithActualValue();
         StatusCodeEqualAssertionProperties assertionProperties = (StatusCodeEqualAssertionProperties) assertion.getOtherProperties();
 
         //  validate arguments
@@ -24,7 +24,9 @@ public class StatusCodeEqualAssertionVerifier extends AssertionVerifier {
             throw new IllegalArgumentException("Actual status code is null.");
         }
 
-        result.setResult(assertionProperties.getStatusCode().equals(((Integer) statusCode).toString()) ?
+        String statusCodeStr = ((Integer) statusCode).toString();
+        result.setActualValue(statusCodeStr);
+        result.setResult(assertionProperties.getStatusCode().equals(statusCodeStr) ?
                 TestResult.PASSED : TestResult.FAILED);
 
         return result;

@@ -1,6 +1,6 @@
 package io.irontest.models.assertion;
 
-public class XPathAssertionVerificationResult extends AssertionVerificationResult {
+public class AssertionVerificationResultWithActualValue extends AssertionVerificationResult {
     private String actualValue;
 
     public String getActualValue() {

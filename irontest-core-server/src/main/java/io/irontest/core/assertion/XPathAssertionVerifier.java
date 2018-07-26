@@ -4,9 +4,8 @@ import io.irontest.core.IronTestNamespaceContext;
 import io.irontest.models.NamespacePrefix;
 import io.irontest.models.TestResult;
 import io.irontest.models.assertion.Assertion;
-import io.irontest.models.assertion.AssertionVerificationResult;
+import io.irontest.models.assertion.AssertionVerificationResultWithActualValue;
 import io.irontest.models.assertion.XPathAssertionProperties;
-import io.irontest.models.assertion.XPathAssertionVerificationResult;
 import io.irontest.utils.XMLUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.NodeList;
@@ -28,7 +27,7 @@ public class XPathAssertionVerifier extends AssertionVerifier {
      * @return
      */
     @Override
-    public AssertionVerificationResult _verify(Assertion assertion, Object input) throws Exception {
+    public AssertionVerificationResultWithActualValue _verify(Assertion assertion, Object input) throws Exception {
         XPathAssertionProperties otherProperties = (XPathAssertionProperties) assertion.getOtherProperties();
 
         //  validate required parameters
@@ -40,7 +39,7 @@ public class XPathAssertionVerifier extends AssertionVerifier {
             throw new IllegalArgumentException("XML is null");
         }
 
-        XPathAssertionVerificationResult result = new XPathAssertionVerificationResult();
+        AssertionVerificationResultWithActualValue result = new AssertionVerificationResultWithActualValue();
         evaluateXPathExpression((String) input, otherProperties.getxPath(),
                 otherProperties.getNamespacePrefixes(), result);
         result.setResult(otherProperties.getExpectedValue().equals(result.getActualValue()) ?
@@ -50,7 +49,7 @@ public class XPathAssertionVerifier extends AssertionVerifier {
 
     private void evaluateXPathExpression(String xmlInput, String xPathExpression,
                                          List<NamespacePrefix> namespacePrefixes,
-                                         XPathAssertionVerificationResult result) throws TransformerException, XPathExpressionException {
+                                         AssertionVerificationResultWithActualValue result) throws TransformerException, XPathExpressionException {
         XPath xpath = XPathFactory.newInstance().newXPath();
         xpath.setNamespaceContext(new IronTestNamespaceContext(namespacePrefixes));
 
