@@ -8,10 +8,11 @@ import io.irontest.db.UserDefinedPropertyDAO;
 import io.irontest.db.UtilsDAO;
 import io.irontest.models.AppInfo;
 import io.irontest.models.DataTable;
-import io.irontest.models.Properties;
 import io.irontest.models.UserDefinedProperty;
 import io.irontest.models.endpoint.Endpoint;
-import io.irontest.models.teststep.*;
+import io.irontest.models.teststep.Teststep;
+import io.irontest.models.teststep.TeststepRequestType;
+import io.irontest.models.teststep.TeststepWrapper;
 import io.irontest.utils.IronTestUtils;
 import io.irontest.utils.XMLUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
@@ -49,41 +50,9 @@ public class TeststepResource {
     @POST
     @PermitAll
     public Teststep create(Teststep teststep) throws JsonProcessingException {
-        preCreationProcess(teststep);
-
         long teststepId = teststepDAO.insert(teststep, appInfo.getAppMode());
 
         return teststepDAO.findById_NoRequest(teststepId);
-    }
-
-    //  adding more info to the teststep object
-    private void preCreationProcess(Teststep teststep) {
-        //  create sample request
-        String sampleRequest = null;
-        if (Teststep.TYPE_DB.equals(teststep.getType())){
-            sampleRequest = "select * from ? where ?";
-        }
-        teststep.setRequest(sampleRequest);
-
-        //  set initial/default property values (in the Properties sub-class)
-        Properties otherProperties = new Properties();
-        switch (teststep.getType()) {
-            case Teststep.TYPE_SOAP:
-                otherProperties = new SOAPTeststepProperties();
-                break;
-            case Teststep.TYPE_HTTP:
-                otherProperties = new HTTPTeststepProperties();
-                break;
-            case Teststep.TYPE_MQ:
-                otherProperties = new MQTeststepProperties();
-                break;
-            case Teststep.TYPE_WAIT:
-                otherProperties = new WaitTeststepProperties(1000);  //  there is no point to wait for 0 milliseconds
-                break;
-            default:
-                break;
-        }
-        teststep.setOtherProperties(otherProperties);
     }
 
     private void populateParametersInWrapper(TeststepWrapper wrapper) {

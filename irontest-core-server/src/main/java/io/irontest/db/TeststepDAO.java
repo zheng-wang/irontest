@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.irontest.core.MQTeststepActionDataBackup;
 import io.irontest.models.AppMode;
 import io.irontest.models.HTTPMethod;
+import io.irontest.models.Properties;
 import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.IntegerEqualAssertionProperties;
 import io.irontest.models.endpoint.Endpoint;
@@ -60,21 +61,15 @@ public interface TeststepDAO extends CrossReferenceDAO {
      * This method considers test step insertion from both Create (test step) button on UI and test case duplicating.
      * @param teststep
      * @param request
-     * @param requestType
      * @param endpointId
      * @param otherProperties
      * @return
      */
-    @SqlUpdate("insert into teststep (testcase_id, sequence, type, description, action, request, request_type, " +
-            "request_filename, endpoint_id, endpoint_property, other_properties) values (:t.testcaseId, " +
-            "case when :t.sequence = 0 " +
-            "then (select coalesce(max(sequence), 0) + 1 from teststep where testcase_id = :t.testcaseId) " +
-            "else :t.sequence end, " +
-            ":t.type, :t.description, :t.action, :request, :requestType, :t.requestFilename, :endpointId, " +
-            ":t.endpointProperty, :otherProperties)")
+    @SqlUpdate("insert into teststep (testcase_id, sequence, type, request, endpoint_id, other_properties) values (" +
+            ":t.testcaseId, (select coalesce(max(sequence), 0) + 1 from teststep where testcase_id = :t.testcaseId), " +
+            ":t.type, :request, :endpointId, :otherProperties)")
     @GetGeneratedKeys
-    long _insertWithoutName(@BindBean("t") Teststep teststep, @Bind("request") Object request,
-                            @Bind("requestType") String requestType, @Bind("endpointId") Long endpointId,
+    long _insertWithoutName(@BindBean("t") Teststep teststep, @Bind("request") Object request, @Bind("endpointId") Long endpointId,
                             @Bind("otherProperties") String otherProperties);
 
     @SqlUpdate("insert into teststep (testcase_id, sequence, name, type, description, action, request, request_type, " +
@@ -90,32 +85,39 @@ public interface TeststepDAO extends CrossReferenceDAO {
     @SqlUpdate("update teststep set name = :name where id = :id")
     void updateNameForInsert(@Bind("id") long id, @Bind("name") String name);
 
-    /**
-     * This method considers test step insertion from both Create (test step) button on UI and test case duplicating.
-     * @param teststep
-     * @param appMode
-     * @return
-     * @throws JsonProcessingException
-     */
     @Transaction
     default long insert(Teststep teststep, AppMode appMode) throws JsonProcessingException {
-        Endpoint endpoint = teststep.getEndpoint();
-        if (endpoint == null && teststep.getEndpointProperty() == null) {    //  from test step creation on UI
-            endpoint = endpointDAO().createUnmanagedEndpoint(teststep.getType(), appMode);
-        } else if (endpoint != null && endpoint.getId() == 0){          //  from test case duplicating, and old endpoint is unmanaged
-            long endpointId = endpointDAO().insertUnmanagedEndpoint(endpoint);
-            endpoint.setId(endpointId);
+        //  set sample request where applicable
+        String sampleRequest = null;
+        if (Teststep.TYPE_DB.equals(teststep.getType())){
+            sampleRequest = "select * from ? where ?";
         }
-        Object request = teststep.getRequest() instanceof String ?
-                ((String) teststep.getRequest()).getBytes() : teststep.getRequest();
-        String otherProperties = new ObjectMapper().writeValueAsString(teststep.getOtherProperties());
-        long id = _insertWithoutName(teststep, request, teststep.getRequestType().toString(),
-                endpoint == null ? null : endpoint.getId(), otherProperties);
 
-        if (teststep.getName() == null) {    //  from test step creation on UI
-            teststep.setName("Step " + id);
+        //  set initial/default property values (in the Properties sub-class)
+        Properties otherProperties = new Properties();
+        switch (teststep.getType()) {
+            case Teststep.TYPE_SOAP:
+                otherProperties = new SOAPTeststepProperties();
+                break;
+            case Teststep.TYPE_HTTP:
+                otherProperties = new HTTPTeststepProperties();
+                break;
+            case Teststep.TYPE_MQ:
+                otherProperties = new MQTeststepProperties();
+                break;
+            case Teststep.TYPE_WAIT:
+                otherProperties = new WaitTeststepProperties(1000);  //  there is no point to wait for 0 milliseconds
+                break;
+            default:
+                break;
         }
-        updateNameForInsert(id, teststep.getName());
+
+        Endpoint endpoint = endpointDAO().createUnmanagedEndpoint(teststep.getType(), appMode);
+        Object request = sampleRequest == null ? null : sampleRequest.getBytes();
+        long id = _insertWithoutName(teststep, request, endpoint == null ? null : endpoint.getId(),
+                new ObjectMapper().writeValueAsString(otherProperties));
+
+        updateNameForInsert(id, "Step " + id);
 
         return id;
     }
@@ -445,11 +447,17 @@ public interface TeststepDAO extends CrossReferenceDAO {
     @SqlQuery("select id from teststep where testcase_id = :testcaseId and sequence = :sequence")
     long findIdBySequence(@Bind("testcaseId") long testcaseId, @Bind("sequence") short sequence);
 
+    @SqlQuery("select id from teststep where testcase_id = :testcaseId")
+    List<Long> findIdsByTestcaseId(@Bind("testcaseId") long testcaseId);
+
     @SqlQuery("select request_type from teststep where id = :teststepId")
     TeststepRequestType findRequestTypeById(@Bind("teststepId") long teststepId);
 
     @SqlUpdate("update teststep set sequence = :newSequence, updated = CURRENT_TIMESTAMP where id = :teststepId")
     void updateSequenceById(@Bind("teststepId") long teststepId, @Bind("newSequence") short newSequence);
+
+    @SqlUpdate("update teststep set endpoint_id = :endpointId where id = :teststepId")
+    void updateEndpointIdByIdForDuplication(@Bind("teststepId") long teststepId, @Bind("endpointId") long endpointId);
 
     @SqlUpdate("update teststep set sequence = case when :direction = '" + STEP_MOVE_DIRECTION_UP + "' then sequence - 1 else sequence + 1 end, " +
             "updated = CURRENT_TIMESTAMP " +
@@ -523,5 +531,30 @@ public interface TeststepDAO extends CrossReferenceDAO {
     default void useDirectEndpoint(Teststep teststep, AppMode appMode) throws JsonProcessingException {
         Endpoint endpoint = endpointDAO().createUnmanagedEndpoint(teststep.getType(), appMode);
         switchToDirectEndpoint(teststep.getId(), endpoint.getId());
+    }
+
+    @SqlUpdate("insert into teststep (testcase_id, sequence, name, type, description, action, request, request_type, " +
+            "request_filename, endpoint_id, endpoint_property, other_properties) select :newTestcaseId, sequence, name, " +
+            "type, description, action, request, request_type, request_filename, endpoint_id, endpoint_property, " +
+            "other_properties from teststep where id = :oldTeststepId")
+    @GetGeneratedKeys
+    long duplicateById(@Bind("oldTeststepId") long oldTeststepId, @Bind("newTestcaseId") long newTestcaseId);
+
+    @Transaction
+    default void duplicateByTestcase(long sourceTestcaseId, long newTestcaseId) {
+        List<Long> oldTeststepIds = findIdsByTestcaseId(sourceTestcaseId);
+
+        for (long oldTeststepId : oldTeststepIds) {
+            long newTeststepId = duplicateById(oldTeststepId, newTestcaseId);
+
+            //  duplicate endpoint if needed
+            Long newEndpointId = endpointDAO().duplicateUnmanagedEndpoint(oldTeststepId);
+            if (newEndpointId != null) {
+                updateEndpointIdByIdForDuplication(newTeststepId, newEndpointId);
+            }
+
+            //  duplicate assertions
+            assertionDAO().duplicateByTeststep(oldTeststepId, newTeststepId);
+        }
     }
 }

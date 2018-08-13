@@ -138,4 +138,16 @@ public interface EndpointDAO {
 
     @SqlUpdate("delete from endpoint where environment_id is null and id = :id")
     void deleteUnmanagedEndpointById(@Bind("id") long id);
+
+    /**
+     * Duplicate the endpoint of the specified test step if the endpoint exists and is an unmanaged one.
+     * @param oldTeststepId
+     * @return new endpoint id if one endpoint is duplicated; null otherwise.
+     */
+    @SqlUpdate("insert into endpoint (name, type, description, url, username, password, other_properties) " +
+            "select e.name, e.type, e.description, e.url, e.username, e.password, e.other_properties " +
+            "from teststep t left outer join endpoint e on t.endpoint_id = e.id where t.id = :oldTeststepId " +
+            "and e.id is not null and e.environment_id is null")
+    @GetGeneratedKeys
+    Long duplicateUnmanagedEndpoint(@Bind("oldTeststepId") long oldTeststepId);
 }

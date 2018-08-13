@@ -63,4 +63,8 @@ public interface AssertionDAO {
      */
     @SqlUpdate("delete from assertion where teststep_id = :teststepId and id not in (<ids>)")
     void deleteByTeststepIdIfIdNotIn(@Bind("teststepId") long teststepId, @BindList("ids") List<Long> ids);
+
+    @SqlUpdate("insert into assertion (teststep_id, name, type, other_properties) " +
+            "select :newTeststepId, name, type, other_properties from assertion where teststep_id = :oldTeststepId")
+    void duplicateByTeststep(@Bind("oldTeststepId") long oldTeststepId, @Bind("newTeststepId") long newTeststepId);
 }

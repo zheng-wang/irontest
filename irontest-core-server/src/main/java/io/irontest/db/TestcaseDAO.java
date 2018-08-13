@@ -4,10 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.irontest.models.DataTable;
 import io.irontest.models.Testcase;
 import io.irontest.models.UserDefinedProperty;
-import io.irontest.models.assertion.Assertion;
-import io.irontest.models.endpoint.Endpoint;
 import io.irontest.models.teststep.Teststep;
-import io.irontest.models.teststep.TeststepRequestType;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
@@ -116,17 +113,17 @@ public interface TestcaseDAO extends CrossReferenceDAO {
      * @return ID of the new test case
      */
     @Transaction
-    default long duplicate(long sourceTestcaseId, long targetFolderId) throws JsonProcessingException {
-        Testcase oldTestcase = findById_Complete(sourceTestcaseId);
+    default long duplicate(long sourceTestcaseId, long targetFolderId) {
+        Testcase oldTestcaseRecord = _findById(sourceTestcaseId);
 
         //  resolve new test case name
-        String newTestcaseName = oldTestcase.getName();
-        if (oldTestcase.getParentFolderId() == targetFolderId) {
+        String newTestcaseName = oldTestcaseRecord.getName();
+        if (oldTestcaseRecord.getParentFolderId() == targetFolderId) {
             int copyIndex = 1;
-            newTestcaseName = oldTestcase.getName() + " - Copy";
+            newTestcaseName = oldTestcaseRecord.getName() + " - Copy";
             while (_nameExistsInFolder(newTestcaseName, targetFolderId)) {
                 copyIndex++;
-                newTestcaseName = oldTestcase.getName() + " - Copy (" + copyIndex + ")";
+                newTestcaseName = oldTestcaseRecord.getName() + " - Copy (" + copyIndex + ")";
             }
         }
 
@@ -137,51 +134,7 @@ public interface TestcaseDAO extends CrossReferenceDAO {
         udpDAO().duplicateByTestcase(sourceTestcaseId, newTestcaseId);
 
         //  duplicate test steps
-        for (Teststep oldTeststep : oldTestcase.getTeststeps()) {
-            Teststep newTeststep = new Teststep();
-            newTeststep.setName(oldTeststep.getName());
-            newTeststep.setTestcaseId(newTestcaseId);
-            newTeststep.setSequence(oldTeststep.getSequence());
-            newTeststep.setType(oldTeststep.getType());
-            newTeststep.setDescription(oldTeststep.getDescription());
-            newTeststep.setAction(oldTeststep.getAction());
-            if (oldTeststep.getRequestType() == TeststepRequestType.TEXT) {
-                newTeststep.setRequest(oldTeststep.getRequest());
-            } else {
-                newTeststep.setRequest(teststepDAO().getBinaryRequestById(oldTeststep.getId()));
-            }
-            newTeststep.setRequestType(oldTeststep.getRequestType());
-            newTeststep.setRequestFilename(oldTeststep.getRequestFilename());
-            newTeststep.setOtherProperties(oldTeststep.getOtherProperties());
-            Endpoint oldEndpoint = oldTeststep.getEndpoint();
-            if (oldEndpoint != null) {
-                Endpoint newEndpoint = new Endpoint();
-                newTeststep.setEndpoint(newEndpoint);
-                if (oldEndpoint.isManaged()) {
-                    newEndpoint.setId(oldEndpoint.getId());
-                } else {
-                    newEndpoint.setName(oldEndpoint.getName());
-                    newEndpoint.setType(oldEndpoint.getType());
-                    newEndpoint.setDescription(oldEndpoint.getDescription());
-                    newEndpoint.setUrl(oldEndpoint.getUrl());
-                    newEndpoint.setUsername(oldEndpoint.getUsername());
-                    newEndpoint.setPassword(oldEndpoint.getPassword());
-                    newEndpoint.setOtherProperties(oldEndpoint.getOtherProperties());
-                }
-            }
-            newTeststep.setEndpointProperty(oldTeststep.getEndpointProperty());
-            long newTeststepId = teststepDAO().insert(newTeststep, null);
-
-            //  duplicate assertions
-            for (Assertion oldAssertion : oldTeststep.getAssertions()) {
-                Assertion newAssertion = new Assertion();
-                newAssertion.setTeststepId(newTeststepId);
-                newAssertion.setName(oldAssertion.getName());
-                newAssertion.setType(oldAssertion.getType());
-                newAssertion.setOtherProperties(oldAssertion.getOtherProperties());
-                assertionDAO().insert(newAssertion);
-            }
-        }
+        teststepDAO().duplicateByTestcase(sourceTestcaseId, newTestcaseId);
 
         //  duplicate data table
         dataTableDAO().duplicateByTestcase(sourceTestcaseId, newTestcaseId);
