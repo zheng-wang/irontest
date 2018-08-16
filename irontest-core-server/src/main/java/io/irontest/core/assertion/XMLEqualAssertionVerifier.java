@@ -23,6 +23,8 @@ public class XMLEqualAssertionVerifier extends AssertionVerifier {
             throw new IllegalArgumentException("Expected XML is null.");
         } else if (input == null) {
             throw new IllegalArgumentException("Actual XML is null.");
+        } else if (input.equals("")) {
+            throw new IllegalArgumentException("Actual XML is empty.");
         }
 
         MessageEqualAssertionVerificationResult result = new MessageEqualAssertionVerificationResult();

@@ -28,6 +28,8 @@ public class JSONEqualAssertionVerifier extends AssertionVerifier {
             throw new IllegalArgumentException("Expected JSON is null.");
         } else if (input == null) {
             throw new IllegalArgumentException("Actual JSON is null.");
+        } else if (input.equals("")) {
+            throw new IllegalArgumentException("Actual JSON is empty.");
         }
 
         String expectedJSON = assertionProperties.getExpectedJSON().replaceAll(
