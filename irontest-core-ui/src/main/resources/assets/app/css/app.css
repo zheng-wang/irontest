@@ -120,7 +120,7 @@
 
 /* grids */
 #testcase-udp-grid, #teststep-grid, #testcase-datatable-grid {
-  height: 600px;
+  height: 550px;
   margin-top: 10px;
   margin-left: -15px;
   margin-right: -15px;
@@ -174,10 +174,6 @@
 .testcase-datatable-grid .ui-grid-header-cell .ui-grid-cell-contents input {
   padding: 0px;
   height: auto;
-}
-
-.ws-uiview {
-  height: 900px;
 }
 
 .full-height {
@@ -278,7 +274,6 @@
 }
 
 .foldertree-pane {
-  height: 800px;
   overflow: auto;
 }
 

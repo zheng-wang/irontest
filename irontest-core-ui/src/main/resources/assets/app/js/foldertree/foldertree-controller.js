@@ -288,6 +288,9 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$rootS
 
     var treeReady = function() {
       if ($scope.treeConfig.version === 1) {       //  initial tree data loading
+        //  consider the page is loaded when the tree is loaded)
+        $rootScope.$emit('pageLoaded');    //  not using broadcast, for better performance
+
         $rootScope.appStatusPromise.then(    //  ensure appStatus is ready for use before reloading the tree data
           function() {
             $scope.reloadTreeData(function successCallback() {
