@@ -1,6 +1,7 @@
 package io.irontest.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.net.UrlEscapers;
 import io.irontest.core.runner.HTTPAPIResponse;
 import io.irontest.core.runner.SQLStatementType;
 import io.irontest.models.DataTable;
@@ -28,6 +29,7 @@ import org.jdbi.v3.core.internal.SqlScriptParser;
 import javax.net.ssl.SSLContext;
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -90,24 +92,27 @@ public final class IronTestUtils {
 
     public static HTTPAPIResponse invokeHTTPAPI(String url, String username, String password, HTTPMethod httpMethod,
                                                 List<HTTPHeader> httpHeaders, String httpBody) throws Exception {
+        //  to allow special characters like whitespace in query parameters
+        String safeUrl = UrlEscapers.urlFragmentEscaper().escape(url);
+
         //  create HTTP request object and set body if applicable
         HttpUriRequest httpRequest;
         switch (httpMethod) {
             case GET:
-                httpRequest = new HttpGet(url);
+                httpRequest = new HttpGet(safeUrl);
                 break;
             case POST:
-                HttpPost httpPost = new HttpPost(url);
+                HttpPost httpPost = new HttpPost(safeUrl);
                 httpPost.setEntity(new StringEntity(httpBody, "UTF-8"));
                 httpRequest = httpPost;
                 break;
             case PUT:
-                HttpPut httpPut = new HttpPut(url);
+                HttpPut httpPut = new HttpPut(safeUrl);
                 httpPut.setEntity(new StringEntity(httpBody, "UTF-8"));
                 httpRequest = httpPut;
                 break;
             case DELETE:
-                httpRequest = new HttpDelete(url);
+                httpRequest = new HttpDelete(safeUrl);
                 break;
             default:
                 throw new IllegalArgumentException("Unrecognized HTTP method " + httpMethod);
