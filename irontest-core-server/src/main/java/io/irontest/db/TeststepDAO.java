@@ -243,6 +243,8 @@ public interface TeststepDAO extends CrossReferenceDAO {
                 //  update folder name to be the XML root element name
                 folder.setName(doc.getDocumentElement().getTagName());
             }
+        } else {
+            rfh2Header.getFolders().clear();
         }
     }
 
