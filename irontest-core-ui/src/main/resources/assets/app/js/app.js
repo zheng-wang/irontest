@@ -35,13 +35,13 @@ angular.module('irontest', ['ngResource', 'ngSanitize', 'ui.router', 'ui.grid', 
   .run(['$rootScope', '$http', '$window', 'IronTestUtils', function($rootScope, $http, $window, IronTestUtils) {
     $rootScope.$on('pageLoaded', function(event, args) {
       //  adjust main panes height on page loaded
-      var pageWrapperObj = document.getElementById('page-wrapper');
+      var wrapperObj = document.getElementById('wrapper');
       var bannerBarObj = document.getElementById('page-top-navbar');
       var expandedSideMenuHeight = 122;
       var folderTreeObj = document.getElementById('folder-tree');
-      var adjustedPageWrapperHeight = window.innerHeight - bannerBarObj.offsetHeight;
+      var adjustedWrapperHeight = window.innerHeight - bannerBarObj.offsetHeight;
       var adjustedFolderTreePaneHeight = window.innerHeight - bannerBarObj.offsetHeight - expandedSideMenuHeight;
-      angular.element(pageWrapperObj).height(adjustedPageWrapperHeight);
+      angular.element(wrapperObj).height(adjustedWrapperHeight);
       angular.element(folderTreeObj).height(adjustedFolderTreePaneHeight);
     });
 
