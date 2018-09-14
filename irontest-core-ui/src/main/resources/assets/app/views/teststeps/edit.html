@@ -85,8 +85,8 @@
             </div>
           </div>
         </uib-tab>
-        <uib-tab heading="{{ teststep.type === 'MQ' || teststep.type === 'IIB' || teststep.type === 'Wait' ?
-                          'Action' : 'Invocation' }}">
+        <uib-tab heading="{{ getActionOrInvocationTabHeading() }}"
+                 deselect="getActionOrInvocationTabHeading() === 'Invocation' ? $broadcast('InvocationTabDeselected') : angular.noop()">
           <div ng-controller="TeststepsActionController">
             <div ng-if="teststep.type === 'SOAP' || teststep.type === 'HTTP'"
                  ng-include="'/ui/views/teststeps/edit-invocation-details-http.html'"

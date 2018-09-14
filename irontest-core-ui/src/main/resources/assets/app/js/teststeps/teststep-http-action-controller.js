@@ -130,6 +130,17 @@ angular.module('irontest').controller('TeststepHTTPActionController', ['$scope',
       });
     };
 
+    $scope.$on('InvocationTabDeselected', function(event, args) {
+      //  there is elementInsertedIntoColumn event for the http headers area, so there must be elementRemovedFromColumn
+      //  event for it as well, just like the assertions area.
+      //  this is to avoid the request/response area height being cut again and again when switching between the
+      //  Invocation tab and other tab.
+      var httpHeadersArea = document.getElementById('httpHeadersArea');
+      if (httpHeadersArea) {
+        $scope.$broadcast('elementRemovedFromColumn', { elementHeight: httpHeadersArea.offsetHeight });
+      }
+    });
+
     $scope.generateSOAPRequest = function() {
       //  open modal dialog
       var modalInstance = $uibModal.open({
