@@ -31,7 +31,7 @@ public class IIB100TeststepRunner extends IIBTeststepRunnerBase {
         @Override public void ignore(Throwable ignored) {}
     }
 
-    public IIB100TeststepRunner(Endpoint endpoint) throws Exception {
+    public IIB100TeststepRunner(Endpoint endpoint, String decryptedEndpointPassword) throws Exception {
         IIBEndpointProperties endpointProperties = (IIBEndpointProperties) endpoint.getOtherProperties();
 
         //  for connecting to IIB 10.0 integration node
@@ -41,7 +41,7 @@ public class IIB100TeststepRunner extends IIBTeststepRunnerBase {
                 String.class, Integer.TYPE, String.class, String.class, Boolean.TYPE);
         BrokerConnectionParameters bcp = constructor.newInstance(
                     endpointProperties.getHost(), endpointProperties.getPort(), endpoint.getUsername(),
-                    getDecryptedEndpointPassword(), endpointProperties.isUseSSL());
+                    decryptedEndpointPassword, endpointProperties.isUseSSL());
         setBrokerConnectionParameters(bcp);
     }
 }
