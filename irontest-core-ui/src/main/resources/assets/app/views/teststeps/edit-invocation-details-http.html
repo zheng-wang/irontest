@@ -5,7 +5,7 @@
     <label for="soapAddress" class="col-lg-2 control-label">SOAP Address</label>
     <div class="col-lg-6">
       <input id="soapAddress" name="soapAddress" type="text" class="form-control"
-             ng-change="endpointSOAPAddressChanged(teststepForm.$valid)"
+             ng-change="$root.$broadcast('endpointSOAPAddressChanged', { isValid: teststepForm.$valid })"
              ng-model="teststep.endpoint.url" spellcheck="false"
              ng-readonly="appStatus.isForbidden() || teststep.endpoint.environment"> <!-- readonly when not authenticated or it is a managed endpoint -->
     </div>
