@@ -1,6 +1,7 @@
 package io.irontest;
 
 import com.fasterxml.jackson.databind.MapperFeature;
+import com.github.tomakehurst.wiremock.WireMockServer;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.Option;
 import com.jayway.jsonpath.spi.json.JacksonJsonProvider;
@@ -41,6 +42,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
+
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 
 public class IronTestApplication extends Application<IronTestConfiguration> {
     private JAXWSBundle jaxWsBundle = new JAXWSBundle();
@@ -103,11 +106,19 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
             System.setProperty("javax.net.ssl.trustStorePassword", configuration.getSslTrustStorePassword());
         }
 
-        createSystemResources(configuration, environment);
+        //  start WireMock server (in the same JVM)
+        WireMockServer wireMockServer = new WireMockServer(options()
+                .port(Integer.parseInt(configuration.getWireMock().get("port")))
+                .maxRequestJournalEntries(Integer.parseInt(configuration.getWireMock().get("maxRequestJournalEntries")))
+                .notifier(new WireMockFileNotifier())
+        );
+        wireMockServer.start();
+
+        createSystemResources(configuration, environment, wireMockServer);
         createSampleResources(configuration, environment);
     }
 
-    private void createSystemResources(IronTestConfiguration configuration, Environment environment) {
+    private void createSystemResources(IronTestConfiguration configuration, Environment environment, WireMockServer wireMockServer) {
         final JdbiFactory jdbiFactory = new JdbiFactory();
         final Jdbi jdbi = jdbiFactory.build(environment, configuration.getSystemDatabase(), "systemDatabase");
 
@@ -195,7 +206,7 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         environment.jersey().register(new TeststepResource(appInfo, teststepDAO, udpDAO, utilsDAO, dataTableDAO));
         environment.jersey().register(new WSDLResource());
         environment.jersey().register(new EnvironmentResource(environmentDAO));
-        environment.jersey().register(new TestcaseRunResource(testcaseDAO, utilsDAO, testcaseRunDAO, teststepRunDAO));
+        environment.jersey().register(new TestcaseRunResource(testcaseDAO, utilsDAO, testcaseRunDAO, teststepRunDAO, wireMockServer));
         environment.jersey().register(new AssertionResource(udpDAO, teststepDAO, dataTableDAO));
         environment.jersey().register(new UDPResource(udpDAO));
         environment.jersey().register(new DataTableResource(dataTableDAO, dataTableColumnDAO, dataTableCellDAO));

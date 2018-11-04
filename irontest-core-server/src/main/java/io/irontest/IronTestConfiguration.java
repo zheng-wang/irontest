@@ -17,6 +17,7 @@ public class IronTestConfiguration extends Configuration {
     private DataSourceFactory systemDatabase = new DataSourceFactory();
     private DataSourceFactory sampleDatabase = new DataSourceFactory();
     private Map<String, Map<String, String>> viewRendererConfiguration = Collections.emptyMap();
+    private Map<String, String> wireMock = Collections.emptyMap();
 
     public String getMode() {
         return mode;
@@ -56,5 +57,13 @@ public class IronTestConfiguration extends Configuration {
             builder.put(entry.getKey(), ImmutableMap.copyOf(entry.getValue()));
         }
         this.viewRendererConfiguration = builder.build();
+    }
+
+    public Map<String, String> getWireMock() {
+        return wireMock;
+    }
+
+    public void setWireMock(Map<String, String> wireMock) {
+        this.wireMock = wireMock;
     }
 }

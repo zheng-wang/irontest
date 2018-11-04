@@ -2,6 +2,7 @@ package io.irontest.resources;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.github.tomakehurst.wiremock.WireMockServer;
 import io.irontest.core.runner.DataDrivenTestcaseRunner;
 import io.irontest.core.runner.RegularTestcaseRunner;
 import io.irontest.core.runner.TestcaseRunner;
@@ -25,13 +26,15 @@ public class TestcaseRunResource {
     private final UtilsDAO utilsDAO;
     private final TestcaseRunDAO testcaseRunDAO;
     private final TeststepRunDAO teststepRunDAO;
+    private WireMockServer wireMockServer;
 
     public TestcaseRunResource(TestcaseDAO testcaseDAO, UtilsDAO utilsDAO, TestcaseRunDAO testcaseRunDAO,
-                               TeststepRunDAO teststepRunDAO) {
+                               TeststepRunDAO teststepRunDAO, WireMockServer wireMockServer) {
         this.testcaseDAO = testcaseDAO;
         this.utilsDAO = utilsDAO;
         this.testcaseRunDAO = testcaseRunDAO;
         this.teststepRunDAO = teststepRunDAO;
+        this.wireMockServer = wireMockServer;
     }
 
     @POST @Path("testcaseruns") @PermitAll
@@ -40,7 +43,7 @@ public class TestcaseRunResource {
         Testcase testcase = testcaseDAO.findById_Complete(testcaseId);
         TestcaseRunner testcaseRunner;
         if (testcase.getDataTable().getRows().isEmpty()) {
-            testcaseRunner = new RegularTestcaseRunner(testcase, utilsDAO, testcaseRunDAO);
+            testcaseRunner = new RegularTestcaseRunner(testcase, utilsDAO, testcaseRunDAO, wireMockServer);
         } else {
             testcaseRunner = new DataDrivenTestcaseRunner(testcase, utilsDAO, testcaseRunDAO);
         }

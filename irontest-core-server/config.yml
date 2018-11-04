@@ -26,17 +26,29 @@ server:
         archivedLogFilenamePattern: ./logs/archive/request/request-%d-%i.log.gz
         archivedFileCount: 200
 
+wireMock:
+  port: 8083
+  maxRequestJournalEntries: 100
+
 logging:
-  # Uncomment below logger for Iron Test resource oriented HTTP APIs request/response logging
-#  loggers:
-#    org.glassfish.jersey.filter.LoggingFilter:
-#      additive: false
-#      appenders:
-#        - type: file
-#          currentLogFilename: ./logs/api.log
-#          maxFileSize: 20MB
-#          archivedLogFilenamePattern: ./logs/archive/api/api-%d-%i.log.gz
-#          archivedFileCount: 200
+  loggers:
+    "io.irontest.WireMockFileNotifier":
+      additive: false
+      appenders:
+        - type: file
+          currentLogFilename: ./logs/wiremock.log
+          maxFileSize: 10MB
+          archivedLogFilenamePattern: ./logs/archive/wiremock/wiremock-%d-%i.log.gz
+          archivedFileCount: 200
+    # Uncomment below logger for Iron Test resource oriented HTTP APIs request/response logging
+    # "org.glassfish.jersey.filter.LoggingFilter":
+    #   additive: false
+    #   appenders:
+    #     - type: file
+    #       currentLogFilename: ./logs/api.log
+    #       maxFileSize: 20MB
+    #       archivedLogFilenamePattern: ./logs/archive/api/api-%d-%i.log.gz
+    #       archivedFileCount: 200
   appenders:
     - type: console
     - type: file
