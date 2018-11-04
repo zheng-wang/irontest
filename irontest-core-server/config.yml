@@ -1,6 +1,5 @@
 # Web server settings.
 server:
-  type: ip-controlled
   # (Do not modify) Root URI for APIs
   rootPath: '/api/*'
   registerDefaultExceptionMappers: false
