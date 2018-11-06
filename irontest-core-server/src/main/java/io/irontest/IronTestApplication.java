@@ -138,6 +138,7 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         final TestcaseRunDAO testcaseRunDAO = jdbi.onDemand(TestcaseRunDAO.class);
         final TestcaseIndividualRunDAO testcaseIndividualRunDAO = jdbi.onDemand(TestcaseIndividualRunDAO.class);
         final TeststepRunDAO teststepRunDAO = jdbi.onDemand(TeststepRunDAO.class);
+        final HTTPStubMappingDAO httpStubMappingDAO = jdbi.onDemand(HTTPStubMappingDAO.class);
         UserDAO userDAO = null;
         if (isInTeamMode(configuration)) {
             userDAO = jdbi.onDemand(UserDAO.class);
@@ -191,6 +192,8 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         testcaseIndividualRunDAO.createTableIfNotExists();
         teststepRunDAO.createSequenceIfNotExists();
         teststepRunDAO.createTableIfNotExists();
+        httpStubMappingDAO.createSequenceIfNotExists();
+        httpStubMappingDAO.createTableIfNotExists();
         if (isInTeamMode(configuration)) {
             userDAO.createSequenceIfNotExists();
             userDAO.createTableIfNotExists();
