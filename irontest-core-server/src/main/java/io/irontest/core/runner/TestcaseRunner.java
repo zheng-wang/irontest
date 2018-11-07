@@ -70,17 +70,23 @@ public abstract class TestcaseRunner {
 
     public abstract TestcaseRun run() throws JsonProcessingException;
 
-    void preProcessingForIIBTestcase() {
+    void preProcessing() {
+        if (!testcase.getHttpStubMappings().isEmpty()) {
+            Teststep httpStubsSetupStep = new Teststep(Teststep.TYPE_HTTP_STUBS_SETUP);
+            httpStubsSetupStep.setName("Set up HTTP stubs");
+            testcase.getTeststeps().add(0, httpStubsSetupStep);
+            Teststep httpStubRequestsVerificationStep = new Teststep(Teststep.TYPE_HTTP_STUB_REQUESTS_VERIFICATION);
+            httpStubRequestsVerificationStep.setName("Verify HTTP stub requests");
+            testcase.getTeststeps().add(1, httpStubRequestsVerificationStep);
+        }
+
         for (Teststep teststep : testcase.getTeststeps()) {
             if (Teststep.TYPE_IIB.equals(teststep.getType()) &&
                     Teststep.ACTION_WAIT_FOR_PROCESSING_COMPLETION.equals(teststep.getAction())) {
                 testcaseHasWaitForProcessingCompletionAction = true;
+                testcase.getTeststeps().add(0, new Teststep(Teststep.TYPE_WAIT));
+                break;
             }
-        }
-        if (testcaseHasWaitForProcessingCompletionAction) {
-            Teststep waitStep = new Teststep();
-            waitStep.setType(Teststep.TYPE_WAIT);
-            testcase.getTeststeps().add(0, waitStep);
         }
     }
 

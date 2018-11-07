@@ -33,11 +33,11 @@ public class DataDrivenTestcaseRunner extends TestcaseRunner {
         DataDrivenTestcaseRun testcaseRun = new DataDrivenTestcaseRun();
         Cloner cloner = new Cloner();
 
-        preProcessingForIIBTestcase();
+        preProcessing();
+
         startTestcaseRun(testcaseRun);
 
         DataTable dataTable = getTestcase().getDataTable();
-
         IronTestUtils.checkDuplicatePropertyNameBetweenDataTableAndUPDs(getUdpNames(), dataTable);
 
         for (int dataTableRowIndex = 0; dataTableRowIndex < dataTable.getRows().size(); dataTableRowIndex++) {
@@ -50,6 +50,7 @@ public class DataDrivenTestcaseRunner extends TestcaseRunner {
             LOGGER.info("Start individually running test case with data table row: " + individualRun.getCaption());
             individualRun.setResult(TestResult.PASSED);
             getTestcaseRunContext().setTestcaseIndividualRunStartTime(individualRun.getStartTime());
+            //  update IIB test case first step
             if (isTestcaseHasWaitForProcessingCompletionAction()) {
                 long secondFraction = individualRun.getStartTime().getTime() % 1000;   //  milliseconds
                 long millisecondsUntilNextSecond = 1000 - secondFraction;

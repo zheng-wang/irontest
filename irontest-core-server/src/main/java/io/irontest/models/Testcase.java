@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import io.irontest.models.teststep.Teststep;
 import io.irontest.resources.ResourceJsonViews;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Testcase {
@@ -20,6 +21,7 @@ public class Testcase {
     private List<Teststep> teststeps;
     @JsonView(ResourceJsonViews.TestcaseExport.class)
     private DataTable dataTable;
+    private List<HTTPStubMapping> httpStubMappings = new ArrayList<>();
 
     public Testcase() {}
 
@@ -92,5 +94,13 @@ public class Testcase {
 
     public void setDataTable(DataTable dataTable) {
         this.dataTable = dataTable;
+    }
+
+    public List<HTTPStubMapping> getHttpStubMappings() {
+        return httpStubMappings;
+    }
+
+    public void setHttpStubMappings(List<HTTPStubMapping> httpStubMappings) {
+        this.httpStubMappings = httpStubMappings;
     }
 }

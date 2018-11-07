@@ -18,6 +18,8 @@ public class Teststep {
     public static final String TYPE_IIB = "IIB";
     public static final String TYPE_MQ = "MQ";
     public static final String TYPE_WAIT = "Wait";
+    public static final String TYPE_HTTP_STUBS_SETUP = "HTTPStubsSetup";
+    public static final String TYPE_HTTP_STUB_REQUESTS_VERIFICATION = "HTTPStubRequestsVerification";
 
     /* of IIB test step */
     public static final String ACTION_START = "Start";
@@ -66,6 +68,10 @@ public class Teststep {
     private Properties otherProperties = new Properties();
 
     public Teststep() {}
+
+    public Teststep(String type) {
+        this.type = type;
+    }
 
     public long getId() {
         return id;

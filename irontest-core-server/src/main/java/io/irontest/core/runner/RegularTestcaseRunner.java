@@ -29,8 +29,10 @@ public class RegularTestcaseRunner extends TestcaseRunner {
     public TestcaseRun run() throws JsonProcessingException {
         RegularTestcaseRun testcaseRun = new RegularTestcaseRun();
 
-        preProcessingForIIBTestcase();
+        preProcessing();
         startTestcaseRun(testcaseRun);
+
+        //  update IIB test case first step
         if (isTestcaseHasWaitForProcessingCompletionAction()) {
             long secondFraction = getTestcaseRunContext().getTestcaseRunStartTime().getTime() % 1000;   //  milliseconds
             long millisecondsUntilNextSecond = 1000 - secondFraction;
