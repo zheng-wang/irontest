@@ -26,7 +26,7 @@
           <li role="menuitem" ng-if="teststep.type === 'HTTP' || teststep.type === 'DB'">
             <a ng-click="assertionsModelObj.createAssertion('JSONPath')" href="">JSONPath Assertion</a>
           </li>
-          <li role="menuitem" ng-if="teststep.type === 'HTTP' || teststep.type === 'MQ'">
+          <li role="menuitem" ng-if="teststep.type === 'HTTP' || teststep.type === 'SOAP' || teststep.type === 'MQ'">
             <a ng-click="assertionsModelObj.createAssertion('XMLEqual')" href="">XMLEqual Assertion</a>
           </li>
           <li role="menuitem" ng-if="teststep.type === 'HTTP' || teststep.type === 'SOAP' || teststep.type === 'MQ'">
