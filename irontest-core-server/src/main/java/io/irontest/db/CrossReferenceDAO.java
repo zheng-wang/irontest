@@ -35,4 +35,7 @@ public interface CrossReferenceDAO {
 
     @CreateSqlObject
     TeststepDAO teststepDAO();
+
+    @CreateSqlObject
+    HTTPStubMappingDAO httpStubMappingDAO();
 }

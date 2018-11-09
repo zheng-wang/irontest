@@ -2,6 +2,7 @@ package io.irontest.db;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.irontest.models.DataTable;
+import io.irontest.models.HTTPStubMapping;
 import io.irontest.models.Testcase;
 import io.irontest.models.UserDefinedProperty;
 import io.irontest.models.teststep.Teststep;
@@ -92,6 +93,9 @@ public interface TestcaseDAO extends CrossReferenceDAO {
 
         DataTable dataTable = dataTableDAO().getTestcaseDataTable(id, false);
         result.setDataTable(dataTable);
+
+        List<HTTPStubMapping> httpStubMappings = httpStubMappingDAO().findByTestcaseId(id);
+        result.setHttpStubMappings(httpStubMappings);
 
         return result;
     }

@@ -45,7 +45,7 @@ public class TestcaseRunResource {
         if (testcase.getDataTable().getRows().isEmpty()) {
             testcaseRunner = new RegularTestcaseRunner(testcase, utilsDAO, testcaseRunDAO, wireMockServer);
         } else {
-            testcaseRunner = new DataDrivenTestcaseRunner(testcase, utilsDAO, testcaseRunDAO);
+            testcaseRunner = new DataDrivenTestcaseRunner(testcase, utilsDAO, testcaseRunDAO, wireMockServer);
         }
         return testcaseRunner.run();
     }

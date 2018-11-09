@@ -55,7 +55,7 @@ public class Teststep {
     @JsonView(ResourceJsonViews.TestcaseExport.class)
     private String requestFilename;
     @JsonView(ResourceJsonViews.TestcaseExport.class)
-    private List<Assertion> assertions = new ArrayList<Assertion>();
+    private List<Assertion> assertions = new ArrayList<>();
     @JsonView(ResourceJsonViews.TestcaseExport.class)
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
             property = "type", visible = true, defaultImpl = Properties.class)
@@ -64,7 +64,8 @@ public class Teststep {
             @JsonSubTypes.Type(value = HTTPTeststepProperties.class, name = Teststep.TYPE_HTTP),
             @JsonSubTypes.Type(value = IIBTeststepProperties.class, name = Teststep.TYPE_IIB),
             @JsonSubTypes.Type(value = MQTeststepProperties.class, name = Teststep.TYPE_MQ),
-            @JsonSubTypes.Type(value = WaitTeststepProperties.class, name = Teststep.TYPE_WAIT)})
+            @JsonSubTypes.Type(value = WaitTeststepProperties.class, name = Teststep.TYPE_WAIT),
+            @JsonSubTypes.Type(value = HTTPStubsSetupTeststepProperties.class, name = Teststep.TYPE_HTTP_STUBS_SETUP)})
     private Properties otherProperties = new Properties();
 
     public Teststep() {}

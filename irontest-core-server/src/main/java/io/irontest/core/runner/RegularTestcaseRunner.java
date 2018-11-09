@@ -18,11 +18,9 @@ import java.util.Date;
 
 public class RegularTestcaseRunner extends TestcaseRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(RegularTestcaseRunner.class);
-    private WireMockServer wireMockServer;
 
     public RegularTestcaseRunner(Testcase testcase, UtilsDAO utilsDAO, TestcaseRunDAO testcaseRunDAO, WireMockServer wireMockServer) {
-        super(testcase, utilsDAO, testcaseRunDAO, LOGGER);
-        this.wireMockServer = wireMockServer;
+        super(testcase, utilsDAO, testcaseRunDAO, LOGGER, wireMockServer);
     }
 
     @Override

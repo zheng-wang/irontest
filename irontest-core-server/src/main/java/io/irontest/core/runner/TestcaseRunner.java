@@ -1,6 +1,7 @@
 package io.irontest.core.runner;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.github.tomakehurst.wiremock.WireMockServer;
 import io.irontest.core.assertion.AssertionVerifier;
 import io.irontest.core.assertion.AssertionVerifierFactory;
 import io.irontest.db.TestcaseRunDAO;
@@ -13,6 +14,7 @@ import io.irontest.models.assertion.AssertionVerificationResult;
 import io.irontest.models.endpoint.Endpoint;
 import io.irontest.models.testrun.TestcaseRun;
 import io.irontest.models.testrun.TeststepRun;
+import io.irontest.models.teststep.HTTPStubsSetupTeststepProperties;
 import io.irontest.models.teststep.Teststep;
 import io.irontest.utils.IronTestUtils;
 import org.slf4j.Logger;
@@ -35,11 +37,12 @@ public abstract class TestcaseRunner {
     private Map<String, String> referenceableStringProperties = new HashMap<>();
     private Map<String, Endpoint> referenceableEndpointProperties = new HashMap<>();
 
-    TestcaseRunner(Testcase testcase, UtilsDAO utilsDAO, TestcaseRunDAO testcaseRunDAO, Logger LOGGER) {
+    TestcaseRunner(Testcase testcase, UtilsDAO utilsDAO, TestcaseRunDAO testcaseRunDAO, Logger LOGGER, WireMockServer wireMockServer) {
         this.testcase = testcase;
         this.utilsDAO = utilsDAO;
         this.testcaseRunDAO = testcaseRunDAO;
         this.LOGGER = LOGGER;
+        this.testcaseRunContext.setWireMockServer(wireMockServer);
     }
 
     protected Testcase getTestcase() {
@@ -70,14 +73,18 @@ public abstract class TestcaseRunner {
 
     public abstract TestcaseRun run() throws JsonProcessingException;
 
+    //  processing before starting the test case run
     void preProcessing() {
         if (!testcase.getHttpStubMappings().isEmpty()) {
             Teststep httpStubsSetupStep = new Teststep(Teststep.TYPE_HTTP_STUBS_SETUP);
             httpStubsSetupStep.setName("Set up HTTP stubs");
+            HTTPStubsSetupTeststepProperties httpStubsSetupTeststepProperties = new HTTPStubsSetupTeststepProperties();
+            httpStubsSetupTeststepProperties.setHttpStubMappings(testcase.getHttpStubMappings());
+            httpStubsSetupStep.setOtherProperties(httpStubsSetupTeststepProperties);
             testcase.getTeststeps().add(0, httpStubsSetupStep);
             Teststep httpStubRequestsVerificationStep = new Teststep(Teststep.TYPE_HTTP_STUB_REQUESTS_VERIFICATION);
             httpStubRequestsVerificationStep.setName("Verify HTTP stub requests");
-            testcase.getTeststeps().add(1, httpStubRequestsVerificationStep);
+            testcase.getTeststeps().add(testcase.getTeststeps().size(), httpStubRequestsVerificationStep);
         }
 
         for (Teststep teststep : testcase.getTeststeps()) {

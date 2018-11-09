@@ -1,5 +1,7 @@
 package io.irontest.core.runner;
 
+import com.github.tomakehurst.wiremock.WireMockServer;
+
 import java.util.Date;
 
 /**
@@ -8,6 +10,7 @@ import java.util.Date;
 public class TestcaseRunContext {
     private Date testcaseRunStartTime;
     private Date testcaseIndividualRunStartTime;
+    private WireMockServer wireMockServer;            //  the universal WireMock server inside the Iron Test instance
 
     public Date getTestcaseRunStartTime() {
         return testcaseRunStartTime;
@@ -23,5 +26,13 @@ public class TestcaseRunContext {
 
     public void setTestcaseIndividualRunStartTime(Date testcaseIndividualRunStartTime) {
         this.testcaseIndividualRunStartTime = testcaseIndividualRunStartTime;
+    }
+
+    public WireMockServer getWireMockServer() {
+        return wireMockServer;
+    }
+
+    public void setWireMockServer(WireMockServer wireMockServer) {
+        this.wireMockServer = wireMockServer;
     }
 }

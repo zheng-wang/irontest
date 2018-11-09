@@ -1,7 +1,6 @@
 package io.irontest.db;
 
 import io.irontest.models.UserDefinedProperty;
-import io.irontest.models.teststep.Teststep;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
@@ -30,13 +29,6 @@ public interface UserDefinedPropertyDAO {
             "CONSTRAINT UDP_" + DB_PROPERTY_NAME_CONSTRAINT_NAME_SUFFIX + " CHECK(" + CUSTOM_PROPERTY_NAME_CHECK + "))")
     void createTableIfNotExists();
 
-    /**
-     * Unlike {@link TeststepDAO#_insert(Teststep, Object, String, Long, String)}, this method does not consider UDP
-     * insertion from test case duplicating. It is already considered with the
-     * {@link #duplicateByTestcase(long, long)} method.
-     * @param testcaseId
-     * @return
-     */
     @SqlUpdate("insert into udp (testcase_id, sequence) values (:testcaseId, (" +
             "select coalesce(max(sequence), 0) + 1 from udp where testcase_id = :testcaseId))")
     @GetGeneratedKeys

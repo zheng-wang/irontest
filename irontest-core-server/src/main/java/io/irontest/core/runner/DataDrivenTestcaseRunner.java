@@ -1,6 +1,7 @@
 package io.irontest.core.runner;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.github.tomakehurst.wiremock.WireMockServer;
 import com.rits.cloning.Cloner;
 import io.irontest.db.TestcaseRunDAO;
 import io.irontest.db.UtilsDAO;
@@ -24,8 +25,8 @@ import static io.irontest.IronTestConstants.IMPLICIT_PROPERTY_NAME_TEST_CASE_IND
 public class DataDrivenTestcaseRunner extends TestcaseRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(DataDrivenTestcaseRunner.class);
 
-    public DataDrivenTestcaseRunner(Testcase testcase, UtilsDAO utilsDAO, TestcaseRunDAO testcaseRunDAO) {
-        super(testcase, utilsDAO, testcaseRunDAO, LOGGER);
+    public DataDrivenTestcaseRunner(Testcase testcase, UtilsDAO utilsDAO, TestcaseRunDAO testcaseRunDAO, WireMockServer wireMockServer) {
+        super(testcase, utilsDAO, testcaseRunDAO, LOGGER, wireMockServer);
     }
 
     @Override
