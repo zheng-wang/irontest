@@ -19,7 +19,7 @@ public class Teststep {
     public static final String TYPE_MQ = "MQ";
     public static final String TYPE_WAIT = "Wait";
     public static final String TYPE_HTTP_STUBS_SETUP = "HTTPStubsSetup";
-    public static final String TYPE_HTTP_STUB_REQUESTS_VERIFICATION = "HTTPStubRequestsVerification";
+    public static final String TYPE_HTTP_STUB_REQUESTS_CHECK = "HTTPStubRequestsCheck";
 
     /* of IIB test step */
     public static final String ACTION_START = "Start";

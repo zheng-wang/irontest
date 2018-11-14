@@ -82,9 +82,9 @@ public abstract class TestcaseRunner {
             httpStubsSetupTeststepProperties.setHttpStubMappings(testcase.getHttpStubMappings());
             httpStubsSetupStep.setOtherProperties(httpStubsSetupTeststepProperties);
             testcase.getTeststeps().add(0, httpStubsSetupStep);
-            Teststep httpStubRequestsVerificationStep = new Teststep(Teststep.TYPE_HTTP_STUB_REQUESTS_VERIFICATION);
-            httpStubRequestsVerificationStep.setName("Verify HTTP stub requests");
-            testcase.getTeststeps().add(testcase.getTeststeps().size(), httpStubRequestsVerificationStep);
+            Teststep httpStubRequestsCheckStep = new Teststep(Teststep.TYPE_HTTP_STUB_REQUESTS_CHECK);
+            httpStubRequestsCheckStep.setName("Check HTTP stub requests");
+            testcase.getTeststeps().add(testcase.getTeststeps().size(), httpStubRequestsCheckStep);
         }
 
         for (Teststep teststep : testcase.getTeststeps()) {
@@ -154,7 +154,7 @@ public abstract class TestcaseRunner {
             switch (teststep.getType()) {
                 case Teststep.TYPE_DB:
                     assertionVerificationInput = ((DBAPIResponse) apiResponse).getRowsJSON();
-                    break;
+                break;
                 case Teststep.TYPE_MQ:
                     assertionVerificationInput = ((MQAPIResponse) apiResponse).getValue();
                     break;

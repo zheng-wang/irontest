@@ -15,12 +15,12 @@ public interface HTTPStubMappingDAO {
 
     @SqlUpdate("CREATE TABLE IF NOT EXISTS httpstubmapping (" +
             "id BIGINT DEFAULT httpstubmapping_sequence.NEXTVAL PRIMARY KEY, " +
-            "testcase_id BIGINT, spec_json CLOB NOT NULL, " +
+            "testcase_id BIGINT, number SMALLINT NOT NULL, spec_json CLOB NOT NULL, " +
             "created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (testcase_id) REFERENCES testcase(id) ON DELETE CASCADE)")
     void createTableIfNotExists();
 
-    @SqlQuery("select * from httpstubmapping where testcase_id = :testcaseId")
+    @SqlQuery("select * from httpstubmapping where testcase_id = :testcaseId order by number")
     List<HTTPStubMapping> findByTestcaseId(@Bind("testcaseId") long testcaseId);
 }

@@ -10,7 +10,7 @@ import java.sql.SQLException;
 public class HTTPStubMappingMapper implements RowMapper<HTTPStubMapping> {
     @Override
     public HTTPStubMapping map(ResultSet rs, StatementContext ctx) throws SQLException {
-        HTTPStubMapping httpStubMapping = new HTTPStubMapping(rs.getString("spec_json"));
+        HTTPStubMapping httpStubMapping = new HTTPStubMapping(rs.getShort("number"), rs.getString("spec_json"));
 
         return httpStubMapping;
     }
