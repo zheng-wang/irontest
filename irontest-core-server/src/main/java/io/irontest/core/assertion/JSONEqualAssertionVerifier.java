@@ -16,19 +16,19 @@ public class JSONEqualAssertionVerifier extends AssertionVerifier {
     /**
      *
      * @param assertion
-     * @param input the JSON string that the assertion is verified against
+     * @param inputs contains only one argument: the JSON string that the assertion is verified against
      * @return
      */
     @Override
-    public AssertionVerificationResult _verify(Assertion assertion, Object input) {
+    public AssertionVerificationResult _verify(Assertion assertion, Object ...inputs) {
         JSONEqualAssertionProperties assertionProperties = (JSONEqualAssertionProperties) assertion.getOtherProperties();
 
         //  validate arguments
         if (assertionProperties.getExpectedJSON() == null) {
             throw new IllegalArgumentException("Expected JSON is null.");
-        } else if (input == null) {
+        } else if (inputs[0] == null) {
             throw new IllegalArgumentException("Actual JSON is null.");
-        } else if (input.equals("")) {
+        } else if (inputs[0].equals("")) {
             throw new IllegalArgumentException("Actual JSON is empty.");
         }
 
@@ -36,7 +36,7 @@ public class JSONEqualAssertionVerifier extends AssertionVerifier {
                 JSON_UNIT_PLACEHOLDER_REGEX, JSON_UNIT_PLACEHOLDER_DELIMITER_REPLACEMENT);
         MessageEqualAssertionVerificationResult result = new MessageEqualAssertionVerificationResult();
         try {
-            assertJsonEquals(expectedJSON, input);
+            assertJsonEquals(expectedJSON, inputs[0]);
         } catch (IllegalArgumentException e) {
             Throwable c = e.getCause();
             if (c instanceof JsonParseException) {

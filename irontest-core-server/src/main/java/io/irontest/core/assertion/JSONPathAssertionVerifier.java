@@ -12,11 +12,11 @@ import org.apache.commons.lang3.StringUtils;
 public class JSONPathAssertionVerifier extends AssertionVerifier {
     /**
      * @param assertion the assertion to be verified (against the input)
-     * @param input the JSON string that the assertion is verified against
+     * @param inputs contains only one argument: the JSON string that the assertion is verified against
      * @return
      */
     @Override
-    public AssertionVerificationResult _verify(Assertion assertion, Object input) throws Exception {
+    public AssertionVerificationResult _verify(Assertion assertion, Object ...inputs) throws Exception {
         JSONPathAssertionProperties otherProperties =
                 (JSONPathAssertionProperties) assertion.getOtherProperties();
 
@@ -30,7 +30,7 @@ public class JSONPathAssertionVerifier extends AssertionVerifier {
         JSONPathAssertionVerificationResult result = new JSONPathAssertionVerificationResult();
         ObjectMapper objectMapper = new ObjectMapper();
         Object expectedValue = objectMapper.readValue(otherProperties.getExpectedValueJSON(), Object.class);
-        Object actualValue = JsonPath.read((String) input, otherProperties.getJsonPath());
+        Object actualValue = JsonPath.read((String) inputs[0], otherProperties.getJsonPath());
         result.setActualValueJSON(objectMapper.writeValueAsString(actualValue));
         result.setResult(expectedValue.equals(actualValue) ? TestResult.PASSED : TestResult.FAILED);
         return result;

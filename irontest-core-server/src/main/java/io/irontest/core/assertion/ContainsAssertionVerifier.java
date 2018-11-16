@@ -10,11 +10,11 @@ public class ContainsAssertionVerifier extends AssertionVerifier {
     /**
      *
      * @param assertion
-     * @param input the String that the assertion is verified against
+     * @param inputs contains only one argument: the String that the assertion is verified against
      * @return
      */
     @Override
-    public AssertionVerificationResult _verify(Assertion assertion, Object input) throws Exception {
+    public AssertionVerificationResult _verify(Assertion assertion, Object ...inputs) throws Exception {
         AssertionVerificationResult result = new AssertionVerificationResult();
         ContainsAssertionProperties otherProperties =
                 (ContainsAssertionProperties) assertion.getOtherProperties();
@@ -24,7 +24,7 @@ public class ContainsAssertionVerifier extends AssertionVerifier {
             throw new IllegalArgumentException("Contains not specified");
         }
 
-        String inputStr = (String) input;
+        String inputStr = (String) inputs[0];
         result.setResult(inputStr.contains(otherProperties.getContains()) ? TestResult.PASSED : TestResult.FAILED);
         return result;
     }

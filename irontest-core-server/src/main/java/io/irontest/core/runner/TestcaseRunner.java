@@ -6,11 +6,13 @@ import io.irontest.core.assertion.AssertionVerifier;
 import io.irontest.core.assertion.AssertionVerifierFactory;
 import io.irontest.db.TestcaseRunDAO;
 import io.irontest.db.UtilsDAO;
+import io.irontest.models.HTTPStubMapping;
 import io.irontest.models.TestResult;
 import io.irontest.models.Testcase;
 import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.AssertionVerification;
 import io.irontest.models.assertion.AssertionVerificationResult;
+import io.irontest.models.assertion.HTTPStubHitAssertionProperties;
 import io.irontest.models.endpoint.Endpoint;
 import io.irontest.models.testrun.TestcaseRun;
 import io.irontest.models.testrun.TeststepRun;
@@ -76,20 +78,30 @@ public abstract class TestcaseRunner {
     //  processing before starting the test case run
     void preProcessing() {
         if (!testcase.getHttpStubMappings().isEmpty()) {
+            //  add HTTPStubsSetup step
             Teststep httpStubsSetupStep = new Teststep(Teststep.TYPE_HTTP_STUBS_SETUP);
             httpStubsSetupStep.setName("Set up HTTP stubs");
-            HTTPStubsSetupTeststepProperties httpStubsSetupTeststepProperties = new HTTPStubsSetupTeststepProperties();
-            httpStubsSetupTeststepProperties.setHttpStubMappings(testcase.getHttpStubMappings());
-            httpStubsSetupStep.setOtherProperties(httpStubsSetupTeststepProperties);
+            HTTPStubsSetupTeststepProperties stubsSetupTeststepProperties = new HTTPStubsSetupTeststepProperties();
+            stubsSetupTeststepProperties.setHttpStubMappings(testcase.getHttpStubMappings());
+            httpStubsSetupStep.setOtherProperties(stubsSetupTeststepProperties);
             testcase.getTeststeps().add(0, httpStubsSetupStep);
-            Teststep httpStubRequestsCheckStep = new Teststep(Teststep.TYPE_HTTP_STUB_REQUESTS_CHECK);
-            httpStubRequestsCheckStep.setName("Check HTTP stub requests");
-            testcase.getTeststeps().add(testcase.getTeststeps().size(), httpStubRequestsCheckStep);
+
+            //  add HTTPStubRequestsCheck step
+            Teststep stubRequestsCheckStep = new Teststep(Teststep.TYPE_HTTP_STUB_REQUESTS_CHECK);
+            stubRequestsCheckStep.setName("Check HTTP stub requests");
+            for (HTTPStubMapping stub: testcase.getHttpStubMappings()) {
+                Assertion stubHitAssertion = new Assertion(Assertion.TYPE_HTTP_STUB_HIT);
+                stubHitAssertion.setName("Stub #" + stub.getNumber() + " was hit exactly once.");
+                stubHitAssertion.setOtherProperties(new HTTPStubHitAssertionProperties(stub.getNumber()));
+                stubRequestsCheckStep.getAssertions().add(stubHitAssertion);
+            }
+            testcase.getTeststeps().add(testcase.getTeststeps().size(), stubRequestsCheckStep);
         }
 
         for (Teststep teststep : testcase.getTeststeps()) {
             if (Teststep.TYPE_IIB.equals(teststep.getType()) &&
                     Teststep.ACTION_WAIT_FOR_PROCESSING_COMPLETION.equals(teststep.getAction())) {
+                //  add Wait step
                 testcaseHasWaitForProcessingCompletionAction = true;
                 testcase.getTeststeps().add(0, new Teststep(Teststep.TYPE_WAIT));
                 break;
@@ -166,13 +178,18 @@ public abstract class TestcaseRunner {
             if (Teststep.TYPE_DB.equals(teststep.getType()) && assertionVerificationInput == null) {
                 //  SQL inserts/deletes/updates, no assertion verification needed
             } else {
-                //  verify assertions against the input
+                Object assertionVerificationInput2 = null;
+
+                //  verify assertions against the inputs
                 for (Assertion assertion : teststep.getAssertions()) {
-                    //  further resolve assertion input (based on test step type and assertion type)
+                    //  further resolve assertion inputs
                     if (Assertion.TYPE_STATUS_CODE_EQUAL.equals(assertion.getType())) {
                         assertionVerificationInput = ((HTTPAPIResponse) apiResponse).getStatusCode();
                     } else if (Teststep.TYPE_SOAP.equals(teststep.getType()) || Teststep.TYPE_HTTP.equals(teststep.getType())) {
                         assertionVerificationInput = ((HTTPAPIResponse) apiResponse).getHttpBody();
+                    } else if (Assertion.TYPE_HTTP_STUB_HIT.equals(assertion.getType())) {
+                        HTTPStubHitAssertionProperties otherProperties = (HTTPStubHitAssertionProperties) assertion.getOtherProperties();
+                        assertionVerificationInput2 = getTestcaseRunContext().getHttpStubMappingInstanceIds().get(otherProperties.getStubNumber());
                     }
 
                     AssertionVerification verification = new AssertionVerification();
@@ -183,7 +200,7 @@ public abstract class TestcaseRunner {
                             assertion.getType(), referenceableStringProperties);
                     AssertionVerificationResult verificationResult;
                     try {
-                        verificationResult = verifier.verify(assertion, assertionVerificationInput);
+                        verificationResult = verifier.verify(assertion, assertionVerificationInput, assertionVerificationInput2);
                     } catch (Exception e) {
                         LOGGER.error("Failed to verify assertion", e);
                         verificationResult = new AssertionVerificationResult();

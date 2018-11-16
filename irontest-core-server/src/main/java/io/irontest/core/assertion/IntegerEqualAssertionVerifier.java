@@ -9,15 +9,15 @@ public class IntegerEqualAssertionVerifier extends AssertionVerifier {
     /**
      *
      * @param assertion
-     * @param input the Integer that the assertion is verified against
+     * @param inputs contains only one argument: the Integer that the assertion is verified against
      * @return
      */
     @Override
-    public AssertionVerificationResult _verify(Assertion assertion, Object input) throws Exception {
+    public AssertionVerificationResult _verify(Assertion assertion, Object ...inputs) {
         AssertionVerificationResult result = new AssertionVerificationResult();
         IntegerEqualAssertionProperties properties = (IntegerEqualAssertionProperties)
                 assertion.getOtherProperties();
-        result.setResult(new Integer(properties.getNumber()).equals(input) ? TestResult.PASSED : TestResult.FAILED);
+        result.setResult(Integer.valueOf(properties.getNumber()).equals(inputs[0]) ? TestResult.PASSED : TestResult.FAILED);
 
         return result;
     }

@@ -12,7 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 
 public class JSONPathXMLEqualAssertionVerifier extends AssertionVerifier {
     @Override
-    public AssertionVerificationResult _verify(Assertion assertion, Object input) throws Exception {
+    public AssertionVerificationResult _verify(Assertion assertion, Object ...inputs) throws Exception {
         JSONPathXMLEqualAssertionProperties otherProperties =
                 (JSONPathXMLEqualAssertionProperties) assertion.getOtherProperties();
 
@@ -29,7 +29,7 @@ public class JSONPathXMLEqualAssertionVerifier extends AssertionVerifier {
             }
         }
 
-        Object actualValue = JsonPath.read((String) input, otherProperties.getJsonPath());
+        Object actualValue = JsonPath.read((String) inputs[0], otherProperties.getJsonPath());
         if (!(actualValue instanceof String)) {
             ObjectMapper objectMapper = new ObjectMapper();
             throw new Exception("JSONPath does not evaluate to a string. It evaluates to:\n " + objectMapper.writeValueAsString(actualValue));

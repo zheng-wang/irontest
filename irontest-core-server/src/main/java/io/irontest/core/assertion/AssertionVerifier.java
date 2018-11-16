@@ -16,10 +16,11 @@ public abstract class AssertionVerifier {
     /**
      * This method modifies the content of assertion object.
      * @param assertion the assertion to be verified (against the input)
-     * @param input the object that the assertion is verified against
+     * @param inputs the objects that the assertion is verified against.
      * @return
+     * @throws Exception
      */
-    public AssertionVerificationResult verify(Assertion assertion, Object input) throws Exception {
+    public AssertionVerificationResult verify(Assertion assertion, Object ...inputs) throws Exception {
         MapValueLookup stringPropertyReferenceResolver = new MapValueLookup(referenceableStringProperties, true);
 
         //  resolve string property references in assertion.name
@@ -44,12 +45,12 @@ public abstract class AssertionVerifier {
             throw new RuntimeException("String properties " + undefinedStringProperties + " not defined.");
         }
 
-        return _verify(assertion, input);
+        return _verify(assertion, inputs);
     }
 
     protected void setReferenceableStringProperties(Map<String, String> referenceableStringProperties) {
         this.referenceableStringProperties = referenceableStringProperties;
     }
 
-    public abstract AssertionVerificationResult _verify(Assertion assertion, Object input) throws Exception;
+    public abstract AssertionVerificationResult _verify(Assertion assertion, Object ...inputs) throws Exception;
 }

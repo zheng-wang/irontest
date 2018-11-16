@@ -15,7 +15,8 @@ public class Assertion {
     public static final String TYPE_JSON_EQUAL = "JSONEqual";
     public static final String TYPE_JSONPATH = "JSONPath";
     public static final String TYPE_JSONPATH_XMLEQUAL = "JSONPathXMLEqual";
-    private Long id;
+    public static final String TYPE_HTTP_STUB_HIT = "HTTPStubHit";
+    private Long id;    //  id being null means this is dynamically created assertion object (no record in the Assertion database table).
     private Long teststepId;
     @JsonView(ResourceJsonViews.TestcaseExport.class)
     private String name;
@@ -31,10 +32,15 @@ public class Assertion {
             @JsonSubTypes.Type(value = XMLEqualAssertionProperties.class, name = Assertion.TYPE_XML_EQUAL),
             @JsonSubTypes.Type(value = JSONEqualAssertionProperties.class, name = Assertion.TYPE_JSON_EQUAL),
             @JsonSubTypes.Type(value = JSONPathAssertionProperties.class, name = Assertion.TYPE_JSONPATH),
-            @JsonSubTypes.Type(value = JSONPathXMLEqualAssertionProperties.class, name = Assertion.TYPE_JSONPATH_XMLEQUAL)})
+            @JsonSubTypes.Type(value = JSONPathXMLEqualAssertionProperties.class, name = Assertion.TYPE_JSONPATH_XMLEQUAL),
+            @JsonSubTypes.Type(value = HTTPStubHitAssertionProperties.class, name = Assertion.TYPE_HTTP_STUB_HIT)})
     private Properties otherProperties = new Properties();
 
     public Assertion() {}
+
+    public Assertion(String type) {
+        this.type = type;
+    }
 
     public Long getId() {
         return id;

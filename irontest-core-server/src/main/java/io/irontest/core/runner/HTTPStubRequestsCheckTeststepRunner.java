@@ -1,29 +1,24 @@
 package io.irontest.core.runner;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
-import com.github.tomakehurst.wiremock.stubbing.ServeEvent;
 import io.irontest.models.teststep.Teststep;
+import io.irontest.utils.IronTestUtils;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import javax.xml.transform.TransformerException;
+import java.io.IOException;
 
 public class HTTPStubRequestsCheckTeststepRunner extends TeststepRunner {
     @Override
-    protected BasicTeststepRun run(Teststep teststep) {
+    protected BasicTeststepRun run(Teststep teststep) throws IOException, TransformerException {
+        BasicTeststepRun basicTeststepRun = new BasicTeststepRun();
+
         WireMockServer wireMockServer = getTestcaseRunContext().getWireMockServer();
+        WireMockServerAPIResponse response = new WireMockServerAPIResponse();
+        String allServeEventsJSON =  new ObjectMapper().writeValueAsString(wireMockServer.getAllServeEvents());
+        response.setAllServeEvents(IronTestUtils.prettyPrintJSONOrXML(allServeEventsJSON));
+        basicTeststepRun.setResponse(response);
 
-        Map<UUID, Boolean> stubHitStatus = new HashMap<>();
-        for (UUID uuid: getTestcaseRunContext().getHttpStubMappingInstanceIds().values()) {
-            stubHitStatus.put(uuid, false);
-        }
-
-        for (ServeEvent serveEvent: wireMockServer.getAllServeEvents()) {
-            if (serveEvent.getWasMatched() && stubHitStatus.keySet().contains(serveEvent.getStubMapping().getId())) {
-                stubHitStatus.put(serveEvent.getStubMapping().getId(), true);
-            }
-        }
-
-        return new BasicTeststepRun();
+        return basicTeststepRun;
     }
 }

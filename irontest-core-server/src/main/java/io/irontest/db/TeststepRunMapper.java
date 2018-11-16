@@ -25,7 +25,7 @@ public class TeststepRunMapper implements RowMapper<TeststepRun> {
         teststepRun.setDuration(rs.getLong("duration"));
         teststepRun.setResult(TestResult.getByText(rs.getString("result")));
 
-        Teststep teststep = null;
+        Teststep teststep;
         try {
             teststep = objectMapper.readValue(rs.getString("teststep"), Teststep.class);
         } catch (IOException e) {
@@ -35,7 +35,7 @@ public class TeststepRunMapper implements RowMapper<TeststepRun> {
 
         //  Use LinkedHashMap here instead of Object (for covering specific response type like DBAPIResponse),
         //    because TeststepRun is used for displaying report, so JSON representation of the response is sufficient.
-        LinkedHashMap response = null;
+        LinkedHashMap response;
         try {
             response = objectMapper.readValue(rs.getString("response"), LinkedHashMap.class);
         } catch (IOException e) {
@@ -45,7 +45,7 @@ public class TeststepRunMapper implements RowMapper<TeststepRun> {
         teststepRun.setInfoMessage(rs.getString("info_message"));
         teststepRun.setErrorMessage(rs.getString("error_message"));
 
-        List<AssertionVerification> assertionVerifications = null;
+        List<AssertionVerification> assertionVerifications;
         try {
             assertionVerifications = new ObjectMapper().readValue(rs.getString("assertion_verifications"),
                     new TypeReference<List<AssertionVerification>>() { });

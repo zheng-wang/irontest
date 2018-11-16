@@ -31,6 +31,8 @@ public class AssertionVerifierFactory {
             result = new JSONPathXMLEqualAssertionVerifier();
         } else if (Assertion.TYPE_JSON_EQUAL.equals(assertionType)) {
             result = new JSONEqualAssertionVerifier();
+        } else if (Assertion.TYPE_HTTP_STUB_HIT.equals(assertionType)) {
+            result = new HTTPStubHitAssertionVerifier();
         } else {
             throw new RuntimeException("Unrecognized assertion type " + assertionType);
         }

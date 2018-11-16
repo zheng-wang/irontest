@@ -9,22 +9,22 @@ public class StatusCodeEqualAssertionVerifier extends AssertionVerifier {
     /**
      *
      * @param assertion
-     * @param statusCode must be an integer
+     * @param inputs contains only one argument: statusCode (must be an integer)
      * @return
      */
     @Override
-    public AssertionVerificationResultWithActualValue _verify(Assertion assertion, Object statusCode) {
+    public AssertionVerificationResultWithActualValue _verify(Assertion assertion, Object ...inputs) {
         AssertionVerificationResultWithActualValue result = new AssertionVerificationResultWithActualValue();
         StatusCodeEqualAssertionProperties assertionProperties = (StatusCodeEqualAssertionProperties) assertion.getOtherProperties();
 
         //  validate arguments
         if (assertionProperties.getStatusCode() == null) {
             throw new IllegalArgumentException("Expected status code is not specified.");
-        } else if (statusCode == null) {
+        } else if (inputs[0] == null) {
             throw new IllegalArgumentException("Actual status code is null.");
         }
 
-        String statusCodeStr = ((Integer) statusCode).toString();
+        String statusCodeStr = ((Integer) inputs[0]).toString();
         result.setActualValue(statusCodeStr);
         result.setResult(assertionProperties.getStatusCode().equals(statusCodeStr) ?
                 TestResult.PASSED : TestResult.FAILED);

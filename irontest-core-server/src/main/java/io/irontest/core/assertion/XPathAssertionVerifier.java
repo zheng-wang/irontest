@@ -23,11 +23,11 @@ public class XPathAssertionVerifier extends AssertionVerifier {
     /**
      *
      * @param assertion
-     * @param input the XML String that the assertion is verified against
+     * @param inputs contains only one argument: the XML String that the assertion is verified against
      * @return
      */
     @Override
-    public AssertionVerificationResultWithActualValue _verify(Assertion assertion, Object input) throws Exception {
+    public AssertionVerificationResultWithActualValue _verify(Assertion assertion, Object ...inputs) throws Exception {
         XPathAssertionProperties otherProperties = (XPathAssertionProperties) assertion.getOtherProperties();
 
         //  validate required parameters
@@ -35,12 +35,12 @@ public class XPathAssertionVerifier extends AssertionVerifier {
             throw new IllegalArgumentException("XPath not specified");
         } else if ("".equals(StringUtils.trimToEmpty(otherProperties.getExpectedValue()))) {
             throw new IllegalArgumentException("Expected Value not specified");
-        } else if (input == null) {
+        } else if (inputs[0] == null) {
             throw new IllegalArgumentException("XML is null");
         }
 
         AssertionVerificationResultWithActualValue result = new AssertionVerificationResultWithActualValue();
-        evaluateXPathExpression((String) input, otherProperties.getxPath(),
+        evaluateXPathExpression((String) inputs[0], otherProperties.getxPath(),
                 otherProperties.getNamespacePrefixes(), result);
         result.setResult(otherProperties.getExpectedValue().equals(result.getActualValue()) ?
                 TestResult.PASSED : TestResult.FAILED);
