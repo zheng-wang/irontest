@@ -188,6 +188,7 @@ public abstract class TestcaseRunner {
                     } else if (Teststep.TYPE_SOAP.equals(teststep.getType()) || Teststep.TYPE_HTTP.equals(teststep.getType())) {
                         assertionVerificationInput = ((HTTPAPIResponse) apiResponse).getHttpBody();
                     } else if (Assertion.TYPE_HTTP_STUB_HIT.equals(assertion.getType())) {
+                        assertionVerificationInput = ((WireMockServerAPIResponse) apiResponse).getAllServeEvents();
                         HTTPStubHitAssertionProperties otherProperties = (HTTPStubHitAssertionProperties) assertion.getOtherProperties();
                         assertionVerificationInput2 = getTestcaseRunContext().getHttpStubMappingInstanceIds().get(otherProperties.getStubNumber());
                     }

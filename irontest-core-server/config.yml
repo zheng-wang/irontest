@@ -83,6 +83,7 @@ sampleDatabase:
   url: jdbc:h2:./database/sample;AUTO_SERVER=TRUE
 
 viewRendererConfiguration:
-  .ftl:
+  freemarker:
+    object_wrapper: io.irontest.views.IronTestObjectWrapper(2.3.27)
     datetime_format: MMM d, yyyy hh:mm:ss.SSS a
 

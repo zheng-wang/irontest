@@ -1,16 +1,22 @@
 package io.irontest.core.runner;
 
-/**
- * Use this class because it seems not simple for Freemarker to serialize Java object to JSON string.
- */
-public class WireMockServerAPIResponse {
-    private String allServeEvents;
+import com.github.tomakehurst.wiremock.stubbing.ServeEvent;
 
-    public String getAllServeEvents() {
+import java.util.List;
+
+public class WireMockServerAPIResponse {
+    private boolean serializeFieldValueToJSONInFreeMarkerTemplate = true;
+    private List<ServeEvent> allServeEvents;
+
+    public List<ServeEvent> getAllServeEvents() {
         return allServeEvents;
     }
 
-    public void setAllServeEvents(String allServeEvents) {
+    public void setAllServeEvents(List<ServeEvent> allServeEvents) {
         this.allServeEvents = allServeEvents;
+    }
+
+    public boolean isSerializeFieldValueToJSONInFreeMarkerTemplate() {
+        return serializeFieldValueToJSONInFreeMarkerTemplate;
     }
 }
