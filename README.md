@@ -8,8 +8,6 @@ The tool
 * is designed for testers and developers, but in the same team/organization BAs or architects may also benefit from it. The thought here is that API test cases contain valuable business knowledge, and this knowledge should be shared and easily accessible to everyone in the team/organization.
 * does not support performance testing (for now).
 
-Notice: **tool is not all**. Test automation is an advanced skill. It takes a lot of effort to learn how to plan the automation, isolate the API under test and how to use tool to develop, run, share and maintain test cases. It also takes long time to accumulate great amount of knowledge and patterns. But you don't have to gain the complete skill in one month (maybe it never completes). Every bit of automation experience you gain will benefit your work immediately and keep benefiting you throughout the rest of your career. So start automating something now!
-
 Table of Contents:
 
 - [Build](#build)
