@@ -8,6 +8,7 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
     $scope.PROPERTIES_TAB_INDEX = 1;
     $scope.TEST_STEPS_TAB_INDEX = 2;
     $scope.DATA_TABLE_TAB_INDEX = 3;
+    $scope.HTTP_STUBS_TAB_INDEX = 4;
 
     $scope.activeTabIndex = ($window.localStorage.lastSelectedTabOnTestcaseEditView) ?
       parseInt($window.localStorage.lastSelectedTabOnTestcaseEditView) : $scope.TEST_STEPS_TAB_INDEX;

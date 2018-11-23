@@ -120,7 +120,7 @@
 }
 
 /* grids */
-#testcase-udp-grid, #teststep-grid, #testcase-datatable-grid {
+#testcase-udp-grid, #teststep-grid, #testcase-datatable-grid, #testcase-httpstub-grid {
   height: 550px;
   margin-top: 10px;
   margin-left: -15px;
