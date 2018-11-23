@@ -18,7 +18,8 @@ public interface HTTPStubMappingDAO {
             "testcase_id BIGINT, number SMALLINT NOT NULL, spec_json CLOB NOT NULL, " +
             "created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
-            "FOREIGN KEY (testcase_id) REFERENCES testcase(id) ON DELETE CASCADE)")
+            "FOREIGN KEY (testcase_id) REFERENCES testcase(id) ON DELETE CASCADE," +
+            "CONSTRAINT HTTPSTUBMAPPING_UNIQUE_NUMBER_CONSTRAINT UNIQUE(testcase_id, number))")
     void createTableIfNotExists();
 
     @SqlQuery("select * from httpstubmapping where testcase_id = :testcaseId order by number")

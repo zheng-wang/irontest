@@ -33,6 +33,8 @@ public class AssertionVerifierFactory {
             result = new JSONEqualAssertionVerifier();
         } else if (Assertion.TYPE_HTTP_STUB_HIT.equals(assertionType)) {
             result = new HTTPStubHitAssertionVerifier();
+        } else if (Assertion.TYPE_ALL_HTTP_STUB_REQUESTS_MATCHED.equals(assertionType)) {
+            result = new AllHTTPStubRequestsMatchedAssertionVerifier();
         } else {
             throw new RuntimeException("Unrecognized assertion type " + assertionType);
         }

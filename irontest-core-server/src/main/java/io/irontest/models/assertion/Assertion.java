@@ -16,6 +16,7 @@ public class Assertion {
     public static final String TYPE_JSONPATH = "JSONPath";
     public static final String TYPE_JSONPATH_XMLEQUAL = "JSONPathXMLEqual";
     public static final String TYPE_HTTP_STUB_HIT = "HTTPStubHit";
+    public static final String TYPE_ALL_HTTP_STUB_REQUESTS_MATCHED = "AllHTTPStubRequestsMatched";
     private Long id;    //  id being null means this is dynamically created assertion object (no record in the Assertion database table).
     private Long teststepId;
     @JsonView(ResourceJsonViews.TestcaseExport.class)
@@ -23,7 +24,8 @@ public class Assertion {
     @JsonView(ResourceJsonViews.TestcaseExport.class)
     private String type;
     @JsonView(ResourceJsonViews.TestcaseExport.class)
-    @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY, property = "type")
+    @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY, property = "type",
+            defaultImpl = Properties.class)
     @JsonSubTypes({
             @JsonSubTypes.Type(value = StatusCodeEqualAssertionProperties.class, name = Assertion.TYPE_STATUS_CODE_EQUAL),
             @JsonSubTypes.Type(value = ContainsAssertionProperties.class, name = Assertion.TYPE_CONTAINS),

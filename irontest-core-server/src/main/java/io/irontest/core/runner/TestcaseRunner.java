@@ -91,10 +91,13 @@ public abstract class TestcaseRunner {
             stubRequestsCheckStep.setName("Check HTTP stub requests");
             for (HTTPStubMapping stub: testcase.getHttpStubMappings()) {
                 Assertion stubHitAssertion = new Assertion(Assertion.TYPE_HTTP_STUB_HIT);
-                stubHitAssertion.setName("Stub #" + stub.getNumber() + " was hit exactly once.");
+                stubHitAssertion.setName("Stub was hit");
                 stubHitAssertion.setOtherProperties(new HTTPStubHitAssertionProperties(stub.getNumber()));
                 stubRequestsCheckStep.getAssertions().add(stubHitAssertion);
             }
+            Assertion allStubRequestsMatchedAssertion = new Assertion(Assertion.TYPE_ALL_HTTP_STUB_REQUESTS_MATCHED);
+            allStubRequestsMatchedAssertion.setName("All stub requests were matched");
+            stubRequestsCheckStep.getAssertions().add(allStubRequestsMatchedAssertion);
             testcase.getTeststeps().add(testcase.getTeststeps().size(), stubRequestsCheckStep);
         }
 
