@@ -2,7 +2,7 @@
 
 angular.module('irontest').factory('HTTPStubs', ['$resource',
   function($resource) {
-    return $resource('api/testcases/:testcaseId/httpstubs', {
+    return $resource('api/testcases/:testcaseId/httpstubs/:httpStubId', {
     }, {
       update: {
         method: 'PUT',

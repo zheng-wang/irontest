@@ -245,3 +245,10 @@
     </a>
   </div>
 </script>
+
+<!-- HTTP stub grid cell templates -->
+<script type="text/ng-template" id="httpStubGridURLCellTemplate.html">
+  <div class="ui-grid-cell-contents">
+    <a ui-sref="httpstub_edit({ testcaseId: row.entity.testcaseId, httpStubId: row.entity.id })">{{COL_FIELD}}</a>
+  </div>
+</script>

@@ -14,7 +14,7 @@ angular.module('irontest').controller('HTTPStubsController', ['$scope', 'HTTPStu
           name: 'number', displayName: 'NO.', width: '5%'
         },
         {
-          name: 'spec.request.url', displayName: 'URL', width: '50%'
+          name: 'spec.request.url', displayName: 'URL', width: '50%', cellTemplate:'httpStubGridURLCellTemplate.html'
         },
         {
           name: 'spec.request.method', displayName: 'Method', width: '5%'
@@ -25,9 +25,16 @@ angular.module('irontest').controller('HTTPStubsController', ['$scope', 'HTTPStu
     $scope.findByTestcaseId = function() {
       HTTPStubs.query({ testcaseId: $stateParams.testcaseId }, function(returnHTTPStubs) {
         $scope.httpStubs = returnHTTPStubs;
-        $scope.httpStubs.forEach(function(httpStub) {
-          httpStub.spec = JSON.parse(httpStub.specJson);
-        });
+      }, function(response) {
+        IronTestUtils.openErrorHTTPResponseModal(response);
+      });
+    };
+
+    $scope.findOne = function() {
+      HTTPStubs.get({
+        testcaseId: $stateParams.testcaseId, httpStubId: $stateParams.httpStubId
+      }, function(httpStub) {
+        $scope.httpStub = httpStub;
       }, function(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);
       });

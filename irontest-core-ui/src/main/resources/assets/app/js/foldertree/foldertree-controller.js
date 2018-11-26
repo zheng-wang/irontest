@@ -197,6 +197,7 @@ angular.module('irontest').controller('FolderTreeController', ['$scope', '$rootS
       switch (stateName) {
         case 'testcase_edit':
         case 'teststep_edit':
+        case 'httpstub_edit':
           tree.select_node(NODE_TYPE_TEST_CASE + params.testcaseId);
           break;
         case 'folder':
