@@ -1,8 +1,8 @@
 package io.irontest.resources;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import io.irontest.db.HTTPStubMappingDAO;
 import io.irontest.models.HTTPStubMapping;
-import io.irontest.models.UserDefinedProperty;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -20,7 +20,13 @@ public class HTTPStubResource {
     }
 
     @GET @Path("testcases/{testcaseId}/httpstubs")
+    @JsonView(ResourceJsonViews.HTTPStubUIGrid.class)
     public List<HTTPStubMapping> findByTestcaseId(@PathParam("testcaseId") long testcaseId) {
         return httpStubMappingDAO.findByTestcaseId(testcaseId);
+    }
+
+    @GET @Path("testcases/{testcaseId}/httpstubs/{httpStubId}")
+    public HTTPStubMapping findById(@PathParam("httpStubId") long httpStubId) {
+        return httpStubMappingDAO.findById(httpStubId);
     }
 }

@@ -24,4 +24,7 @@ public interface HTTPStubMappingDAO {
 
     @SqlQuery("select * from httpstubmapping where testcase_id = :testcaseId order by number")
     List<HTTPStubMapping> findByTestcaseId(@Bind("testcaseId") long testcaseId);
+
+    @SqlQuery("select * from httpstubmapping where id = :httpStubId")
+    HTTPStubMapping findById(@Bind("httpStubId") long httpStubId);
 }

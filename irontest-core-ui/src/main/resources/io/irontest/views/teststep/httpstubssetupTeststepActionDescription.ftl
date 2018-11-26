@@ -6,7 +6,7 @@
   <div class="row">
     <div class="col-lg-1">${ stubMapping.number }</div>
     <div class="col-lg-11">
-      <textarea class="form-control" rows="8" readonly>${ stubMapping.specJson }</textarea>
+      <textarea class="form-control" rows="8" readonly>${ stubMapping.spec }</textarea>
     </div>
   </div>
 </#list>

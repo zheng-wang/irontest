@@ -8,4 +8,6 @@ public class ResourceJsonViews {
     public static class TestcaseRunResultOnTestcaseEditView {}
 
     public static class TestcaseExport {}
+
+    public static class HTTPStubUIGrid {}
 }
