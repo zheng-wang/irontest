@@ -17,7 +17,7 @@ public class HTTPStubMapping {
         this.id = id;
         this.testcaseId = testcaseId;
         this.number = number;
-        this.spec = spec;
+        setSpec(spec);
     }
 
     public long getId() {
@@ -50,5 +50,6 @@ public class HTTPStubMapping {
 
     public void setSpec(StubMapping spec) {
         this.spec = spec;
+        this.spec.setId(null);    //  UUID is for stub instance, not for stub spec/definition.
     }
 }

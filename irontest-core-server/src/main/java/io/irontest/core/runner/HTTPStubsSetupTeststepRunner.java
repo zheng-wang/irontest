@@ -22,10 +22,11 @@ public class HTTPStubsSetupTeststepRunner extends TeststepRunner {
         HTTPStubsSetupTeststepProperties otherProperties = (HTTPStubsSetupTeststepProperties) teststep.getOtherProperties();
         wireMockServer.loadMappingsUsing(stubMappings -> {
             for (HTTPStubMapping stubMapping: otherProperties.getHttpStubMappings()) {
-                StubMapping mapping = stubMapping.getSpec();
-                httpStubMappingInstanceIds.put(stubMapping.getNumber(), mapping.getId());
-                mapping.setDirty(false);
-                stubMappings.addMapping(mapping);
+                //  create (clone) a new instance out of the stub spec, with UUID generated for the instance
+                StubMapping stubInstance = StubMapping.buildFrom(StubMapping.buildJsonStringFor(stubMapping.getSpec()));
+                httpStubMappingInstanceIds.put(stubMapping.getNumber(), stubInstance.getId());
+                stubInstance.setDirty(false);
+                stubMappings.addMapping(stubInstance);
             }
         });
 
