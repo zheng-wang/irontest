@@ -39,5 +39,10 @@ angular.module('irontest').controller('HTTPStubsController', ['$scope', 'HTTPStu
         IronTestUtils.openErrorHTTPResponseModal(response);
       });
     };
+
+    $scope.showExpectedRequestBodyTextArea = function() {
+      var httpStub = $scope.httpStub;
+      return httpStub.spec.request.bodyPatterns.some(e => 'equalToXml' in e);
+    }
   }
 ]);
