@@ -7,6 +7,8 @@ angular.module('irontest').controller('HTTPStubsController', ['$scope', 'HTTPStu
     //  HTTP stubs of the test case
     $scope.httpStubs = [];
 
+    $scope.expectedRequestBodyMainPattern = 'abc';
+
     $scope.httpStubGridOptions = {
       data: 'httpStubs', enableColumnMenus: false,
       columnDefs: [
@@ -35,6 +37,8 @@ angular.module('irontest').controller('HTTPStubsController', ['$scope', 'HTTPStu
         testcaseId: $stateParams.testcaseId, httpStubId: $stateParams.httpStubId
       }, function(httpStub) {
         $scope.httpStub = httpStub;
+        var mainBodyPattern = httpStub.spec.request.bodyPatterns.find(e => ('equalToXml' in e || 'equalToJson' in e));
+        $scope.expectedRequestBodyMainPattern = mainBodyPattern.equalToXml || mainBodyPattern.equalToJson;
       }, function(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);
       });
@@ -42,7 +46,11 @@ angular.module('irontest').controller('HTTPStubsController', ['$scope', 'HTTPStu
 
     $scope.showExpectedRequestBodyTextArea = function() {
       var httpStub = $scope.httpStub;
-      return httpStub.spec.request.bodyPatterns.some(e => 'equalToXml' in e);
+      if (typeof httpStub === 'undefined') {    //  the stub hasn't been loaded into $scope (by the findOne function)
+        return false;
+      } else {
+        return httpStub.spec.request.bodyPatterns.some(e => 'equalToXml' in e || 'equalToJson' in e);
+      }
     }
   }
 ]);

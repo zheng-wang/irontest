@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.http.ResponseDefinition;
+import com.github.tomakehurst.wiremock.matching.ContentPattern;
 import com.github.tomakehurst.wiremock.matching.RequestPattern;
 import com.github.tomakehurst.wiremock.stubbing.StubMapping;
 import com.jayway.jsonpath.Configuration;
@@ -34,6 +35,7 @@ import io.irontest.auth.SimplePrincipal;
 import io.irontest.db.*;
 import io.irontest.models.AppInfo;
 import io.irontest.models.AppMode;
+import io.irontest.models.mixin.ContentPatternMixIn;
 import io.irontest.models.mixin.RequestPatternMixIn;
 import io.irontest.models.mixin.ResponseDefinitionMixIn;
 import io.irontest.models.mixin.StubMappingMixIn;
@@ -102,6 +104,7 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         objectMapper.addMixIn(StubMapping.class, StubMappingMixIn.class);
         objectMapper.addMixIn(RequestPattern.class, RequestPatternMixIn.class);
         objectMapper.addMixIn(ResponseDefinition.class, ResponseDefinitionMixIn.class);
+        objectMapper.addMixIn(ContentPattern.class, ContentPatternMixIn.class);
     }
 
     private boolean isInTeamMode(IronTestConfiguration configuration) {

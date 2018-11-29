@@ -31,47 +31,48 @@
           <input id="url" name="url" type="text" class="form-control" ng-change="autoSave(httpStubForm.$valid)"
                  ng-model="httpStub.spec.request.url" spellcheck="false" ng-readonly="appStatus.isForbidden()">
         </div>
+        <div class="col-lg-1 pull-right btn-group" uib-dropdown keyboard-nav>
+          <button id="single-button" type="button" class="btn btn-primary" uib-dropdown-toggle>
+            <i class="fa fa-list"></i> <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu">
+            <li role="menuitem" ng-class="{'disabled': appStatus.isForbidden() || httpStub.spec.request.method === 'GET'
+                || httpStub.spec.request.method === 'DELETE'}">
+              <a ng-click="appStatus.isForbidden() ? $event.stopPropagation() : setExpectedRequestBody()" href="">Set Expected Request Body</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-lg-2 text-center">
+          <label for="expectedRequestBodyMainPattern" class="control-label">Expected Request Body</label>
+        </div>
+        <div class="col-lg-2">
+          <!-- This is the 'main' body pattern, like 'equalToJson'. Additional body patterns like 'ignoreArrayOrder' are complementary to the 'main' pattern. -->
+          <select name="expectedRequestBodyMainPattern" id="expectedRequestBodyMainPattern" class="form-control"
+                  ng-model="expectedRequestBodyMainPattern" ng-disabled="appStatus.isForbidden()"
+                  ng-change="expectedRequestBodyMainPatternChanged(httpStubForm.$valid)">
+            <option value="abc">abc</option>
+            <option value="equalToXml">equalToXml</option>
+            <option value="equalToJson">equalToJson</option>
+          </select>
+        </div>
+        <div class="col-lg-offset-2 col-lg-2 text-center">
+          <label for="responseBody" class="control-label">Response Body</label>
+        </div>
       </div>
       <div class="form-group">
         <div class="col-lg-6">
-          <div class="row">
-            <div class="col-lg-4 text-center">
-              <label for="expectedRequestBodyMainPattern" class="control-label">Expected Request Body</label>
-            </div>
-            <div class="col-lg-3">
-              <!-- This is the 'main' body pattern, like 'equalToJson'. Additional body patterns like 'ignoreArrayOrder' are complementary to the 'main' pattern. -->
-              <select name="expectedRequestBodyMainPattern" id="expectedRequestBodyMainPattern" class="form-control"
-                      ng-model="expectedRequestBodyMainPattern" ng-disabled="appStatus.isForbidden()"
-                      ng-change="expectedRequestBodyMainPatternChanged(httpStubForm.$valid)">
-                <option value="equalToXml">equalToXml</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-group"></div> <!-- spacer -->
-          <div class="row">
-            <div class="col-lg-12">
-              <textarea id="expectedRequestBodyTextArea" name="expectedRequestBodyTextArea" rows="35"
-                        class="form-control" ng-model="expectedRequestBodyText"
-                        ng-change="expectedRequestBodyTextChanged(httpStubForm.$valid)"
-                        spellcheck="false" ng-readonly="appStatus.isForbidden()"
-                        ng-show="showExpectedRequestBodyTextArea()"></textarea>
-            </div>
-          </div>
+          <textarea id="expectedRequestBodyTextArea" name="expectedRequestBodyTextArea" rows="35"
+                    class="form-control" ng-model="expectedRequestBodyText"
+                    ng-change="expectedRequestBodyTextChanged(httpStubForm.$valid)"
+                    spellcheck="false" ng-readonly="appStatus.isForbidden()"
+                    ng-show="showExpectedRequestBodyTextArea()"></textarea>
         </div>
         <div class="col-lg-6">
-          <div class="row">
-            <div class="col-lg-12">
-              <label for="responseBody" class="control-label">Response Body</label>
-            </div>
-          </div>
-          <div class="form-group"></div> <!-- spacer -->
-          <div class="row">
-            <div class="col-lg-12">
-              <textarea id="responseBody" name="responseBody" rows="35" ng-model="httpStub.spec.response.body"
-                      placeholder="Response Body" class="form-control" spellcheck="false"
-                      ng-readonly="appStatus.isForbidden()"></textarea>
-            </div>
-          </div>
+          <textarea id="responseBody" name="responseBody" rows="35" ng-model="httpStub.spec.response.body"
+                  placeholder="Response Body" class="form-control" spellcheck="false"
+                  ng-readonly="appStatus.isForbidden()"></textarea>
         </div>
       </div>
     </form>
