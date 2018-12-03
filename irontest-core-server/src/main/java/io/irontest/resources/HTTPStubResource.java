@@ -3,11 +3,10 @@ package io.irontest.resources;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.irontest.db.HTTPStubMappingDAO;
 import io.irontest.models.HTTPStubMapping;
+import io.irontest.models.UserDefinedProperty;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.annotation.security.PermitAll;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
@@ -23,6 +22,13 @@ public class HTTPStubResource {
     @JsonView(ResourceJsonViews.HTTPStubUIGrid.class)
     public List<HTTPStubMapping> findByTestcaseId(@PathParam("testcaseId") long testcaseId) {
         return httpStubMappingDAO.findByTestcaseId(testcaseId);
+    }
+
+    @POST
+    @Path("testcases/{testcaseId}/httpstubs")
+    @PermitAll
+    public HTTPStubMapping create(@PathParam("testcaseId") long testcaseId) {
+        return httpStubMappingDAO.insert(testcaseId);
     }
 
     @GET @Path("testcases/{testcaseId}/httpstubs/{httpStubId}")

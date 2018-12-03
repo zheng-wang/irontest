@@ -3,11 +3,10 @@
 //  NOTICE:
 //    The $scope here prototypically inherits from the $scope of TestcasesController,
 angular.module('irontest').controller('HTTPStubsController', ['$scope', 'HTTPStubs', 'IronTestUtils', '$stateParams',
-  function($scope, HTTPStubs, IronTestUtils, $stateParams) {
+    '$state',
+  function($scope, HTTPStubs, IronTestUtils, $stateParams, $state) {
     //  HTTP stubs of the test case
     $scope.httpStubs = [];
-
-    $scope.expectedRequestBodyMainPattern = 'abc';
 
     $scope.httpStubGridOptions = {
       data: 'httpStubs', enableColumnMenus: false,
@@ -25,8 +24,17 @@ angular.module('irontest').controller('HTTPStubsController', ['$scope', 'HTTPStu
     };
 
     $scope.findByTestcaseId = function() {
-      HTTPStubs.query({ testcaseId: $stateParams.testcaseId }, function(returnHTTPStubs) {
-        $scope.httpStubs = returnHTTPStubs;
+      HTTPStubs.query({ testcaseId: $stateParams.testcaseId }, function(httpStubs) {
+        $scope.httpStubs = httpStubs;
+      }, function(response) {
+        IronTestUtils.openErrorHTTPResponseModal(response);
+      });
+    };
+
+    $scope.createHTTPStub = function() {
+      var httpStub = new HTTPStubs();
+      httpStub.$save({ testcaseId: $stateParams.testcaseId }, function(httpStub) {
+        $state.go('httpstub_edit', {testcaseId: $stateParams.testcaseId, httpStubId: httpStub.id});
       }, function(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);
       });
@@ -37,20 +45,24 @@ angular.module('irontest').controller('HTTPStubsController', ['$scope', 'HTTPStu
         testcaseId: $stateParams.testcaseId, httpStubId: $stateParams.httpStubId
       }, function(httpStub) {
         $scope.httpStub = httpStub;
-        var mainBodyPattern = httpStub.spec.request.bodyPatterns.find(e => ('equalToXml' in e || 'equalToJson' in e));
-        $scope.expectedRequestBodyMainPattern = mainBodyPattern.equalToXml || mainBodyPattern.equalToJson;
+        var bodyPatterns = httpStub.spec.request.bodyPatterns;
+        if (bodyPatterns) {
+          for (var i = 0; i < bodyPatterns.length; i++) {
+            var bodyPattern = bodyPatterns[i];
+            if ('equalToXml' in bodyPattern) {
+              $scope.expectedRequestBodyMainPattern = 'equalToXml';
+              $scope.expectedRequestBodyMainPatternValue = bodyPattern.equalToXml;
+              break;
+            } else if ('equalToJson' in bodyPattern) {
+              $scope.expectedRequestBodyMainPattern = 'equalToJson';
+              $scope.expectedRequestBodyMainPatternValue = bodyPattern.equalToJson;
+              break;
+            }
+          }
+        }
       }, function(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);
       });
     };
-
-    $scope.showExpectedRequestBodyTextArea = function() {
-      var httpStub = $scope.httpStub;
-      if (typeof httpStub === 'undefined') {    //  the stub hasn't been loaded into $scope (by the findOne function)
-        return false;
-      } else {
-        return httpStub.spec.request.bodyPatterns.some(e => 'equalToXml' in e || 'equalToJson' in e);
-      }
-    }
   }
 ]);

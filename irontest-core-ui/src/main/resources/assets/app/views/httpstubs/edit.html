@@ -52,22 +52,27 @@
           <select name="expectedRequestBodyMainPattern" id="expectedRequestBodyMainPattern" class="form-control"
                   ng-model="expectedRequestBodyMainPattern" ng-disabled="appStatus.isForbidden()"
                   ng-change="expectedRequestBodyMainPatternChanged(httpStubForm.$valid)">
-            <option value="abc">abc</option>
-            <option value="equalToXml">equalToXml</option>
-            <option value="equalToJson">equalToJson</option>
+            <option value="equalToXml">Equal to XML</option>
+            <option value="equalToJson">Equal to JSON</option>
           </select>
         </div>
         <div class="col-lg-offset-2 col-lg-2 text-center">
+          <label for="responseStatusCode" class="control-label">Response Status Code</label>
+        </div>
+        <div class="col-lg-1">
+          <input id="responseStatusCode" name="responseStatusCode" class="form-control" type="text" maxlength="3"
+                 pattern="[0-9]\d*" ng-model="httpStub.spec.response.status"/>
+        </div>
+        <div class="col-lg-2">
           <label for="responseBody" class="control-label">Response Body</label>
         </div>
       </div>
       <div class="form-group">
         <div class="col-lg-6">
-          <textarea id="expectedRequestBodyTextArea" name="expectedRequestBodyTextArea" rows="35"
-                    class="form-control" ng-model="expectedRequestBodyText"
-                    ng-change="expectedRequestBodyTextChanged(httpStubForm.$valid)"
-                    spellcheck="false" ng-readonly="appStatus.isForbidden()"
-                    ng-show="showExpectedRequestBodyTextArea()"></textarea>
+          <textarea id="expectedRequestBodyMainPatternValue" name="expectedRequestBodyMainPatternValue" rows="35"
+                    class="form-control" ng-model="expectedRequestBodyMainPatternValue"
+                    ng-change="expectedRequestBodyMainPatternValueChanged(httpStubForm.$valid)"
+                    spellcheck="false" ng-readonly="appStatus.isForbidden()"></textarea>
         </div>
         <div class="col-lg-6">
           <textarea id="responseBody" name="responseBody" rows="35" ng-model="httpStub.spec.response.body"
