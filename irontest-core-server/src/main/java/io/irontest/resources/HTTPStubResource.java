@@ -3,7 +3,6 @@ package io.irontest.resources;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.irontest.db.HTTPStubMappingDAO;
 import io.irontest.models.HTTPStubMapping;
-import io.irontest.models.UserDefinedProperty;
 
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.*;
@@ -31,8 +30,20 @@ public class HTTPStubResource {
         return httpStubMappingDAO.insert(testcaseId);
     }
 
+    @DELETE @Path("httpstubs/{httpStubId}")
+    @PermitAll
+    public void delete(@PathParam("httpStubId") long httpStubId) {
+        httpStubMappingDAO.deleteById(httpStubId);
+    }
+
     @GET @Path("testcases/{testcaseId}/httpstubs/{httpStubId}")
     public HTTPStubMapping findById(@PathParam("httpStubId") long httpStubId) {
         return httpStubMappingDAO.findById(httpStubId);
+    }
+
+    @PUT @Path("httpstubs/{httpStubId}")
+    @PermitAll
+    public void update(HTTPStubMapping stub) {
+        httpStubMappingDAO.update(stub);
     }
 }

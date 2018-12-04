@@ -37,7 +37,7 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
     });
 
     $scope.teststepGridOptions = {
-      enableSorting: false,
+      enableSorting: false, enableColumnMenus: false,
       rowTemplate: '<div grid="grid" class="ui-grid-draggable-row" draggable="true"><div ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader, \'custom\': true }" ui-grid-cell></div></div>',
       columnDefs: [
         {
@@ -51,7 +51,7 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
         { name: 'type', width: 80, minWidth: 80 },
         { name: 'description' },
         {
-          name: 'delete', width: 100, minWidth: 80, enableSorting: false, enableFiltering: false,
+          name: 'delete', width: 70, minWidth: 70, enableSorting: false, enableFiltering: false,
           cellTemplate: 'teststepGridDeleteCellTemplate.html'
         },
       ],

@@ -247,8 +247,19 @@
 </script>
 
 <!-- HTTP stub grid cell templates -->
+<script type="text/ng-template" id="httpStubGridNOCellTemplate.html">
+  <div class="ui-grid-cell-contents text-center">{{COL_FIELD}}</div>
+</script>
 <script type="text/ng-template" id="httpStubGridURLCellTemplate.html">
   <div class="ui-grid-cell-contents">
     <a ui-sref="httpstub_edit({ testcaseId: row.entity.testcaseId, httpStubId: row.entity.id })">{{COL_FIELD}}</a>
+  </div>
+</script>
+<script type="text/ng-template" id="httpStubGridDeleteCellTemplate.html">
+  <div class="ui-grid-cell-contents">
+    <a ng-click="grid.appScope.appStatus.isForbidden() ? angular.noop() : grid.appScope.removeHTTPStub(row.entity)"
+       ng-class="{'no-underline' : grid.appScope.appStatus.isForbidden()}" href="">
+      <i class="glyphicon glyphicon-trash center-block text-center"></i>
+    </a>
   </div>
 </script>

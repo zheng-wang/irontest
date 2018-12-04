@@ -1,7 +1,7 @@
 package io.irontest.db;
 
+import com.github.tomakehurst.wiremock.stubbing.StubMapping;
 import io.irontest.models.HTTPStubMapping;
-import io.irontest.models.UserDefinedProperty;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
@@ -39,8 +39,18 @@ public interface HTTPStubMappingDAO {
 
     @Transaction
     default HTTPStubMapping insert(long testcaseId) {
-        String specJson = "{ \"request\": { \"method\": \"GET\" }, \"response\": { \"status\": 200 } }";
+        String specJson = "{ \"request\": { \"url\": \"/\", \"method\": \"GET\" }, \"response\": { \"status\": 200 } }";
         long id = _insert(testcaseId, specJson);
         return findById(id);
+    }
+
+    @SqlUpdate("delete from httpstubmapping where id = :id")
+    void deleteById(@Bind("id") long id);
+
+    @SqlUpdate("update httpstubmapping set spec_json = :specJson, updated = CURRENT_TIMESTAMP where id = :id")
+    void _update(@Bind("id") long id, @Bind("specJson") String specJson);
+
+    default void update(HTTPStubMapping stub) {
+        _update(stub.getId(), StubMapping.buildJsonStringFor(stub.getSpec()));
     }
 }
