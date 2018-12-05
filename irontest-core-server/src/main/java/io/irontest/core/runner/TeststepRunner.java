@@ -7,6 +7,7 @@ import io.irontest.db.UtilsDAO;
 import io.irontest.models.endpoint.Endpoint;
 import io.irontest.models.teststep.Teststep;
 import io.irontest.models.teststep.TeststepRequestType;
+import io.irontest.utils.IronTestUtils;
 import org.apache.commons.text.StrSubstitutor;
 
 import java.io.IOException;
@@ -62,6 +63,7 @@ public abstract class TeststepRunner {
         List<String> undefinedStringProperties = new ArrayList<>();
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
+        IronTestUtils.addMixInsForWireMock(objectMapper);
 
         //  resolve property references in teststep.otherProperties
         String otherPropertiesJSON = objectMapper.writeValueAsString(teststep.getOtherProperties());

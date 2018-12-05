@@ -1,13 +1,13 @@
 <div ng-controller="HTTPStubsController" ng-init="findOne()">
   <div class="row page-header" id="page-header">
-    <div class="col-lg-7 page-header-part1">
+    <div class="col-lg-4 page-header-part1">
       <h3><div>HTTP Stub - {{httpStub.number}}</div></h3>
     </div>
     <div class="row page-header-part2">
       <div class="col-lg-2 text-center">
         <h4><label irt-successful-message></label></h4>
       </div>
-      <div class="col-lg-1 text-left">
+      <div class="col-lg-offset-3 col-lg-1 text-left">
         <h4><a class="back-link" ui-sref="testcase_edit({testcaseId: httpStub.testcaseId})">Back</a></h4>
       </div>
     </div>
@@ -19,7 +19,7 @@
         <label for="method" class="col-lg-1 control-label">Method</label>
         <div class="col-lg-1">
           <select name="method" id="method" class="form-control" ng-model="httpStub.spec.request.method"
-                  ng-change="update(httpStubForm.$valid)" ng-disabled="appStatus.isForbidden()">
+                  ng-change="methodChanged(httpStubForm.$valid)" ng-disabled="appStatus.isForbidden()">
             <option value="GET">GET</option>
             <option value="POST">POST</option>
             <option value="PUT">PUT</option>
@@ -42,30 +42,32 @@
             <i class="fa fa-list"></i> <span class="caret"></span>
           </button>
           <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu">
-            <li role="menuitem" ng-class="{'disabled': expectedRequestBodyNotApplicable()}">
-              <a ng-click="expectedRequestBodyNotApplicable() ? $event.stopPropagation() : enableExpectedRequestBody()" href="">Enable Expected Request Body</a>
+            <li role="menuitem" ng-class="{'disabled': requestBodyNotApplicable()}">
+              <a ng-click="requestBodyNotApplicable() ? $event.stopPropagation() : toggleRestrictRequestBody(httpStubForm.$valid)" href="">
+                <i class="fa {{ httpStub.spec.request.bodyPatterns ? 'fa-check-square-o' : 'fa-square-o' }}"></i> Restrict Request Body
+              </a>
             </li>
           </ul>
         </div>
       </div>
       <div class="form-group">
-        <div class="col-lg-2 text-center">
-          <label for="expectedRequestBodyMainPattern" class="control-label" ng-show="httpStub.spec.request.bodyPatterns">Expected Request Body</label>
+        <div class="col-lg-2">
+          <label for="requestBodyMainPatternName" class="control-label" ng-if="httpStub.spec.request.bodyPatterns">Request Body</label>
         </div>
         <div class="col-lg-2">
-          <!-- This is the 'main' body pattern, like 'equalToJson'. Additional body patterns like 'ignoreArrayOrder' are complementary to the 'main' pattern. -->
-          <select name="expectedRequestBodyMainPattern" id="expectedRequestBodyMainPattern" class="form-control"
-                  ng-model="expectedRequestBodyMainPattern" ng-disabled="appStatus.isForbidden()"
-                  ng-change="expectedRequestBodyMainPatternChanged(httpStubForm.$valid)"
-                  ng-show="httpStub.spec.request.bodyPatterns">
+          <!-- This is the 'main' request body pattern, like 'equalToJson'. Additional request body patterns like 'ignoreArrayOrder' are complementary to the 'main' pattern. -->
+          <select name="requestBodyMainPatternName" id="requestBodyMainPatternName" class="form-control"
+                  ng-model="requestBodyMainPattern.name" ng-disabled="appStatus.isForbidden()"
+                  ng-change="requestBodyMainPatternNameChanged(httpStubForm.$valid)"
+                  ng-if="httpStub.spec.request.bodyPatterns">
             <option value="equalToXml">Equal to XML</option>
             <option value="equalToJson">Equal to JSON</option>
           </select>
         </div>
-        <div class="col-lg-offset-2 col-lg-2 text-center">
+        <div class="col-lg-offset-2 col-lg-2">
           <label for="responseStatusCode" class="control-label">Response Status Code</label>
         </div>
-        <div class="col-lg-1">
+        <div class="col-lg-1 no-left-padding" style="margin-left: -50px">
           <input id="responseStatusCode" name="responseStatusCode" class="form-control" type="text" maxlength="3"
                  pattern="[0-9]\d*" ng-model="httpStub.spec.response.status" ng-change="autoSave(httpStubForm.$valid)"/>
         </div>
@@ -75,11 +77,11 @@
       </div>
       <div class="form-group">
         <div class="col-lg-6">
-          <textarea id="expectedRequestBodyMainPatternValue" name="expectedRequestBodyMainPatternValue" rows="35"
-                    class="form-control" ng-model="expectedRequestBodyMainPatternValue"
-                    ng-change="expectedRequestBodyMainPatternValueChanged(httpStubForm.$valid)"
+          <textarea id="requestBodyMainPatternValue" name="requestBodyMainPatternValue" rows="35"
+                    class="form-control" ng-model="requestBodyMainPattern.value"
+                    ng-change="requestBodyMainPatternValueChanged(httpStubForm.$valid)"
                     spellcheck="false" ng-readonly="appStatus.isForbidden()"
-                    ng-show="httpStub.spec.request.bodyPatterns"></textarea>
+                    ng-if="requestBodyMainPattern.name"></textarea>
         </div>
         <div class="col-lg-6">
           <textarea id="responseBody" name="responseBody" rows="35" ng-model="httpStub.spec.response.body"

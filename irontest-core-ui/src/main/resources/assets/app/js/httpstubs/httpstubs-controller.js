@@ -5,6 +5,7 @@
 angular.module('irontest').controller('HTTPStubsController', ['$scope', 'HTTPStubs', 'IronTestUtils', '$stateParams',
     '$state', '$timeout', '$rootScope',
   function($scope, HTTPStubs, IronTestUtils, $stateParams, $state, $timeout, $rootScope) {
+    //  -------------------------------  for HTTP stub grid on test case edit view -----------------------------------
     //  HTTP stubs of the test case
     $scope.httpStubs = [];
 
@@ -25,8 +26,19 @@ angular.module('irontest').controller('HTTPStubsController', ['$scope', 'HTTPStu
           name: 'delete', width: 70, minWidth: 70, enableSorting: false,
           cellTemplate: 'httpStubGridDeleteCellTemplate.html'
         }
-      ]
+      ],
+      onRegisterApi: function(gridApi) {
+        $scope.gridApi = gridApi;
+
+        $scope.$parent.handleTestcaseRunResultOutlineAreaDisplay();
+      }
     };
+
+    $scope.$on('testcaseRunResultOutlineAreaShown', function() {
+      if ($scope.gridApi) {
+        $scope.gridApi.core.handleWindowResize();
+      }
+    });
 
     $scope.findByTestcaseId = function() {
       HTTPStubs.query({ testcaseId: $stateParams.testcaseId }, function(httpStubs) {
@@ -53,6 +65,12 @@ angular.module('irontest').controller('HTTPStubsController', ['$scope', 'HTTPStu
       });
     };
 
+    //  -------------------------------  for HTTP stub edit view -----------------------------------
+    var resetRequestBodyMainPattern = function() {
+      $scope.requestBodyMainPattern = { name: null, value: null };
+    };
+    resetRequestBodyMainPattern();
+
     var timer;
     $scope.autoSave = function(isValid) {
       if (timer) $timeout.cancel(timer);
@@ -63,9 +81,8 @@ angular.module('irontest').controller('HTTPStubsController', ['$scope', 'HTTPStu
 
     $scope.update = function(isValid) {
       if (isValid) {
-        $scope.httpStub.$update(function(response) {
+        $scope.httpStub.$update(function() {
           $scope.$broadcast('successfullySaved');
-          $scope.httpStub = response;
         }, function(response) {
           IronTestUtils.openErrorHTTPResponseModal(response);
         });
@@ -81,16 +98,14 @@ angular.module('irontest').controller('HTTPStubsController', ['$scope', 'HTTPStu
         $scope.httpStub = httpStub;
         var bodyPatterns = httpStub.spec.request.bodyPatterns;
         if (bodyPatterns) {
-          for (var i = 0; i < bodyPatterns.length; i++) {
-            var bodyPattern = bodyPatterns[i];
+          var bodyPattern = bodyPatterns[0];
+          if (bodyPattern) {
             if ('equalToXml' in bodyPattern) {
-              $scope.expectedRequestBodyMainPattern = 'equalToXml';
-              $scope.expectedRequestBodyMainPatternValue = bodyPattern.equalToXml;
-              break;
+              $scope.requestBodyMainPattern.name = 'equalToXml';
+              $scope.requestBodyMainPattern.value = bodyPattern.equalToXml;
             } else if ('equalToJson' in bodyPattern) {
-              $scope.expectedRequestBodyMainPattern = 'equalToJson';
-              $scope.expectedRequestBodyMainPatternValue = bodyPattern.equalToJson;
-              break;
+              $scope.requestBodyMainPattern.name = 'equalToJson';
+              $scope.requestBodyMainPattern.value = bodyPattern.equalToJson;
             }
           }
         }
@@ -99,8 +114,8 @@ angular.module('irontest').controller('HTTPStubsController', ['$scope', 'HTTPStu
       });
     };
 
-    $scope.expectedRequestBodyNotApplicable = function() {
-      if ($scope.httpStub) {
+    $scope.requestBodyNotApplicable = function() {
+      if ($scope.httpStub) {     //  when the view is on loading, there is no $scope.httpStub
         var requestMethod = $scope.httpStub.spec.request.method;
         return $rootScope.appStatus.isForbidden() || requestMethod === 'GET' || requestMethod === 'DELETE';
       } else {
@@ -108,12 +123,49 @@ angular.module('irontest').controller('HTTPStubsController', ['$scope', 'HTTPStu
       }
     };
 
-    $scope.enableExpectedRequestBody = function() {
+    $scope.methodChanged = function(isValid) {
       var request = $scope.httpStub.spec.request;
-      if (!request.bodyPatterns) {
-        request.bodyPatterns = [];
-        $scope.update(true);
+      if (request.bodyPatterns && $scope.requestBodyNotApplicable()) {
+        delete request.bodyPatterns;
+        resetRequestBodyMainPattern();
       }
+      $scope.update(isValid);
+    };
+
+    $scope.toggleRestrictRequestBody = function(isValid) {
+      var request = $scope.httpStub.spec.request;
+      if (request.bodyPatterns) {
+        delete request.bodyPatterns;
+      } else {
+        request.bodyPatterns = [];
+      }
+      resetRequestBodyMainPattern();
+      $scope.update(isValid);
+    };
+
+    $scope.requestBodyMainPatternNameChanged = function(isValid) {
+      var newMainPatternName = $scope.requestBodyMainPattern.name;
+      var bodyPatterns = $scope.httpStub.spec.request.bodyPatterns;
+      bodyPatterns.length = 0;    //  clear the bodyPatterns array
+      var bodyPattern = new Object();
+      var newMainPatternValue;
+      if (newMainPatternName === 'equalToXml') {
+        newMainPatternValue = '<a/>';
+      } else if (newMainPatternName === 'equalToJson') {
+        newMainPatternValue = null;
+      }
+      $scope.requestBodyMainPattern.value = newMainPatternValue;
+      bodyPattern[newMainPatternName] = newMainPatternValue;
+      bodyPatterns.push(bodyPattern);
+      $scope.update(isValid);
+    };
+
+    $scope.requestBodyMainPatternValueChanged = function(isValid) {
+      var mainPatternName = $scope.requestBodyMainPattern.name;
+      var mainPatternValue = $scope.requestBodyMainPattern.value;
+      var bodyPattern = $scope.httpStub.spec.request.bodyPatterns[0];
+      bodyPattern[mainPatternName] = mainPatternValue;
+      $scope.autoSave(isValid);
     };
   }
 ]);

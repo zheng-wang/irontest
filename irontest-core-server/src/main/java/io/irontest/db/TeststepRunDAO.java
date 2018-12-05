@@ -2,17 +2,10 @@ package io.irontest.db;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.tomakehurst.wiremock.http.LoggedResponse;
-import com.github.tomakehurst.wiremock.http.ResponseDefinition;
-import com.github.tomakehurst.wiremock.matching.RequestPattern;
-import com.github.tomakehurst.wiremock.stubbing.StubMapping;
 import io.irontest.models.endpoint.Endpoint;
-import io.irontest.models.mixin.LoggedResponseMixIn;
-import io.irontest.models.mixin.RequestPatternMixIn;
-import io.irontest.models.mixin.ResponseDefinitionMixIn;
-import io.irontest.models.mixin.StubMappingMixIn;
 import io.irontest.models.testrun.TeststepRun;
 import io.irontest.models.teststep.Teststep;
+import io.irontest.utils.IronTestUtils;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
@@ -61,10 +54,7 @@ public interface TeststepRunDAO {
         }
 
         ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.addMixIn(StubMapping.class, StubMappingMixIn.class);
-        objectMapper.addMixIn(RequestPattern.class, RequestPatternMixIn.class);
-        objectMapper.addMixIn(ResponseDefinition.class, ResponseDefinitionMixIn.class);
-        objectMapper.addMixIn(LoggedResponse.class, LoggedResponseMixIn.class);
+        IronTestUtils.addMixInsForWireMock(objectMapper);
         long id = _insert(testcaseRunId, testcaseIndividualRunId, objectMapper.writeValueAsString(teststep),
                 objectMapper.writeValueAsString(teststepRun.getResponse()), teststepRun.getInfoMessage(),
                 teststepRun.getErrorMessage(), objectMapper.writeValueAsString(teststepRun.getAssertionVerifications()),

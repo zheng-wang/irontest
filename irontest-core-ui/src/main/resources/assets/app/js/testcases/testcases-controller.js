@@ -186,6 +186,9 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
             case $scope.DATA_TABLE_TAB_INDEX:
               majorElementId = 'testcase-datatable-grid';
               break;
+            case $scope.HTTP_STUBS_TAB_INDEX:
+              majorElementId = 'testcase-httpstub-grid';
+              break;
           }
           var pageWrapperObj = document.getElementById('page-wrapper');
           var pageWrapperHeight = pageWrapperObj.offsetHeight;
@@ -214,6 +217,7 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
                 break;
               case $scope.PROPERTIES_TAB_INDEX:
               case $scope.DATA_TABLE_TAB_INDEX:
+              case $scope.HTTP_STUBS_TAB_INDEX:
                 $scope.$broadcast('testcaseRunResultOutlineAreaShown');
                 break;
             }

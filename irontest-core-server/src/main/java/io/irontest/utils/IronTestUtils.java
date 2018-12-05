@@ -1,6 +1,11 @@
 package io.irontest.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.tomakehurst.wiremock.http.LoggedResponse;
+import com.github.tomakehurst.wiremock.http.ResponseDefinition;
+import com.github.tomakehurst.wiremock.matching.ContentPattern;
+import com.github.tomakehurst.wiremock.matching.RequestPattern;
+import com.github.tomakehurst.wiremock.stubbing.StubMapping;
 import com.google.common.net.UrlEscapers;
 import io.irontest.core.runner.HTTPAPIResponse;
 import io.irontest.core.runner.SQLStatementType;
@@ -8,6 +13,7 @@ import io.irontest.models.DataTable;
 import io.irontest.models.DataTableColumn;
 import io.irontest.models.HTTPMethod;
 import io.irontest.models.UserDefinedProperty;
+import io.irontest.models.mixin.*;
 import io.irontest.models.teststep.HTTPHeader;
 import org.antlr.runtime.ANTLRStringStream;
 import org.apache.commons.codec.binary.Base64;
@@ -29,7 +35,6 @@ import org.jdbi.v3.core.internal.SqlScriptParser;
 import javax.net.ssl.SSLContext;
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -182,5 +187,13 @@ public final class IronTestUtils {
             }
             return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonObject);
         }
+    }
+
+    public static void addMixInsForWireMock(ObjectMapper objectMapper) {
+        objectMapper.addMixIn(StubMapping.class, StubMappingMixIn.class);
+        objectMapper.addMixIn(RequestPattern.class, RequestPatternMixIn.class);
+        objectMapper.addMixIn(ResponseDefinition.class, ResponseDefinitionMixIn.class);
+        objectMapper.addMixIn(ContentPattern.class, ContentPatternMixIn.class);
+        objectMapper.addMixIn(LoggedResponse.class, LoggedResponseMixIn.class);
     }
 }

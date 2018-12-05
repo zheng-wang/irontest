@@ -3,10 +3,6 @@ package io.irontest;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
-import com.github.tomakehurst.wiremock.http.ResponseDefinition;
-import com.github.tomakehurst.wiremock.matching.ContentPattern;
-import com.github.tomakehurst.wiremock.matching.RequestPattern;
-import com.github.tomakehurst.wiremock.stubbing.StubMapping;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.Option;
 import com.jayway.jsonpath.spi.json.JacksonJsonProvider;
@@ -35,11 +31,8 @@ import io.irontest.auth.SimplePrincipal;
 import io.irontest.db.*;
 import io.irontest.models.AppInfo;
 import io.irontest.models.AppMode;
-import io.irontest.models.mixin.ContentPatternMixIn;
-import io.irontest.models.mixin.RequestPatternMixIn;
-import io.irontest.models.mixin.ResponseDefinitionMixIn;
-import io.irontest.models.mixin.StubMappingMixIn;
 import io.irontest.resources.*;
+import io.irontest.utils.IronTestUtils;
 import io.irontest.ws.ArticleSOAP;
 import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
@@ -101,10 +94,7 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         //  configure the Jackson ObjectMapper used by JAX-RS (Jersey)
         ObjectMapper objectMapper = bootstrap.getObjectMapper();
         objectMapper.disable(MapperFeature.DEFAULT_VIEW_INCLUSION);
-        objectMapper.addMixIn(StubMapping.class, StubMappingMixIn.class);
-        objectMapper.addMixIn(RequestPattern.class, RequestPatternMixIn.class);
-        objectMapper.addMixIn(ResponseDefinition.class, ResponseDefinitionMixIn.class);
-        objectMapper.addMixIn(ContentPattern.class, ContentPatternMixIn.class);
+        IronTestUtils.addMixInsForWireMock(objectMapper);
     }
 
     private boolean isInTeamMode(IronTestConfiguration configuration) {
