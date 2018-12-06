@@ -150,10 +150,13 @@
 .http-header-grid {
   height: 160px;
 }
-.http-header-grid .ui-grid-menu-button {
+.http-stub-header-grid {
+  height: 120px;
+}
+.http-header-grid .ui-grid-menu-button, .http-stub-header-grid .ui-grid-menu-button {
   height: 20px;
 }
-.http-header-grid .ui-grid-cell-contents {
+.http-header-grid .ui-grid-cell-contents, .http-stub-header-grid .ui-grid-cell-contents {
   padding-top: 0px;
   padding-bottom: 0px;
 }

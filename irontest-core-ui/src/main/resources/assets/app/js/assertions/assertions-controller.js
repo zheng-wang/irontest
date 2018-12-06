@@ -92,7 +92,7 @@ angular.module('irontest').controller('AssertionsController', ['$scope', '$rootS
     };
 
     $scope.assertionsModelObj.createAssertion = function(type) {
-      var name = IronTestUtils.getNextNameInSequence($scope.teststep.assertions, type);
+      var name = IronTestUtils.getNextNameInSequence($scope.teststep.assertions, type + ' ');
       var assertion = {
         name: name,
         type: type,

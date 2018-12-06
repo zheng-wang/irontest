@@ -6,27 +6,18 @@ angular.module('irontest')
       //  Search elements in the array using property, and delete the first element that has the property
       //  with the property value. The elements must be objects, and the property must be of primitive type.
       deleteArrayElementByProperty: function(array, propertyName, propertyValue) {
-        var indexOfElement = array.findIndex(
-          function(element) {
-            return element[propertyName] === propertyValue;
-          }
-        );
-        array.splice(indexOfElement, 1);
+        array.splice(array.findIndex(item => item[propertyName] === propertyValue), 1);
       },
 
       //  Search the objArray (by inspecting each obj's name property) to
       //  find the next available name-in-sequence to use.
-      //  Name-in-sequence format: '<baseName> <sequence>'. For example: 'XPath 1'.
-      getNextNameInSequence: function(objArray, baseName) {
-        var isExistingName = function(obj) {
-          return obj.name === this;
-        };
-
+      //  Name-in-sequence format: '<nameBase><sequence>'. For example: 'XPath 1' if nameBase is 'XPath '.
+      getNextNameInSequence: function(objArray, nameBase) {
         var sequence = 1;
         var name;
         for (; sequence < 10000000; sequence += 1) {
-          name = baseName + ' ' + sequence;
-          if (objArray.findIndex(isExistingName, name) === -1) {
+          name = nameBase + sequence;
+          if (objArray.findIndex(obj => obj.name === name) === -1) {
             break;
           }
         }
