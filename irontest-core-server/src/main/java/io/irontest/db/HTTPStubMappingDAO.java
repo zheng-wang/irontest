@@ -7,7 +7,6 @@ import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
-import org.jdbi.v3.sqlobject.transaction.Transaction;
 
 import java.util.List;
 
@@ -18,7 +17,9 @@ public interface HTTPStubMappingDAO {
 
     @SqlUpdate("CREATE TABLE IF NOT EXISTS httpstubmapping (" +
             "id BIGINT DEFAULT httpstubmapping_sequence.NEXTVAL PRIMARY KEY, " +
-            "testcase_id BIGINT, number SMALLINT NOT NULL, spec_json CLOB NOT NULL, " +
+            "testcase_id BIGINT, number SMALLINT NOT NULL, " +
+            "spec_json CLOB NOT NULL DEFAULT '{ \"request\": { \"url\": \"/\", \"method\": \"GET\" }, \"response\": { \"status\": 200 } }', " +
+            "expected_hit_count SMALLINT NOT NULL DEFAULT 1, " +
             "created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (testcase_id) REFERENCES testcase(id) ON DELETE CASCADE," +
@@ -31,26 +32,19 @@ public interface HTTPStubMappingDAO {
     @SqlQuery("select * from httpstubmapping where id = :httpStubId")
     HTTPStubMapping findById(@Bind("httpStubId") long httpStubId);
 
-    @SqlUpdate("insert into httpstubmapping (testcase_id, number, spec_json) values (:testcaseId, (" +
-            "select coalesce(max(number), 0) + 1 from httpstubmapping where testcase_id = :testcaseId)," +
-            ":specJson)")
+    @SqlUpdate("insert into httpstubmapping (testcase_id, number) values (:testcaseId, (" +
+            "select coalesce(max(number), 0) + 1 from httpstubmapping where testcase_id = :testcaseId))")
     @GetGeneratedKeys
-    long _insert(@Bind("testcaseId") long testcaseId, @Bind("specJson") String specJson);
-
-    @Transaction
-    default HTTPStubMapping insert(long testcaseId) {
-        String specJson = "{ \"request\": { \"url\": \"/\", \"method\": \"GET\" }, \"response\": { \"status\": 200 } }";
-        long id = _insert(testcaseId, specJson);
-        return findById(id);
-    }
+    long insert(@Bind("testcaseId") long testcaseId);
 
     @SqlUpdate("delete from httpstubmapping where id = :id")
     void deleteById(@Bind("id") long id);
 
-    @SqlUpdate("update httpstubmapping set spec_json = :specJson, updated = CURRENT_TIMESTAMP where id = :id")
-    void _update(@Bind("id") long id, @Bind("specJson") String specJson);
+    @SqlUpdate("update httpstubmapping set spec_json = :specJson, expected_hit_count = :expectedHitCount, " +
+            "updated = CURRENT_TIMESTAMP where id = :id")
+    void _update(@Bind("id") long id, @Bind("specJson") String specJson, @Bind("expectedHitCount") short expectedHitCount);
 
     default void update(HTTPStubMapping stub) {
-        _update(stub.getId(), StubMapping.buildJsonStringFor(stub.getSpec()));
+        _update(stub.getId(), StubMapping.buildJsonStringFor(stub.getSpec()), stub.getExpectedHitCount());
     }
 }

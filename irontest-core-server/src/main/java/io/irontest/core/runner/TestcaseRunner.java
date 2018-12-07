@@ -92,7 +92,8 @@ public abstract class TestcaseRunner {
             for (HTTPStubMapping stub: testcase.getHttpStubMappings()) {
                 Assertion stubHitAssertion = new Assertion(Assertion.TYPE_HTTP_STUB_HIT);
                 stubHitAssertion.setName("Stub was hit");
-                stubHitAssertion.setOtherProperties(new HTTPStubHitAssertionProperties(stub.getNumber()));
+                stubHitAssertion.setOtherProperties(
+                        new HTTPStubHitAssertionProperties(stub.getNumber(), stub.getExpectedHitCount()));
                 stubRequestsCheckStep.getAssertions().add(stubHitAssertion);
             }
             Assertion allStubRequestsMatchedAssertion = new Assertion(Assertion.TYPE_ALL_HTTP_STUB_REQUESTS_MATCHED);

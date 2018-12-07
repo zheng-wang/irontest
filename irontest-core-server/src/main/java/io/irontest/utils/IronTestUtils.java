@@ -40,6 +40,9 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.*;
 
+import static com.github.tomakehurst.wiremock.common.Metadata.metadata;
+import static io.irontest.IronTestConstants.WIREMOCK_STUB_METADATA_ATTR_NAME_IRON_TEST_ID;
+
 public final class IronTestUtils {
     /**
      * @param rs
@@ -195,5 +198,20 @@ public final class IronTestUtils {
         objectMapper.addMixIn(ResponseDefinition.class, ResponseDefinitionMixIn.class);
         objectMapper.addMixIn(ContentPattern.class, ContentPatternMixIn.class);
         objectMapper.addMixIn(LoggedResponse.class, LoggedResponseMixIn.class);
+    }
+
+    /**
+     * Create (clone) a new instance out of the stub spec, with UUID generated for the instance.
+     * The instance also has the ironTestId as metadata.
+     * The spec is not changed.
+     * @param spec
+     * @return
+     */
+    public static StubMapping createStubInstance(long ironTestId, StubMapping spec) {
+        StubMapping stubInstance = StubMapping.buildFrom(StubMapping.buildJsonStringFor(spec));
+        stubInstance.setMetadata(metadata()
+                .attr(WIREMOCK_STUB_METADATA_ATTR_NAME_IRON_TEST_ID, Long.toString(ironTestId)).build());
+        stubInstance.setDirty(false);
+        return stubInstance;
     }
 }

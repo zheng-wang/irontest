@@ -25,4 +25,6 @@ public interface IronTestConstants {
     int DEFAULT_KDF_ITERATIONS = 10000;
     int KDF_KEY_LENGTH = 256;
     String USER_ROLE_ADMIN = "admin";
+
+    String WIREMOCK_STUB_METADATA_ATTR_NAME_IRON_TEST_ID = "ironTestId";
 }

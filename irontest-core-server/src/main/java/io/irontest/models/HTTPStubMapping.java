@@ -10,14 +10,16 @@ public class HTTPStubMapping {
     private long testcaseId;
     private short number;
     private StubMapping spec;
+    private short expectedHitCount;
 
     public HTTPStubMapping() {}
 
-    public HTTPStubMapping(long id, long testcaseId, short number, StubMapping spec) {
+    public HTTPStubMapping(long id, long testcaseId, short number, StubMapping spec, short expectedHitCount) {
         this.id = id;
         this.testcaseId = testcaseId;
         this.number = number;
         setSpec(spec);
+        this.expectedHitCount = expectedHitCount;
     }
 
     public long getId() {
@@ -51,5 +53,13 @@ public class HTTPStubMapping {
     public void setSpec(StubMapping spec) {
         this.spec = spec;
         this.spec.setId(null);    //  UUID is for stub instance, not for stub spec/definition.
+    }
+
+    public short getExpectedHitCount() {
+        return expectedHitCount;
+    }
+
+    public void setExpectedHitCount(short expectedHitCount) {
+        this.expectedHitCount = expectedHitCount;
     }
 }

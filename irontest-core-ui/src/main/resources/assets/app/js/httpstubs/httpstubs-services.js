@@ -13,6 +13,10 @@ angular.module('irontest').factory('HTTPStubs', ['$resource',
         method: 'DELETE',
         url: 'api/httpstubs/:httpStubId',
         params: { httpStubId: '@id' }
+      },
+      loadAll: {
+        method: 'POST',
+        url: 'api/testcases/:testcaseId/httpstubs/loadAll',
       }
     });
   }
