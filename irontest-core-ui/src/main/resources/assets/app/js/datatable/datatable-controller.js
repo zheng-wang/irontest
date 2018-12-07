@@ -1,7 +1,7 @@
 'use strict';
 
 //  NOTICE:
-//    The $scope here prototypically inherits from the $scope of TestcasesController,
+//    The $scope here prototypically inherits from the $scope of TestcasesController.
 angular.module('irontest').controller('DataTableController', ['$scope', 'IronTestUtils', '$stateParams', 'DataTable',
     '$timeout', '$uibModal', '$rootScope',
   function($scope, IronTestUtils, $stateParams, DataTable, $timeout, $uibModal, $rootScope) {

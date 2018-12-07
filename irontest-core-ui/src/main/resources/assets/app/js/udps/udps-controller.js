@@ -1,7 +1,7 @@
 'use strict';
 
 //  NOTICE:
-//    The $scope here prototypically inherits from the $scope of TestcasesController,
+//    The $scope here prototypically inherits from the $scope of TestcasesController.
 angular.module('irontest').controller('UDPsController', ['$scope', 'UDPs', 'IronTestUtils', '$stateParams',
     '$uibModal',
   function($scope, UDPs, IronTestUtils, $stateParams, $uibModal) {
