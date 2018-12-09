@@ -2,7 +2,7 @@
 Iron Test is an open source tool for integration testing APIs such as HTTP APIs (including RESTful APIs), SOAP web services, relational databases, JMS APIs (TBD), WebSphere MQ, IBM Integration Bus (IIB), etc. It is suitable for Integration, ESB, Microservices and SOA testing.
 
 The tool 
-* has GUI, saving user programming skills.
+* has GUI, saving user programming skills. Developers also have better experience using GUIed tool, as coding and reading code are by nature more stressful.
 * provides advanced features like unlimited level folder structure for test case management, centralized and environment based endpoints management, user defined properties, data driven testing, mock service (TBD), full-text test case searching (TBD), and built-in (no VCS) team collaboration (partially done).
 * intends to provide a platform enabling integrating testing capabilities for all types of APIs (potentially including mainframe and IOT) so that user does not have to pick up a new set of tools for testing a new type of API.
 * is designed for testers and developers, but in the same team/organization BAs or architects may also benefit from it. The thought here is that API test cases contain valuable business knowledge, and this knowledge should be shared and easily accessible to everyone in the team/organization.
