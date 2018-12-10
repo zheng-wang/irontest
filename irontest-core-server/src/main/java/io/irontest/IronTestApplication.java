@@ -63,6 +63,7 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
     public void initialize(Bootstrap<IronTestConfiguration> bootstrap) {
         bootstrap.addBundle(new AssetsBundle("/assets/app", "/ui", "index.htm", "ui"));
         bootstrap.addBundle(new AssetsBundle("/META-INF/resources/webjars", "/ui/lib", null, "uilib"));
+        bootstrap.addBundle(new AssetsBundle("/assets/mockserver", "/ui/mockserver", "mockserver.htm", "mockserver"));
         bootstrap.addBundle(jaxWsBundle);
         bootstrap.addBundle(new MultiPartBundle());
         bootstrap.addBundle(new ViewBundle<IronTestConfiguration>(){
@@ -220,6 +221,7 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         environment.jersey().register(new UDPResource(udpDAO));
         environment.jersey().register(new DataTableResource(dataTableDAO, dataTableColumnDAO, dataTableCellDAO));
         environment.jersey().register(new HTTPStubResource(httpStubMappingDAO, wireMockServer));
+        environment.jersey().register(new MockServerResource(wireMockServer));
         if (isInTeamMode(configuration)) {
             environment.jersey().register(new UserResource(userDAO));
         }

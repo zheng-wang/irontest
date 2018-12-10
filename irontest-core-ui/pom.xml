@@ -20,7 +20,6 @@
         <jquery.version>3.2.1</jquery.version>
         <angular-bootstrap.version>2.5.0</angular-bootstrap.version>
         <startbootstrap-sb-admin-2.version>3.3.7+1</startbootstrap-sb-admin-2.version>
-        <underscore.version>1.8.3</underscore.version>
         <ui-grid-draggable-rows.version>0.3.3</ui-grid-draggable-rows.version>
         <ng-file-upload.version>12.2.13</ng-file-upload.version>
         <metisMenu.version>1.1.3</metisMenu.version>
@@ -121,11 +120,6 @@
         </dependency>
         <dependency>
             <groupId>org.webjars.bower</groupId>
-            <artifactId>underscore</artifactId>
-            <version>${underscore.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.webjars.bower</groupId>
             <artifactId>ui-grid-draggable-rows</artifactId>
             <version>${ui-grid-draggable-rows.version}</version>
             <exclusions>
@@ -199,6 +193,7 @@
                 <includes>
                     <include>assets/app/index.htm</include>
                     <include>assets/app/sidebar.html</include>
+                    <include>assets/mockserver/mockserver.htm</include>
                     <include>io/irontest/views/testcaseRun.ftl</include>
                 </includes>
             </resource>

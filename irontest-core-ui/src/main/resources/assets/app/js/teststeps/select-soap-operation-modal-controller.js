@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('irontest').controller('SelectSOAPOperationModalController', ['$scope', '$uibModalInstance',
-    '$http', '_', 'IronTestUtils', 'wsdlURL',
-  function($scope, $uibModalInstance, $http, _, IronTestUtils, wsdlURL) {
+    '$http', 'IronTestUtils', 'wsdlURL',
+  function($scope, $uibModalInstance, $http, IronTestUtils, wsdlURL) {
     $scope.wsdlURL = wsdlURL;
 
     $scope.loadWSDLBindings = function() {
@@ -11,16 +11,14 @@ angular.module('irontest').controller('SelectSOAPOperationModalController', ['$s
         .then(function successCallback(response) {
           $scope.wsdlBindings = response.data;
           $scope.wsdlBinding = $scope.wsdlBindings[0];
-          $scope.wsdlOperations = $scope.wsdlBindings[0].operations;
-          $scope.wsdlOperation = $scope.wsdlOperations[0];
+          $scope.refreshOperations();
         }, function errorCallback(response) {
           IronTestUtils.openErrorHTTPResponseModal(response);
         });
     };
 
     $scope.refreshOperations = function() {
-      $scope.wsdlOperations = _.findWhere(
-        $scope.wsdlBindings, { name: $scope.wsdlBinding.name }).operations;
+      $scope.wsdlOperations = $scope.wsdlBinding.operations;
       $scope.wsdlOperation = $scope.wsdlOperations[0];
     };
 

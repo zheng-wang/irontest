@@ -1,0 +1,13 @@
+/* custom sb admin 2 classes */
+.sidebar {
+  width: 30%;
+  height: 100%;
+  margin-top: 0px;
+}
+#page-wrapper {
+  margin: 0 0 0 30%;
+}
+
+.stub-instances-pane {
+  height: 30%;
+}

@@ -1,0 +1,14 @@
+<div class="navbar-default sidebar" ng-controller="MockServerController" ng-init="findAllStubInstances()">
+  <div class="stub-instances-pane">
+    <ul class="list-unstyled">
+      <li ng-repeat="stubInstance in stubInstances">
+        <a ui-sref="stub_instance({ stubInstanceId: stubInstance.id })">
+          <h5>{{stubInstance.request.url}}</h5>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div>
+    456
+  </div>
+</div>

@@ -1,13 +1,7 @@
-//  Add underscore to AngularJS
-angular.module('underscore', [])
-  .factory('_', ['$window', function($window) {
-    return $window._; // assumes underscore has already been loaded on the page
-  }]);
-
 // Declare app level module dependencies
 angular.module('irontest', ['ngResource', 'ngSanitize', 'ui.router', 'ui.grid', 'ui.grid.resizeColumns',
     'ui.grid.moveColumns', 'ui.grid.pagination', 'ui.grid.edit', 'ui.grid.cellNav', 'ui.grid.selection',
-    'ui.grid.draggable-rows', 'ui.bootstrap', 'underscore', 'ngFileUpload', 'ngJsTree'])
+    'ui.grid.draggable-rows', 'ui.bootstrap', 'ngFileUpload', 'ngJsTree'])
   .factory('authInterceptor', ['$q', '$rootScope', function($q, $rootScope) {
     return {
       responseError: function(response) {
