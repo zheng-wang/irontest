@@ -23,24 +23,20 @@
   <script src="/ui/lib/angular/${angular.version}/angular.min.js"></script>
   <script src="/ui/lib/angular-resource/${angular.version}/angular-resource.min.js"></script>
   <script src="/ui/lib/angular-ui-router/${angular-ui-router.version}/release/angular-ui-router.min.js"></script>
+  <script src="/ui/lib/angular-bootstrap/${angular-bootstrap.version}/ui-bootstrap.min.js"></script>
 
+  <script src="/ui/common/js/common-module.js"></script>
+  <script src="/ui/common/js/common-services.js"></script>
+  <script src="/ui/common/js/common-controllers.js"></script>
   <script src="/ui/mockserver/js/mockserver-module.js"></script>
   <script src="/ui/mockserver/js/mockserver-routes.js"></script>
   <script src="/ui/mockserver/js/mockserver-services.js"></script>
   <script src="/ui/mockserver/js/mockserver-controller.js"></script>
+  <script src="/ui/mockserver/js/stub-instance-controller.js"></script>
 
   <!-- Always load the error message modal template, in case Iron Test server is down during using
     and browser is unable to alert user of the error. -->
-  <script type="text/ng-template" id="errorMessageModalTemplate.html">
-    <div class="modal-header">
-      <button type="button" class="close" ng-click="close()">&times;</button>
-      <h3 class="modal-title">Error</h3>
-    </div>
-    <div class="modal-body">
-      <p>{{ errorMessage }}</p>
-      <p>Details: {{ errorDetails }}</p>
-    </div>
-  </script>
+  <div ng-include="'/ui/common/errorMessageModalTemplate.html'"></div>
 </body>
 
 </html>

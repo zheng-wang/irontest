@@ -11,7 +11,7 @@ import io.irontest.resources.ResourceJsonViews;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class RequestPatternMixIn {
-    @JsonView(ResourceJsonViews.HTTPStubUIGrid.class)
+    @JsonView({ResourceJsonViews.HTTPStubUIGrid.class, ResourceJsonViews.MockServer.class})
     private UrlPattern url;
     @JsonView(ResourceJsonViews.HTTPStubUIGrid.class)
     private RequestMethod method;

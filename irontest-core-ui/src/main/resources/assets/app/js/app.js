@@ -1,7 +1,6 @@
-// Declare app level module dependencies
-angular.module('irontest', ['ngResource', 'ngSanitize', 'ui.router', 'ui.grid', 'ui.grid.resizeColumns',
+angular.module('irontest', ['common', 'ngSanitize', 'ui.grid', 'ui.grid.resizeColumns',
     'ui.grid.moveColumns', 'ui.grid.pagination', 'ui.grid.edit', 'ui.grid.cellNav', 'ui.grid.selection',
-    'ui.grid.draggable-rows', 'ui.bootstrap', 'ngFileUpload', 'ngJsTree'])
+    'ui.grid.draggable-rows', 'ngFileUpload', 'ngJsTree'])
   .factory('authInterceptor', ['$q', '$rootScope', function($q, $rootScope) {
     return {
       responseError: function(response) {
@@ -12,19 +11,8 @@ angular.module('irontest', ['ngResource', 'ngSanitize', 'ui.router', 'ui.grid', 
       }
     };
   }])
-  .config(['$httpProvider', '$stateProvider', '$urlRouterProvider', function(
-      $httpProvider, $stateProvider, $urlRouterProvider) {
-
+  .config(['$httpProvider', function($httpProvider) {
     $httpProvider.interceptors.push('authInterceptor');
-
-    // set default (home) view for the right pane
-    $urlRouterProvider.otherwise('/');
-
-    $stateProvider
-      .state('home', {
-        url: '/',
-        templateUrl: '/ui/views/blank.html'
-      })
   }])
   .run(['$rootScope', '$http', '$window', 'IronTestUtils', function($rootScope, $http, $window, IronTestUtils) {
     $rootScope.$on('pageLoaded', function(event, args) {

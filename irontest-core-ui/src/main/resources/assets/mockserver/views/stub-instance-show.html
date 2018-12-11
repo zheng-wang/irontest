@@ -1,0 +1,18 @@
+<div ng-controller="StubInstanceController" ng-init="find()">
+  <div class="row page-header" id="page-header">
+    <div class="col-lg-7">
+      <h3><div>Stub for {{ stubInstance.request.url }}</div></h3>
+    </div>
+  </div>
+  <div class="row">
+    <form name="stubInstanceForm" class="form-horizontal col-lg-10" role="form" novalidate>
+      <div class="form-group">
+        <label for="details" class="col-lg-2 control-label">Description</label>
+        <div class="col-lg-10">
+          <textarea name="details" id="details" rows="30" class="form-control" readonly>{{ stubInstance | json }}</textarea>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+

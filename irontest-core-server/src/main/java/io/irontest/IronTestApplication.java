@@ -62,8 +62,9 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
     @Override
     public void initialize(Bootstrap<IronTestConfiguration> bootstrap) {
         bootstrap.addBundle(new AssetsBundle("/assets/app", "/ui", "index.htm", "ui"));
-        bootstrap.addBundle(new AssetsBundle("/META-INF/resources/webjars", "/ui/lib", null, "uilib"));
+        bootstrap.addBundle(new AssetsBundle("/META-INF/resources/webjars", "/ui/lib", null, "lib"));
         bootstrap.addBundle(new AssetsBundle("/assets/mockserver", "/ui/mockserver", "mockserver.htm", "mockserver"));
+        bootstrap.addBundle(new AssetsBundle("/assets/common", "/ui/common", null, "common"));
         bootstrap.addBundle(jaxWsBundle);
         bootstrap.addBundle(new MultiPartBundle());
         bootstrap.addBundle(new ViewBundle<IronTestConfiguration>(){

@@ -8,6 +8,15 @@ angular.module('mockserver').factory('MockServer', ['$resource',
         method: 'GET',
         url: '../api/mockserver/stubInstances',
         isArray: true
+      },
+      findStubInstanceById: {
+        method: 'GET',
+        url: '../api/mockserver/stubInstances/:stubInstanceId'
+      },
+      findRequestsForStubInstance: {
+        method: 'GET',
+        url: '../api/mockserver/stubInstances/:stubInstanceId/stubRequests',
+        isArray: true
       }
     });
   }

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('irontest').controller('ErrorMessageModalController', ['$scope', '$uibModalInstance',
+angular.module('common').controller('ErrorMessageModalController', ['$scope', '$uibModalInstance',
     'errorMessage', 'errorDetails',
   function($scope, $uibModalInstance, errorMessage, errorDetails) {
     $scope.errorMessage = errorMessage;

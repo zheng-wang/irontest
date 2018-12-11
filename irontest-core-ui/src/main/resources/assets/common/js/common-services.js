@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('irontest')
+angular.module('common')
   .factory('IronTestUtils', function ($uibModal) {
     return {
       //  Search elements in the array using property, and delete the first element that has the property

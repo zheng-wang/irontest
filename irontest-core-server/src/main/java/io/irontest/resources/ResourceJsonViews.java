@@ -10,4 +10,6 @@ public class ResourceJsonViews {
     public static class TestcaseExport {}
 
     public static class HTTPStubUIGrid {}
+
+    public static class MockServer {}
 }

@@ -60,10 +60,11 @@
   <script src="/ui/lib/jstree/${jstree.version}/dist/jstree.min.js"></script>
   <script src="/ui/lib/ng-js-tree/${ng-js-tree.version}/dist/ngJsTree.min.js"></script>
 
+  <script src="/ui/common/js/common-module.js"></script>
+  <script src="/ui/common/js/common-services.js"></script>
+  <script src="/ui/common/js/common-controllers.js"></script>
   <script src="/ui/js/app.js"></script>
-  <script src="/ui/js/common/common-services.js"></script>
   <script src="/ui/js/common/common-directives.js"></script>
-  <script src="/ui/js/common/common-controllers.js"></script>
   <script src="/ui/js/user/user-controller.js"></script>
   <script src="/ui/js/user/login-modal-controller.js"></script>
   <script src="/ui/js/user/change-password-modal-controller.js"></script>
@@ -117,16 +118,7 @@
 
   <!-- Always load the error message modal template, in case Iron Test server is down during using
     and browser is unable to alert user of the error. -->
-  <script type="text/ng-template" id="errorMessageModalTemplate.html">
-    <div class="modal-header">
-      <button type="button" class="close" ng-click="close()">&times;</button>
-      <h3 class="modal-title">Error</h3>
-    </div>
-    <div class="modal-body">
-      <p>{{ errorMessage }}</p>
-      <p>Details: {{ errorDetails }}</p>
-    </div>
-  </script>
+  <div ng-include="'/ui/common/errorMessageModalTemplate.html'"></div>
 </body>
 
 </html>
