@@ -5,7 +5,9 @@ import com.github.tomakehurst.wiremock.http.LoggedResponse;
 import com.github.tomakehurst.wiremock.http.ResponseDefinition;
 import com.github.tomakehurst.wiremock.matching.ContentPattern;
 import com.github.tomakehurst.wiremock.matching.RequestPattern;
+import com.github.tomakehurst.wiremock.stubbing.ServeEvent;
 import com.github.tomakehurst.wiremock.stubbing.StubMapping;
+import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.google.common.net.UrlEscapers;
 import io.irontest.core.runner.HTTPAPIResponse;
 import io.irontest.core.runner.SQLStatementType;
@@ -198,6 +200,8 @@ public final class IronTestUtils {
         objectMapper.addMixIn(ResponseDefinition.class, ResponseDefinitionMixIn.class);
         objectMapper.addMixIn(ContentPattern.class, ContentPatternMixIn.class);
         objectMapper.addMixIn(LoggedResponse.class, LoggedResponseMixIn.class);
+        objectMapper.addMixIn(ServeEvent.class, ServeEventMixIn.class);
+        objectMapper.addMixIn(LoggedRequest.class, LoggedRequestMixIn.class);
     }
 
     /**

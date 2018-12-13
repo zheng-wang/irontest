@@ -11,5 +11,7 @@ public class ResourceJsonViews {
 
     public static class HTTPStubUIGrid {}
 
-    public static class MockServer {}
+    public static class MockServerStubInstanceList {}
+
+    public static class MockServerStubRequestList {}
 }

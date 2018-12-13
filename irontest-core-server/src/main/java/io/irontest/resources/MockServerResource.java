@@ -23,7 +23,7 @@ public class MockServerResource {
     }
 
     @GET @Path("stubInstances")
-    @JsonView(ResourceJsonViews.MockServer.class)
+    @JsonView(ResourceJsonViews.MockServerStubInstanceList.class)
     public List<StubMapping> findAllStubInstances() {
         return wireMockServer.getStubMappings();
     }
@@ -40,6 +40,7 @@ public class MockServerResource {
     }
 
     @GET @Path("stubInstances/{stubInstanceId}/stubRequests")
+    @JsonView(ResourceJsonViews.MockServerStubRequestList.class)
     public List<ServeEvent> findRequestsForStubInstance(@PathParam("stubInstanceId") UUID stubInstanceId) {
         List<ServeEvent> result = new ArrayList<>();
         List<ServeEvent> serveEvents = wireMockServer.getAllServeEvents();
@@ -49,5 +50,16 @@ public class MockServerResource {
             }
         }
         return result;
+    }
+
+    @GET @Path("stubRequests/{stubRequestId}")
+    public ServeEvent findStubRequestById(@PathParam("stubRequestId") UUID stubRequestId) {
+        List<ServeEvent> serveEvents = wireMockServer.getAllServeEvents();
+        for (ServeEvent serveEvent: serveEvents) {
+            if (serveEvent.getId().equals(stubRequestId)) {
+                return serveEvent;
+            }
+        }
+        return null;
     }
 }

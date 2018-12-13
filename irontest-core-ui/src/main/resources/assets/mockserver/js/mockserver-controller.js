@@ -22,7 +22,7 @@ angular.module('mockserver').controller('MockServerController', ['$scope', 'Mock
 
     $scope.stubRequestSelected = function(stubRequest) {
        $scope.selectedStubRequest = stubRequest;
-       //$state.go('stub_request', { stubRequestId: stubRequest.id });
+       $state.go('stub_request', { stubRequestId: stubRequest.id });
      };
   }
 ]);

@@ -17,6 +17,10 @@ angular.module('mockserver').factory('MockServer', ['$resource',
         method: 'GET',
         url: '../api/mockserver/stubInstances/:stubInstanceId/stubRequests',
         isArray: true
+      },
+      findStubRequestById: {
+        method: 'GET',
+        url: '../api/mockserver/stubRequests/:stubRequestId'
       }
     });
   }

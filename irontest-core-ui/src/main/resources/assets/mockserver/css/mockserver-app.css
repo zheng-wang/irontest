@@ -12,6 +12,9 @@
 #page-wrapper {
   margin: 0 0 0 30%;
 }
+#page-header {
+  margin: 0 0 20px 0;
+}
 
 .stub-instances-pane {
   height: 35%;

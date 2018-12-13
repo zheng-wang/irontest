@@ -6,13 +6,13 @@ import com.github.tomakehurst.wiremock.http.RequestMethod;
 import com.github.tomakehurst.wiremock.matching.UrlPattern;
 import io.irontest.resources.ResourceJsonViews;
 
+import java.util.Date;
+
 /**
- * MixIn for {@link com.github.tomakehurst.wiremock.matching.RequestPattern}.
+ * MixIn for {@link com.github.tomakehurst.wiremock.verification.LoggedRequest}.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class RequestPatternMixIn {
-    @JsonView({ResourceJsonViews.HTTPStubUIGrid.class, ResourceJsonViews.MockServerStubInstanceList.class})
-    UrlPattern url;
-    @JsonView(ResourceJsonViews.HTTPStubUIGrid.class)
-    RequestMethod method;
+public class LoggedRequestMixIn {
+    @JsonView(ResourceJsonViews.MockServerStubRequestList.class)
+    Date loggedDate;
 }
