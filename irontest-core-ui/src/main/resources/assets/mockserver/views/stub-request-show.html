@@ -5,7 +5,31 @@
     </div>
   </div>
   <div class="row">
-    <form name="stubRequestForm" class="form-horizontal col-lg-10" role="form" novalidate>
+    <form name="stubInstanceForm" class="form-horizontal col-lg-12" role="form" novalidate>
+      <div class="form-group">
+        <div class="col-lg-1">Method:</div>
+        <div class="col-lg-1">{{ stubRequest.request.method }}</div>
+        <div class="col-lg-2">Absolute URL:</div>
+        <div class="col-lg-5">{{ stubRequest.request.absoluteUrl }}</div>
+        <div class="col-lg-1">Client IP:</div>
+        <div class="col-lg-1">{{ stubRequest.request.clientIp }}</div>
+      </div>
+      <div class="form-group">
+        <div class="col-lg-2">Request Headers:</div>
+      </div>
+      <div class="form-group">
+        <div class="col-lg-6">
+          <textarea name="requestHeaders" id="requestHeaders" rows="8" class="form-control" readonly>{{ stubRequestHeadersStr }}</textarea>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-lg-2">Request Body:</div>
+      </div>
+      <div class="form-group">
+        <div class="col-lg-6">
+          <textarea name="requestBody" id="requestBody" rows="28" class="form-control" readonly>{{ stubRequest.request.body }}</textarea>
+        </div>
+      </div>
     </form>
   </div>
 </div>

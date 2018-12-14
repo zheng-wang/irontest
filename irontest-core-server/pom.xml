@@ -139,6 +139,11 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <dependency>  <!-- WireMock's dependency -->
+            <groupId>com.flipkart.zjsonpatch</groupId>
+            <artifactId>zjsonpatch</artifactId>
+            <version>0.4.6</version>
+        </dependency>
 
         <!-- For Java 9+ (backward compatible with Java 1.8).
             Refer to https://stackoverflow.com/questions/43574426/how-to-resolve-java-lang-noclassdeffounderror-javax-xml-bind-jaxbexception-in-j

@@ -1,6 +1,6 @@
 /* custom sb admin 2 classes */
 .sidebar {
-  width: 30%;
+  width: 25%;
   height: 100%;
   margin-top: 0px;
 }
@@ -10,7 +10,7 @@
   padding-bottom: 5px;
 }
 #page-wrapper {
-  margin: 0 0 0 30%;
+  margin: 0 0 0 25%;
 }
 #page-header {
   margin: 0 0 20px 0;
