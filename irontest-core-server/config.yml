@@ -84,6 +84,5 @@ sampleDatabase:
 
 viewRendererConfiguration:
   freemarker:
-    object_wrapper: io.irontest.views.IronTestObjectWrapper(2.3.27)
     datetime_format: MMM d, yyyy hh:mm:ss.SSS a
 

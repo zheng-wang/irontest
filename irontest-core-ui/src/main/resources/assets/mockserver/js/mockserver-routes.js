@@ -7,7 +7,7 @@ angular.module('mockserver').config(['$stateProvider', function ($stateProvider)
         templateUrl: '/ui/mockserver/views/stub-instance-show.html'
     })
     .state('stub_request', {
-        url: '/stubRequests/:stubRequestId',
+        url: '/stubInstances/:stubInstanceId/stubRequests/:stubRequestId',
         templateUrl: '/ui/mockserver/views/stub-request-show.html'
     });
 }]);

@@ -80,7 +80,7 @@
     (stepRun.teststep.type != "MQ" || (stepRun.teststep.type == "MQ" && stepRun.response.value??))>
   <div class="form-group"></div> <!-- spacer -->
   <div class="row">
-    <div class="col-lg-1">Response: </div>
+    <div class="col-lg-1">${ (stepRun.teststep.type == "HTTPStubRequestsCheck")?then('Stub Requests', 'Response') }:</div>
     <div class="col-lg-11">
       <#-- Extra response info for test step that has response HTTP headers -->
       <#if stepRun.response.httpHeaders?? && (stepRun.response.httpHeaders?size > 0)>
@@ -96,11 +96,19 @@
           </div>
         </div>
       </#if>
-      <div class="form-group">
-        <#t><textarea class="form-control" rows="8" readonly>
-          <#t><#include "${stepRun.teststep.type?lower_case}TeststepResponse.ftl">
-        <#t></textarea>
-      </div>
+      <#if stepRun.teststep.type == "HTTPStubRequestsCheck">
+        <div class="row">
+          <#t><div class="col-lg-12">
+            <#t><#include "${stepRun.teststep.type?lower_case}TeststepResponse.ftl">
+          <#t></div>
+        </div>
+      <#else>
+        <div class="form-group">
+          <#t><textarea class="form-control" rows="8" readonly>
+            <#t><#include "${stepRun.teststep.type?lower_case}TeststepResponse.ftl">
+          <#t></textarea>
+        </div>
+      </#if>
     </div>
   </div>
 </#if>

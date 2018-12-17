@@ -3,8 +3,8 @@
     <h4 class="text-center">Loaded Stubs</h4>
     <ul class="list-unstyled">
       <li ng-repeat="stubInstance in stubInstances"
-          ng-class="{ 'list-item-clicked' : $parent.selectedStubInstance.id === stubInstance.id }">
-        <a ng-click="stubInstanceSelected(stubInstance)" href="">
+          ng-class="{ 'list-item-clicked' : $parent.selectedStubInstanceId === stubInstance.id }">
+        <a ng-click="stubInstanceSelected(stubInstance.id)" href="">
           <!-- leave the div here to enable mouseover effect on the anchor when mouse is over anywhere outside the anchor but in the list item -->
           <div>{{ stubInstance.request.url }}</div>
         </a>
@@ -15,10 +15,10 @@
     <h4 class="text-center">Requests for the Stub</h4>
     <ul class="list-unstyled">
       <li ng-repeat="stubRequest in stubRequests"
-          ng-class="{ 'list-item-clicked' : $parent.selectedStubRequest.id === stubRequest.id }">
-        <a ng-click="stubRequestSelected(stubRequest)" href="">
+          ng-class="{ 'list-item-clicked' : $parent.selectedStubRequestId === stubRequest.id }">
+        <a ng-click="stubRequestSelected(stubRequest.id)" href="">
           <!-- leave the div here to enable mouseover effect on the anchor when mouse is over anywhere outside the anchor but in the list item -->
-          <div>{{ stubRequest.request.loggedDate | date:'medium' }}</div>
+          <div>{{ stubRequest.request.loggedDate | date: 'MMM d, y h:mm:ss.sss a' }}</div>
         </a>
       </li>
     </ul>
