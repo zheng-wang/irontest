@@ -5,7 +5,7 @@
     </div>
   </div>
   <div class="row">
-    <form name="stubInstanceForm" class="form-horizontal col-lg-12" role="form" novalidate>
+    <form name="stubRequestForm" class="form-horizontal col-lg-12" role="form" novalidate>
       <div class="form-group">
         <div class="col-lg-1">Method:</div>
         <div class="col-lg-1">{{ stubRequest.request.method }}</div>
@@ -17,8 +17,10 @@
         <div class="col-lg-1">{{ stubRequest.request.clientIp }}</div>
         <div class="col-lg-offset-4 col-lg-2">Response Status Code:</div>
         <div class="col-lg-1">{{ stubRequest.response.status }}</div>
-        <div class="col-lg-2">Response Delayed (ms):</div>
-        <div class="col-lg-1">{{ stubRequest.timing.addedDelay }}</div>
+        <div ng-if="stubRequest.timing.addedDelay > 0">
+          <div class="col-lg-2">Response Delayed (ms):</div>
+          <div class="col-lg-1">{{ stubRequest.timing.addedDelay }}</div>
+        </div>
       </div>
       <div class="form-group">
         <div class="col-lg-2">Request Headers:</div>

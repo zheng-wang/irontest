@@ -11,7 +11,7 @@ angular.module('irontest').controller('HTTPStubController', ['$scope', 'HTTPStub
     $scope.activeTabIndex = SPEC_TAB_INDEX;
 
     var resetRequestBodyMainPattern = function() {
-      $scope.requestBodyMainPattern = { name: null, value: null };
+      $scope.requestBodyMainPattern = IronTestUtils.getRequestBodyMainPattern();
     };
     resetRequestBodyMainPattern();
 
@@ -43,20 +43,7 @@ angular.module('irontest').controller('HTTPStubController', ['$scope', 'HTTPStub
       }, function(httpStub) {
         $scope.httpStub = httpStub;
 
-        //  set requestBodyMainPattern
-        var bodyPatterns = httpStub.spec.request.bodyPatterns;
-        if (bodyPatterns) {
-          var bodyPattern = bodyPatterns[0];
-          if (bodyPattern) {
-            if ('equalToXml' in bodyPattern) {
-              $scope.requestBodyMainPattern.name = 'equalToXml';
-              $scope.requestBodyMainPattern.value = bodyPattern.equalToXml;
-            } else if ('equalToJson' in bodyPattern) {
-              $scope.requestBodyMainPattern.name = 'equalToJson';
-              $scope.requestBodyMainPattern.value = bodyPattern.equalToJson;
-            }
-          }
-        }
+        $scope.requestBodyMainPattern = IronTestUtils.getRequestBodyMainPattern(httpStub.spec.request.bodyPatterns);
 
         //  set response headers
         var headers = httpStub.spec.response.headers;

@@ -5,7 +5,6 @@ import com.github.tomakehurst.wiremock.stubbing.ServeEvent;
 import java.util.List;
 
 public class WireMockServerAPIResponse {
-    private boolean serializeFieldValueToJSONInFreeMarkerTemplate = true;
     private List<ServeEvent> allServeEvents;
 
     public List<ServeEvent> getAllServeEvents() {
@@ -14,9 +13,5 @@ public class WireMockServerAPIResponse {
 
     public void setAllServeEvents(List<ServeEvent> allServeEvents) {
         this.allServeEvents = allServeEvents;
-    }
-
-    public boolean isSerializeFieldValueToJSONInFreeMarkerTemplate() {
-        return serializeFieldValueToJSONInFreeMarkerTemplate;
     }
 }

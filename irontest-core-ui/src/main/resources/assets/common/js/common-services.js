@@ -64,6 +64,39 @@ angular.module('common')
             }
           }
         });
+      },
+
+      getRequestBodyMainPattern: function(bodyPatterns) {
+        var result = { name: null, displayName: null, value: null };
+        if (bodyPatterns) {
+          var bodyPattern = bodyPatterns[0];
+          if (bodyPattern) {
+            if ('equalToXml' in bodyPattern) {
+              result.name = 'equalToXml';
+              result.displayName = 'Equal to XML';
+              result.value = bodyPattern.equalToXml;
+            } else if ('equalToJson' in bodyPattern) {
+              result.name = 'equalToJson';
+              result.displayName = 'Equal to JSON';
+              result.value = bodyPattern.equalToJson;
+            }
+          }
+        }
+        return result;
+      },
+
+      formatHTTPHeadersObj: function(headersObj) {
+        var result = '';
+        if (headersObj) {
+          Object.keys(headersObj).forEach(function(key, index) {
+            if (index > 0) {
+              result += '\n';
+            }
+            result += key + ': ' + headersObj[key];
+          });
+        }
+
+        return result;
       }
     };
   });

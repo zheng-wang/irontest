@@ -80,7 +80,9 @@
     (stepRun.teststep.type != "MQ" || (stepRun.teststep.type == "MQ" && stepRun.response.value??))>
   <div class="form-group"></div> <!-- spacer -->
   <div class="row">
-    <div class="col-lg-1">${ (stepRun.teststep.type == "HTTPStubRequestsCheck")?then('Stub Requests', 'Response') }:</div>
+    <div class="col-lg-1" <#if stepRun.teststep.type == "HTTPStubRequestsCheck">id="stub-requests-in-step-run-${ stepRun.id?string.computer }"</#if>>
+      ${ (stepRun.teststep.type == "HTTPStubRequestsCheck")?then('Stub Requests', 'Response') }:
+    </div>
     <div class="col-lg-11">
       <#-- Extra response info for test step that has response HTTP headers -->
       <#if stepRun.response.httpHeaders?? && (stepRun.response.httpHeaders?size > 0)>
@@ -152,7 +154,6 @@
           </div>
         </div>
       </div>
-      <div class="form-group"></div> <!-- spacer -->
       <div class="row">
         <#if verification.verificationResult.error??>
           <div class="col-lg-1">Error:</div>

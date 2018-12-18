@@ -1,8 +1,8 @@
-.test-result-color-Passed {
+.test-result-color-Passed, .stub-request-color-Matched {
   color: lime;
 }
 
-.test-result-color-Failed {
+.test-result-color-Failed, .stub-request-color-Unmatched {
   color: red;
 }
 

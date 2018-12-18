@@ -3,10 +3,13 @@
 <#list stepRun.response.allServeEvents as stubRequest>
   <div class="row">
     <div class="col-lg-1">Stub Request:</div>
-    <form class="form-horizontal col-lg-11" role="form" novalidate>
+    <form name="stubRequestForm" class="form-horizontal col-lg-11" role="form" novalidate>
       <div class="form-group">
         <div class="col-lg-2">Logged Time:</div>
         <div class="col-lg-3">${ stubRequest.request.loggedDate?number_to_datetime }</div>
+        <div class="col-lg-1 stub-request-color-${ stubRequest.wasMatched?then('Matched', 'Unmatched') }">
+          ${ stubRequest.wasMatched?then('Matched', 'Unmatched') }
+        </div>
       </div>
       <div class="form-group">
         <div class="col-lg-1">Method:</div>
@@ -19,8 +22,10 @@
         <div class="col-lg-1">${ stubRequest.request.clientIp }</div>
         <div class="col-lg-offset-4 col-lg-2">Response Status Code:</div>
         <div class="col-lg-1">${ stubRequest.response.status }</div>
-        <div class="col-lg-2">Response Delayed (ms):</div>
-        <div class="col-lg-1">${ stubRequest.timing.addedDelay }</div>
+        <#if (stubRequest.timing.addedDelay > 0)>
+          <div class="col-lg-2">Response Delayed (ms):</div>
+          <div class="col-lg-1">${ stubRequest.timing.addedDelay }</div>
+        </#if>
       </div>
       <div class="form-group">
         <div class="col-lg-2">Request Headers:</div>
