@@ -22,6 +22,10 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -35,11 +39,11 @@ public final class XMLUtils {
      * @return
      * @throws TransformerException
      */
-    public static String prettyPrintXML(String input) throws TransformerException {
+    public static String prettyPrintXML(String input) throws TransformerException, XPathExpressionException {
         if (input == null) {
             return null;
         } else {
-            Document doc = null;
+            Document doc;
             try {
                 doc = XMLUtils.xmlStringToDOM(input);
             } catch (Exception e) {
@@ -47,6 +51,32 @@ public final class XMLUtils {
                 return input;
             }
 
+            //  Remove blank text nodes from doc (if a blank text node is the only child of a parent node, leave it untouched. e.g. <c>    </c> will not become <c/>).
+            //  A blank text node is a text node containing one or more whitespaces.
+            //  This code block is used to mitigate a Transformer issue introduced since Java 9. Refer to http://java9.wtf/xml-transformer/.
+            //      For Transformer since Java 9, text node that is sibling of element is treated like an element.
+            //          e.g. <a>ccc<b>123</b></a> will be pretty printed as
+            //            <a>
+            //              ccc
+            //              <b>123</b>
+            //            </a>.
+            //      If such a text node is blank, the output xml will contain an empty/blank line.
+            //          e.g. <a> <b>123</b></a> will be pretty printed as
+            //            <a>
+            //
+            //              <b>123</b>
+            //            </a>
+            XPathFactory xpathFactory = XPathFactory.newInstance();
+            XPathExpression xpathExp = xpathFactory.newXPath().compile("//text()[normalize-space(.) = '']");
+            NodeList blankTextNodes = (NodeList) xpathExp.evaluate(doc, XPathConstants.NODESET);
+            for (int i = 0; i < blankTextNodes.getLength(); i++) {
+                Node blankTextNode = blankTextNodes.item(i);
+                if (blankTextNode.getNextSibling() != null || blankTextNode.getPreviousSibling() != null) {
+                    blankTextNode.getParentNode().removeChild(blankTextNode);
+                }
+            }
+
+            //  pretty print the xml
             Transformer transformer = TransformerFactory.newInstance().newTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");

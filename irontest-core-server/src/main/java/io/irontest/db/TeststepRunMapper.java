@@ -2,6 +2,7 @@ package io.irontest.db;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.irontest.core.runner.APIResponse;
 import io.irontest.models.TestResult;
 import io.irontest.models.assertion.AssertionVerification;
 import io.irontest.models.testrun.TeststepRun;
@@ -12,7 +13,6 @@ import org.jdbi.v3.core.statement.StatementContext;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 public class TeststepRunMapper implements RowMapper<TeststepRun> {
@@ -33,11 +33,9 @@ public class TeststepRunMapper implements RowMapper<TeststepRun> {
         }
         teststepRun.setTeststep(teststep);
 
-        //  Use LinkedHashMap here instead of Object (for covering specific response type like DBAPIResponse),
-        //    because TeststepRun is used for displaying report, so JSON representation of the response is sufficient.
-        LinkedHashMap response;
+        APIResponse response;
         try {
-            response = objectMapper.readValue(rs.getString("response"), LinkedHashMap.class);
+            response = objectMapper.readValue(rs.getString("response"), APIResponse.class);
         } catch (IOException e) {
             throw new SQLException("Failed to deserialize response JSON.", e);
         }

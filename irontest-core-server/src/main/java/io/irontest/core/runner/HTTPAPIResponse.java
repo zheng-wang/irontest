@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Used for both SOAP API and generic HTTP API.
  */
-public class HTTPAPIResponse {
+public class HTTPAPIResponse extends APIResponse {
     private int statusCode;
     private List<HTTPHeader> httpHeaders = new ArrayList<HTTPHeader>();
     private String httpBody;

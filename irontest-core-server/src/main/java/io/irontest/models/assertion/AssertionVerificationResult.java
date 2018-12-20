@@ -6,7 +6,7 @@ import io.irontest.models.TestResult;
 /**
  * Output of assertion verifier.
  */
-@JsonTypeInfo(use = JsonTypeInfo.Id.MINIMAL_CLASS, include = JsonTypeInfo.As.PROPERTY, property = "minClassName")
+@JsonTypeInfo(use = JsonTypeInfo.Id.MINIMAL_CLASS, property = "minClassName")
 public class AssertionVerificationResult {
     private TestResult result;
     private String error;            //  message of error occurred during verification

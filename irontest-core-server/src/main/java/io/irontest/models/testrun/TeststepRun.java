@@ -1,6 +1,7 @@
 package io.irontest.models.testrun;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import io.irontest.core.runner.APIResponse;
 import io.irontest.models.assertion.AssertionVerification;
 import io.irontest.models.teststep.Teststep;
 import io.irontest.resources.ResourceJsonViews;
@@ -14,7 +15,7 @@ import java.util.List;
 public class TeststepRun extends TestRun {
     @JsonView(ResourceJsonViews.TestcaseRunResultOnTestcaseEditView.class)
     private Teststep teststep;
-    private Object response;            //  API response (could be null when there is no endpoint, no API invocation, or API invocation response is not used)
+    private APIResponse response;            //  API response (could be null when there is no endpoint, no API invocation, or API invocation response is not used)
     private String infoMessage;         //  some additional information when the test step finishes running successfully
     private String errorMessage;        //  error message of running the test step (errors when verifying assertions are captured in AssertionVerification)
     private List<AssertionVerification> assertionVerifications = new ArrayList<>();
@@ -43,11 +44,11 @@ public class TeststepRun extends TestRun {
         this.assertionVerifications = assertionVerifications;
     }
 
-    public Object getResponse() {
+    public APIResponse getResponse() {
         return response;
     }
 
-    public void setResponse(Object response) {
+    public void setResponse(APIResponse response) {
         this.response = response;
     }
 

@@ -36,6 +36,7 @@ import org.jdbi.v3.core.internal.SqlScriptParser;
 
 import javax.net.ssl.SSLContext;
 import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -176,7 +177,7 @@ public final class IronTestUtils {
      * @return
      * @throws TransformerException
      */
-    public static String prettyPrintJSONOrXML(String input) throws TransformerException, IOException {
+    public static String prettyPrintJSONOrXML(String input) throws TransformerException, IOException, XPathExpressionException {
         if (input == null) {
             return null;
         } else if (input.trim().startsWith("<")) {     //  potentially xml (impossible to be json)

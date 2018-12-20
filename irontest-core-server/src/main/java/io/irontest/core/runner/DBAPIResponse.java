@@ -2,7 +2,7 @@ package io.irontest.core.runner;
 
 import java.util.List;
 
-public class DBAPIResponse {
+public class DBAPIResponse extends APIResponse {
     //  applicable only to non-select statements
     private String statementExecutionResults;
 

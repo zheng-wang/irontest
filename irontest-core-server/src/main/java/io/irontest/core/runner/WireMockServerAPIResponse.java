@@ -4,7 +4,7 @@ import com.github.tomakehurst.wiremock.stubbing.ServeEvent;
 
 import java.util.List;
 
-public class WireMockServerAPIResponse {
+public class WireMockServerAPIResponse extends APIResponse {
     private List<ServeEvent> allServeEvents;
 
     public List<ServeEvent> getAllServeEvents() {
