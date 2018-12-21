@@ -8,6 +8,6 @@ import io.irontest.resources.ResourceJsonViews;
  * MixIn for {@link com.github.tomakehurst.wiremock.stubbing.ServeEvent}.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonView(ResourceJsonViews.MockServerStubRequestList.class)
+@JsonView({ResourceJsonViews.MockServerStubRequestList.class, ResourceJsonViews.MockServerUnmatchedRequestList.class})
 public class ServeEventMixIn {
 }

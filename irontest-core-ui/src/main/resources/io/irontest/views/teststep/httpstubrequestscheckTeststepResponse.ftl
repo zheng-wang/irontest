@@ -6,7 +6,7 @@
     <form name="stubRequestForm" class="form-horizontal col-lg-11" role="form" novalidate>
       <div class="form-group">
         <div class="col-lg-2">Logged Time:</div>
-        <div class="col-lg-3">${ stubRequest.request.loggedDate?number_to_datetime }</div>
+        <div class="col-lg-3">${ stubRequest.request.loggedDate?datetime }</div>
         <div class="col-lg-1 stub-request-color-${ stubRequest.wasMatched?then('Matched', 'Unmatched') }">
           ${ stubRequest.wasMatched?then('Matched', 'Unmatched') }
         </div>
@@ -33,10 +33,10 @@
       </div>
       <div class="form-group">
         <div class="col-lg-6">
-          <textarea name="requestHeaders" rows="5" class="form-control" readonly><#if stubRequest.request.headers??><@fmt.formatHTTPHeadersObj object=stubRequest.request.headers/></#if></textarea>
+          <textarea name="requestHeaders" rows="6" class="form-control" readonly><#if stubRequest.request.headers??><@fmt.formatHTTPHeadersObj object=stubRequest.request.headers/></#if></textarea>
         </div>
         <div class="col-lg-6">
-          <textarea name="responseHeaders" rows="5" class="form-control" readonly><#if stubRequest.response.headers??><@fmt.formatHTTPHeadersObj object=stubRequest.response.headers/></#if></textarea>
+          <textarea name="responseHeaders" rows="6" class="form-control" readonly><#if stubRequest.response.headers??><@fmt.formatHTTPHeadersObj object=stubRequest.response.headers/></#if></textarea>
         </div>
       </div>
       <div class="form-group">
@@ -45,10 +45,10 @@
       </div>
       <div class="form-group">
         <div class="col-lg-6">
-          <textarea name="requestBody" rows="8" class="form-control" readonly>${ stubRequest.request.body }</textarea>
+          <textarea name="requestBody" rows="9" class="form-control" readonly>${ stubRequest.request.bodyAsString }</textarea>
         </div>
         <div class="col-lg-6">
-          <textarea name="responseBody" rows="8" class="form-control" readonly>${ stubRequest.response.body }</textarea>
+          <textarea name="responseBody" rows="9" class="form-control" readonly>${ stubRequest.response.bodyAsString }</textarea>
         </div>
       </div>
     </form>

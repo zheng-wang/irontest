@@ -1,6 +1,8 @@
 package io.irontest.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.common.Encoding;
 import com.github.tomakehurst.wiremock.http.LoggedResponse;
 import com.github.tomakehurst.wiremock.http.ResponseDefinition;
 import com.github.tomakehurst.wiremock.matching.ContentPattern;
@@ -8,6 +10,7 @@ import com.github.tomakehurst.wiremock.matching.RequestPattern;
 import com.github.tomakehurst.wiremock.stubbing.ServeEvent;
 import com.github.tomakehurst.wiremock.stubbing.StubMapping;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
+import com.github.tomakehurst.wiremock.verification.notmatched.PlainTextStubNotMatchedRenderer;
 import com.google.common.net.UrlEscapers;
 import io.irontest.core.runner.HTTPAPIResponse;
 import io.irontest.core.runner.SQLStatementType;
@@ -218,5 +221,31 @@ public final class IronTestUtils {
                 .attr(WIREMOCK_STUB_METADATA_ATTR_NAME_IRON_TEST_ID, Long.toString(ironTestId)).build());
         stubInstance.setDirty(false);
         return stubInstance;
+    }
+
+    /**
+     * By default, unmatched WireMock stub request (ServeEvent) does not have the actual response headers or response body.
+     * This method update the unmatched serveEvent obtained from the WireMockServer by changing its response headers and body to the actual values.
+     * @param serveEvent
+     * @return the input serveEvent if it was matched;
+     *         a new ServeEvent object with all fields same as the input serveEvent, except for the response headers and body, if it was unmatched.
+     */
+    public static ServeEvent updateUnmatchedStubRequest(ServeEvent serveEvent, WireMockServer wireMockServer) {
+        if (serveEvent.getWasMatched()) {
+            return serveEvent;
+        } else {
+            PlainTextStubNotMatchedRenderer renderer = (PlainTextStubNotMatchedRenderer) wireMockServer.getOptions()
+                    .getNotMatchedRenderer();
+            ResponseDefinition responseDefinition = renderer.render(wireMockServer, serveEvent.getRequest());
+            LoggedResponse response = serveEvent.getResponse();
+            com.github.tomakehurst.wiremock.http.HttpHeaders updatedHeaders = responseDefinition.getHeaders();
+            String updatedBody = responseDefinition.getBody().substring(2);  //  remove the leading \r\n
+            LoggedResponse updatedResponse = new LoggedResponse(response.getStatus(), updatedHeaders,
+                    Encoding.encodeBase64(updatedBody.getBytes()), response.getFault(), null);
+            ServeEvent updatedServeEvent = new ServeEvent(serveEvent.getId(), serveEvent.getRequest(),
+                    serveEvent.getStubMapping(), serveEvent.getResponseDefinition(), updatedResponse,
+                    serveEvent.getWasMatched(), serveEvent.getTiming());
+            return updatedServeEvent;
+        }
     }
 }

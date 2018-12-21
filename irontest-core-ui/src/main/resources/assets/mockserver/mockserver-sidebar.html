@@ -1,4 +1,4 @@
-<div class="navbar-default sidebar" ng-controller="MockServerController" ng-init="findAllStubInstances()">
+<div class="navbar-default sidebar" ng-controller="MockServerController" ng-init="findAllStubInstancesAndUnmatchedStubRequests()">
   <div class="stub-instances-pane">
     <h4 class="text-center">Loaded Stubs</h4>
     <ul class="list-unstyled">
@@ -11,12 +11,24 @@
       </li>
     </ul>
   </div>
-  <div>
+  <div class="matched-stub-requests-pane">
     <h4 class="text-center">Matched Requests for the Stub</h4>
     <ul class="list-unstyled">
-      <li ng-repeat="stubRequest in stubRequests"
+      <li ng-repeat="stubRequest in matchedRequests"
           ng-class="{ 'list-item-clicked' : $parent.selectedStubRequestId === stubRequest.id }">
-        <a ng-click="stubRequestSelected(stubRequest.id)" href="">
+        <a ng-click="matchedStubRequestSelected(stubRequest.id)" href="">
+          <!-- leave the div here to enable mouseover effect on the anchor when mouse is over anywhere outside the anchor but in the list item -->
+          <div>{{ stubRequest.request.loggedDate | date: 'MMM d, y h:mm:ss.sss a' }}</div>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div>
+    <h4 class="text-center">Unmatched Requests</h4>
+    <ul class="list-unstyled">
+      <li ng-repeat="stubRequest in unmatchedRequests"
+          ng-class="{ 'list-item-clicked' : $parent.selectedStubRequestId === stubRequest.id }">
+        <a ng-click="unmatchedStubRequestSelected(stubRequest.id)" href="">
           <!-- leave the div here to enable mouseover effect on the anchor when mouse is over anywhere outside the anchor but in the list item -->
           <div>{{ stubRequest.request.loggedDate | date: 'MMM d, y h:mm:ss.sss a' }}</div>
         </a>

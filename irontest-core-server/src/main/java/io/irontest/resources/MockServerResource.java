@@ -2,8 +2,14 @@ package io.irontest.resources;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.common.Encoding;
+import com.github.tomakehurst.wiremock.http.HttpHeaders;
+import com.github.tomakehurst.wiremock.http.LoggedResponse;
+import com.github.tomakehurst.wiremock.http.ResponseDefinition;
 import com.github.tomakehurst.wiremock.stubbing.ServeEvent;
 import com.github.tomakehurst.wiremock.stubbing.StubMapping;
+import com.github.tomakehurst.wiremock.verification.notmatched.PlainTextStubNotMatchedRenderer;
+import io.irontest.utils.IronTestUtils;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -28,6 +34,19 @@ public class MockServerResource {
         return wireMockServer.getStubMappings();
     }
 
+    @GET @Path("unmatchedStubRequests")
+    @JsonView(ResourceJsonViews.MockServerUnmatchedRequestList.class)
+    public List<ServeEvent> findAllUnmatchedStubRequests() {
+        List<ServeEvent> result = new ArrayList<>();
+        List<ServeEvent> serveEvents = wireMockServer.getAllServeEvents();
+        for (ServeEvent serveEvent: serveEvents) {
+            if (!serveEvent.getWasMatched()) {
+                result.add(serveEvent);
+            }
+        }
+        return result;
+    }
+
     @GET @Path("stubInstances/{stubInstanceId}")
     public StubMapping findStubInstanceById(@PathParam("stubInstanceId") UUID stubInstanceId) {
         List<StubMapping> stubInstances = wireMockServer.getStubMappings();
@@ -41,7 +60,7 @@ public class MockServerResource {
 
     @GET @Path("stubInstances/{stubInstanceId}/stubRequests")
     @JsonView(ResourceJsonViews.MockServerStubRequestList.class)
-    public List<ServeEvent> findRequestsForStubInstance(@PathParam("stubInstanceId") UUID stubInstanceId) {
+    public List<ServeEvent> findMatchedRequestsForStubInstance(@PathParam("stubInstanceId") UUID stubInstanceId) {
         List<ServeEvent> result = new ArrayList<>();
         List<ServeEvent> serveEvents = wireMockServer.getAllServeEvents();
         for (ServeEvent serveEvent: serveEvents) {
@@ -57,7 +76,11 @@ public class MockServerResource {
         List<ServeEvent> serveEvents = wireMockServer.getAllServeEvents();
         for (ServeEvent serveEvent: serveEvents) {
             if (serveEvent.getId().equals(stubRequestId)) {
-                return serveEvent;
+                if (serveEvent.getWasMatched()) {
+                    return serveEvent;
+                } else {
+                    return IronTestUtils.updateUnmatchedStubRequest(serveEvent, wireMockServer);
+                }
             }
         }
         return null;

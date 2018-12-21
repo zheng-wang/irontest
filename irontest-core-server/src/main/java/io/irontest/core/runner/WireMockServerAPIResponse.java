@@ -2,10 +2,11 @@ package io.irontest.core.runner;
 
 import com.github.tomakehurst.wiremock.stubbing.ServeEvent;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class WireMockServerAPIResponse extends APIResponse {
-    private List<ServeEvent> allServeEvents;
+    private List<ServeEvent> allServeEvents = new ArrayList<>();
 
     public List<ServeEvent> getAllServeEvents() {
         return allServeEvents;

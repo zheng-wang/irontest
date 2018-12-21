@@ -13,6 +13,6 @@ import java.util.Date;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class LoggedRequestMixIn {
-    @JsonView(ResourceJsonViews.MockServerStubRequestList.class)
+    @JsonView({ResourceJsonViews.MockServerStubRequestList.class, ResourceJsonViews.MockServerUnmatchedRequestList.class})
     Date loggedDate;
 }

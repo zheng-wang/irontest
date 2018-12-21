@@ -1,7 +1,11 @@
 package io.irontest.core.runner;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.stubbing.ServeEvent;
 import io.irontest.models.teststep.Teststep;
+import io.irontest.utils.IronTestUtils;
+
+import java.util.List;
 
 public class HTTPStubRequestsCheckTeststepRunner extends TeststepRunner {
     @Override
@@ -11,7 +15,11 @@ public class HTTPStubRequestsCheckTeststepRunner extends TeststepRunner {
         WireMockServer wireMockServer = getTestcaseRunContext().getWireMockServer();
         WireMockServerAPIResponse response = new WireMockServerAPIResponse();
 
-        response.setAllServeEvents(wireMockServer.getAllServeEvents());
+        List<ServeEvent> allServeEvents = wireMockServer.getAllServeEvents();
+        for (ServeEvent serveEvent: allServeEvents) {
+            response.getAllServeEvents().add(IronTestUtils.updateUnmatchedStubRequest(serveEvent, wireMockServer));
+        }
+
         basicTeststepRun.setResponse(response);
 
         return basicTeststepRun;

@@ -9,11 +9,16 @@ angular.module('mockserver').factory('MockServer', ['$resource',
         url: '../api/mockserver/stubInstances',
         isArray: true
       },
+      findAllUnmatchedStubRequests: {
+        method: 'GET',
+        url: '../api/mockserver/unmatchedStubRequests',
+        isArray: true
+      },
       findStubInstanceById: {
         method: 'GET',
         url: '../api/mockserver/stubInstances/:stubInstanceId'
       },
-      findRequestsForStubInstance: {
+      findMatchedRequestsForStubInstance: {
         method: 'GET',
         url: '../api/mockserver/stubInstances/:stubInstanceId/stubRequests',
         isArray: true
