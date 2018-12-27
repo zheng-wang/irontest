@@ -26,6 +26,10 @@ angular.module('mockserver').factory('MockServer', ['$resource',
       findStubRequestById: {
         method: 'GET',
         url: '../api/mockserver/stubRequests/:stubRequestId'
+      },
+      clearRequestLog: {
+        method: 'POST',
+        url: '../api/mockserver/clearRequestLog'
       }
     });
   }

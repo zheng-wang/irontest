@@ -11,11 +11,16 @@
       </li>
     </ul>
   </div>
+  <div class="clear-request-log-button-pane">
+    <div class="col-lg-offset-1 col-lg-1">
+      <button class="btn btn-info" ng-click="clearRequestLog()" ng-disabled="appStatus.isForbidden()">Clear Request Log</button>
+    </div>
+  </div>
   <div class="matched-stub-requests-pane">
     <h4 class="text-center">Matched Requests for the Stub</h4>
     <ul class="list-unstyled">
       <li ng-repeat="stubRequest in matchedRequests"
-          ng-class="{ 'list-item-clicked' : $parent.selectedStubRequestId === stubRequest.id }">
+          ng-class="{ 'list-item-clicked' : $parent.selectedMatchedStubRequestId === stubRequest.id }">
         <a ng-click="matchedStubRequestSelected(stubRequest.id)" href="">
           <!-- leave the div here to enable mouseover effect on the anchor when mouse is over anywhere outside the anchor but in the list item -->
           <div>{{ stubRequest.request.loggedDate | date: 'MMM d, y h:mm:ss.sss a' }}</div>
@@ -27,7 +32,7 @@
     <h4 class="text-center">Unmatched Requests</h4>
     <ul class="list-unstyled">
       <li ng-repeat="stubRequest in unmatchedRequests"
-          ng-class="{ 'list-item-clicked' : $parent.selectedStubRequestId === stubRequest.id }">
+          ng-class="{ 'list-item-clicked' : $parent.selectedUnmatchedStubRequestId === stubRequest.id }">
         <a ng-click="unmatchedStubRequestSelected(stubRequest.id)" href="">
           <!-- leave the div here to enable mouseover effect on the anchor when mouse is over anywhere outside the anchor but in the list item -->
           <div>{{ stubRequest.request.loggedDate | date: 'MMM d, y h:mm:ss.sss a' }}</div>

@@ -16,12 +16,26 @@
   margin: 0 0 20px 0;
 }
 
+.stub-instances-pane, .matched-stub-requests-pane, .clear-request-log-button-pane {
+  border-bottom: 1px solid #e7e7e7;
+}
+
 .stub-instances-pane, .matched-stub-requests-pane {
-  height: 33%;
   padding-top: 15px;
   padding-left: 15px;
   overflow: auto;
-  border-bottom: 1px solid #e7e7e7;
+}
+
+.clear-request-log-button-pane {
+  height: 34px;
+}
+
+.stub-instances-pane {
+  height: 25%
+}
+
+.matched-stub-requests-pane {
+  height: 40%;
 }
 
 .sidebar .list-item-clicked {
