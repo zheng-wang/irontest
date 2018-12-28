@@ -16,6 +16,7 @@ angular.module('mockserver').controller('MockServerController', ['$scope', 'Mock
         if ($scope.selectedStubInstanceId && (
             !stubInstances.find(stubInstance => stubInstance.id === $scope.selectedStubInstanceId))) {  //  the selected stub instance no longer exists in the mock server
           $scope.selectedStubInstanceId = null;
+          $scope.matchedRequests = null;
           $state.go('home');
         }
 
@@ -55,7 +56,7 @@ angular.module('mockserver').controller('MockServerController', ['$scope', 'Mock
             $state.go('stub_instance', { stubInstanceId: selectedStubInstanceId });
           }
 
-            findMatchedRequestsForSelectedStubInstanceTimer = $timeout(findMatchedRequestsForSelectedStubInstance, DATA_REFRESH_INTERVAL);
+          findMatchedRequestsForSelectedStubInstanceTimer = $timeout(findMatchedRequestsForSelectedStubInstance, DATA_REFRESH_INTERVAL);
         }, function(response) {
           IronTestUtils.openErrorHTTPResponseModal(response);
         });

@@ -16,7 +16,7 @@
   margin: 0 0 20px 0;
 }
 
-.stub-instances-pane, .matched-stub-requests-pane, .clear-request-log-button-pane {
+.stub-instances-pane {
   border-bottom: 1px solid #e7e7e7;
 }
 
@@ -27,6 +27,7 @@
 }
 
 .clear-request-log-button-pane {
+  padding-top: 10px;
   height: 34px;
 }
 
