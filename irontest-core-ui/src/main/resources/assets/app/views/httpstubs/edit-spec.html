@@ -84,7 +84,7 @@
 <div class="form-group">
   <div class="col-lg-6">
     <textarea id="requestBodyMainPatternValue" name="requestBodyMainPatternValue" rows="35" class="form-control"
-              ng-model="requestBodyMainPattern.value" ng-change="requestBodyMainPatternValueChanged(httpStubForm.$valid)"
+              ng-model="httpStub.requestBodyMainPatternValue" ng-change="autoSave(httpStubForm.$valid)"
               spellcheck="false" ng-readonly="appStatus.isForbidden()" ng-if="requestBodyMainPattern.name"></textarea>
   </div>
   <div class="col-lg-6">

@@ -92,24 +92,15 @@ angular.module('irontest').controller('HTTPStubController', ['$scope', 'HTTPStub
       var bodyPatterns = $scope.httpStub.spec.request.bodyPatterns;
       bodyPatterns.length = 0;    //  clear the bodyPatterns array
       var bodyPattern = new Object();
-      var newMainPatternValue;
+      var hiddenMainPatternValue;
       if (newMainPatternName === 'equalToXml') {
-        newMainPatternValue = '<a/>';
+        hiddenMainPatternValue = '<IronTest_ToBeSubstitutedDuringStepRun/>';
       } else if (newMainPatternName === 'equalToJson') {
-        newMainPatternValue = null;
+        hiddenMainPatternValue = "\"IronTest_ToBeSubstitutedDuringStepRun\"";
       }
-      $scope.requestBodyMainPattern.value = newMainPatternValue;
-      bodyPattern[newMainPatternName] = newMainPatternValue;
+      bodyPattern[newMainPatternName] = hiddenMainPatternValue;
       bodyPatterns.push(bodyPattern);
       $scope.update(isValid);
-    };
-
-    $scope.requestBodyMainPatternValueChanged = function(isValid) {
-      var mainPatternName = $scope.requestBodyMainPattern.name;
-      var mainPatternValue = $scope.requestBodyMainPattern.value;
-      var bodyPattern = $scope.httpStub.spec.request.bodyPatterns[0];
-      bodyPattern[mainPatternName] = mainPatternValue;
-      $scope.autoSave(isValid);
     };
 
     $scope.toggleDelayResponse = function(isValid) {

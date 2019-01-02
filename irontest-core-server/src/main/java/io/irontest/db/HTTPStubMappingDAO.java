@@ -19,6 +19,7 @@ public interface HTTPStubMappingDAO {
             "id BIGINT DEFAULT httpstubmapping_sequence.NEXTVAL PRIMARY KEY, " +
             "testcase_id BIGINT, number SMALLINT NOT NULL, " +
             "spec_json CLOB NOT NULL DEFAULT '{ \"request\": { \"url\": \"/\", \"method\": \"GET\" }, \"response\": { \"status\": 200 } }', " +
+            "request_body_main_pattern_value CLOB, " +
             "expected_hit_count SMALLINT NOT NULL DEFAULT 1, " +
             "created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
@@ -40,11 +41,15 @@ public interface HTTPStubMappingDAO {
     @SqlUpdate("delete from httpstubmapping where id = :id")
     void deleteById(@Bind("id") long id);
 
-    @SqlUpdate("update httpstubmapping set spec_json = :specJson, expected_hit_count = :expectedHitCount, " +
+    @SqlUpdate("update httpstubmapping set spec_json = :specJson, " +
+            "request_body_main_pattern_value = :requestBodyMainPatternValue, expected_hit_count = :expectedHitCount, " +
             "updated = CURRENT_TIMESTAMP where id = :id")
-    void _update(@Bind("id") long id, @Bind("specJson") String specJson, @Bind("expectedHitCount") short expectedHitCount);
+    void _update(@Bind("id") long id, @Bind("specJson") String specJson,
+                 @Bind("requestBodyMainPatternValue") String requestBodyMainPatternValue,
+                 @Bind("expectedHitCount") short expectedHitCount);
 
     default void update(HTTPStubMapping stub) {
-        _update(stub.getId(), StubMapping.buildJsonStringFor(stub.getSpec()), stub.getExpectedHitCount());
+        _update(stub.getId(), StubMapping.buildJsonStringFor(stub.getSpec()), stub.getRequestBodyMainPatternValue(),
+                stub.getExpectedHitCount());
     }
 }

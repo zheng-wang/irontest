@@ -15,7 +15,8 @@ public class HTTPStubMappingMapper implements RowMapper<HTTPStubMapping> {
         StubMapping spec = StubMapping.buildFrom(specJSON);
         HTTPStubMapping httpStubMapping = new HTTPStubMapping(
                 rs.getLong("id"), rs.getLong("testcase_id"),
-                rs.getShort("number"), spec, rs.getShort("expected_hit_count"));
+                rs.getShort("number"), spec, rs.getString("request_body_main_pattern_value"),
+                rs.getShort("expected_hit_count"));
 
         return httpStubMapping;
     }
