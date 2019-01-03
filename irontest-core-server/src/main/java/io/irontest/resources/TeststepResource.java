@@ -25,18 +25,21 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static io.irontest.IronTestConstants.IMPLICIT_PROPERTY_DATE_TIME_FORMAT;
 import static io.irontest.IronTestConstants.IMPLICIT_PROPERTY_NAME_TEST_STEP_START_TIME;
 
 @Path("/testcases/{testcaseId}/teststeps") @Produces({ MediaType.APPLICATION_JSON })
 public class TeststepResource {
-    private final AppInfo appInfo;
-    private final TeststepDAO teststepDAO;
-    private final UserDefinedPropertyDAO udpDAO;
-    private final UtilsDAO utilsDAO;
-    private final DataTableDAO dataTableDAO;
+    private AppInfo appInfo;
+    private TeststepDAO teststepDAO;
+    private UserDefinedPropertyDAO udpDAO;
+    private UtilsDAO utilsDAO;
+    private DataTableDAO dataTableDAO;
 
     public TeststepResource(AppInfo appInfo, TeststepDAO teststepDAO, UserDefinedPropertyDAO udpDAO, UtilsDAO utilsDAO,
                             DataTableDAO dataTableDAO) {
@@ -129,13 +132,12 @@ public class TeststepResource {
         //  gather referenceable string properties and endpoint properties
         List<UserDefinedProperty> testcaseUDPs = udpDAO.findByTestcaseId(teststep.getTestcaseId());
         Map<String, String> referenceableStringProperties = IronTestUtils.udpListToMap(testcaseUDPs);
-        Set<String> udpNames = referenceableStringProperties.keySet();
         referenceableStringProperties.put(IMPLICIT_PROPERTY_NAME_TEST_STEP_START_TIME,
                 IMPLICIT_PROPERTY_DATE_TIME_FORMAT.format(new Date()));
         DataTable dataTable = dataTableDAO.getTestcaseDataTable(teststep.getTestcaseId(), true);
         Map<String, Endpoint> referenceableEndpointProperties = new HashMap<>();
         if (dataTable.getRows().size() > 0) {
-            IronTestUtils.checkDuplicatePropertyNameBetweenDataTableAndUPDs(udpNames, dataTable);
+            IronTestUtils.checkDuplicatePropertyNameBetweenDataTableAndUPDs(referenceableStringProperties.keySet(), dataTable);
             referenceableStringProperties.putAll(dataTable.getStringPropertiesInRow(0));
             referenceableEndpointProperties.putAll(dataTable.getEndpointPropertiesInRow(0));
         }

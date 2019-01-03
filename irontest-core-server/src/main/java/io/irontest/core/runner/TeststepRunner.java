@@ -2,9 +2,15 @@ package io.irontest.core.runner;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.tomakehurst.wiremock.matching.ContentPattern;
+import com.github.tomakehurst.wiremock.matching.EqualToJsonPattern;
+import com.github.tomakehurst.wiremock.matching.EqualToXmlPattern;
+import com.github.tomakehurst.wiremock.stubbing.StubMapping;
 import io.irontest.core.MapValueLookup;
 import io.irontest.db.UtilsDAO;
+import io.irontest.models.HTTPStubMapping;
 import io.irontest.models.endpoint.Endpoint;
+import io.irontest.models.teststep.HTTPStubsSetupTeststepProperties;
 import io.irontest.models.teststep.Teststep;
 import io.irontest.models.teststep.TeststepRequestType;
 import io.irontest.utils.IronTestUtils;
@@ -36,6 +42,14 @@ public abstract class TeststepRunner {
      */
     private void prepareTeststep() throws IOException {
         resolveReferenceableStringProperties();
+
+        //  special processing for otherProperties that contains HTTPStubMapping objects
+        //  must do this after resolving referenceable string properties
+        if (teststep.getOtherProperties() instanceof HTTPStubsSetupTeststepProperties) {
+            HTTPStubsSetupTeststepProperties httpStubsSetupTeststepProperties =
+                    (HTTPStubsSetupTeststepProperties) teststep.getOtherProperties();
+            IronTestUtils.substituteRequestBodyMainPatternValue(httpStubsSetupTeststepProperties.getHttpStubMappings());
+        }
 
         //  resolve endpoint property if set on test step
         if (teststep.getEndpointProperty() != null) {

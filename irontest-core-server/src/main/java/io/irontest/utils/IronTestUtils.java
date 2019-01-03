@@ -6,6 +6,8 @@ import com.github.tomakehurst.wiremock.common.Encoding;
 import com.github.tomakehurst.wiremock.http.LoggedResponse;
 import com.github.tomakehurst.wiremock.http.ResponseDefinition;
 import com.github.tomakehurst.wiremock.matching.ContentPattern;
+import com.github.tomakehurst.wiremock.matching.EqualToJsonPattern;
+import com.github.tomakehurst.wiremock.matching.EqualToXmlPattern;
 import com.github.tomakehurst.wiremock.matching.RequestPattern;
 import com.github.tomakehurst.wiremock.stubbing.ServeEvent;
 import com.github.tomakehurst.wiremock.stubbing.StubMapping;
@@ -14,10 +16,7 @@ import com.github.tomakehurst.wiremock.verification.notmatched.PlainTextStubNotM
 import com.google.common.net.UrlEscapers;
 import io.irontest.core.runner.HTTPAPIResponse;
 import io.irontest.core.runner.SQLStatementType;
-import io.irontest.models.DataTable;
-import io.irontest.models.DataTableColumn;
-import io.irontest.models.HTTPMethod;
-import io.irontest.models.UserDefinedProperty;
+import io.irontest.models.*;
 import io.irontest.models.mixin.*;
 import io.irontest.models.teststep.HTTPHeader;
 import org.antlr.runtime.ANTLRStringStream;
@@ -246,6 +245,28 @@ public final class IronTestUtils {
                     serveEvent.getStubMapping(), serveEvent.getResponseDefinition(), updatedResponse,
                     serveEvent.getWasMatched(), serveEvent.getTiming());
             return updatedServeEvent;
+        }
+    }
+
+    public static void substituteRequestBodyMainPatternValue(List<HTTPStubMapping> httpStubMappings) {
+        for (HTTPStubMapping httpStubMapping: httpStubMappings) {
+            StubMapping spec = httpStubMapping.getSpec();
+            List<ContentPattern<?>> requestBodyPatterns = spec.getRequest().getBodyPatterns();
+            if (requestBodyPatterns != null) {
+                for (int i = 0; i < requestBodyPatterns.size(); i++) {
+                    ContentPattern requestBodyPattern = requestBodyPatterns.get(i);
+                    if (requestBodyPattern instanceof EqualToXmlPattern) {
+                        requestBodyPatterns.set(i, new EqualToXmlPattern(httpStubMapping.getRequestBodyMainPatternValue()));
+                        break;
+                    } else if (requestBodyPattern instanceof EqualToJsonPattern) {
+                        EqualToJsonPattern equalToJsonPattern = (EqualToJsonPattern) requestBodyPattern;
+                        requestBodyPatterns.set(i, new EqualToJsonPattern(
+                                httpStubMapping.getRequestBodyMainPatternValue(),
+                                equalToJsonPattern.isIgnoreArrayOrder(), equalToJsonPattern.isIgnoreExtraElements()));
+                        break;
+                    }
+                }
+            }
         }
     }
 }
