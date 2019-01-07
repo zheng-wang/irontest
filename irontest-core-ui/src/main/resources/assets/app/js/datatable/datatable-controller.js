@@ -65,9 +65,9 @@ angular.module('irontest').controller('DataTableController', ['$scope', 'IronTes
         name: columnName,
         displayName: columnName,  //  need this line to avoid underscore in column name is not displayed in column header
         // determine column min width according to the length of column name
-        // assuming each character deserves 8 pixels
+        // assuming each character deserves 8.6 pixels
         // 30 pixels for displaying grid header menu arrow
-        minWidth: columnName.length * 8 + 30,
+        minWidth: columnName.length * 8.6 + 30,
         enableColumnMenu: columnName === 'Caption' ? false : true,
         enableHiding: false,
         menuItems: [

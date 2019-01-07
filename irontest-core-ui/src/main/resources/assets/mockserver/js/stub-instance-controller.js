@@ -9,7 +9,21 @@ angular.module('mockserver').controller('StubInstanceController', ['$scope', 'Mo
           $scope.stubInstance = null;
         } else {
           $scope.stubInstance = stubInstance;
-          $scope.requestBodyMainPattern = IronTestUtils.getRequestBodyMainPattern(stubInstance.request.bodyPatterns)
+          $scope.requestBodyMainPattern = IronTestUtils.getRequestBodyMainPattern(stubInstance.request.bodyPatterns);
+
+          //  construct stubRequestHeadersStr
+          var stubRequestHeadersStr = '';
+          var requestHeaders = stubInstance.request.headers;
+          if (requestHeaders) {
+            Object.keys(requestHeaders).forEach(function(key, index) {
+              if (index > 0) {
+                stubRequestHeadersStr += '\n';
+              }
+              stubRequestHeadersStr += key + ': ' + requestHeaders[key].equalTo;
+            });
+          }
+          $scope.stubRequestHeadersStr = stubRequestHeadersStr;
+
           $scope.stubResponseHeadersStr = IronTestUtils.formatHTTPHeadersObj(stubInstance.response.headers);
         }
       }, function(response) {

@@ -45,13 +45,18 @@ angular.module('irontest').controller('HTTPStubController', ['$scope', 'HTTPStub
 
         $scope.requestBodyMainPattern = IronTestUtils.getRequestBodyMainPattern(httpStub.spec.request.bodyPatterns);
 
-        //  set response headers
-        var headers = httpStub.spec.response.headers;
-        if (headers) {
-          var headersGridData = Object.keys(headers).map(function(key) {
-            return { name: key, value: headers[key] };
+        //  set request and response headers
+        var requestHeaders = httpStub.spec.request.headers;
+        if (requestHeaders) {
+          $scope.requestHeaderGridOptions.data = Object.keys(requestHeaders).map(function(key) {
+            return { name: key, value: requestHeaders[key].equalTo };
           });
-          $scope.responseHeaderGridOptions.data = headersGridData;
+        }
+        var responseHeaders = httpStub.spec.response.headers;
+        if (responseHeaders) {
+          $scope.responseHeaderGridOptions.data = Object.keys(responseHeaders).map(function(key) {
+            return { name: key, value: responseHeaders[key] };
+          });
         }
       }, function(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);
@@ -113,6 +118,32 @@ angular.module('irontest').controller('HTTPStubController', ['$scope', 'HTTPStub
       $scope.update(isValid);
     };
 
+    var createRequestHeader = function(gridMenuEvent) {
+      var headersInGrid = $scope.requestHeaderGridOptions.data;
+      var request = $scope.httpStub.spec.request;
+      if (!request.headers) {
+        request.headers = {};
+      }
+      var headersObj = request.headers;
+      var newHeaderName = IronTestUtils.getNextNameInSequence(headersInGrid, 'name');
+      var newHeaderValue = '';
+      headersObj[newHeaderName] = { equalTo: newHeaderValue };
+      headersInGrid.push({ name: newHeaderName, value: newHeaderValue });
+      $scope.update(true, function selectTheNewRow() {
+        $scope.requestHeaderGridApi.grid.modifyRows(headersInGrid);
+        $scope.requestHeaderGridApi.selection.selectRow(headersInGrid[headersInGrid.length - 1]);
+      });
+    };
+
+    var deleteRequestHeader = function(gridMenuEvent) {
+      var selectedRow = $scope.requestHeaderGridApi.selection.getSelectedRows()[0];
+      var headersInGrid = $scope.requestHeaderGridOptions.data;
+      var headersObj = $scope.httpStub.spec.request.headers;
+      delete headersObj[selectedRow.name];
+      IronTestUtils.deleteArrayElementByProperty(headersInGrid, '$$hashKey', selectedRow.$$hashKey);
+      $scope.update(true);
+    };
+
     var createResponseHeader = function(gridMenuEvent) {
       var headersInGrid = $scope.responseHeaderGridOptions.data;
       var response = $scope.httpStub.spec.response;
@@ -139,49 +170,85 @@ angular.module('irontest').controller('HTTPStubController', ['$scope', 'HTTPStub
       $scope.update(true);
     };
 
-    $scope.responseHeaderGridOptions = {
+    var commonHeaderGridOptions = {
       enableSorting: false, enableRowHeaderSelection: false, multiSelect: false,
       enableGridMenu: true, enableColumnMenus: false, gridMenuShowHideColumns: false,
       rowHeight: 20, enableHorizontalScrollbar: uiGridConstants.scrollbars.NEVER,
       columnDefs: [
         { name: 'name', width: HEADER_GRID_NAME_COLUMN_WIDTH,
           headerTooltip: 'Double click to edit', enableCellEdit: true,
-          editableCellTemplate: 'responseHeaderGridEditableCellTemplate.html' },
+          editableCellTemplate: 'headerGridEditableCellTemplate.html' },
         { name: 'value', headerTooltip: 'Double click to edit', enableCellEdit: true, cellTooltip: true,
-          editableCellTemplate: 'responseHeaderGridEditableCellTemplate.html' }
-      ],
-      gridMenuCustomItems: [
-        { title: 'Create', order: 210, action: createResponseHeader,
-          shown: function() {
-            return !$rootScope.appStatus.isForbidden();
-          }
-        },
-        { title: 'Delete', order: 220, action: deleteResponseHeader,
-          shown: function() {
-            return !$rootScope.appStatus.isForbidden() &&
-              $scope.responseHeaderGridApi.selection.getSelectedRows().length === 1;
-          }
+          editableCellTemplate: 'headerGridEditableCellTemplate.html' }
+      ]
+    };
+
+    $scope.requestHeaderGridOptions = JSON.parse(JSON.stringify(commonHeaderGridOptions));
+    $scope.requestHeaderGridOptions.gridMenuCustomItems = [
+      { title: 'Create', order: 210, action: createRequestHeader,
+        shown: function() {
+          return !$rootScope.appStatus.isForbidden();
         }
-      ],
-      onRegisterApi: function (gridApi) {
-        $scope.responseHeaderGridApi = gridApi;
-        gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue){
-          if (newValue !== oldValue) {
-            var response = $scope.httpStub.spec.response;
-            var headersObj = response.headers;
-            if (colDef.name === 'name') {       //  header name was changed
-              //  to preserve the order of headers, can't just create new property and delete old property on headersObj
-              response.headers = {};
-              var headersInGrid = $scope.responseHeaderGridOptions.data;
-              headersInGrid.forEach(headerInGrid => response.headers[headerInGrid.name] = headerInGrid.value);
-            } else {                            //  header value was changed
-              var headerName = rowEntity.name;
-              headersObj[headerName] = newValue;
-            }
-            $scope.update(true);
-          }
-        });
+      },
+      { title: 'Delete', order: 220, action: deleteRequestHeader,
+        shown: function() {
+          return !$rootScope.appStatus.isForbidden() &&
+            $scope.requestHeaderGridApi.selection.getSelectedRows().length === 1;
+        }
       }
+    ];
+    $scope.requestHeaderGridOptions.onRegisterApi = function(gridApi) {
+      $scope.requestHeaderGridApi = gridApi;
+      gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
+        if (newValue !== oldValue) {
+          var request = $scope.httpStub.spec.request;
+          var headersObj = request.headers;
+          if (colDef.name === 'name') {       //  header name was changed
+            //  to preserve the order of headers, can't just create new property and delete old property on headersObj
+            request.headers = {};
+            var headersInGrid = $scope.requestHeaderGridOptions.data;
+            headersInGrid.forEach(headerInGrid => request.headers[headerInGrid.name] = { equalTo: headerInGrid.value });
+          } else {                            //  header value was changed
+            var headerName = rowEntity.name;
+            headersObj[headerName].equalTo = newValue;
+          }
+          $scope.update(true);
+        }
+      });
+    };
+
+    $scope.responseHeaderGridOptions = JSON.parse(JSON.stringify(commonHeaderGridOptions));
+    $scope.responseHeaderGridOptions.gridMenuCustomItems = [
+      { title: 'Create', order: 210, action: createResponseHeader,
+        shown: function() {
+          return !$rootScope.appStatus.isForbidden();
+        }
+      },
+      { title: 'Delete', order: 220, action: deleteResponseHeader,
+        shown: function() {
+          return !$rootScope.appStatus.isForbidden() &&
+            $scope.responseHeaderGridApi.selection.getSelectedRows().length === 1;
+        }
+      }
+    ];
+    $scope.responseHeaderGridOptions.onRegisterApi = function(gridApi) {
+      $scope.responseHeaderGridApi = gridApi;
+      gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue) {
+        if (newValue !== oldValue) {
+          var response = $scope.httpStub.spec.response;
+          var headersObj = response.headers;
+          if (colDef.name === 'name') {       //  header name was changed
+            //  to preserve the order of headers, can't just create new property and delete old property on headersObj
+            response.headers = {};
+            var headersInGrid = $scope.responseHeaderGridOptions.data;
+            headersInGrid.forEach(headerInGrid => response.headers[headerInGrid.name] = headerInGrid.value);
+          } else {                            //  header value was changed
+            var headerName = rowEntity.name;
+            headersObj[headerName] = newValue;
+          }
+          $scope.update(true);
+        }
+      });
     };
   }
 ]);

@@ -15,6 +15,34 @@
         <div class="col-lg-8">${ stubMapping.spec.request.url }</div>
       </div>
       <div class="form-group">
+        <div class="col-lg-offset-6 col-lg-2">Response Status Code:</div>
+        <div class="col-lg-1">${ stubMapping.spec.response.status }</div>
+        <#if stubMapping.spec.response.fixedDelayMilliseconds??>
+          <div class="col-lg-1">Delay (ms):</div>
+          <div class="col-lg-1">${ stubMapping.spec.response.fixedDelayMilliseconds }</div>
+        </#if>
+      </div>
+      <div class="form-group">
+        <div class="col-lg-6">Request Headers:</div>
+        <div class="col-lg-6">Response Headers:</div>
+      </div>
+      <div class="form-group">
+        <div class="col-lg-6">
+          <textarea name="requestHeaders" rows="6" class="form-control" readonly>
+            <#if stubMapping.spec.request.headers??>
+              <#compress>
+                <#list stubMapping.spec.request.headers?keys as key>
+                  ${key}: ${stubMapping.spec.request.headers[key].expected }
+                </#list>
+              </#compress>
+            </#if>
+          <#lt></textarea>
+        </div>
+        <div class="col-lg-6">
+          <textarea name="responseHeaders" rows="6" class="form-control" readonly><#if stubMapping.spec.response.headers??><@fmt.formatHTTPHeadersObj object=stubMapping.spec.response.headers/></#if></textarea>
+        </div>
+      </div>
+      <div class="form-group">
         <div class="col-lg-2">${ (stubMapping.spec.request.bodyPatterns??)?then('Request Body', '') }</div>
         <div class="col-lg-2">
           <#if stubMapping.spec.request.bodyPatterns??>
@@ -22,12 +50,7 @@
             <#if (stubMapping.spec.request.bodyPatterns?first).equalToJson??>Equal to JSON</#if>
           </#if>
         </div>
-        <div class="col-lg-offset-2 col-lg-2">Response Status Code:</div>
-        <div class="col-lg-1">${ stubMapping.spec.response.status }</div>
-        <#if stubMapping.spec.response.fixedDelayMilliseconds??>
-          <div class="col-lg-1">Delay (ms):</div>
-          <div class="col-lg-1">${ stubMapping.spec.response.fixedDelayMilliseconds }</div>
-        </#if>
+        <div class="col-lg-offset-2 col-lg-6">Response Body:</div>
       </div>
       <div class="form-group">
         <div class="col-lg-6">
@@ -36,22 +59,7 @@
           </#if>
         </div>
         <div class="col-lg-6">
-          <div class="form-group">
-            <div class="col-lg-3">Response Headers:</div>
-          </div>
-          <div class="form-group">
-            <div class="col-lg-12">
-              <textarea name="responseHeaders" rows="6" class="form-control" readonly><#if stubMapping.spec.response.headers??><@fmt.formatHTTPHeadersObj object=stubMapping.spec.response.headers/></#if></textarea>
-            </div>
-          </div>
-          <div class="form-group">
-            <div class="col-lg-3">Response Body:</div>
-          </div>
-          <div class="form-group">
-            <div class="col-lg-12">
-              <textarea name="responseBody" rows="9" class="form-control" readonly>${ (stubMapping.spec.response.body??)?then(stubMapping.spec.response.body, '') }</textarea>
-            </div>
-          </div>
+          <textarea name="responseBody" rows="9" class="form-control" readonly>${ (stubMapping.spec.response.body??)?then(stubMapping.spec.response.body, '') }</textarea>
         </div>
       </div>
     </form>
