@@ -66,23 +66,34 @@ angular.module('common')
         });
       },
 
-      getRequestBodyMainPattern: function(bodyPatterns) {
-        var result = { name: null, displayName: null, value: null };
-        if (bodyPatterns) {
-          var bodyPattern = bodyPatterns[0];
-          if (bodyPattern) {
-            if ('equalToXml' in bodyPattern) {
-              result.name = 'equalToXml';
-              result.displayName = 'Equal to XML';
-              result.value = bodyPattern.equalToXml;
-            } else if ('equalToJson' in bodyPattern) {
-              result.name = 'equalToJson';
-              result.displayName = 'Equal to JSON';
-              result.value = bodyPattern.equalToJson;
+      getRequestBodyMainPattern: function(requestMethod, bodyPatterns) {
+        if (this.requestBodyApplicable(requestMethod)) {
+          var result = { name: null, displayName: null, value: null };
+            if (bodyPatterns) {
+              var bodyPattern = bodyPatterns[0];
+              if (bodyPattern) {
+                if ('equalToXml' in bodyPattern) {
+                  result.name = 'equalToXml';
+                  result.displayName = 'Equal to XML';
+                  result.value = bodyPattern.equalToXml;
+                } else if ('equalToJson' in bodyPattern) {
+                  result.name = 'equalToJson';
+                  result.displayName = 'Equal to JSON';
+                  result.value = bodyPattern.equalToJson;
+                }
+              }
+            } else {
+              result.name = 'any';
+              result.displayName = 'Can be Any';
             }
-          }
+            return result;
+        } else {
+          return null;
         }
-        return result;
+      },
+
+      requestBodyApplicable: function(requestMethod) {
+        return requestMethod && (requestMethod === 'POST' || requestMethod === 'PUT');
       },
 
       formatHTTPHeadersObj: function(headersObj) {

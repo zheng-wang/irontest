@@ -43,11 +43,12 @@
         </div>
       </div>
       <div class="form-group">
-        <div class="col-lg-2">${ (stubMapping.spec.request.bodyPatterns??)?then('Request Body', '') }</div>
+        <div class="col-lg-2"><#if stubMapping.spec.request.method == "POST" || stubMapping.spec.request.method == "PUT">Request Body</#if></div>
         <div class="col-lg-2">
           <#if stubMapping.spec.request.bodyPatterns??>
             <#if (stubMapping.spec.request.bodyPatterns?first).equalToXml??>Equal to XML</#if>
             <#if (stubMapping.spec.request.bodyPatterns?first).equalToJson??>Equal to JSON</#if>
+          <#elseif stubMapping.spec.request.method == "POST" || stubMapping.spec.request.method == "PUT">Can be Any
           </#if>
         </div>
         <div class="col-lg-offset-2 col-lg-6">Response Body:</div>

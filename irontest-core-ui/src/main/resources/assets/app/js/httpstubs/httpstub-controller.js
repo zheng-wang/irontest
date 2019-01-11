@@ -10,11 +10,6 @@ angular.module('irontest').controller('HTTPStubController', ['$scope', 'HTTPStub
 
     $scope.activeTabIndex = SPEC_TAB_INDEX;
 
-    var resetRequestBodyMainPattern = function() {
-      $scope.requestBodyMainPattern = IronTestUtils.getRequestBodyMainPattern();
-    };
-    resetRequestBodyMainPattern();
-
     $scope.autoSave = function(isValid) {
       if (timer) $timeout.cancel(timer);
       timer = $timeout(function() {
@@ -43,7 +38,8 @@ angular.module('irontest').controller('HTTPStubController', ['$scope', 'HTTPStub
       }, function(httpStub) {
         $scope.httpStub = httpStub;
 
-        $scope.requestBodyMainPattern = IronTestUtils.getRequestBodyMainPattern(httpStub.spec.request.bodyPatterns);
+        $scope.requestBodyMainPattern = IronTestUtils.getRequestBodyMainPattern(
+          httpStub.spec.request.method, httpStub.spec.request.bodyPatterns);
 
         //  set request and response headers
         var requestHeaders = httpStub.spec.request.headers;
@@ -63,10 +59,9 @@ angular.module('irontest').controller('HTTPStubController', ['$scope', 'HTTPStub
       });
     };
 
-    $scope.requestBodyNotApplicable = function() {
+    $scope.requestBodyApplicable = function() {
       if ($scope.httpStub) {     //  when the view is on loading, there is no $scope.httpStub
-        var requestMethod = $scope.httpStub.spec.request.method;
-        return $rootScope.appStatus.isForbidden() || requestMethod === 'GET' || requestMethod === 'DELETE';
+        return IronTestUtils.requestBodyApplicable($scope.httpStub.spec.request.method);
       } else {
         return true;
       }
@@ -74,37 +69,38 @@ angular.module('irontest').controller('HTTPStubController', ['$scope', 'HTTPStub
 
     $scope.methodChanged = function(isValid) {
       var request = $scope.httpStub.spec.request;
-      if (request.bodyPatterns && $scope.requestBodyNotApplicable()) {
-        delete request.bodyPatterns;
-        resetRequestBodyMainPattern();
-      }
-      $scope.update(isValid);
-    };
-
-    $scope.toggleRestrictRequestBody = function(isValid) {
-      var request = $scope.httpStub.spec.request;
-      if (request.bodyPatterns) {
-        delete request.bodyPatterns;
+      if ($scope.requestBodyApplicable()) {
+        if (!$scope.requestBodyMainPattern) {
+          $scope.requestBodyMainPattern = IronTestUtils.getRequestBodyMainPattern(request.method);
+        }
       } else {
-        request.bodyPatterns = [];
+        delete request.bodyPatterns;
+        delete $scope.requestBodyMainPattern;
       }
-      resetRequestBodyMainPattern();
       $scope.update(isValid);
     };
 
     $scope.requestBodyMainPatternNameChanged = function(isValid) {
       var newMainPatternName = $scope.requestBodyMainPattern.name;
-      var bodyPatterns = $scope.httpStub.spec.request.bodyPatterns;
-      bodyPatterns.length = 0;    //  clear the bodyPatterns array
-      var bodyPattern = new Object();
-      var hiddenMainPatternValue;
-      if (newMainPatternName === 'equalToXml') {
-        hiddenMainPatternValue = '<IronTest_ToBeSubstitutedDuringStepRun/>';
-      } else if (newMainPatternName === 'equalToJson') {
-        hiddenMainPatternValue = "\"IronTest_ToBeSubstitutedDuringStepRun\"";
+      var request = $scope.httpStub.spec.request;
+      if (newMainPatternName === 'any') {
+        delete request.bodyPatterns;
+        $scope.requestBodyMainPattern = IronTestUtils.getRequestBodyMainPattern($scope.httpStub.spec.request.method);
+      } else {
+        request.bodyPatterns = [];
+        var bodyPatterns = request.bodyPatterns;
+        var bodyPattern = new Object();
+        var hiddenMainPatternValue;
+        if (newMainPatternName === 'equalToXml') {
+          hiddenMainPatternValue = '<IronTest_ToBeSubstitutedDuringStepRun/>';
+          bodyPattern.enablePlaceholders = true;
+          bodyPattern.placeholderOpeningDelimiterRegex = "#\\{";
+        } else if (newMainPatternName === 'equalToJson') {
+          hiddenMainPatternValue = "\"IronTest_ToBeSubstitutedDuringStepRun\"";
+        }
+        bodyPattern[newMainPatternName] = hiddenMainPatternValue;
+        bodyPatterns.push(bodyPattern);
       }
-      bodyPattern[newMainPatternName] = hiddenMainPatternValue;
-      bodyPatterns.push(bodyPattern);
       $scope.update(isValid);
     };
 

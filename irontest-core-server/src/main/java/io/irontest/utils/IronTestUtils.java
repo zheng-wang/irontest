@@ -256,7 +256,12 @@ public final class IronTestUtils {
                 for (int i = 0; i < requestBodyPatterns.size(); i++) {
                     ContentPattern requestBodyPattern = requestBodyPatterns.get(i);
                     if (requestBodyPattern instanceof EqualToXmlPattern) {
-                        requestBodyPatterns.set(i, new EqualToXmlPattern(httpStubMapping.getRequestBodyMainPatternValue()));
+                        EqualToXmlPattern equalToXmlPattern = (EqualToXmlPattern) requestBodyPattern;
+                        requestBodyPatterns.set(i, new EqualToXmlPattern(
+                                httpStubMapping.getRequestBodyMainPatternValue(),
+                                equalToXmlPattern.isEnablePlaceholders(),
+                                equalToXmlPattern.getPlaceholderOpeningDelimiterRegex(),
+                                equalToXmlPattern.getPlaceholderClosingDelimiterRegex()));
                         break;
                     } else if (requestBodyPattern instanceof EqualToJsonPattern) {
                         EqualToJsonPattern equalToJsonPattern = (EqualToJsonPattern) requestBodyPattern;

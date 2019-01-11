@@ -33,8 +33,8 @@
         </div>
       </div>
       <div class="form-group">
-        <div class="col-lg-2">{{ stubInstance.request.bodyPatterns ? 'Request Body' : '' }}</div>
-        <div class="col-lg-2">{{ stubInstance.request.bodyPatterns ? requestBodyMainPattern.displayName : '' }}</div>
+        <div class="col-lg-2">{{ requestBodyMainPattern ? 'Request Body' : '' }}</div>
+        <div class="col-lg-2">{{ requestBodyMainPattern ? requestBodyMainPattern.displayName : '' }}</div>
         <div class="col-lg-offset-2 col-lg-6">Response Body:</div>
       </div>
       <div class="form-group">

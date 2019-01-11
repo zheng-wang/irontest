@@ -9,7 +9,8 @@ angular.module('mockserver').controller('StubInstanceController', ['$scope', 'Mo
           $scope.stubInstance = null;
         } else {
           $scope.stubInstance = stubInstance;
-          $scope.requestBodyMainPattern = IronTestUtils.getRequestBodyMainPattern(stubInstance.request.bodyPatterns);
+          $scope.requestBodyMainPattern = IronTestUtils.getRequestBodyMainPattern(
+            stubInstance.request.method, stubInstance.request.bodyPatterns);
 
           //  construct stubRequestHeadersStr
           var stubRequestHeadersStr = '';

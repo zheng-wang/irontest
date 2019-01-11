@@ -27,11 +27,6 @@
       <i class="fa fa-list"></i> <span class="caret"></span>
     </button>
     <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu">
-      <li role="menuitem" ng-class="{'disabled': requestBodyNotApplicable()}">
-        <a ng-click="requestBodyNotApplicable() ? $event.stopPropagation() : toggleRestrictRequestBody(httpStubForm.$valid)" href="">
-          <i class="fa {{ httpStub.spec.request.bodyPatterns ? 'fa-check-square-o' : 'fa-square-o' }}"></i> Restrict Request Body
-        </a>
-      </li>
       <li role="menuitem" ng-class="{'disabled': appStatus.isForbidden()}">
         <a ng-click="appStatus.isForbidden() ? $event.stopPropagation() : toggleDelayResponse(httpStubForm.$valid)" href="">
           <i class="fa {{ httpStub.spec.response.hasOwnProperty('fixedDelayMilliseconds') ? 'fa-check-square-o' : 'fa-square-o' }}"></i> Delay Response
@@ -86,14 +81,15 @@
   <div class="col-lg-6">
     <div class="form-group">
       <div class="col-lg-1">
-        <label for="requestBodyMainPatternName" class="control-label" ng-if="httpStub.spec.request.bodyPatterns">Body</label>
+        <label for="requestBodyMainPatternName" class="control-label" ng-if="requestBodyApplicable()">Body</label>
       </div>
       <div class="col-lg-3">
         <!-- This is the 'main' request body pattern, like 'equalToJson'. Additional request body patterns like 'ignoreArrayOrder' are complementary to the 'main' pattern. -->
         <select name="requestBodyMainPatternName" id="requestBodyMainPatternName" class="form-control"
                 ng-model="requestBodyMainPattern.name" ng-disabled="appStatus.isForbidden()"
                 ng-change="requestBodyMainPatternNameChanged(httpStubForm.$valid)"
-                ng-if="httpStub.spec.request.bodyPatterns">
+                ng-if="requestBodyApplicable()">
+          <option value="any">Can be Any</option>
           <option value="equalToXml">Equal to XML</option>
           <option value="equalToJson">Equal to JSON</option>
         </select>
@@ -103,7 +99,7 @@
       <div class="col-lg-12">
         <textarea id="requestBodyMainPatternValue" name="requestBodyMainPatternValue" rows="26" class="form-control"
               ng-model="httpStub.requestBodyMainPatternValue" ng-change="autoSave(httpStubForm.$valid)"
-              spellcheck="false" ng-readonly="appStatus.isForbidden()" ng-if="requestBodyMainPattern.name"></textarea>
+              spellcheck="false" ng-readonly="appStatus.isForbidden()" ng-if="requestBodyMainPattern.name && requestBodyMainPattern.name !== 'any'"></textarea>
       </div>
     </div>
   </div>
