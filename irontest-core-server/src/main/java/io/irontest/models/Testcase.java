@@ -22,14 +22,16 @@ public class Testcase {
     @JsonView(ResourceJsonViews.TestcaseExport.class)
     private DataTable dataTable;
     private List<HTTPStubMapping> httpStubMappings = new ArrayList<>();
+    private boolean checkHTTPStubsHitOrder;
 
     public Testcase() {}
 
-    public Testcase(long id, String name, String description, long parentFolderId) {
+    public Testcase(long id, String name, String description, long parentFolderId, boolean checkHTTPStubsHitOrder) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.parentFolderId = parentFolderId;
+        this.checkHTTPStubsHitOrder = checkHTTPStubsHitOrder;
     }
 
     public long getId() {
@@ -102,5 +104,13 @@ public class Testcase {
 
     public void setHttpStubMappings(List<HTTPStubMapping> httpStubMappings) {
         this.httpStubMappings = httpStubMappings;
+    }
+
+    public boolean isCheckHTTPStubsHitOrder() {
+        return checkHTTPStubsHitOrder;
+    }
+
+    public void setCheckHTTPStubsHitOrder(boolean checkHTTPStubsHitOrder) {
+        this.checkHTTPStubsHitOrder = checkHTTPStubsHitOrder;
     }
 }

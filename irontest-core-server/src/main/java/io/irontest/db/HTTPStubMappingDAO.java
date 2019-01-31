@@ -7,6 +7,7 @@ import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
+import org.jdbi.v3.sqlobject.transaction.Transaction;
 
 import java.util.List;
 
@@ -51,5 +52,38 @@ public interface HTTPStubMappingDAO {
     default void update(HTTPStubMapping stub) {
         _update(stub.getId(), StubMapping.buildJsonStringFor(stub.getSpec()), stub.getRequestBodyMainPatternValue(),
                 stub.getExpectedHitCount());
+    }
+
+    @SqlQuery("select * from httpstubmapping where testcase_id = :testcaseId and number = :number")
+    HTTPStubMapping findByNumber(@Bind("testcaseId") long testcaseId, @Bind("number") short number);
+
+    @SqlUpdate("update httpstubmapping set number = :newNumber, updated = CURRENT_TIMESTAMP where id = :id")
+    void updateNumberById(@Bind("id") long id, @Bind("newNumber") short newNumber);
+
+    @SqlUpdate("update httpstubmapping set number = case when :direction = 'up' then number - 1 else number + 1 end, " +
+            "updated = CURRENT_TIMESTAMP " +
+            "where testcase_id = :testcaseId and number >= :firstNumber and number <= :lastNumber")
+    void batchMove(@Bind("testcaseId") long testcaseId,
+                   @Bind("firstNumber") short firstNumber,
+                   @Bind("lastNumber") short lastNumber,
+                   @Bind("direction") String direction);
+
+    @Transaction
+    default void moveInTestcase(long testcaseId, short fromNumber, short toNumber) {
+        if (fromNumber != toNumber) {
+            long draggedStubId = findByNumber(testcaseId, fromNumber).getId();
+
+            //  shelve the dragged stub first
+            updateNumberById(draggedStubId, (short) -1);
+
+            if (fromNumber < toNumber) {
+                batchMove(testcaseId, (short) (fromNumber + 1), toNumber, "up");
+            } else {
+                batchMove(testcaseId, toNumber, (short) (fromNumber - 1), "down");
+            }
+
+            //  move the dragged stub last
+            updateNumberById(draggedStubId, toNumber);
+        }
     }
 }

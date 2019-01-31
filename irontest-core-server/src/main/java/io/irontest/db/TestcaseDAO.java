@@ -25,7 +25,8 @@ public interface TestcaseDAO extends CrossReferenceDAO {
 
     @SqlUpdate("CREATE TABLE IF NOT EXISTS testcase (id BIGINT DEFAULT testcase_sequence.NEXTVAL PRIMARY KEY, " +
             "name varchar(200) NOT NULL DEFAULT CURRENT_TIMESTAMP, description CLOB, " +
-            "parent_folder_id BIGINT NOT NULL, created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
+            "parent_folder_id BIGINT NOT NULL, check_http_stubs_hit_order BOOLEAN NOT NULL DEFAULT FALSE, " +
+            "created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (parent_folder_id) REFERENCES folder(id), " +
             "CONSTRAINT TESTCASE_" + DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX + " UNIQUE(parent_folder_id, name))")
@@ -50,7 +51,7 @@ public interface TestcaseDAO extends CrossReferenceDAO {
     }
 
     @SqlUpdate("update testcase set name = :name, description = :description, " +
-            "updated = CURRENT_TIMESTAMP where id = :id")
+            "check_http_stubs_hit_order = :checkHTTPStubsHitOrder, updated = CURRENT_TIMESTAMP where id = :id")
     void update(@BindBean Testcase testcase);
 
     @SqlQuery("select * from testcase where id = :id")

@@ -23,7 +23,7 @@ public class HTTPStubsSetupTeststepRunner extends TeststepRunner {
         HTTPStubsSetupTeststepProperties otherProperties = (HTTPStubsSetupTeststepProperties) teststep.getOtherProperties();
         wireMockServer.loadMappingsUsing(stubMappings -> {
             for (HTTPStubMapping stubMapping: otherProperties.getHttpStubMappings()) {
-                StubMapping stubInstance = IronTestUtils.createStubInstance(stubMapping.getId(), stubMapping.getSpec());
+                StubMapping stubInstance = IronTestUtils.createStubInstance(stubMapping.getId(), stubMapping.getNumber(), stubMapping.getSpec());
                 stubMappings.addMapping(stubInstance);
                 httpStubMappingInstanceIds.put(stubMapping.getNumber(), stubInstance.getId());
             }

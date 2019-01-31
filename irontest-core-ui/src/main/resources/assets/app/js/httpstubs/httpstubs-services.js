@@ -17,6 +17,11 @@ angular.module('irontest').factory('HTTPStubs', ['$resource',
       loadAll: {
         method: 'POST',
         url: 'api/testcases/:testcaseId/httpstubs/loadAll',
+      },
+      move: {
+        method: 'POST',
+        url: 'api/testcases/:testcaseId/httpstubs/move',
+        isArray: true
       }
     });
   }

@@ -47,6 +47,7 @@ import java.util.*;
 
 import static com.github.tomakehurst.wiremock.common.Metadata.metadata;
 import static io.irontest.IronTestConstants.WIREMOCK_STUB_METADATA_ATTR_NAME_IRON_TEST_ID;
+import static io.irontest.IronTestConstants.WIREMOCK_STUB_METADATA_ATTR_NAME_IRON_TEST_NUMBER;
 
 public final class IronTestUtils {
     /**
@@ -214,10 +215,12 @@ public final class IronTestUtils {
      * @param spec
      * @return
      */
-    public static StubMapping createStubInstance(long ironTestId, StubMapping spec) {
+    public static StubMapping createStubInstance(long ironTestId, short ironTestNumber, StubMapping spec) {
         StubMapping stubInstance = StubMapping.buildFrom(StubMapping.buildJsonStringFor(spec));
         stubInstance.setMetadata(metadata()
-                .attr(WIREMOCK_STUB_METADATA_ATTR_NAME_IRON_TEST_ID, Long.toString(ironTestId)).build());
+                .attr(WIREMOCK_STUB_METADATA_ATTR_NAME_IRON_TEST_ID, Long.toString(ironTestId))
+                .attr(WIREMOCK_STUB_METADATA_ATTR_NAME_IRON_TEST_NUMBER, Short.toString(ironTestNumber))
+                .build());
         stubInstance.setDirty(false);
         return stubInstance;
     }

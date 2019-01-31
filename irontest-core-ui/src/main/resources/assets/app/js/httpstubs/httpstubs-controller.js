@@ -10,6 +10,7 @@ angular.module('irontest').controller('HTTPStubsController', ['$scope', 'HTTPStu
 
     $scope.httpStubGridOptions = {
       data: 'httpStubs', enableColumnMenus: false,
+      rowTemplate: '<div grid="grid" class="ui-grid-draggable-row" draggable="true"><div ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader, \'custom\': true }" ui-grid-cell></div></div>',
       columnDefs: [
         {
           name: 'number', displayName: 'NO.', width: 55, minWidth: 55,
@@ -28,6 +29,26 @@ angular.module('irontest').controller('HTTPStubsController', ['$scope', 'HTTPStu
       ],
       onRegisterApi: function(gridApi) {
         $scope.gridApi = gridApi;
+
+        gridApi.draggableRows.on.rowDropped($scope, function (info) {
+          var toNumber;
+          if (info.fromIndex > info.toIndex) {    // row moved up
+            toNumber = $scope.httpStubs[info.toIndex + 1].number;
+          } else {                            // row moved down
+            toNumber = $scope.httpStubs[info.toIndex - 1].number;
+          }
+
+          HTTPStubs.move({
+            testcaseId: $scope.testcase.id,
+            fromNumber: info.draggedRowEntity.number,
+            toNumber: toNumber
+          }, {}, function(response) {
+            $scope.$emit('successfullySaved');
+            $scope.httpStubs = response;  // this is necessary as server side will change number values of http stubs.
+          }, function(response) {
+            IronTestUtils.openErrorHTTPResponseModal(response);
+          });
+        });
 
         $scope.$parent.handleTestcaseRunResultOutlineAreaDisplay();
       }

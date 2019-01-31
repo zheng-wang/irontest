@@ -86,8 +86,9 @@ public abstract class TestcaseRunner {
             httpStubsSetupStep.setOtherProperties(stubsSetupTeststepProperties);
             testcase.getTeststeps().add(0, httpStubsSetupStep);
 
-            //  add HTTPStubRequestsCheck step
+            //  add HTTPStubRequestsCheck step and its assertions
             Teststep stubRequestsCheckStep = new Teststep(Teststep.TYPE_HTTP_STUB_REQUESTS_CHECK);
+            testcase.getTeststeps().add(testcase.getTeststeps().size(), stubRequestsCheckStep);
             stubRequestsCheckStep.setName("Check HTTP stub requests");
             for (HTTPStubMapping stub: testcase.getHttpStubMappings()) {
                 Assertion stubHitAssertion = new Assertion(Assertion.TYPE_HTTP_STUB_HIT);
@@ -96,10 +97,14 @@ public abstract class TestcaseRunner {
                         new HTTPStubHitAssertionProperties(stub.getNumber(), stub.getExpectedHitCount()));
                 stubRequestsCheckStep.getAssertions().add(stubHitAssertion);
             }
+            if (testcase.getHttpStubMappings().size() > 1 && testcase.isCheckHTTPStubsHitOrder()) {
+                Assertion stubsHitInOrderAssertion = new Assertion(Assertion.TYPE_HTTP_STUBS_HIT_IN_ORDER);
+                stubsHitInOrderAssertion.setName("Stubs were hit in order");
+                stubRequestsCheckStep.getAssertions().add(stubsHitInOrderAssertion);
+            }
             Assertion allStubRequestsMatchedAssertion = new Assertion(Assertion.TYPE_ALL_HTTP_STUB_REQUESTS_MATCHED);
             allStubRequestsMatchedAssertion.setName("All stub requests were matched");
             stubRequestsCheckStep.getAssertions().add(allStubRequestsMatchedAssertion);
-            testcase.getTeststeps().add(testcase.getTeststeps().size(), stubRequestsCheckStep);
         }
 
         for (Teststep teststep : testcase.getTeststeps()) {

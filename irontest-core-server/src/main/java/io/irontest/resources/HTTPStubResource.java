@@ -115,9 +115,18 @@ public class HTTPStubResource {
                     wireMockServer.removeStubMapping(existingInstance);
                 }
 
-                StubMapping stubInstance = IronTestUtils.createStubInstance(stub.getId(), stub.getSpec());
+                StubMapping stubInstance = IronTestUtils.createStubInstance(stub.getId(), stub.getNumber(), stub.getSpec());
                 stubMappings.addMapping(stubInstance);
             }
         });
+    }
+
+    @POST @Path("testcases/{testcaseId}/httpstubs/move")
+    @PermitAll
+    @JsonView(ResourceJsonViews.HTTPStubUIGrid.class)
+    public List<HTTPStubMapping> move(@PathParam("testcaseId") long testcaseId,
+                                          @QueryParam("fromNumber") short fromNumber, @QueryParam("toNumber") short toNumber) {
+        httpStubMappingDAO.moveInTestcase(testcaseId, fromNumber, toNumber);
+        return httpStubMappingDAO.findByTestcaseId(testcaseId);
     }
 }

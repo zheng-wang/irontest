@@ -35,6 +35,8 @@ public class AssertionVerifierFactory {
             result = new HTTPStubHitAssertionVerifier();
         } else if (Assertion.TYPE_ALL_HTTP_STUB_REQUESTS_MATCHED.equals(assertionType)) {
             result = new AllHTTPStubRequestsMatchedAssertionVerifier();
+        } else if (Assertion.TYPE_HTTP_STUBS_HIT_IN_ORDER.equals(assertionType)) {
+            result = new HTTPStubsHitInOrderAssertionVerifier();
         } else {
             throw new RuntimeException("Unrecognized assertion type " + assertionType);
         }

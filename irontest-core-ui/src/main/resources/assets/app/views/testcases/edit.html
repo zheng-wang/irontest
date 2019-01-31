@@ -98,8 +98,15 @@
             <div class="col-lg-offset-1 col-lg-1">
               <button class="btn btn-info" ng-click="loadAllHTTPStubs()" ng-disabled="appStatus.isForbidden()">Load All</button>
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-3">
               <h5 ng-if="stubsLoadingStatus === 'finished'">All stubs have been loaded into mock server</h5>
+            </div>
+            <div class="col-lg-2 checkbox">
+              <label>
+                <input name="checkHTTPStubsHitOrder" id="checkHTTPStubsHitOrder" type="checkbox"
+                       ng-model="testcase.checkHTTPStubsHitOrder" ng-change="update(testcaseForm.$valid)"
+                       ng-disabled="appStatus.isForbidden()"> Check Hit Order
+              </label>
             </div>
             <div class="col-lg-2 pull-right">
               <a ng-href="ui/mockserver" target='_blank'>
@@ -110,7 +117,8 @@
           <div class="form-group">
             <div class="col-lg-12">
               <div ng-if="activeTabIndex === HTTP_STUBS_TAB_INDEX" ui-grid="httpStubGridOptions" ui-grid-resize-columns
-                   class="ui-grid" id="testcase-httpstub-grid" ng-style="styleOfMajorElementOnSelectedTab"></div>
+                   ui-grid-draggable-rows class="ui-grid" id="testcase-httpstub-grid"
+                   ng-style="styleOfMajorElementOnSelectedTab"></div>
             </div>
           </div>
         </div>
