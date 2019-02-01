@@ -36,7 +36,8 @@ public class Assertion {
             @JsonSubTypes.Type(value = JSONEqualAssertionProperties.class, name = Assertion.TYPE_JSON_EQUAL),
             @JsonSubTypes.Type(value = JSONPathAssertionProperties.class, name = Assertion.TYPE_JSONPATH),
             @JsonSubTypes.Type(value = JSONPathXMLEqualAssertionProperties.class, name = Assertion.TYPE_JSONPATH_XMLEQUAL),
-            @JsonSubTypes.Type(value = HTTPStubHitAssertionProperties.class, name = Assertion.TYPE_HTTP_STUB_HIT)})
+            @JsonSubTypes.Type(value = HTTPStubHitAssertionProperties.class, name = Assertion.TYPE_HTTP_STUB_HIT),
+            @JsonSubTypes.Type(value = HTTPStubsHitInOrderAssertionProperties.class, name = Assertion.TYPE_HTTP_STUBS_HIT_IN_ORDER)})
     private Properties otherProperties = new Properties();
 
     public Assertion() {}

@@ -10,9 +10,10 @@ import io.irontest.resources.ResourceJsonViews;
  * MixIn for {@link com.github.tomakehurst.wiremock.matching.RequestPattern}.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonView(ResourceJsonViews.TestcaseExport.class)
 public class RequestPatternMixIn {
-    @JsonView({ResourceJsonViews.HTTPStubUIGrid.class, ResourceJsonViews.MockServerStubInstanceList.class})
+    @JsonView({ResourceJsonViews.HTTPStubUIGrid.class, ResourceJsonViews.MockServerStubInstanceList.class, ResourceJsonViews.TestcaseExport.class})
     UrlPattern url;
-    @JsonView(ResourceJsonViews.HTTPStubUIGrid.class)
+    @JsonView({ResourceJsonViews.HTTPStubUIGrid.class, ResourceJsonViews.TestcaseExport.class})
     RequestMethod method;
 }

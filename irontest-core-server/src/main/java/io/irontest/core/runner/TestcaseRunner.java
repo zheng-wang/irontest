@@ -9,10 +9,7 @@ import io.irontest.db.UtilsDAO;
 import io.irontest.models.HTTPStubMapping;
 import io.irontest.models.TestResult;
 import io.irontest.models.Testcase;
-import io.irontest.models.assertion.Assertion;
-import io.irontest.models.assertion.AssertionVerification;
-import io.irontest.models.assertion.AssertionVerificationResult;
-import io.irontest.models.assertion.HTTPStubHitAssertionProperties;
+import io.irontest.models.assertion.*;
 import io.irontest.models.endpoint.Endpoint;
 import io.irontest.models.testrun.TestcaseRun;
 import io.irontest.models.testrun.TeststepRun;
@@ -21,10 +18,7 @@ import io.irontest.models.teststep.Teststep;
 import io.irontest.utils.IronTestUtils;
 import org.slf4j.Logger;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static io.irontest.IronTestConstants.*;
 
@@ -75,7 +69,7 @@ public abstract class TestcaseRunner {
 
     public abstract TestcaseRun run() throws JsonProcessingException;
 
-    //  processing before starting the test case run
+    //  process the test case before starting to run it
     void preProcessing() {
         if (!testcase.getHttpStubMappings().isEmpty()) {
             //  add HTTPStubsSetup step
@@ -100,6 +94,11 @@ public abstract class TestcaseRunner {
             if (testcase.getHttpStubMappings().size() > 1 && testcase.isCheckHTTPStubsHitOrder()) {
                 Assertion stubsHitInOrderAssertion = new Assertion(Assertion.TYPE_HTTP_STUBS_HIT_IN_ORDER);
                 stubsHitInOrderAssertion.setName("Stubs were hit in order");
+                List<Short> expectedHitOrder = new ArrayList<>();
+                for (HTTPStubMapping stub: testcase.getHttpStubMappings()) {
+                    expectedHitOrder.add(stub.getNumber());
+                }
+                stubsHitInOrderAssertion.setOtherProperties(new HTTPStubsHitInOrderAssertionProperties(expectedHitOrder));
                 stubRequestsCheckStep.getAssertions().add(stubsHitInOrderAssertion);
             }
             Assertion allStubRequestsMatchedAssertion = new Assertion(Assertion.TYPE_ALL_HTTP_STUB_REQUESTS_MATCHED);
@@ -200,6 +199,8 @@ public abstract class TestcaseRunner {
                         assertionVerificationInput = ((WireMockServerAPIResponse) apiResponse).getAllServeEvents();
                         HTTPStubHitAssertionProperties otherProperties = (HTTPStubHitAssertionProperties) assertion.getOtherProperties();
                         assertionVerificationInput2 = getTestcaseRunContext().getHttpStubMappingInstanceIds().get(otherProperties.getStubNumber());
+                    } else if (Assertion.TYPE_HTTP_STUBS_HIT_IN_ORDER.equals(assertion.getType())) {
+                        assertionVerificationInput = ((WireMockServerAPIResponse) apiResponse).getAllServeEvents();
                     }
 
                     AssertionVerification verification = new AssertionVerification();

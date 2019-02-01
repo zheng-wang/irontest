@@ -7,6 +7,12 @@ import java.util.List;
 public class HTTPStubsHitInOrderAssertionProperties extends Properties {
     private List<Short> expectedHitOrder;
 
+    public HTTPStubsHitInOrderAssertionProperties() {}
+
+    public HTTPStubsHitInOrderAssertionProperties(List<Short> expectedHitOrder) {
+        this.expectedHitOrder = expectedHitOrder;
+    }
+
     public List<Short> getExpectedHitOrder() {
         return expectedHitOrder;
     }

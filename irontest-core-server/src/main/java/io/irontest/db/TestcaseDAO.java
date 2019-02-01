@@ -105,8 +105,8 @@ public interface TestcaseDAO extends CrossReferenceDAO {
     boolean _nameExistsInFolder(@Bind("name") String name,
                                 @Bind("parentFolderId") long parentFolderId);
 
-    @SqlUpdate("insert into testcase (name, description, parent_folder_id) " +
-            "select :name, description, :parentFolderId from testcase where id = :sourceTestcaseId")
+    @SqlUpdate("insert into testcase (name, description, parent_folder_id, check_http_stubs_hit_order) " +
+            "select :name, description, :parentFolderId, check_http_stubs_hit_order from testcase where id = :sourceTestcaseId")
     @GetGeneratedKeys
     long duplicateById(@Bind("name") String name, @Bind("parentFolderId") long parentFolderId,
                        @Bind("sourceTestcaseId") long sourceTestcaseId);
@@ -143,6 +143,9 @@ public interface TestcaseDAO extends CrossReferenceDAO {
 
         //  duplicate data table
         dataTableDAO().duplicateByTestcase(sourceTestcaseId, newTestcaseId);
+
+        //  duplicate HTTP stubs
+        httpStubMappingDAO().duplicateByTestcase(sourceTestcaseId, newTestcaseId);
 
         return newTestcaseId;
     }

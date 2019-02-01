@@ -10,9 +10,10 @@ import io.irontest.resources.ResourceJsonViews;
  * MixIn for {@link com.github.tomakehurst.wiremock.stubbing.StubMapping}.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonView(ResourceJsonViews.MockServerStubInstanceList.class)
+@JsonView({ResourceJsonViews.MockServerStubInstanceList.class, ResourceJsonViews.TestcaseExport.class})
 public abstract class StubMappingMixIn {
-    @JsonView({ResourceJsonViews.HTTPStubUIGrid.class, ResourceJsonViews.MockServerStubInstanceList.class})
+    @JsonView({ResourceJsonViews.HTTPStubUIGrid.class, ResourceJsonViews.MockServerStubInstanceList.class,
+            ResourceJsonViews.TestcaseExport.class})
     RequestPattern request;
 
     //  ignore this WireMock internal field

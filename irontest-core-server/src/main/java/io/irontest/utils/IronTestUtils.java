@@ -218,8 +218,8 @@ public final class IronTestUtils {
     public static StubMapping createStubInstance(long ironTestId, short ironTestNumber, StubMapping spec) {
         StubMapping stubInstance = StubMapping.buildFrom(StubMapping.buildJsonStringFor(spec));
         stubInstance.setMetadata(metadata()
-                .attr(WIREMOCK_STUB_METADATA_ATTR_NAME_IRON_TEST_ID, Long.toString(ironTestId))
-                .attr(WIREMOCK_STUB_METADATA_ATTR_NAME_IRON_TEST_NUMBER, Short.toString(ironTestNumber))
+                .attr(WIREMOCK_STUB_METADATA_ATTR_NAME_IRON_TEST_ID, ironTestId)
+                .attr(WIREMOCK_STUB_METADATA_ATTR_NAME_IRON_TEST_NUMBER, ironTestNumber)
                 .build());
         stubInstance.setDirty(false);
         return stubInstance;

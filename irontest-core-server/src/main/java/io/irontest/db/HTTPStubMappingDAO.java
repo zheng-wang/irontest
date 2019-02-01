@@ -20,8 +20,7 @@ public interface HTTPStubMappingDAO {
             "id BIGINT DEFAULT httpstubmapping_sequence.NEXTVAL PRIMARY KEY, " +
             "testcase_id BIGINT, number SMALLINT NOT NULL, " +
             "spec_json CLOB NOT NULL DEFAULT '{ \"request\": { \"url\": \"/\", \"method\": \"GET\" }, \"response\": { \"status\": 200 } }', " +
-            "request_body_main_pattern_value CLOB, " +
-            "expected_hit_count SMALLINT NOT NULL DEFAULT 1, " +
+            "request_body_main_pattern_value CLOB, expected_hit_count SMALLINT NOT NULL DEFAULT 1, " +
             "created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (testcase_id) REFERENCES testcase(id) ON DELETE CASCADE," +
@@ -86,4 +85,14 @@ public interface HTTPStubMappingDAO {
             updateNumberById(draggedStubId, toNumber);
         }
     }
+
+    /**
+     * Copy HTTP stubs from source test case to target test case.
+     * @param sourceTestcaseId
+     * @param targetTestcaseId
+     */
+    @SqlUpdate("insert into httpstubmapping (testcase_id, number, spec_json, request_body_main_pattern_value, expected_hit_count) " +
+            "select :targetTestcaseId, number, spec_json, request_body_main_pattern_value, expected_hit_count from httpstubmapping where testcase_id = :sourceTestcaseId")
+    void duplicateByTestcase(@Bind("sourceTestcaseId") long sourceTestcaseId,
+                             @Bind("targetTestcaseId") long targetTestcaseId);
 }

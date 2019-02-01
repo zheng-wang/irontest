@@ -21,7 +21,9 @@ public class Testcase {
     private List<Teststep> teststeps;
     @JsonView(ResourceJsonViews.TestcaseExport.class)
     private DataTable dataTable;
+    @JsonView(ResourceJsonViews.TestcaseExport.class)
     private List<HTTPStubMapping> httpStubMappings = new ArrayList<>();
+    @JsonView(ResourceJsonViews.TestcaseExport.class)
     private boolean checkHTTPStubsHitOrder;
 
     public Testcase() {}
