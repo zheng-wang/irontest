@@ -36,7 +36,8 @@ public interface TestcaseDAO extends CrossReferenceDAO {
     @GetGeneratedKeys
     long _insertWithoutName(@BindBean Testcase testcase);
 
-    @SqlUpdate("insert into testcase (name, description, parent_folder_id) values (:name, :description, :parentFolderId)")
+    @SqlUpdate("insert into testcase (name, description, parent_folder_id, check_http_stubs_hit_order) values (" +
+            ":name, :description, :parentFolderId, :checkHTTPStubsHitOrder)")
     @GetGeneratedKeys
     long _insertWithName(@BindBean Testcase testcase);
 
@@ -173,6 +174,11 @@ public interface TestcaseDAO extends CrossReferenceDAO {
 
         //  insert data table
         dataTableDAO().insertByImport(testcaseId, testcase.getDataTable());
+
+        //  insert HTTP stubs
+        for (HTTPStubMapping stub: testcase.getHttpStubMappings()) {
+            httpStubMappingDAO().insertByImport(testcaseId, stub);
+        }
 
         return testcaseId;
     }

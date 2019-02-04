@@ -5,10 +5,7 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.common.Encoding;
 import com.github.tomakehurst.wiremock.http.LoggedResponse;
 import com.github.tomakehurst.wiremock.http.ResponseDefinition;
-import com.github.tomakehurst.wiremock.matching.ContentPattern;
-import com.github.tomakehurst.wiremock.matching.EqualToJsonPattern;
-import com.github.tomakehurst.wiremock.matching.EqualToXmlPattern;
-import com.github.tomakehurst.wiremock.matching.RequestPattern;
+import com.github.tomakehurst.wiremock.matching.*;
 import com.github.tomakehurst.wiremock.stubbing.ServeEvent;
 import com.github.tomakehurst.wiremock.stubbing.StubMapping;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
@@ -201,6 +198,7 @@ public final class IronTestUtils {
     public static void addMixInsForWireMock(ObjectMapper objectMapper) {
         objectMapper.addMixIn(StubMapping.class, StubMappingMixIn.class);
         objectMapper.addMixIn(RequestPattern.class, RequestPatternMixIn.class);
+        objectMapper.addMixIn(StringValuePattern.class, StringValuePatternMixIn.class);
         objectMapper.addMixIn(ResponseDefinition.class, ResponseDefinitionMixIn.class);
         objectMapper.addMixIn(ContentPattern.class, ContentPatternMixIn.class);
         objectMapper.addMixIn(LoggedResponse.class, LoggedResponseMixIn.class);

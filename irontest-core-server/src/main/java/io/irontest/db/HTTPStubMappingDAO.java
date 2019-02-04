@@ -38,6 +38,12 @@ public interface HTTPStubMappingDAO {
     @GetGeneratedKeys
     long insert(@Bind("testcaseId") long testcaseId);
 
+    @SqlUpdate("insert into httpstubmapping (testcase_id, number, spec_json, request_body_main_pattern_value, " +
+            "expected_hit_count) values (:testcaseId, :number, :specJson, :requestBodyMainPatternValue, :expectedHitCount)")
+    void insert(@Bind("testcaseId") long testcaseId, @Bind("number") short number, @Bind("specJson") String specJson,
+                @Bind("requestBodyMainPatternValue") String requestBodyMainPatternValue,
+                @Bind("expectedHitCount") short expectedHitCount);
+
     @SqlUpdate("delete from httpstubmapping where id = :id")
     void deleteById(@Bind("id") long id);
 
@@ -95,4 +101,9 @@ public interface HTTPStubMappingDAO {
             "select :targetTestcaseId, number, spec_json, request_body_main_pattern_value, expected_hit_count from httpstubmapping where testcase_id = :sourceTestcaseId")
     void duplicateByTestcase(@Bind("sourceTestcaseId") long sourceTestcaseId,
                              @Bind("targetTestcaseId") long targetTestcaseId);
+
+    default void insertByImport(long testcaseId, HTTPStubMapping stub) {
+        insert(testcaseId, stub.getNumber(), StubMapping.buildJsonStringFor(stub.getSpec()),
+                stub.getRequestBodyMainPatternValue(), stub.getExpectedHitCount());
+    }
 }
