@@ -10,9 +10,6 @@ import io.irontest.models.assertion.MessageEqualAssertionVerificationResult;
 import static net.javacrumbs.jsonunit.JsonAssert.assertJsonEquals;
 
 public class JSONEqualAssertionVerifier extends AssertionVerifier {
-    private static final String JSON_UNIT_PLACEHOLDER_REGEX = "#\\{[\\s]*(json-unit\\.[^}]+)}";
-    private static final String JSON_UNIT_PLACEHOLDER_DELIMITER_REPLACEMENT = "\\${$1}";
-
     /**
      *
      * @param assertion
@@ -22,9 +19,10 @@ public class JSONEqualAssertionVerifier extends AssertionVerifier {
     @Override
     public AssertionVerificationResult _verify(Assertion assertion, Object ...inputs) {
         JSONEqualAssertionProperties assertionProperties = (JSONEqualAssertionProperties) assertion.getOtherProperties();
+        String expectedJSON = assertionProperties.getExpectedJSON();
 
         //  validate arguments
-        if (assertionProperties.getExpectedJSON() == null) {
+        if (expectedJSON == null) {
             throw new IllegalArgumentException("Expected JSON is null.");
         } else if (inputs[0] == null) {
             throw new IllegalArgumentException("Actual JSON is null.");
@@ -32,8 +30,6 @@ public class JSONEqualAssertionVerifier extends AssertionVerifier {
             throw new IllegalArgumentException("Actual JSON is empty.");
         }
 
-        String expectedJSON = assertionProperties.getExpectedJSON().replaceAll(
-                JSON_UNIT_PLACEHOLDER_REGEX, JSON_UNIT_PLACEHOLDER_DELIMITER_REPLACEMENT);
         MessageEqualAssertionVerificationResult result = new MessageEqualAssertionVerificationResult();
         try {
             assertJsonEquals(expectedJSON, inputs[0]);

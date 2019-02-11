@@ -13,8 +13,9 @@
   <label for="endpointEnvironment" class="col-lg-2 control-label">Environment</label>
   <div class="col-lg-10">
     <select ng-if="isInShareEndpointMode()" name="endpointEnvironment" id="endpointEnvironment"
-            class="form-control" ng-model="teststep.endpoint.environment"
-            ng-options="item.name for item in environments"></select>
+            class="form-control" ng-model="teststep.endpoint.environment">
+      <option ng-repeat="environment in environments" ng-value="environment">{{ environment.name }}</option>
+    </select>
     <input ng-if="!isInShareEndpointMode()" name="endpointEnvironmentName"
            type="text" class="form-control" ng-model="teststep.endpoint.environment.name"
            id="endpointEnvironmentName" readonly>

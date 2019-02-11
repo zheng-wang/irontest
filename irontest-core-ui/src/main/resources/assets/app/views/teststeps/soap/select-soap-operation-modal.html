@@ -17,14 +17,17 @@
       <label for="wsdlBinding" class="col-lg-2 control-label">WSDL Binding</label>
       <div class="col-lg-10">
         <select name="wsdlBinding" id="wsdlBinding" class="form-control" ng-model="wsdlBinding"
-                ng-options="item.name for item in wsdlBindings" ng-change="refreshOperations()"></select>
+                ng-change="refreshOperations()">
+          <option ng-repeat="binding in wsdlBindings" ng-value="binding">{{ binding.name }}</option>
+        </select>
       </div>
     </div>
     <div class="form-group required">
       <label for="wsdlOperation" class="col-lg-2 control-label">WSDL Operation</label>
       <div class="col-lg-10">
-        <select name="wsdlOperation" id="wsdlOperation" class="form-control" ng-model="wsdlOperation"
-                ng-options="item for item in wsdlOperations"></select>
+        <select name="wsdlOperation" id="wsdlOperation" class="form-control" ng-model="wsdlOperation">
+          <option ng-repeat="operation in wsdlOperations" ng-value="operation">{{ operation }}</option>
+        </select>
       </div>
     </div>
   </form>
