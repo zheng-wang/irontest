@@ -101,6 +101,18 @@ public final class IronTestUtils {
         }
     }
 
+    /**
+     * This method trusts all SSL certificates exposed by the API.
+     *
+     * @param url
+     * @param username
+     * @param password
+     * @param httpMethod
+     * @param httpHeaders
+     * @param httpBody
+     * @return
+     * @throws Exception
+     */
     public static HTTPAPIResponse invokeHTTPAPI(String url, String username, String password, HTTPMethod httpMethod,
                                                 List<HTTPHeader> httpHeaders, String httpBody) throws Exception {
         //  to allow special characters like whitespace in query parameters

@@ -7,6 +7,7 @@ import com.predic8.wsdl.WSDLParser;
 import com.predic8.wstool.creator.RequestTemplateCreator;
 import com.predic8.wstool.creator.SOARequestCreator;
 import groovy.xml.MarkupBuilder;
+import io.irontest.core.SSLTrustedExternalResolver;
 import io.irontest.models.WSDLBinding;
 import io.irontest.models.teststep.SOAPOperationInfo;
 
@@ -28,6 +29,7 @@ public class WSDLResource {
     public List<WSDLBinding> getWSDLBindings(@PathParam("wsdlUrl") String wsdlUrl) throws UnsupportedEncodingException {
         List<WSDLBinding> result = new ArrayList<WSDLBinding>();
         WSDLParser parser = new WSDLParser();
+        parser.setResourceResolver(new SSLTrustedExternalResolver());
         Definitions definition = parser.parse(wsdlUrl);
         for (Binding binding: definition.getBindings()) {
             List<String> operationNames = new ArrayList<String>();
