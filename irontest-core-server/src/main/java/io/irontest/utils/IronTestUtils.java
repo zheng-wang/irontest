@@ -19,6 +19,7 @@ import io.irontest.models.teststep.HTTPHeader;
 import org.antlr.runtime.ANTLRStringStream;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.validator.routines.UrlValidator;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
@@ -115,6 +116,11 @@ public final class IronTestUtils {
      */
     public static HTTPAPIResponse invokeHTTPAPI(String url, String username, String password, HTTPMethod httpMethod,
                                                 List<HTTPHeader> httpHeaders, String httpBody) throws Exception {
+        UrlValidator urlValidator = new UrlValidator(new String[] {"http", "https"}, UrlValidator.ALLOW_LOCAL_URLS);
+        if (!urlValidator.isValid(url)) {
+            throw new RuntimeException("Invalid URL");
+        }
+
         //  to allow special characters like whitespace in query parameters
         String safeUrl = UrlEscapers.urlFragmentEscaper().escape(url);
 
