@@ -84,33 +84,7 @@
       ${ (stepRun.teststep.type == "HTTPStubRequestsCheck")?then('Stub Requests', 'Response') }:
     </div>
     <div class="col-lg-11">
-      <#-- Extra response info for test step that has response HTTP headers -->
-      <#if stepRun.response.httpHeaders?? && (stepRun.response.httpHeaders?size > 0)>
-        <div class="row">
-          <div class="col-lg-2">HTTP Headers:</div>
-          <div class="col-lg-10">
-            <#list stepRun.response.httpHeaders as httpHeader>
-              <div class="row">
-                <div class="col-lg-2">${ httpHeader.name }:</div>
-                <div class="col-lg-10">${ httpHeader.value }</div>
-              </div>
-            </#list>
-          </div>
-        </div>
-      </#if>
-      <#if stepRun.teststep.type == "HTTPStubRequestsCheck">
-        <div class="row">
-          <#t><div class="col-lg-12">
-            <#t><#include "${stepRun.teststep.type?lower_case}TeststepResponse.ftl">
-          <#t></div>
-        </div>
-      <#else>
-        <div class="form-group">
-          <#t><textarea class="form-control" rows="8" readonly>
-            <#t><#include "${stepRun.teststep.type?lower_case}TeststepResponse.ftl">
-          <#t></textarea>
-        </div>
-      </#if>
+      <#t><#include "${stepRun.teststep.type?lower_case}TeststepResponse.ftl">
     </div>
   </div>
 </#if>
