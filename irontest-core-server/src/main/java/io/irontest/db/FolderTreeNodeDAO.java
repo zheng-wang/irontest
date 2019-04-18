@@ -24,8 +24,8 @@ public interface FolderTreeNodeDAO extends CrossReferenceDAO {
                         @Bind("id") long id);
 
     @SqlUpdate("update folder set name = :name, parent_folder_id = :parentFolderId, updated = CURRENT_TIMESTAMP where id = :id")
-    void _updateFolder(@Bind("name") String name, @Bind("parentFolderId") long parentFolderId,
-                      @Bind("id") long id);
+    void _updateFolder(@Bind("name") String name, @Bind("parentFolderId") Long parentFolderId,
+                       @Bind("id") long id);
 
     default void update(FolderTreeNode node) {
         if (FolderTreeNodeType.TESTCASE == node.getType()) {
