@@ -62,7 +62,7 @@
 
 <#-- Extra request info for MQ step Enqueue action with RFH2 header -->
 <#if stepRun.teststep.type == "MQ" && (stepRun.teststep.action == "Enqueue" || stepRun.teststep.action == "Publish") &&
-    stepRun.teststep.otherProperties.rfh2Header.enabled == true>
+    stepRun.teststep.otherProperties.rfh2Header??>
   <div class="row">
     <div class="col-lg-2">RFH2 Header Folders:</div>
     <div class="col-lg-10">

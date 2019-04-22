@@ -168,7 +168,7 @@ public class MQTeststepRunner extends TeststepRunner {
         MQMessage message = new MQMessage();
 
         //  add RFH2 header if included
-        if (rfh2Header.isEnabled()) {
+        if (rfh2Header != null) {
             //  create MQMD properties on the message object (MQMD is not written into message, but is used by MQ PUT)
             MQMD mqmd = new MQMD();
             mqmd.setFormat(CMQC.MQFMT_RF_HEADER_2);

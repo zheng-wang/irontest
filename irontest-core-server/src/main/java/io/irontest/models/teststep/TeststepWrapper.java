@@ -7,7 +7,7 @@ public class TeststepWrapper {
     private Teststep teststep;
 
     //  currently only used for conveying information to DB test step UI
-    private Map<String, Object> parameters = new HashMap<String, Object>();
+    private Map<String, Object> parameters = new HashMap<>();
 
     public Teststep getTeststep() {
         return teststep;

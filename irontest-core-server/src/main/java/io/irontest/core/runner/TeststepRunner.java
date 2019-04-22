@@ -2,13 +2,8 @@ package io.irontest.core.runner;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.tomakehurst.wiremock.matching.ContentPattern;
-import com.github.tomakehurst.wiremock.matching.EqualToJsonPattern;
-import com.github.tomakehurst.wiremock.matching.EqualToXmlPattern;
-import com.github.tomakehurst.wiremock.stubbing.StubMapping;
 import io.irontest.core.MapValueLookup;
 import io.irontest.db.UtilsDAO;
-import io.irontest.models.HTTPStubMapping;
 import io.irontest.models.endpoint.Endpoint;
 import io.irontest.models.teststep.HTTPStubsSetupTeststepProperties;
 import io.irontest.models.teststep.Teststep;

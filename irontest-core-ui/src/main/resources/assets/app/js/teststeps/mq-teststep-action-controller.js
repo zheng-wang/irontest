@@ -74,13 +74,23 @@ angular.module('irontest').controller('MQTeststepActionController', ['$scope', '
       });
     };
 
+    $scope.$watch('teststep.otherProperties', function() {
+      if ($scope.teststep.otherProperties.rfh2Header) {
+        $scope.includeRfh2Header = true;
+      } else {
+        $scope.includeRfh2Header = false;
+      }
+    });
+
     $scope.toggleRFH2Header = function(isValid) {
       var header = $scope.teststep.otherProperties.rfh2Header;
-      if (header.enabled === true && header.folders.length === 0) {
-        $scope.addRFH2Folder(isValid);
-      } else {
+      if (header) {
+        $scope.teststep.otherProperties.rfh2Header = null;
         $scope.textMessageTabSelected(0);
         $scope.update(isValid);
+      } else {
+        $scope.teststep.otherProperties.rfh2Header = { folders: [] };
+        $scope.addRFH2Folder(isValid);
       }
     };
 

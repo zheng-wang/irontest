@@ -14,8 +14,7 @@ public class MQTeststepActionDataBackup {
     private List<Assertion> dequeueAssertions;    // only for Dequeue action
 
     //  for Enqueue and Publish actions
-    private String textRequest;
-    private byte[] fileRequest;
+    private byte[] request;
     private String requestFilename;
     private MQRFH2Header rfh2Header;
 
@@ -35,20 +34,12 @@ public class MQTeststepActionDataBackup {
         this.dequeueAssertions = dequeueAssertions;
     }
 
-    public String getTextRequest() {
-        return textRequest;
+    public byte[] getRequest() {
+        return request;
     }
 
-    public void setTextRequest(String textRequest) {
-        this.textRequest = textRequest;
-    }
-
-    public byte[] getFileRequest() {
-        return fileRequest;
-    }
-
-    public void setFileRequest(byte[] fileRequest) {
-        this.fileRequest = fileRequest;
+    public void setRequest(byte[] request) {
+        this.request = request;
     }
 
     public String getRequestFilename() {

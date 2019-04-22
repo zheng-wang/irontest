@@ -9,7 +9,7 @@ public class MQTeststepProperties extends Properties {
     private MQDestinationType destinationType = MQDestinationType.QUEUE;       //  queue is the default destination type
     private String queueName;
     private String topicString;
-    private MQRFH2Header rfh2Header = new MQRFH2Header();  // for Enqueue action and Publish action with message from text
+    private MQRFH2Header rfh2Header;  // for Enqueue action and Publish action with message from text; null means no RFH2 header
 
     public MQDestinationType getDestinationType() {
         return destinationType;

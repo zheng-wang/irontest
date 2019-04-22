@@ -11,16 +11,15 @@
   <div ng-if="teststep.requestType === 'Text'">
     <div class="col-lg-2 checkbox">
       <label>
-        <input type="checkbox" ng-model="teststep.otherProperties.rfh2Header.enabled"
-               ng-change="toggleRFH2Header(teststepForm.$valid)"
+        <input type="checkbox" ng-model="includeRfh2Header" ng-change="toggleRFH2Header(teststepForm.$valid)"
                ng-disabled="appStatus.isForbidden()">Include RFH2 Header
       </label>
     </div>
-    <div class="col-lg-2" ng-if="teststep.otherProperties.rfh2Header.enabled">
+    <div class="col-lg-2" ng-if="includeRfh2Header">
       <button type="button" class="btn btn-info" ng-click="addRFH2Folder(teststepForm.$valid)"
               ng-disabled="appStatus.isForbidden()">Add RFH2 Folder</button>
     </div>
-    <div class="col-lg-2" ng-if="teststep.otherProperties.rfh2Header.enabled">
+    <div class="col-lg-2" ng-if="includeRfh2Header">
       <button type="button" class="btn btn-info" ng-click="deleteRFH2Folder(teststepForm.$valid)"
               ng-disabled="appStatus.isForbidden() || textMessageActiveTabIndex === 0 ||
                 teststep.otherProperties.rfh2Header.folders.length === 1">Delete RFH2 Folder</button>
@@ -34,7 +33,7 @@
       <li ng-class="{ 'active' : textMessageActiveTabIndex === 0 }" ng-click="textMessageTabSelected(0)">
         <a data-toggle="tab" href="#textMessageTab0" target="_self">Body</a>
       </li>
-      <li ng-if="teststep.otherProperties.rfh2Header.enabled"
+      <li ng-if="includeRfh2Header"
           ng-repeat="folder in teststep.otherProperties.rfh2Header.folders track by $index + 1"
           ng-class="{ 'active' : textMessageActiveTabIndex === $index + 1 }"
           ng-click="textMessageTabSelected($index + 1)">
@@ -49,7 +48,7 @@
                       rows="23" spellcheck="false" ng-readonly="appStatus.isForbidden()"></textarea>
         </div>
       </div>
-      <div ng-if="teststep.otherProperties.rfh2Header.enabled" id="textMessageTab{{$index + 1}}"
+      <div ng-if="includeRfh2Header" id="textMessageTab{{$index + 1}}"
            class="tab-pane" ng-class="{ 'active' : textMessageActiveTabIndex === $index + 1 }"
            ng-repeat="folder in teststep.otherProperties.rfh2Header.folders track by $index + 1">
         <div class="form-group"></div> <!-- spacer -->
