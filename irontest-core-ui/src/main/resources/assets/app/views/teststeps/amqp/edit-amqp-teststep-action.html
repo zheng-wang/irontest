@@ -3,6 +3,16 @@
   <label for="serviceURI" class="col-lg-2 control-label">Service URI</label>
   <div class="col-lg-8">
     <input type="text" name="serviceURI" id="serviceURI" class="form-control" readonly
-           value="amqp://{{teststep.endpoint.otherProperties.host}}:{{teststep.endpoint.otherProperties.port}}">
+           value="{{ teststep.endpoint.url }}">
+  </div>
+</div>
+<div class="form-group">
+  <div>
+    <label for="nodeAddress" class="col-lg-2 control-label">Target Address</label>
+    <div class="col-lg-8">
+      <input id="nodeAddress" name="nodeAddress" type="text" class="form-control" spellcheck="false"
+             ng-model="teststep.otherProperties.nodeAddress" ng-change="autoSave(teststepForm.$valid)"
+             ng-readonly="appStatus.isForbidden()">
+    </div>
   </div>
 </div>
