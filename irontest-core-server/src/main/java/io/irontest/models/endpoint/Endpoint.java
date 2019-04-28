@@ -14,6 +14,7 @@ public class Endpoint {
     public static final String TYPE_DB = "DB";
     public static final String TYPE_MQ = "MQ";
     public static final String TYPE_IIB = "IIB";
+    public static final String TYPE_AMQP = "AMQP";
     private long id;
     @JsonView(ResourceJsonViews.DataTableUIGrid.class)
     private Environment environment;

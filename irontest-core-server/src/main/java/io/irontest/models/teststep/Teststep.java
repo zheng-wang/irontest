@@ -15,8 +15,9 @@ public class Teststep {
     public static final String TYPE_SOAP = "SOAP";
     public static final String TYPE_DB = "DB";
     public static final String TYPE_HTTP = "HTTP";
-    public static final String TYPE_IIB = "IIB";
     public static final String TYPE_MQ = "MQ";
+    public static final String TYPE_IIB = "IIB";
+    public static final String TYPE_AMQP = "AMQP";
     public static final String TYPE_WAIT = "Wait";
     public static final String TYPE_HTTP_STUBS_SETUP = "HTTPStubsSetup";
     public static final String TYPE_HTTP_STUB_REQUESTS_CHECK = "HTTPStubRequestsCheck";

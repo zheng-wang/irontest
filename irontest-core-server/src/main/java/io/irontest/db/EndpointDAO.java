@@ -87,6 +87,9 @@ public interface EndpointDAO {
                 case Teststep.TYPE_IIB:
                     endpoint.setType(Endpoint.TYPE_IIB);
                     break;
+                case Teststep.TYPE_AMQP:
+                    endpoint.setType(Endpoint.TYPE_AMQP);
+                    break;
                 default:
                     break;
             }
