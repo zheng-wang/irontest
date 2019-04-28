@@ -40,16 +40,12 @@
                     ng-readonly="appStatus.isForbidden()"></textarea>
         </div>
       </div>
-      <div ng-if="endpoint.type === 'SOAP'"
-           ng-include="'/ui/views/endpoints/edit-soap-endpoint.html'"></div>
-      <div ng-if="endpoint.type === 'DB'"
-           ng-include="'/ui/views/endpoints/edit-db-endpoint.html'"></div>
-      <div ng-if="endpoint.type === 'HTTP'"
-           ng-include="'/ui/views/endpoints/edit-http-endpoint.html'"></div>
-      <div ng-if="endpoint.type === 'MQ'"
-           ng-include="'/ui/views/endpoints/edit-mq-endpoint.html'"></div>
-      <div ng-if="endpoint.type === 'IIB'"
-           ng-include="'/ui/views/endpoints/edit-iib-endpoint.html'"></div>
+      <div ng-if="endpoint.type === 'SOAP'" ng-include="'/ui/views/endpoints/edit-soap-endpoint.html'"></div>
+      <div ng-if="endpoint.type === 'DB'" ng-include="'/ui/views/endpoints/edit-db-endpoint.html'"></div>
+      <div ng-if="endpoint.type === 'HTTP'" ng-include="'/ui/views/endpoints/edit-http-endpoint.html'"></div>
+      <div ng-if="endpoint.type === 'MQ'" ng-include="'/ui/views/endpoints/edit-mq-endpoint.html'"></div>
+      <div ng-if="endpoint.type === 'IIB'" ng-include="'/ui/views/endpoints/edit-iib-endpoint.html'"></div>
+      <div ng-if="endpoint.type === 'AMQP'" ng-include="'/ui/views/endpoints/edit-amqp-endpoint.html'"></div>
     </form>
   </div>
 </div>

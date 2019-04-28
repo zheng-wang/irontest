@@ -1,0 +1,7 @@
+<div class="form-group">
+  <label for="serviceURI" class="col-lg-2 control-label">Service URI</label>
+  <div class="col-lg-10">
+    <input id="serviceURI" name="serviceURI" type="text" class="form-control" ng-model="endpoint.url"
+           ng-change="autoSave(endpointForm.$valid)" ng-readonly="appStatus.isForbidden()" spellcheck="false">
+  </div>
+</div>
