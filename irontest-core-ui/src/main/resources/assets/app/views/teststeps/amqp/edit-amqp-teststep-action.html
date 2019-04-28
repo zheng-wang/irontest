@@ -6,6 +6,7 @@
            value="{{ teststep.endpoint.url }}">
   </div>
 </div>
+
 <div class="form-group">
   <div>
     <label for="nodeAddress" class="col-lg-2 control-label">Target Address</label>
@@ -14,5 +15,27 @@
              ng-model="teststep.otherProperties.nodeAddress" ng-change="autoSave(teststepForm.$valid)"
              ng-readonly="appStatus.isForbidden()">
     </div>
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="col-lg-2 control-label">Action</label>
+  <div class="col-lg-3"><h5>Send</h5></div>
+  <div class="col-lg-1">
+    <button type="button" class="btn btn-info btn-block" ng-click="doAction()"
+            ng-disabled="appStatus.isForbidden() || endpointInfoIncomplete() || actionInfoIncomplete() ||
+              steprun.status === 'ongoing'">Do</button>
+  </div>
+  <div class="col-lg-4">       <!-- Action run status message -->
+    <h5 ng-if="steprun.status === 'ongoing'">Sending message ...</h5>
+    <h5 ng-if="steprun.status === 'finished'">Message sent.</h5>
+  </div>
+</div>
+
+<div class="form-group">
+  <div class="col-lg-10">
+    <textarea id="requestBody" name="requestBody" class="form-control" spellcheck="false" rows="30"
+              ng-model="teststep.request" ng-change="autoSave(teststepForm.$valid)"
+              ng-readonly="appStatus.isForbidden()"></textarea>
   </div>
 </div>
