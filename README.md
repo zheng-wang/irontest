@@ -1,5 +1,5 @@
 # Iron Test
-Iron Test is an open source tool for integration testing APIs such as HTTP APIs (including RESTful APIs), SOAP web services, relational databases, JMS APIs (TBD), WebSphere MQ, IBM Integration Bus (IIB), etc. It is suitable for Integration, ESB, Microservices and SOA testing.
+Iron Test is an open source tool for integration testing APIs such as HTTP APIs (including RESTful APIs), SOAP web services, relational databases, JMS APIs (TBD), AMQP APIs, WebSphere MQ, IBM Integration Bus (IIB), etc. It is suitable for Integration, ESB, Microservices and SOA testing.
 
 The tool 
 * has GUI, saving user programming skills. Developers also have better experience using GUIed tool, as writing, reading and maintaining code are more brain power draining.

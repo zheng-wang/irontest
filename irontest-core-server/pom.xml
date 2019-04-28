@@ -151,6 +151,11 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <dependency>
+            <groupId>com.ibm.mqlight</groupId>
+            <artifactId>mqlight-api</artifactId>
+            <version>1.0.2016062300</version>
+        </dependency>
 
         <!-- WireMock's dependencies -->
         <dependency>
