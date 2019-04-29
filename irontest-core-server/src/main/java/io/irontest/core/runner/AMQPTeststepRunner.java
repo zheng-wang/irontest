@@ -34,7 +34,6 @@ public class AMQPTeststepRunner extends TeststepRunner {
                 }, null);
             }
 
-            @Override
             public void onRetrying(NonBlockingClient client, Void context, ClientException clientException) {
                 if (clientException != null) {
                     Exception wrappedException = new Exception(
@@ -46,7 +45,6 @@ public class AMQPTeststepRunner extends TeststepRunner {
                 }
             }
 
-            @Override
             public void onStopped(NonBlockingClient client, Void context, ClientException clientException) {
                 if (clientException != null) {
                     Exception wrappedException = new Exception(
