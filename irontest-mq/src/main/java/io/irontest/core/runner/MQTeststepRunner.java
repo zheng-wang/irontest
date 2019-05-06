@@ -2,16 +2,12 @@ package io.irontest.core.runner;
 
 import com.ibm.mq.*;
 import com.ibm.mq.constants.CMQC;
-import com.ibm.mq.headers.MQDataException;
-import com.ibm.mq.headers.MQHeaderIterator;
 import com.ibm.mq.headers.MQMD;
-import com.ibm.mq.headers.MQRFH2;
+import com.ibm.mq.headers.*;
 import io.irontest.models.endpoint.MQConnectionMode;
 import io.irontest.models.endpoint.MQEndpointProperties;
-import io.irontest.models.teststep.MQDestinationType;
-import io.irontest.models.teststep.MQRFH2Header;
-import io.irontest.models.teststep.MQTeststepProperties;
-import io.irontest.models.teststep.Teststep;
+import io.irontest.models.teststep.*;
+import io.irontest.utils.IronTestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +37,7 @@ public class MQTeststepRunner extends TeststepRunner {
 
         BasicTeststepRun basicTeststepRun = new BasicTeststepRun();
 
-        MQAPIResponse response = new MQAPIResponse();
+        APIResponse response = null;
         MQEndpointProperties endpointProperties = (MQEndpointProperties) teststep.getEndpoint().getOtherProperties();
         MQQueueManager queueManager = null;
         try {
@@ -57,9 +53,8 @@ public class MQTeststepRunner extends TeststepRunner {
             }
 
             if (MQDestinationType.QUEUE == teststepProperties.getDestinationType()) {
-                Object responseValue = doQueueAction(queueManager, teststepProperties.getQueueName(), action,
+                response = doQueueAction(queueManager, teststepProperties.getQueueName(), action,
                         teststep.getRequest(), teststepProperties.getRfh2Header());
-                response.setValue(responseValue);
             } else if (MQDestinationType.TOPIC == teststepProperties.getDestinationType()) {
                 doTopicAction(queueManager, teststepProperties.getTopicString(), action, teststep.getRequest(),
                         teststepProperties.getRfh2Header());
@@ -75,9 +70,9 @@ public class MQTeststepRunner extends TeststepRunner {
         return basicTeststepRun;
     }
 
-    private Object doQueueAction(MQQueueManager queueManager, String queueName, String action, Object request,
+    private APIResponse doQueueAction(MQQueueManager queueManager, String queueName, String action, Object request,
                                  MQRFH2Header rfh2Header) throws Exception {
-        Object responseValue = null;
+        APIResponse response = null;
         MQQueue queue = null;
         int openOptions = CMQC.MQOO_FAIL_IF_QUIESCING + CMQC.MQOO_INPUT_SHARED;
         try {
@@ -101,9 +96,10 @@ public class MQTeststepRunner extends TeststepRunner {
             if (Teststep.ACTION_CLEAR.equals(action)) {
                 clearQueue(queue);
             } else if (Teststep.ACTION_CHECK_DEPTH.equals(action)) {
-                responseValue = queue.getCurrentDepth();
+                response = new MQCheckQueueDepthResponse();
+                ((MQCheckQueueDepthResponse) response).setQueueDepth(queue.getCurrentDepth());
             } else if (Teststep.ACTION_DEQUEUE.equals(action)) {
-                responseValue = dequeue(queue);
+                response = dequeue(queue);
             } else if (Teststep.ACTION_ENQUEUE.equals(action)) {
                 enqueue(queue, request, rfh2Header);
             } else {
@@ -115,7 +111,7 @@ public class MQTeststepRunner extends TeststepRunner {
             }
         }
 
-        return responseValue;
+        return response;
     }
 
     private void doTopicAction(MQQueueManager queueManager, String topicString, String action, Object data,
@@ -148,7 +144,7 @@ public class MQTeststepRunner extends TeststepRunner {
             throw new Exception("Data can not be null.");
         }
 
-        MQMessage message = null;
+        MQMessage message;
         if (data instanceof String) {
             message = buildMessageFromText((String) data, rfh2Header);
         } else {
@@ -214,15 +210,33 @@ public class MQTeststepRunner extends TeststepRunner {
         return message;
     }
 
-    private String dequeue(MQQueue queue) throws MQException, IOException, MQDataException {
-        String result = null;
+    private MQDequeueResponse dequeue(MQQueue queue) throws MQException, IOException, MQDataException {
+        MQDequeueResponse result = new MQDequeueResponse();
         MQGetMessageOptions getOptions = new MQGetMessageOptions();
         getOptions.options = CMQC.MQGMO_NO_WAIT + CMQC.MQGMO_FAIL_IF_QUIESCING;
         MQMessage message = new MQMessage();
         try {
             queue.get(message, getOptions);
+
+            //  parse the MQMessage to Iron Test model
+            MQRFH2Header mqrfh2Header = null;
             MQHeaderIterator it = new MQHeaderIterator(message);
-            result = it.getBodyAsText();
+            while (it.hasNext()) {
+                MQHeader header = it.nextHeader();
+                if (header instanceof MQRFH2) {
+                    mqrfh2Header = new MQRFH2Header();
+                    MQRFH2 mqrfh2 = (MQRFH2) header;
+                    String[] folderStrings = mqrfh2.getFolderStrings();
+                    for (int i = 0; i < folderStrings.length; i++) {
+                        MQRFH2Folder mqrfh2Folder = new MQRFH2Folder();
+                        mqrfh2Folder.setString(folderStrings[i]);
+                        IronTestUtils.validateMQRFH2FolderStringAndSetFolderName(mqrfh2Folder);
+                        mqrfh2Header.getFolders().add(mqrfh2Folder);
+                    }
+                }
+            }
+            result.setMqrfh2Header(mqrfh2Header);
+            result.setBodyAsText(it.getBodyAsText());
         } catch(MQException mqEx) {
             if (mqEx.getCompCode() == CMQC.MQCC_FAILED && mqEx.getReason() == CMQC.MQRC_NO_MSG_AVAILABLE) {
                 //  No more message available on the queue

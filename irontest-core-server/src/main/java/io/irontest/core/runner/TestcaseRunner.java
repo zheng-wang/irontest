@@ -170,13 +170,17 @@ public abstract class TestcaseRunner {
 
             //  initially resolve assertion input (based on test step type)
             Object apiResponse = teststepRun.getResponse();
-            Object assertionVerificationInput;
+            Object assertionVerificationInput = null;
             switch (teststep.getType()) {
                 case Teststep.TYPE_DB:
                     assertionVerificationInput = ((DBAPIResponse) apiResponse).getRowsJSON();
                 break;
                 case Teststep.TYPE_MQ:
-                    assertionVerificationInput = ((MQAPIResponse) apiResponse).getValue();
+                    if (Teststep.ACTION_CHECK_DEPTH.equals(teststep.getAction())) {
+                        assertionVerificationInput = ((MQCheckQueueDepthResponse) apiResponse).getQueueDepth();
+                    } else if (Teststep.ACTION_DEQUEUE.equals(teststep.getAction())) {
+                        assertionVerificationInput = ((MQDequeueResponse) apiResponse).getBodyAsText();
+                    }
                     break;
                 default:
                     assertionVerificationInput = apiResponse;

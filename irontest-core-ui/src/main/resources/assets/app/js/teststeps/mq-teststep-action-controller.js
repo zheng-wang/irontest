@@ -63,7 +63,7 @@ angular.module('irontest').controller('MQTeststepActionController', ['$scope', '
       var teststep = new Teststeps($scope.teststep);
       $scope.steprun.status = 'ongoing';
       teststep.$run(function(basicTeststepRun) {
-        $scope.steprun.response = basicTeststepRun.response.value;
+        $scope.steprun.response = basicTeststepRun.response;
         $scope.steprun.status = 'finished';
         timer = $timeout(function() {
           $scope.steprun.status = null;

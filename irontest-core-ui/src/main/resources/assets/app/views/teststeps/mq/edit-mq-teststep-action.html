@@ -81,7 +81,7 @@
 <div ng-if="teststep.action === 'Dequeue'">
   <div class="form-group form-group-reduced-bottom-margin" height-adjustable-element-in-column="0.7">
     <div class="col-lg-10 full-height">
-      <textarea name="actualMessageBody" ng-model="steprun.response" id="actualMessageBody"
+      <textarea name="actualMessageBody" ng-model="steprun.response.bodyAsText" id="actualMessageBody"
                 placeholder="{{ steprun.status === 'ongoing' || steprun.response === '' ? '' : 'Actual Message Body' }}"
                 class="form-control full-height-important" spellcheck="false"
                 ng-readonly="appStatus.isForbidden()"></textarea>

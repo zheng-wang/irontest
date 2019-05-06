@@ -159,8 +159,8 @@ public class TeststepResource {
                 break;
             case Teststep.TYPE_MQ:
                 if (Teststep.ACTION_DEQUEUE.equals(teststep.getAction())) {
-                    MQAPIResponse mqAPIResponse = (MQAPIResponse) basicTeststepRun.getResponse();
-                    mqAPIResponse.setValue(IronTestUtils.prettyPrintJSONOrXML((String) mqAPIResponse.getValue()));
+                    MQDequeueResponse mqDequeueResponse = (MQDequeueResponse) basicTeststepRun.getResponse();
+                    mqDequeueResponse.setBodyAsText(IronTestUtils.prettyPrintJSONOrXML(mqDequeueResponse.getBodyAsText()));
                 }
                 break;
             default:

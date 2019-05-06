@@ -16,6 +16,7 @@ import io.irontest.core.runner.SQLStatementType;
 import io.irontest.models.*;
 import io.irontest.models.mixin.*;
 import io.irontest.models.teststep.HTTPHeader;
+import io.irontest.models.teststep.MQRFH2Folder;
 import org.antlr.runtime.ANTLRStringStream;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
@@ -33,6 +34,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.util.EntityUtils;
 import org.jdbi.v3.core.internal.SqlScriptParser;
+import org.w3c.dom.Document;
 
 import javax.net.ssl.SSLContext;
 import javax.xml.transform.TransformerException;
@@ -292,5 +294,18 @@ public final class IronTestUtils {
                 }
             }
         }
+    }
+
+    public static void validateMQRFH2FolderStringAndSetFolderName(MQRFH2Folder folder) {
+        //  validate folder string is well formed XML
+        Document doc;
+        try {
+            doc = XMLUtils.xmlStringToDOM(folder.getString());
+        } catch (Exception e) {
+            throw new RuntimeException("Folder string is not a valid XML. " + folder.getString(), e);
+        }
+
+        //  update folder name to be the XML root element name
+        folder.setName(doc.getDocumentElement().getTagName());
     }
 }

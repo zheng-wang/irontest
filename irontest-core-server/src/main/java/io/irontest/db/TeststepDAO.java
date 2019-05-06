@@ -10,6 +10,7 @@ import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.IntegerEqualAssertionProperties;
 import io.irontest.models.endpoint.Endpoint;
 import io.irontest.models.teststep.*;
+import io.irontest.utils.IronTestUtils;
 import io.irontest.utils.XMLUtils;
 import org.apache.commons.io.IOUtils;
 import org.jdbi.v3.sqlobject.config.RegisterColumnMapper;
@@ -238,16 +239,7 @@ public interface TeststepDAO extends CrossReferenceDAO {
         if (rfh2Header != null) {
             List<MQRFH2Folder> rfh2Folders = rfh2Header.getFolders();
             for (MQRFH2Folder folder : rfh2Folders) {
-                //  validate folder string is well formed XML
-                Document doc;
-                try {
-                    doc = XMLUtils.xmlStringToDOM(folder.getString());
-                } catch (Exception e) {
-                    throw new RuntimeException("Folder string is not a valid XML. " + folder.getString(), e);
-                }
-
-                //  update folder name to be the XML root element name
-                folder.setName(doc.getDocumentElement().getTagName());
+                IronTestUtils.validateMQRFH2FolderStringAndSetFolderName(folder);
             }
         }
     }
@@ -490,9 +482,9 @@ public interface TeststepDAO extends CrossReferenceDAO {
     @SqlUpdate("update teststep set request = :request, request_type = :requestType, request_filename = :requestFilename, " +
             "updated = CURRENT_TIMESTAMP where id = :teststepId")
     void _setRequestFile(@Bind("teststepId") long teststepId,
-                       @Bind("request") byte[] request,   //  InputStream used to work here with jdbi v2, but it is not working with jdbi v3
-                       @Bind("requestType") String requestType,
-                       @Bind("requestFilename") String requestFilename);
+                         @Bind("request") byte[] request,   //  InputStream used to work here with jdbi v2, but it is not working with jdbi v3
+                         @Bind("requestType") String requestType,
+                         @Bind("requestFilename") String requestFilename);
 
     @Transaction
     default Teststep setRequestFile(long teststepId, String fileName, InputStream inputStream) throws IOException {
