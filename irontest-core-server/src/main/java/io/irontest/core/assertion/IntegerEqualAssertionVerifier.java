@@ -4,6 +4,7 @@ import io.irontest.models.TestResult;
 import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.AssertionVerificationResult;
 import io.irontest.models.assertion.IntegerEqualAssertionProperties;
+import io.irontest.models.assertion.IntegerEqualAssertionVerificationResult;
 
 public class IntegerEqualAssertionVerifier extends AssertionVerifier {
     /**
@@ -14,9 +15,10 @@ public class IntegerEqualAssertionVerifier extends AssertionVerifier {
      */
     @Override
     public AssertionVerificationResult _verify(Assertion assertion, Object ...inputs) {
-        AssertionVerificationResult result = new AssertionVerificationResult();
+        IntegerEqualAssertionVerificationResult result = new IntegerEqualAssertionVerificationResult();
         IntegerEqualAssertionProperties properties = (IntegerEqualAssertionProperties)
                 assertion.getOtherProperties();
+        result.setActualNumber((int) inputs[0]);
         result.setResult(Integer.valueOf(properties.getNumber()).equals(inputs[0]) ? TestResult.PASSED : TestResult.FAILED);
 
         return result;

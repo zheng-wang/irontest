@@ -1,1 +1,1 @@
-Integer "${ stepRun.response.value }".
+Integer "${ verification.verificationResult.actualNumber }".
