@@ -77,7 +77,7 @@
 
 <#-- Response info -->
 <#if stepRun.response?? &&
-    (stepRun.teststep.type != "MQ" || (stepRun.teststep.type == "MQ" && stepRun.response.value??))>
+    (stepRun.teststep.type != "MQ" || (stepRun.teststep.type == "MQ" && stepRun.response??))>
   <div class="form-group"></div> <!-- spacer -->
   <div class="row">
     <div class="col-lg-1" <#if stepRun.teststep.type == "HTTPStubRequestsCheck">id="stub-requests-in-step-run-${ stepRun.id?string.computer }"</#if>>

@@ -78,26 +78,7 @@
   </div>
 </div>
 
-<div ng-if="teststep.action === 'Dequeue'">
-  <div class="form-group form-group-reduced-bottom-margin" height-adjustable-element-in-column="0.7">
-    <div class="col-lg-10 full-height">
-      <textarea name="actualMessageBody" ng-model="steprun.response.bodyAsText" id="actualMessageBody"
-                placeholder="{{ steprun.status === 'ongoing' || steprun.response === '' ? '' : 'Actual Message Body' }}"
-                class="form-control full-height-important" spellcheck="false"
-                ng-readonly="appStatus.isForbidden()"></textarea>
-    </div>
-  </div>
-  <div class="form-group form-group-reduced-bottom-margin" id="assertionsArea">
-    <div class="mq-teststep-assertions-area-content" ng-if="showAssertionsArea"
-         ng-include="'/ui/views/assertions/list-assertions.html'">
-    </div>
-  </div>
-  <div class="form-group no-bottom-margin">
-    <div class="col-lg-2">
-      <button type="button" class="btn btn-info" ng-click="toggleAssertionsArea()">Assertions</button>
-    </div>
-  </div>
-</div>
+<div ng-if="teststep.action === 'Dequeue'" ng-include="'/ui/views/teststeps/mq/edit-mq-teststep-dequeue-action.html'"></div>
 
 <div ng-if="teststep.action === 'Enqueue' || teststep.action === 'Publish'"
      ng-include="'/ui/views/teststeps/mq/edit-mq-teststep-request.html'"></div>

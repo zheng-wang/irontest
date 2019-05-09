@@ -302,3 +302,9 @@
   margin-top: 10px;
   margin-bottom: 10px;
 }
+
+.mq-message-details-tabset,
+.mq-message-details-tabset .tab-content,
+.mq-message-details-tabset .tab-pane {
+  height: 100% !important;
+}
