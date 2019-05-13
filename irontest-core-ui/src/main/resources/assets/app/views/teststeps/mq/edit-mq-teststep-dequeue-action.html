@@ -2,9 +2,11 @@
   <div class="col-lg-10 full-height">
     <uib-tabset class="mq-message-details-tabset">
       <uib-tab heading="Body">
-        <textarea name="actualMessageBody" ng-model="steprun.response.bodyAsText" id="actualMessageBody"
-                  placeholder="{{ steprun.status === 'ongoing' || steprun.response.bodyAsText === '' ? '' : 'Actual Message Body' }}"
-                  class="form-control full-height-important" spellcheck="false" ng-readonly="appStatus.isForbidden()"></textarea>
+        <div class="col-lg-12">
+          <textarea name="actualMessageBody" ng-model="steprun.response.bodyAsText" id="actualMessageBody"
+                    placeholder="{{ steprun.status === 'ongoing' || steprun.response.bodyAsText === '' ? '' : 'Actual Message Body' }}"
+                    class="form-control" spellcheck="false" ng-readonly="appStatus.isForbidden()"></textarea>
+        </div>
       </uib-tab>
     </uib-tabset>
   </div>
