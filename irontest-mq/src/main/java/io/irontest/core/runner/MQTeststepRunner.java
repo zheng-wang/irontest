@@ -213,7 +213,9 @@ public class MQTeststepRunner extends TeststepRunner {
     private MQDequeueResponse dequeue(MQQueue queue) throws MQException, IOException, MQDataException {
         MQDequeueResponse result = new MQDequeueResponse();
         MQGetMessageOptions getOptions = new MQGetMessageOptions();
-        getOptions.options = CMQC.MQGMO_NO_WAIT + CMQC.MQGMO_FAIL_IF_QUIESCING;
+        //  The MQGMO_PROPERTIES_FORCE_MQRFH2 is to enforce message properties to be returned in the MQRFH2 headers.
+        //  This is so that user can see message properties with names reserved by MQRFH2 folders (like <mqps> or <usr>) as MQRFH2 folders.
+        getOptions.options = CMQC.MQGMO_NO_WAIT + CMQC.MQGMO_FAIL_IF_QUIESCING + CMQC.MQGMO_PROPERTIES_FORCE_MQRFH2;
         MQMessage message = new MQMessage();
         try {
             queue.get(message, getOptions);

@@ -10,6 +10,7 @@ import io.irontest.models.AppInfo;
 import io.irontest.models.DataTable;
 import io.irontest.models.UserDefinedProperty;
 import io.irontest.models.endpoint.Endpoint;
+import io.irontest.models.teststep.MQRFH2Folder;
 import io.irontest.models.teststep.Teststep;
 import io.irontest.models.teststep.TeststepRequestType;
 import io.irontest.models.teststep.TeststepWrapper;
@@ -161,6 +162,11 @@ public class TeststepResource {
                 if (Teststep.ACTION_DEQUEUE.equals(teststep.getAction())) {
                     MQDequeueResponse mqDequeueResponse = (MQDequeueResponse) basicTeststepRun.getResponse();
                     mqDequeueResponse.setBodyAsText(IronTestUtils.prettyPrintJSONOrXML(mqDequeueResponse.getBodyAsText()));
+                    if (mqDequeueResponse.getMqrfh2Header() != null) {
+                        for (MQRFH2Folder mqrfh2Folder: mqDequeueResponse.getMqrfh2Header().getFolders()) {
+                            mqrfh2Folder.setString(IronTestUtils.prettyPrintJSONOrXML(mqrfh2Folder.getString()));
+                        }
+                    }
                 }
                 break;
             default:

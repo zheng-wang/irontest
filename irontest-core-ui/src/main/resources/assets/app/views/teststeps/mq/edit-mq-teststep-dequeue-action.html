@@ -3,9 +3,15 @@
     <uib-tabset class="mq-message-details-tabset">
       <uib-tab heading="Body">
         <div class="col-lg-12">
-          <textarea name="actualMessageBody" ng-model="steprun.response.bodyAsText" id="actualMessageBody"
+          <textarea class="form-control" ng-model="steprun.response.bodyAsText" spellcheck="false"
                     placeholder="{{ steprun.status === 'ongoing' || steprun.response.bodyAsText === '' ? '' : 'Actual Message Body' }}"
-                    class="form-control" spellcheck="false" ng-readonly="appStatus.isForbidden()"></textarea>
+                    ng-readonly="appStatus.isForbidden()"></textarea>
+        </div>
+      </uib-tab>
+      <uib-tab ng-repeat="folder in steprun.response.mqrfh2Header.folders" heading="{{ folder.name }}">
+        <div class="col-lg-12">
+          <textarea ng-model="folder.string" class="form-control" spellcheck="false"
+                    ng-readonly="appStatus.isForbidden()"></textarea>
         </div>
       </uib-tab>
     </uib-tabset>
