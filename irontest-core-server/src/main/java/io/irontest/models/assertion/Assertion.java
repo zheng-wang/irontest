@@ -18,6 +18,8 @@ public class Assertion {
     public static final String TYPE_HTTP_STUB_HIT = "HTTPStubHit";
     public static final String TYPE_ALL_HTTP_STUB_REQUESTS_MATCHED = "AllHTTPStubRequestsMatched";
     public static final String TYPE_HTTP_STUBS_HIT_IN_ORDER = "HTTPStubsHitInOrder";
+    public static final String TYPE_HAS_AN_MQRFH2_FOLDER_EQUAL_TO_XML = "HasAnMQRFH2FolderEqualToXml";
+
     private Long id;    //  id being null means this is dynamically created assertion object (no record in the Assertion database table).
     private Long teststepId;
     @JsonView(ResourceJsonViews.TestcaseExport.class)
@@ -37,7 +39,8 @@ public class Assertion {
             @JsonSubTypes.Type(value = JSONPathAssertionProperties.class, name = Assertion.TYPE_JSONPATH),
             @JsonSubTypes.Type(value = JSONPathXMLEqualAssertionProperties.class, name = Assertion.TYPE_JSONPATH_XMLEQUAL),
             @JsonSubTypes.Type(value = HTTPStubHitAssertionProperties.class, name = Assertion.TYPE_HTTP_STUB_HIT),
-            @JsonSubTypes.Type(value = HTTPStubsHitInOrderAssertionProperties.class, name = Assertion.TYPE_HTTP_STUBS_HIT_IN_ORDER)})
+            @JsonSubTypes.Type(value = HTTPStubsHitInOrderAssertionProperties.class, name = Assertion.TYPE_HTTP_STUBS_HIT_IN_ORDER),
+            @JsonSubTypes.Type(value = HasAnMQRFH2FolderEqualToXmlAssertionProperties.class, name = Assertion.TYPE_HAS_AN_MQRFH2_FOLDER_EQUAL_TO_XML)})
     private Properties otherProperties = new Properties();
 
     public Assertion() {}

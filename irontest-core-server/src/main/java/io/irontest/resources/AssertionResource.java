@@ -1,5 +1,6 @@
 package io.irontest.resources;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.irontest.core.assertion.AssertionVerifier;
 import io.irontest.core.assertion.AssertionVerifierFactory;
 import io.irontest.db.DataTableDAO;
@@ -11,6 +12,7 @@ import io.irontest.models.UserDefinedProperty;
 import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.AssertionVerificationRequest;
 import io.irontest.models.assertion.AssertionVerificationResult;
+import io.irontest.models.teststep.MQRFH2Header;
 import io.irontest.utils.IronTestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,11 +61,16 @@ public class AssertionResource {
             IronTestUtils.checkDuplicatePropertyNameBetweenDataTableAndUPDs(udpNames, dataTable);
             referenceableStringProperties.putAll(dataTable.getStringPropertiesInRow(0));
         }
+
         AssertionVerifier assertionVerifier = AssertionVerifierFactory.getInstance().create(
                 assertion.getType(), referenceableStringProperties);
+        Object assertionInput = assertionVerificationRequest.getInput();
+        if (Assertion.TYPE_HAS_AN_MQRFH2_FOLDER_EQUAL_TO_XML.equals(assertion.getType())) {
+            assertionInput = new ObjectMapper().convertValue(assertionInput, MQRFH2Header.class);
+        }
         AssertionVerificationResult result;
         try {
-            result = assertionVerifier.verify(assertion, assertionVerificationRequest.getInput());
+            result = assertionVerifier.verify(assertion, assertionInput);
         } catch (Exception e) {
             LOGGER.error("Failed to verify assertion", e);
             result = new AssertionVerificationResult();

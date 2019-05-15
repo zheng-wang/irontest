@@ -37,6 +37,8 @@ public class AssertionVerifierFactory {
             result = new AllHTTPStubRequestsMatchedAssertionVerifier();
         } else if (Assertion.TYPE_HTTP_STUBS_HIT_IN_ORDER.equals(assertionType)) {
             result = new HTTPStubsHitInOrderAssertionVerifier();
+        } else if (Assertion.TYPE_HAS_AN_MQRFH2_FOLDER_EQUAL_TO_XML.equals(assertionType)) {
+            result = new HasAnMQRFH2FolderEqualToXmlAssertionVerifier();
         } else {
             throw new RuntimeException("Unrecognized assertion type " + assertionType);
         }

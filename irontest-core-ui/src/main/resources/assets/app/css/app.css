@@ -296,9 +296,23 @@
   margin-bottom: 10px;
 }
 
+.divider-left-short {
+  float: left;
+  width: 10%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
 .divider-right {
   float: right;
   width: 30%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.divider-right-short {
+  float: right;
+  width: 10%;
   margin-top: 10px;
   margin-bottom: 10px;
 }

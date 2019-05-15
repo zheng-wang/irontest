@@ -10,11 +10,16 @@
           <li class="text-center" ng-if="teststep.type === 'HTTP' || teststep.type === 'SOAP'">
             <hr class="divider-left">On Headers<hr class="divider-right">
           </li>
+          <li class="text-center" ng-if="teststep.type === 'MQ'">
+            <hr class="divider-left-short">On MQRFH2 Header<hr class="divider-right-short">
+          </li>
+          <li role="menuitem" ng-if="teststep.type === 'MQ'">
+            <a ng-click="assertionsModelObj.createAssertion('HasAnMQRFH2FolderEqualToXml')" href="">HasAnMQRFH2FolderEqualToXml Assertion</a>
+          </li>
           <li role="menuitem" ng-if="teststep.type === 'HTTP' || teststep.type === 'SOAP'">
             <a ng-click="assertionsModelObj.createAssertion('StatusCodeEqual')" href="">StatusCodeEqual Assertion</a>
           </li>
-
-          <li class="text-center" ng-if="teststep.type === 'HTTP' || teststep.type === 'SOAP'">
+          <li class="text-center" ng-if="teststep.type === 'HTTP' || teststep.type === 'SOAP' || teststep.type === 'MQ'">
             <hr class="divider-left">On Body<hr class="divider-right">
           </li>
           <li role="menuitem" ng-if="teststep.type === 'SOAP' || teststep.type === 'HTTP'">
@@ -70,6 +75,8 @@
          ng-include="'/ui/views/assertions/xmlequal-assertion-edit.html'"></div>
     <div ng-if="assertionsModelObj.assertion.type === 'JSONEqual'"
          ng-include="'/ui/views/assertions/jsonequal-assertion-edit.html'"></div>
+    <div ng-if="assertionsModelObj.assertion.type === 'HasAnMQRFH2FolderEqualToXml'"
+         ng-include="'/ui/views/assertions/hasanmqrfh2folderequaltoxml-assertion-edit.html'"></div>
   </div>
 </div>
 <script type="text/ng-template" id="assertionGridNameCellTemplate.html">

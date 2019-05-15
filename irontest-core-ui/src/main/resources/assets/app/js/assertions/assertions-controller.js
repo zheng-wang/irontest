@@ -111,10 +111,14 @@ angular.module('irontest').controller('AssertionsController', ['$scope', '$rootS
       //  resolve assertion input
       var input;
       var apiResponse = $scope.$parent.steprun.response;
-      if (assertion.type === 'StatusCodeEqual') {
-        input = apiResponse.statusCode;
-      } else if ($scope.teststep.type === 'SOAP' || $scope.teststep.type === 'HTTP') {
-        input = apiResponse.httpBody;
+      if ($scope.teststep.type === 'SOAP' || $scope.teststep.type === 'HTTP') {
+        if (assertion.type === 'StatusCodeEqual') {
+          input = apiResponse.statusCode;
+        } else {
+          input = apiResponse.httpBody;
+        }
+      } else if ($scope.teststep.type === 'MQ' && assertion.type === 'HasAnMQRFH2FolderEqualToXml') {
+        input = apiResponse.mqrfh2Header;
       } else {
         input = apiResponse;
       }

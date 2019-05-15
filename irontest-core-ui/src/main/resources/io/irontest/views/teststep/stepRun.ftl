@@ -52,25 +52,16 @@
         </div>
       </#if>
       <#if stepRun.teststep.request??>
-        <div class="form-group">
-          <textarea class="form-control" rows="8" readonly>${ stepRun.teststep.request }</textarea>
+        <div class="row">
+          <div class="col-lg-12">
+            <#if stepRun.teststep.type == "MQ">
+              <#t><#include "${stepRun.teststep.type?lower_case}TeststepRequest.ftl">
+            <#else>
+              <textarea class="form-control" rows="8" readonly>${ stepRun.teststep.request }</textarea>
+            </#if>
+          </div>
         </div>
       </#if>
-    </div>
-  </div>
-</#if>
-
-<#-- Extra request info for MQ step Enqueue action with RFH2 header -->
-<#if stepRun.teststep.type == "MQ" && (stepRun.teststep.action == "Enqueue" || stepRun.teststep.action == "Publish") &&
-    stepRun.teststep.otherProperties.rfh2Header??>
-  <div class="row">
-    <div class="col-lg-2">RFH2 Header Folders:</div>
-    <div class="col-lg-10">
-      <#list stepRun.teststep.otherProperties.rfh2Header.folders as rfh2Folder>
-        <div class="row">
-          <div class="col-lg-12">${ rfh2Folder.string }</div>
-        </div>
-      </#list>
     </div>
   </div>
 </#if>
