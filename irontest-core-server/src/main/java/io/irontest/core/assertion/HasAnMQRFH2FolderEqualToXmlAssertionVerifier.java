@@ -29,7 +29,8 @@ public class HasAnMQRFH2FolderEqualToXmlAssertionVerifier extends AssertionVerif
         result.setResult(TestResult.FAILED);
         MQRFH2Header mqrfh2Header = (MQRFH2Header) inputs[0];
         for (MQRFH2Folder mqrfh2Folder: mqrfh2Header.getFolders()) {
-            String differencesStr = XMLUtils.compareXML(assertionProperties.getXml(), mqrfh2Folder.getString());
+            String differencesStr = XMLUtils.compareXML(
+                    assertionProperties.getXml(), mqrfh2Folder.getString(), false);
             if (differencesStr.length() == 0) {
                 result.setResult(TestResult.PASSED);
                 break;

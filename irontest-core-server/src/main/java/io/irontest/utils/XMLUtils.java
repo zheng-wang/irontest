@@ -119,6 +119,14 @@ public final class XMLUtils {
         return writer.toString();
     }
 
+    /**
+     * Parse input xml string into a DOM document, with namespace unaware.
+     * @param xml
+     * @return
+     * @throws ParserConfigurationException
+     * @throws IOException
+     * @throws SAXException
+     */
     public static Document xmlStringToDOM(String xml) throws ParserConfigurationException, IOException, SAXException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -127,17 +135,44 @@ public final class XMLUtils {
     }
 
     /**
+     * Compare XML, with namespace aware.
      * @param control
      * @param test
      * @return differences found, in a format for print
      */
     public static String compareXML(String control, String test) {
+        return compareXML(control, test, true);
+    }
+
+    /**
+     * @param control
+     * @param test
+     * @param namespaceAware
+     * @return differences found, in a format for print
+     */
+    public static String compareXML(String control, String test, boolean namespaceAware) {
+        Object controlObject = control;
+        Object testObject = test;
+
+        //  by default XMLUnit parses control and test XML string with namespace aware, and below code can not alter this behavior
+        //      DocumentBuilderFactory factory = ...;
+        //      factory.setNamespaceAware(false);
+        //      DiffBuilder.withDocumentBuilderFactory(factory);
+        if (!namespaceAware) {
+            try {
+                controlObject = xmlStringToDOM(control);
+                testObject = xmlStringToDOM(test);
+            } catch (Exception e) {
+                throw new RuntimeException(e.getCause().getMessage(), e);
+            }
+        }
+
         StringBuilder differencesSB = new StringBuilder();
         Diff diff;
         try {
             diff = DiffBuilder
-                    .compare(control)
-                    .withTest(test)
+                    .compare(controlObject)
+                    .withTest(testObject)
                     .normalizeWhitespace()
                     //  Use custom DifferenceEvaluator in combination with the default DifferenceEvaluator, to utilize
                     //  the default DifferenceEvaluator's feature which turns some DIFFERENT comparison results into
@@ -146,7 +181,7 @@ public final class XMLUtils {
                             DifferenceEvaluators.Default, new PlaceholderDifferenceEvaluator("#\\{", null)))
                     .build();
         } catch (XMLUnitException e) {
-            throw new RuntimeException(e.getCause().getMessage());
+            throw new RuntimeException(e.getCause().getMessage(), e);
         }
         if (diff.hasDifferences()) {
             Iterator it = diff.getDifferences().iterator();
