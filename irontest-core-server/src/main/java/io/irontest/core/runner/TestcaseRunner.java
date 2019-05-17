@@ -167,44 +167,21 @@ public abstract class TestcaseRunner {
             teststepRun.setResult(TestResult.FAILED);
         } else {
             teststepRun.setResult(TestResult.PASSED);
-
-            //  initially resolve assertion input (based on test step type)
             Object apiResponse = teststepRun.getResponse();
-            Object assertionVerificationInput = null;
-            switch (teststep.getType()) {
-                case Teststep.TYPE_DB:
-                    assertionVerificationInput = ((DBAPIResponse) apiResponse).getRowsJSON();
-                break;
-                case Teststep.TYPE_MQ:
-                    if (Teststep.ACTION_CHECK_DEPTH.equals(teststep.getAction())) {
-                        assertionVerificationInput = ((MQCheckQueueDepthResponse) apiResponse).getQueueDepth();
-                    } else if (Teststep.ACTION_DEQUEUE.equals(teststep.getAction())) {
-                        assertionVerificationInput = ((MQDequeueResponse) apiResponse).getBodyAsText();
-                    }
-                    break;
-                default:
-                    assertionVerificationInput = apiResponse;
-                    break;
-            }
 
-            if (Teststep.TYPE_DB.equals(teststep.getType()) && assertionVerificationInput == null) {
+            if (Teststep.TYPE_DB.equals(teststep.getType()) && ((DBAPIResponse) apiResponse).getRowsJSON() == null) {
                 //  SQL inserts/deletes/updates, no assertion verification needed
             } else {
-                Object assertionVerificationInput2 = null;
-
                 //  verify assertions against the inputs
                 for (Assertion assertion : teststep.getAssertions()) {
-                    //  further resolve assertion inputs
-                    if (Assertion.TYPE_STATUS_CODE_EQUAL.equals(assertion.getType())) {
-                        assertionVerificationInput = ((HTTPAPIResponse) apiResponse).getStatusCode();
-                    } else if (Teststep.TYPE_SOAP.equals(teststep.getType()) || Teststep.TYPE_HTTP.equals(teststep.getType())) {
-                        assertionVerificationInput = ((HTTPAPIResponse) apiResponse).getHttpBody();
-                    } else if (Assertion.TYPE_HTTP_STUB_HIT.equals(assertion.getType())) {
-                        assertionVerificationInput = ((WireMockServerAPIResponse) apiResponse).getAllServeEvents();
+                    Object assertionVerificationInput = resolveAssertionVerificationInputFromAPIResponse(teststep.getType(),
+                            teststep.getAction(), assertion.getType(), apiResponse);
+
+                    //  resolve assertion verification input2 if applicable
+                    Object assertionVerificationInput2 = null;
+                    if (Assertion.TYPE_HTTP_STUB_HIT.equals(assertion.getType())) {
                         HTTPStubHitAssertionProperties otherProperties = (HTTPStubHitAssertionProperties) assertion.getOtherProperties();
                         assertionVerificationInput2 = getTestcaseRunContext().getHttpStubMappingInstanceIds().get(otherProperties.getStubNumber());
-                    } else if (Assertion.TYPE_HTTP_STUBS_HIT_IN_ORDER.equals(assertion.getType())) {
-                        assertionVerificationInput = ((WireMockServerAPIResponse) apiResponse).getAllServeEvents();
                     }
 
                     AssertionVerification verification = new AssertionVerification();
@@ -237,5 +214,33 @@ public abstract class TestcaseRunner {
         teststepRun.setDuration(new Date().getTime() - teststepRun.getStartTime().getTime());
 
         return teststepRun;
+    }
+
+    private Object resolveAssertionVerificationInputFromAPIResponse(String teststepType, String teststepAction,
+                                                                    String assertionType, Object apiResponse) {
+        Object result = apiResponse;
+
+        if (Assertion.TYPE_STATUS_CODE_EQUAL.equals(assertionType)) {
+            result = ((HTTPAPIResponse) apiResponse).getStatusCode();
+        } else if (Teststep.TYPE_SOAP.equals(teststepType) || Teststep.TYPE_HTTP.equals(teststepType)) {
+            result = ((HTTPAPIResponse) apiResponse).getHttpBody();
+        } else if (Assertion.TYPE_HTTP_STUB_HIT.equals(assertionType)) {
+            result = ((WireMockServerAPIResponse) apiResponse).getAllServeEvents();
+        } else if (Assertion.TYPE_HTTP_STUBS_HIT_IN_ORDER.equals(assertionType)) {
+            result = ((WireMockServerAPIResponse) apiResponse).getAllServeEvents();
+        } else if (Teststep.TYPE_MQ.equals(teststepType)) {
+            if (Teststep.ACTION_CHECK_DEPTH.equals(teststepAction)) {
+                result = ((MQCheckQueueDepthResponse) apiResponse).getQueueDepth();
+            } else if (Teststep.ACTION_DEQUEUE.equals(teststepAction)) {
+                MQDequeueResponse mqDequeueResponse = (MQDequeueResponse) apiResponse;
+                if (Assertion.TYPE_HAS_AN_MQRFH2_FOLDER_EQUAL_TO_XML.equals(assertionType)) {
+                    result = mqDequeueResponse.getMqrfh2Header();
+                } else {
+                    result = mqDequeueResponse.getBodyAsText();
+                }
+            }
+        }
+
+        return result;
     }
 }
