@@ -58,7 +58,7 @@
     <h5 ng-if="teststep.action === 'CheckDepth' && steprun.status === 'finished'">
       Queue depth is {{ steprun.response.queueDepth }}</h5>
     <h5 ng-if="teststep.action === 'Dequeue' && steprun.status === 'finished'">
-      {{ steprun.response.bodyAsText === null ? 'No more message available on the queue.' : 'Message fetched.' }}</h5>
+      {{ steprun.response === null ? 'No more message available on the queue.' : 'Message fetched.' }}</h5>
     <h5 ng-if="teststep.action === 'Enqueue' && steprun.status === 'ongoing'">Sending message ...</h5>
     <h5 ng-if="teststep.action === 'Enqueue' && steprun.status === 'finished'">Message sent.</h5>
     <h5 ng-if="teststep.action === 'Publish' && steprun.status === 'ongoing'">Publishing message ...</h5>

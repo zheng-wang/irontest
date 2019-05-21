@@ -233,10 +233,14 @@ public abstract class TestcaseRunner {
                 result = ((MQCheckQueueDepthResponse) apiResponse).getQueueDepth();
             } else if (Teststep.ACTION_DEQUEUE.equals(teststepAction)) {
                 MQDequeueResponse mqDequeueResponse = (MQDequeueResponse) apiResponse;
-                if (Assertion.TYPE_HAS_AN_MQRFH2_FOLDER_EQUAL_TO_XML.equals(assertionType)) {
-                    result = mqDequeueResponse.getMqrfh2Header();
+                if (mqDequeueResponse == null) {
+                    result = null;
                 } else {
-                    result = mqDequeueResponse.getBodyAsText();
+                    if (Assertion.TYPE_HAS_AN_MQRFH2_FOLDER_EQUAL_TO_XML.equals(assertionType)) {
+                        result = mqDequeueResponse.getMqrfh2Header();
+                    } else {
+                        result = mqDequeueResponse.getBodyAsText();
+                    }
                 }
             }
         }

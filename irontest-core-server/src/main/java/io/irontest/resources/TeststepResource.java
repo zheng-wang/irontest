@@ -161,10 +161,12 @@ public class TeststepResource {
             case Teststep.TYPE_MQ:
                 if (Teststep.ACTION_DEQUEUE.equals(teststep.getAction())) {
                     MQDequeueResponse mqDequeueResponse = (MQDequeueResponse) basicTeststepRun.getResponse();
-                    mqDequeueResponse.setBodyAsText(IronTestUtils.prettyPrintJSONOrXML(mqDequeueResponse.getBodyAsText()));
-                    if (mqDequeueResponse.getMqrfh2Header() != null) {
-                        for (MQRFH2Folder mqrfh2Folder: mqDequeueResponse.getMqrfh2Header().getFolders()) {
-                            mqrfh2Folder.setString(IronTestUtils.prettyPrintJSONOrXML(mqrfh2Folder.getString()));
+                    if (mqDequeueResponse != null) {
+                        mqDequeueResponse.setBodyAsText(IronTestUtils.prettyPrintJSONOrXML(mqDequeueResponse.getBodyAsText()));
+                        if (mqDequeueResponse.getMqrfh2Header() != null) {
+                            for (MQRFH2Folder mqrfh2Folder: mqDequeueResponse.getMqrfh2Header().getFolders()) {
+                                mqrfh2Folder.setString(IronTestUtils.prettyPrintJSONOrXML(mqrfh2Folder.getString()));
+                            }
                         }
                     }
                 }

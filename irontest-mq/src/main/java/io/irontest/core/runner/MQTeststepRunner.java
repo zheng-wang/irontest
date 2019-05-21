@@ -211,7 +211,7 @@ public class MQTeststepRunner extends TeststepRunner {
     }
 
     private MQDequeueResponse dequeue(MQQueue queue) throws MQException, IOException, MQDataException {
-        MQDequeueResponse result = new MQDequeueResponse();
+        MQDequeueResponse result = null;
         MQGetMessageOptions getOptions = new MQGetMessageOptions();
         //  The MQGMO_PROPERTIES_FORCE_MQRFH2 is to enforce message properties to be returned in the MQRFH2 headers.
         //  This is so that user can see message properties with names reserved by MQRFH2 folders (like <mqps> or <usr>) as MQRFH2 folders.
@@ -219,6 +219,10 @@ public class MQTeststepRunner extends TeststepRunner {
         MQMessage message = new MQMessage();
         try {
             queue.get(message, getOptions);
+
+            //  create the response object only when there is message returned from the queue
+            //  when there is no message on the queue, keep the response object as null (i.e. there is no response)
+            result = new MQDequeueResponse();
 
             //  parse the MQMessage to Iron Test model
             MQRFH2Header mqrfh2Header = null;
