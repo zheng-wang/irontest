@@ -14,6 +14,7 @@ public class JSONPathAssertionVerifier extends AssertionVerifier {
      * @param assertion the assertion to be verified (against the input)
      * @param inputs contains only one argument: the JSON string that the assertion is verified against
      * @return
+     * @throws Exception
      */
     @Override
     public AssertionVerificationResult _verify(Assertion assertion, Object ...inputs) throws Exception {

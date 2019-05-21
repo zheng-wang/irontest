@@ -50,7 +50,12 @@ public class DBTeststepRunner extends TeststepRunner {
         sanityCheckTheStatements(statements);
 
         Endpoint endpoint = teststep.getEndpoint();
-        Jdbi jdbi = Jdbi.create(endpoint.getUrl(), endpoint.getUsername(), getDecryptedEndpointPassword());
+        Jdbi jdbi;
+        if (endpoint.getUsername() == null) {
+            jdbi = Jdbi.create(endpoint.getUrl());
+        } else {
+            jdbi = Jdbi.create(endpoint.getUrl(), endpoint.getUsername(), getDecryptedEndpointPassword());
+        }
         Handle handle = jdbi.open();
         if (SQLStatementType.isSelectStatement(statements.get(0))) {    //  the request is a select statement
             RetainingColumnOrderResultSetMapper resultSetMapper = new RetainingColumnOrderResultSetMapper();

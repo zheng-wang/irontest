@@ -11,6 +11,13 @@ import io.irontest.utils.XMLUtils;
 import org.apache.commons.lang3.StringUtils;
 
 public class JSONPathXMLEqualAssertionVerifier extends AssertionVerifier {
+    /**
+     *
+     * @param assertion
+     * @param inputs contains only one argument: the JSON string that the assertion is verified against
+     * @return
+     * @throws Exception
+     */
     @Override
     public AssertionVerificationResult _verify(Assertion assertion, Object ...inputs) throws Exception {
         JSONPathXMLEqualAssertionProperties otherProperties =

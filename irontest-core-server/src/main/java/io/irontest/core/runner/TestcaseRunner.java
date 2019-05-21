@@ -228,6 +228,8 @@ public abstract class TestcaseRunner {
             result = ((WireMockServerAPIResponse) apiResponse).getAllServeEvents();
         } else if (Assertion.TYPE_HTTP_STUBS_HIT_IN_ORDER.equals(assertionType)) {
             result = ((WireMockServerAPIResponse) apiResponse).getAllServeEvents();
+        } else if (Teststep.TYPE_DB.equals(teststepType)) {
+            result = ((DBAPIResponse) apiResponse).getRowsJSON();
         } else if (Teststep.TYPE_MQ.equals(teststepType)) {
             if (Teststep.ACTION_CHECK_DEPTH.equals(teststepAction)) {
                 result = ((MQCheckQueueDepthResponse) apiResponse).getQueueDepth();
