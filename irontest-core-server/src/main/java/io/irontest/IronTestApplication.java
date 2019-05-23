@@ -127,7 +127,8 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         //  sqljdbc_auth.dll.
         //  System.load(System.getProperty("user.dir") + "/lib/jdbc/sqlserver/sqljdbc_auth.dll") is not effective, as
         //  the SQL Server JDBC driver is only looking at java.library.path.
-        System.setProperty("java.library.path", System.getProperty("user.dir") + "/lib/jdbc/sqlserver");
+        System.setProperty("java.library.path", System.getProperty("user.dir") + "/lib/jdbc/sqlserver;" +
+                System.getProperty("java.library.path"));
         try {
             Field fieldSysPath = ClassLoader.class.getDeclaredField("sys_paths");
             fieldSysPath.setAccessible(true);
