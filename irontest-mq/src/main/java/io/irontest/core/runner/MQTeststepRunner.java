@@ -163,15 +163,17 @@ public class MQTeststepRunner extends TeststepRunner {
             throws IOException, MQDataException {
         MQMessage message = new MQMessage();
 
-        //  add RFH2 header if included
-        if (rfh2Header != null) {
-            //  create MQMD properties on the message object (MQMD is not written into message, but is used by MQ PUT)
-            MQMD mqmd = new MQMD();
+        //  create MQMD properties on the message object (MQMD is not written into message, but is used by MQ PUT)
+        MQMD mqmd = new MQMD();
+        message.putDateTime = new GregorianCalendar();
+        mqmd.setEncoding(CMQC.MQENC_REVERSED);
+
+        if (rfh2Header == null) {
+            mqmd.copyTo(message);
+        } else {   //  add RFH2 header if included
             mqmd.setFormat(CMQC.MQFMT_RF_HEADER_2);
-            mqmd.setEncoding(CMQC.MQENC_REVERSED);
             mqmd.setCodedCharSetId(CMQC.MQCCSI_DEFAULT);
             mqmd.setPersistence(CMQC.MQPER_PERSISTENT);
-            message.putDateTime = new GregorianCalendar();
             mqmd.copyTo(message);
 
             //  populate RFH2 header
