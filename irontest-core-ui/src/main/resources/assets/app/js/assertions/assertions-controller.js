@@ -52,7 +52,7 @@ angular.module('irontest').controller('AssertionsController', ['$scope', '$rootS
         }
       ],
       onRegisterApi: function (gridApi) {
-        $scope.assertionsAreaLoadedCallback();
+        $scope.bottomPaneLoadedCallback();
         $scope.assertionsModelObj.gridApi = gridApi;
         gridApi.selection.on.rowSelectionChanged($scope, function(row) {
           $scope.assertionsModelObj.assertion = row.entity;
