@@ -5,27 +5,25 @@
 //    ng-include also creates a scope.
 angular.module('irontest').controller('TeststepsActionController', ['$scope',
   function($scope) {
-    $scope.showAssertionsArea = false;
-    $scope.showPropertyExtractorsArea = false;
+    $scope.showBottomPane = false;
+    $scope.bottomButtonModel = { selectedButton: null};
 
     var removeBottomPaneFromColumn = function() {
       var elementHeight = document.getElementById('bottomPane').offsetHeight;
       $scope.$broadcast('elementRemovedFromColumn', { elementHeight: elementHeight });
     };
 
-    $scope.toggleAssertionsArea = function() {
-      if ($scope.showAssertionsArea) {    //  for toggle off
+    $scope.$watch('bottomButtonModel.selectedButton', function(newValue, oldValue) {
+      if (oldValue && !newValue) {
         removeBottomPaneFromColumn();
-      }
-      $scope.showAssertionsArea = !$scope.showAssertionsArea;
-    };
-
-    $scope.togglePropertyExtractorsArea = function() {
-      if ($scope.showPropertyExtractorsArea) {    //  for toggle off
+        $scope.showBottomPane = false;
+      } else if (oldValue && newValue) {
         removeBottomPaneFromColumn();
+        $scope.showBottomPane = true;
+      } else if (!oldValue && newValue) {
+        $scope.showBottomPane = true;
       }
-      $scope.showPropertyExtractorsArea = !$scope.showPropertyExtractorsArea;
-    };
+    });
 
     $scope.bottomPaneLoadedCallback = function() {
       var elementHeight = document.getElementById('bottomPane').offsetHeight;

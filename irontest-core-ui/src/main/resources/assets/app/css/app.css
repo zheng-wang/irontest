@@ -188,14 +188,14 @@
   height: 100% !important;
 }
 
-.assertions-area-content {
+.bottom-pane-content {
   width: 98%;
   margin-left: 15px;
   padding: 10px;
   border: 1px solid #ccc
 }
 
-.mq-teststep-assertions-area-content {
+.mq-teststep-bottom-pane-content {
   width: 81.2%;
   margin-left: 15px;
   padding: 10px;
