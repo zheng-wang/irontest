@@ -1,3 +1,22 @@
-<div class="row" ng-controller="PropertyExtractorsController">
-  <div class="col-lg-12">Property Extractors</div>
+<div class="row" ng-controller="PropertyExtractorsController" ng-init="findByTeststepId()">
+  <div class="col-lg-3">
+    <div class="form-group">
+      <div class="btn-group col-lg-4" uib-dropdown keyboard-nav>
+        <button type="button" class="btn btn-info dropdown-toggle" uib-dropdown-toggle
+                ng-disabled="appStatus.isForbidden()">
+          Create <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" uib-dropdown-menu role="menu">
+          <li role="menuitem">
+            <a ng-click="createPropertyExtractor('JSONPath')" href="">JSONPath Property Extractor</a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-lg-8">
+        <button type="button" class="btn btn-info" title="Extract property out of current response"
+                ng-disabled="appStatus.isForbidden() || !steprun.response || !propertyExtractor"
+                ng-click="extractSelectedProperty()">Extract</button>
+      </div>
+    </div>
+  </div>
 </div>

@@ -9,20 +9,21 @@ angular.module('common')
         array.splice(array.findIndex(item => item[propertyName] === propertyValue), 1);
       },
 
-      //  Search the objArray (by inspecting each obj's name property) to
+      //  Search the objArray by inspecting the specified property of each obj to
       //  find the next available name-in-sequence to use.
+      //  If propertyName is not specified, use 'name' as default.
       //  Name-in-sequence format: '<nameBase><sequence>'. For example: 'XPath 1' if nameBase is 'XPath '.
-      getNextNameInSequence: function(objArray, nameBase) {
+      getNextNameInSequence: function(objArray, nameBase, propertyName = 'name') {
         var sequence = 1;
-        var name;
+        var result;
         for (; sequence < 10000000; sequence += 1) {
-          name = nameBase + sequence;
-          if (objArray.findIndex(obj => obj.name === name) === -1) {
+          result = nameBase + sequence;
+          if (objArray.findIndex(obj => obj[propertyName] === result) === -1) {
             break;
           }
         }
 
-        return name;
+        return result;
       },
 
       //  instruction is to tell user how to handle the error

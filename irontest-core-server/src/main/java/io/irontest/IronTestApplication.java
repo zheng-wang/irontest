@@ -241,6 +241,7 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         environment.jersey().register(new DataTableResource(dataTableDAO, dataTableColumnDAO, dataTableCellDAO));
         environment.jersey().register(new HTTPStubResource(httpStubMappingDAO, wireMockServer, udpDAO, dataTableDAO));
         environment.jersey().register(new MockServerResource(wireMockServer));
+        environment.jersey().register(new PropertyExtractorResource(propertyExtractorDAO));
         if (isInTeamMode(configuration)) {
             environment.jersey().register(new UserResource(userDAO));
         }
