@@ -1,6 +1,8 @@
 package io.irontest.resources;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.irontest.db.PropertyExtractorDAO;
+import io.irontest.models.UserDefinedProperty;
 import io.irontest.models.teststep.PropertyExtractor;
 
 import javax.annotation.security.PermitAll;
@@ -27,5 +29,11 @@ public class PropertyExtractorResource {
     public PropertyExtractor create(@PathParam("teststepId") long teststepId, PropertyExtractor propertyExtractor) {
         long id = propertyExtractorDAO.insert(teststepId, propertyExtractor);
         return propertyExtractorDAO.findById(id);
+    }
+
+    @PUT @Path("propertyExtractors/{propertyExtractorId}")
+    @PermitAll
+    public void update(PropertyExtractor propertyExtractor) {
+        propertyExtractorDAO.update(propertyExtractor);
     }
 }

@@ -4,9 +4,68 @@
 //    The $scope here prototypically inherits from the $scope of the specific test step controller.
 //    ng-include also creates a scope.
 angular.module('irontest').controller('PropertyExtractorsController', ['$scope', 'IronTestUtils', 'PropertyExtractors',
-    '$stateParams',
-  function($scope, IronTestUtils, PropertyExtractors, $stateParams) {
-    $scope.bottomPaneLoadedCallback();
+    '$stateParams', 'uiGridConstants', '$timeout',
+  function($scope, IronTestUtils, PropertyExtractors, $stateParams, uiGridConstants, $timeout) {
+    var removeSelectedPropertyExtractor = function() {
+      var propertyExtractor = $scope.propertyExtractor;
+      propertyExtractor.$remove(function(response) {
+        delete $scope.propertyExtractor;
+        IronTestUtils.deleteArrayElementByProperty($scope.propertyExtractors, 'id', propertyExtractor.id);
+      }, function(response) {
+        IronTestUtils.openErrorHTTPResponseModal(response);
+      });
+    };
+
+    $scope.propertyExtractorsGridOptions = {
+      data: 'propertyExtractors',
+      enableRowHeaderSelection: false, multiSelect: false, noUnselect: true,
+      enableGridMenu: true, gridMenuShowHideColumns: false, enableColumnMenus: false,
+      columnDefs: [
+        {
+          name: 'propertyName', displayName: 'Property Name', headerTooltip: 'Double click to edit',
+          sort: { direction: uiGridConstants.ASC, priority: 1 },
+          enableCellEdit: true, editableCellTemplate: 'propertyExtractorsGridPropertyNameEditableCellTemplate.html'
+        },
+        { name: 'type', displayName: 'Extractor Type', width: 127, minWidth: 80, enableCellEdit: false }
+      ],
+      gridMenuCustomItems: [
+        { title: 'Delete', order: 210, action: removeSelectedPropertyExtractor,
+          shown: function() {
+            return !$rootScope.appStatus.isForbidden() &&
+              $scope.propertyExtractorsGridApi.selection.getSelectedRows().length === 1;
+          }
+        }
+      ],
+      onRegisterApi: function (gridApi) {
+        $scope.bottomPaneLoadedCallback();
+        $scope.propertyExtractorsGridApi = gridApi;
+        gridApi.selection.on.rowSelectionChanged($scope, function(row) {
+          $scope.propertyExtractor = row.entity;
+        });
+        gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue){
+          if (newValue !== oldValue) {
+            $scope.propertyExtractorUpdate();
+          }
+        });
+      }
+    };
+
+    var timer;
+    $scope.propertyExtractorAutoSave = function() {
+      if (timer) $timeout.cancel(timer);
+      timer = $timeout(function() {
+        $scope.propertyExtractorUpdate();
+      }, 2000);
+    };
+
+    $scope.propertyExtractorUpdate = function() {
+      if (timer) $timeout.cancel(timer);  //  cancel existing timer if the update function is called directly (to avoid duplicate save)
+      $scope.propertyExtractor.$update(function(response) {
+        $scope.$emit('successfullySaved');
+      }, function(response) {
+        IronTestUtils.openErrorHTTPResponseModal(response);
+      });
+    };
 
     $scope.findByTeststepId = function() {
       PropertyExtractors.query({ teststepId: $stateParams.teststepId }, function(returnPropertyExtractors) {

@@ -1,5 +1,7 @@
 <div class="row" ng-controller="AssertionsController">
-  <div class="col-lg-3">
+  <!-- without the z-index, assertions grid vertical scrollbar and partial grid menu could be overlapped by
+       the assertion details div when an assertion has been selected -->
+  <div class="col-lg-3" style="z-index: 1000">
     <div class="form-group">
       <div class="btn-group col-lg-4" uib-dropdown keyboard-nav>
         <button type="button" class="btn btn-info dropdown-toggle" uib-dropdown-toggle
@@ -79,6 +81,7 @@
          ng-include="'/ui/views/assertions/hasanmqrfh2folderequaltoxml-assertion-edit.html'"></div>
   </div>
 </div>
+
 <script type="text/ng-template" id="assertionGridNameCellTemplate.html">
   <div class="ui-grid-cell-contents">
     <div ng-class="{ 'background-red' : grid.appScope.assertionsModelObj.assertionVerificationResults[row.entity.id].result === 'Failed',

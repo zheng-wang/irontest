@@ -1,5 +1,7 @@
 <div class="row" ng-controller="PropertyExtractorsController" ng-init="findByTeststepId()">
-  <div class="col-lg-3">
+  <!-- without the z-index, property extractors grid vertical scrollbar and partial grid menu could be overlapped by
+       the property extractor details div when a property extractor has been selected -->
+  <div class="col-lg-3" style="z-index: 1000">
     <div class="form-group">
       <div class="btn-group col-lg-4" uib-dropdown keyboard-nav>
         <button type="button" class="btn btn-info dropdown-toggle" uib-dropdown-toggle
@@ -18,5 +20,21 @@
                 ng-click="extractSelectedProperty()">Extract</button>
       </div>
     </div>
+    <div class="form-group no-bottom-margin">
+      <div ui-grid="propertyExtractorsGridOptions" ui-grid-resize-columns ui-grid-move-columns ui-grid-selection
+           ui-grid-edit class="ui-grid col-lg-12 property-extractors-grid"></div>
+    </div>
+  </div>
+  <!-- property extractor details area -->
+  <div class="col-lg-9" ng-if="propertyExtractor">
+    <div style="margin-left: 10px" ng-if="propertyExtractor.type === 'JSONPath'"
+         ng-include="'/ui/views/propertyextractors/jsonpath-property-extractor-edit.html'"></div>
   </div>
 </div>
+
+<script type="text/ng-template" id="propertyExtractorsGridPropertyNameEditableCellTemplate.html">
+  <div class="ui-grid-cell-contents">
+    <input type="text" class="form-control" ui-grid-editor ng-model="MODEL_COL_FIELD"
+           ng-readonly="grid.appScope.appStatus.isForbidden()">
+  </div>
+</script>

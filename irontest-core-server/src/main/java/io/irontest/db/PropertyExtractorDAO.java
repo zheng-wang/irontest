@@ -36,4 +36,8 @@ public interface PropertyExtractorDAO {
 
     @SqlQuery("select * from property_extractor where teststep_id = :teststepId")
     List<PropertyExtractor> findByTeststepId(@Bind("teststepId") long teststepId);
+
+    @SqlUpdate("update property_extractor set property_name = :propertyName, path = :path, " +
+            "updated = CURRENT_TIMESTAMP where id = :id")
+    void update(@BindBean PropertyExtractor propertyExtractor);
 }

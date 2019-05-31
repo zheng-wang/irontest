@@ -132,7 +132,7 @@
 .select-managed-endpoint-modal-grid {
   height: 600px;
 }
-.assertions-grid {
+.assertions-grid, .property-extractors-grid {
   height: 200px;
   margin-left: 15px;
   padding-left: 0px;
