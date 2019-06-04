@@ -1,8 +1,8 @@
 package io.irontest.resources;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.irontest.db.PropertyExtractorDAO;
-import io.irontest.models.UserDefinedProperty;
+import io.irontest.models.teststep.PropertyExtractionRequest;
+import io.irontest.models.teststep.PropertyExtractionResult;
 import io.irontest.models.teststep.PropertyExtractor;
 
 import javax.annotation.security.PermitAll;
@@ -35,5 +35,22 @@ public class PropertyExtractorResource {
     @PermitAll
     public void update(PropertyExtractor propertyExtractor) {
         propertyExtractorDAO.update(propertyExtractor);
+    }
+
+    @DELETE @Path("propertyExtractors/{propertyExtractorId}")
+    @PermitAll
+    public void delete(@PathParam("propertyExtractorId") long propertyExtractorId) {
+        propertyExtractorDAO.deleteById(propertyExtractorId);
+    }
+
+    /**
+     * This is a stateless operation, i.e. not persisting anything in database.
+     * @param propertyExtractionRequest
+     * @return
+     */
+    @POST @Path("propertyExtractors/{propertyExtractorId}/run")
+    @PermitAll
+    public PropertyExtractionResult run(PropertyExtractionRequest propertyExtractionRequest) {
+        return null;
     }
 }

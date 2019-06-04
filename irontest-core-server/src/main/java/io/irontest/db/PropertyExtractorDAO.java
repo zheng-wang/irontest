@@ -40,4 +40,7 @@ public interface PropertyExtractorDAO {
     @SqlUpdate("update property_extractor set property_name = :propertyName, path = :path, " +
             "updated = CURRENT_TIMESTAMP where id = :id")
     void update(@BindBean PropertyExtractor propertyExtractor);
+
+    @SqlUpdate("delete from property_extractor where id = :id")
+    void deleteById(@Bind("id") long id);
 }

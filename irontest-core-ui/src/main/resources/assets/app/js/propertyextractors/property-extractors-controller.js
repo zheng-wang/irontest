@@ -4,8 +4,8 @@
 //    The $scope here prototypically inherits from the $scope of the specific test step controller.
 //    ng-include also creates a scope.
 angular.module('irontest').controller('PropertyExtractorsController', ['$scope', 'IronTestUtils', 'PropertyExtractors',
-    '$stateParams', 'uiGridConstants', '$timeout',
-  function($scope, IronTestUtils, PropertyExtractors, $stateParams, uiGridConstants, $timeout) {
+    '$stateParams', 'uiGridConstants', '$timeout', '$rootScope',
+  function($scope, IronTestUtils, PropertyExtractors, $stateParams, uiGridConstants, $timeout, $rootScope) {
     var removeSelectedPropertyExtractor = function() {
       var propertyExtractor = $scope.propertyExtractor;
       propertyExtractor.$remove(function(response) {
@@ -67,7 +67,7 @@ angular.module('irontest').controller('PropertyExtractorsController', ['$scope',
       });
     };
 
-    $scope.findByTeststepId = function() {
+    $scope.findPropertyExtractorsByTeststepId = function() {
       PropertyExtractors.query({ teststepId: $stateParams.teststepId }, function(returnPropertyExtractors) {
         $scope.propertyExtractors = returnPropertyExtractors;
       }, function(response) {
@@ -84,6 +84,26 @@ angular.module('irontest').controller('PropertyExtractorsController', ['$scope',
       propertyExtractor.$save({ teststepId: $stateParams.teststepId }, function(returnPropertyExtractor) {
         $scope.propertyExtractors.push(propertyExtractor);
         $scope.$emit('successfullySaved');
+      }, function(response) {
+        IronTestUtils.openErrorHTTPResponseModal(response);
+      });
+    };
+
+    $scope.extractProperty = function() {
+      var propertyExtractor = $scope.propertyExtractor;
+
+      //  resolve property extraction input
+      var input;
+      var apiResponse = $scope.$parent.steprun.response;
+      if ($scope.teststep.type === 'HTTP') {
+        input = apiResponse.httpBody;
+      } else {
+        input = apiResponse;
+      }
+
+      var propertyExtractionRequest = { input: input, propertyExtractor: propertyExtractor };
+      PropertyExtractors.run({ propertyExtractorId: propertyExtractor.id }, propertyExtractionRequest, function(response) {
+        console.log(response);
       }, function(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);
       });

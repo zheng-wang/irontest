@@ -13,6 +13,10 @@ angular.module('irontest').factory('PropertyExtractors', ['$resource',
         method: 'DELETE',
         url: 'api/propertyExtractors/:propertyExtractorId',
         params: { propertyExtractorId: '@id' }
+      },
+      run: {
+        method: 'POST',
+        url: 'api/propertyExtractors/:propertyExtractorId/run'
       }
     });
   }
