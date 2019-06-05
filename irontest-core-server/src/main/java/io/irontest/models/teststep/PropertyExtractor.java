@@ -1,6 +1,16 @@
 package io.irontest.models.teststep;
 
-public class PropertyExtractor {
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import io.irontest.core.propertyextractor.JSONPathPropertyExtractor;
+
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY,
+        property = "type", visible = true)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = JSONPathPropertyExtractor.class, name = PropertyExtractor.TYPE_JSONPATH)})
+public abstract class PropertyExtractor {
+    public static final String TYPE_JSONPATH = "JSONPath";
+
     private long id;
     private String propertyName;
     private String type;
@@ -46,4 +56,6 @@ public class PropertyExtractor {
     public void setPath(String path) {
         this.path = path;
     }
+
+    public abstract PropertyExtractionResult extract(String propertyExtractionInput) throws Exception;
 }

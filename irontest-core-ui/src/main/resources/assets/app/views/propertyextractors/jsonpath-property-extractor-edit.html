@@ -6,7 +6,10 @@
     </textarea>
   </div>
   <div class="col-lg-6" style="padding-left: 5px">
-    <textarea name="propertyValue" id="propertyValue" class="form-control" rows="12" readonly
-              placeholder="Property Value"></textarea>
+    <textarea name="propertyValue" id="propertyValue" class="form-control" rows="12" placeholder="Property Value"
+              ng-class="{ 'text-red' : propertyExtractionResult.error }" readonly>{{
+        $parent.propertyExtractionResult.error ?
+          $parent.propertyExtractionResult.error :
+          $parent.propertyExtractionResult.propertyValue }}</textarea>
   </div>
 </div>

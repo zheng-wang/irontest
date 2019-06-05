@@ -4,6 +4,8 @@ import io.irontest.db.PropertyExtractorDAO;
 import io.irontest.models.teststep.PropertyExtractionRequest;
 import io.irontest.models.teststep.PropertyExtractionResult;
 import io.irontest.models.teststep.PropertyExtractor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.*;
@@ -12,6 +14,8 @@ import java.util.List;
 
 @Path("/") @Produces({ MediaType.APPLICATION_JSON })
 public class PropertyExtractorResource {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AssertionResource.class);
+
     private PropertyExtractorDAO propertyExtractorDAO;
     public PropertyExtractorResource(PropertyExtractorDAO propertyExtractorDAO) {
         this.propertyExtractorDAO = propertyExtractorDAO;
@@ -48,9 +52,18 @@ public class PropertyExtractorResource {
      * @param propertyExtractionRequest
      * @return
      */
-    @POST @Path("propertyExtractors/{propertyExtractorId}/run")
+    @POST @Path("propertyExtractors/{propertyExtractorId}/extract")
     @PermitAll
-    public PropertyExtractionResult run(PropertyExtractionRequest propertyExtractionRequest) {
-        return null;
+    public PropertyExtractionResult extract(PropertyExtractionRequest propertyExtractionRequest) {
+        PropertyExtractor propertyExtractor = propertyExtractionRequest.getPropertyExtractor();
+        String propertyExtractionInput = propertyExtractionRequest.getInput();
+        PropertyExtractionResult result = new PropertyExtractionResult();
+        try {
+            result = propertyExtractor.extract(propertyExtractionInput);
+        } catch (Exception e) {
+            LOGGER.error("Failed to extract property", e);
+            result.setError(e.getMessage());
+        }
+        return result;
     }
 }

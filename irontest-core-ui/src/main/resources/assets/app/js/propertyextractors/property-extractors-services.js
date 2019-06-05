@@ -14,9 +14,9 @@ angular.module('irontest').factory('PropertyExtractors', ['$resource',
         url: 'api/propertyExtractors/:propertyExtractorId',
         params: { propertyExtractorId: '@id' }
       },
-      run: {
+      extract: {
         method: 'POST',
-        url: 'api/propertyExtractors/:propertyExtractorId/run'
+        url: 'api/propertyExtractors/:propertyExtractorId/extract'
       }
     });
   }

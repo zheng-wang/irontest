@@ -6,6 +6,10 @@
 angular.module('irontest').controller('PropertyExtractorsController', ['$scope', 'IronTestUtils', 'PropertyExtractors',
     '$stateParams', 'uiGridConstants', '$timeout', '$rootScope',
   function($scope, IronTestUtils, PropertyExtractors, $stateParams, uiGridConstants, $timeout, $rootScope) {
+    var clearCurrentPropertyExtractionResult = function() {
+      delete $scope.propertyExtractionResult;
+    };
+
     var removeSelectedPropertyExtractor = function() {
       var propertyExtractor = $scope.propertyExtractor;
       propertyExtractor.$remove(function(response) {
@@ -40,6 +44,7 @@ angular.module('irontest').controller('PropertyExtractorsController', ['$scope',
         $scope.bottomPaneLoadedCallback();
         $scope.propertyExtractorsGridApi = gridApi;
         gridApi.selection.on.rowSelectionChanged($scope, function(row) {
+          clearCurrentPropertyExtractionResult();
           $scope.propertyExtractor = row.entity;
         });
         gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue){
@@ -52,6 +57,7 @@ angular.module('irontest').controller('PropertyExtractorsController', ['$scope',
 
     var timer;
     $scope.propertyExtractorAutoSave = function() {
+      clearCurrentPropertyExtractionResult();
       if (timer) $timeout.cancel(timer);
       timer = $timeout(function() {
         $scope.propertyExtractorUpdate();
@@ -102,11 +108,15 @@ angular.module('irontest').controller('PropertyExtractorsController', ['$scope',
       }
 
       var propertyExtractionRequest = { input: input, propertyExtractor: propertyExtractor };
-      PropertyExtractors.run({ propertyExtractorId: propertyExtractor.id }, propertyExtractionRequest, function(response) {
-        console.log(response);
+      PropertyExtractors.extract({ propertyExtractorId: propertyExtractor.id }, propertyExtractionRequest, function(response) {
+        $scope.propertyExtractionResult = response;
       }, function(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);
       });
     };
+
+    $scope.$watch('steprun.response', function() {
+      clearCurrentPropertyExtractionResult();
+    }, true);
   }
 ]);
