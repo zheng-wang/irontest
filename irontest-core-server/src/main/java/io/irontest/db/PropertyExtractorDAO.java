@@ -10,7 +10,7 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 import java.util.List;
 
-import static io.irontest.IronTestConstants.DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX;
+import static io.irontest.IronTestConstants.*;
 
 @RegisterRowMapper(PropertyExtractorMapper.class)
 public interface PropertyExtractorDAO {
@@ -23,7 +23,8 @@ public interface PropertyExtractorDAO {
             "created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (teststep_id) REFERENCES teststep(id) ON DELETE CASCADE, " +
-            "CONSTRAINT PROPERTY_EXTRACTOR_" + DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX + " UNIQUE(teststep_id, property_name))")
+            "CONSTRAINT PROPERTY_EXTRACTOR_" + DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX + " UNIQUE(teststep_id, property_name), " +
+            "CONSTRAINT PROPERTY_EXTRACTOR_" + DB_PROPERTY_NAME_CONSTRAINT_NAME_SUFFIX + " CHECK(" + CUSTOM_PROPERTY_NAME_CHECK2 + "))")
     void createTableIfNotExists();
 
     @SqlQuery("select * from property_extractor where id = :id")

@@ -59,7 +59,7 @@ public class PropertyExtractorResource {
         String propertyExtractionInput = propertyExtractionRequest.getInput();
         PropertyExtractionResult result = new PropertyExtractionResult();
         try {
-            result = propertyExtractor.extract(propertyExtractionInput);
+            result.setPropertyValue(propertyExtractor.extract(propertyExtractionInput));
         } catch (Exception e) {
             LOGGER.error("Failed to extract property", e);
             result.setError(e.getMessage());

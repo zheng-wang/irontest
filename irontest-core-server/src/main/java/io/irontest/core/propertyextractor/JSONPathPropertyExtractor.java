@@ -3,7 +3,6 @@ package io.irontest.core.propertyextractor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
-import io.irontest.models.teststep.PropertyExtractionResult;
 import io.irontest.models.teststep.PropertyExtractor;
 
 public class JSONPathPropertyExtractor extends PropertyExtractor {
@@ -14,10 +13,8 @@ public class JSONPathPropertyExtractor extends PropertyExtractor {
     }
 
     @Override
-    public PropertyExtractionResult extract(String input) throws JsonProcessingException {
-        PropertyExtractionResult result = new PropertyExtractionResult();
+    public String extract(String input) throws JsonProcessingException {
         Object value = JsonPath.read(input, getPath());
-        result.setPropertyValue(new ObjectMapper().writeValueAsString(value));
-        return result;
+        return new ObjectMapper().writeValueAsString(value);
     }
 }

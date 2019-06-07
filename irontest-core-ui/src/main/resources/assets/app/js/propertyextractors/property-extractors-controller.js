@@ -82,7 +82,7 @@ angular.module('irontest').controller('PropertyExtractorsController', ['$scope',
     };
 
     $scope.createPropertyExtractor = function(type) {
-      var propertyName = IronTestUtils.getNextNameInSequence($scope.propertyExtractors, 'Property ', 'propertyName');
+      var propertyName = IronTestUtils.getNextNameInSequence($scope.propertyExtractors, 'Property', 'propertyName');
       var propertyExtractor = new PropertyExtractors({
         propertyName: propertyName,
         type: type,

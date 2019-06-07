@@ -57,5 +57,5 @@ public abstract class PropertyExtractor {
         this.path = path;
     }
 
-    public abstract PropertyExtractionResult extract(String propertyExtractionInput) throws Exception;
+    public abstract String extract(String propertyExtractionInput) throws Exception;
 }
