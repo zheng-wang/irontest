@@ -57,6 +57,7 @@ public class Teststep {
     private String requestFilename;
     @JsonView(ResourceJsonViews.TestcaseExport.class)
     private List<Assertion> assertions = new ArrayList<>();
+    private List<PropertyExtractor> propertyExtractors = new ArrayList<>();
     @JsonView(ResourceJsonViews.TestcaseExport.class)
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
             property = "type", visible = true, defaultImpl = Properties.class)
@@ -186,5 +187,13 @@ public class Teststep {
 
     public void setAction(String action) {
         this.action = action;
+    }
+
+    public List<PropertyExtractor> getPropertyExtractors() {
+        return propertyExtractors;
+    }
+
+    public void setPropertyExtractors(List<PropertyExtractor> propertyExtractors) {
+        this.propertyExtractors = propertyExtractors;
     }
 }

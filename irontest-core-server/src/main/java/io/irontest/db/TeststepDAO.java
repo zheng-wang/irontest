@@ -11,7 +11,6 @@ import io.irontest.models.assertion.IntegerEqualAssertionProperties;
 import io.irontest.models.endpoint.Endpoint;
 import io.irontest.models.teststep.*;
 import io.irontest.utils.IronTestUtils;
-import io.irontest.utils.XMLUtils;
 import org.apache.commons.io.IOUtils;
 import org.jdbi.v3.sqlobject.config.RegisterColumnMapper;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
@@ -21,7 +20,6 @@ import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 import org.jdbi.v3.sqlobject.transaction.Transaction;
-import org.w3c.dom.Document;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -394,17 +392,18 @@ public interface TeststepDAO extends CrossReferenceDAO {
     long findTestcaseIdById(@Bind("id") long id);
 
     @Transaction
-    default void populateTeststepWithEndpointAndAssertions(Teststep teststep) {
+    default void populateTeststepWithOtherDetails(Teststep teststep) {
         Endpoint endpoint = endpointDAO().findById(teststep.getEndpoint().getId());
         teststep.setEndpoint(endpoint);
         teststep.setAssertions(assertionDAO().findByTeststepId(teststep.getId()));
+        teststep.setPropertyExtractors(propertyExtractorDAO().findByTeststepId(teststep.getId()));
     }
 
     @Transaction
     default Teststep findById_NoRequest(long id) {
         Teststep teststep = _findById_NoRequest(id);
         if (teststep != null) {
-            populateTeststepWithEndpointAndAssertions(teststep);
+            populateTeststepWithOtherDetails(teststep);
         }
         return teststep;
     }
@@ -414,7 +413,7 @@ public interface TeststepDAO extends CrossReferenceDAO {
     default Teststep findById_Complete(long id) {
         Teststep teststep = _findById_Complete(id);
         if (teststep != null) {
-            populateTeststepWithEndpointAndAssertions(teststep);
+            populateTeststepWithOtherDetails(teststep);
         }
         return teststep;
     }
@@ -425,7 +424,7 @@ public interface TeststepDAO extends CrossReferenceDAO {
     default List<Teststep> findByTestcaseId_Complete(long testcaseId) {
         List<Teststep> teststeps = _findByTestcaseId_Complete(testcaseId);
         for (Teststep teststep: teststeps) {
-            populateTeststepWithEndpointAndAssertions(teststep);
+            populateTeststepWithOtherDetails(teststep);
         }
         return teststeps;
     }

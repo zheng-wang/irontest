@@ -14,6 +14,7 @@ import io.irontest.models.endpoint.Endpoint;
 import io.irontest.models.testrun.TestcaseRun;
 import io.irontest.models.testrun.TeststepRun;
 import io.irontest.models.teststep.HTTPStubsSetupTeststepProperties;
+import io.irontest.models.teststep.PropertyExtractor;
 import io.irontest.models.teststep.Teststep;
 import io.irontest.utils.IronTestUtils;
 import org.slf4j.Logger;
@@ -162,52 +163,15 @@ public abstract class TestcaseRunner {
             LOGGER.error(message, e);
         }
 
-        //  verify assertions
         if (exceptionOccurred) {
             teststepRun.setResult(TestResult.FAILED);
         } else {
             teststepRun.setResult(TestResult.PASSED);
             Object apiResponse = teststepRun.getResponse();
-
-            if (Teststep.TYPE_DB.equals(teststep.getType()) && ((DBAPIResponse) apiResponse).getRowsJSON() == null) {
-                //  SQL inserts/deletes/updates, no assertion verification needed
-            } else {
-                //  verify assertions against the inputs
-                for (Assertion assertion : teststep.getAssertions()) {
-                    Object assertionVerificationInput = resolveAssertionVerificationInputFromAPIResponse(teststep.getType(),
-                            teststep.getAction(), assertion.getType(), apiResponse);
-
-                    //  resolve assertion verification input2 if applicable
-                    Object assertionVerificationInput2 = null;
-                    if (Assertion.TYPE_HTTP_STUB_HIT.equals(assertion.getType())) {
-                        HTTPStubHitAssertionProperties otherProperties = (HTTPStubHitAssertionProperties) assertion.getOtherProperties();
-                        assertionVerificationInput2 = getTestcaseRunContext().getHttpStubMappingInstanceIds().get(otherProperties.getStubNumber());
-                    }
-
-                    AssertionVerification verification = new AssertionVerification();
-                    teststepRun.getAssertionVerifications().add(verification);
-                    verification.setAssertion(assertion);
-
-                    AssertionVerifier verifier = AssertionVerifierFactory.getInstance().create(
-                            assertion.getType(), referenceableStringProperties);
-                    AssertionVerificationResult verificationResult;
-                    try {
-                        verificationResult = verifier.verify(assertion, assertionVerificationInput, assertionVerificationInput2);
-                    } catch (Exception e) {
-                        LOGGER.error("Failed to verify assertion", e);
-                        verificationResult = new AssertionVerificationResult();
-                        verificationResult.setResult(TestResult.FAILED);
-                        String message = e.getMessage();
-                        verificationResult.setError(message == null ? "null" : message);  // exception message could be null (though rarely)
-                    }
-
-                    verification.setVerificationResult(verificationResult);
-
-                    if (TestResult.FAILED == verificationResult.getResult()) {
-                        teststepRun.setResult(TestResult.FAILED);
-                    }
-                }
-            }
+            verifyAssertions(teststep.getType(), teststep.getAction(), teststep.getAssertions(), apiResponse, teststepRun);
+            Map<String, String> extractedProperties =
+                    extractPropertiesOutOfAPIResponse(teststep.getType(), teststep.getPropertyExtractors(), apiResponse);
+            referenceableStringProperties.putAll(extractedProperties);
         }
 
         //  test step run ends
@@ -248,5 +212,70 @@ public abstract class TestcaseRunner {
         }
 
         return result;
+    }
+
+    private void verifyAssertions(String teststepType, String teststepAction, List<Assertion> assertions,
+                                  Object apiResponse, TeststepRun teststepRun) {
+        if (Teststep.TYPE_DB.equals(teststepType) && ((DBAPIResponse) apiResponse).getRowsJSON() == null) {
+            //  SQL inserts/deletes/updates, no assertion verification needed
+        } else {
+            //  verify assertions against the inputs
+            for (Assertion assertion : assertions) {
+                Object assertionVerificationInput = resolveAssertionVerificationInputFromAPIResponse(teststepType,
+                        teststepAction, assertion.getType(), apiResponse);
+
+                //  resolve assertion verification input2 if applicable
+                Object assertionVerificationInput2 = null;
+                if (Assertion.TYPE_HTTP_STUB_HIT.equals(assertion.getType())) {
+                    HTTPStubHitAssertionProperties otherProperties = (HTTPStubHitAssertionProperties) assertion.getOtherProperties();
+                    assertionVerificationInput2 = getTestcaseRunContext().getHttpStubMappingInstanceIds().get(otherProperties.getStubNumber());
+                }
+
+                AssertionVerification verification = new AssertionVerification();
+                teststepRun.getAssertionVerifications().add(verification);
+                verification.setAssertion(assertion);
+
+                AssertionVerifier verifier = AssertionVerifierFactory.getInstance().create(
+                        assertion.getType(), referenceableStringProperties);
+                AssertionVerificationResult verificationResult;
+                try {
+                    verificationResult = verifier.verify(assertion, assertionVerificationInput, assertionVerificationInput2);
+                } catch (Exception e) {
+                    LOGGER.error("Failed to verify assertion", e);
+                    verificationResult = new AssertionVerificationResult();
+                    verificationResult.setResult(TestResult.FAILED);
+                    String message = e.getMessage();
+                    verificationResult.setError(message == null ? "null" : message);  // exception message could be null (though rarely)
+                }
+
+                verification.setVerificationResult(verificationResult);
+
+                if (TestResult.FAILED == verificationResult.getResult()) {
+                    teststepRun.setResult(TestResult.FAILED);
+                }
+            }
+        }
+    }
+
+    /**
+     * Extract properties out of API response, and make the properties visible to the next test step run.
+     */
+    private Map<String, String> extractPropertiesOutOfAPIResponse(String teststepType, List<PropertyExtractor> propertyExtractors, Object apiResponse) {
+        Map<String, String> extractedProperties = new HashMap<>();
+        for (PropertyExtractor propertyExtractor: propertyExtractors) {
+            String propertyExtractionInput = null;
+            if (Teststep.TYPE_HTTP.equals(teststepType)) {
+                propertyExtractionInput = ((HTTPAPIResponse) apiResponse).getHttpBody();
+            }
+            String propertyValue;
+            try {
+                propertyValue = propertyExtractor.extract(propertyExtractionInput);
+                extractedProperties.put(propertyExtractor.getPropertyName(), propertyValue);
+            } catch (Exception e) {
+                LOGGER.error("Failed to extract property", e);
+            }
+        }
+
+        return extractedProperties;
     }
 }

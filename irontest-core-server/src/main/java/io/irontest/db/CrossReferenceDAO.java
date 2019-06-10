@@ -25,6 +25,9 @@ public interface CrossReferenceDAO {
     AssertionDAO assertionDAO();
 
     @CreateSqlObject
+    PropertyExtractorDAO propertyExtractorDAO();
+
+    @CreateSqlObject
     TeststepRunDAO teststepRunDAO();
 
     @CreateSqlObject
