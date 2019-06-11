@@ -188,9 +188,9 @@ public abstract class TestcaseRunner {
             result = ((HTTPAPIResponse) apiResponse).getStatusCode();
         } else if (Teststep.TYPE_SOAP.equals(teststepType) || Teststep.TYPE_HTTP.equals(teststepType)) {
             result = ((HTTPAPIResponse) apiResponse).getHttpBody();
-        } else if (Assertion.TYPE_HTTP_STUB_HIT.equals(assertionType)) {
-            result = ((WireMockServerAPIResponse) apiResponse).getAllServeEvents();
-        } else if (Assertion.TYPE_HTTP_STUBS_HIT_IN_ORDER.equals(assertionType)) {
+        } else if (Assertion.TYPE_HTTP_STUB_HIT.equals(assertionType) ||
+                Assertion.TYPE_ALL_HTTP_STUB_REQUESTS_MATCHED.equals(assertionType) ||
+                Assertion.TYPE_HTTP_STUBS_HIT_IN_ORDER.equals(assertionType)) {
             result = ((WireMockServerAPIResponse) apiResponse).getAllServeEvents();
         } else if (Teststep.TYPE_DB.equals(teststepType)) {
             result = ((DBAPIResponse) apiResponse).getRowsJSON();

@@ -30,4 +30,8 @@ public class HTTPHeader {
     public void setValue(String value) {
         this.value = value;
     }
+
+    public String toString() {
+        return name + ": " + value;
+    }
 }

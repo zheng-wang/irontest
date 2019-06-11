@@ -31,7 +31,7 @@
 
 <#-- Request info -->
 <#if stepRun.teststep.request?? || (stepRun.teststep.otherProperties.httpHeaders?? &&
-    stepRun.teststep.otherProperties.httpHeaders?size > 0)>
+    stepRun.teststep.otherProperties.httpHeaders?size > 0)>   <!-- for an HTTP/SOAP test step, it seems possible for the HTTP request body to be null while HTTP request headers exist -->
   <div class="form-group"></div> <!-- spacer -->
   <div class="row">
     <div class="col-lg-1">Request:</div>
@@ -40,16 +40,19 @@
       <#if stepRun.teststep.otherProperties.httpHeaders?? &&
           (stepRun.teststep.otherProperties.httpHeaders?size > 0)>
         <div class="row">
-          <div class="col-lg-2">HTTP Headers:</div>
-          <div class="col-lg-10">
-            <#list stepRun.teststep.otherProperties.httpHeaders as httpHeader>
-              <div class="row">
-                <div class="col-lg-2">${ httpHeader.name }:</div>
-                <div class="col-lg-10">${ httpHeader.value }</div>
-              </div>
-            </#list>
+          <div class="col-lg-12">HTTP Headers:</div>
+        </div>
+        <div class="form-group"></div> <!-- spacer -->
+        <div class="row">
+          <div class="col-lg-12">
+            <textarea rows="6" class="form-control" readonly>${ stepRun.teststep.otherProperties.httpHeaders?join("\n") }</textarea>
           </div>
         </div>
+        <div class="form-group"></div> <!-- spacer -->
+        <div class="row">
+          <div class="col-lg-12">HTTP Body:</div>
+        </div>
+        <div class="form-group"></div> <!-- spacer -->
       </#if>
       <#if stepRun.teststep.request??>
         <div class="row">

@@ -15,6 +15,10 @@ public class JSONPathPropertyExtractor extends PropertyExtractor {
     @Override
     public String extract(String input) throws JsonProcessingException {
         Object value = JsonPath.read(input, getPath());
-        return new ObjectMapper().writeValueAsString(value);
+        if (value instanceof String) {
+            return (String) value;         //  ObjectMapper().writeValueAsString returns the string surrounded with ".
+        } else {
+            return new ObjectMapper().writeValueAsString(value);
+        }
     }
 }
