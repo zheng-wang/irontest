@@ -8,7 +8,7 @@ import io.irontest.resources.ResourceJsonViews;
 import java.util.ArrayList;
 import java.util.List;
 
-@JsonView(ResourceJsonViews.TestcaseExport.class)
+@JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
 public class XPathAssertionProperties extends Properties {
     private String xPath;
     private String expectedValue;

@@ -3,7 +3,7 @@ package io.irontest.models.teststep;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.irontest.resources.ResourceJsonViews;
 
-@JsonView(ResourceJsonViews.TestcaseExport.class)
+@JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
 public class MQRFH2Folder {
     private String name;               //  only useful to UI
     private String string;

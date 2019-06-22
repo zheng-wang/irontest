@@ -15,21 +15,25 @@ public class Endpoint {
     public static final String TYPE_MQ = "MQ";
     public static final String TYPE_IIB = "IIB";
     public static final String TYPE_AMQP = "AMQP";
+
+    @JsonView(ResourceJsonViews.TeststepEdit.class)
     private long id;
-    @JsonView(ResourceJsonViews.DataTableUIGrid.class)
+    @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.DataTableUIGrid.class})
     private Environment environment;
-    @JsonView({ResourceJsonViews.DataTableUIGrid.class, ResourceJsonViews.TestcaseExport.class})
+    @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.DataTableUIGrid.class,
+            ResourceJsonViews.TestcaseExport.class})
     private String name;
-    @JsonView(ResourceJsonViews.TestcaseExport.class)
+    @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     private String type;
-    @JsonView(ResourceJsonViews.TestcaseExport.class)
+    @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     private String description;
-    @JsonView(ResourceJsonViews.TestcaseExport.class)
+    @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     private String url;                //  can be SOAP address, JDBC URL, etc.; not used by MQ or IIB endpoint
-    @JsonView(ResourceJsonViews.TestcaseExport.class)
+    @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     private String username;
+    @JsonView(ResourceJsonViews.TeststepEdit.class)
     private String password;
-    @JsonView(ResourceJsonViews.TestcaseExport.class)
+    @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
             property = "type", visible = true, defaultImpl = Properties.class)
     @JsonSubTypes({

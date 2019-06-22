@@ -34,31 +34,34 @@ public class Teststep {
     public static final String ACTION_ENQUEUE = "Enqueue";
     public static final String ACTION_PUBLISH = "Publish";
 
+    @JsonView(ResourceJsonViews.TeststepEdit.class)
     private long id;   //  id being 0 means this is dynamically created test step object (no record in the Teststep database table).
+    @JsonView(ResourceJsonViews.TeststepEdit.class)
     private long testcaseId;
     private short sequence;
-    @JsonView({ResourceJsonViews.TestcaseRunResultOnTestcaseEditView.class, ResourceJsonViews.TestcaseExport.class})
+    @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseRunResultOnTestcaseEditView.class,
+            ResourceJsonViews.TestcaseExport.class})
     private String name;
-    @JsonView(ResourceJsonViews.TestcaseExport.class)
+    @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     private String type;
-    @JsonView(ResourceJsonViews.TestcaseExport.class)
+    @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     private String description;
-    @JsonView(ResourceJsonViews.TestcaseExport.class)
+    @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     private String action;            //  currently only used in MQ test step and IIB test step
-    @JsonView(ResourceJsonViews.TestcaseExport.class)
+    @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     private Endpoint endpoint;
     @JsonView(ResourceJsonViews.TestcaseExport.class)
     private String endpointProperty;
-    @JsonView(ResourceJsonViews.TestcaseExport.class)
+    @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     private Object request;
-    @JsonView(ResourceJsonViews.TestcaseExport.class)
+    @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     private TeststepRequestType requestType = TeststepRequestType.TEXT;
-    @JsonView(ResourceJsonViews.TestcaseExport.class)
+    @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     private String requestFilename;
-    @JsonView(ResourceJsonViews.TestcaseExport.class)
+    @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     private List<Assertion> assertions = new ArrayList<>();
     private List<PropertyExtractor> propertyExtractors = new ArrayList<>();
-    @JsonView(ResourceJsonViews.TestcaseExport.class)
+    @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
             property = "type", visible = true, defaultImpl = Properties.class)
     @JsonSubTypes({

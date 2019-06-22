@@ -20,13 +20,15 @@ public class Assertion {
     public static final String TYPE_HTTP_STUBS_HIT_IN_ORDER = "HTTPStubsHitInOrder";
     public static final String TYPE_HAS_AN_MQRFH2_FOLDER_EQUAL_TO_XML = "HasAnMQRFH2FolderEqualToXml";
 
+    @JsonView(ResourceJsonViews.TeststepEdit.class)
     private Long id;    //  id being null means this is dynamically created assertion object (no record in the Assertion database table).
+    @JsonView(ResourceJsonViews.TeststepEdit.class)
     private Long teststepId;
-    @JsonView(ResourceJsonViews.TestcaseExport.class)
+    @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     private String name;
-    @JsonView(ResourceJsonViews.TestcaseExport.class)
+    @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     private String type;
-    @JsonView(ResourceJsonViews.TestcaseExport.class)
+    @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY, property = "type",
             defaultImpl = Properties.class)
     @JsonSubTypes({

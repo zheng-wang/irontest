@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import io.irontest.models.Properties;
 import io.irontest.resources.ResourceJsonViews;
 
-@JsonView(ResourceJsonViews.TestcaseExport.class)
+@JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
 public class JSONPathXMLEqualAssertionProperties extends Properties {
     private String jsonPath;
     private String expectedXML;

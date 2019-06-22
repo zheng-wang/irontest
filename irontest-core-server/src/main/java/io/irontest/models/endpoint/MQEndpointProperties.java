@@ -6,12 +6,16 @@ import com.fasterxml.jackson.annotation.JsonView;
 import io.irontest.models.Properties;
 import io.irontest.resources.ResourceJsonViews;
 
-@JsonView(ResourceJsonViews.TestcaseExport.class)
 public class MQEndpointProperties extends Properties {
+    @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     private MQConnectionMode connectionMode = MQConnectionMode.BINDINGS;
+    @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     private String queueManagerName;
+    @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     private String host;
+    @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     private Integer port;
+    @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     private String svrConnChannelName;
 
     public MQConnectionMode getConnectionMode() {
@@ -59,7 +63,7 @@ public class MQEndpointProperties extends Properties {
      * @return
      */
     @JsonProperty
-    @JsonView(ResourceJsonViews.None.class)
+    @JsonView(ResourceJsonViews.TeststepEdit.class)
     public String getQueueManagerAddress() {
         return connectionMode == MQConnectionMode.BINDINGS ?
                 queueManagerName : host + ':' + port + '/' + queueManagerName;

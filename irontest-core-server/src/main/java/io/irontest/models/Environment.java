@@ -8,7 +8,7 @@ import java.util.List;
 
 public class Environment {
     private long id;
-    @JsonView(ResourceJsonViews.DataTableUIGrid.class)
+    @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.DataTableUIGrid.class})
     private String name;
     private String description;
     private List<Endpoint> endpoints;

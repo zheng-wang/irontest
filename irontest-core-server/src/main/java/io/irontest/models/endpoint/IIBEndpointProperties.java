@@ -6,10 +6,12 @@ import com.fasterxml.jackson.annotation.JsonView;
 import io.irontest.models.Properties;
 import io.irontest.resources.ResourceJsonViews;
 
-@JsonView(ResourceJsonViews.TestcaseExport.class)
 public class IIBEndpointProperties extends Properties {
+    @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     private String host;
+    @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     private Integer port;
+    @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     private boolean useSSL = false;
 
     public String getHost() {
@@ -41,7 +43,7 @@ public class IIBEndpointProperties extends Properties {
      * @return
      */
     @JsonProperty
-    @JsonView(ResourceJsonViews.None.class)
+    @JsonView(ResourceJsonViews.TeststepEdit.class)
     public String getIntegrationNodeAddress() {
         return (isUseSSL() ? "https" : "http") + "://" + host + ":" + port ;
     }

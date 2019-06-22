@@ -1,5 +1,6 @@
 package io.irontest.resources;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.irontest.core.runner.*;
 import io.irontest.db.DataTableDAO;
@@ -77,6 +78,7 @@ public class TeststepResource {
     }
 
     @GET @Path("{teststepId}")
+    @JsonView(ResourceJsonViews.TeststepEdit.class)
     public TeststepWrapper findById(@PathParam("teststepId") long teststepId) {
         TeststepWrapper wrapper = new TeststepWrapper();
         Teststep teststep;

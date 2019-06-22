@@ -16,4 +16,6 @@ public class ResourceJsonViews {
     public static class MockServerStubRequestList {}
 
     public static class MockServerUnmatchedRequestList {}
+
+    public static class TeststepEdit {}
 }

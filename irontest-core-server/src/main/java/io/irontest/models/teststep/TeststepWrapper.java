@@ -1,8 +1,12 @@
 package io.irontest.models.teststep;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import io.irontest.resources.ResourceJsonViews;
+
 import java.util.HashMap;
 import java.util.Map;
 
+@JsonView(ResourceJsonViews.TeststepEdit.class)
 public class TeststepWrapper {
     private Teststep teststep;
 
