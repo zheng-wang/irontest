@@ -28,6 +28,8 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.*;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
@@ -36,6 +38,7 @@ import org.apache.http.util.EntityUtils;
 import org.jdbi.v3.core.internal.SqlScriptParser;
 import org.w3c.dom.Document;
 
+import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
@@ -177,7 +180,9 @@ public final class IronTestUtils {
 
         //  build HTTP Client instance, trusting all SSL certificates
         SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial((TrustStrategy) (chain, authType) -> true).build();
-        HttpClient httpClient = HttpClients.custom().setSSLContext(sslContext).build();
+        HostnameVerifier allowAllHosts = new NoopHostnameVerifier();
+        SSLConnectionSocketFactory connectionFactory = new SSLConnectionSocketFactory(sslContext, allowAllHosts);
+        HttpClient httpClient = HttpClients.custom().setSSLSocketFactory(connectionFactory).build();
 
         //  invoke the API
         try {
