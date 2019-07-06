@@ -1,7 +1,6 @@
 package io.irontest.resources;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.jaxrs.annotation.JacksonFeatures;
 import io.dropwizard.jersey.PATCH;
@@ -60,7 +59,7 @@ public class TestcaseResource {
     @POST @Path("testcases/{testcaseId}/duplicate")
     @PermitAll
     public Testcase duplicate(@PathParam("testcaseId") long testcaseId,
-                          @QueryParam("targetFolderId") long targetFolderId) throws JsonProcessingException {
+                          @QueryParam("targetFolderId") long targetFolderId) {
         Testcase testcase = new Testcase();
         testcase.setId(testcaseDAO.duplicate(testcaseId, targetFolderId));
         return testcase;
