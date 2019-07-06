@@ -1,9 +1,14 @@
 package io.irontest.resources;
 
+import io.irontest.db.DataTableDAO;
 import io.irontest.db.PropertyExtractorDAO;
+import io.irontest.db.UserDefinedPropertyDAO;
+import io.irontest.models.DataTable;
+import io.irontest.models.UserDefinedProperty;
 import io.irontest.models.teststep.PropertyExtractionRequest;
 import io.irontest.models.teststep.PropertyExtractionResult;
 import io.irontest.models.teststep.PropertyExtractor;
+import io.irontest.utils.IronTestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,13 +16,21 @@ import javax.annotation.security.PermitAll;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Path("/") @Produces({ MediaType.APPLICATION_JSON })
 public class PropertyExtractorResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(AssertionResource.class);
 
-    private PropertyExtractorDAO propertyExtractorDAO;
-    public PropertyExtractorResource(PropertyExtractorDAO propertyExtractorDAO) {
+    private final UserDefinedPropertyDAO udpDAO;
+    private final DataTableDAO dataTableDAO;
+    private final PropertyExtractorDAO propertyExtractorDAO;
+
+    public PropertyExtractorResource(UserDefinedPropertyDAO udpDAO, DataTableDAO dataTableDAO,
+                                     PropertyExtractorDAO propertyExtractorDAO) {
+        this.udpDAO = udpDAO;
+        this.dataTableDAO = dataTableDAO;
         this.propertyExtractorDAO = propertyExtractorDAO;
     }
 
@@ -56,10 +69,22 @@ public class PropertyExtractorResource {
     @PermitAll
     public PropertyExtractionResult extract(PropertyExtractionRequest propertyExtractionRequest) {
         PropertyExtractor propertyExtractor = propertyExtractionRequest.getPropertyExtractor();
+
+        //  gather referenceable string properties
+        long testcaseId = propertyExtractorDAO.findTestcaseIdById(propertyExtractor.getId());
+        List<UserDefinedProperty> testcaseUDPs = udpDAO.findByTestcaseId(testcaseId);
+        Map<String, String> referenceableStringProperties = IronTestUtils.udpListToMap(testcaseUDPs);
+        Set<String> udpNames = referenceableStringProperties.keySet();
+        DataTable dataTable = dataTableDAO.getTestcaseDataTable(testcaseId, true);
+        if (dataTable.getRows().size() > 0) {
+            IronTestUtils.checkDuplicatePropertyNameBetweenDataTableAndUPDs(udpNames, dataTable);
+            referenceableStringProperties.putAll(dataTable.getStringPropertiesInRow(0));
+        }
+
         String propertyExtractionInput = propertyExtractionRequest.getInput();
         PropertyExtractionResult result = new PropertyExtractionResult();
         try {
-            result.setPropertyValue(propertyExtractor.extract(propertyExtractionInput));
+            result.setPropertyValue(propertyExtractor.extract(propertyExtractionInput, referenceableStringProperties));
         } catch (Exception e) {
             LOGGER.error("Failed to extract property", e);
             result.setError(e.getMessage());

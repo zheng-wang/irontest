@@ -13,7 +13,7 @@ public class JSONPathPropertyExtractor extends PropertyExtractor {
     }
 
     @Override
-    public String extract(String input) throws JsonProcessingException {
+    public String _extract(String input) throws JsonProcessingException {
         Object value = JsonPath.read(input, getPath());
         if (value instanceof String) {
             return (String) value;         //  ObjectMapper().writeValueAsString returns the string surrounded with ".

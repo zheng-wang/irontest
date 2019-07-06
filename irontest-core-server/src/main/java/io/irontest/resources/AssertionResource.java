@@ -53,10 +53,11 @@ public class AssertionResource {
         Assertion assertion = assertionVerificationRequest.getAssertion();
 
         //  gather referenceable string properties
-        List<UserDefinedProperty> testcaseUDPs = udpDAO.findTestcaseUDPsByTeststepId(assertion.getTeststepId());
+        long testcaseId = teststepDAO.findTestcaseIdById(assertion.getTeststepId());
+        List<UserDefinedProperty> testcaseUDPs = udpDAO.findByTestcaseId(testcaseId);
         Map<String, String> referenceableStringProperties = IronTestUtils.udpListToMap(testcaseUDPs);
         Set<String> udpNames = referenceableStringProperties.keySet();
-        DataTable dataTable = dataTableDAO.getTestcaseDataTable(teststepDAO.findTestcaseIdById(assertion.getTeststepId()), true);
+        DataTable dataTable = dataTableDAO.getTestcaseDataTable(testcaseId, true);
         if (dataTable.getRows().size() > 0) {
             IronTestUtils.checkDuplicatePropertyNameBetweenDataTableAndUPDs(udpNames, dataTable);
             referenceableStringProperties.putAll(dataTable.getStringPropertiesInRow(0));

@@ -44,4 +44,7 @@ public interface PropertyExtractorDAO {
 
     @SqlUpdate("delete from property_extractor where id = :id")
     void deleteById(@Bind("id") long id);
+
+    @SqlQuery("select testcase_id from teststep where id = (select teststep_id from property_extractor where id = :id)")
+    long findTestcaseIdById(@Bind("id") long id);
 }

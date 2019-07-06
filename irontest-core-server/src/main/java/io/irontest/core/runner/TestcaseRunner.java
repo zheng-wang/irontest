@@ -168,9 +168,19 @@ public abstract class TestcaseRunner {
         } else {
             teststepRun.setResult(TestResult.PASSED);
             Object apiResponse = teststepRun.getResponse();
+
             verifyAssertions(teststep.getType(), teststep.getAction(), teststep.getAssertions(), apiResponse, teststepRun);
-            Map<String, String> extractedProperties =
-                    extractPropertiesOutOfAPIResponse(teststep.getType(), teststep.getPropertyExtractors(), apiResponse);
+
+            Map<String, String> extractedProperties = new HashMap<>();
+            try {
+                extractedProperties = extractPropertiesOutOfAPIResponse(teststep.getType(),
+                        teststep.getPropertyExtractors(), apiResponse, referenceableStringProperties);
+            } catch (Exception e) {
+                String errorMessage = "Failed to extract properties out of API response.";
+                LOGGER.error(errorMessage, e);
+                teststepRun.setErrorMessage(errorMessage + " " + e.getMessage());
+                teststepRun.setResult(TestResult.FAILED);
+            }
             referenceableStringProperties.putAll(extractedProperties);
         }
 
@@ -260,20 +270,18 @@ public abstract class TestcaseRunner {
     /**
      * Extract properties out of API response, and make the properties visible to the next test step run.
      */
-    private Map<String, String> extractPropertiesOutOfAPIResponse(String teststepType, List<PropertyExtractor> propertyExtractors, Object apiResponse) {
+    private Map<String, String> extractPropertiesOutOfAPIResponse(String teststepType,
+                                                                  List<PropertyExtractor> propertyExtractors,
+                                                                  Object apiResponse,
+                                                                  Map<String, String> referenceableStringProperties) throws Exception {
         Map<String, String> extractedProperties = new HashMap<>();
         for (PropertyExtractor propertyExtractor: propertyExtractors) {
             String propertyExtractionInput = null;
             if (Teststep.TYPE_HTTP.equals(teststepType)) {
                 propertyExtractionInput = ((HTTPAPIResponse) apiResponse).getHttpBody();
             }
-            String propertyValue;
-            try {
-                propertyValue = propertyExtractor.extract(propertyExtractionInput);
-                extractedProperties.put(propertyExtractor.getPropertyName(), propertyValue);
-            } catch (Exception e) {
-                LOGGER.error("Failed to extract property", e);
-            }
+            String propertyValue = propertyExtractor.extract(propertyExtractionInput, referenceableStringProperties);
+            extractedProperties.put(propertyExtractor.getPropertyName(), propertyValue);
         }
 
         return extractedProperties;

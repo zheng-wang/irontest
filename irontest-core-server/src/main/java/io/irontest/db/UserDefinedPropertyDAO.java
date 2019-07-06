@@ -56,9 +56,6 @@ public interface UserDefinedPropertyDAO {
     @SqlQuery("select * from udp where testcase_id = :testcaseId order by sequence")
     List<UserDefinedProperty> findByTestcaseId(@Bind("testcaseId") long testcaseId);
 
-    @SqlQuery("select u.* from udp u, teststep t where t.id = :teststepId and t.testcase_id = u.testcase_id")
-    List<UserDefinedProperty> findTestcaseUDPsByTeststepId(@Bind("teststepId") long teststepId);
-
     @SqlUpdate("update udp set name = :name, value = :value, updated = CURRENT_TIMESTAMP where id = :id")
     void update(@BindBean UserDefinedProperty udp);
 

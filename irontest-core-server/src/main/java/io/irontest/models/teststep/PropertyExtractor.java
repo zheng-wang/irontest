@@ -2,7 +2,12 @@ package io.irontest.models.teststep;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import io.irontest.core.MapValueLookup;
 import io.irontest.core.propertyextractor.JSONPathPropertyExtractor;
+import org.apache.commons.text.StrSubstitutor;
+
+import java.util.Map;
+import java.util.Set;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY,
         property = "type", visible = true)
@@ -57,5 +62,19 @@ public abstract class PropertyExtractor {
         this.path = path;
     }
 
-    public abstract String extract(String propertyExtractionInput) throws Exception;
+    public String extract(String propertyExtractionInput, Map<String, String> referenceableStringProperties) throws Exception {
+        MapValueLookup stringPropertyReferenceResolver = new MapValueLookup(referenceableStringProperties, true);
+
+        //  resolve string property references in path
+        this.path = new StrSubstitutor(stringPropertyReferenceResolver).replace(this.path);
+        Set<String> undefinedStringProperties = stringPropertyReferenceResolver.getUnfoundKeys();
+
+        if (!undefinedStringProperties.isEmpty()) {
+            throw new RuntimeException("String properties " + undefinedStringProperties + " not defined.");
+        }
+
+        return _extract(propertyExtractionInput);
+    }
+
+    public abstract String _extract(String propertyExtractionInput) throws Exception;
 }
