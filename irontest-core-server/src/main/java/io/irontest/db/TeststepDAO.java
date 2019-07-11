@@ -141,6 +141,10 @@ public interface TeststepDAO extends CrossReferenceDAO {
             assertion.setTeststepId(teststepId);
             assertionDAO().insert(assertion);
         }
+
+        for (PropertyExtractor propertyExtractor: teststep.getPropertyExtractors()) {
+            propertyExtractorDAO().insert(teststepId, propertyExtractor);
+        }
     }
 
     @SqlUpdate("update teststep set name = :name, description = :description, action = :action, request = :request, " +

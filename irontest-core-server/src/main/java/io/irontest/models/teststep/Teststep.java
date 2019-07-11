@@ -60,6 +60,7 @@ public class Teststep {
     private String requestFilename;
     @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     private List<Assertion> assertions = new ArrayList<>();
+    @JsonView(ResourceJsonViews.TestcaseExport.class)
     private List<PropertyExtractor> propertyExtractors = new ArrayList<>();
     @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY,

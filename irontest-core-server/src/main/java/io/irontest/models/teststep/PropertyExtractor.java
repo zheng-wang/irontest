@@ -2,8 +2,10 @@ package io.irontest.models.teststep;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonView;
 import io.irontest.core.MapValueLookup;
 import io.irontest.core.propertyextractor.JSONPathPropertyExtractor;
+import io.irontest.resources.ResourceJsonViews;
 import org.apache.commons.text.StrSubstitutor;
 
 import java.util.Map;
@@ -17,8 +19,11 @@ public abstract class PropertyExtractor {
     public static final String TYPE_JSONPATH = "JSONPath";
 
     private long id;
+    @JsonView(ResourceJsonViews.TestcaseExport.class)
     private String propertyName;
+    @JsonView(ResourceJsonViews.TestcaseExport.class)
     private String type;
+    @JsonView(ResourceJsonViews.TestcaseExport.class)
     private String path;
 
     public PropertyExtractor() {}
