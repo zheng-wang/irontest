@@ -2,8 +2,9 @@
 <div class="form-group">
   <label for="serviceURI" class="col-lg-2 control-label">Service URI</label>
   <div class="col-lg-8">
-    <input type="text" name="serviceURI" id="serviceURI" class="form-control" readonly
-           value="{{ teststep.endpoint.url }}">
+    <input name="serviceURI" id="serviceURI" type="text" class="form-control" ng-model="teststep.endpoint.url"
+           ng-change="autoSave(teststepForm.$valid)" spellcheck="false"
+           ng-readonly="appStatus.isForbidden() || teststep.endpoint.environment">
   </div>
 </div>
 
