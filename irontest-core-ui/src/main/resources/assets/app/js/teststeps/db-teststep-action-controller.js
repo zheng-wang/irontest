@@ -1,12 +1,27 @@
 'use strict';
 
 //  NOTICE:
-//    The $scope here prototypically inherits from the $scope of TeststepsController.
+//    The $scope here prototypically inherits from the $scope of TeststepsActionController.
 //    ng-include also creates a scope.
-angular.module('irontest').controller('DBTeststepController', ['$scope', 'Teststeps', 'IronTestUtils', '$timeout',
+angular.module('irontest').controller('DBTeststepActionController', ['$scope', 'Teststeps', 'IronTestUtils', '$timeout',
     '$http',
   function($scope, Teststeps, IronTestUtils, $timeout, $http) {
     var timer;
+
+    $scope.$watch('teststepParameters.isSQLRequestSingleSelectStatement', function(newValue, oldValue) {
+      if (oldValue === true && newValue === false) {
+        $scope.$parent.$parent.removeBottomPaneFromColumn();
+        $scope.$parent.$parent.showBottomPane = false;
+        $scope.$parent.$parent.bottomButtonModel.selectedButton = null;
+        $scope.showAssertionsButton = false;
+      } else if (oldValue === false && newValue === true) {
+        $scope.$parent.$parent.showBottomPane = false;
+        $scope.$parent.$parent.bottomButtonModel.selectedButton = null;
+        $scope.showAssertionsButton = true;
+      } else if (oldValue === true && newValue === true) {    //  on view being newly loaded (by such as refreshing the page)
+        $scope.showAssertionsButton = true;
+      }
+    });
 
     $scope.responseOptions = {
       enableFiltering: true,

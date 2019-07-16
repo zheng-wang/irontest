@@ -224,45 +224,48 @@ public abstract class TestcaseRunner {
         return result;
     }
 
+    /**
+     * Verify assertions against the API response.
+     * @param teststepType
+     * @param teststepAction
+     * @param assertions
+     * @param apiResponse
+     * @param teststepRun
+     */
     private void verifyAssertions(String teststepType, String teststepAction, List<Assertion> assertions,
                                   Object apiResponse, TeststepRun teststepRun) {
-        if (Teststep.TYPE_DB.equals(teststepType) && ((DBAPIResponse) apiResponse).getRowsJSON() == null) {
-            //  SQL inserts/deletes/updates, no assertion verification needed
-        } else {
-            //  verify assertions against the inputs
-            for (Assertion assertion : assertions) {
-                Object assertionVerificationInput = resolveAssertionVerificationInputFromAPIResponse(teststepType,
-                        teststepAction, assertion.getType(), apiResponse);
+        for (Assertion assertion : assertions) {
+            Object assertionVerificationInput = resolveAssertionVerificationInputFromAPIResponse(teststepType,
+                    teststepAction, assertion.getType(), apiResponse);
 
-                //  resolve assertion verification input2 if applicable
-                Object assertionVerificationInput2 = null;
-                if (Assertion.TYPE_HTTP_STUB_HIT.equals(assertion.getType())) {
-                    HTTPStubHitAssertionProperties otherProperties = (HTTPStubHitAssertionProperties) assertion.getOtherProperties();
-                    assertionVerificationInput2 = getTestcaseRunContext().getHttpStubMappingInstanceIds().get(otherProperties.getStubNumber());
-                }
+            //  resolve assertion verification input2 if applicable
+            Object assertionVerificationInput2 = null;
+            if (Assertion.TYPE_HTTP_STUB_HIT.equals(assertion.getType())) {
+                HTTPStubHitAssertionProperties otherProperties = (HTTPStubHitAssertionProperties) assertion.getOtherProperties();
+                assertionVerificationInput2 = getTestcaseRunContext().getHttpStubMappingInstanceIds().get(otherProperties.getStubNumber());
+            }
 
-                AssertionVerification verification = new AssertionVerification();
-                teststepRun.getAssertionVerifications().add(verification);
-                verification.setAssertion(assertion);
+            AssertionVerification verification = new AssertionVerification();
+            teststepRun.getAssertionVerifications().add(verification);
+            verification.setAssertion(assertion);
 
-                AssertionVerifier verifier = AssertionVerifierFactory.getInstance().create(
-                        assertion.getType(), referenceableStringProperties);
-                AssertionVerificationResult verificationResult;
-                try {
-                    verificationResult = verifier.verify(assertion, assertionVerificationInput, assertionVerificationInput2);
-                } catch (Exception e) {
-                    LOGGER.error("Failed to verify assertion", e);
-                    verificationResult = new AssertionVerificationResult();
-                    verificationResult.setResult(TestResult.FAILED);
-                    String message = e.getMessage();
-                    verificationResult.setError(message == null ? "null" : message);  // exception message could be null (though rarely)
-                }
+            AssertionVerifier verifier = AssertionVerifierFactory.getInstance().create(
+                    assertion.getType(), referenceableStringProperties);
+            AssertionVerificationResult verificationResult;
+            try {
+                verificationResult = verifier.verify(assertion, assertionVerificationInput, assertionVerificationInput2);
+            } catch (Exception e) {
+                LOGGER.error("Failed to verify assertion", e);
+                verificationResult = new AssertionVerificationResult();
+                verificationResult.setResult(TestResult.FAILED);
+                String message = e.getMessage();
+                verificationResult.setError(message == null ? "null" : message);  // exception message could be null (though rarely)
+            }
 
-                verification.setVerificationResult(verificationResult);
+            verification.setVerificationResult(verificationResult);
 
-                if (TestResult.FAILED == verificationResult.getResult()) {
-                    teststepRun.setResult(TestResult.FAILED);
-                }
+            if (TestResult.FAILED == verificationResult.getResult()) {
+                teststepRun.setResult(TestResult.FAILED);
             }
         }
     }

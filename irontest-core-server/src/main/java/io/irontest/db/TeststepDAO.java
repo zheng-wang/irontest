@@ -3,6 +3,7 @@ package io.irontest.db;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.irontest.core.MQTeststepActionDataBackup;
+import io.irontest.core.runner.SQLStatementType;
 import io.irontest.models.AppMode;
 import io.irontest.models.HTTPMethod;
 import io.irontest.models.Properties;
@@ -183,6 +184,10 @@ public interface TeststepDAO extends CrossReferenceDAO {
             processMQTeststep(oldTeststep, teststep);
         }
 
+        if (Teststep.TYPE_DB.equals(teststep.getType())) {
+            processDBTeststep(teststep);
+        }
+
         Endpoint oldEndpoint = oldTeststep.getEndpoint();
         Endpoint newEndpoint = teststep.getEndpoint();
         Long newEndpointId = newEndpoint == null ? null : newEndpoint.getId();
@@ -232,6 +237,12 @@ public interface TeststepDAO extends CrossReferenceDAO {
         } else if (TeststepRequestType.TEXT == teststep.getRequestType() && (
                 Teststep.ACTION_ENQUEUE.equals(newAction) || Teststep.ACTION_PUBLISH.equals(newAction))) {
             processMQTeststepRFH2Folders(teststep);
+        }
+    }
+
+    default void processDBTeststep(Teststep teststep) {
+        if (!IronTestUtils.isSQLRequestSingleSelectStatement((String) teststep.getRequest())) {
+            teststep.getAssertions().clear();
         }
     }
 

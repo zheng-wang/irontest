@@ -8,17 +8,17 @@ angular.module('irontest').controller('TeststepsActionController', ['$scope',
     $scope.showBottomPane = false;
     $scope.bottomButtonModel = { selectedButton: null};
 
-    var removeBottomPaneFromColumn = function() {
+    $scope.removeBottomPaneFromColumn = function() {
       var elementHeight = document.getElementById('bottomPane').offsetHeight;
       $scope.$broadcast('elementRemovedFromColumn', { elementHeight: elementHeight });
     };
 
     $scope.$watch('bottomButtonModel.selectedButton', function(newValue, oldValue) {
       if (oldValue && !newValue) {
-        removeBottomPaneFromColumn();
+        $scope.removeBottomPaneFromColumn();
         $scope.showBottomPane = false;
       } else if (oldValue && newValue) {
-        removeBottomPaneFromColumn();
+        $scope.removeBottomPaneFromColumn();
         $scope.showBottomPane = true;
       } else if (!oldValue && newValue) {
         $scope.showBottomPane = true;
