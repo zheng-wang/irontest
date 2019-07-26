@@ -68,7 +68,7 @@ public class DBTeststepRunner extends TeststepRunner {
                 public void afterExecution(PreparedStatement stmt, StatementContext ctx) throws SQLException {
                     ResultSetMetaData metaData = stmt.getMetaData();
                     for (int i = 1; i <= metaData.getColumnCount(); i++) {
-                        columnNames.add(metaData.getColumnLabel(i).toLowerCase());
+                        columnNames.add(metaData.getColumnLabel(i));
                     }
                 }
             });

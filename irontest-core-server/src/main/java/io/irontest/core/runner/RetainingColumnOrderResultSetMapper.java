@@ -20,7 +20,7 @@ public class RetainingColumnOrderResultSetMapper implements RowMapper<Map<String
         try {
             ResultSetMetaData resultSetMetaData = rs.getMetaData();
             for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
-                String columnName = resultSetMetaData.getColumnLabel(i).toLowerCase();
+                String columnName = resultSetMetaData.getColumnLabel(i);
                 orderedRow.put(columnName, rs.getObject(columnName));
             }
         } catch (SQLException e) {
