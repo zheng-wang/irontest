@@ -8,7 +8,6 @@ angular.module('irontest').controller('MQTeststepActionController', ['$scope', '
   function($scope, IronTestUtils, $timeout, $http, Upload, $window, Teststeps) {
     var timer;
     $scope.steprun = {};
-    $scope.textMessageActiveTabIndex = 0;
 
     var clearPreviousRunStatus = function() {
       if (timer) $timeout.cancel(timer);
@@ -86,7 +85,6 @@ angular.module('irontest').controller('MQTeststepActionController', ['$scope', '
       var header = $scope.teststep.otherProperties.rfh2Header;
       if (header) {
         $scope.teststep.otherProperties.rfh2Header = null;
-        $scope.textMessageTabSelected(0);
         $scope.update(isValid);
       } else {
         $scope.teststep.otherProperties.rfh2Header = { folders: [] };
@@ -97,19 +95,33 @@ angular.module('irontest').controller('MQTeststepActionController', ['$scope', '
     $scope.addRFH2Folder = function(isValid) {
       var folders = $scope.teststep.otherProperties.rfh2Header.folders;
       folders.push({ string: '<RFH2Folder></RFH2Folder>' });
-      $scope.textMessageActiveTabIndex = folders.length;
+      $timeout(function() {
+        $scope.textMessageActiveTabIndex = folders.length;
+      }, 200);
       $scope.update(isValid);
     };
 
-    $scope.textMessageTabSelected = function(index) {
-      $scope.textMessageActiveTabIndex = index;
+    $scope.autoSaveRFH2Folder = function(isValid) {
+      var selectedTab = $scope.textMessageActiveTabIndex;
+      var successCallback = function() {
+        $timeout(function() {
+          $scope.textMessageActiveTabIndex = selectedTab;
+        });
+      };
+      $scope.autoSave(isValid, successCallback);
     };
 
     $scope.deleteRFH2Folder = function(isValid) {
+      var selectedTab = $scope.textMessageActiveTabIndex;
       var folders = $scope.teststep.otherProperties.rfh2Header.folders;
       folders.splice($scope.textMessageActiveTabIndex - 1, 1);
-      $scope.textMessageActiveTabIndex = $scope.textMessageActiveTabIndex - 1;
-      $scope.update(isValid);
+      $scope.textMessageActiveTabIndex = selectedTab - 1;    //  change index immediately for better UX (no blink)
+      var successCallback = function() {
+        $timeout(function() {
+          $scope.textMessageActiveTabIndex = selectedTab - 1;   //  redo the change-index due to $scope.teststep being refreshed causing the RFH2 folder tabs being recreated and tabset index being set to 0
+        });
+      };
+      $scope.update(isValid, successCallback);
     };
 
     $scope.uploadRequestFile = function(file) {

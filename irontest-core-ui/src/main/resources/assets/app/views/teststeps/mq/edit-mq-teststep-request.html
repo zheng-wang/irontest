@@ -27,37 +27,25 @@
   </div>
 </div>
 
-<div class="form-group" ng-if="teststep.requestType === 'Text'">
-  <div class="col-lg-10">
-    <ul class="nav nav-tabs">
-      <li ng-class="{ 'active' : textMessageActiveTabIndex === 0 }" ng-click="textMessageTabSelected(0)">
-        <a data-toggle="tab" href="#textMessageTab0" target="_self">Body</a>
-      </li>
-      <li ng-if="includeRfh2Header"
-          ng-repeat="folder in teststep.otherProperties.rfh2Header.folders track by $index + 1"
-          ng-class="{ 'active' : textMessageActiveTabIndex === $index + 1 }"
-          ng-click="textMessageTabSelected($index + 1)">
-        <a data-toggle="tab" href="#textMessageTab{{$index + 1}}" target="_self">{{folder.name}}</a>
-      </li>
-    </ul>
-    <div class="tab-content">
-      <div id="textMessageTab0" class="tab-pane" ng-class="{ 'active' : textMessageActiveTabIndex === 0 }">
-        <div class="form-group"></div> <!-- spacer -->
+<!-- There is no element addition/removal in column requirement on this view.
+    Use the height-adjustable-element-in-column directive only to give the <div> an initial fixed height, so that the
+    full-height class on the embedded <div> can be effective . -->
+<div class="form-group" ng-if="teststep.requestType === 'Text'" height-adjustable-element-in-column="0.7">
+  <div class="col-lg-10 full-height">
+    <uib-tabset active="$parent.$parent.$parent.$parent.textMessageActiveTabIndex" class="mq-message-details-tabset">
+      <uib-tab index="0" heading="Body">
         <div class="col-lg-12">
-            <textarea ng-model="teststep.request" ng-change="autoSave(teststepForm.$valid)" class="form-control"
-                      rows="23" spellcheck="false" ng-readonly="appStatus.isForbidden()"></textarea>
+          <textarea class="form-control" ng-model="teststep.request" ng-change="autoSave(teststepForm.$valid)"
+                    ng-readonly="appStatus.isForbidden()" spellcheck="false"></textarea>
         </div>
-      </div>
-      <div ng-if="includeRfh2Header" id="textMessageTab{{$index + 1}}"
-           class="tab-pane" ng-class="{ 'active' : textMessageActiveTabIndex === $index + 1 }"
-           ng-repeat="folder in teststep.otherProperties.rfh2Header.folders track by $index + 1">
-        <div class="form-group"></div> <!-- spacer -->
+      </uib-tab>
+      <uib-tab index="$index + 1" ng-repeat="folder in teststep.otherProperties.rfh2Header.folders" heading="{{ folder.name }}">
         <div class="col-lg-12">
-            <textarea ng-model="folder.string" ng-change="autoSave(teststepForm.$valid)" class="form-control" rows="23"
-                      spellcheck="false" ng-readonly="appStatus.isForbidden()"></textarea>
+          <textarea ng-model="folder.string" ng-change="autoSaveRFH2Folder(teststepForm.$valid)" class="form-control"
+                    ng-readonly="appStatus.isForbidden()" spellcheck="false"></textarea>
         </div>
-      </div>
-    </div>
+      </uib-tab>
+    </uib-tabset>
   </div>
 </div>
 
