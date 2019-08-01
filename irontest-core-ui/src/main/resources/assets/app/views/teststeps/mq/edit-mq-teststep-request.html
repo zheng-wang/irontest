@@ -32,7 +32,7 @@
     full-height class on the embedded <div> can be effective . -->
 <div class="form-group" ng-if="teststep.requestType === 'Text'" height-adjustable-element-in-column="0.7">
   <div class="col-lg-10 full-height">
-    <uib-tabset active="$parent.$parent.$parent.$parent.textMessageActiveTabIndex" class="mq-message-details-tabset">
+    <uib-tabset active="textMessageTabs.activeIndex" class="mq-message-details-tabset">
       <uib-tab index="0" heading="Body">
         <div class="col-lg-12">
           <textarea class="form-control" ng-model="teststep.request" ng-change="autoSave(teststepForm.$valid)"
