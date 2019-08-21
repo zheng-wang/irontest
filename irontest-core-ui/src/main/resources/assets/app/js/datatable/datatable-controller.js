@@ -31,6 +31,12 @@ angular.module('irontest').controller('DataTableController', ['$scope', 'IronTes
           }
         });
 
+        gridApi.colMovable.on.columnPositionChanged($scope, function(colDef, originalPosition, newPosition) {
+          console.log(colDef);
+          console.log(originalPosition);
+          console.log(newPosition);
+        });
+
         $scope.$parent.handleTestcaseRunResultOutlineAreaDisplay();
       }
     };
