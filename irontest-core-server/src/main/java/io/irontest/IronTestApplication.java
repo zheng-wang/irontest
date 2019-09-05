@@ -39,7 +39,6 @@ import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.jdbi.v3.core.Jdbi;
 
 import java.io.File;
-import java.lang.reflect.Field;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
@@ -122,20 +121,6 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
                 .notifier(new WireMockFileNotifier())
         );
         wireMockServer.start();
-
-        //  To enable connecting to SQL Server via Windows Authentication, alter the java.library.path for loading the
-        //  sqljdbc_auth.dll.
-        //  System.load(System.getProperty("user.dir") + "/lib/jdbc/sqlserver/sqljdbc_auth.dll") is not effective, as
-        //  the SQL Server JDBC driver is only looking at java.library.path.
-        System.setProperty("java.library.path", System.getProperty("user.dir") + "/lib/jdbc/sqlserver;" +
-                System.getProperty("java.library.path"));
-        try {
-            Field fieldSysPath = ClassLoader.class.getDeclaredField("sys_paths");
-            fieldSysPath.setAccessible(true);
-            fieldSysPath.set(null, null);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
 
         createSystemResources(configuration, environment, wireMockServer);
         createSampleResources(configuration, environment);
