@@ -21,6 +21,7 @@ public class IIBTeststepRunner extends TeststepRunner {
         try {
             iib100URLs = new URL[] {
                     new File(userDir, "lib/iib/v100/IntegrationAPI.jar").toURI().toURL(),
+                    new File(userDir, "lib/iib/v100/jetty-client.jar").toURI().toURL(),
                     new File(userDir, "lib/iib/v100/jetty-io.jar").toURI().toURL(),
                     new File(userDir, "lib/iib/v100/jetty-util.jar").toURI().toURL(),
                     new File(userDir, "lib/iib/v100/websocket-api.jar").toURI().toURL(),
