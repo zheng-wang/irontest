@@ -17,7 +17,8 @@
         <lib.jdbc.oracle>lib/jdbc/oracle</lib.jdbc.oracle>
         <lib.jdbc.sqlserver>lib/jdbc/sqlserver</lib.jdbc.sqlserver>
         <lib.mq>lib/mq</lib.mq>
-        <jdbc.driver.oracle>${lib.jdbc.oracle}/ojdbc6.jar</jdbc.driver.oracle>
+        <jdbc.driver.oracle.6>${lib.jdbc.oracle}/ojdbc6.jar</jdbc.driver.oracle.6>
+        <jdbc.driver.oracle.8>${lib.jdbc.oracle}/ojdbc8.jar</jdbc.driver.oracle.8>
         <jdbc.driver.sqlserver>${lib.jdbc.sqlserver}/sqljdbc41.jar</jdbc.driver.sqlserver>
         <mq.jar.com.ibm.mq>${lib.mq}/com.ibm.mq.jar</mq.jar.com.ibm.mq>
         <mq.jar.com.ibm.mq.jmqi>${lib.mq}/com.ibm.mq.jmqi.jar</mq.jar.com.ibm.mq.jmqi>
@@ -133,7 +134,7 @@
                                         <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                             <manifestEntries>
                                                 <Main-Class>io.irontest.IronTestApplication</Main-Class>
-                                                <Class-Path>${jdbc.driver.oracle} ${jdbc.driver.sqlserver} ${mq.jar.com.ibm.mq} ${mq.jar.com.ibm.mq.jmqi} ${mq.jar.com.ibm.mq.commonservices} ${mq.jar.com.ibm.mq.pcf} ${mq.jar.com.ibm.mq.headers} ${mq.jar.connector}</Class-Path>
+                                                <Class-Path>${jdbc.driver.oracle.6} ${jdbc.driver.oracle.8} ${jdbc.driver.sqlserver} ${mq.jar.com.ibm.mq} ${mq.jar.com.ibm.mq.jmqi} ${mq.jar.com.ibm.mq.commonservices} ${mq.jar.com.ibm.mq.pcf} ${mq.jar.com.ibm.mq.headers} ${mq.jar.connector}</Class-Path>
                                             </manifestEntries>
                                         </transformer>
                                         <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
@@ -235,7 +236,8 @@
                                 <configuration>
                                     <mainClass>io.irontest.IronTestApplication</mainClass>
                                     <additionalClasspathElements>
-                                        <additionalClasspathElement>../${jdbc.driver.oracle}</additionalClasspathElement>
+                                        <additionalClasspathElement>../${jdbc.driver.oracle.6}</additionalClasspathElement>
+                                        <additionalClasspathElement>../${jdbc.driver.oracle.8}</additionalClasspathElement>
                                         <additionalClasspathElement>../${jdbc.driver.sqlserver}</additionalClasspathElement>
                                     </additionalClasspathElements>
                                     <systemProperties>
