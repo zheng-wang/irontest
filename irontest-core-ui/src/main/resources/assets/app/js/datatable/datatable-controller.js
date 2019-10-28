@@ -32,9 +32,19 @@ angular.module('irontest').controller('DataTableController', ['$scope', 'IronTes
         });
 
         gridApi.colMovable.on.columnPositionChanged($scope, function(colDef, originalPosition, newPosition) {
-          console.log(colDef);
-          console.log(originalPosition);
-          console.log(newPosition);
+          var toSequence = $scope.dataTableGridOptions.columnDefs[newPosition].dataTableColumnSequence;
+
+          DataTable.moveColumn({
+            testcaseId: $scope.testcase.id,
+            fromSequence: colDef.dataTableColumnSequence,
+            toSequence: toSequence
+          }, {}, function(dataTable) {
+            $scope.$emit('successfullySaved');
+              updateDataTableGrid(dataTable);
+              $scope.dataTable = dataTable;    // this is necessary as server side will change sequence values of data table columns (including the dragged column and some not-dragged columns).
+          }, function(response) {
+            IronTestUtils.openErrorHTTPResponseModal(response);
+          });
         });
 
         $scope.$parent.handleTestcaseRunResultOutlineAreaDisplay();
@@ -64,17 +74,19 @@ angular.module('irontest').controller('DataTableController', ['$scope', 'IronTes
       });
     };
 
-    var getDefaultColumnDef = function(dataTableColumnId, columnName, dataTableColumnType) {
+    var getDefaultColumnDef = function(dataTableColumnId, columnName, dataTableColumnType, dataTableColumnSequence) {
       return {
         dataTableColumnId: dataTableColumnId,    //  not standard ui grid property for column def
         dataTableColumnType: dataTableColumnType,    //  not standard ui grid property for column def
+        dataTableColumnSequence: dataTableColumnSequence,    //  not standard ui grid property for column def
         name: columnName,
         displayName: columnName,  //  need this line to avoid underscore in column name is not displayed in column header
         // determine column width according to the length of column name
         // assuming each character deserves 9 pixels (friendly to uppercase letters)
         // 30 pixels for displaying grid header menu arrow
         width: columnName.length * 9 + 30,
-        enableColumnMenu: columnName === 'Caption' ? false : true,
+        enableColumnMenu: dataTableColumnSequence === 1 ? false : true,
+        enableColumnMoving: dataTableColumnSequence === 1 ? false : true,
         enableHiding: false,
         menuItems: [
           {
@@ -108,7 +120,7 @@ angular.module('irontest').controller('DataTableController', ['$scope', 'IronTes
       for (var i = 0; i < dataTable.columns.length; i++) {
         var dataTableColumn = dataTable.columns[i];
         var columnName = dataTableColumn.name;
-        var uiGridColumn = getDefaultColumnDef(dataTableColumn.id, columnName, dataTableColumn.type);
+        var uiGridColumn = getDefaultColumnDef(dataTableColumn.id, columnName, dataTableColumn.type, dataTableColumn.sequence);
         if (lastColumnHeaderInEditMode === true && i === dataTable.columns.length - 1) {
           uiGridColumn.headerCellTemplate = DATA_TABLE_GRID_EDITABLE_HEADER_CELL_TEMPLATE;
         }
@@ -132,7 +144,7 @@ angular.module('irontest').controller('DataTableController', ['$scope', 'IronTes
       var deletionColumn = {
          name: 'delete.1',  //  give this column a name that is not able to be created by user
          displayName: 'Delete', width: 70, minWidth: 60, enableCellEdit: false, enableColumnMenu: false,
-         cellTemplate: 'dataTableGridDeleteCellTemplate.html'
+         enableColumnMoving: false, cellTemplate: 'dataTableGridDeleteCellTemplate.html'
       };
       $scope.dataTableGridOptions.columnDefs.push(deletionColumn);
       $scope.dataTableGridOptions.data = dataTable.rows;

@@ -50,8 +50,16 @@ public class DataTableResource {
     @POST @PermitAll
     @Path("testcases/{testcaseId}/datatable/renameColumn")
     public DataTable renameColumn(@PathParam("testcaseId") long testcaseId, @QueryParam("columnId") long columnId,
-                             @QueryParam("newName") String newName) {
+                                  @QueryParam("newName") String newName) {
         dataTableColumnDAO.rename(columnId, newName);
+        return dataTableDAO.getTestcaseDataTable(testcaseId, false);
+    }
+
+    @POST @PermitAll
+    @Path("testcases/{testcaseId}/datatable/moveColumn")
+    public DataTable moveColumn(@PathParam("testcaseId") long testcaseId,
+                                @QueryParam("fromSequence") short fromSequence, @QueryParam("toSequence") short toSequence) {
+        dataTableColumnDAO.moveInTestcase(testcaseId, fromSequence, toSequence);
         return dataTableDAO.getTestcaseDataTable(testcaseId, false);
     }
 

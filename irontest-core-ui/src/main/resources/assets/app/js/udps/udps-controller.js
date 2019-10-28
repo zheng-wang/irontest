@@ -76,7 +76,7 @@ angular.module('irontest').controller('UDPsController', ['$scope', 'UDPs', 'Iron
             toSequence: toSequence
           }, {}, function(response) {
             $scope.$emit('successfullySaved');
-            $scope.udps = response;  // this is necessary as server side will change sequence values of udps.
+            $scope.udps = response;  // this is necessary as server side will change sequence values of udps (including the dragged udp and some not-dragged upds).
           }, function(response) {
             IronTestUtils.openErrorHTTPResponseModal(response);
           });

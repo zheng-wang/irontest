@@ -22,6 +22,12 @@ angular.module('irontest').factory('DataTable', ['$resource',
           verb: 'renameColumn'
         }
       },
+      moveColumn: {
+        method: 'POST',
+        params: {
+          verb: 'moveColumn'
+        }
+      },
       addRow: {
         method: 'POST',
         params: {

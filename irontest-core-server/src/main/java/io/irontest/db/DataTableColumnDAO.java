@@ -84,4 +84,38 @@ public interface DataTableColumnDAO extends CrossReferenceDAO {
             "select name, type, sequence, :targetTestcaseId from datatable_column where testcase_id = :sourceTestcaseId")
     void duplicateByTestcase(@Bind("sourceTestcaseId") long sourceTestcaseId,
                              @Bind("targetTestcaseId") long targetTestcaseId);
+
+    @SqlQuery("select * from datatable_column where testcase_id = :testcaseId and sequence = :sequence")
+    DataTableColumn findBySequence(@Bind("testcaseId") long testcaseId, @Bind("sequence") short sequence);
+
+    @SqlUpdate("update datatable_column set sequence = :newSequence, updated = CURRENT_TIMESTAMP where id = :id")
+    void updateSequenceById(@Bind("id") long id, @Bind("newSequence") short newSequence);
+
+    @SqlUpdate("update datatable_column set " +
+            "sequence = case when :direction = 'left' then sequence - 1 else sequence + 1 end, " +
+            "updated = CURRENT_TIMESTAMP " +
+            "where testcase_id = :testcaseId and sequence >= :firstSequence and sequence <= :lastSequence")
+    void batchMove(@Bind("testcaseId") long testcaseId,
+                   @Bind("firstSequence") short firstSequence,
+                   @Bind("lastSequence") short lastSequence,
+                   @Bind("direction") String direction);
+
+    @Transaction
+    default void moveInTestcase(long testcaseId, short fromSequence, short toSequence) {
+        if (fromSequence != toSequence) {
+            long draggedColumnId = findBySequence(testcaseId, fromSequence).getId();
+
+            //  shelve the dragged column first
+            updateSequenceById(draggedColumnId, (short) -1);
+
+            if (fromSequence < toSequence) {
+                batchMove(testcaseId, (short) (fromSequence + 1), toSequence, "left");
+            } else {
+                batchMove(testcaseId, toSequence, (short) (fromSequence - 1), "right");
+            }
+
+            //  move the dragged column last
+            updateSequenceById(draggedColumnId, toSequence);
+        }
+    }
 }

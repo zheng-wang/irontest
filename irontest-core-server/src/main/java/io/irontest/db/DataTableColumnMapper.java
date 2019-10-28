@@ -14,6 +14,7 @@ public class DataTableColumnMapper implements RowMapper<DataTableColumn> {
         result.setId(rs.getLong("id"));
         result.setName(rs.getString("name"));
         result.setType(DataTableColumnType.getByText(rs.getString("type")));
+        result.setSequence(rs.getShort("sequence"));
         return result;
     }
 }

@@ -11,6 +11,7 @@ public class DataTableColumn {
     private String name;
     @JsonView({ResourceJsonViews.DataTableUIGrid.class, ResourceJsonViews.TestcaseExport.class})
     private DataTableColumnType type;
+    @JsonView(ResourceJsonViews.DataTableUIGrid.class)
     private short sequence;
 
     public long getId() {
