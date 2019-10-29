@@ -25,7 +25,6 @@ import static io.irontest.IronTestConstants.*;
 
 public abstract class TestcaseRunner {
     private Testcase testcase;
-    private boolean testcaseHasWaitForProcessingCompletionAction = false;
     private UtilsDAO utilsDAO;
     private TestcaseRunDAO testcaseRunDAO;
     private Logger LOGGER;
@@ -42,12 +41,8 @@ public abstract class TestcaseRunner {
         this.testcaseRunContext.setWireMockServer(wireMockServer);
     }
 
-    protected Testcase getTestcase() {
+    Testcase getTestcase() {
         return testcase;
-    }
-
-    boolean isTestcaseHasWaitForProcessingCompletionAction() {
-        return testcaseHasWaitForProcessingCompletionAction;
     }
 
     TestcaseRunDAO getTestcaseRunDAO() {
@@ -110,9 +105,9 @@ public abstract class TestcaseRunner {
         for (Teststep teststep : testcase.getTeststeps()) {
             if (Teststep.TYPE_IIB.equals(teststep.getType()) &&
                     Teststep.ACTION_WAIT_FOR_PROCESSING_COMPLETION.equals(teststep.getAction())) {
-                //  add Wait step
-                testcaseHasWaitForProcessingCompletionAction = true;
-                testcase.getTeststeps().add(0, new Teststep(Teststep.TYPE_WAIT));
+                Teststep waitUntilNextSecondStep = new Teststep(Teststep.TYPE_WAIT_UNTIL_NEXT_SECOND);
+                waitUntilNextSecondStep.setName("Wait until next second");
+                testcase.getTeststeps().add(0, waitUntilNextSecondStep);
                 break;
             }
         }

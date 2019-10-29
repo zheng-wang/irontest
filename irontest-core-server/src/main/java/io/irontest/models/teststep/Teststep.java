@@ -19,6 +19,8 @@ public class Teststep {
     public static final String TYPE_IIB = "IIB";
     public static final String TYPE_AMQP = "AMQP";
     public static final String TYPE_WAIT = "Wait";
+
+    public static final String TYPE_WAIT_UNTIL_NEXT_SECOND = "WaitUntilNextSecond";
     public static final String TYPE_HTTP_STUBS_SETUP = "HTTPStubsSetup";
     public static final String TYPE_HTTP_STUB_REQUESTS_CHECK = "HTTPStubRequestsCheck";
 

@@ -11,7 +11,6 @@ import io.irontest.models.testrun.TestcaseIndividualRun;
 import io.irontest.models.testrun.TestcaseRun;
 import io.irontest.models.testrun.TeststepRun;
 import io.irontest.models.teststep.Teststep;
-import io.irontest.models.teststep.WaitTeststepProperties;
 import io.irontest.utils.IronTestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,14 +50,6 @@ public class DataDrivenTestcaseRunner extends TestcaseRunner {
             LOGGER.info("Start individually running test case with data table row: " + individualRun.getCaption());
             individualRun.setResult(TestResult.PASSED);
             getTestcaseRunContext().setTestcaseIndividualRunStartTime(individualRun.getStartTime());
-            //  update IIB test case first step
-            if (isTestcaseHasWaitForProcessingCompletionAction()) {
-                long secondFraction = individualRun.getStartTime().getTime() % 1000;   //  milliseconds
-                long millisecondsUntilNextSecond = 1000 - secondFraction;
-                Teststep waitStep = getTestcase().getTeststeps().get(0);
-                waitStep.setName("Wait " + millisecondsUntilNextSecond + " milliseconds");
-                waitStep.setOtherProperties(new WaitTeststepProperties(millisecondsUntilNextSecond));
-            }
             getReferenceableStringProperties().put(IMPLICIT_PROPERTY_NAME_TEST_CASE_INDIVIDUAL_START_TIME,
                     IMPLICIT_PROPERTY_DATE_TIME_FORMAT.format(individualRun.getStartTime()));
             individualRun.setCaption(dataTableRow.get(DataTableColumn.COLUMN_NAME_CAPTION).getValue());

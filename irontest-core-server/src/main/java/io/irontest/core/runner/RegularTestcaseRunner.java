@@ -10,7 +10,6 @@ import io.irontest.models.testrun.RegularTestcaseRun;
 import io.irontest.models.testrun.TestcaseRun;
 import io.irontest.models.testrun.TeststepRun;
 import io.irontest.models.teststep.Teststep;
-import io.irontest.models.teststep.WaitTeststepProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,15 +28,6 @@ public class RegularTestcaseRunner extends TestcaseRunner {
 
         preProcessing();
         startTestcaseRun(testcaseRun);
-
-        //  update IIB test case first step
-        if (isTestcaseHasWaitForProcessingCompletionAction()) {
-            long secondFraction = getTestcaseRunContext().getTestcaseRunStartTime().getTime() % 1000;   //  milliseconds
-            long millisecondsUntilNextSecond = 1000 - secondFraction;
-            Teststep waitStep = getTestcase().getTeststeps().get(0);
-            waitStep.setName("Wait " + millisecondsUntilNextSecond + " milliseconds");
-            waitStep.setOtherProperties(new WaitTeststepProperties(millisecondsUntilNextSecond));
-        }
 
         //  run test steps
         for (Teststep teststep : getTestcase().getTeststeps()) {
