@@ -97,8 +97,6 @@ public class TeststepResource {
     @PUT @Path("{teststepId}")
     @PermitAll
     public TeststepWrapper update(Teststep teststep) throws Exception {
-        Thread.sleep(100);  //  workaround for Chrome's 'Failed to load response data' problem (still exist in Chrome 65)
-
         teststepDAO.update(teststep);
 
         TeststepWrapper wrapper = new TeststepWrapper();
@@ -125,8 +123,6 @@ public class TeststepResource {
     @POST @Path("{teststepId}/run")
     @PermitAll
     public BasicTeststepRun run(Teststep teststep) throws Exception {
-        Thread.sleep(100);  //  workaround for Chrome's 'Failed to load response data' problem (still exist in Chrome 65)
-
         //  fetch request binary if its type is file
         if (teststep.getRequestType() == TeststepRequestType.FILE) {
             teststep.setRequest(teststepDAO.getBinaryRequestById(teststep.getId()));

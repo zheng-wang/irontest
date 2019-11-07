@@ -48,8 +48,6 @@ public class AssertionResource {
     @POST @Path("assertions/{assertionId}/verify")
     @PermitAll
     public AssertionVerificationResult verify(AssertionVerificationRequest assertionVerificationRequest) throws InterruptedException {
-        Thread.sleep(100);  //  workaround for Chrome's 'Failed to load response data' problem (still exist in Chrome 65)
-
         Assertion assertion = assertionVerificationRequest.getAssertion();
 
         //  gather referenceable string properties
