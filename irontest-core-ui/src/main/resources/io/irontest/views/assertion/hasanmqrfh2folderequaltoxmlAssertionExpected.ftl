@@ -1,1 +1,1 @@
-<textarea class="form-control" rows="6" readonly>${ (verification.assertion.otherProperties.xml??)?then(verification.assertion.otherProperties.xml, 'null') }</textarea>
+<textarea class="form-control" rows="6" readonly>${ (verification.assertion.otherProperties.xml??)?then(ironTestUtilsAdatper.prettyPrintJSONOrXML(verification.assertion.otherProperties.xml), 'null') }</textarea>
