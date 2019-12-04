@@ -6,7 +6,7 @@
       Body:
     </div>
     <div class="col-lg-11">
-      <textarea class="form-control" rows="8" readonly>${ stepRun.response.bodyAsText }</textarea>
+      <textarea class="form-control" rows="8" readonly>${ ironTestUtilsAdatper.prettyPrintJSONOrXML(stepRun.response.bodyAsText) }</textarea>
     </div>
   </div>
   <#if stepRun.response.mqrfh2Header??>
@@ -19,7 +19,7 @@
         <#list stepRun.response.mqrfh2Header.folders as mqrfh2Folder>
           <div class="row">
             <div class="col-lg-12">
-              <textarea class="form-control" rows="8" readonly>${ mqrfh2Folder.string }</textarea>
+              <textarea class="form-control" rows="8" readonly>${ ironTestUtilsAdatper.prettyPrintJSONOrXML(mqrfh2Folder.string) }</textarea>
             </div>
           </div>
           <div class="form-group"></div> <!-- spacer -->

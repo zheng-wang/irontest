@@ -56,11 +56,11 @@
       <div class="form-group">
         <div class="col-lg-6">
           <#if stubMapping.spec.request.bodyPatterns??>
-            <textarea name="requestBody" rows="9" class="form-control" readonly>${ (stubMapping.spec.request.bodyPatterns?first).value }</textarea>
+            <textarea name="requestBody" rows="9" class="form-control" readonly>${ ironTestUtilsAdatper.prettyPrintJSONOrXML((stubMapping.spec.request.bodyPatterns?first).value) }</textarea>
           </#if>
         </div>
         <div class="col-lg-6">
-          <textarea name="responseBody" rows="9" class="form-control" readonly>${ (stubMapping.spec.response.body??)?then(stubMapping.spec.response.body, '') }</textarea>
+          <textarea name="responseBody" rows="9" class="form-control" readonly>${ ironTestUtilsAdatper.prettyPrintJSONOrXML((stubMapping.spec.response.body??)?then(stubMapping.spec.response.body, '')) }</textarea>
         </div>
       </div>
     </form>

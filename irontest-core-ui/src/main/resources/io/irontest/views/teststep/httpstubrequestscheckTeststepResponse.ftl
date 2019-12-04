@@ -47,10 +47,10 @@
           </div>
           <div class="form-group">
             <div class="col-lg-6">
-              <textarea name="requestBody" rows="9" class="form-control" readonly>${ stubRequest.request.bodyAsString }</textarea>
+              <textarea name="requestBody" rows="9" class="form-control" readonly>${ ironTestUtilsAdatper.prettyPrintJSONOrXML(stubRequest.request.bodyAsString) }</textarea>
             </div>
             <div class="col-lg-6">
-              <textarea name="responseBody" rows="9" class="form-control" readonly>${ stubRequest.response.bodyAsString }</textarea>
+              <textarea name="responseBody" rows="9" class="form-control" readonly>${ ironTestUtilsAdatper.prettyPrintJSONOrXML(stubRequest.response.bodyAsString) }</textarea>
             </div>
           </div>
         </form>

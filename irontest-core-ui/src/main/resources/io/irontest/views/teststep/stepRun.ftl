@@ -60,7 +60,7 @@
             <#if stepRun.teststep.type == "MQ">
               <#t><#include "${stepRun.teststep.type?lower_case}TeststepRequest.ftl">
             <#else>
-              <textarea class="form-control" rows="8" readonly>${ stepRun.teststep.request }</textarea>
+              <textarea class="form-control" rows="8" readonly>${ ironTestUtilsAdatper.prettyPrintJSONOrXML(stepRun.teststep.request) }</textarea>
             </#if>
           </div>
         </div>

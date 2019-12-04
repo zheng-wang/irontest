@@ -8,13 +8,19 @@ import io.irontest.models.testrun.TeststepRun;
  */
 public class TeststepRunView extends View {
     private final TeststepRun teststepRun;
+    private IronTestUtilsFreeMarkerAdapter ironTestUtilsAdapter;
 
     public TeststepRunView(TeststepRun teststepRun) {
         super("../views/teststep/stepRun.ftl");
         this.teststepRun = teststepRun;
+        this.ironTestUtilsAdapter = new IronTestUtilsFreeMarkerAdapter();
     }
 
     public TeststepRun getStepRun() {
         return teststepRun;
+    }
+
+    public IronTestUtilsFreeMarkerAdapter getIronTestUtilsAdatper() {
+        return ironTestUtilsAdapter;
     }
 }
