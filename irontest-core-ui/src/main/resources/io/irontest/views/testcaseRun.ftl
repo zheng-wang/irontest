@@ -15,7 +15,6 @@
   <style>
     <#include "/META-INF/resources/webjars/bootstrap/${bootstrap.version}/dist/css/bootstrap.min.css">
   </style>
-
   <#-- Custom CSS -->
   <style>
     <#include "/assets/app/css/html-report.css">
@@ -23,6 +22,11 @@
 </head>
 
 <body>
+
+<#-- jQuery; ${jquery.version} is Maven property (for filtering) -->
+<script><#include "/META-INF/resources/webjars/jquery/${jquery.version}/dist/jquery.min.js"></script>
+<#-- Bootstrap js; ${bootstrap.version} is Maven property (for filtering) -->
+<script><#include "/META-INF/resources/webjars/bootstrap/${bootstrap.version}/dist/js/bootstrap.min.js"></script>
 
 <div class="container-fluid">
   <div class="row">

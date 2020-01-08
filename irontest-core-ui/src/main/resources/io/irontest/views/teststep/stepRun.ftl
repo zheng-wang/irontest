@@ -29,53 +29,37 @@
   </div>
 </div>
 
-<#-- Request info -->
-<#if stepRun.teststep.request?? || (stepRun.teststep.otherProperties.httpHeaders?? &&
-    stepRun.teststep.otherProperties.httpHeaders?size > 0)>   <!-- for an HTTP/SOAP test step, it seems possible for the HTTP request body to be null while HTTP request headers exist -->
+<#-- Request, Response and Assertions info -->
+<#assign teststepTypes = ["SOAP", "DB", "HTTP", "MQ", "AMQP"]>
+<#if teststepTypes?seq_contains(stepRun.teststep.type)>
   <div class="form-group"></div> <!-- spacer -->
-  <div class="row">
-    <div class="col-lg-1">Request:</div>
-    <div class="col-lg-11">
-      <#-- Extra request info for test step that has request HTTP headers -->
-      <#if stepRun.teststep.otherProperties.httpHeaders?? &&
-          (stepRun.teststep.otherProperties.httpHeaders?size > 0)>
-        <div class="row">
-          <div class="col-lg-12">HTTP Headers:</div>
-        </div>
-        <div class="form-group"></div> <!-- spacer -->
-        <div class="row">
-          <div class="col-lg-12">
-            <textarea rows="6" class="form-control" readonly>${ stepRun.teststep.otherProperties.httpHeaders?join("\n") }</textarea>
-          </div>
-        </div>
-        <div class="form-group"></div> <!-- spacer -->
-        <div class="row">
-          <div class="col-lg-12">HTTP Body:</div>
-        </div>
-        <div class="form-group"></div> <!-- spacer -->
-      </#if>
-      <#if stepRun.teststep.request??>
-        <div class="row">
-          <div class="col-lg-12">
-            <#if stepRun.teststep.type == "MQ">
-              <#t><#include "${stepRun.teststep.type?lower_case}TeststepRequest.ftl">
-            <#else>
-              <textarea class="form-control" rows="8" readonly>${ ironTestUtilsAdatper.prettyPrintJSONOrXML(stepRun.teststep.request) }</textarea>
-            </#if>
-          </div>
-        </div>
-      </#if>
+  <div>
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+      <li role="presentation"><a href="#step-run-${ stepRun.id?string.computer }-request" aria-controls="request" role="tab" data-toggle="tab">Request</a></li>
+      <!-- set Response tab to be active as response is the most interesting information -->
+      <li role="presentation" class="active"><a href="#step-run-${ stepRun.id?string.computer }-response" aria-controls="response" role="tab" data-toggle="tab">Response</a></li>
+      <li role="presentation"><a href="#step-run-${ stepRun.id?string.computer }-assertions" aria-controls="assertions" role="tab" data-toggle="tab">Assertions</a></li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content request-response-assertions-tab-panes">
+      <div role="tabpanel" class="tab-pane" id="step-run-${ stepRun.id?string.computer }-request">
+        <#include "teststepRequest.ftl">
+      </div>
+      <div role="tabpanel" class="tab-pane active" id="step-run-${ stepRun.id?string.computer }-response">
+        <#include "teststepResponse.ftl">
+      </div>
+      <div role="tabpanel" class="tab-pane" id="step-run-${ stepRun.id?string.computer }-assertions">
+        <#include "teststepAssertions.ftl">
+      </div>
     </div>
   </div>
 </#if>
 
-<#-- Response info -->
-<#if stepRun.response??>
-  <div class="form-group"></div> <!-- spacer -->
+<#if stepRun.teststep.type == "HTTPStubRequestsCheck" && stepRun.response??>
   <div class="row">
-    <div class="col-lg-1" <#if stepRun.teststep.type == "HTTPStubRequestsCheck">id="stub-requests-in-step-run-${ stepRun.id?string.computer }"</#if>>
-      ${ (stepRun.teststep.type == "HTTPStubRequestsCheck")?then('Stub Requests', 'Response') }:
-    </div>
+    <div class="col-lg-1" id="stub-requests-in-step-run-${ stepRun.id?string.computer }">Stub Requests</div>
     <div class="col-lg-11">
       <#t><#include "${stepRun.teststep.type?lower_case}TeststepResponse.ftl">
     </div>
@@ -97,45 +81,3 @@
     <div class="col-lg-11">${stepRun.errorMessage}</div>
   </div>
 </#if>
-
-<#-- Assertion verifications -->
-<#list stepRun.assertionVerifications as verification>
-  <div class="form-group"></div> <!-- spacer -->
-  <div class="row">
-    <div class="col-lg-1">Assertion:</div>
-    <div class="col-lg-11">
-      <div class="row">
-        <div class="col-lg-1">Name:</div>
-        <div class="col-lg-3">${verification.assertion.name}</div>
-        <div class="col-lg-2">Verification result:</div>
-        <div class="col-lg-1 test-result-color-${verification.verificationResult.result}">
-            ${verification.verificationResult.result}
-        </div>
-      </div>
-      <div class="form-group"></div> <!-- spacer -->
-      <div class="row">
-        <div class="col-lg-1">Expected:</div>
-        <div class="col-lg-11">
-          <div class="form-group">
-            <#include "../assertion/${verification.assertion.type?lower_case}AssertionExpected.ftl">
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <#if verification.verificationResult.error??>
-          <div class="col-lg-1">Error:</div>
-          <div class="col-lg-11">${verification.verificationResult.error}</div>
-        <#else>
-          <div class="col-lg-1">Actual:</div>
-          <div class="col-lg-11">
-            <#if verification.verificationResult.result == "Passed">
-              As expected.
-            <#else>
-              <#include "../assertion/${verification.assertion.type?lower_case}AssertionActualWhenFailed.ftl">
-            </#if>
-          </div>
-        </#if>
-      </div>
-    </div>
-  </div>
-</#list>

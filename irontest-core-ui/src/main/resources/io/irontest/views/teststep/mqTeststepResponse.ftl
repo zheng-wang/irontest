@@ -6,7 +6,7 @@
       Body:
     </div>
     <div class="col-lg-11">
-      <textarea class="form-control" rows="8" readonly>${ ironTestUtilsAdatper.prettyPrintJSONOrXML(stepRun.response.bodyAsText) }</textarea>
+      <textarea class="form-control message-body-textarea" readonly>${ ironTestUtilsAdatper.prettyPrintJSONOrXML(stepRun.response.bodyAsText) }</textarea>
     </div>
   </div>
   <#if stepRun.response.mqrfh2Header??>
