@@ -3,7 +3,7 @@
   <div class="row">
     <div class="col-lg-12">HTTP Headers:</div>
   </div>
-  <div class="form-group"></div> <!-- spacer -->
+  <div class="form-group"></div> <#-- spacer -->
   <div class="row">
     <div class="col-lg-12">
       <textarea rows="6" class="form-control" readonly>${ stepRun.response.httpHeaders?join("\n") }</textarea>

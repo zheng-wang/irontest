@@ -32,18 +32,20 @@
 <#-- Request, Response and Assertions info -->
 <#assign teststepTypes = ["SOAP", "DB", "HTTP", "MQ", "AMQP"]>
 <#if teststepTypes?seq_contains(stepRun.teststep.type)>
-  <div class="form-group"></div> <!-- spacer -->
+  <div class="form-group"></div> <#-- spacer -->
   <div>
-    <!-- Nav tabs -->
-    <ul class="nav nav-tabs" role="tablist">
-      <li role="presentation"><a href="#step-run-${ stepRun.id?string.computer }-request" aria-controls="request" role="tab" data-toggle="tab">Request</a></li>
-      <!-- set Response tab to be active as response is the most interesting information -->
-      <li role="presentation" class="active"><a href="#step-run-${ stepRun.id?string.computer }-response" aria-controls="response" role="tab" data-toggle="tab">Response</a></li>
-      <li role="presentation"><a href="#step-run-${ stepRun.id?string.computer }-assertions" aria-controls="assertions" role="tab" data-toggle="tab">Assertions</a></li>
+    <#-- Nav tabs -->
+    <ul class="nav nav-tabs tabs-in-test-report" role="tablist">
+      <#-- use data-target attribute instead of href attribute on the anchor elements, to avoid spoiling routes of
+        angular app on the test case edit view. Refer to https://stackoverflow.com/questions/19225968/bootstrap-tab-is-not-working-when-tab-with-data-target-instead-of-href for more details -->
+      <li role="presentation"><a data-target="#step-run-${ stepRun.id?string.computer }-request" aria-controls="request" role="tab" data-toggle="tab">Request</a></li>
+      <#-- set Response tab to be active as response is the most interesting information -->
+      <li role="presentation" class="active"><a data-target="#step-run-${ stepRun.id?string.computer }-response" aria-controls="response" role="tab" data-toggle="tab">Response</a></li>
+      <li role="presentation"><a data-target="#step-run-${ stepRun.id?string.computer }-assertions" aria-controls="assertions" role="tab" data-toggle="tab">Assertions</a></li>
     </ul>
 
-    <!-- Tab panes -->
-    <div class="tab-content request-response-assertions-tab-panes">
+    <#-- Tab panes -->
+    <div class="tab-content" id="request-response-assertions-tab-panes">
       <div role="tabpanel" class="tab-pane" id="step-run-${ stepRun.id?string.computer }-request">
         <#include "teststepRequest.ftl">
       </div>

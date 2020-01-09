@@ -8,7 +8,7 @@
     </div>
   </div>
   <#if stepRun.teststep.otherProperties.rfh2Header??>
-    <div class="form-group"></div> <!-- spacer -->
+    <div class="form-group"></div> <#-- spacer -->
     <div class="row">
       <div class="col-lg-1">
         MQRFH2 Header Folders:
@@ -20,7 +20,7 @@
               <textarea class="form-control" rows="8" readonly>${ ironTestUtilsAdatper.prettyPrintJSONOrXML(mqrfh2Folder.string) }</textarea>
             </div>
           </div>
-          <div class="form-group"></div> <!-- spacer -->
+          <div class="form-group"></div> <#-- spacer -->
         </#list>
       </div>
     </div>

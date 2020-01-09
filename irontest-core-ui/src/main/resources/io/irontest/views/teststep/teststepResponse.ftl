@@ -1,4 +1,4 @@
-<div class="form-group"></div> <!-- spacer -->
+<div class="form-group"></div> <#-- spacer -->
 
 <#if stepRun.response??>
   <div class="row">

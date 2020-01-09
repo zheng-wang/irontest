@@ -1,5 +1,5 @@
 <#list stepRun.assertionVerifications as verification>
-  <div class="form-group"></div> <!-- spacer -->
+  <div class="form-group"></div> <#-- spacer -->
   <div class="row">
     <div class="col-lg-1">Assertion:</div>
     <div class="col-lg-11">
@@ -11,7 +11,7 @@
             ${verification.verificationResult.result}
         </div>
       </div>
-      <div class="form-group"></div> <!-- spacer -->
+      <div class="form-group"></div> <#-- spacer -->
       <div class="row">
         <div class="col-lg-1">Expected:</div>
         <div class="col-lg-11">

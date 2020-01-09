@@ -16,7 +16,7 @@
   padding-left: 20px;
 }
 
-.request-response-assertions-tab-panes {
+#request-response-assertions-tab-panes {
   height: 780px;
   overflow-x: hidden;
   overflow-y: auto;
@@ -24,4 +24,8 @@
 
 .message-body-textarea {
   height: 540px !important;
+}
+
+.tabs-in-test-report li:hover {
+  cursor: pointer;
 }
