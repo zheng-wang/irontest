@@ -26,5 +26,5 @@
     </div>
   </#if>
 <#else>
-  <textarea class="form-control message-body-textarea" readonly>${ stepRun.teststep.request }</textarea>
+  <textarea class="form-control message-body-textarea" readonly>${ (stepRun.teststep.request??)?then(stepRun.teststep.request, 'null') }</textarea>
 </#if>

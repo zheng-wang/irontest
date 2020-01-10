@@ -31,30 +31,41 @@
 
 <#-- Request, Response and Assertions info -->
 <#assign teststepTypes = ["SOAP", "DB", "HTTP", "MQ", "AMQP"]>
-<#if teststepTypes?seq_contains(stepRun.teststep.type)>
+<#if teststepTypes?seq_contains(stepRun.teststep.type) && !(stepRun.teststep.type == 'MQ' && stepRun.teststep.action == 'Clear')>
   <div class="form-group"></div> <#-- spacer -->
+
+  <#assign hasRequestTab = !(stepRun.teststep.type == 'MQ' && (stepRun.teststep.action == 'CheckDepth' || stepRun.teststep.action == 'Dequeue'))>
+  <#assign hasResponseAndAssertionsTabs = !(stepRun.teststep.type == 'MQ' && (stepRun.teststep.action == 'Enqueue' || stepRun.teststep.action == 'Publish')) && !(stepRun.teststep.type == 'AMQP')>
   <div>
     <#-- Nav tabs -->
     <ul class="nav nav-tabs tabs-in-test-report" role="tablist">
       <#-- use data-target attribute instead of href attribute on the anchor elements, to avoid spoiling routes of
         angular app on the test case edit view. Refer to https://stackoverflow.com/questions/19225968/bootstrap-tab-is-not-working-when-tab-with-data-target-instead-of-href for more details -->
-      <li role="presentation"><a data-target="#step-run-${ stepRun.id?string.computer }-request" aria-controls="request" role="tab" data-toggle="tab">Request</a></li>
-      <#-- set Response tab to be active as response is the most interesting information -->
-      <li role="presentation" class="active"><a data-target="#step-run-${ stepRun.id?string.computer }-response" aria-controls="response" role="tab" data-toggle="tab">Response</a></li>
-      <li role="presentation"><a data-target="#step-run-${ stepRun.id?string.computer }-assertions" aria-controls="assertions" role="tab" data-toggle="tab">Assertions</a></li>
+      <#if hasRequestTab>
+        <li role="presentation" ${ (hasResponseAndAssertionsTabs)?then('', 'class=active') }><a data-target="#step-run-${ stepRun.id?string.computer }-request" aria-controls="request" role="tab" data-toggle="tab">Request</a></li>
+      </#if>
+      <#if hasResponseAndAssertionsTabs>
+        <#-- set Response tab to be active as response is the most interesting information -->
+        <li role="presentation" class="active"><a data-target="#step-run-${ stepRun.id?string.computer }-response" aria-controls="response" role="tab" data-toggle="tab">Response</a></li>
+        <li role="presentation"><a data-target="#step-run-${ stepRun.id?string.computer }-assertions" aria-controls="assertions" role="tab" data-toggle="tab">Assertions</a></li>
+      </#if>
     </ul>
 
     <#-- Tab panes -->
     <div class="tab-content" id="request-response-assertions-tab-panes">
-      <div role="tabpanel" class="tab-pane" id="step-run-${ stepRun.id?string.computer }-request">
-        <#include "teststepRequest.ftl">
-      </div>
-      <div role="tabpanel" class="tab-pane active" id="step-run-${ stepRun.id?string.computer }-response">
-        <#include "teststepResponse.ftl">
-      </div>
-      <div role="tabpanel" class="tab-pane" id="step-run-${ stepRun.id?string.computer }-assertions">
-        <#include "teststepAssertions.ftl">
-      </div>
+      <#if hasRequestTab>
+        <div role="tabpanel" class="tab-pane ${ (hasResponseAndAssertionsTabs)?then('', 'active') }" id="step-run-${ stepRun.id?string.computer }-request">
+          <#include "teststepRequest.ftl">
+        </div>
+      </#if>
+      <#if hasResponseAndAssertionsTabs>
+        <div role="tabpanel" class="tab-pane active" id="step-run-${ stepRun.id?string.computer }-response">
+          <#include "teststepResponse.ftl">
+        </div>
+        <div role="tabpanel" class="tab-pane" id="step-run-${ stepRun.id?string.computer }-assertions">
+          <#include "teststepAssertions.ftl">
+        </div>
+      </#if>
     </div>
   </div>
 </#if>
