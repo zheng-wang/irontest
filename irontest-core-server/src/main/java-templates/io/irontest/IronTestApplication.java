@@ -48,6 +48,8 @@ import java.util.logging.Logger;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 
 public class IronTestApplication extends Application<IronTestConfiguration> {
+    //  project.version is a Maven built-in property, and it will be filtered during build
+    public static final String VERSION = "${project.version}";
     private JAXWSBundle jaxWsBundle = new JAXWSBundle();
 
     public static void main(String[] args) throws Exception {
@@ -131,6 +133,7 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         final Jdbi jdbi = jdbiFactory.build(environment, configuration.getSystemDatabase(), "systemDatabase");
 
         //  create DAO objects
+        final VersionDAO versionDAO = jdbi.onDemand(VersionDAO.class);
         final FolderDAO folderDAO = jdbi.onDemand(FolderDAO.class);
         final EnvironmentDAO environmentDAO = jdbi.onDemand(EnvironmentDAO.class);
         final EndpointDAO endpointDAO = jdbi.onDemand(EndpointDAO.class);
@@ -174,7 +177,9 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         }
 
         //  create database tables
-        //  order is important!!! (there are foreign keys linking them)
+        //  keep the order!!! (there are foreign keys linking some of them)
+        versionDAO.createTableIfNotExists();
+        versionDAO.insertVersionIfNotExists();
         folderDAO.createSequenceIfNotExists();
         folderDAO.createTableIfNotExists();
         folderDAO.insertARootNodeIfNotExists();
