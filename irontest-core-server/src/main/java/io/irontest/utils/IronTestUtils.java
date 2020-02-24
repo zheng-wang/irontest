@@ -205,7 +205,18 @@ public final class IronTestUtils {
     public static String prettyPrintJSONOrXML(String input) throws TransformerException, IOException, XPathExpressionException {
         if (input == null) {
             return null;
-        } else if (input.trim().startsWith("<")) {     //  potentially xml (impossible to be json)
+        }
+
+        String trimmedInput = input.trim();
+        if (trimmedInput.toUpperCase().startsWith("<!DOCTYPE HTML")) {
+            //  not formatting html with DOCTYPE for now, as
+            //    1. it could cause https://stackoverflow.com/questions/39189174/dom-parser-freezes-with-an-html-having-a-doctype-declaration
+            //    2. if using DocumentBuilderFactory.setAttribute("http://apache.org/xml/features/nonvalidating/load-external-dtd", false),
+            //        the freeze can be avoided, but the returned pretty printed html from XMLUtils.prettyPrintXML method is missing the DOCTYPE declaration.
+            //        This is possibly due to https://stackoverflow.com/questions/6637076/parsing-xml-with-dom-doctype-gets-erased
+            //  an example declaration: <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+            return input;
+        } else if (trimmedInput.startsWith("<") && trimmedInput.endsWith(">")) {     //  potentially xml (impossible to be json)
             return XMLUtils.prettyPrintXML(input);
         } else {                     //  potentially json (impossible to be xml)
             ObjectMapper objectMapper = new ObjectMapper();
