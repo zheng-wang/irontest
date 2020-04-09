@@ -24,9 +24,6 @@
           <li class="text-center" ng-if="teststep.type === 'HTTP' || teststep.type === 'SOAP' || teststep.type === 'MQ'">
             <hr class="divider-left">On Body<hr class="divider-right">
           </li>
-          <li role="menuitem" ng-if="teststep.type === 'SOAP' || teststep.type === 'HTTP'">
-            <a ng-click="assertionsModelObj.createAssertion('Contains')" href="">Contains Assertion</a>
-          </li>
           <li role="menuitem" ng-if="teststep.type === 'HTTP' || teststep.type === 'DB' || teststep.type === 'MQ'">
             <a ng-click="assertionsModelObj.createAssertion('JSONEqual')" href="">JSONEqual Assertion</a>
           </li>
@@ -41,6 +38,9 @@
           </li>
           <li role="menuitem" ng-if="teststep.type === 'DB'">
             <a ng-click="assertionsModelObj.createAssertion('JSONPathXMLEqual')" href="">JSONPathXMLEqual Assertion</a>
+          </li>
+          <li role="menuitem" ng-if="teststep.type === 'SOAP' || teststep.type === 'HTTP' || teststep.type === 'MQ'">
+            <a ng-click="assertionsModelObj.createAssertion('Contains')" href="">Contains Assertion</a>
           </li>
         </ul>
       </div>

@@ -218,7 +218,8 @@ public final class IronTestUtils {
             return input;
         } else if (trimmedInput.startsWith("<") && trimmedInput.endsWith(">")) {     //  potentially xml (impossible to be json)
             return XMLUtils.prettyPrintXML(input);
-        } else {                     //  potentially json (impossible to be xml)
+        } else if (trimmedInput.startsWith("[") || trimmedInput.startsWith("{")) {   //  potentially json array/object (impossible to be xml)
+            //  notice that string "111 222 333" will be parsed by Jackson as Integer 111, so only pretty print potential json array/object here.
             ObjectMapper objectMapper = new ObjectMapper();
             Object jsonObject;
             try {
@@ -228,6 +229,8 @@ public final class IronTestUtils {
                 return input;
             }
             return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonObject);
+        } else {
+            return input;
         }
     }
 
