@@ -1,0 +1,46 @@
+<div class="form-group"></div> <!-- spacer -->
+
+<div class="form-group no-left-margin">
+  <label for="beginIndex" class="col-lg-1 control-label">Begin Index</label>
+  <div class="col-lg-5 no-right-padding">
+    <input type="text" name="beginIndex" ng-model="assertionsModelObj.assertion.otherProperties.beginIndex"
+           id="beginIndex" class="form-control" ng-change="assertionsModelObj.autoSave(teststepForm.$valid)"
+           ng-readonly="appStatus.isForbidden()" spellcheck="false">
+  </div>
+  <label for="endIndex" class="col-lg-1 control-label">End Index</label>
+  <div class="col-lg-5 no-left-padding">
+    <input type="text" name="endIndex" ng-model="assertionsModelObj.assertion.otherProperties.endIndex"
+           id="endIndex" class="form-control" ng-change="assertionsModelObj.autoSave(teststepForm.$valid)"
+           ng-readonly="appStatus.isForbidden()" spellcheck="false">
+  </div>
+</div>
+
+<div class="form-group no-bottom-margin no-left-margin">
+  <div class="col-lg-1">
+    <div class="form-group"></div>
+    <div class="form-group"></div>
+    <div class="form-group">
+      <label for="expectedValue" class="control-label">Expected Value</label>
+    </div>
+  </div>
+  <div class="col-lg-5 no-right-padding">
+    <textarea name="expectedValue" ng-model="assertionsModelObj.assertion.otherProperties.expectedValue" ng-trim="false"
+              id="expectedValue" rows="8" class="form-control" ng-readonly="appStatus.isForbidden()"
+              ng-change="assertionsModelObj.autoSave(teststepForm.$valid)" spellcheck="false">
+    </textarea>
+  </div>
+  <div class="col-lg-1">
+    <div class="form-group"></div>
+    <div class="form-group"></div>
+    <div class="form-group no-right-margin">
+      <label for="actualValue" class="control-label">Actual Value</label>
+    </div>
+  </div>
+  <div class="col-lg-5 no-left-padding">
+    <textarea name="actualValue" id="actualValue" rows="8" class="form-control"
+              ng-class="{ 'text-red' : assertionsModelObj.assertionVerificationResults[assertionsModelObj.assertion.id].error }" readonly>{{
+        $parent.assertionsModelObj.assertionVerificationResults[$parent.assertionsModelObj.assertion.id].error ?
+        $parent.assertionsModelObj.assertionVerificationResults[$parent.assertionsModelObj.assertion.id].error :
+        $parent.assertionsModelObj.assertionVerificationResults[$parent.assertionsModelObj.assertion.id].actualValue }}</textarea>
+  </div>
+</div>

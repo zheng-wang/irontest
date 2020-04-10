@@ -10,6 +10,7 @@ public class Assertion {
     public static final String TYPE_STATUS_CODE_EQUAL = "StatusCodeEqual";
     public static final String TYPE_CONTAINS = "Contains";
     public static final String TYPE_TEXTEQUAL = "TextEqual";
+    public static final String TYPE_SUBSTRING = "Substring";
     public static final String TYPE_XPATH = "XPath";
     public static final String TYPE_INTEGER_EQUAL = "IntegerEqual";
     public static final String TYPE_XML_EQUAL = "XMLEqual";
@@ -36,6 +37,7 @@ public class Assertion {
             @JsonSubTypes.Type(value = StatusCodeEqualAssertionProperties.class, name = Assertion.TYPE_STATUS_CODE_EQUAL),
             @JsonSubTypes.Type(value = ContainsAssertionProperties.class, name = Assertion.TYPE_CONTAINS),
             @JsonSubTypes.Type(value = TextEqualAssertionProperties.class, name = Assertion.TYPE_TEXTEQUAL),
+            @JsonSubTypes.Type(value = SubstringAssertionProperties.class, name = Assertion.TYPE_SUBSTRING),
             @JsonSubTypes.Type(value = XPathAssertionProperties.class, name = Assertion.TYPE_XPATH),
             @JsonSubTypes.Type(value = IntegerEqualAssertionProperties.class, name = Assertion.TYPE_INTEGER_EQUAL),
             @JsonSubTypes.Type(value = XMLEqualAssertionProperties.class, name = Assertion.TYPE_XML_EQUAL),

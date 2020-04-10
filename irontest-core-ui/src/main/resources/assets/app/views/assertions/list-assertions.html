@@ -27,7 +27,7 @@
           <li role="menuitem" ng-if="teststep.type === 'HTTP' || teststep.type === 'DB' || teststep.type === 'MQ'">
             <a ng-click="assertionsModelObj.createAssertion('JSONEqual')" href="">JSONEqual Assertion</a>
           </li>
-          <li role="menuitem" ng-if="teststep.type === 'HTTP' || teststep.type === 'DB'">
+          <li role="menuitem" ng-if="teststep.type === 'HTTP' || teststep.type === 'DB' || teststep.type === 'MQ'">
             <a ng-click="assertionsModelObj.createAssertion('JSONPath')" href="">JSONPath Assertion</a>
           </li>
           <li role="menuitem" ng-if="teststep.type === 'HTTP' || teststep.type === 'SOAP' || teststep.type === 'MQ'">
@@ -44,6 +44,9 @@
           </li>
           <li role="menuitem" ng-if="teststep.type === 'MQ'">
             <a ng-click="assertionsModelObj.createAssertion('TextEqual')" href="">TextEqual Assertion</a>
+          </li>
+          <li role="menuitem" ng-if="teststep.type === 'MQ'">
+            <a ng-click="assertionsModelObj.createAssertion('Substring')" href="">Substring Assertion</a>
           </li>
         </ul>
       </div>
@@ -71,6 +74,8 @@
          ng-include="'/ui/views/assertions/contains-assertion-edit.html'"></div>
     <div ng-if="assertionsModelObj.assertion.type === 'TextEqual'"
          ng-include="'/ui/views/assertions/textequal-assertion-edit.html'"></div>
+    <div ng-if="assertionsModelObj.assertion.type === 'Substring'"
+         ng-include="'/ui/views/assertions/substring-assertion-edit.html'"></div>
     <div ng-if="assertionsModelObj.assertion.type === 'XPath'"
          ng-include="'/ui/views/assertions/xpath-assertion-edit.html'"
          ng-controller="XPathAssertionController"></div>
