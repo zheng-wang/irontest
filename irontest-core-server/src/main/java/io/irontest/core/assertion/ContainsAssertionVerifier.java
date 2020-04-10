@@ -14,18 +14,19 @@ public class ContainsAssertionVerifier extends AssertionVerifier {
      * @return
      */
     @Override
-    public AssertionVerificationResult _verify(Assertion assertion, Object ...inputs) throws Exception {
-        AssertionVerificationResult result = new AssertionVerificationResult();
+    public AssertionVerificationResult _verify(Assertion assertion, Object ...inputs) {
         ContainsAssertionProperties otherProperties =
                 (ContainsAssertionProperties) assertion.getOtherProperties();
+        String contains = otherProperties.getContains();
 
-        //  validate other properties
-        if ("".equals(StringUtils.trimToEmpty(otherProperties.getContains()))) {
+        //  validate argument
+        if ("".equals(StringUtils.trimToEmpty(contains))) {
             throw new IllegalArgumentException("Contains not specified");
         }
 
+        AssertionVerificationResult result = new AssertionVerificationResult();
         String inputStr = (String) inputs[0];
-        result.setResult(inputStr.contains(otherProperties.getContains()) ? TestResult.PASSED : TestResult.FAILED);
+        result.setResult(inputStr.contains(contains) ? TestResult.PASSED : TestResult.FAILED);
         return result;
     }
 }

@@ -1,0 +1,1 @@
+<textarea class="form-control" rows="6" readonly>${ (verification.assertion.otherProperties.expectedText??)?then(verification.assertion.otherProperties.expectedText, 'null') }</textarea>

@@ -35,8 +35,8 @@
     <uib-tabset active="textMessageTabs.activeIndex" class="mq-message-details-tabset">
       <uib-tab index="0" heading="Body">
         <div class="col-lg-12">
-          <textarea class="form-control" ng-model="teststep.request" ng-change="autoSave(teststepForm.$valid)"
-                    ng-readonly="appStatus.isForbidden()" spellcheck="false"></textarea>
+          <textarea class="form-control" ng-model="teststep.request" ng-trim="false" spellcheck="false"
+                    ng-change="autoSave(teststepForm.$valid)" ng-readonly="appStatus.isForbidden()"></textarea>
         </div>
       </uib-tab>
       <uib-tab index="$index + 1" ng-repeat="folder in teststep.otherProperties.rfh2Header.folders" heading="{{ folder.name }}">

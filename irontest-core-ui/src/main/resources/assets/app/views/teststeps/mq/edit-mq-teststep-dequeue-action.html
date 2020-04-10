@@ -3,7 +3,7 @@
     <uib-tabset class="mq-message-details-tabset">
       <uib-tab heading="Body">
         <div class="col-lg-12">
-          <textarea class="form-control" ng-model="steprun.response.bodyAsText" spellcheck="false"
+          <textarea class="form-control" ng-model="steprun.response.bodyAsText" ng-trim="false" spellcheck="false"
                     placeholder="{{ steprun.status === 'ongoing' || steprun.response.bodyAsText === '' ? '' : 'Actual Message Body' }}"
                     ng-readonly="appStatus.isForbidden()"></textarea>
         </div>
