@@ -2,6 +2,7 @@ package io.irontest.db;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.irontest.models.Properties;
 import io.irontest.models.assertion.Assertion;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
@@ -67,4 +68,11 @@ public interface AssertionDAO {
     @SqlUpdate("insert into assertion (teststep_id, name, type, other_properties) " +
             "select :newTeststepId, name, type, other_properties from assertion where teststep_id = :oldTeststepId")
     void duplicateByTeststep(@Bind("oldTeststepId") long oldTeststepId, @Bind("newTeststepId") long newTeststepId);
+
+    @SqlUpdate("update assertion set other_properties = :otherProperties, updated = CURRENT_TIMESTAMP where id = :id")
+    void _updateOtherProperties(@Bind("otherProperties") String otherProperties, @Bind("id") long id);
+
+    default void updateOtherProperties(long assertionId, Properties properties) throws JsonProcessingException {
+        _updateOtherProperties(new ObjectMapper().writeValueAsString(properties), assertionId);
+    }
 }

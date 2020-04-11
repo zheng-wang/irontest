@@ -36,6 +36,9 @@
           <li role="menuitem" ng-if="teststep.type === 'HTTP' || teststep.type === 'SOAP' || teststep.type === 'MQ'">
             <a ng-click="assertionsModelObj.createAssertion('XPath')" href="">XPath Assertion</a>
           </li>
+          <li role="menuitem" ng-if="teststep.type === 'HTTP' || teststep.type === 'SOAP' || teststep.type === 'MQ'">
+            <a ng-click="assertionsModelObj.createAssertion('XMLValidAgainstXSD')" href="">XMLValidAgainstXSD Assertion</a>
+          </li>
           <li role="menuitem" ng-if="teststep.type === 'DB'">
             <a ng-click="assertionsModelObj.createAssertion('JSONPathXMLEqual')" href="">JSONPathXMLEqual Assertion</a>
           </li>
@@ -81,15 +84,18 @@
          ng-include="'/ui/views/assertions/substring-assertion-edit.html'"></div>
     <div ng-if="assertionsModelObj.assertion.type === 'RegexMatch'"
          ng-include="'/ui/views/assertions/regexmatch-assertion-edit.html'"></div>
-    <div ng-if="assertionsModelObj.assertion.type === 'XPath'"
-         ng-include="'/ui/views/assertions/xpath-assertion-edit.html'"
-         ng-controller="XPathAssertionController"></div>
     <div ng-if="assertionsModelObj.assertion.type === 'JSONPath'"
          ng-include="'/ui/views/assertions/jsonpath-assertion-edit.html'"></div>
     <div ng-if="assertionsModelObj.assertion.type === 'JSONPathXMLEqual'"
          ng-include="'/ui/views/assertions/jsonpath-xmlequal-assertion-edit.html'"></div>
     <div ng-if="assertionsModelObj.assertion.type === 'XMLEqual'"
          ng-include="'/ui/views/assertions/xmlequal-assertion-edit.html'"></div>
+    <div ng-if="assertionsModelObj.assertion.type === 'XPath'"
+         ng-include="'/ui/views/assertions/xpath-assertion-edit.html'"
+         ng-controller="XPathAssertionController"></div>
+    <div ng-if="assertionsModelObj.assertion.type === 'XMLValidAgainstXSD'"
+         ng-include="'/ui/views/assertions/xmlvalidagainstxsd-assertion-edit.html'"
+         ng-controller="XMLValidAgainstXSDController"></div>
     <div ng-if="assertionsModelObj.assertion.type === 'JSONEqual'"
          ng-include="'/ui/views/assertions/jsonequal-assertion-edit.html'"></div>
     <div ng-if="assertionsModelObj.assertion.type === 'HasAnMQRFH2FolderEqualToXml'"
