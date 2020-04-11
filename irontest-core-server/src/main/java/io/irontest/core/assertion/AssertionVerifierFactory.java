@@ -21,10 +21,12 @@ public class AssertionVerifierFactory {
             result = new XPathAssertionVerifier();
         } else if (Assertion.TYPE_CONTAINS.equals(assertionType)) {
             result = new ContainsAssertionVerifier();
-        } else if (Assertion.TYPE_TEXTEQUAL.equals(assertionType)) {
+        } else if (Assertion.TYPE_TEXT_EQUAL.equals(assertionType)) {
             result = new TextEqualAssertionVerifier();
         } else if (Assertion.TYPE_SUBSTRING.equals(assertionType)) {
             result = new SubstringAssertionVerifier();
+        } else if (Assertion.TYPE_REGEX_MATCH.equals(assertionType)) {
+            result = new RegexMatchAssertionVerifier();
         } else if (Assertion.TYPE_INTEGER_EQUAL.equals(assertionType)) {
             result = new IntegerEqualAssertionVerifier();
         } else if (Assertion.TYPE_XML_EQUAL.equals(assertionType)) {

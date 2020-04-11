@@ -1,0 +1,18 @@
+<div class="form-group"></div> <!-- spacer -->
+<div style="margin-left: 10px">
+  <div class="form-group form-group-reduced-bottom-margin">
+    <div class="col-lg-12">
+      <textarea ng-model="assertionsModelObj.assertion.otherProperties.regex" cols="12"
+                rows="{{ assertionsModelObj.assertionVerificationResults[assertionsModelObj.assertion.id].error ? 8 : 10 }}"
+                class="form-control" placeholder="Regex"
+                ng-change="assertionsModelObj.autoSave(teststepForm.$valid)" spellcheck="false"
+                ng-readonly="appStatus.isForbidden()">
+      </textarea>
+    </div>
+  </div>
+  <div class="form-group form-group-reduced-bottom-margin">
+    <div class="col-lg-offset-2 col-lg-10" ng-if="assertionsModelObj.assertionVerificationResults[assertionsModelObj.assertion.id].error">
+      <h5 class="text-red">{{ $parent.assertionsModelObj.assertionVerificationResults[$parent.assertionsModelObj.assertion.id].error }}</h5>
+    </div>
+  </div>
+</div>

@@ -48,6 +48,9 @@
           <li role="menuitem" ng-if="teststep.type === 'MQ'">
             <a ng-click="assertionsModelObj.createAssertion('Substring')" href="">Substring Assertion</a>
           </li>
+          <li role="menuitem" ng-if="teststep.type === 'MQ'">
+            <a ng-click="assertionsModelObj.createAssertion('RegexMatch')" href="">RegexMatch Assertion</a>
+          </li>
         </ul>
       </div>
       <div class="col-lg-8">
@@ -76,6 +79,8 @@
          ng-include="'/ui/views/assertions/textequal-assertion-edit.html'"></div>
     <div ng-if="assertionsModelObj.assertion.type === 'Substring'"
          ng-include="'/ui/views/assertions/substring-assertion-edit.html'"></div>
+    <div ng-if="assertionsModelObj.assertion.type === 'RegexMatch'"
+         ng-include="'/ui/views/assertions/regexmatch-assertion-edit.html'"></div>
     <div ng-if="assertionsModelObj.assertion.type === 'XPath'"
          ng-include="'/ui/views/assertions/xpath-assertion-edit.html'"
          ng-controller="XPathAssertionController"></div>
