@@ -23,6 +23,8 @@ public class AssertionVerifierFactory {
             result = new ContainsAssertionVerifier();
         } else if (Assertion.TYPE_TEXTEQUAL.equals(assertionType)) {
             result = new TextEqualAssertionVerifier();
+        } else if (Assertion.TYPE_SUBSTRING.equals(assertionType)) {
+            result = new SubstringAssertionVerifier();
         } else if (Assertion.TYPE_INTEGER_EQUAL.equals(assertionType)) {
             result = new IntegerEqualAssertionVerifier();
         } else if (Assertion.TYPE_XML_EQUAL.equals(assertionType)) {
