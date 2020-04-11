@@ -1,1 +1,1 @@
-Response contains "${ (verification.assertion.otherProperties.contains??)?then(verification.assertion.otherProperties.contains, 'null') }".
+Response contains "${ (assertionProperties.contains??)?then(assertionProperties.contains, 'null') }".

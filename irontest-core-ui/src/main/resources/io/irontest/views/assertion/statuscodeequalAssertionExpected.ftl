@@ -1,1 +1,1 @@
-Response status code "${ (verification.assertion.otherProperties.statusCode??)?then(verification.assertion.otherProperties.statusCode, 'null') }".
+Response status code "${ (assertionProperties.statusCode??)?then(assertionProperties.statusCode, 'null') }".

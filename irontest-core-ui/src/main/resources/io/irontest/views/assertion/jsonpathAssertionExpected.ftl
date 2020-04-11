@@ -1,2 +1,2 @@
-JSONPath "${ (verification.assertion.otherProperties.jsonPath??)?then(verification.assertion.otherProperties.jsonPath, 'null') }" evaluates to
-"${ (verification.assertion.otherProperties.expectedValueJSON??)?then(verification.assertion.otherProperties.expectedValueJSON, 'null') }".
+JSONPath "${ (assertionProperties.jsonPath??)?then(assertionProperties.jsonPath, 'null') }" evaluates to
+"${ (assertionProperties.expectedValueJSON??)?then(assertionProperties.expectedValueJSON, 'null') }".

@@ -1,1 +1,1 @@
-<textarea class="form-control" rows="6" readonly>${ (verification.assertion.otherProperties.expectedXML??)?then(ironTestUtilsAdatper.prettyPrintJSONOrXML(verification.assertion.otherProperties.expectedXML), 'null') }</textarea>
+<textarea class="form-control" rows="6" readonly>${ (assertionProperties.expectedXML??)?then(ironTestUtilsAdatper.prettyPrintJSONOrXML(assertionProperties.expectedXML), 'null') }</textarea>

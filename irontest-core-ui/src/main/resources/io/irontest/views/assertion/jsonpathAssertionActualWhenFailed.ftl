@@ -1,2 +1,2 @@
-JSONPath "${ verification.assertion.otherProperties.jsonPath }" evaluated to "${ verification.verificationResult.actualValueJSON }".
+JSONPath "${ assertionProperties.jsonPath }" evaluated to "${ verificationResult.actualValueJSON }".
 

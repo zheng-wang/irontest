@@ -1,1 +1,1 @@
-Integer "${ verification.assertion.otherProperties.number }".
+Integer "${ assertionProperties.number }".

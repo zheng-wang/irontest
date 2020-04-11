@@ -1,2 +1,2 @@
-The XPath evaluated to "${ (verification.verificationResult.actualValue??)?then(verification.verificationResult.actualValue, 'null') }".
+The XPath evaluated to "${ (verificationResult.actualValue??)?then(verificationResult.actualValue, 'null') }".
 

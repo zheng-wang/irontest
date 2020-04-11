@@ -1,1 +1,1 @@
-<#list verification.assertion.otherProperties.expectedHitOrder as stubNumber>#${ stubNumber }<#sep>, </#sep></#list>.
+<#list assertionProperties.expectedHitOrder as stubNumber>#${ stubNumber }<#sep>, </#sep></#list>.

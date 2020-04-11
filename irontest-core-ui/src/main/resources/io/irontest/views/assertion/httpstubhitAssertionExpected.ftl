@@ -1,1 +1,1 @@
-Stub #${verification.assertion.otherProperties.stubNumber} was hit ${verification.assertion.otherProperties.expectedHitCount} times.
+Stub #${ assertionProperties.stubNumber } was hit ${ assertionProperties.expectedHitCount } times.

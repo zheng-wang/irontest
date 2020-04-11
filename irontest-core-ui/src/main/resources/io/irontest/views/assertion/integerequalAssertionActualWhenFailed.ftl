@@ -1,1 +1,1 @@
-Integer "${ verification.verificationResult.actualNumber }".
+Integer "${ verificationResult.actualNumber }".
