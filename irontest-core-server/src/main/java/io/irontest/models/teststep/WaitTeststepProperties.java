@@ -6,19 +6,19 @@ import io.irontest.resources.ResourceJsonViews;
 
 @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
 public class WaitTeststepProperties extends Properties {
-    private long milliseconds;
+    private String milliseconds;  //  String instead of long to allow Iron Test property to be used in this field
 
     public WaitTeststepProperties() {}
 
-    public WaitTeststepProperties(long milliseconds) {
+    public WaitTeststepProperties(String milliseconds) {
         this.milliseconds = milliseconds;
     }
 
-    public long getMilliseconds() {
+    public String getMilliseconds() {
         return milliseconds;
     }
 
-    public void setMilliseconds(long milliseconds) {
+    public void setMilliseconds(String milliseconds) {
         this.milliseconds = milliseconds;
     }
 }

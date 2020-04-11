@@ -2,12 +2,11 @@
 <div class="form-group required" ng-class="{ 'has-error' : savingStatus.submitted && teststepForm.milliseconds.$invalid }">
   <label for="milliseconds" class="col-lg-2 control-label">Milliseconds</label>
   <div class="col-lg-7">
-    <input name="milliseconds" id="milliseconds" type="text" class="form-control" ng-change="autoSave(teststepForm.$valid)"
-           maxlength="5" pattern="[1-9]\d*" ng-model="teststep.otherProperties.milliseconds" required
+    <input name="milliseconds" id="milliseconds" type="text" class="form-control" required
+           ng-model="teststep.otherProperties.milliseconds" ng-change="autoSave(teststepForm.$valid)"
            ng-readonly="appStatus.isForbidden()">
     <div ng-show="savingStatus.submitted && teststepForm.milliseconds.$invalid" class="help-block">
       <p ng-show="teststepForm.milliseconds.$error.required">Milliseconds is required</p>
-      <p ng-show="teststepForm.milliseconds.$error.pattern">Please enter an integer greater than 0</p>
     </div>
   </div>
 </div>

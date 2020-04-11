@@ -6,7 +6,10 @@ import io.irontest.models.teststep.WaitTeststepProperties;
 public class WaitTeststepRunner extends TeststepRunner {
     protected BasicTeststepRun run(Teststep teststep) throws InterruptedException {
         WaitTeststepProperties teststepProperties = (WaitTeststepProperties) teststep.getOtherProperties();
-        Thread.sleep(teststepProperties.getMilliseconds());
+        long milliseconds = Long.valueOf(teststepProperties.getMilliseconds());
+        if (milliseconds > 0) {
+            Thread.sleep(milliseconds);
+        }
         return new BasicTeststepRun();
     }
 }

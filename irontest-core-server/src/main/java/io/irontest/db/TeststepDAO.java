@@ -3,7 +3,6 @@ package io.irontest.db;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.irontest.core.MQTeststepActionDataBackup;
-import io.irontest.core.runner.SQLStatementType;
 import io.irontest.models.AppMode;
 import io.irontest.models.HTTPMethod;
 import io.irontest.models.Properties;
@@ -106,7 +105,7 @@ public interface TeststepDAO extends CrossReferenceDAO {
                 otherProperties = new MQTeststepProperties();
                 break;
             case Teststep.TYPE_WAIT:
-                otherProperties = new WaitTeststepProperties(1000);  //  there is no point to wait for 0 milliseconds
+                otherProperties = new WaitTeststepProperties("1000");
                 break;
             default:
                 break;
