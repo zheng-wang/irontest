@@ -10,4 +10,8 @@ public class IronTestUtilsFreeMarkerAdapter {
     public String prettyPrintJSONOrXML(String input) throws XPathExpressionException, TransformerException, IOException {
         return IronTestUtils.prettyPrintJSONOrXML(input);
     }
+
+    public String base64EncodeByteArray(byte[] bytes) {
+        return IronTestUtils.base64EncodeByteArray(bytes);
+    }
 }

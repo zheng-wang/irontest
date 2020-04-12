@@ -327,4 +327,8 @@ public final class IronTestUtils {
         //  update folder name to be the XML root element name
         folder.setName(doc.getDocumentElement().getTagName());
     }
+
+    public static String base64EncodeByteArray(byte[] bytes) {
+        return bytes == null ? null : Base64.encodeBase64String(bytes);
+    }
 }
