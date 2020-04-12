@@ -1,17 +1,20 @@
 package io.irontest.models.assertion;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import io.irontest.models.Properties;
+import io.irontest.resources.ResourceJsonViews;
 
 public class XMLValidAgainstXSDAssertionProperties extends Properties {
-    private String filename;
+    @JsonView({ResourceJsonViews.TeststepEdit.class})
+    private String fileName;
     private byte[] fileBytes;
 
-    public String getFilename() {
-        return filename;
+    public String getFileName() {
+        return fileName;
     }
 
-    public void setFilename(String filename) {
-        this.filename = filename;
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
     public byte[] getFileBytes() {

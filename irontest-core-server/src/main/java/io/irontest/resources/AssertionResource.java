@@ -24,7 +24,9 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.*;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -101,8 +103,14 @@ public class AssertionResource {
     public void saveXSDFile(@PathParam("assertionId") long assertionId,
                                     @FormDataParam("file") InputStream inputStream,
                                     @FormDataParam("file") FormDataContentDisposition contentDispositionHeader) throws IOException {
+        //  check the file
+        String fileName = contentDispositionHeader.getFileName();
+        if (!(fileName.toLowerCase().endsWith(".xsd") || fileName.toLowerCase().endsWith(".zip"))) {
+            throw new IllegalArgumentException("Only XSD file and Zip file are supported.");
+        }
+
         XMLValidAgainstXSDAssertionProperties properties = new XMLValidAgainstXSDAssertionProperties();
-        properties.setFilename(contentDispositionHeader.getFileName());
+        properties.setFileName(fileName);
         byte[] fileBytes;
         try {
             fileBytes = IOUtils.toByteArray(inputStream);
@@ -111,5 +119,22 @@ public class AssertionResource {
         }
         properties.setFileBytes(fileBytes);
         assertionDAO.updateOtherProperties(assertionId, properties);
+    }
+
+    /**
+     * Download the XSD file (or zip file) from the (XMLValidAgainstXSD) assertion.
+     * @param assertionId
+     * @return
+     */
+    @GET @Path("assertions/{assertionId}/xsdFile")
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public Response getXSDFile(@PathParam("assertionId") long assertionId) {
+        Assertion assertion = assertionDAO.findById(assertionId);
+        XMLValidAgainstXSDAssertionProperties assertionProperties =
+                (XMLValidAgainstXSDAssertionProperties) assertion.getOtherProperties();
+        String fileName = assertionProperties.getFileName();
+        return Response.ok(assertionProperties.getFileBytes())
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                .build();
     }
 }

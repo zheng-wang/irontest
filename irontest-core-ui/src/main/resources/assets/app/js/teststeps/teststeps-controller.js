@@ -54,13 +54,17 @@ angular.module('irontest').controller('TeststepsController', ['$scope', 'Testste
       $scope.teststep = teststep;
     };
 
-    $scope.findOne = function() {
+    //  successCallback is for descendant controllers to do some extra things
+    $scope.findOne = function(successCallback) {
       Teststeps.get({
         testcaseId: $stateParams.testcaseId,
         teststepId: $stateParams.teststepId
       }, function (response) {
         $scope.teststep = new Teststeps(response.teststep);
         $scope.teststepParameters = response.parameters;
+        if (successCallback) {
+          successCallback();
+        }
       }, function(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);
       });
