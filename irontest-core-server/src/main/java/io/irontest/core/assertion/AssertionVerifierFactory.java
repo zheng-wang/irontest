@@ -1,6 +1,7 @@
 package io.irontest.core.assertion;
 
 import io.irontest.models.assertion.Assertion;
+import io.irontest.models.assertion.XMLValidAgainstXSDAssertionProperties;
 
 import java.util.Map;
 
@@ -31,6 +32,8 @@ public class AssertionVerifierFactory {
             result = new IntegerEqualAssertionVerifier();
         } else if (Assertion.TYPE_XML_EQUAL.equals(assertionType)) {
             result = new XMLEqualAssertionVerifier();
+        } else if (Assertion.TYPE_XML_VALID_AGAINST_XSD.equals(assertionType)) {
+            result = new XMLValidAgainstXSDAssertionVerifier();
         } else if (Assertion.TYPE_JSONPATH.equals(assertionType)) {
             result = new JSONPathAssertionVerifier();
         } else if (Assertion.TYPE_JSONPATH_XMLEQUAL.equals(assertionType)){

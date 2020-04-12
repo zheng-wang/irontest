@@ -60,6 +60,11 @@ public class AssertionResource {
     public AssertionVerificationResult verify(AssertionVerificationRequest assertionVerificationRequest) throws InterruptedException {
         Assertion assertion = assertionVerificationRequest.getAssertion();
 
+        //  populate xsd file bytes for XMLValidAgainstXSDAssertion which are not passed from UI to this method
+        if (Assertion.TYPE_XML_VALID_AGAINST_XSD.equals(assertion.getType())) {
+            assertion.setOtherProperties(assertionDAO.findById(assertion.getId()).getOtherProperties());
+        }
+
         //  gather referenceable string properties
         long testcaseId = teststepDAO.findTestcaseIdById(assertion.getTeststepId());
         List<UserDefinedProperty> testcaseUDPs = udpDAO.findByTestcaseId(testcaseId);
