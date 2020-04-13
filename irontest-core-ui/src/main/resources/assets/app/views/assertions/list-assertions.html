@@ -45,13 +45,13 @@
           <li role="menuitem" ng-if="teststep.type === 'SOAP' || teststep.type === 'HTTP' || teststep.type === 'MQ'">
             <a ng-click="assertionsModelObj.createAssertion('Contains')" href="">Contains Assertion</a>
           </li>
-          <li role="menuitem" ng-if="teststep.type === 'MQ'">
+          <li role="menuitem" ng-if="teststep.type === 'HTTP' || teststep.type === 'MQ'">
             <a ng-click="assertionsModelObj.createAssertion('TextEqual')" href="">TextEqual Assertion</a>
           </li>
-          <li role="menuitem" ng-if="teststep.type === 'MQ'">
+          <li role="menuitem" ng-if="teststep.type === 'HTTP' || teststep.type === 'MQ'">
             <a ng-click="assertionsModelObj.createAssertion('Substring')" href="">Substring Assertion</a>
           </li>
-          <li role="menuitem" ng-if="teststep.type === 'MQ'">
+          <li role="menuitem" ng-if="teststep.type === 'HTTP' || teststep.type === 'MQ'">
             <a ng-click="assertionsModelObj.createAssertion('RegexMatch')" href="">RegexMatch Assertion</a>
           </li>
         </ul>
