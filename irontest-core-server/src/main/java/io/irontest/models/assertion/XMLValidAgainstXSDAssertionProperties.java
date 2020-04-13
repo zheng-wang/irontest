@@ -5,8 +5,9 @@ import io.irontest.models.Properties;
 import io.irontest.resources.ResourceJsonViews;
 
 public class XMLValidAgainstXSDAssertionProperties extends Properties {
-    @JsonView({ResourceJsonViews.TeststepEdit.class})
+    @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     private String fileName;
+    @JsonView({ResourceJsonViews.TestcaseExport.class})
     private byte[] fileBytes;
 
     public String getFileName() {

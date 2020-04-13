@@ -3,13 +3,11 @@ package io.irontest.resources;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.irontest.core.runner.*;
-import io.irontest.db.DataTableDAO;
-import io.irontest.db.TeststepDAO;
-import io.irontest.db.UserDefinedPropertyDAO;
-import io.irontest.db.UtilsDAO;
+import io.irontest.db.*;
 import io.irontest.models.AppInfo;
 import io.irontest.models.DataTable;
 import io.irontest.models.UserDefinedProperty;
+import io.irontest.models.assertion.Assertion;
 import io.irontest.models.endpoint.Endpoint;
 import io.irontest.models.teststep.MQRFH2Folder;
 import io.irontest.models.teststep.Teststep;
@@ -42,14 +40,16 @@ public class TeststepResource {
     private UserDefinedPropertyDAO udpDAO;
     private UtilsDAO utilsDAO;
     private DataTableDAO dataTableDAO;
+    private AssertionDAO assertionDAO;
 
     public TeststepResource(AppInfo appInfo, TeststepDAO teststepDAO, UserDefinedPropertyDAO udpDAO, UtilsDAO utilsDAO,
-                            DataTableDAO dataTableDAO) {
+                            DataTableDAO dataTableDAO, AssertionDAO assertionDAO) {
         this.appInfo = appInfo;
         this.teststepDAO = teststepDAO;
         this.udpDAO = udpDAO;
         this.utilsDAO = utilsDAO;
         this.dataTableDAO = dataTableDAO;
+        this.assertionDAO = assertionDAO;
     }
 
     @POST
@@ -97,6 +97,18 @@ public class TeststepResource {
     @PUT @Path("{teststepId}")
     @PermitAll
     public TeststepWrapper update(Teststep teststep) throws Exception {
+        //  Restore otherProperties from system database for existing XMLValidAgainstXSD assertions, as they are not
+        //  supposed to be updated through this API (currently used for UI only).
+        //  Without this code, whenever a new XMLValidAgainstXSD assertion is added, or an existing XMLValidAgainstXSD
+        //  assertion is deleted, all existing XMLValidAgainstXSD assertions in the same test step will see their
+        //  otherProperties.fileBytes set to null in system database.
+        List<Assertion> assertions = teststep.getAssertions();
+        for (Assertion assertion: assertions) {
+            if (assertion.getId() != null && Assertion.TYPE_XML_VALID_AGAINST_XSD.endsWith(assertion.getType())) {
+                assertion.setOtherProperties(assertionDAO.findById(assertion.getId()).getOtherProperties());
+            }
+        }
+
         teststepDAO.update(teststep);
 
         TeststepWrapper wrapper = new TeststepWrapper();
