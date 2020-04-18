@@ -14,6 +14,22 @@ angular.module('irontest', ['common', 'ngSanitize', 'ui.grid', 'ui.grid.resizeCo
   .config(['$httpProvider', function($httpProvider) {
     $httpProvider.interceptors.push('authInterceptor');
   }])
+  .directive('input', function($compile) {      //  disable the default trimming on text input fields
+    return {
+      link(scope, element, attrs) {
+        if (element.attr('type') === 'text') {
+          attrs.$set('ngTrim', 'false');
+        }
+      }
+    };
+  })
+  .directive('textarea', function($compile) {      //  disable the default trimming on textarea fields
+    return {
+      link(scope, element, attrs) {
+        attrs.$set('ngTrim', 'false');
+      }
+    };
+  })
   .run(['$rootScope', '$http', '$window', 'IronTestUtils', function($rootScope, $http, $window, IronTestUtils) {
     $rootScope.$on('pageLoaded', function(event, args) {
       //  adjust main panes height on page loaded
