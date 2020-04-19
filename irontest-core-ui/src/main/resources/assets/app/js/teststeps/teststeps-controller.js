@@ -72,8 +72,7 @@ angular.module('irontest').controller('TeststepsController', ['$scope', 'Testste
 
     $scope.getActionOrInvocationTabHeading = function() {
       var teststep = $scope.teststep;
-      return teststep.type === 'MQ' || teststep.type === 'IIB' || teststep.type === 'AMQP' || teststep.type === 'Wait' ?
-        'Action' : 'Invocation';
+      return ['FTP', 'MQ', 'IIB', 'AMQP', 'Wait'].indexOf(teststep.type) >= 0 ? 'Action' : 'Invocation';
     }
   }
 ]);

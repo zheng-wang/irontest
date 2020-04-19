@@ -39,6 +39,7 @@ public class Endpoint {
             property = "type", visible = true, defaultImpl = Properties.class)
     @JsonSubTypes({
             @JsonSubTypes.Type(value = SOAPEndpointProperties.class, name = Endpoint.TYPE_SOAP),
+            @JsonSubTypes.Type(value = FTPEndpointProperties.class, name = Endpoint.TYPE_FTP),
             @JsonSubTypes.Type(value = MQEndpointProperties.class, name = Endpoint.TYPE_MQ),
             @JsonSubTypes.Type(value = IIBEndpointProperties.class, name = Endpoint.TYPE_IIB)
     })
