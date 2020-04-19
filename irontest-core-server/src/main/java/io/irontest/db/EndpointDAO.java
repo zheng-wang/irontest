@@ -66,13 +66,16 @@ public interface EndpointDAO {
             endpoint = new Endpoint();
             endpoint.setName("Unmanaged Endpoint");
             switch (teststepType) {
+                case Teststep.TYPE_HTTP:
+                    endpoint.setType(Endpoint.TYPE_HTTP);
+                    endpoint.setOtherProperties(new HTTPEndpointProperties());
+                    break;
                 case Teststep.TYPE_SOAP:
                     endpoint.setType(Endpoint.TYPE_SOAP);
                     endpoint.setOtherProperties(new SOAPEndpointProperties());
                     break;
-                case Teststep.TYPE_HTTP:
-                    endpoint.setType(Endpoint.TYPE_HTTP);
-                    endpoint.setOtherProperties(new HTTPEndpointProperties());
+                case Teststep.TYPE_FTP:
+                    endpoint.setType(Endpoint.TYPE_FTP);
                     break;
                 case Teststep.TYPE_DB:
                     endpoint.setType(Endpoint.TYPE_DB);

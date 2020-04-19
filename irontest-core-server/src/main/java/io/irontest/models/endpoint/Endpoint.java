@@ -9,8 +9,9 @@ import io.irontest.models.Properties;
 import io.irontest.resources.ResourceJsonViews;
 
 public class Endpoint {
-    public static final String TYPE_SOAP = "SOAP";
     public static final String TYPE_HTTP = "HTTP";
+    public static final String TYPE_SOAP = "SOAP";
+    public static final String TYPE_FTP = "FTP";
     public static final String TYPE_DB = "DB";
     public static final String TYPE_MQ = "MQ";
     public static final String TYPE_IIB = "IIB";

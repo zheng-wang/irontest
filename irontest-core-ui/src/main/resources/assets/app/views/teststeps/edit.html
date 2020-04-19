@@ -55,14 +55,17 @@
               </div>
             </div>
             <div class="col-lg-10" ng-if="teststep.endpoint">
+              <!-- common for all types of endpoints -->
               <div ng-include="'/ui/views/teststeps/edit-endpoint-details-basic-info.html'"></div>
 
-              <div ng-if="teststep.type === 'SOAP'" ng-controller="SOAPTeststepEndpointController"
-                   ng-include="'/ui/views/teststeps/soap/edit-soap-teststep-endpoint-details.html'"></div>
-              <div ng-if="teststep.type === 'DB'"
-                   ng-include="'/ui/views/teststeps/db/edit-db-teststep-endpoint-details.html'"></div>
               <div ng-if="teststep.type === 'HTTP'"
                    ng-include="'/ui/views/teststeps/http/edit-http-teststep-endpoint-details.html'"></div>
+              <div ng-if="teststep.type === 'SOAP'" ng-controller="SOAPTeststepEndpointController"
+                   ng-include="'/ui/views/teststeps/soap/edit-soap-teststep-endpoint-details.html'"></div>
+              <div ng-if="teststep.type === 'FTP'"
+                   ng-include="'/ui/views/teststeps/ftp/edit-ftp-teststep-endpoint-details.html'"></div>
+              <div ng-if="teststep.type === 'DB'"
+                   ng-include="'/ui/views/teststeps/db/edit-db-teststep-endpoint-details.html'"></div>
               <div ng-if="teststep.type === 'MQ'"
                    ng-include="'/ui/views/teststeps/mq/edit-mq-teststep-endpoint-details.html'"></div>
               <div ng-if="teststep.type === 'IIB'" ng-controller="IIBTeststepEndpointController"
@@ -70,6 +73,7 @@
               <div ng-if="teststep.type === 'AMQP'"
                    ng-include="'/ui/views/teststeps/amqp/edit-amqp-teststep-endpoint-details.html'"></div>
 
+              <!-- common for all types of endpoints -->
               <div ng-include="'/ui/views/teststeps/edit-endpoint-details-bottom-part.html'"></div>
             </div>
             <div class="col-lg-10" ng-if="teststep.endpointProperty">

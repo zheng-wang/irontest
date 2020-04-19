@@ -6,13 +6,11 @@ import com.fasterxml.jackson.annotation.JsonView;
 import io.irontest.models.Properties;
 import io.irontest.resources.ResourceJsonViews;
 
-public class IIBEndpointProperties extends Properties {
+public class FTPEndpointProperties extends Properties {
     @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     private String host;
     @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     private Integer port;
-    @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
-    private boolean useSSL = false;
 
     public String getHost() {
         return host;
@@ -30,26 +28,18 @@ public class IIBEndpointProperties extends Properties {
         this.port = port;
     }
 
-    public boolean isUseSSL() {
-        return useSSL;
-    }
-
-    public void setUseSSL(boolean useSSL) {
-        this.useSSL = useSSL;
-    }
-
     /**
-     * Used to unify integration node address display on test step action tab and test case run report.
+     * Used to unify FTP address display on test step action tab and test case run report.
      * @return
      */
     @JsonProperty
     @JsonView(ResourceJsonViews.TeststepEdit.class)
-    public String getIntegrationNodeAddress() {
-        return (isUseSSL() ? "https" : "http") + "://" + host + ":" + port;
+    public String getFTPAddress() {
+        return "ftp://" + host + ":" + port;
     }
 
     @JsonIgnore
-    public void setIntegrationNodeAddress(String integrationNodeAddress) {
+    public void setFTPAddress(String ftpAddress) {
         //  do nothing
     }
 }
