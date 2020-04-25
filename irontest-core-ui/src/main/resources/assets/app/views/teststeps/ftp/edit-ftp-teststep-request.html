@@ -1,0 +1,39 @@
+<div class="form-group">
+  <label for="fileFrom" class="col-lg-2 control-label">File From</label>
+  <div class="col-lg-2">
+    <select name="fileFrom" id="fileFrom" class="form-control"
+            ng-model="teststep.apiRequest.fileFrom" ng-change="update(teststepForm.$valid)"
+            ng-disabled="appStatus.isForbidden() || steprun.status === 'ongoing'">
+      <option value="Text">Text</option>
+      <option value="File">File</option>
+    </select>
+  </div>
+</div>
+
+<div class="form-group" ng-if="teststep.apiRequest.fileFrom === 'Text'">
+  <div class="col-lg-10">
+    <textarea id="fileContent" name="fileContent" class="form-control" spellcheck="false" rows="30"
+              ng-model="teststep.apiRequest.fileContent" ng-change="autoSave(teststepForm.$valid)"
+              ng-readonly="appStatus.isForbidden()"></textarea>
+  </div>
+</div>
+
+<div ng-if="teststep.apiRequest.fileFrom === 'File'">
+  <div class="form-group"></div> <!-- spacer -->
+  <div class="form-group"></div> <!-- spacer -->
+  <div class="form-group"></div> <!-- spacer -->
+  <div class="form-group">
+    <div class="col-lg-offset-2 col-lg-1">
+      <button type="file" class="btn btn-info" ngf-select="uploadRequestFile($file)" ngf-max-size="30MB"
+              ng-disabled="appStatus.isForbidden()">Select File</button>
+    </div>
+    <div class="col-lg-1" ng-if="teststep.apiRequest.filename">
+      <button type="button" class="btn btn-info" ng-click="downloadRequestFile()">Download File</button>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-lg-offset-2 col-lg-7" ng-if="teststep.apiRequest.filename">
+      <h5>{{teststep.requestFilename}}</h5>
+    </div>
+  </div>
+</div>

@@ -42,7 +42,7 @@ public interface TeststepDAO extends CrossReferenceDAO {
             "sequence SMALLINT NOT NULL, name VARCHAR(200) NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "type VARCHAR(20) NOT NULL, description CLOB, action VARCHAR(50), endpoint_id BIGINT, " +
             "endpoint_property VARCHAR(200), request BLOB, request_type VARCHAR(20) NOT NULL DEFAULT 'Text', " +
-            "request_filename VARCHAR(200), other_properties CLOB, step_data_backup CLOB, " +
+            "request_filename VARCHAR(200), api_request CLOB, other_properties CLOB, step_data_backup CLOB, " +
             "created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (endpoint_id) REFERENCES endpoint(id), " +
@@ -64,12 +64,13 @@ public interface TeststepDAO extends CrossReferenceDAO {
      * @param otherProperties
      * @return
      */
-    @SqlUpdate("insert into teststep (testcase_id, sequence, type, request, endpoint_id, other_properties) values (" +
-            ":t.testcaseId, (select coalesce(max(sequence), 0) + 1 from teststep where testcase_id = :t.testcaseId), " +
-            ":t.type, :request, :endpointId, :otherProperties)")
+    @SqlUpdate("insert into teststep (testcase_id, sequence, type, request, api_request, endpoint_id, " +
+            "other_properties) values (:t.testcaseId, " +
+              "(select coalesce(max(sequence), 0) + 1 from teststep where testcase_id = :t.testcaseId), " +
+            ":t.type, :request, :apiRequest, :endpointId, :otherProperties)")
     @GetGeneratedKeys
     long _insertWithoutName(@BindBean("t") Teststep teststep, @Bind("request") Object request, @Bind("endpointId") Long endpointId,
-                            @Bind("otherProperties") String otherProperties);
+                            @Bind("otherProperties") String otherProperties, @Bind("apiRequest") String apiRequest);
 
     @SqlUpdate("insert into teststep (testcase_id, sequence, name, type, description, action, request, request_type, " +
             "request_filename, endpoint_id, endpoint_property, other_properties) values (:t.testcaseId, " +
@@ -92,14 +93,18 @@ public interface TeststepDAO extends CrossReferenceDAO {
             sampleRequest = "select * from ? where ?";
         }
 
-        //  set initial/default property values (in the Properties sub-class)
+        //  set initial/default property values (in the Properties sub-class) or API request
         Properties otherProperties = new Properties();
+        APIRequest apiRequest = new APIRequest();
         switch (teststep.getType()) {
+            case Teststep.TYPE_HTTP:
+                otherProperties = new HTTPTeststepProperties();
+                break;
             case Teststep.TYPE_SOAP:
                 otherProperties = new SOAPTeststepProperties();
                 break;
-            case Teststep.TYPE_HTTP:
-                otherProperties = new HTTPTeststepProperties();
+            case Teststep.TYPE_FTP:
+                apiRequest = new FtpUploadRequestFileFromText();
                 break;
             case Teststep.TYPE_MQ:
                 otherProperties = new MQTeststepProperties();
@@ -114,7 +119,8 @@ public interface TeststepDAO extends CrossReferenceDAO {
         Endpoint endpoint = endpointDAO().createUnmanagedEndpoint(teststep.getType(), appMode);
         Object request = sampleRequest == null ? null : sampleRequest.getBytes();
         long id = _insertWithoutName(teststep, request, endpoint == null ? null : endpoint.getId(),
-                new ObjectMapper().writeValueAsString(otherProperties));
+                new ObjectMapper().writeValueAsString(otherProperties),
+                new ObjectMapper().writeValueAsString(apiRequest));
 
         updateNameForInsert(id, "Step " + id);
 

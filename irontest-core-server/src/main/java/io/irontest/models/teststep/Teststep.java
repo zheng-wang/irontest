@@ -62,6 +62,8 @@ public class Teststep {
     @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     private String requestFilename;
     @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
+    private APIRequest apiRequest;
+    @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     private List<Assertion> assertions = new ArrayList<>();
     @JsonView(ResourceJsonViews.TestcaseExport.class)
     private List<PropertyExtractor> propertyExtractors = new ArrayList<>();
@@ -147,6 +149,14 @@ public class Teststep {
 
     public void setRequestFilename(String requestFilename) {
         this.requestFilename = requestFilename;
+    }
+
+    public APIRequest getApiRequest() {
+        return apiRequest;
+    }
+
+    public void setApiRequest(APIRequest apiRequest) {
+        this.apiRequest = apiRequest;
     }
 
     public Endpoint getEndpoint() {
