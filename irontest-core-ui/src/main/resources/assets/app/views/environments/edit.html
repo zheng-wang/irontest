@@ -47,9 +47,10 @@
             Create <span class="caret"></span>
           </button>
           <ul class="dropdown-menu" uib-dropdown-menu role="menu">
-            <li role="menuitem"><a ng-click="createEndpoint('SOAP')" href="">SOAP Endpoint</a></li>
-            <li role="menuitem"><a ng-click="createEndpoint('DB')" href="">Database Endpoint</a></li>
             <li role="menuitem"><a ng-click="createEndpoint('HTTP')" href="">HTTP Endpoint</a></li>
+            <li role="menuitem"><a ng-click="createEndpoint('SOAP')" href="">SOAP Endpoint</a></li>
+            <li role="menuitem"><a ng-click="createEndpoint('FTP')" href="">FTP Endpoint</a></li>
+            <li role="menuitem"><a ng-click="createEndpoint('DB')" href="">Database Endpoint</a></li>
             <li role="menuitem"><a ng-click="createEndpoint('MQ')" href="">MQ Endpoint</a></li>
             <li role="menuitem"><a ng-click="createEndpoint('IIB')" href="">IIB Endpoint</a></li>
             <li role="menuitem"><a ng-click="createEndpoint('AMQP')" href="">AMQP Endpoint</a></li>
@@ -58,7 +59,7 @@
       </div>
       <div class="form-group"></div> <!-- spacer -->
       <div class="row">
-        <div ng-if="activeTabIndex === 1" ui-grid="{paginationPageSizes: [20,50,100], paginationPageSize: 20,
+        <div ng-if="activeTabIndex === 1" ui-grid="{paginationPageSizes: [25,50,100], paginationPageSize: 25,
                enableFiltering: true, data: environment.endpoints, columnDefs: endpointGridColumnDefs}"
              ui-grid-pagination ui-grid-resize-columns ui-grid-move-columns class="ui-grid endpoint-grid"></div>
       </div>
