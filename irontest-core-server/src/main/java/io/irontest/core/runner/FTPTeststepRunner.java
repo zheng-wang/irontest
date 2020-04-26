@@ -52,27 +52,28 @@ public class FTPTeststepRunner extends TeststepRunner {
         }
 
         FTPEndpointProperties endpointProperties = (FTPEndpointProperties) endpoint.getOtherProperties();
-        String username = endpoint.getUsername() == null ? "anonymous" : endpoint.getUsername();
-        String password = endpoint.getUsername() == null ?
-                System.getProperty("user.name") + "@" + InetAddress.getLocalHost().getHostName() :
-                endpoint.getPassword();
+        String username = StringUtils.trimToEmpty(endpoint.getUsername());
+        String password = endpoint.getPassword();
+        if ("".equals(username)) {
+            username = "anonymous";
+            password = System.getProperty("user.name") + "@" + InetAddress.getLocalHost().getHostName();
+        }
         FTPClient ftpClient = new FTPClient();
         ftpClient.addProtocolCommandListener(new PrintCommandListener(new PrintWriter(System.out)));
+        ftpClient.addProtocolCommandListener(new ProtocolCommandListener() {
+            @Override
+            public void protocolCommandSent(ProtocolCommandEvent event) {}
+
+            @Override
+            public void protocolReplyReceived(ProtocolCommandEvent event) {
+                if (FTPReply.isNegativePermanent(event.getReplyCode())) {
+                    throw new RuntimeException("Failed to put the file. " + event.getMessage());
+                }
+            }
+        });
         try {
             ftpClient.connect(endpointProperties.getHost(), endpointProperties.getPort());
             ftpClient.login(username, password);
-
-            ftpClient.addProtocolCommandListener(new ProtocolCommandListener() {
-                @Override
-                public void protocolCommandSent(ProtocolCommandEvent event) {}
-
-                @Override
-                public void protocolReplyReceived(ProtocolCommandEvent event) {
-                    if (FTPReply.isNegativePermanent(event.getReplyCode())) {
-                        throw new RuntimeException("Failed to put the file. " + event.getMessage());
-                    }
-                }
-            });
             ftpClient.storeFile(targetFilePath, new ByteArrayInputStream(fileBytes));
         } finally {
             ftpClient.disconnect();
