@@ -73,7 +73,6 @@ public class Teststep {
     @JsonSubTypes({
             @JsonSubTypes.Type(value = HTTPTeststepProperties.class, name = Teststep.TYPE_HTTP),
             @JsonSubTypes.Type(value = SOAPTeststepProperties.class, name = Teststep.TYPE_SOAP),
-            @JsonSubTypes.Type(value = FTPTeststepProperties.class, name = Teststep.TYPE_FTP),
             @JsonSubTypes.Type(value = MQTeststepProperties.class, name = Teststep.TYPE_MQ),
             @JsonSubTypes.Type(value = IIBTeststepProperties.class, name = Teststep.TYPE_IIB),
             @JsonSubTypes.Type(value = AMQPTeststepProperties.class, name = Teststep.TYPE_AMQP),

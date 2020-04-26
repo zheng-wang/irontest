@@ -1,12 +1,20 @@
 <div class="form-group">
-  <label for="fileFrom" class="col-lg-2 control-label">File From</label>
-  <div class="col-lg-2">
+  <label for="fileFrom" class="col-lg-1 control-label">File From</label>
+  <div class="col-lg-1">
     <select name="fileFrom" id="fileFrom" class="form-control"
             ng-model="teststep.apiRequest.fileFrom" ng-change="update(teststepForm.$valid)"
             ng-disabled="appStatus.isForbidden() || steprun.status === 'ongoing'">
       <option value="Text">Text</option>
       <option value="File">File</option>
     </select>
+  </div>
+  <div ng-if="teststep.apiRequest.fileFrom === 'Text'">
+    <label for="targetFileName" class="col-lg-2 control-label">Target File Name</label>
+    <div class="col-lg-5">
+      <input name="targetFilename" id="targetFileName" type="text" class="form-control" ng-trim="true"
+             ng-model="teststep.apiRequest.targetFileName" ng-change="autoSave(teststepForm.$valid)" spellcheck="false"
+             ng-readonly="appStatus.isForbidden()">
+    </div>
   </div>
 </div>
 
