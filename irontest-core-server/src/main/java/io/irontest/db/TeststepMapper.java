@@ -2,6 +2,7 @@ package io.irontest.db;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.irontest.models.endpoint.Endpoint;
+import io.irontest.models.teststep.APIRequest;
 import io.irontest.models.teststep.Teststep;
 import io.irontest.models.teststep.TeststepRequestType;
 import io.irontest.utils.IronTestUtils;
@@ -47,6 +48,13 @@ public class TeststepMapper implements RowMapper<Teststep> {
                 Object request = teststep.getRequestType() == TeststepRequestType.FILE ?
                         requestBytes : new String(requestBytes);
                 teststep.setRequest(request);
+            }
+        }
+        if (fields.contains("api_request") && rs.getString("api_request") != null) {
+            try {
+                teststep.setApiRequest(new ObjectMapper().readValue(rs.getString("api_request"), APIRequest.class));
+            } catch (IOException e) {
+                throw new SQLException("Failed to deserialize api_request JSON.", e);
             }
         }
         teststep.setRequestFilename(fields.contains("request_filename") ?

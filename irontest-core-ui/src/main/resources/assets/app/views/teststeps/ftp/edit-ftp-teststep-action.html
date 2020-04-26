@@ -9,7 +9,7 @@
 
 <div class="form-group">
   <label class="col-lg-2 control-label">Action</label>
-  <div class="col-lg-3"><h5>Upload</h5></div>
+  <div class="col-lg-3"><h5>Put</h5></div>
   <div class="col-lg-1">
     <button type="button" class="btn btn-info btn-block" ng-click="doAction()"
             ng-disabled="appStatus.isForbidden() || endpointInfoIncomplete() || actionInfoIncomplete() ||
@@ -21,5 +21,4 @@
   </div>
 </div>
 
-<div ng-if="teststep.action === 'Enqueue' || teststep.action === 'Publish'"
-     ng-include="'/ui/views/teststeps/mq/edit-mq-teststep-request.html'"></div>
+<div ng-include="'/ui/views/teststeps/ftp/edit-ftp-teststep-request.html'"></div>

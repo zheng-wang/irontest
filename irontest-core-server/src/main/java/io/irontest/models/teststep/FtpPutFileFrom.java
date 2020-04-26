@@ -2,12 +2,12 @@ package io.irontest.models.teststep;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public enum FtpUploadFileFrom {
+public enum FtpPutFileFrom {
     TEXT("Text"), FILE("File");
 
     private final String text;
 
-    FtpUploadFileFrom(String text) {
+    FtpPutFileFrom(String text) {
         this.text = text;
     }
 
@@ -17,8 +17,8 @@ public enum FtpUploadFileFrom {
         return text;
     }
 
-    public static FtpUploadFileFrom getByText(String text) {
-        for (FtpUploadFileFrom e : values()) {
+    public static FtpPutFileFrom getByText(String text) {
+        for (FtpPutFileFrom e : values()) {
             if (e.text.equals(text)) {
                 return e;
             }

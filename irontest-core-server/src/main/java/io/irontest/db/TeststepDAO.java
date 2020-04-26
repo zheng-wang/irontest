@@ -104,7 +104,7 @@ public interface TeststepDAO extends CrossReferenceDAO {
                 otherProperties = new SOAPTeststepProperties();
                 break;
             case Teststep.TYPE_FTP:
-                apiRequest = new FtpUploadRequestFileFromText();
+                apiRequest = new FtpPutRequestFileFromText();
                 break;
             case Teststep.TYPE_MQ:
                 otherProperties = new MQTeststepProperties();
@@ -154,13 +154,14 @@ public interface TeststepDAO extends CrossReferenceDAO {
     }
 
     @SqlUpdate("update teststep set name = :name, description = :description, action = :action, request = :request, " +
-            "request_type = :requestType, request_filename = :requestFilename, endpoint_id = :endpointId, " +
-            "endpoint_property = :endpointProperty, other_properties = :otherProperties, updated = CURRENT_TIMESTAMP " +
-            "where id = :id")
+            "request_type = :requestType, request_filename = :requestFilename, api_request = :apiRequest, " +
+            "endpoint_id = :endpointId, endpoint_property = :endpointProperty, other_properties = :otherProperties, " +
+            "updated = CURRENT_TIMESTAMP where id = :id")
     void _updateWithStringRequest(@Bind("name") String name, @Bind("description") String description,
                                   @Bind("action") String action, @Bind("request") Object request,
                                   @Bind("requestType") String requestType,
                                   @Bind("requestFilename") String requestFilename,
+                                  @Bind("apiRequest") String apiRequest,
                                   @Bind("id") long id, @Bind("endpointId") Long endpointId,
                                   @Bind("endpointProperty") String endpointProperty,
                                   @Bind("otherProperties") String otherProperties);
@@ -204,9 +205,10 @@ public interface TeststepDAO extends CrossReferenceDAO {
                     teststep.getEndpointProperty(), otherProperties);
         } else {       // update teststep with string request
             Object request = teststep.getRequest() == null ? null : ((String) teststep.getRequest()).getBytes();
+            String apiRequest = new ObjectMapper().writeValueAsString(teststep.getApiRequest());
             _updateWithStringRequest(teststep.getName(), teststep.getDescription(), teststep.getAction(), request,
-                    teststep.getRequestType().toString(), teststep.getRequestFilename(), teststep.getId(), newEndpointId,
-                    teststep.getEndpointProperty(), otherProperties);
+                    teststep.getRequestType().toString(), teststep.getRequestFilename(), apiRequest, teststep.getId(),
+                    newEndpointId, teststep.getEndpointProperty(), otherProperties);
         }
 
         updateEndpointIfExists(oldEndpoint, newEndpoint);
