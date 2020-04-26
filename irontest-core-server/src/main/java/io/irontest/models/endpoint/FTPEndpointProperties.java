@@ -29,17 +29,17 @@ public class FTPEndpointProperties extends Properties {
     }
 
     /**
-     * Used to unify FTP URL display on test step action tab and test case run report.
+     * Used to unify FTP server URL display on test step action tab and test case run report.
      * @return
      */
     @JsonProperty
     @JsonView(ResourceJsonViews.TeststepEdit.class)
-    public String getFtpURL() {
+    public String getFtpServerURL() {
         return "ftp://" + host + ":" + port;
     }
 
     @JsonIgnore
-    public void setFtpURL(String ftpURL) {
+    public void setFtpServerURL(String ftpServerURL) {
         //  do nothing
     }
 }

@@ -25,7 +25,7 @@ angular.module('irontest').controller('FTPTeststepActionController', ['$scope', 
 
     $scope.actionInfoIncomplete = function() {
       var apiRequest = $scope.teststep.apiRequest;
-      return apiRequest.fileFrom === 'Text' && (!apiRequest.fileContent || !apiRequest.targetFileName);
+      return apiRequest.fileFrom === 'Text' && (!apiRequest.fileContent || !apiRequest.targetFilePath);
     };
 
     $scope.doAction = function() {

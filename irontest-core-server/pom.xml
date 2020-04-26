@@ -161,6 +161,11 @@
             <artifactId>mqlight-api</artifactId>
             <version>1.0.2016062300</version>
         </dependency>
+        <dependency>
+            <groupId>commons-net</groupId>
+            <artifactId>commons-net</artifactId>
+            <version>3.6</version>
+        </dependency>
 
         <!-- WireMock's dependencies -->
         <dependency>

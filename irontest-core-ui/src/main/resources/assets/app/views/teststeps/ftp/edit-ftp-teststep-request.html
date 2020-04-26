@@ -1,5 +1,5 @@
 <div class="form-group">
-  <label for="fileFrom" class="col-lg-1 control-label">File From</label>
+  <label for="fileFrom" class="col-lg-2 control-label">File From</label>
   <div class="col-lg-1">
     <select name="fileFrom" id="fileFrom" class="form-control"
             ng-model="teststep.apiRequest.fileFrom" ng-change="update(teststepForm.$valid)"
@@ -9,10 +9,10 @@
     </select>
   </div>
   <div ng-if="teststep.apiRequest.fileFrom === 'Text'">
-    <label for="targetFileName" class="col-lg-2 control-label">Target File Name</label>
+    <label for="targetFilePath" class="col-lg-2 control-label">Target File Path</label>
     <div class="col-lg-5">
-      <input name="targetFilename" id="targetFileName" type="text" class="form-control" ng-trim="true"
-             ng-model="teststep.apiRequest.targetFileName" ng-change="autoSave(teststepForm.$valid)" spellcheck="false"
+      <input name="targetFilePath" id="targetFilePath" type="text" class="form-control" ng-trim="true"
+             ng-model="teststep.apiRequest.targetFilePath" ng-change="autoSave(teststepForm.$valid)" spellcheck="false"
              ng-readonly="appStatus.isForbidden()">
     </div>
   </div>
