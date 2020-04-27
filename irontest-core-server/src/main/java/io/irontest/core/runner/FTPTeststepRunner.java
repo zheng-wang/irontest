@@ -16,7 +16,6 @@ import org.apache.commons.net.ftp.FTPReply;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.InetAddress;
 
 public class FTPTeststepRunner extends TeststepRunner {
     protected BasicTeststepRun run(Teststep teststep) throws Exception {
@@ -32,11 +31,14 @@ public class FTPTeststepRunner extends TeststepRunner {
     }
 
     private void put(Endpoint endpoint, FtpPutRequest ftpPutRequest) throws IOException {
+        String username = StringUtils.trimToEmpty(endpoint.getUsername());
         String targetFilePath = StringUtils.trimToEmpty(ftpPutRequest.getTargetFilePath());
         byte[] fileBytes = null;
 
         //  validate arguments
-        if ("".equals(targetFilePath)) {
+        if ("".equals(username)) {
+            throw new IllegalArgumentException("Username not specified in Endpoint.");
+        } else if ("".equals(targetFilePath)) {
             throw new IllegalArgumentException("Target File Path not specified.");
         }
         if (ftpPutRequest instanceof FtpPutRequestFileFromText) {
@@ -52,12 +54,7 @@ public class FTPTeststepRunner extends TeststepRunner {
         }
 
         FTPEndpointProperties endpointProperties = (FTPEndpointProperties) endpoint.getOtherProperties();
-        String username = StringUtils.trimToEmpty(endpoint.getUsername());
         String password = getDecryptedEndpointPassword();
-        if ("".equals(username)) {
-            username = "anonymous";
-            password = System.getProperty("user.name") + "@" + InetAddress.getLocalHost().getHostName();
-        }
         FTPClient ftpClient = new FTPClient();
         ftpClient.addProtocolCommandListener(new PrintCommandListener(new PrintWriter(System.out)));
         ftpClient.addProtocolCommandListener(new ProtocolCommandListener() {
