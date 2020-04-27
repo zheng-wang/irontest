@@ -53,7 +53,7 @@ public class FTPTeststepRunner extends TeststepRunner {
 
         FTPEndpointProperties endpointProperties = (FTPEndpointProperties) endpoint.getOtherProperties();
         String username = StringUtils.trimToEmpty(endpoint.getUsername());
-        String password = endpoint.getPassword();
+        String password = getDecryptedEndpointPassword();
         if ("".equals(username)) {
             username = "anonymous";
             password = System.getProperty("user.name") + "@" + InetAddress.getLocalHost().getHostName();
@@ -74,6 +74,7 @@ public class FTPTeststepRunner extends TeststepRunner {
         try {
             ftpClient.connect(endpointProperties.getHost(), endpointProperties.getPort());
             ftpClient.login(username, password);
+            ftpClient.enterLocalPassiveMode();
             ftpClient.storeFile(targetFilePath, new ByteArrayInputStream(fileBytes));
         } finally {
             ftpClient.disconnect();
