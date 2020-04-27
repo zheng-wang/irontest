@@ -261,7 +261,7 @@
   width: 65%;
 }
 .teststep-run-report-modal .modal-content {
-  height: 950px;
+  height: 800px;           /* for screen with resolution height >= 1080px */
   overflow-y: auto;
 }
 .udp-value-textarea-editor-modal, .datatable-string-cell-textarea-editor-modal, .teststep-run-report-modal {

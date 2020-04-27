@@ -32,13 +32,13 @@ public class FTPTeststepRunner extends TeststepRunner {
 
     private void put(Endpoint endpoint, FtpPutRequest ftpPutRequest) throws IOException {
         String username = StringUtils.trimToEmpty(endpoint.getUsername());
-        String targetFilePath = StringUtils.trimToEmpty(ftpPutRequest.getTargetFilePath());
+        String remoteFilePath = StringUtils.trimToEmpty(ftpPutRequest.getRemoteFilePath());
         byte[] fileBytes = null;
 
         //  validate arguments
         if ("".equals(username)) {
             throw new IllegalArgumentException("Username not specified in Endpoint.");
-        } else if ("".equals(targetFilePath)) {
+        } else if ("".equals(remoteFilePath)) {
             throw new IllegalArgumentException("Target File Path not specified.");
         }
         if (ftpPutRequest instanceof FtpPutRequestFileFromText) {
@@ -72,7 +72,7 @@ public class FTPTeststepRunner extends TeststepRunner {
             ftpClient.connect(endpointProperties.getHost(), endpointProperties.getPort());
             ftpClient.login(username, password);
             ftpClient.enterLocalPassiveMode();
-            ftpClient.storeFile(targetFilePath, new ByteArrayInputStream(fileBytes));
+            ftpClient.storeFile(remoteFilePath, new ByteArrayInputStream(fileBytes));
         } finally {
             ftpClient.disconnect();
         }

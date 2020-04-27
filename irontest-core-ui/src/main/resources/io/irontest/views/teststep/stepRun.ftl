@@ -1,6 +1,14 @@
 <#ftl encoding='UTF-8'>
+
+<#assign teststep = stepRun.teststep>
+<#assign apiRequest = teststep.apiRequest>
+<#if teststep.endpoint??>  <#-- not all test steps have endpoint (e.g. Wait step) -->
+  <#assign endpoint = teststep.endpoint>
+  <#assign endpointProperties = endpoint.otherProperties>
+</#if>
+
 <div class="row" id="step-run-${ stepRun.id?string.computer }">
-  <div class="col-lg-11"><h4>${ stepRun.teststep.name }</h4></div>
+  <div class="col-lg-11"><h4>${ teststep.name }</h4></div>
   <#if testcaseRun??>
     <div class="col-lg-1"><a href="#page-top">Top</a></div>
   </#if>
@@ -15,27 +23,36 @@
   <div class="col-lg-1">${ stepRun.duration } ms</div>
 </div>
 
-<#if stepRun.teststep.description?? && stepRun.teststep.description?has_content>
+<#if teststep.description?? && teststep.description?has_content>
   <div class="row">
     <div class="col-lg-1">Description:</div>
-    <div class="col-lg-11">${ stepRun.teststep.description }</div>
+    <div class="col-lg-11">${ teststep.description }</div>
   </div>
 </#if>
 
 <div class="row">
   <div class="col-lg-1">Action:</div>
   <div class="col-lg-11">
-    <#include "${stepRun.teststep.type?lower_case}TeststepActionDescription.ftl">
+    <#include "${teststep.type?lower_case}TeststepActionDescription.ftl">
   </div>
 </div>
 
-<#-- Request, Response and Assertions info -->
-<#assign teststepTypes = ["SOAP", "DB", "HTTP", "MQ", "AMQP"]>
-<#if teststepTypes?seq_contains(stepRun.teststep.type) && !(stepRun.teststep.type == 'MQ' && stepRun.teststep.action == 'Clear')>
+<#-- Error info -->
+<#if stepRun.errorMessage??>
+  <div class="row">
+    <div class="col-lg-1">Error:</div>
+    <div class="col-lg-11">${stepRun.errorMessage}</div>
+  </div>
+</#if>
+
+<#-- Request, Response, and Assertions info -->
+<#assign teststepTypes = ["HTTP", "SOAP", "FTP", "DB", "MQ", "AMQP"]>
+<#if teststepTypes?seq_contains(teststep.type) && !(teststep.type == 'MQ' && teststep.action == 'Clear')>
   <div class="form-group"></div> <#-- spacer -->
 
-  <#assign hasRequestTab = !(stepRun.teststep.type == 'MQ' && (stepRun.teststep.action == 'CheckDepth' || stepRun.teststep.action == 'Dequeue'))>
-  <#assign hasResponseAndAssertionsTabs = !(stepRun.teststep.type == 'MQ' && (stepRun.teststep.action == 'Enqueue' || stepRun.teststep.action == 'Publish')) && !(stepRun.teststep.type == 'AMQP')>
+  <#assign hasRequestTab = !(teststep.type == 'MQ' && (teststep.action == 'CheckDepth' || teststep.action == 'Dequeue'))>
+  <#assign hasResponseAndAssertionsTabs = !(teststep.type == 'MQ' && (teststep.action == 'Enqueue' || teststep.action == 'Publish')) &&
+    !(teststep.type == 'AMQP') && !(teststep.type == 'FTP')>
   <div>
     <#-- Nav tabs -->
     <ul class="nav nav-tabs tabs-in-test-report" role="tablist">
@@ -74,7 +91,7 @@
   <div class="row">
     <div class="col-lg-1" id="stub-requests-in-step-run-${ stepRun.id?string.computer }">Stub Requests</div>
     <div class="col-lg-11">
-      <#t><#include "${stepRun.teststep.type?lower_case}TeststepResponse.ftl">
+      <#t><#include "${teststep.type?lower_case}TeststepResponse.ftl">
     </div>
   </div>
 </#if>
@@ -84,13 +101,5 @@
   <div class="row">
     <div class="col-lg-1">Info:</div>
     <div class="col-lg-11">${stepRun.infoMessage}</div>
-  </div>
-</#if>
-
-<#-- Error info -->
-<#if stepRun.errorMessage??>
-  <div class="row">
-    <div class="col-lg-1">Error:</div>
-    <div class="col-lg-11">${stepRun.errorMessage}</div>
   </div>
 </#if>

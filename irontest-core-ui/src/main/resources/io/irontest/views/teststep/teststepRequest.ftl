@@ -1,8 +1,10 @@
 <div class="form-group"></div> <#-- spacer -->
 
-<#if stepRun.teststep.type == 'HTTP' || stepRun.teststep.type == 'SOAP'>
+<#if teststep.type == 'HTTP' || teststep.type == 'SOAP'>
   <#include "httpTeststepRequest.ftl">
-<#elseif stepRun.teststep.type == "MQ">
+<#elseif teststep.type == "FTP">
+  <#include "ftpTeststepRequest.ftl">
+<#elseif teststep.type == "MQ">
   <#include "mqTeststepRequest.ftl">
 <#else>
   <div class="row">

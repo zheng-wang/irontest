@@ -9,10 +9,10 @@
     </select>
   </div>
   <div ng-if="teststep.apiRequest.fileFrom === 'Text'">
-    <label for="targetFilePath" class="col-lg-2 control-label">Target File Path</label>
+    <label for="remoteFilePath" class="col-lg-2 control-label">Remote File Path</label>
     <div class="col-lg-5">
-      <input name="targetFilePath" id="targetFilePath" type="text" class="form-control" ng-trim="true"
-             ng-model="teststep.apiRequest.targetFilePath" ng-change="autoSave(teststepForm.$valid)" spellcheck="false"
+      <input name="remoteFilePath" id="remoteFilePath" type="text" class="form-control" ng-trim="true"
+             ng-model="teststep.apiRequest.remoteFilePath" ng-change="autoSave(teststepForm.$valid)" spellcheck="false"
              ng-readonly="appStatus.isForbidden()">
     </div>
   </div>

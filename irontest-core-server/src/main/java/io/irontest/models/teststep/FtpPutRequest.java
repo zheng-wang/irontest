@@ -2,7 +2,7 @@ package io.irontest.models.teststep;
 
 public class FtpPutRequest extends APIRequest {
     private FtpPutFileFrom fileFrom = FtpPutFileFrom.TEXT;
-    private String targetFilePath;
+    private String remoteFilePath;
 
     public FtpPutFileFrom getFileFrom() {
         return fileFrom;
@@ -12,11 +12,11 @@ public class FtpPutRequest extends APIRequest {
         this.fileFrom = fileFrom;
     }
 
-    public String getTargetFilePath() {
-        return targetFilePath;
+    public String getRemoteFilePath() {
+        return remoteFilePath;
     }
 
-    public void setTargetFilePath(String targetFilePath) {
-        this.targetFilePath = targetFilePath;
+    public void setRemoteFilePath(String remoteFilePath) {
+        this.remoteFilePath = remoteFilePath;
     }
 }
