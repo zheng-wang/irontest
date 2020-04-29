@@ -1,7 +1,9 @@
 <#ftl encoding='UTF-8'>
 
 <#assign teststep = stepRun.teststep>
-<#assign apiRequest = teststep.apiRequest>
+<#if teststep.apiRequest??>  <#-- not all test steps have apiRequest (e.g. Wait step) -->
+  <#assign apiRequest = teststep.apiRequest>
+</#if>
 <#if teststep.endpoint??>  <#-- not all test steps have endpoint (e.g. Wait step) -->
   <#assign endpoint = teststep.endpoint>
   <#assign endpointProperties = endpoint.otherProperties>
