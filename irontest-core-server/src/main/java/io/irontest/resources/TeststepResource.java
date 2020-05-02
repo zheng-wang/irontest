@@ -206,6 +206,24 @@ public class TeststepResource {
     }
 
     /**
+     * Save the uploaded file as Teststep's API request file.
+     * Use @POST instead of @PUT because ng-file-upload seems not working with PUT.
+     * @param teststepId
+     * @param inputStream
+     * @param contentDispositionHeader
+     * @return
+     * @throws IOException
+     */
+    @POST @Path("{teststepId}/apiRequestFile")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @PermitAll
+    public Teststep saveAPIRequestFile(@PathParam("teststepId") long teststepId,
+                                    @FormDataParam("file") InputStream inputStream,
+                                    @FormDataParam("file") FormDataContentDisposition contentDispositionHeader) throws IOException {
+        return teststepDAO.saveApiRequestFile(teststepId, contentDispositionHeader.getFileName(), inputStream);
+    }
+
+    /**
      * Download Teststep.request as a file.
      * @param teststepId
      * @return

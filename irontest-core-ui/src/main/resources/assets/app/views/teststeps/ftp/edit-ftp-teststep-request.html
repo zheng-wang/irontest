@@ -8,13 +8,11 @@
       <option value="File">File</option>
     </select>
   </div>
-  <div ng-if="teststep.apiRequest.fileFrom === 'Text'">
-    <label for="remoteFilePath" class="col-lg-2 control-label">Remote File Path</label>
-    <div class="col-lg-5">
-      <input name="remoteFilePath" id="remoteFilePath" type="text" class="form-control" ng-trim="true"
-             ng-model="teststep.apiRequest.remoteFilePath" ng-change="autoSave(teststepForm.$valid)" spellcheck="false"
-             ng-readonly="appStatus.isForbidden()">
-    </div>
+  <label for="remoteFilePath" class="col-lg-2 control-label">Remote File Path</label>
+  <div class="col-lg-5">
+    <input name="remoteFilePath" id="remoteFilePath" type="text" class="form-control" ng-trim="true"
+           ng-model="teststep.apiRequest.remoteFilePath" ng-change="autoSave(teststepForm.$valid)" spellcheck="false"
+           ng-readonly="appStatus.isForbidden()">
   </div>
 </div>
 
@@ -32,16 +30,16 @@
   <div class="form-group"></div> <!-- spacer -->
   <div class="form-group">
     <div class="col-lg-offset-2 col-lg-1">
-      <button type="file" class="btn btn-info" ngf-select="uploadRequestFile($file)" ngf-max-size="30MB"
+      <button type="file" class="btn btn-info" ngf-select="uploadAPIRequestFile($file)" ngf-max-size="10MB"
               ng-disabled="appStatus.isForbidden()">Select File</button>
     </div>
-    <div class="col-lg-1" ng-if="teststep.apiRequest.filename">
-      <button type="button" class="btn btn-info" ng-click="downloadRequestFile()">Download File</button>
+    <div class="col-lg-1" ng-if="teststep.apiRequest.fileName">
+      <button type="button" class="btn btn-info" ng-click="downloadAPIRequestFile()">Download File</button>
     </div>
   </div>
   <div class="form-group">
-    <div class="col-lg-offset-2 col-lg-7" ng-if="teststep.apiRequest.filename">
-      <h5>{{teststep.requestFilename}}</h5>
+    <div class="col-lg-offset-2 col-lg-7" ng-if="teststep.apiRequest.fileName">
+      <h5>{{ teststep.apiRequest.fileName }}</h5>
     </div>
   </div>
 </div>

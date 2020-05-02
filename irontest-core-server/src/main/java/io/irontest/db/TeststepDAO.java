@@ -182,16 +182,21 @@ public interface TeststepDAO extends CrossReferenceDAO {
     default void update(Teststep teststep) throws Exception {
         Teststep oldTeststep = findById_NoRequest(teststep.getId());  //  old request is not read into memory, to save memory
 
-        if (Teststep.TYPE_HTTP.equals(teststep.getType())) {
-            processHTTPTeststepBackupRestore(oldTeststep, teststep);
-        }
-
-        if (Teststep.TYPE_MQ.equals(teststep.getType()) && teststep.getAction() != null) {   //  newly created MQ test step does not have action and does not need the processing
-            processMQTeststep(oldTeststep, teststep);
-        }
-
-        if (Teststep.TYPE_DB.equals(teststep.getType())) {
-            processDBTeststep(teststep);
+        switch (teststep.getType()) {
+            case Teststep.TYPE_HTTP:
+                processHTTPTeststepBackupRestore(oldTeststep, teststep);
+                break;
+            case Teststep.TYPE_FTP:
+                processFTPTeststep(oldTeststep, teststep);
+                break;
+            case Teststep.TYPE_DB:
+                processDBTeststep(teststep);
+                break;
+            case Teststep.TYPE_MQ:
+                processMQTeststep(oldTeststep, teststep);
+                break;
+            default:
+                break;
         }
 
         Endpoint oldEndpoint = oldTeststep.getEndpoint();
@@ -230,26 +235,39 @@ public interface TeststepDAO extends CrossReferenceDAO {
         }
     }
 
-    default void processMQTeststep(Teststep oldTeststep, Teststep teststep) throws IOException {
-        String newAction = teststep.getAction();
-        if (!newAction.equals(oldTeststep.getAction()) ||
-                teststep.getRequestType() != oldTeststep.getRequestType()) {    //  action or 'message from' is switched, so clear things
-            teststep.setRequest(null);
-            teststep.setRequestFilename(null);
-            teststep.getAssertions().clear();
-            MQTeststepProperties properties = (MQTeststepProperties) teststep.getOtherProperties();
-            properties.setRfh2Header(null);
-
-            backupRestoreMQTeststepActionData(oldTeststep, teststep);
-        } else if (TeststepRequestType.TEXT == teststep.getRequestType() && (
-                Teststep.ACTION_ENQUEUE.equals(newAction) || Teststep.ACTION_PUBLISH.equals(newAction))) {
-            processMQTeststepRFH2Folders(teststep);
+    default void processFTPTeststep(Teststep oldTeststep, Teststep teststep) {
+        FtpPutFileFrom oldFileFrom = ((FtpPutRequest) oldTeststep.getApiRequest()).getFileFrom();
+        FtpPutRequest ftpPutRequest = (FtpPutRequest) teststep.getApiRequest();
+        FtpPutFileFrom fileFrom = ftpPutRequest.getFileFrom();
+        if (fileFrom != oldFileFrom) {
+            teststep.setApiRequest(fileFrom == FtpPutFileFrom.TEXT ?
+                    new FtpPutRequestFileFromText(ftpPutRequest) :
+                    new FtpPutRequestFileFromFile(ftpPutRequest));
         }
     }
 
     default void processDBTeststep(Teststep teststep) {
         if (!IronTestUtils.isSQLRequestSingleSelectStatement((String) teststep.getRequest())) {
             teststep.getAssertions().clear();
+        }
+    }
+
+    default void processMQTeststep(Teststep oldTeststep, Teststep teststep) throws IOException {
+        if (teststep.getAction() != null) {      //  newly created MQ test step does not have action and does not need the processing
+            String newAction = teststep.getAction();
+            if (!newAction.equals(oldTeststep.getAction()) ||
+                    teststep.getRequestType() != oldTeststep.getRequestType()) {    //  action or 'message from' is switched, so clear things
+                teststep.setRequest(null);
+                teststep.setRequestFilename(null);
+                teststep.getAssertions().clear();
+                MQTeststepProperties properties = (MQTeststepProperties) teststep.getOtherProperties();
+                properties.setRfh2Header(null);
+
+                backupRestoreMQTeststepActionData(oldTeststep, teststep);
+            } else if (TeststepRequestType.TEXT == teststep.getRequestType() && (
+                    Teststep.ACTION_ENQUEUE.equals(newAction) || Teststep.ACTION_PUBLISH.equals(newAction))) {
+                processMQTeststepRFH2Folders(teststep);
+            }
         }
     }
 
@@ -404,7 +422,8 @@ public interface TeststepDAO extends CrossReferenceDAO {
     }
 
     @SqlQuery("select id, testcase_id, sequence, name, type, description, action, endpoint_id, endpoint_property, " +
-            "request_type, request_filename, other_properties, step_data_backup from teststep where id = :id")
+            "request_type, request_filename, api_request, other_properties, step_data_backup " +
+            "from teststep where id = :id")
     Teststep _findById_NoRequest(@Bind("id") long id);
 
     @SqlQuery("select * from teststep where id = :id")
@@ -570,5 +589,28 @@ public interface TeststepDAO extends CrossReferenceDAO {
             //  duplicate assertions
             assertionDAO().duplicateByTeststep(oldTeststepId, newTeststepId);
         }
+    }
+
+    @SqlUpdate("update teststep set api_request = :apiRequest, updated = CURRENT_TIMESTAMP where id = :teststepId")
+    void saveApiRequest(@Bind("teststepId") long teststepId, @Bind("apiRequest") String apiRequest);
+
+    @Transaction
+    default Teststep saveApiRequestFile(long teststepId, String fileName, InputStream inputStream) throws IOException {
+        Teststep teststep = findById_Complete(teststepId);
+        if (Teststep.TYPE_FTP.equals(teststep.getType())) {
+            FtpPutRequestFileFromFile putRequest = (FtpPutRequestFileFromFile) teststep.getApiRequest();
+            putRequest.setFileName(fileName);
+            byte[] fileBytes;
+            try {
+                fileBytes = IOUtils.toByteArray(inputStream);
+            } finally {
+                inputStream.close();
+            }
+            putRequest.setFileContent(fileBytes);
+
+            saveApiRequest(teststepId, new ObjectMapper().writeValueAsString(putRequest));
+        }
+
+        return findById_Complete(teststepId);
     }
 }
