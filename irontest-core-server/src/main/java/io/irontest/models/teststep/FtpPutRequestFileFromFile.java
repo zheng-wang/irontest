@@ -1,6 +1,10 @@
 package io.irontest.models.teststep;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import io.irontest.resources.ResourceJsonViews;
+
 public class FtpPutRequestFileFromFile extends FtpPutRequest {
+    @JsonView(ResourceJsonViews.TeststepEdit.class)
     private String fileName;
     private byte[] fileContent;
 

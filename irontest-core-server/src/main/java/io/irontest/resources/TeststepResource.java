@@ -96,6 +96,7 @@ public class TeststepResource {
 
     @PUT @Path("{teststepId}")
     @PermitAll
+    @JsonView(ResourceJsonViews.TeststepEdit.class)
     public TeststepWrapper update(Teststep teststep) throws Exception {
         //  Restore otherProperties from system database for existing XMLValidAgainstXSD assertions, as they are not
         //  supposed to be updated through this API (currently used for UI only).
@@ -217,6 +218,7 @@ public class TeststepResource {
     @POST @Path("{teststepId}/apiRequestFile")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @PermitAll
+    @JsonView(ResourceJsonViews.TeststepEdit.class)
     public Teststep saveAPIRequestFile(@PathParam("teststepId") long teststepId,
                                     @FormDataParam("file") InputStream inputStream,
                                     @FormDataParam("file") FormDataContentDisposition contentDispositionHeader) throws IOException {
