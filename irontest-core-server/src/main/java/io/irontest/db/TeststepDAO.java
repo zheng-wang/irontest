@@ -239,10 +239,14 @@ public interface TeststepDAO extends CrossReferenceDAO {
         FtpPutFileFrom oldFileFrom = ((FtpPutRequest) oldTeststep.getApiRequest()).getFileFrom();
         FtpPutRequest ftpPutRequest = (FtpPutRequest) teststep.getApiRequest();
         FtpPutFileFrom fileFrom = ftpPutRequest.getFileFrom();
-        if (fileFrom != oldFileFrom) {
+        if (fileFrom != oldFileFrom) {         //  switching between file from text/file
             teststep.setApiRequest(fileFrom == FtpPutFileFrom.TEXT ?
                     new FtpPutRequestFileFromText(ftpPutRequest) :
                     new FtpPutRequestFileFromFile(ftpPutRequest));
+        } else if (fileFrom == FtpPutFileFrom.FILE) {
+            FtpPutRequestFileFromFile oldFtpPutRequestFileFromFile = (FtpPutRequestFileFromFile) oldTeststep.getApiRequest();
+            FtpPutRequestFileFromFile ftpPutRequestFileFromFile = (FtpPutRequestFileFromFile) ftpPutRequest;
+            ftpPutRequestFileFromFile.setFileContent(oldFtpPutRequestFileFromFile.getFileContent());
         }
     }
 

@@ -9,10 +9,7 @@ import io.irontest.models.DataTable;
 import io.irontest.models.UserDefinedProperty;
 import io.irontest.models.assertion.Assertion;
 import io.irontest.models.endpoint.Endpoint;
-import io.irontest.models.teststep.MQRFH2Folder;
-import io.irontest.models.teststep.Teststep;
-import io.irontest.models.teststep.TeststepRequestType;
-import io.irontest.models.teststep.TeststepWrapper;
+import io.irontest.models.teststep.*;
 import io.irontest.utils.IronTestUtils;
 import io.irontest.utils.XMLUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
@@ -238,6 +235,28 @@ public class TeststepResource {
         String filename = teststep.getRequestFilename() == null ? "UnknownFilename" : teststep.getRequestFilename();
         return Response.ok(teststep.getRequest())
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
+                .build();
+    }
+
+    /**
+     * Download Teststep's API request file.
+     * @param teststepId
+     * @return
+     */
+    @GET @Path("{teststepId}/apiRequestFile")
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public Response getAPIRequestFile(@PathParam("teststepId") long teststepId) {
+        Teststep teststep = teststepDAO.findById_NoRequest(teststepId);
+        String fileName = null;
+        byte[] fileBytes = null;
+        if (Teststep.TYPE_FTP.equals(teststep.getType())) {
+            FtpPutRequestFileFromFile putRequest = (FtpPutRequestFileFromFile) teststep.getApiRequest();
+            fileBytes = putRequest.getFileContent();
+            fileName = putRequest.getFileName();
+        }
+
+        return Response.ok(fileBytes)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
                 .build();
     }
 
