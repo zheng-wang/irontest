@@ -137,6 +137,10 @@ public class TeststepResource {
         if (teststep.getRequestType() == TeststepRequestType.FILE) {
             teststep.setRequest(teststepDAO.getBinaryRequestById(teststep.getId()));
         }
+        //  fetch API request binary if its type is file
+        if (Teststep.TYPE_FTP.equals(teststep.getType()) && teststep.getApiRequest() instanceof FtpPutRequestFileFromFile) {
+            teststep.setApiRequest(teststepDAO.getAPIRequestById(teststep.getId()));
+        }
 
         //  gather referenceable string properties and endpoint properties
         List<UserDefinedProperty> testcaseUDPs = udpDAO.findByTestcaseId(teststep.getTestcaseId());

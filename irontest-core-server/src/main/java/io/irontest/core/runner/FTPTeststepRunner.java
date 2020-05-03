@@ -2,10 +2,7 @@ package io.irontest.core.runner;
 
 import io.irontest.models.endpoint.Endpoint;
 import io.irontest.models.endpoint.FTPEndpointProperties;
-import io.irontest.models.teststep.APIRequest;
-import io.irontest.models.teststep.FtpPutRequest;
-import io.irontest.models.teststep.FtpPutRequestFileFromText;
-import io.irontest.models.teststep.Teststep;
+import io.irontest.models.teststep.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.net.PrintCommandListener;
 import org.apache.commons.net.ProtocolCommandEvent;
@@ -51,6 +48,14 @@ public class FTPTeststepRunner extends TeststepRunner {
             }
 
             fileBytes = fileContent.getBytes();
+        } else {
+            FtpPutRequestFileFromFile ftpPutRequestFileFromFile = (FtpPutRequestFileFromFile) ftpPutRequest;
+            fileBytes = ftpPutRequestFileFromFile.getFileContent();
+
+            //  validate arguments
+            if (fileBytes == null || fileBytes.length == 0) {
+                throw new IllegalArgumentException("No file content.");
+            }
         }
 
         FTPEndpointProperties endpointProperties = (FTPEndpointProperties) endpoint.getOtherProperties();

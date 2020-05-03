@@ -549,6 +549,10 @@ public interface TeststepDAO extends CrossReferenceDAO {
     @RegisterColumnMapper(ObjectColumnMapper.class)
     Object getBinaryRequestById(@Bind("teststepId") long teststepId);
 
+    @SqlQuery("select api_request from teststep where id = :teststepId")
+    @RegisterColumnMapper(APIRequestColumMapper.class)
+    APIRequest getAPIRequestById(@Bind("teststepId") long teststepId);
+
     @SqlUpdate("update teststep set endpoint_id = null, endpoint_property = 'Endpoint', " +
             "updated = CURRENT_TIMESTAMP where id = :teststepId")
     void switchToEndpointProperty(@Bind("teststepId") long teststepId);
