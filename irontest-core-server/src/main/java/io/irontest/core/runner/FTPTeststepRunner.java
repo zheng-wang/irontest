@@ -9,6 +9,8 @@ import org.apache.commons.net.ProtocolCommandEvent;
 import org.apache.commons.net.ProtocolCommandListener;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
+import org.apache.commons.net.ftp.FTPSClient;
+import org.apache.commons.net.util.TrustManagerUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -60,7 +62,13 @@ public class FTPTeststepRunner extends TeststepRunner {
 
         FTPEndpointProperties endpointProperties = (FTPEndpointProperties) endpoint.getOtherProperties();
         String password = getDecryptedEndpointPassword();
-        FTPClient ftpClient = new FTPClient();
+        FTPClient ftpClient = null;
+        if (endpointProperties.isUseSSL()) {
+            ftpClient = new FTPSClient();
+            ((FTPSClient) ftpClient).setTrustManager(TrustManagerUtils.getAcceptAllTrustManager());
+        } else {
+            ftpClient = new FTPClient();
+        }
         ftpClient.addProtocolCommandListener(new PrintCommandListener(new PrintWriter(System.out)));
         ftpClient.addProtocolCommandListener(new ProtocolCommandListener() {
             @Override
@@ -77,6 +85,9 @@ public class FTPTeststepRunner extends TeststepRunner {
             ftpClient.connect(endpointProperties.getHost(), endpointProperties.getPort());
             ftpClient.login(username, password);
             ftpClient.enterLocalPassiveMode();
+            if (endpointProperties.isUseSSL()) {
+                ((FTPSClient) ftpClient).execPROT("P");
+            }
             ftpClient.storeFile(remoteFilePath, new ByteArrayInputStream(fileBytes));
         } finally {
             ftpClient.disconnect();
