@@ -32,7 +32,7 @@ public class FTPTeststepRunner extends TeststepRunner {
     private void put(Endpoint endpoint, FtpPutRequest ftpPutRequest) throws IOException {
         String username = StringUtils.trimToEmpty(endpoint.getUsername());
         String remoteFilePath = StringUtils.trimToEmpty(ftpPutRequest.getRemoteFilePath());
-        byte[] fileBytes = null;
+        byte[] fileBytes;
 
         //  validate arguments
         if ("".equals(username)) {
