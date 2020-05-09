@@ -62,7 +62,7 @@ public class FTPTeststepRunner extends TeststepRunner {
 
         FTPEndpointProperties endpointProperties = (FTPEndpointProperties) endpoint.getOtherProperties();
         String password = getDecryptedEndpointPassword();
-        FTPClient ftpClient = null;
+        FTPClient ftpClient;
         if (endpointProperties.isUseSSL()) {
             ftpClient = new FTPSClient();
             ((FTPSClient) ftpClient).setTrustManager(TrustManagerUtils.getAcceptAllTrustManager());
