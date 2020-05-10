@@ -1,5 +1,14 @@
 # Iron Test
-Iron Test is an open source tool for integration testing APIs such as HTTP APIs (including RESTful APIs), SOAP web services, relational databases, JMS APIs (TBD), AMQP APIs, WebSphere MQ, IBM Integration Bus (IIB), etc. It is suitable for Integration, ESB, Microservices and SOA testing.
+Iron Test is an open source tool for integration testing a variety of APIs. It is suitable for Integration, ESB, Microservices and SOA testing.
+
+Supported API types
+* HTTP (including RESTful services)
+* SOAP
+* FTP(S)
+* Relational databases (H2, Oracle, SQL Server)
+* AMQP
+* WebSphere MQ
+* IBM Integration Bus (IIB)
 
 The tool 
 * has GUI, saving user programming skills. Developers also have better experience using GUIed tool, as writing, reading and maintaining code are more brain power draining.
@@ -27,7 +36,7 @@ Table of Contents:
 ## Build
 Prerequisites: JDK (Java SE Development Kit) 8+, Apache Maven 3.3+.
 
-Download the latest Iron Test release from [here](https://github.com/zheng-wang/irontest/releases) to your local machine. Extract it, cd to the project directory (in which there is README.md), and run below Maven command
+Download the latest Iron Test source code release from [here](https://github.com/zheng-wang/irontest/releases) to your local machine. Extract it, cd to the project directory (in which there is README.md), and run below Maven command
 
 `mvn clean package -P prod`
 
