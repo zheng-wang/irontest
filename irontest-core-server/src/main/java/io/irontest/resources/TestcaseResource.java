@@ -52,6 +52,7 @@ public class TestcaseResource {
     }
 
     /**
+     * Clone/copy test case in the same system database.
      * @param testcaseId
      * @param targetFolderId
      * @return the new test case (containing ID only)

@@ -113,7 +113,7 @@ public interface TestcaseDAO extends CrossReferenceDAO {
                        @Bind("sourceTestcaseId") long sourceTestcaseId);
 
     /**
-     * Clone the test case and its contents.
+     * Clone/copy test case in the same system database.
      * @param sourceTestcaseId id of the test case to be cloned
      * @param targetFolderId id of the folder in which the new test case will be created
      * @return ID of the new test case

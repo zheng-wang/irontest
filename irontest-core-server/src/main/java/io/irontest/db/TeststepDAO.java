@@ -73,14 +73,14 @@ public interface TeststepDAO extends CrossReferenceDAO {
                             @Bind("otherProperties") String otherProperties, @Bind("apiRequest") String apiRequest);
 
     @SqlUpdate("insert into teststep (testcase_id, sequence, name, type, description, action, request, request_type, " +
-            "request_filename, endpoint_id, endpoint_property, other_properties) values (:t.testcaseId, " +
+            "request_filename, api_request, endpoint_id, endpoint_property, other_properties) values (:t.testcaseId, " +
             "select coalesce(max(sequence), 0) + 1 from teststep where testcase_id = :t.testcaseId, :t.name, " +
-            ":t.type, :t.description, :t.action, :request, :requestType, :t.requestFilename, :endpointId, " +
-            ":t.endpointProperty, :otherProperties)")
+            ":t.type, :t.description, :t.action, :request, :requestType, :t.requestFilename, :apiRequest, " +
+            ":endpointId, :t.endpointProperty, :otherProperties)")
     @GetGeneratedKeys
     long _insertWithName(@BindBean("t") Teststep teststep, @Bind("request") byte[] request,
-                         @Bind("requestType") String requestType, @Bind("endpointId") Long endpointId,
-                         @Bind("otherProperties") String otherProperties);
+                         @Bind("requestType") String requestType, @Bind("apiRequest") String apiRequest,
+                         @Bind("endpointId") Long endpointId, @Bind("otherProperties") String otherProperties);
 
     @SqlUpdate("update teststep set name = :name where id = :id")
     void updateNameForInsert(@Bind("id") long id, @Bind("name") String name);
@@ -139,9 +139,10 @@ public interface TeststepDAO extends CrossReferenceDAO {
             request = teststep.getRequestType() == TeststepRequestType.FILE ?
                     Base64.getDecoder().decode(requestString) : requestString.getBytes();
         }
-        String otherProperties = new ObjectMapper().writeValueAsString(teststep.getOtherProperties());
-        long teststepId = _insertWithName(teststep, request, teststep.getRequestType().toString(), endpointId,
-                otherProperties);
+        String apiRequestJSONString = new ObjectMapper().writeValueAsString(teststep.getApiRequest());
+        String otherPropertiesJSONString = new ObjectMapper().writeValueAsString(teststep.getOtherProperties());
+        long teststepId = _insertWithName(teststep, request, teststep.getRequestType().toString(), apiRequestJSONString,
+                endpointId, otherPropertiesJSONString);
 
         for (Assertion assertion : teststep.getAssertions()) {
             assertion.setTeststepId(teststepId);

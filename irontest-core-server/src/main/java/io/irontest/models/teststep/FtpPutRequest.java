@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonView;
 import io.irontest.resources.ResourceJsonViews;
 
 public class FtpPutRequest extends APIRequest {
-    @JsonView(ResourceJsonViews.TeststepEdit.class)
+    @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     private FtpPutFileFrom fileFrom = FtpPutFileFrom.TEXT;
-    @JsonView(ResourceJsonViews.TeststepEdit.class)
+    @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     private String remoteFilePath;
 
     public FtpPutFileFrom getFileFrom() {

@@ -3,7 +3,7 @@ package io.irontest.models.teststep;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.irontest.resources.ResourceJsonViews;
 
-@JsonView(ResourceJsonViews.TeststepEdit.class)
+@JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
 public class FtpPutRequestFileFromText extends FtpPutRequest {
     private String fileContent;
 
