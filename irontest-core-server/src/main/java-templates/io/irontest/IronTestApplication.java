@@ -3,6 +3,7 @@ package io.irontest;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.Option;
 import com.jayway.jsonpath.spi.json.JacksonJsonProvider;
@@ -118,6 +119,7 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
 
         //  start WireMock server (in the same JVM)
         WireMockServer wireMockServer = new WireMockServer(options()
+                .extensions(new ResponseTemplateTransformer(true))
                 .port(Integer.parseInt(configuration.getWireMock().get("port")))
                 .maxRequestJournalEntries(Integer.parseInt(configuration.getWireMock().get("maxRequestJournalEntries")))
                 .notifier(new WireMockFileNotifier())
