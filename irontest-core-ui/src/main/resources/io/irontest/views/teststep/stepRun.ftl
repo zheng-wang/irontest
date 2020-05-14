@@ -48,13 +48,14 @@
 </#if>
 
 <#-- Request, Response, and Assertions info -->
-<#assign teststepTypes = ["HTTP", "SOAP", "FTP", "DB", "MQ", "AMQP"]>
+<#assign teststepTypes = ["HTTP", "SOAP", "FTP", "DB", "MQ", "AMQP", "HTTPStubRequestsCheck"]>
 <#if teststepTypes?seq_contains(teststep.type) && !(teststep.type == 'MQ' && teststep.action == 'Clear')>
   <div class="form-group"></div> <#-- spacer -->
 
-  <#assign hasRequestTab = !(teststep.type == 'MQ' && (teststep.action == 'CheckDepth' || teststep.action == 'Dequeue'))>
+  <#assign hasRequestTab = !(teststep.type == 'MQ' && (teststep.action == 'CheckDepth' || teststep.action == 'Dequeue')) &&
+    teststep.type != 'HTTPStubRequestsCheck'>
   <#assign hasResponseAndAssertionsTabs = !(teststep.type == 'MQ' && (teststep.action == 'Enqueue' || teststep.action == 'Publish')) &&
-    !(teststep.type == 'AMQP') && !(teststep.type == 'FTP')>
+    teststep.type != 'AMQP' && teststep.type != 'FTP'>
   <div>
     <#-- Nav tabs -->
     <ul class="nav nav-tabs tabs-in-test-report" role="tablist">
@@ -85,15 +86,6 @@
           <#include "teststepAssertions.ftl">
         </div>
       </#if>
-    </div>
-  </div>
-</#if>
-
-<#if stepRun.teststep.type == "HTTPStubRequestsCheck" && stepRun.response??>
-  <div class="row">
-    <div class="col-lg-1" id="stub-requests-in-step-run-${ stepRun.id?string.computer }">Stub Requests</div>
-    <div class="col-lg-11">
-      <#t><#include "${teststep.type?lower_case}TeststepResponse.ftl">
     </div>
   </div>
 </#if>
