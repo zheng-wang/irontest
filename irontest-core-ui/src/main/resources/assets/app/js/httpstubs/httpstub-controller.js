@@ -6,9 +6,9 @@ angular.module('irontest').controller('HTTPStubController', ['$scope', 'HTTPStub
   function($scope, HTTPStubs, IronTestUtils, $stateParams, $timeout, $rootScope, uiGridConstants) {
     const SPEC_TAB_INDEX = 1;
     const HEADER_GRID_NAME_COLUMN_WIDTH = '30%';
-    var timer;
-
     $scope.activeTabIndex = SPEC_TAB_INDEX;
+    $scope.isStubStateful = false;
+    var timer;
 
     $scope.autoSave = function(isValid) {
       if (timer) $timeout.cancel(timer);
@@ -38,6 +38,11 @@ angular.module('irontest').controller('HTTPStubController', ['$scope', 'HTTPStub
       }, function(httpStub) {
         $scope.httpStub = httpStub;
 
+        var scenarioName = httpStub.spec.scenarioName
+        if (scenarioName && scenarioName.trim() !== '') {
+          $scope.isStubStateful = true;
+        }
+
         $scope.requestBodyMainPattern = IronTestUtils.getRequestBodyMainPattern(
           httpStub.spec.request.method, httpStub.spec.request.bodyPatterns);
 
@@ -57,6 +62,20 @@ angular.module('irontest').controller('HTTPStubController', ['$scope', 'HTTPStub
       }, function(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);
       });
+    };
+
+    $scope.toggleStubStateful = function(isValid) {
+      var stubSpec = $scope.httpStub.spec;
+      if ($scope.isStubStateful) {
+        stubSpec.scenarioName = null;
+        stubSpec.requiredScenarioState = null;
+        stubSpec.newScenarioState = null;
+        $scope.isStubStateful = false;
+      } else {
+        stubSpec.scenarioName = 'Scenario 1';
+        $scope.isStubStateful = true;
+      }
+      $scope.update(isValid);
     };
 
     $scope.requestBodyApplicable = function() {

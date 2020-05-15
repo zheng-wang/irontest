@@ -29,6 +29,39 @@
               </div>
             </div>
           </div>
+          <div class="form-group">
+            <label for="isStateful" class="col-lg-2 control-label">Is Stateful</label>
+            <div class="col-lg-1">
+              <input name="isStateful" id="isStateful" type="checkbox" ng-model="isStubStateful"
+                     ng-change="toggleStubStateful(httpStubForm.$valid)" ng-disabled="appStatus.isForbidden()">
+            </div>
+          </div>
+          <div ng-if="isStubStateful">
+            <div class="form-group">
+              <label for="scenarioName" class="col-lg-2 control-label">Scenario Name</label>
+              <div class="col-lg-4">
+                <input id="scenarioName" name="scenarioName" type="text" class="form-control"
+                       ng-model="httpStub.spec.scenarioName" ng-change="autoSave(httpStubForm.$valid)"
+                       ng-readonly="appStatus.isForbidden()">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="requiredScenarioState" class="col-lg-2 control-label">Required Scenario State</label>
+              <div class="col-lg-4">
+                <input id="requiredScenarioState" name="requiredScenarioState" type="text" class="form-control"
+                       ng-model="httpStub.spec.requiredScenarioState" ng-change="autoSave(httpStubForm.$valid)"
+                       ng-readonly="appStatus.isForbidden()">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="newScenarioState" class="col-lg-2 control-label">New Scenario State</label>
+              <div class="col-lg-4">
+                <input id="newScenarioState" name="newScenarioState" type="text" class="form-control"
+                       ng-model="httpStub.spec.newScenarioState" ng-change="autoSave(httpStubForm.$valid)"
+                       ng-readonly="appStatus.isForbidden()">
+              </div>
+            </div>
+          </div>
         </uib-tab>
         <uib-tab heading="Spec">
           <div ng-include="'/ui/views/httpstubs/edit-spec.html'"></div>
