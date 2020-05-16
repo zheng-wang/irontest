@@ -5,7 +5,6 @@ angular.module('irontest').controller('HTTPStubController', ['$scope', 'HTTPStub
     '$timeout', '$rootScope', 'uiGridConstants',
   function($scope, HTTPStubs, IronTestUtils, $stateParams, $timeout, $rootScope, uiGridConstants) {
     const SPEC_TAB_INDEX = 1;
-    const HEADER_GRID_NAME_COLUMN_WIDTH = '30%';
     $scope.activeTabIndex = SPEC_TAB_INDEX;
     $scope.isStubStateful = false;
     var timer;
@@ -50,7 +49,10 @@ angular.module('irontest').controller('HTTPStubController', ['$scope', 'HTTPStub
         var requestHeaders = httpStub.spec.request.headers;
         if (requestHeaders) {
           $scope.requestHeaderGridOptions.data = Object.keys(requestHeaders).map(function(key) {
-            return { name: key, value: requestHeaders[key].equalTo };
+            var header = requestHeaders[key];
+            var operator = Object.keys(header)[0];
+            var value = operator === 'anything' ? '' : header[operator];
+            return { name: key, operator: operator, value: value };
           });
         }
         var responseHeaders = httpStub.spec.response.headers;
@@ -139,11 +141,10 @@ angular.module('irontest').controller('HTTPStubController', ['$scope', 'HTTPStub
       if (!request.headers) {
         request.headers = {};
       }
-      var headersObj = request.headers;
       var newHeaderName = IronTestUtils.getNextNameInSequence(headersInGrid, 'name');
       var newHeaderValue = '';
-      headersObj[newHeaderName] = { equalTo: newHeaderValue };
-      headersInGrid.push({ name: newHeaderName, value: newHeaderValue });
+      request.headers[newHeaderName] = { equalTo: newHeaderValue };
+      headersInGrid.push({ name: newHeaderName, operator: 'equalTo', value: newHeaderValue });
       $scope.update(true, function selectTheNewRow() {
         $scope.requestHeaderGridApi.grid.modifyRows(headersInGrid);
         $scope.requestHeaderGridApi.selection.selectRow(headersInGrid[headersInGrid.length - 1]);
@@ -188,17 +189,21 @@ angular.module('irontest').controller('HTTPStubController', ['$scope', 'HTTPStub
     var commonHeaderGridOptions = {
       enableSorting: false, enableRowHeaderSelection: false, multiSelect: false,
       enableGridMenu: true, enableColumnMenus: false, gridMenuShowHideColumns: false,
-      rowHeight: 20, enableHorizontalScrollbar: uiGridConstants.scrollbars.NEVER,
-      columnDefs: [
-        { name: 'name', width: HEADER_GRID_NAME_COLUMN_WIDTH,
-          headerTooltip: 'Double click to edit', enableCellEdit: true,
-          editableCellTemplate: 'headerGridEditableCellTemplate.html' },
-        { name: 'value', headerTooltip: 'Double click to edit', enableCellEdit: true, cellTooltip: true,
-          editableCellTemplate: 'headerGridEditableCellTemplate.html' }
-      ]
+      rowHeight: 20, enableHorizontalScrollbar: uiGridConstants.scrollbars.NEVER
     };
 
     $scope.requestHeaderGridOptions = JSON.parse(JSON.stringify(commonHeaderGridOptions));
+    $scope.requestHeaderGridOptions.columnDefs = [
+      { name: 'name', width: '25%',
+        headerTooltip: 'Double click cell to edit', enableCellEdit: true,
+        editableCellTemplate: 'headerGridEditableCellTemplate.html' },
+      { name: 'operator', width: '15%', headerTooltip: 'Double click cell to select',
+        editableCellTemplate: 'ui-grid/dropdownEditor', editDropdownOptionsArray: [
+        { id: 'equalTo', value: 'equalTo' }, { id: 'anything', value: 'anything' }, { id: 'matches', value: 'matches' }
+      ]},
+      { name: 'value', headerTooltip: 'Double click cell to edit', enableCellEdit: true, cellTooltip: true,
+        editableCellTemplate: 'headerGridEditableCellTemplate.html' }
+    ];
     $scope.requestHeaderGridOptions.gridMenuCustomItems = [
       { title: 'Create', order: 210, action: createRequestHeader,
         shown: function() {
@@ -220,12 +225,16 @@ angular.module('irontest').controller('HTTPStubController', ['$scope', 'HTTPStub
           var headersObj = request.headers;
           if (colDef.name === 'name') {       //  header name was changed
             //  to preserve the order of headers, can't just create new property and delete old property on headersObj
-            request.headers = {};
+            request.headers = {};   //  can't use headersObj variable in this if block
             var headersInGrid = $scope.requestHeaderGridOptions.data;
-            headersInGrid.forEach(headerInGrid => request.headers[headerInGrid.name] = { equalTo: headerInGrid.value });
-          } else {                            //  header value was changed
-            var headerName = rowEntity.name;
-            headersObj[headerName].equalTo = newValue;
+            headersInGrid.forEach(headerInGrid =>
+              request.headers[headerInGrid.name] = { [headerInGrid.operator]: headerInGrid.value }
+            );
+          } else if (colDef.name === 'operator') {           //  header operator was changed
+            rowEntity.value = '';
+            headersObj[rowEntity.name] = { [newValue]: '' };
+          } else if (colDef.name === 'value') {                            //  header value was changed
+            headersObj[rowEntity.name][rowEntity.operator] = newValue;
           }
           $scope.update(true);
         }
@@ -233,6 +242,13 @@ angular.module('irontest').controller('HTTPStubController', ['$scope', 'HTTPStub
     };
 
     $scope.responseHeaderGridOptions = JSON.parse(JSON.stringify(commonHeaderGridOptions));
+    $scope.responseHeaderGridOptions.columnDefs = [
+      { name: 'name', width: '30%',
+        headerTooltip: 'Double click cell to edit', enableCellEdit: true,
+        editableCellTemplate: 'headerGridEditableCellTemplate.html' },
+      { name: 'value', headerTooltip: 'Double click cell to edit', enableCellEdit: true, cellTooltip: true,
+        editableCellTemplate: 'headerGridEditableCellTemplate.html' }
+    ];
     $scope.responseHeaderGridOptions.gridMenuCustomItems = [
       { title: 'Create', order: 210, action: createResponseHeader,
         shown: function() {
