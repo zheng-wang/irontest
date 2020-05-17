@@ -9,6 +9,22 @@
     <div class="col-lg-1">${ stubMapping.number }</div>
     <form name="stubSpecForm" class="form-horizontal col-lg-11" role="form" novalidate>
       <div class="form-group">
+        <div class="col-lg-2">Expected Hit Count:</div>
+        <div class="col-lg-1">${ stubMapping.expectedHitCount }</div>
+      </div>
+      <#if stubMapping.spec.scenarioName??>
+        <div class="form-group">
+          <div class="col-lg-2">Scenario Name:</div>
+          <div class="col-lg-2">${ stubMapping.spec.scenarioName }</div>
+          <div class="col-lg-2">Required Scenario State:</div>
+          <div class="col-lg-2">${ stubMapping.spec.requiredScenarioState }</div>
+          <#if stubMapping.spec.newScenarioState??>
+            <div class="col-lg-2">New Scenario State:</div>
+            <div class="col-lg-2">${ stubMapping.spec.newScenarioState }</div>
+          </#if>
+        </div>
+      </#if>
+      <div class="form-group">
         <div class="col-lg-1">Method:</div>
         <div class="col-lg-1">${ stubMapping.spec.request.method }</div>
         <div class="col-lg-1">URL:</div>
@@ -30,9 +46,15 @@
         <div class="col-lg-6">
           <textarea name="requestHeaders" rows="6" class="form-control" readonly>
             <#if stubMapping.spec.request.headers??>
+              <#assign requestHeaders = stubMapping.spec.request.headers>
               <#compress>
-                <#list stubMapping.spec.request.headers?keys as key>
-                  ${key}: ${stubMapping.spec.request.headers[key].expected }
+                <#list requestHeaders?keys as key>
+                  <#t>${ key }
+                  <#if requestHeaders[key].name = 'anything'>
+                    is anything
+                  <#else>
+                    ${ requestHeaders[key].name } ${ requestHeaders[key].expected }
+                  </#if>
                 </#list>
               </#compress>
             </#if>
