@@ -201,7 +201,10 @@ angular.module('irontest').controller('HTTPStubController', ['$scope', 'HTTPStub
         editableCellTemplate: 'ui-grid/dropdownEditor', editDropdownOptionsArray: [
         { id: 'equalTo', value: 'equalTo' }, { id: 'anything', value: 'anything' }, { id: 'matches', value: 'matches' }
       ]},
-      { name: 'value', headerTooltip: 'Double click cell to edit', enableCellEdit: true, cellTooltip: true,
+      { name: 'value', headerTooltip: 'Double click cell to edit', cellTooltip: true,
+        cellEditableCondition: function(scope) {
+          return scope.row.entity.operator !== 'anything';
+        },
         editableCellTemplate: 'headerGridEditableCellTemplate.html' }
     ];
     $scope.requestHeaderGridOptions.gridMenuCustomItems = [
