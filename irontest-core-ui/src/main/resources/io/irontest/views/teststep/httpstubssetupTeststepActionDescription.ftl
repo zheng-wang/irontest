@@ -8,10 +8,6 @@
   <div class="row">
     <div class="col-lg-1">${ stubMapping.number }</div>
     <form name="stubSpecForm" class="form-horizontal col-lg-11" role="form" novalidate>
-      <div class="form-group">
-        <div class="col-lg-2">Expected Hit Count:</div>
-        <div class="col-lg-1">${ stubMapping.expectedHitCount }</div>
-      </div>
       <#if stubMapping.spec.scenarioName??>
         <div class="form-group">
           <div class="col-lg-2">Scenario Name:</div>

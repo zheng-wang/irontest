@@ -6,6 +6,16 @@
   </div>
   <div class="row">
     <form name="stubInstanceForm" class="form-horizontal col-lg-12" role="form" novalidate>
+      <div class="form-group" ng-if="stubInstance.scenarioName">
+        <div class="col-lg-2">Scenario Name:</div>
+        <div class="col-lg-2">{{ stubInstance.scenarioName }}</div>
+        <div class="col-lg-2">Required Scenario State:</div>
+        <div class="col-lg-2">{{ stubInstance.requiredScenarioState }}</div>
+        <div ng-if="stubInstance.newScenarioState">
+          <div class="col-lg-2">New Scenario State:</div>
+          <div class="col-lg-2">{{ stubInstance.newScenarioState }}</div>
+        </div>
+      </div>
       <div class="form-group">
         <div class="col-lg-1">Method:</div>
         <div class="col-lg-1">{{ stubInstance.request.method }}</div>

@@ -20,7 +20,12 @@ angular.module('mockserver').controller('StubInstanceController', ['$scope', 'Mo
               if (index > 0) {
                 stubRequestHeadersStr += '\n';
               }
-              stubRequestHeadersStr += key + ': ' + requestHeaders[key].equalTo;
+              var operator = Object.keys(requestHeaders[key])[0];
+              if (operator === 'anything') {
+                stubRequestHeadersStr += key + ' is anything';
+              } else {
+                stubRequestHeadersStr += key + ' ' + operator + ' ' + requestHeaders[key][operator];
+              }
             });
           }
           $scope.stubRequestHeadersStr = stubRequestHeadersStr;
