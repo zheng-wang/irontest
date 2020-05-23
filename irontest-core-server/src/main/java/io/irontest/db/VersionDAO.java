@@ -1,5 +1,6 @@
 package io.irontest.db;
 
+import io.irontest.Version;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 public interface VersionDAO {
@@ -8,7 +9,6 @@ public interface VersionDAO {
             "updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)")
     void createTableIfNotExists();
 
-    //  project.version is a Maven built-in property, and it will be filtered during build
-    @SqlUpdate("insert into version (version) select '${project.version}' where not exists (select * from version)")
+    @SqlUpdate("insert into version (version) select '" + Version.VERSION + "' where not exists (select * from version)")
     void insertVersionIfNotExists();
 }

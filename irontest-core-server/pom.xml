@@ -240,7 +240,7 @@
                 <version>1.0.0</version>
                 <executions>
                     <execution>
-                        <id>filter-src</id>
+                        <id>filtering-java-templates</id>
                         <goals>
                             <goal>filter-sources</goal>
                         </goals>

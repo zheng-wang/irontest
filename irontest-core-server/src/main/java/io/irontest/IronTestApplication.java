@@ -49,8 +49,6 @@ import java.util.logging.Logger;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 
 public class IronTestApplication extends Application<IronTestConfiguration> {
-    //  project.version is a Maven built-in property, and it will be filtered during build
-    public static final String VERSION = "${project.version}";
     private JAXWSBundle jaxWsBundle = new JAXWSBundle();
 
     public static void main(String[] args) throws Exception {
