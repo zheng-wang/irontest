@@ -137,12 +137,12 @@ public final class IronTestUtils {
                 break;
             case POST:
                 HttpPost httpPost = new HttpPost(safeUrl);
-                httpPost.setEntity(new StringEntity(httpBody, "UTF-8"));
+                httpPost.setEntity(httpBody == null ? null : new StringEntity(httpBody, "UTF-8"));    //  StringEntity doesn't accept null string (exception is thrown)
                 httpRequest = httpPost;
                 break;
             case PUT:
                 HttpPut httpPut = new HttpPut(safeUrl);
-                httpPut.setEntity(new StringEntity(httpBody, "UTF-8"));
+                httpPut.setEntity(httpBody == null ? null : new StringEntity(httpBody, "UTF-8"));     //  StringEntity doesn't accept null string (exception is thrown)
                 httpRequest = httpPut;
                 break;
             case DELETE:
