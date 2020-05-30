@@ -41,7 +41,7 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
       rowTemplate: '<div grid="grid" class="ui-grid-draggable-row" draggable="true"><div ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name" class="ui-grid-cell" ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader, \'custom\': true }" ui-grid-cell></div></div>',
       columnDefs: [
         {
-          name: 'sequence', displayName: 'NO.', width: 55, minWidth: 55,
+          name: 'sequence', displayName: 'NO.', width: 62, minWidth: 62,
           cellTemplate: 'teststepGridSequenceCellTemplate.html'
         },
         {
@@ -51,7 +51,7 @@ angular.module('irontest').controller('TestcasesController', ['$scope', 'Testcas
         { name: 'type', width: 80, minWidth: 80 },
         { name: 'description' },
         {
-          name: 'delete', width: 70, minWidth: 70, enableSorting: false, enableFiltering: false,
+          name: 'delete', width: 78, minWidth: 78, enableSorting: false, enableFiltering: false,
           cellTemplate: 'teststepGridDeleteCellTemplate.html'
         },
       ],
