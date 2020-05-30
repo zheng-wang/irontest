@@ -24,6 +24,7 @@ import org.apache.commons.validator.routines.UrlValidator;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
+import org.apache.http.HttpHost;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
@@ -32,6 +33,7 @@ import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.util.EntityUtils;
@@ -43,6 +45,7 @@ import javax.net.ssl.SSLContext;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 import java.io.IOException;
+import java.net.*;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -178,11 +181,20 @@ public final class IronTestUtils {
             return null;
         };
 
-        //  build HTTP Client instance, trusting all SSL certificates
+        //  build HTTP Client instance, trusting all SSL certificates, using system HTTP proxy if needed and exists
         SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial((TrustStrategy) (chain, authType) -> true).build();
         HostnameVerifier allowAllHosts = new NoopHostnameVerifier();
         SSLConnectionSocketFactory connectionFactory = new SSLConnectionSocketFactory(sslContext, allowAllHosts);
-        HttpClient httpClient = HttpClients.custom().setSSLSocketFactory(connectionFactory).build();
+        HttpClientBuilder httpClientBuilder = HttpClients.custom().setSSLSocketFactory(connectionFactory);
+        InetAddress urlHost = InetAddress.getByName(new URL(url).getHost());
+        if (!(urlHost.isLoopbackAddress() || urlHost.isSiteLocalAddress())) {    //  only use system proxy for external address
+            Proxy systemHTTPProxy = getSystemHTTPProxy();
+            if (systemHTTPProxy != null) {
+                InetSocketAddress addr = (InetSocketAddress) systemHTTPProxy.address();
+                httpClientBuilder.setProxy(new HttpHost(addr.getHostName(), addr.getPort()));
+            }
+        }
+        HttpClient httpClient = httpClientBuilder.build();
 
         //  invoke the API
         try {
@@ -192,6 +204,25 @@ public final class IronTestUtils {
         }
 
         return apiResponse;
+    }
+
+    public static Proxy getSystemHTTPProxy() {
+        System.setProperty("java.net.useSystemProxies", "true");
+        List<Proxy> proxyList;
+        try {
+            proxyList = ProxySelector.getDefault().select(new URI("http://foo/bar"));
+        } catch (URISyntaxException e) {
+            throw new RuntimeException("Failed to get system proxy", e);
+        } finally {
+            System.setProperty("java.net.useSystemProxies", "false");
+        }
+
+        for (Proxy proxy: proxyList) {
+            if (proxy.type() == Proxy.Type.HTTP) {
+                return proxy;
+            }
+        }
+        return null;
     }
 
     /**
