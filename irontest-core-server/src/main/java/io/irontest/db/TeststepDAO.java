@@ -576,9 +576,9 @@ public interface TeststepDAO extends CrossReferenceDAO {
     }
 
     @SqlUpdate("insert into teststep (testcase_id, sequence, name, type, description, action, request, request_type, " +
-            "request_filename, endpoint_id, endpoint_property, other_properties) select :newTestcaseId, sequence, name, " +
-            "type, description, action, request, request_type, request_filename, endpoint_id, endpoint_property, " +
-            "other_properties from teststep where id = :oldTeststepId")
+            "request_filename, api_request, endpoint_id, endpoint_property, other_properties) select :newTestcaseId, " +
+            "sequence, name, type, description, action, request, request_type, request_filename, api_request, " +
+            "endpoint_id, endpoint_property, other_properties from teststep where id = :oldTeststepId")
     @GetGeneratedKeys
     long duplicateById(@Bind("oldTeststepId") long oldTeststepId, @Bind("newTestcaseId") long newTestcaseId);
 
