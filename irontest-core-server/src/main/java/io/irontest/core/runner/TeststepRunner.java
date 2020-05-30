@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.irontest.core.MapValueLookup;
 import io.irontest.db.UtilsDAO;
 import io.irontest.models.endpoint.Endpoint;
+import io.irontest.models.teststep.APIRequest;
 import io.irontest.models.teststep.HTTPStubsSetupTeststepProperties;
 import io.irontest.models.teststep.Teststep;
 import io.irontest.models.teststep.TeststepRequestType;
@@ -91,6 +92,14 @@ public abstract class TeststepRunner {
                     (String) teststep.getRequest()));
             undefinedStringProperties.addAll(propertyReferenceResolver.getUnfoundKeys());
         }
+
+        //  resolve property references in teststep.apiRequest (null safe)
+        String apiRequestJSON = objectMapper.writeValueAsString(teststep.getApiRequest());
+        propertyReferenceResolver = new MapValueLookup(referenceableStringProperties, false);
+        String resolvedApiRequestJSON = new StrSubstitutor(propertyReferenceResolver).replace(apiRequestJSON);
+        undefinedStringProperties.addAll(propertyReferenceResolver.getUnfoundKeys());
+        APIRequest resolvedApiRequest = objectMapper.readValue(resolvedApiRequestJSON, APIRequest.class);
+        teststep.setApiRequest(resolvedApiRequest);
 
         if (!undefinedStringProperties.isEmpty()) {
             throw new RuntimeException("String properties " + undefinedStringProperties + " not defined.");
