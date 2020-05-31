@@ -81,6 +81,18 @@ angular.module('irontest').controller('PropertyExtractorsController', ['$scope',
       });
     };
 
+    var selectPropertyExtractorInGridByPropertyName = function(propertyName) {
+      var propertyExtractors = $scope.propertyExtractors;
+      var propertyExtractor = propertyExtractors.find(
+        function(propExtr) {
+          return propExtr.propertyName === propertyName;
+        }
+      );
+      var gridApi = $scope.propertyExtractorsGridApi;
+      gridApi.grid.modifyRows(propertyExtractors);
+      gridApi.selection.selectRow(propertyExtractor);
+    };
+
     $scope.createPropertyExtractor = function(type) {
       var propertyName = IronTestUtils.getNextNameInSequence($scope.propertyExtractors, 'Property', 'propertyName');
       var propertyExtractor = new PropertyExtractors({
@@ -91,6 +103,9 @@ angular.module('irontest').controller('PropertyExtractorsController', ['$scope',
       propertyExtractor.$save({ teststepId: $stateParams.teststepId }, function(returnPropertyExtractor) {
         $scope.propertyExtractors.push(propertyExtractor);
         $scope.$emit('successfullySaved');
+
+        //  select newly created property extractor in grid
+        selectPropertyExtractorInGridByPropertyName(propertyName);
       }, function(response) {
         IronTestUtils.openErrorHTTPResponseModal(response);
       });
