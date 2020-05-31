@@ -25,6 +25,9 @@ public class PropertyExtractorRunnerFactory {
             case PropertyExtractor.TYPE_JSONPATH:
                 result = new JSONPathPropertyExtractorRunner();
                 break;
+            case PropertyExtractor.TYPE_COOKIE:
+                result = new CookiePropertyExtractorRunner();
+                break;
             default:
                 throw new RuntimeException("Unrecognized property extractor type " + propertyExtractorType);
         }

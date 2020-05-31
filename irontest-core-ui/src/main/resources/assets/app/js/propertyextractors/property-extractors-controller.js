@@ -118,7 +118,11 @@ angular.module('irontest').controller('PropertyExtractorsController', ['$scope',
       var input;
       var apiResponse = $scope.$parent.steprun.response;
       if ($scope.teststep.type === 'HTTP') {
-        input = apiResponse.httpBody;
+        if (propertyExtractor.type === 'Cookie') {
+          input = apiResponse.httpHeaders.find(header => header.name === 'Set-Cookie').value;
+        } else {
+          input = apiResponse.httpBody;
+        }
       } else {
         input = apiResponse;
       }
