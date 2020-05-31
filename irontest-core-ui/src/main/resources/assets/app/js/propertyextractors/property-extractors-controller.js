@@ -86,6 +86,7 @@ angular.module('irontest').controller('PropertyExtractorsController', ['$scope',
       var propertyExtractor = new PropertyExtractors({
         propertyName: propertyName,
         type: type,
+        otherProperties: {}  //  adding this property here to avoid Jackson 'Missing property' error (http://stackoverflow.com/questions/28089484/deserialization-with-jsonsubtypes-for-no-value-missing-property-error)
       });
       propertyExtractor.$save({ teststepId: $stateParams.teststepId }, function(returnPropertyExtractor) {
         $scope.propertyExtractors.push(propertyExtractor);

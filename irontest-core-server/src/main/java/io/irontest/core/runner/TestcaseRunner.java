@@ -14,7 +14,7 @@ import io.irontest.models.endpoint.Endpoint;
 import io.irontest.models.testrun.TestcaseRun;
 import io.irontest.models.testrun.TeststepRun;
 import io.irontest.models.teststep.HTTPStubsSetupTeststepProperties;
-import io.irontest.models.teststep.PropertyExtractor;
+import io.irontest.models.propertyextractor.PropertyExtractor;
 import io.irontest.models.teststep.Teststep;
 import io.irontest.utils.IronTestUtils;
 import org.slf4j.Logger;
@@ -278,8 +278,8 @@ public abstract class TestcaseRunner {
             if (Teststep.TYPE_HTTP.equals(teststepType)) {
                 propertyExtractionInput = ((HTTPAPIResponse) apiResponse).getHttpBody();
             }
-            String propertyValue = propertyExtractor.extract(propertyExtractionInput, referenceableStringProperties);
-            extractedProperties.put(propertyExtractor.getPropertyName(), propertyValue);
+//            String propertyValue = propertyExtractor.extract(propertyExtractionInput, referenceableStringProperties);
+//            extractedProperties.put(propertyExtractor.getPropertyName(), propertyValue);
         }
 
         return extractedProperties;

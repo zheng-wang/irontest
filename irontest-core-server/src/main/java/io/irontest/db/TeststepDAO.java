@@ -9,6 +9,7 @@ import io.irontest.models.Properties;
 import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.IntegerEqualAssertionProperties;
 import io.irontest.models.endpoint.Endpoint;
+import io.irontest.models.propertyextractor.PropertyExtractor;
 import io.irontest.models.teststep.*;
 import io.irontest.utils.IronTestUtils;
 import org.apache.commons.io.IOUtils;

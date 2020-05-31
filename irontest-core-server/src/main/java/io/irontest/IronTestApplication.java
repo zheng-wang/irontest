@@ -133,6 +133,7 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
     private void createSystemResources(IronTestConfiguration configuration, Environment environment, WireMockServer wireMockServer) {
         final JdbiFactory jdbiFactory = new JdbiFactory();
         final Jdbi jdbi = jdbiFactory.build(environment, configuration.getSystemDatabase(), "systemDatabase");
+        jdbi.registerArgument(new PropertiesArgumentFactory());
 
         //  create DAO objects
         final VersionDAO versionDAO = jdbi.onDemand(VersionDAO.class);

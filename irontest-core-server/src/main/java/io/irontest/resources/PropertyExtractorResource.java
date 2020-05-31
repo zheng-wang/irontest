@@ -1,13 +1,15 @@
 package io.irontest.resources;
 
+import io.irontest.core.propertyextractor.PropertyExtractorRunner;
+import io.irontest.core.propertyextractor.PropertyExtractorRunnerFactory;
 import io.irontest.db.DataTableDAO;
 import io.irontest.db.PropertyExtractorDAO;
 import io.irontest.db.UserDefinedPropertyDAO;
 import io.irontest.models.DataTable;
 import io.irontest.models.UserDefinedProperty;
-import io.irontest.models.teststep.PropertyExtractionRequest;
-import io.irontest.models.teststep.PropertyExtractionResult;
-import io.irontest.models.teststep.PropertyExtractor;
+import io.irontest.models.propertyextractor.PropertyExtractionRequest;
+import io.irontest.models.propertyextractor.PropertyExtractionResult;
+import io.irontest.models.propertyextractor.PropertyExtractor;
 import io.irontest.utils.IronTestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -67,7 +70,7 @@ public class PropertyExtractorResource {
      */
     @POST @Path("propertyExtractors/{propertyExtractorId}/extract")
     @PermitAll
-    public PropertyExtractionResult extract(PropertyExtractionRequest propertyExtractionRequest) {
+    public PropertyExtractionResult extract(PropertyExtractionRequest propertyExtractionRequest) throws IOException {
         PropertyExtractor propertyExtractor = propertyExtractionRequest.getPropertyExtractor();
 
         //  gather referenceable string properties
@@ -81,10 +84,12 @@ public class PropertyExtractorResource {
             referenceableStringProperties.putAll(dataTable.getStringPropertiesInRow(0));
         }
 
+        PropertyExtractorRunner propertyExtractorRunner = PropertyExtractorRunnerFactory.getInstance().create(
+                propertyExtractor, referenceableStringProperties);
         String propertyExtractionInput = propertyExtractionRequest.getInput();
         PropertyExtractionResult result = new PropertyExtractionResult();
         try {
-            result.setPropertyValue(propertyExtractor.extract(propertyExtractionInput, referenceableStringProperties));
+            result.setPropertyValue(propertyExtractorRunner.extract(propertyExtractionInput));
         } catch (Exception e) {
             LOGGER.error("Failed to extract property", e);
             result.setError(e.getMessage());

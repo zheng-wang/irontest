@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import io.irontest.models.Properties;
 import io.irontest.models.assertion.Assertion;
 import io.irontest.models.endpoint.Endpoint;
+import io.irontest.models.propertyextractor.PropertyExtractor;
 import io.irontest.resources.ResourceJsonViews;
 
 import java.util.ArrayList;

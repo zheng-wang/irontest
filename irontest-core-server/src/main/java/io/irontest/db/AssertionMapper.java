@@ -11,7 +11,7 @@ import java.sql.SQLException;
 
 public class AssertionMapper implements RowMapper<Assertion> {
     public Assertion map(ResultSet rs, StatementContext ctx) throws SQLException {
-        Assertion assertion = null;
+        Assertion assertion;
         String type = rs.getString("type");
         String tempAssertionJSON = "{\"type\":\"" + type + "\",\"otherProperties\":" +
                 rs.getString("other_properties") + "}";

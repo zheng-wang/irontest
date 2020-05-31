@@ -16,7 +16,7 @@ public class EndpointMapper implements RowMapper<Endpoint> {
     public Endpoint map(ResultSet rs, StatementContext ctx) throws SQLException {
         List<String> fields = IronTestUtils.getFieldsPresentInResultSet(rs);
 
-        Endpoint endpoint = null;
+        Endpoint endpoint;
         String type = rs.getString("type");
         if (fields.contains("other_properties") && rs.getString("other_properties") != null) {
             String tempEndpointJSON = "{\"type\":\"" + type + "\",\"otherProperties\":" +

@@ -1,4 +1,4 @@
-package io.irontest.models.teststep;
+package io.irontest.models.propertyextractor;
 
 public class PropertyExtractionRequest {
     private PropertyExtractor propertyExtractor;
