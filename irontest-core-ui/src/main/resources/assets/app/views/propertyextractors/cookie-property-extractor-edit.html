@@ -1,0 +1,20 @@
+<div class="form-group"></div> <!-- spacer -->
+<div class="form-group"></div> <!-- spacer -->
+<div class="form-group"></div> <!-- spacer -->
+<div class="form-group">
+  <label for="cookieName" class="col-lg-2 control-label">Cookie Name</label>
+  <div class="col-lg-9">
+    <input type="text" name="cookieName" id="cookieName" class="form-control" placeholder="Cookie Name"
+           spellcheck="false" ng-model="propertyExtractor.otherProperties.cookieName"
+           ng-change="propertyExtractorAutoSave()" ng-readonly="appStatus.isForbidden()">
+  </div>
+</div>
+<div class="form-group">
+  <label for="propertyValue" class="col-lg-2 control-label">Property Value</label>
+  <div class="col-lg-9">
+    <textarea name="propertyValue" id="propertyValue" class="form-control" rows="6"
+              ng-class="{ 'text-red' : propertyExtractionResult.error }" readonly>{{
+        $parent.propertyExtractionResult.error ?
+          $parent.propertyExtractionResult.error : $parent.propertyExtractionResult.propertyValue }}</textarea>
+  </div>
+</div>

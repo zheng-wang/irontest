@@ -10,7 +10,8 @@
         </button>
         <ul class="dropdown-menu" uib-dropdown-menu role="menu">
           <li role="menuitem">
-            <a ng-click="createPropertyExtractor('JSONPath')" href="">JSONPath Property Extractor</a>
+            <a ng-click="createPropertyExtractor('JSONPath')" href="">JSONPath Extractor</a>
+            <a ng-click="createPropertyExtractor('Cookie')" href="">Cookie Extractor</a>
           </li>
         </ul>
       </div>
@@ -29,6 +30,8 @@
   <div class="col-lg-9" ng-if="propertyExtractor">
     <div style="margin-left: 10px" ng-if="propertyExtractor.type === 'JSONPath'"
          ng-include="'/ui/views/propertyextractors/jsonpath-property-extractor-edit.html'"></div>
+    <div style="margin-left: 10px" ng-if="propertyExtractor.type === 'Cookie'"
+         ng-include="'/ui/views/propertyextractors/cookie-property-extractor-edit.html'"></div>
   </div>
 </div>
 

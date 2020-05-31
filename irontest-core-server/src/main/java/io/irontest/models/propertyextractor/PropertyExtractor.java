@@ -8,6 +8,7 @@ import io.irontest.resources.ResourceJsonViews;
 
 public class PropertyExtractor {
     public static final String TYPE_JSONPATH = "JSONPath";
+    public static final String TYPE_COOKIE = "Cookie";
 
     private long id;
     @JsonView(ResourceJsonViews.TestcaseExport.class)
@@ -18,7 +19,8 @@ public class PropertyExtractor {
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
             property = "type", visible = true, defaultImpl = Properties.class)
     @JsonSubTypes({
-            @JsonSubTypes.Type(value = JSONPathPropertyExtractorProperties.class, name = PropertyExtractor.TYPE_JSONPATH)})
+            @JsonSubTypes.Type(value = JSONPathPropertyExtractorProperties.class, name = PropertyExtractor.TYPE_JSONPATH),
+            @JsonSubTypes.Type(value = CookiePropertyExtractorProperties.class, name = PropertyExtractor.TYPE_COOKIE)})
     private Properties otherProperties = new Properties();
 
     public long getId() {
