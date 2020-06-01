@@ -47,4 +47,9 @@ public interface PropertyExtractorDAO {
 
     @SqlQuery("select testcase_id from teststep where id = (select teststep_id from property_extractor where id = :id)")
     long findTestcaseIdById(@Bind("id") long id);
+
+    @SqlUpdate("insert into property_extractor (teststep_id, property_name, type, other_properties) " +
+            "select :newTeststepId, property_name, type, other_properties " +
+            "from property_extractor where teststep_id = :oldTeststepId")
+    void duplicateByTeststep(@Bind("oldTeststepId") long oldTeststepId, @Bind("newTeststepId") long newTeststepId);
 }

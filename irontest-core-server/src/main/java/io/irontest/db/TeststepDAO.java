@@ -598,6 +598,9 @@ public interface TeststepDAO extends CrossReferenceDAO {
 
             //  duplicate assertions
             assertionDAO().duplicateByTeststep(oldTeststepId, newTeststepId);
+
+            //  duplicate property extractors
+            propertyExtractorDAO().duplicateByTeststep(oldTeststepId, newTeststepId);
         }
     }
 
