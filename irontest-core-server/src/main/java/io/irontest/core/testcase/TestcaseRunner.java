@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import io.irontest.core.assertion.AssertionVerifier;
 import io.irontest.core.assertion.AssertionVerifierFactory;
+import io.irontest.core.propertyextractor.PropertyExtractorRunner;
+import io.irontest.core.propertyextractor.PropertyExtractorRunnerFactory;
 import io.irontest.core.teststep.*;
 import io.irontest.db.TestcaseRunDAO;
 import io.irontest.db.UtilsDAO;
@@ -12,12 +14,14 @@ import io.irontest.models.TestResult;
 import io.irontest.models.Testcase;
 import io.irontest.models.assertion.*;
 import io.irontest.models.endpoint.Endpoint;
+import io.irontest.models.propertyextractor.PropertyExtractor;
 import io.irontest.models.testrun.TestcaseRun;
 import io.irontest.models.testrun.TeststepRun;
+import io.irontest.models.teststep.HTTPHeader;
 import io.irontest.models.teststep.HTTPStubsSetupTeststepProperties;
-import io.irontest.models.propertyextractor.PropertyExtractor;
 import io.irontest.models.teststep.Teststep;
 import io.irontest.utils.IronTestUtils;
+import org.eclipse.jetty.http.HttpHeader;
 import org.slf4j.Logger;
 
 import java.util.*;
@@ -277,10 +281,20 @@ public abstract class TestcaseRunner {
         for (PropertyExtractor propertyExtractor: propertyExtractors) {
             String propertyExtractionInput = null;
             if (Teststep.TYPE_HTTP.equals(teststepType)) {
-                propertyExtractionInput = ((HTTPAPIResponse) apiResponse).getHttpBody();
+                HTTPAPIResponse httpApiResponse = (HTTPAPIResponse) apiResponse;
+                if (PropertyExtractor.TYPE_COOKIE.equals(propertyExtractor.getType())) {
+                    Optional<HTTPHeader> setCookieHeader = httpApiResponse.getHttpHeaders().stream()
+                            .filter(httpHeader -> HttpHeader.SET_COOKIE.asString().equals(httpHeader.getName())).findFirst();
+                    propertyExtractionInput = setCookieHeader.isPresent() ? setCookieHeader.get().getValue() : null;
+                } else {
+                    propertyExtractionInput = httpApiResponse.getHttpBody();
+                }
             }
-//            String propertyValue = propertyExtractor.extract(propertyExtractionInput, referenceableStringProperties);
-//            extractedProperties.put(propertyExtractor.getPropertyName(), propertyValue);
+
+            PropertyExtractorRunner propertyExtractorRunner = PropertyExtractorRunnerFactory.getInstance().create(
+                    propertyExtractor, referenceableStringProperties);
+            String propertyValue = propertyExtractorRunner.extract(propertyExtractionInput);
+            extractedProperties.put(propertyExtractor.getPropertyName(), propertyValue);
         }
 
         return extractedProperties;
