@@ -207,14 +207,11 @@ public final class IronTestUtils {
     }
 
     public static Proxy getSystemHTTPProxy() {
-        System.setProperty("java.net.useSystemProxies", "true");
         List<Proxy> proxyList;
         try {
             proxyList = ProxySelector.getDefault().select(new URI("http://foo/bar"));
         } catch (URISyntaxException e) {
             throw new RuntimeException("Failed to get system proxy", e);
-        } finally {
-            System.setProperty("java.net.useSystemProxies", "false");
         }
 
         for (Proxy proxy: proxyList) {

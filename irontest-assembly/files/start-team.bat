@@ -1,2 +1,2 @@
 cd %~dp0
-java -Ddw.mode=team -jar ${uberJarFileName}.jar server config.yml
+java -Djava.net.useSystemProxies=true -Ddw.mode=team -jar ${uberJarFileName}.jar server config.yml

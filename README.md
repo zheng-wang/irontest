@@ -56,7 +56,7 @@ Prerequisites: JRE (Java SE Runtime Environment) or JDK 8+.
 
 To launch Iron Test application, cd to `<IronTest_Home>` and run below command
 
-`java -jar <jarFilename> server config.yml`
+`java -Djava.net.useSystemProxies=true -jar <jarFilename> server config.yml`
 
 On Windows, alternatively you can simply run `<IronTest_Home>\start.bat`. You might want to create a shortcut of it on your Windows Desktop, Task Bar or Start Menu for more convenient launching.
 
