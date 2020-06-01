@@ -2,7 +2,7 @@ package io.irontest.resources;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import io.irontest.core.runner.*;
+import io.irontest.core.teststep.*;
 import io.irontest.db.*;
 import io.irontest.models.AppInfo;
 import io.irontest.models.DataTable;

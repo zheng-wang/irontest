@@ -2,7 +2,7 @@ package io.irontest.db;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.irontest.core.MQTeststepActionDataBackup;
+import io.irontest.core.teststep.MQTeststepActionDataBackup;
 import io.irontest.models.AppMode;
 import io.irontest.models.HTTPMethod;
 import io.irontest.models.Properties;

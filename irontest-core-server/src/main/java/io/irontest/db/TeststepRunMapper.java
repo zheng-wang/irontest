@@ -2,7 +2,7 @@ package io.irontest.db;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.irontest.core.runner.APIResponse;
+import io.irontest.core.teststep.APIResponse;
 import io.irontest.models.TestResult;
 import io.irontest.models.assertion.AssertionVerification;
 import io.irontest.models.testrun.TeststepRun;

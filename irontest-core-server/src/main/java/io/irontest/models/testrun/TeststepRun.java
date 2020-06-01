@@ -1,7 +1,7 @@
 package io.irontest.models.testrun;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import io.irontest.core.runner.APIResponse;
+import io.irontest.core.teststep.APIResponse;
 import io.irontest.models.assertion.AssertionVerification;
 import io.irontest.models.teststep.Teststep;
 import io.irontest.resources.ResourceJsonViews;

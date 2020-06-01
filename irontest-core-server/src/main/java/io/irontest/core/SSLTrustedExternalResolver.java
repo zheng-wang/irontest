@@ -1,7 +1,7 @@
 package io.irontest.core;
 
 import com.predic8.xml.util.ExternalResolver;
-import io.irontest.core.runner.HTTPAPIResponse;
+import io.irontest.core.teststep.HTTPAPIResponse;
 import io.irontest.models.HTTPMethod;
 import io.irontest.utils.IronTestUtils;
 
