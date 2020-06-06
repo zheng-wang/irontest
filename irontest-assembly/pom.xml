@@ -179,7 +179,6 @@
                                         <!-- copy files -->
                                         <resource>
                                             <directory>files</directory>
-                                            <filtering>true</filtering>
                                         </resource>
                                     </resources>
                                 </configuration>
