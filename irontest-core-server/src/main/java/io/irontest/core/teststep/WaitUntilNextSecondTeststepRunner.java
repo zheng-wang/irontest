@@ -1,9 +1,7 @@
 package io.irontest.core.teststep;
 
-import io.irontest.models.teststep.Teststep;
-
 public class WaitUntilNextSecondTeststepRunner extends TeststepRunner {
-    protected BasicTeststepRun run(Teststep teststep) throws InterruptedException {
+    public BasicTeststepRun run() throws InterruptedException {
         long startTimeSecond = getTestcaseRunContext().getTestcaseIndividualRunStartTime() != null ?
                 getTestcaseRunContext().getTestcaseIndividualRunStartTime().getTime() / 1000 :   //  data driven test case individual run
                 getTestcaseRunContext().getTestcaseRunStartTime().getTime() / 1000;              //  regular test case run

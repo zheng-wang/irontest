@@ -6,7 +6,8 @@ import io.irontest.models.teststep.Teststep;
 import io.irontest.utils.IronTestUtils;
 
 public class HTTPTeststepRunner extends TeststepRunner {
-    protected BasicTeststepRun run(Teststep teststep) throws Exception {
+    public BasicTeststepRun run() throws Exception {
+        Teststep teststep = getTeststep();
         BasicTeststepRun basicTeststepRun = new BasicTeststepRun();
         Endpoint endpoint = teststep.getEndpoint();
         HTTPTeststepProperties otherProperties = (HTTPTeststepProperties) teststep.getOtherProperties();

@@ -43,7 +43,8 @@ public class DBTeststepRunner extends TeststepRunner {
         }
     }
 
-    protected BasicTeststepRun run(Teststep teststep) throws Exception {
+    public BasicTeststepRun run() throws Exception {
+        Teststep teststep = getTeststep();
         BasicTeststepRun basicTeststepRun = new BasicTeststepRun();
         DBAPIResponse response = new DBAPIResponse();
         String request = (String) teststep.getRequest();

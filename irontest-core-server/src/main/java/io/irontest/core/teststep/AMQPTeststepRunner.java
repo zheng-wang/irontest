@@ -12,7 +12,8 @@ import java.util.List;
 public class AMQPTeststepRunner extends TeststepRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(AMQPTeststepRunner.class);
 
-    protected BasicTeststepRun run(Teststep teststep) throws Exception {
+    public BasicTeststepRun run() throws Exception {
+        Teststep teststep = getTeststep();
         AMQPTeststepProperties otherProperties = (AMQPTeststepProperties) teststep.getOtherProperties();
 
         List<Exception> exceptionListDuringSending = new ArrayList<>();

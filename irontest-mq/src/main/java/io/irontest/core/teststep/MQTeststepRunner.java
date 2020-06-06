@@ -25,7 +25,8 @@ public class MQTeststepRunner extends TeststepRunner {
         MQException.logExclude(CMQC.MQRC_NO_MSG_AVAILABLE);
     }
 
-    protected BasicTeststepRun run(Teststep teststep) throws Exception {
+    public BasicTeststepRun run() throws Exception {
+        Teststep teststep = getTeststep();
         String action = teststep.getAction();
         if (teststep.getAction() == null) {
             throw new Exception("Action not specified.");

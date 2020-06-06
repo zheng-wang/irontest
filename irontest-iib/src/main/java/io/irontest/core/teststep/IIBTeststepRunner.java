@@ -39,7 +39,8 @@ public class IIBTeststepRunner extends TeststepRunner {
         iib90ClassLoader = new IIBTeststepRunnerClassLoader(iib90URLs, IIBTeststepRunner.class.getClassLoader());
     }
 
-    protected BasicTeststepRun run(Teststep teststep) throws Exception {
+    public BasicTeststepRun run() throws Exception {
+        Teststep teststep = getTeststep();
         Endpoint endpoint = teststep.getEndpoint();
         String actualRunnerClassName;
         ClassLoader classLoader;
@@ -58,7 +59,8 @@ public class IIBTeststepRunner extends TeststepRunner {
             actualRunner = constructor.newInstance(endpoint);
         }
 
+        actualRunner.setTeststep(teststep);
         actualRunner.setTestcaseRunContext(getTestcaseRunContext());
-        return actualRunner.run(teststep);
+        return actualRunner.run();
     }
 }

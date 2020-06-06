@@ -17,7 +17,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 public class FTPTeststepRunner extends TeststepRunner {
-    protected BasicTeststepRun run(Teststep teststep) throws Exception {
+    public BasicTeststepRun run() throws Exception {
+        Teststep teststep = getTeststep();
         BasicTeststepRun basicTeststepRun = new BasicTeststepRun();
         Endpoint endpoint = teststep.getEndpoint();
 
