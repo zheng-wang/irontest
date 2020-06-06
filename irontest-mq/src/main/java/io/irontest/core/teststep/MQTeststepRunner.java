@@ -191,7 +191,7 @@ public class MQTeststepRunner extends TeststepRunner {
 
     private MQMessage buildMessageFromFile(byte[] bytes) throws MQDataException, IOException {
         MQMessage message = new MQMessage();
-        MQMD mqmdHeader = null;
+        MQMD mqmdHeader;
         try {
             mqmdHeader = new MQMD(new DataInputStream(new ByteArrayInputStream(bytes)),
                     CMQC.MQENC_REVERSED, CMQC.MQCCSI_DEFAULT);

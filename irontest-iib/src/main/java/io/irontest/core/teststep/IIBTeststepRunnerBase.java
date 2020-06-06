@@ -42,14 +42,18 @@ public class IIBTeststepRunnerBase extends TeststepRunner {
                     teststepProperties.getMessageFlowName());
 
             //  do the specified action
-            if (Teststep.ACTION_START.equals(action)) {
-                start(messageFlowProxy, basicTeststepRun);
-            } else if (Teststep.ACTION_STOP.equals(action)) {
-                stop(messageFlowProxy, basicTeststepRun);
-            } else if (Teststep.ACTION_WAIT_FOR_PROCESSING_COMPLETION.equals(action)) {
-                waitForProcessingCompletion(messageFlowProxy);
-            } else {
-                throw new Exception("Unrecognized action " + action);
+            switch (action) {
+                case Teststep.ACTION_START:
+                    start(messageFlowProxy, basicTeststepRun);
+                    break;
+                case Teststep.ACTION_STOP:
+                    stop(messageFlowProxy, basicTeststepRun);
+                    break;
+                case Teststep.ACTION_WAIT_FOR_PROCESSING_COMPLETION:
+                    waitForProcessingCompletion(messageFlowProxy);
+                    break;
+                default:
+                    throw new Exception("Unrecognized action " + action);
             }
         } finally {
             if (brokerProxy != null) {
