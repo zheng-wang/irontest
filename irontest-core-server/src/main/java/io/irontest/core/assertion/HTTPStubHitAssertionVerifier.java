@@ -2,7 +2,6 @@ package io.irontest.core.assertion;
 
 import com.github.tomakehurst.wiremock.stubbing.ServeEvent;
 import io.irontest.models.TestResult;
-import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.AssertionVerificationResult;
 import io.irontest.models.assertion.HTTPStubHitAssertionProperties;
 import io.irontest.models.assertion.HTTPStubHitAssertionVerificationResult;
@@ -12,10 +11,10 @@ import java.util.UUID;
 
 public class HTTPStubHitAssertionVerifier extends AssertionVerifier {
     @Override
-    public AssertionVerificationResult _verify(Assertion assertion, Object ...inputs) {
+    public AssertionVerificationResult verify(Object ...inputs) {
         HTTPStubHitAssertionVerificationResult result = new HTTPStubHitAssertionVerificationResult();
 
-        HTTPStubHitAssertionProperties otherProperties = (HTTPStubHitAssertionProperties) assertion.getOtherProperties();
+        HTTPStubHitAssertionProperties otherProperties = (HTTPStubHitAssertionProperties) getAssertion().getOtherProperties();
 
         List<ServeEvent> allServeEvents = (List<ServeEvent>) inputs[0];
         UUID stubInstanceUUID = (UUID) inputs[1];

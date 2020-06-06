@@ -1,7 +1,6 @@
 package io.irontest.resources;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import io.irontest.core.testcase.DataDrivenTestcaseRunner;
 import io.irontest.core.testcase.RegularTestcaseRunner;
@@ -19,6 +18,7 @@ import io.irontest.views.TeststepRunView;
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.io.IOException;
 
 @Path("/") @Produces({ MediaType.APPLICATION_JSON })
 public class TestcaseRunResource {
@@ -39,7 +39,7 @@ public class TestcaseRunResource {
 
     @POST @Path("testcaseruns") @PermitAll
     @JsonView(ResourceJsonViews.TestcaseRunResultOnTestcaseEditView.class)
-    public TestcaseRun create(@QueryParam("testcaseId") long testcaseId) throws JsonProcessingException {
+    public TestcaseRun create(@QueryParam("testcaseId") long testcaseId) throws IOException {
         Testcase testcase = testcaseDAO.findById_Complete(testcaseId);
         TestcaseRunner testcaseRunner;
         if (testcase.getDataTable().getRows().isEmpty()) {

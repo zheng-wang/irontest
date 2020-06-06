@@ -1,6 +1,5 @@
 package io.irontest.core.testcase;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import io.irontest.core.assertion.AssertionVerifier;
 import io.irontest.core.assertion.AssertionVerifierFactory;
@@ -24,6 +23,7 @@ import io.irontest.utils.IronTestUtils;
 import org.eclipse.jetty.http.HttpHeader;
 import org.slf4j.Logger;
 
+import java.io.IOException;
 import java.util.*;
 
 import static io.irontest.IronTestConstants.*;
@@ -68,7 +68,7 @@ public abstract class TestcaseRunner {
         return referenceableEndpointProperties;
     }
 
-    public abstract TestcaseRun run() throws JsonProcessingException;
+    public abstract TestcaseRun run() throws IOException;
 
     //  process the test case before starting to run it
     void preProcessing() {
@@ -135,7 +135,7 @@ public abstract class TestcaseRunner {
                 IMPLICIT_PROPERTY_DATE_TIME_FORMAT.format(testcaseRunStartTime));
     }
 
-    TeststepRun runTeststep(Teststep teststep) {
+    TeststepRun runTeststep(Teststep teststep) throws IOException {
         TeststepRun teststepRun = new TeststepRun();
         teststepRun.setTeststep(teststep);
 
@@ -233,7 +233,7 @@ public abstract class TestcaseRunner {
      * @param teststepRun
      */
     private void verifyAssertions(String teststepType, String teststepAction, List<Assertion> assertions,
-                                  Object apiResponse, TeststepRun teststepRun) {
+                                  Object apiResponse, TeststepRun teststepRun) throws IOException {
         for (Assertion assertion : assertions) {
             Object assertionVerificationInput = resolveAssertionVerificationInputFromAPIResponse(teststepType,
                     teststepAction, assertion.getType(), apiResponse);
@@ -250,10 +250,10 @@ public abstract class TestcaseRunner {
             verification.setAssertion(assertion);
 
             AssertionVerifier verifier = AssertionVerifierFactory.getInstance().create(
-                    assertion.getType(), referenceableStringProperties);
+                    assertion, referenceableStringProperties);
             AssertionVerificationResult verificationResult;
             try {
-                verificationResult = verifier.verify(assertion, assertionVerificationInput, assertionVerificationInput2);
+                verificationResult = verifier.verify(assertionVerificationInput, assertionVerificationInput2);
             } catch (Exception e) {
                 LOGGER.error("Failed to verify assertion", e);
                 verificationResult = new AssertionVerificationResult();

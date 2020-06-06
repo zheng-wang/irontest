@@ -57,7 +57,7 @@ public class AssertionResource {
      */
     @POST @Path("assertions/{assertionId}/verify")
     @PermitAll
-    public AssertionVerificationResult verify(AssertionVerificationRequest assertionVerificationRequest) throws InterruptedException {
+    public AssertionVerificationResult verify(AssertionVerificationRequest assertionVerificationRequest) throws IOException {
         Assertion assertion = assertionVerificationRequest.getAssertion();
 
         //  populate xsd file bytes for XMLValidAgainstXSDAssertion which are not passed from UI to this method
@@ -77,14 +77,14 @@ public class AssertionResource {
         }
 
         AssertionVerifier assertionVerifier = AssertionVerifierFactory.getInstance().create(
-                assertion.getType(), referenceableStringProperties);
+                assertion, referenceableStringProperties);
         Object assertionInput = assertionVerificationRequest.getInput();
         if (Assertion.TYPE_HAS_AN_MQRFH2_FOLDER_EQUAL_TO_XML.equals(assertion.getType())) {
             assertionInput = new ObjectMapper().convertValue(assertionInput, MQRFH2Header.class);
         }
         AssertionVerificationResult result;
         try {
-            result = assertionVerifier.verify(assertion, assertionInput);
+            result = assertionVerifier.verify(assertionInput);
         } catch (Exception e) {
             LOGGER.error("Failed to verify assertion", e);
             result = new AssertionVerificationResult();

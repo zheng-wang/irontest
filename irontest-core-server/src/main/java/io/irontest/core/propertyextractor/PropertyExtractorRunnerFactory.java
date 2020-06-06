@@ -18,6 +18,13 @@ public class PropertyExtractorRunnerFactory {
         return instance;
     }
 
+    /**
+     * This method modifies content of the propertyExtractor object.
+     * @param propertyExtractor
+     * @param referenceableStringProperties
+     * @return
+     * @throws IOException
+     */
     public PropertyExtractorRunner create(PropertyExtractor propertyExtractor, Map<String, String> referenceableStringProperties) throws IOException {
         PropertyExtractorRunner result;
         String propertyExtractorType = propertyExtractor.getType();

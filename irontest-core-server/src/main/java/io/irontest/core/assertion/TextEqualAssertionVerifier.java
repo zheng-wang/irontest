@@ -1,20 +1,19 @@
 package io.irontest.core.assertion;
 
 import io.irontest.models.TestResult;
-import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.AssertionVerificationResult;
 import io.irontest.models.assertion.TextEqualAssertionProperties;
 
 public class TextEqualAssertionVerifier extends AssertionVerifier {
     /**
      *
-     * @param assertion
      * @param inputs contains only one argument: the string that the assertion is verified against
      * @return
      */
     @Override
-    public AssertionVerificationResult _verify(Assertion assertion, Object... inputs) {
-        TextEqualAssertionProperties assertionProperties = (TextEqualAssertionProperties) assertion.getOtherProperties();
+    public AssertionVerificationResult verify(Object... inputs) {
+        TextEqualAssertionProperties assertionProperties =
+                (TextEqualAssertionProperties) getAssertion().getOtherProperties();
         String expectedText = assertionProperties.getExpectedText();
 
         //  validate argument

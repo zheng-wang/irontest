@@ -3,7 +3,6 @@ package io.irontest.core.assertion;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import io.irontest.models.TestResult;
-import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.AssertionVerificationResult;
 import io.irontest.models.assertion.JSONPathAssertionProperties;
 import io.irontest.models.assertion.JSONPathAssertionVerificationResult;
@@ -11,15 +10,15 @@ import org.apache.commons.lang3.StringUtils;
 
 public class JSONPathAssertionVerifier extends AssertionVerifier {
     /**
-     * @param assertion the assertion to be verified (against the input)
+     *
      * @param inputs contains only one argument: the JSON string that the assertion is verified against
      * @return
      * @throws Exception
      */
     @Override
-    public AssertionVerificationResult _verify(Assertion assertion, Object ...inputs) throws Exception {
+    public AssertionVerificationResult verify(Object ...inputs) throws Exception {
         JSONPathAssertionProperties otherProperties =
-                (JSONPathAssertionProperties) assertion.getOtherProperties();
+                (JSONPathAssertionProperties) getAssertion().getOtherProperties();
 
         //  validate other properties
         if ("".equals(StringUtils.trimToEmpty(otherProperties.getJsonPath()))) {

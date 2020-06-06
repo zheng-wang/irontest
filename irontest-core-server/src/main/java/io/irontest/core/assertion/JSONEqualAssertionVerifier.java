@@ -2,7 +2,6 @@ package io.irontest.core.assertion;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import io.irontest.models.TestResult;
-import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.AssertionVerificationResult;
 import io.irontest.models.assertion.JSONEqualAssertionProperties;
 import io.irontest.models.assertion.MessageEqualAssertionVerificationResult;
@@ -12,13 +11,12 @@ import static net.javacrumbs.jsonunit.JsonAssert.assertJsonEquals;
 public class JSONEqualAssertionVerifier extends AssertionVerifier {
     /**
      *
-     * @param assertion
      * @param inputs contains only one argument: the JSON string that the assertion is verified against
      * @return
      */
     @Override
-    public AssertionVerificationResult _verify(Assertion assertion, Object ...inputs) {
-        JSONEqualAssertionProperties assertionProperties = (JSONEqualAssertionProperties) assertion.getOtherProperties();
+    public AssertionVerificationResult verify(Object ...inputs) {
+        JSONEqualAssertionProperties assertionProperties = (JSONEqualAssertionProperties) getAssertion().getOtherProperties();
         String expectedJSON = assertionProperties.getExpectedJSON();
 
         //  validate arguments

@@ -1,7 +1,6 @@
 package io.irontest.core.assertion;
 
 import io.irontest.models.TestResult;
-import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.AssertionVerificationResult;
 import io.irontest.models.assertion.MessageEqualAssertionVerificationResult;
 import io.irontest.models.assertion.XMLEqualAssertionProperties;
@@ -10,13 +9,13 @@ import io.irontest.utils.XMLUtils;
 public class XMLEqualAssertionVerifier extends AssertionVerifier {
     /**
      *
-     * @param assertion
      * @param inputs contains only one argument: the XML string that the assertion is verified against
      * @return
      */
     @Override
-    public AssertionVerificationResult _verify(Assertion assertion, Object ...inputs) {
-        XMLEqualAssertionProperties assertionProperties = (XMLEqualAssertionProperties) assertion.getOtherProperties();
+    public AssertionVerificationResult verify(Object ...inputs) {
+        XMLEqualAssertionProperties assertionProperties =
+                (XMLEqualAssertionProperties) getAssertion().getOtherProperties();
 
         //  validate arguments
         if (assertionProperties.getExpectedXML() == null) {

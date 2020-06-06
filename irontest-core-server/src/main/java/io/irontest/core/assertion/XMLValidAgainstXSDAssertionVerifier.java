@@ -1,7 +1,6 @@
 package io.irontest.core.assertion;
 
 import io.irontest.models.TestResult;
-import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.AssertionVerificationResult;
 import io.irontest.models.assertion.XMLValidAgainstXSDAssertionProperties;
 import io.irontest.models.assertion.XMLValidAgainstXSDAssertionVerificationResult;
@@ -28,16 +27,15 @@ import java.util.List;
 public class XMLValidAgainstXSDAssertionVerifier extends AssertionVerifier {
     /**
      *
-     * @param assertion
      * @param inputs  contains only one argument: the XML string that the assertion is verified against
      * @return
      * @throws Exception
      */
     @Override
-    public AssertionVerificationResult _verify(Assertion assertion, Object... inputs) throws Exception {
+    public AssertionVerificationResult verify(Object... inputs) throws Exception {
         String xmlString = (String) inputs[0];
         XMLValidAgainstXSDAssertionProperties assertionProperties =
-                (XMLValidAgainstXSDAssertionProperties) assertion.getOtherProperties();
+                (XMLValidAgainstXSDAssertionProperties) getAssertion().getOtherProperties();
         String fileName = StringUtils.trimToEmpty(assertionProperties.getFileName());
 
         //  validate arguments

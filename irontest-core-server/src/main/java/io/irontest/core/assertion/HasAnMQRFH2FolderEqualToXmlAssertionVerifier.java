@@ -1,7 +1,6 @@
 package io.irontest.core.assertion;
 
 import io.irontest.models.TestResult;
-import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.AssertionVerificationResult;
 import io.irontest.models.assertion.HasAnMQRFH2FolderEqualToXmlAssertionProperties;
 import io.irontest.models.teststep.MQRFH2Folder;
@@ -10,14 +9,13 @@ import io.irontest.utils.XMLUtils;
 
 public class HasAnMQRFH2FolderEqualToXmlAssertionVerifier extends AssertionVerifier {
     /**
-     * @param assertion
      * @param inputs contains only one argument: the {@link MQRFH2Header label} object that the assertion is verified against
      * @return
      */
-    public AssertionVerificationResult _verify(Assertion assertion, Object... inputs) {
+    public AssertionVerificationResult verify(Object... inputs) {
         AssertionVerificationResult result = new AssertionVerificationResult();
         HasAnMQRFH2FolderEqualToXmlAssertionProperties assertionProperties =
-                (HasAnMQRFH2FolderEqualToXmlAssertionProperties) assertion.getOtherProperties();
+                (HasAnMQRFH2FolderEqualToXmlAssertionProperties) getAssertion().getOtherProperties();
 
         //  validate arguments
         if (assertionProperties.getXml() == null) {

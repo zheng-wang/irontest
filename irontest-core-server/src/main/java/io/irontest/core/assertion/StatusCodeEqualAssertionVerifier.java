@@ -1,21 +1,20 @@
 package io.irontest.core.assertion;
 
 import io.irontest.models.TestResult;
-import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.AssertionVerificationResultWithActualValue;
 import io.irontest.models.assertion.StatusCodeEqualAssertionProperties;
 
 public class StatusCodeEqualAssertionVerifier extends AssertionVerifier {
     /**
      *
-     * @param assertion
      * @param inputs contains only one argument: statusCode (must be an integer)
      * @return
      */
     @Override
-    public AssertionVerificationResultWithActualValue _verify(Assertion assertion, Object ...inputs) {
+    public AssertionVerificationResultWithActualValue verify(Object ...inputs) {
         AssertionVerificationResultWithActualValue result = new AssertionVerificationResultWithActualValue();
-        StatusCodeEqualAssertionProperties assertionProperties = (StatusCodeEqualAssertionProperties) assertion.getOtherProperties();
+        StatusCodeEqualAssertionProperties assertionProperties =
+                (StatusCodeEqualAssertionProperties) getAssertion().getOtherProperties();
 
         //  validate arguments
         if (assertionProperties.getStatusCode() == null) {

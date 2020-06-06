@@ -1,7 +1,6 @@
 package io.irontest.core.assertion;
 
 import io.irontest.models.TestResult;
-import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.AssertionVerificationResult;
 import io.irontest.models.assertion.AssertionVerificationResultWithActualValue;
 import io.irontest.models.assertion.SubstringAssertionProperties;
@@ -11,13 +10,13 @@ public class SubstringAssertionVerifier extends AssertionVerifier {
 
     /**
      *
-     * @param assertion
      * @param inputs contains only one argument: the string that the assertion is verified against
      * @return
      */
     @Override
-    public AssertionVerificationResult _verify(Assertion assertion, Object... inputs) {
-        SubstringAssertionProperties assertionProperties = (SubstringAssertionProperties) assertion.getOtherProperties();
+    public AssertionVerificationResult verify(Object... inputs) {
+        SubstringAssertionProperties assertionProperties =
+                (SubstringAssertionProperties) getAssertion().getOtherProperties();
         String beginIndexStr = StringUtils.trimToEmpty(assertionProperties.getBeginIndex());
         String endIndexStr = StringUtils.trimToEmpty(assertionProperties.getEndIndex());
         String expectedValue = assertionProperties.getExpectedValue();

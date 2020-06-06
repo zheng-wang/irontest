@@ -1,6 +1,5 @@
 package io.irontest.core.testcase;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import io.irontest.db.TestcaseRunDAO;
 import io.irontest.db.UtilsDAO;
@@ -13,6 +12,7 @@ import io.irontest.models.teststep.Teststep;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.Date;
 
 public class RegularTestcaseRunner extends TestcaseRunner {
@@ -23,7 +23,7 @@ public class RegularTestcaseRunner extends TestcaseRunner {
     }
 
     @Override
-    public TestcaseRun run() throws JsonProcessingException {
+    public TestcaseRun run() throws IOException {
         RegularTestcaseRun testcaseRun = new RegularTestcaseRun();
 
         preProcessing();

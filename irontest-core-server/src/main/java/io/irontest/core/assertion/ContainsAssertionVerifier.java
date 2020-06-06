@@ -9,14 +9,13 @@ import org.apache.commons.lang3.StringUtils;
 public class ContainsAssertionVerifier extends AssertionVerifier {
     /**
      *
-     * @param assertion
      * @param inputs contains only one argument: the String that the assertion is verified against
      * @return
      */
     @Override
-    public AssertionVerificationResult _verify(Assertion assertion, Object ...inputs) {
+    public AssertionVerificationResult verify(Object ...inputs) {
         ContainsAssertionProperties otherProperties =
-                (ContainsAssertionProperties) assertion.getOtherProperties();
+                (ContainsAssertionProperties) getAssertion().getOtherProperties();
         String contains = otherProperties.getContains();
 
         //  validate argument

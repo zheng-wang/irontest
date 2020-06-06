@@ -3,7 +3,6 @@ package io.irontest.core.assertion;
 import io.irontest.core.IronTestNamespaceContext;
 import io.irontest.models.NamespacePrefix;
 import io.irontest.models.TestResult;
-import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.AssertionVerificationResultWithActualValue;
 import io.irontest.models.assertion.XPathAssertionProperties;
 import io.irontest.utils.XMLUtils;
@@ -22,13 +21,12 @@ import java.util.List;
 public class XPathAssertionVerifier extends AssertionVerifier {
     /**
      *
-     * @param assertion
      * @param inputs contains only one argument: the XML String that the assertion is verified against
      * @return
      */
     @Override
-    public AssertionVerificationResultWithActualValue _verify(Assertion assertion, Object ...inputs) throws Exception {
-        XPathAssertionProperties otherProperties = (XPathAssertionProperties) assertion.getOtherProperties();
+    public AssertionVerificationResultWithActualValue verify(Object ...inputs) throws Exception {
+        XPathAssertionProperties otherProperties = (XPathAssertionProperties) getAssertion().getOtherProperties();
 
         //  validate required parameters
         if ("".equals(StringUtils.trimToEmpty(otherProperties.getxPath()))) {

@@ -1,7 +1,6 @@
 package io.irontest.core.assertion;
 
 import io.irontest.models.TestResult;
-import io.irontest.models.assertion.Assertion;
 import io.irontest.models.assertion.AssertionVerificationResult;
 import io.irontest.models.assertion.RegexMatchAssertionProperties;
 import org.apache.commons.lang3.StringUtils;
@@ -11,14 +10,14 @@ import java.util.regex.Pattern;
 public class RegexMatchAssertionVerifier extends AssertionVerifier {
     /**
      *
-     * @param assertion
      * @param inputs contains only one argument: the string that the assertion is verified against
      * @return
      */
     @Override
-    public AssertionVerificationResult _verify(Assertion assertion, Object... inputs) {
+    public AssertionVerificationResult verify(Object... inputs) {
         String inputStr = (String) inputs[0];
-        RegexMatchAssertionProperties assertionProperties = (RegexMatchAssertionProperties) assertion.getOtherProperties();
+        RegexMatchAssertionProperties assertionProperties =
+                (RegexMatchAssertionProperties) getAssertion().getOtherProperties();
         String regex = StringUtils.trimToEmpty(assertionProperties.getRegex());
 
         //  validate arguments
