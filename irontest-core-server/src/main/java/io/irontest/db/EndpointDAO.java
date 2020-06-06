@@ -1,7 +1,5 @@
 package io.irontest.db;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.irontest.models.AppMode;
 import io.irontest.models.endpoint.*;
 import io.irontest.models.teststep.Teststep;
@@ -32,18 +30,16 @@ public interface EndpointDAO {
             "CONSTRAINT ENDPOINT_" + DB_UNIQUE_NAME_CONSTRAINT_NAME_SUFFIX + " UNIQUE(environment_id, type, name))")
     void createTableIfNotExists();
 
-    @SqlUpdate("insert into endpoint (environment_id, type, other_properties) values (:evId, :type, :otherProperties)")
+    @SqlUpdate("insert into endpoint (environment_id, type, other_properties) values (:evId, :ep.type, :ep.otherProperties)")
     @GetGeneratedKeys
-    long _insertManagedEndpoint(@Bind("evId") long environmentId, @Bind("type") String type,
-                                @Bind("otherProperties") String otherProperties);
+    long _insertManagedEndpoint(@BindBean("ep") Endpoint endpoint, @Bind("evId") long environmentId);
 
     @SqlUpdate("update endpoint set name = :name where id = :id")
     void updateNameForInsert(@Bind("id") long id, @Bind("name") String name);
 
     @Transaction
-    default long insertManagedEndpoint(Endpoint endpoint) throws JsonProcessingException {
-        String otherProperties = new ObjectMapper().writeValueAsString(endpoint.getOtherProperties());
-        long id = _insertManagedEndpoint(endpoint.getEnvironment().getId(), endpoint.getType(), otherProperties);
+    default long insertManagedEndpoint(Endpoint endpoint) {
+        long id = _insertManagedEndpoint(endpoint, endpoint.getEnvironment().getId());
         updateNameForInsert(id, "Endpoint " + id);
         return id;
     }
@@ -51,16 +47,14 @@ public interface EndpointDAO {
     /**
      * Here assuming endpoint.password is already encrypted.
      * @param endpoint
-     * @param otherProperties
      * @return
      */
     @SqlUpdate("insert into endpoint (name, type, description, url, username, password, other_properties) " +
-               "values (:ep.name, :ep.type, :ep.description, :ep.url, :ep.username, :ep.password, :otherProperties)")
+               "values (:ep.name, :ep.type, :ep.description, :ep.url, :ep.username, :ep.password, :ep.otherProperties)")
     @GetGeneratedKeys
-    long _insertUnmanagedEndpoint(@BindBean("ep") Endpoint endpoint,
-                                  @Bind("otherProperties") String otherProperties);
+    long insertUnmanagedEndpoint(@BindBean("ep") Endpoint endpoint);
 
-    default Endpoint createUnmanagedEndpoint(String teststepType, AppMode appMode) throws JsonProcessingException {
+    default Endpoint createUnmanagedEndpoint(String teststepType, AppMode appMode) {
         Endpoint endpoint = null;
         if (!Teststep.TYPE_WAIT.equals(teststepType)) {
             endpoint = new Endpoint();
@@ -104,24 +98,17 @@ public interface EndpointDAO {
         return endpoint;
     }
 
-    default long insertUnmanagedEndpoint(Endpoint endpoint) throws JsonProcessingException {
-        String otherProperties = new ObjectMapper().writeValueAsString(endpoint.getOtherProperties());
-        return _insertUnmanagedEndpoint(endpoint, otherProperties);
-    }
-
     @SqlUpdate("update endpoint set environment_id = :evId, name = :ep.name, type = :ep.type, " +
             "description = :ep.description, url = :ep.url, username = :ep.username, password = CASE " +
                 "WHEN COALESCE(password, '') <> COALESCE(:ep.password, '') " + // encrypt only when password is changed
                     "THEN ENCRYPT('AES', '" + ENDPOINT_PASSWORD_ENCRYPTION_KEY + "', STRINGTOUTF8(:ep.password)) " +
                 "ELSE password END, " +
-            "other_properties = :otherProperties, updated = CURRENT_TIMESTAMP where id = :ep.id")
-    void _update(@BindBean("ep") Endpoint endpoint, @Bind("evId") Long environmentId,
-                 @Bind("otherProperties") String otherProperties);
+            "other_properties = :ep.otherProperties, updated = CURRENT_TIMESTAMP where id = :ep.id")
+    void _update(@BindBean("ep") Endpoint endpoint, @Bind("evId") Long environmentId);
 
-    default void update(Endpoint endpoint) throws JsonProcessingException {
-        String otherProperties = new ObjectMapper().writeValueAsString(endpoint.getOtherProperties());
+    default void update(Endpoint endpoint) {
         Long environmentId = endpoint.getEnvironment() == null ? null : endpoint.getEnvironment().getId();
-        _update(endpoint, environmentId, otherProperties);
+        _update(endpoint, environmentId);
     }
 
     @SqlUpdate("delete from endpoint where id = :id")

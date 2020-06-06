@@ -1,6 +1,5 @@
 package io.irontest.db;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.irontest.models.DataTableCell;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
@@ -65,7 +64,7 @@ public interface DataTableCellDAO extends CrossReferenceDAO {
     void _insert(@Bind("columnId") long columnId, @BindBean("cell") DataTableCell cell, @Bind("endpointId") Long endpointId);
 
     @Transaction
-    default void insert(long columnId, DataTableCell cell) throws JsonProcessingException {
+    default void insert(long columnId, DataTableCell cell) {
         Long endpointId = null;
         if (cell.getEndpoint() != null) {
             endpointId = endpointDAO().insertUnmanagedEndpoint(cell.getEndpoint());

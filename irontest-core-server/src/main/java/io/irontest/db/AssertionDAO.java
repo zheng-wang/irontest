@@ -1,7 +1,5 @@
 package io.irontest.db;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.irontest.models.Properties;
 import io.irontest.models.assertion.Assertion;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
@@ -31,22 +29,13 @@ public interface AssertionDAO {
     void createTableIfNotExists();
 
     @SqlUpdate("insert into assertion (teststep_id, name, type, other_properties) values " +
-            "(:a.teststepId, :a.name, :a.type, :otherProperties)")
+            "(:a.teststepId, :a.name, :a.type, :a.otherProperties)")
     @GetGeneratedKeys
-    long _insert(@BindBean("a") Assertion assertion, @Bind("otherProperties") String otherProperties);
+    long insert(@BindBean("a") Assertion assertion);
 
-    default long insert(Assertion assertion) throws JsonProcessingException {
-        return _insert(assertion, new ObjectMapper().writeValueAsString(assertion.getOtherProperties()));
-    }
-
-    @SqlUpdate("update assertion set name = :name, other_properties = :otherProperties, " +
-            "updated = CURRENT_TIMESTAMP where id = :id")
-    void _update(@Bind("name") String name, @Bind("otherProperties") String otherProperties, @Bind("id") long id);
-
-    default void update(Assertion assertion) throws JsonProcessingException {
-        _update(assertion.getName(), new ObjectMapper().writeValueAsString(assertion.getOtherProperties()),
-                assertion.getId());
-    }
+    @SqlUpdate("update assertion set name = :a.name, other_properties = :a.otherProperties, " +
+            "updated = CURRENT_TIMESTAMP where id = :a.id")
+    void update(@BindBean("a") Assertion assertion);
 
     @SqlQuery("select * from assertion where teststep_id = :teststepId")
     List<Assertion> findByTeststepId(@Bind("teststepId") long teststepId);
@@ -70,9 +59,5 @@ public interface AssertionDAO {
     void duplicateByTeststep(@Bind("oldTeststepId") long oldTeststepId, @Bind("newTeststepId") long newTeststepId);
 
     @SqlUpdate("update assertion set other_properties = :otherProperties, updated = CURRENT_TIMESTAMP where id = :id")
-    void _updateOtherProperties(@Bind("otherProperties") String otherProperties, @Bind("id") long id);
-
-    default void updateOtherProperties(long assertionId, Properties properties) throws JsonProcessingException {
-        _updateOtherProperties(new ObjectMapper().writeValueAsString(properties), assertionId);
-    }
+    void updateOtherProperties(@Bind("id") long id, @Bind("otherProperties") Properties otherProperties);
 }

@@ -62,26 +62,25 @@ public interface TeststepDAO extends CrossReferenceDAO {
      * @param teststep
      * @param request
      * @param endpointId
-     * @param otherProperties
      * @return
      */
     @SqlUpdate("insert into teststep (testcase_id, sequence, type, request, api_request, endpoint_id, " +
             "other_properties) values (:t.testcaseId, " +
               "(select coalesce(max(sequence), 0) + 1 from teststep where testcase_id = :t.testcaseId), " +
-            ":t.type, :request, :apiRequest, :endpointId, :otherProperties)")
+            ":t.type, :request, :apiRequest, :endpointId, :t.otherProperties)")
     @GetGeneratedKeys
-    long _insertWithoutName(@BindBean("t") Teststep teststep, @Bind("request") Object request, @Bind("endpointId") Long endpointId,
-                            @Bind("otherProperties") String otherProperties, @Bind("apiRequest") String apiRequest);
+    long _insertWithoutName(@BindBean("t") Teststep teststep, @Bind("request") Object request,
+                            @Bind("endpointId") Long endpointId, @Bind("apiRequest") String apiRequest);
 
     @SqlUpdate("insert into teststep (testcase_id, sequence, name, type, description, action, request, request_type, " +
             "request_filename, api_request, endpoint_id, endpoint_property, other_properties) values (:t.testcaseId, " +
             "select coalesce(max(sequence), 0) + 1 from teststep where testcase_id = :t.testcaseId, :t.name, " +
             ":t.type, :t.description, :t.action, :request, :requestType, :t.requestFilename, :apiRequest, " +
-            ":endpointId, :t.endpointProperty, :otherProperties)")
+            ":endpointId, :t.endpointProperty, :t.otherProperties)")
     @GetGeneratedKeys
     long _insertWithName(@BindBean("t") Teststep teststep, @Bind("request") byte[] request,
                          @Bind("requestType") String requestType, @Bind("apiRequest") String apiRequest,
-                         @Bind("endpointId") Long endpointId, @Bind("otherProperties") String otherProperties);
+                         @Bind("endpointId") Long endpointId);
 
     @SqlUpdate("update teststep set name = :name where id = :id")
     void updateNameForInsert(@Bind("id") long id, @Bind("name") String name);
@@ -117,10 +116,10 @@ public interface TeststepDAO extends CrossReferenceDAO {
                 break;
         }
 
+        teststep.setOtherProperties(otherProperties);
         Endpoint endpoint = endpointDAO().createUnmanagedEndpoint(teststep.getType(), appMode);
         Object request = sampleRequest == null ? null : sampleRequest.getBytes();
         long id = _insertWithoutName(teststep, request, endpoint == null ? null : endpoint.getId(),
-                new ObjectMapper().writeValueAsString(otherProperties),
                 new ObjectMapper().writeValueAsString(apiRequest));
 
         updateNameForInsert(id, "Step " + id);
@@ -141,9 +140,8 @@ public interface TeststepDAO extends CrossReferenceDAO {
                     Base64.getDecoder().decode(requestString) : requestString.getBytes();
         }
         String apiRequestJSONString = new ObjectMapper().writeValueAsString(teststep.getApiRequest());
-        String otherPropertiesJSONString = new ObjectMapper().writeValueAsString(teststep.getOtherProperties());
         long teststepId = _insertWithName(teststep, request, teststep.getRequestType().toString(), apiRequestJSONString,
-                endpointId, otherPropertiesJSONString);
+                endpointId);
 
         for (Assertion assertion : teststep.getAssertions()) {
             assertion.setTeststepId(teststepId);
@@ -155,30 +153,21 @@ public interface TeststepDAO extends CrossReferenceDAO {
         }
     }
 
-    @SqlUpdate("update teststep set name = :name, description = :description, action = :action, request = :request, " +
-            "request_type = :requestType, request_filename = :requestFilename, api_request = :apiRequest, " +
-            "endpoint_id = :endpointId, endpoint_property = :endpointProperty, other_properties = :otherProperties, " +
-            "updated = CURRENT_TIMESTAMP where id = :id")
-    void _updateWithStringRequest(@Bind("name") String name, @Bind("description") String description,
-                                  @Bind("action") String action, @Bind("request") Object request,
+    @SqlUpdate("update teststep set name = :t.name, description = :t.description, action = :t.action, request = :request, " +
+            "request_type = :requestType, request_filename = :t.requestFilename, api_request = :apiRequest, " +
+            "endpoint_id = :endpointId, endpoint_property = :t.endpointProperty, other_properties = :t.otherProperties, " +
+            "updated = CURRENT_TIMESTAMP where id = :t.id")
+    void _updateWithStringRequest(@BindBean("t") Teststep teststep, @Bind("request") Object request,
                                   @Bind("requestType") String requestType,
-                                  @Bind("requestFilename") String requestFilename,
                                   @Bind("apiRequest") String apiRequest,
-                                  @Bind("id") long id, @Bind("endpointId") Long endpointId,
-                                  @Bind("endpointProperty") String endpointProperty,
-                                  @Bind("otherProperties") String otherProperties);
+                                  @Bind("endpointId") Long endpointId);
 
-    @SqlUpdate("update teststep set name = :name, description = :description, request_type = :requestType, " +
-            "request_filename = :requestFilename, action = :action, endpoint_id = :endpointId, " +
-            "endpoint_property = :endpointProperty, other_properties = :otherProperties, updated = CURRENT_TIMESTAMP " +
-            "where id = :id")
-    void _updateWithoutRequest(@Bind("name") String name, @Bind("description") String description,
-                               @Bind("requestType") String requestType,
-                               @Bind("requestFilename") String requestFilename,
-                               @Bind("action") String action, @Bind("id") long id,
-                               @Bind("endpointId") Long endpointId,
-                               @Bind("endpointProperty") String endpointProperty,
-                               @Bind("otherProperties") String otherProperties);
+    @SqlUpdate("update teststep set name = :t.name, description = :t.description, request_type = :requestType, " +
+            "request_filename = :t.requestFilename, action = :t.action, endpoint_id = :endpointId, " +
+            "endpoint_property = :t.endpointProperty, other_properties = :t.otherProperties, updated = CURRENT_TIMESTAMP " +
+            "where id = :t.id")
+    void _updateWithoutRequest(@BindBean("t") Teststep teststep, @Bind("requestType") String requestType,
+                               @Bind("endpointId") Long endpointId);
 
     @Transaction
     default void update(Teststep teststep) throws Exception {
@@ -204,18 +193,13 @@ public interface TeststepDAO extends CrossReferenceDAO {
         Endpoint oldEndpoint = oldTeststep.getEndpoint();
         Endpoint newEndpoint = teststep.getEndpoint();
         Long newEndpointId = newEndpoint == null ? null : newEndpoint.getId();
-        String otherProperties = new ObjectMapper().writeValueAsString(teststep.getOtherProperties());
 
         if (teststep.getRequestType() == TeststepRequestType.FILE) {    // update teststep without file request (this can save memory, as file could be big)
-            _updateWithoutRequest(teststep.getName(), teststep.getDescription(), teststep.getRequestType().toString(),
-                    teststep.getRequestFilename(), teststep.getAction(), teststep.getId(), newEndpointId,
-                    teststep.getEndpointProperty(), otherProperties);
+            _updateWithoutRequest(teststep, teststep.getRequestType().toString(), newEndpointId);
         } else {       // update teststep with string request
             Object request = teststep.getRequest() == null ? null : ((String) teststep.getRequest()).getBytes();
             String apiRequest = new ObjectMapper().writeValueAsString(teststep.getApiRequest());
-            _updateWithStringRequest(teststep.getName(), teststep.getDescription(), teststep.getAction(), request,
-                    teststep.getRequestType().toString(), teststep.getRequestFilename(), apiRequest, teststep.getId(),
-                    newEndpointId, teststep.getEndpointProperty(), otherProperties);
+            _updateWithStringRequest(teststep, request, teststep.getRequestType().toString(), apiRequest, newEndpointId);
         }
 
         updateEndpointIfExists(oldEndpoint, newEndpoint);
@@ -373,7 +357,7 @@ public interface TeststepDAO extends CrossReferenceDAO {
     String getStepDataBackupById(@Bind("teststepId") long teststepId);
 
     @Transaction
-    default void updateAssertions(Teststep teststep) throws JsonProcessingException {
+    default void updateAssertions(Teststep teststep) {
         AssertionDAO assertionDAO = assertionDAO();
         List<Long> newAssertionIds = new ArrayList<>();
         for (Assertion assertion: teststep.getAssertions()) {
@@ -391,7 +375,7 @@ public interface TeststepDAO extends CrossReferenceDAO {
         assertionDAO.deleteByTeststepIdIfIdNotIn(teststep.getId(), newAssertionIds);
     }
 
-    default void updateEndpointIfExists(Endpoint oldEndpoint, Endpoint newEndpoint) throws JsonProcessingException {
+    default void updateEndpointIfExists(Endpoint oldEndpoint, Endpoint newEndpoint) {
         if (newEndpoint != null) {
             if (newEndpoint.isManaged()) {
                 if (oldEndpoint.isManaged()) {

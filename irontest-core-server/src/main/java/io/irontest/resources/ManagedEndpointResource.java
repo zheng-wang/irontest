@@ -1,6 +1,5 @@
 package io.irontest.resources;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.irontest.db.EndpointDAO;
 import io.irontest.models.AppInfo;
 import io.irontest.models.AppMode;
@@ -31,7 +30,7 @@ public class ManagedEndpointResource {
 
     @POST @Path("environments/{environmentId}/endpoints")
     @PermitAll
-    public Endpoint create(@PathParam("environmentId") long environmentId, Endpoint endpoint) throws JsonProcessingException {
+    public Endpoint create(@PathParam("environmentId") long environmentId, Endpoint endpoint) {
         Environment env = new Environment();
         env.setId(environmentId);
         endpoint.setEnvironment(env);
@@ -48,7 +47,7 @@ public class ManagedEndpointResource {
 
     @PUT @Path("endpoints/{endpointId}")
     @PermitAll
-    public Endpoint update(Endpoint endpoint) throws JsonProcessingException {
+    public Endpoint update(Endpoint endpoint) {
         endpointDAO.update(endpoint);
         return endpointDAO.findById(endpoint.getId());
     }
