@@ -167,6 +167,16 @@
             <artifactId>commons-net</artifactId>
             <version>3.6</version>
         </dependency>
+        <dependency> <!-- only used for getting the class DefaultArtifactVersion -->
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-artifact</artifactId>
+            <version>3.6.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.9.11</version> <!-- can't use 0.9.12, as there is https://github.com/ronmamo/reflections/issues/273 -->
+        </dependency>
 
         <!-- WireMock's dependencies -->
         <dependency>

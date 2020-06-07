@@ -33,6 +33,7 @@ import io.irontest.db.*;
 import io.irontest.models.AppInfo;
 import io.irontest.models.AppMode;
 import io.irontest.resources.*;
+import io.irontest.upgrade.UpgradeCommand;
 import io.irontest.utils.IronTestUtils;
 import io.irontest.ws.ArticleSOAP;
 import org.glassfish.jersey.filter.LoggingFilter;
