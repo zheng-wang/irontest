@@ -39,46 +39,42 @@ public class TeststepRunnerFactory {
      */
     public TeststepRunner newTeststepRunner(Teststep teststep, UtilsDAO utilsDAO,
                                             Map<String, String> referenceableStringProperties,
-                                            Map<String, Endpoint> referenceableEndpointProperties, TestcaseRunContext testcaseRunContext) {
+                                            Map<String, Endpoint> referenceableEndpointProperties, TestcaseRunContext testcaseRunContext) throws Exception {
         TeststepRunner runner;
-        try {
-            Class runnerClass = Class.forName("io.irontest.core.teststep." + teststep.getType() + "TeststepRunner");
-            Constructor<TeststepRunner> constructor = runnerClass.getConstructor();
-            runner = constructor.newInstance();
+        Class runnerClass = Class.forName("io.irontest.core.teststep." + teststep.getType() + "TeststepRunner");
+        Constructor<TeststepRunner> constructor = runnerClass.getConstructor();
+        runner = constructor.newInstance();
 
-            resolveReferenceableStringProperties(teststep, referenceableStringProperties);
+        resolveReferenceableStringProperties(teststep, referenceableStringProperties);
 
-            //  special processing for otherProperties that contains HTTPStubMapping objects
-            //  must do this after resolving referenceable string properties
-            if (teststep.getOtherProperties() instanceof HTTPStubsSetupTeststepProperties) {
-                HTTPStubsSetupTeststepProperties httpStubsSetupTeststepProperties =
-                        (HTTPStubsSetupTeststepProperties) teststep.getOtherProperties();
-                IronTestUtils.substituteRequestBodyMainPatternValue(httpStubsSetupTeststepProperties.getHttpStubMappings());
-            }
-
-            //  resolve endpoint property if set on test step
-            if (teststep.getEndpointProperty() != null) {
-                teststep.setEndpoint(referenceableEndpointProperties.get(teststep.getEndpointProperty()));
-                if (teststep.getEndpoint() == null) {
-                    throw new RuntimeException("Endpoint property " + teststep.getEndpointProperty() + " not defined or is null.");
-                }
-            }
-
-            //  decrypt password from endpoint
-            //  not modifying the endpoint object. Reasons
-            //    1. Avoid the decrypted password leaking out of this runner (moving around with the Endpoint object)
-            //    2. Avoid affecting other step runs when the endpoint object comes from a referenceable property (like from data table)
-            Endpoint endpoint = teststep.getEndpoint();
-            if (endpoint != null && endpoint.getPassword() != null) {
-                runner.setDecryptedEndpointPassword(utilsDAO.decryptEndpointPassword(endpoint.getPassword()));
-            }
-
-            runner.setTeststep(teststep);
-
-            runner.setTestcaseRunContext(testcaseRunContext);
-        } catch (Exception e) {
-            throw new RuntimeException("Unable to instantiate test step runner.", e);
+        //  special processing for otherProperties that contains HTTPStubMapping objects
+        //  must do this after resolving referenceable string properties
+        if (teststep.getOtherProperties() instanceof HTTPStubsSetupTeststepProperties) {
+            HTTPStubsSetupTeststepProperties httpStubsSetupTeststepProperties =
+                    (HTTPStubsSetupTeststepProperties) teststep.getOtherProperties();
+            IronTestUtils.substituteRequestBodyMainPatternValue(httpStubsSetupTeststepProperties.getHttpStubMappings());
         }
+
+        //  resolve endpoint property if set on test step
+        if (teststep.getEndpointProperty() != null) {
+            teststep.setEndpoint(referenceableEndpointProperties.get(teststep.getEndpointProperty()));
+            if (teststep.getEndpoint() == null) {
+                throw new RuntimeException("Endpoint property " + teststep.getEndpointProperty() + " not defined or is null.");
+            }
+        }
+
+        //  decrypt password from endpoint
+        //  not modifying the endpoint object. Reasons
+        //    1. Avoid the decrypted password leaking out of this runner (moving around with the Endpoint object)
+        //    2. Avoid affecting other step runs when the endpoint object comes from a referenceable property (like from data table)
+        Endpoint endpoint = teststep.getEndpoint();
+        if (endpoint != null && endpoint.getPassword() != null) {
+            runner.setDecryptedEndpointPassword(utilsDAO.decryptEndpointPassword(endpoint.getPassword()));
+        }
+
+        runner.setTeststep(teststep);
+
+        runner.setTestcaseRunContext(testcaseRunContext);
 
         return runner;
     }
