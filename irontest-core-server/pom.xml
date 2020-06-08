@@ -176,6 +176,12 @@
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
             <version>0.9.11</version> <!-- can't use 0.9.12, as there is https://github.com/ronmamo/reflections/issues/273 -->
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava</artifactId> <!-- Guava 20 is missing ImmutableList.toImmutableList method required by Jdbi 3.5.1 -->
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- WireMock's dependencies -->
