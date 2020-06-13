@@ -19,10 +19,8 @@ public class UpgradeCommand extends ConfiguredCommand<IronTestConfiguration> {
 
     @Override
     protected void run(Bootstrap bootstrap, Namespace namespace, IronTestConfiguration configuration) {
-//        String systemDatabaseVersionStr = getSystemDatabaseVersionStr(configuration);
-//        String jarFileVersionStr = Version.VERSION;
-        String systemDatabaseVersionStr = "0.13.0";
-        String jarFileVersionStr = "0.15.0";
+        String systemDatabaseVersionStr = getSystemDatabaseVersionStr(configuration);
+        String jarFileVersionStr = Version.VERSION;
         DefaultArtifactVersion jarFileVersion = new DefaultArtifactVersion(jarFileVersionStr);
         DefaultArtifactVersion systemDatabaseVersion = new DefaultArtifactVersion(systemDatabaseVersionStr);
         int result = systemDatabaseVersion.compareTo(jarFileVersion);
@@ -39,11 +37,20 @@ public class UpgradeCommand extends ConfiguredCommand<IronTestConfiguration> {
             System.out.println("  start the new version of Iron Test in your current <IronTest_Home> (like by running the start.bat).");
         } else {    //  system database version is smaller
             UpgradeActions upgradeActions = new UpgradeActions();
-            if (upgradeActions.needsSystemDatabaseUpgrade(systemDatabaseVersion, jarFileVersion)) {
-                System.out.println("Please manually backup <IronTest_Home>/database folder to your normal maintenance backup location. Type yes and then Enter to confirm backup completion.");
+            if (upgradeActions.needsSystemDBUpgrade(systemDatabaseVersion, jarFileVersion)) {
+                System.out.println("Please manually backup <IronTest_Home>/database folder to your normal maintenance backup location. Type y and then Enter to confirm backup completion.");
                 Scanner scanner = new Scanner(System.in);
                 String line = null;
-                while (!"yes".equalsIgnoreCase(line)) {
+                while (!"y".equalsIgnoreCase(line)) {
+                    line = scanner.nextLine().trim();
+                }
+            }
+
+            if (upgradeActions.needsConfigYmlUpgrade(systemDatabaseVersion, jarFileVersion)) {
+                System.out.println("Please manually backup <IronTest_Home>/config.yml file to your normal maintenance backup location. Type y and then Enter to confirm backup completion.");
+                Scanner scanner = new Scanner(System.in);
+                String line = null;
+                while (!"y".equalsIgnoreCase(line)) {
                     line = scanner.nextLine().trim();
                 }
             }
