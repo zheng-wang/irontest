@@ -2,7 +2,7 @@ package io.irontest.upgrade;
 
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 
-public class UpgradeResourceFile implements Comparable<UpgradeResourceFile> {
+public class ResourceFile implements Comparable<ResourceFile> {
     private DefaultArtifactVersion fromVersion;
     private DefaultArtifactVersion toVersion;
     private String resourcePath;
@@ -32,7 +32,7 @@ public class UpgradeResourceFile implements Comparable<UpgradeResourceFile> {
     }
 
     @Override
-    public int compareTo(UpgradeResourceFile o) {
+    public int compareTo(ResourceFile o) {
         return this.fromVersion.compareTo(o.fromVersion);
     }
 }
