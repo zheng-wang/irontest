@@ -2,17 +2,19 @@ package io.irontest.upgrade;
 
 import io.dropwizard.db.DataSourceFactory;
 import io.irontest.IronTestConfiguration;
+import org.apache.commons.io.IOUtils;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
+import org.jdbi.v3.core.Jdbi;
 import org.reflections.Reflections;
 import org.reflections.scanners.ResourcesScanner;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashSet;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
@@ -23,7 +25,11 @@ public class UpgradeActions {
 
     protected void upgrade(DefaultArtifactVersion systemDatabaseVersion, DefaultArtifactVersion jarFileVersion,
                            IronTestConfiguration configuration) throws IOException {
-        boolean needsSystemDBUpgrade = needsSystemDBUpgrade(systemDatabaseVersion, jarFileVersion);
+        System.out.println("Upgrading Iron Test from v" + systemDatabaseVersion + " to v" + jarFileVersion + ".");
+
+        List<UpgradeResourceFile> applicableSystemDBUpgrades =
+                getApplicableUpgradeResourceFiles(systemDatabaseVersion, jarFileVersion, "db", "SystemDB", "sql");
+        boolean needsSystemDBUpgrade = !applicableSystemDBUpgrades.isEmpty();
         if (needsSystemDBUpgrade) {
             System.out.println("Please manually backup <IronTest_Home>/database folder to your normal maintenance backup location. Type y and then Enter to confirm backup completion.");
             Scanner scanner = new Scanner(System.in);
@@ -32,7 +38,11 @@ public class UpgradeActions {
                 line = scanner.nextLine().trim();
             }
         }
-        boolean needsConfigYmlUpgrade = needsConfigYmlUpgrade(systemDatabaseVersion, jarFileVersion);
+
+        List<UpgradeResourceFile> applicableConfigYmlUpgrades =
+                getApplicableUpgradeResourceFiles(systemDatabaseVersion, jarFileVersion,
+                        "configyml", "ConfigYml", "class");
+        boolean needsConfigYmlUpgrade = !applicableConfigYmlUpgrades.isEmpty();
         if (needsConfigYmlUpgrade) {
             System.out.println("Please manually backup <IronTest_Home>/config.yml file to your normal maintenance backup location. Type y and then Enter to confirm backup completion.");
             Scanner scanner = new Scanner(System.in);
@@ -42,13 +52,13 @@ public class UpgradeActions {
             }
         }
 
-        Path upgradeWorkspace = Files.createTempDirectory("irontest-upgrade");
+        Path upgradeWorkspace = Files.createTempDirectory("irontest-upgrade-");
         Path logFilePath = Paths.get(upgradeWorkspace.toString(),
                 "upgrade-from-v" + systemDatabaseVersion + "-to-v" + jarFileVersion + ".log");
         FileHandler logFileHandler = new FileHandler(logFilePath.toString());
         logFileHandler.setFormatter(new SimpleFormatter());
         LOGGER.addHandler(logFileHandler);
-        LOGGER.info("Create temp upgrade directory " + upgradeWorkspace.toString());
+        LOGGER.info("Created temp upgrade directory " + upgradeWorkspace.toString());
 
         if (needsSystemDBUpgrade || needsConfigYmlUpgrade) {
             Path oldDir = Paths.get(upgradeWorkspace.toString(), "old");
@@ -57,29 +67,25 @@ public class UpgradeActions {
             Files.createDirectory(newDir);
 
             if (needsSystemDBUpgrade) {
-                upgradeSystemDB(configuration.getSystemDatabase(), oldDir, newDir);
+                upgradeSystemDB(configuration.getSystemDatabase(), applicableSystemDBUpgrades, oldDir, newDir,
+                        jarFileVersion);
             }
         }
     }
 
-    private boolean needsSystemDBUpgrade(DefaultArtifactVersion oldVersion, DefaultArtifactVersion newVersion) {
-        Set<String> systemDBUpgradeFilePaths = getApplicableUpgradeFilePaths(oldVersion, newVersion, "db",
-                "SystemDB", "sql");
-
-        return !systemDBUpgradeFilePaths.isEmpty();
-    }
-
-    private boolean needsConfigYmlUpgrade(DefaultArtifactVersion oldVersion, DefaultArtifactVersion newVersion) {
-        Set<String> configYmlUpgradeFilePaths = getApplicableUpgradeFilePaths(oldVersion, newVersion,
-                "configyml", "ConfigYml", "class");
-
-        return !configYmlUpgradeFilePaths.isEmpty();
-    }
-
-    private Set<String> getApplicableUpgradeFilePaths(DefaultArtifactVersion oldVersion,
+    /**
+     * Result is sorted by fromVersion.
+     * @param oldVersion
+     * @param newVersion
+     * @param subPackage
+     * @param prefix
+     * @param extension
+     * @return
+     */
+    private List<UpgradeResourceFile> getApplicableUpgradeResourceFiles(DefaultArtifactVersion oldVersion,
                                                       DefaultArtifactVersion newVersion, String subPackage,
                                                       String prefix, String extension) {
-        Set<String> result = new HashSet<>();
+        List<UpgradeResourceFile> result = new ArrayList<>();
 
         Reflections reflections = new Reflections(
                 getClass().getPackage().getName() + "." + subPackage, new ResourcesScanner());
@@ -90,34 +96,64 @@ public class UpgradeActions {
             String upgradeFileName = upgradeFilePathFragments[upgradeFilePathFragments.length - 1];
             String[] versionsInUpgradeFileName = upgradeFileName.replace(prefix + "_", "").
                     replace("." + extension, "").split("_To_");
-            DefaultArtifactVersion oldVersionInUpgradeFileName = new DefaultArtifactVersion(
+            DefaultArtifactVersion fromVersionInUpgradeFileName = new DefaultArtifactVersion(
                     versionsInUpgradeFileName[0].replace("_", "."));
-            DefaultArtifactVersion newVersionInUpgradeFileName = new DefaultArtifactVersion(
+            DefaultArtifactVersion toVersionInUpgradeFileName = new DefaultArtifactVersion(
                     versionsInUpgradeFileName[1].replace("_", "."));
-            if (oldVersionInUpgradeFileName.compareTo(oldVersion) >= 0 &&
-                    newVersionInUpgradeFileName.compareTo(newVersion) <=0) {
-                result.add(upgradeFilePath);
+            if (fromVersionInUpgradeFileName.compareTo(oldVersion) >= 0 &&
+                    toVersionInUpgradeFileName.compareTo(newVersion) <=0) {
+                UpgradeResourceFile upgradeResourceFile = new UpgradeResourceFile();
+                upgradeResourceFile.setResourcePath(upgradeFilePath);
+                upgradeResourceFile.setFromVersion(fromVersionInUpgradeFileName);
+                upgradeResourceFile.setToVersion(toVersionInUpgradeFileName);
+                result.add(upgradeResourceFile);
             }
         }
+
+        Collections.sort(result);
 
         return result;
     }
 
-    private void upgradeSystemDB(DataSourceFactory systemDBConfiguration, Path oldDir, Path newDir) throws IOException {
+    private void upgradeSystemDB(DataSourceFactory systemDBConfiguration,
+                                 List<UpgradeResourceFile> applicableSystemDBUpgrades, Path oldDir, Path newDir,
+                                 DefaultArtifactVersion jarFileVersion)
+            throws IOException {
         Path oldDatabaseFolder = Files.createDirectory(Paths.get(oldDir.toString(), "database"));
         Path newDatabaseFolder = Files.createDirectory(Paths.get(newDir.toString(), "database"));
-
         String systemDBURL = systemDBConfiguration.getUrl();
         String systemDBBaseURL = systemDBURL.split(";")[0];
+
+        //  copy system database to the old and new folders under the temp workspace
         String systemDBRelativePath = systemDBBaseURL.replace("jdbc:h2:", "");
         String[] systemDBFileRelativePathFragments = systemDBRelativePath.split("/");
         String systemDBFileName = systemDBFileRelativePathFragments[systemDBFileRelativePathFragments.length - 1] + ".mv.db";
         Path sourceFile = Paths.get("database", systemDBFileName);
         Path targetOldFile = Paths.get(oldDatabaseFolder.toString(), systemDBFileName);
         Path targetNewFile = Paths.get(newDatabaseFolder.toString(), systemDBFileName);
-        LOGGER.info("Copy current system database to " + oldDatabaseFolder.toString());
         Files.copy(sourceFile, targetOldFile);
-        LOGGER.info("Copy current system database to " + newDatabaseFolder.toString());
+        LOGGER.info("Copied current system database to " + oldDatabaseFolder.toString());
         Files.copy(sourceFile, targetNewFile);
+        LOGGER.info("Copied current system database to " + newDatabaseFolder.toString());
+
+        String newSystemDBURL = "jdbc:h2:" + targetNewFile.toString().replace(".mv.db", "") + ";IFEXISTS=TRUE";
+        Jdbi jdbi = Jdbi.create(newSystemDBURL,
+                systemDBConfiguration.getUser(), systemDBConfiguration.getPassword());
+
+        //  run SQL scripts against the system database in the 'new' folder
+        for (UpgradeResourceFile sqlFile: applicableSystemDBUpgrades) {
+            try (InputStream is = getClass().getClassLoader().getResourceAsStream(sqlFile.getResourcePath())) {
+                String sqlScript = IOUtils.toString(is, StandardCharsets.UTF_8.name());
+                jdbi.withHandle(handle -> handle.createScript(sqlScript).execute());
+            }
+            LOGGER.info("Executed SQL script " + sqlFile.getResourcePath() + " in " + newSystemDBURL + ".");
+        }
+
+        //  update Version table
+        jdbi.withHandle(handle -> handle
+                .createUpdate("update version set version = ?, updated = CURRENT_TIMESTAMP")
+                .bind(0, jarFileVersion.toString())
+                .execute());
+        LOGGER.info("Updated Version to " + jarFileVersion + " in " + newSystemDBURL + ".");
     }
 }
