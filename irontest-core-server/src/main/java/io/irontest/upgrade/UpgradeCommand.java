@@ -18,7 +18,7 @@ public class UpgradeCommand extends ConfiguredCommand<IronTestConfiguration> {
     }
 
     @Override
-    protected void run(Bootstrap bootstrap, Namespace namespace, IronTestConfiguration configuration) throws IOException {
+    protected void run(Bootstrap bootstrap, Namespace namespace, IronTestConfiguration configuration) throws Exception {
         String systemDBVersionStr = getSystemDBVersionStr(configuration);
         String jarFileVersionStr = Version.VERSION;
         DefaultArtifactVersion jarFileVersion = new DefaultArtifactVersion(jarFileVersionStr);
