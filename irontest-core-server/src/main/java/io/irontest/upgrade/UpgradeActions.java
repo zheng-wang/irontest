@@ -1,7 +1,5 @@
 package io.irontest.upgrade;
 
-import io.dropwizard.db.DataSourceFactory;
-import io.irontest.IronTestConfiguration;
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.jdbi.v3.core.Jdbi;
@@ -14,8 +12,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.*;
+import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
@@ -25,7 +23,8 @@ public class UpgradeActions {
     private static Logger LOGGER = Logger.getLogger("Upgrade");
 
     protected void upgrade(DefaultArtifactVersion systemDatabaseVersion, DefaultArtifactVersion jarFileVersion,
-                           IronTestConfiguration configuration) throws Exception {
+                           String ironTestHome, String fullyQualifiedSystemDBURL, String user, String password)
+            throws Exception {
         System.out.println("Upgrading Iron Test from v" + systemDatabaseVersion + " to v" + jarFileVersion + ".");
 
         Path upgradeWorkspace = Files.createTempDirectory("irontest-upgrade-");
@@ -34,6 +33,7 @@ public class UpgradeActions {
         FileHandler logFileHandler = new FileHandler(logFilePath.toString());
         logFileHandler.setFormatter(new SimpleFormatter());
         LOGGER.addHandler(logFileHandler);
+        LOGGER.addHandler(new ConsoleHandler());
         LOGGER.info("Created temp upgrade directory " + upgradeWorkspace.toString());
 
         List<ResourceFile> applicableSystemDBUpgrades =
@@ -57,22 +57,22 @@ public class UpgradeActions {
             Files.createDirectory(newDir);
 
             if (needsSystemDBUpgrade) {
-                upgradeSystemDB(configuration.getSystemDatabase(), applicableSystemDBUpgrades, oldDir, newDir,
-                        jarFileVersion);
+                upgradeSystemDB(ironTestHome, fullyQualifiedSystemDBURL, user, password, applicableSystemDBUpgrades,
+                        oldDir, newDir, jarFileVersion);
             }
 
-            //  copy files from the 'new' folder to <IronTest_Home>
-            if (needsSystemDBUpgrade) {
-                String systemDBFileName = getSystemDBFileName(configuration.getSystemDatabase());
-                Path newDatabaseFolder = Paths.get(newDir.toString(), "database");
-                Path ironTestHomeSystemDatabaseFolder = Paths.get(".", "database");
-                Path sourceFile = Paths.get(newDatabaseFolder.toString(), systemDBFileName);
-                Path targetFile = Paths.get(ironTestHomeSystemDatabaseFolder.toString(), systemDBFileName);
-
-                Files.copy(sourceFile, targetFile, StandardCopyOption.REPLACE_EXISTING);
-                LOGGER.info("Copied " + systemDBFileName + " from " + newDatabaseFolder + " to " +
-                        ironTestHomeSystemDatabaseFolder + ".");
-            }
+//            //  copy files from the 'new' folder to <IronTest_Home>
+//            if (needsSystemDBUpgrade) {
+//                String systemDBFileName = getSystemDBFileName(configuration.getSystemDatabase());
+//                Path newDatabaseFolder = Paths.get(newDir.toString(), "database");
+//                Path ironTestHomeSystemDatabaseFolder = Paths.get(".", "database");
+//                Path sourceFile = Paths.get(newDatabaseFolder.toString(), systemDBFileName);
+//                Path targetFile = Paths.get(ironTestHomeSystemDatabaseFolder.toString(), systemDBFileName);
+//
+//                Files.copy(sourceFile, targetFile, StandardCopyOption.REPLACE_EXISTING);
+//                LOGGER.info("Copied " + systemDBFileName + " from " + newDatabaseFolder + " to " +
+//                        ironTestHomeSystemDatabaseFolder + ".");
+//            }
         }
     }
 
@@ -118,26 +118,28 @@ public class UpgradeActions {
         return result;
     }
 
-    private String getSystemDBFileName(DataSourceFactory systemDBConfiguration) {
-        String systemDBURL = systemDBConfiguration.getUrl();
-        String systemDBBaseURL = systemDBURL.split(";")[0];
+    private String getSystemDBFileName(String fullyQualifiedSystemDBURL) {
+        String systemDBBaseURL = fullyQualifiedSystemDBURL.split(";")[0];
 
         //  copy system database to the old and new folders under the temp workspace
-        String systemDBRelativePath = systemDBBaseURL.replace("jdbc:h2:", "");
-        String[] systemDBFileRelativePathFragments = systemDBRelativePath.split("/");
+        String systemDBPath = systemDBBaseURL.replace("jdbc:h2:", "");
+        String[] systemDBFileRelativePathFragments = systemDBPath.split("[/\\\\]");  // split by / and \
         String systemDBFileName = systemDBFileRelativePathFragments[systemDBFileRelativePathFragments.length - 1] + ".mv.db";
         return systemDBFileName;
     }
 
-    private void upgradeSystemDB(DataSourceFactory systemDBConfiguration,
+    private void upgradeSystemDB(String ironTestHome, String fullyQualifiedSystemDBURL, String user, String password,
                                  List<ResourceFile> applicableSystemDBUpgrades, Path oldDir, Path newDir,
                                  DefaultArtifactVersion jarFileVersion)
             throws IOException {
         Path oldDatabaseFolder = Files.createDirectory(Paths.get(oldDir.toString(), "database"));
         Path newDatabaseFolder = Files.createDirectory(Paths.get(newDir.toString(), "database"));
 
-        String systemDBFileName = getSystemDBFileName(systemDBConfiguration);
-        Path sourceFile = Paths.get("database", systemDBFileName);
+        String systemDBFileName = getSystemDBFileName(fullyQualifiedSystemDBURL);
+
+        System.out.println(systemDBFileName);
+
+        Path sourceFile = Paths.get(ironTestHome, "database", systemDBFileName);
         Path targetOldFile = Paths.get(oldDatabaseFolder.toString(), systemDBFileName);
         Path targetNewFile = Paths.get(newDatabaseFolder.toString(), systemDBFileName);
         Files.copy(sourceFile, targetOldFile);
@@ -146,8 +148,7 @@ public class UpgradeActions {
         LOGGER.info("Copied current system database to " + newDatabaseFolder.toString());
 
         String newSystemDBURL = "jdbc:h2:" + targetNewFile.toString().replace(".mv.db", "") + ";IFEXISTS=TRUE";
-        Jdbi jdbi = Jdbi.create(newSystemDBURL,
-                systemDBConfiguration.getUser(), systemDBConfiguration.getPassword());
+        Jdbi jdbi = Jdbi.create(newSystemDBURL, user, password);
 
         //  run SQL scripts against the system database in the 'new' folder
         for (ResourceFile sqlFile: applicableSystemDBUpgrades) {
