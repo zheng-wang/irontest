@@ -8,10 +8,13 @@ import org.reflections.scanners.ResourcesScanner;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
@@ -56,12 +59,14 @@ public class UpgradeActions {
             Files.createDirectory(oldDir);
             Files.createDirectory(newDir);
 
-            if (needsSystemDBUpgrade) {
-                upgradeSystemDB(ironTestHome, fullyQualifiedSystemDBURL, user, password, applicableSystemDBUpgrades,
-                        oldDir, newDir, jarFileVersion);
-            }
+            upgradeSystemDB(ironTestHome, fullyQualifiedSystemDBURL, user, password, applicableSystemDBUpgrades,
+                    oldDir, newDir, jarFileVersion);
+        }
 
-//            //  copy files from the 'new' folder to <IronTest_Home>
+        copyFilesToBeUpgraded(ironTestHome, systemDatabaseVersion, jarFileVersion);
+
+        
+                    //  copy files from the 'new' folder to <IronTest_Home>
 //            if (needsSystemDBUpgrade) {
 //                String systemDBFileName = getSystemDBFileName(configuration.getSystemDatabase());
 //                Path newDatabaseFolder = Paths.get(newDir.toString(), "database");
@@ -73,6 +78,26 @@ public class UpgradeActions {
 //                LOGGER.info("Copied " + systemDBFileName + " from " + newDatabaseFolder + " to " +
 //                        ironTestHomeSystemDatabaseFolder + ".");
 //            }
+    }
+
+    private void copyFilesToBeUpgraded(String ironTestHome, DefaultArtifactVersion systemDatabaseVersion,
+                                       DefaultArtifactVersion jarFileVersion)
+            throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException,
+            InstantiationException, IOException {
+        List<ResourceFile> applicableCopyFilesUpgrades = getApplicableUpgradeResourceFiles(systemDatabaseVersion,
+                jarFileVersion, "copyfiles", "CopyFiles", "class");
+        for (ResourceFile clazzFile: applicableCopyFilesUpgrades) {
+            Class clazz = Class.forName(clazzFile.getResourcePath().replace("/", ".")
+                    .replace(".class", ""));
+            Constructor<CopyFilesUpgrade> constructor = clazz.getConstructor();
+            CopyFilesUpgrade upgrade = constructor.newInstance();
+            Map<String, String> filePathMap = upgrade.getFilePathMap();
+            for (Map.Entry<String, String> mapEntry: filePathMap.entrySet()) {
+                Path sourceFile = Paths.get(".", mapEntry.getKey()).toAbsolutePath();
+                Path targetFile = Paths.get(ironTestHome, mapEntry.getValue()).toAbsolutePath();
+                Files.copy(sourceFile, targetFile, StandardCopyOption.REPLACE_EXISTING);
+                LOGGER.info("Copyied " + sourceFile + " to " + targetFile + ".");
+            }
         }
     }
 
