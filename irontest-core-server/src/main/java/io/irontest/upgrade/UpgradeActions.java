@@ -11,10 +11,7 @@ import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 import java.util.*;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
@@ -65,19 +62,45 @@ public class UpgradeActions {
 
         copyFilesToBeUpgraded(ironTestHome, systemDatabaseVersion, jarFileVersion);
 
+        deleteOldJarsFromIronTestHome(ironTestHome);
+
+        copyNewJarFromDistToIronTestHome(jarFileVersion, ironTestHome);
         
-                    //  copy files from the 'new' folder to <IronTest_Home>
-//            if (needsSystemDBUpgrade) {
-//                String systemDBFileName = getSystemDBFileName(configuration.getSystemDatabase());
-//                Path newDatabaseFolder = Paths.get(newDir.toString(), "database");
-//                Path ironTestHomeSystemDatabaseFolder = Paths.get(".", "database");
-//                Path sourceFile = Paths.get(newDatabaseFolder.toString(), systemDBFileName);
-//                Path targetFile = Paths.get(ironTestHomeSystemDatabaseFolder.toString(), systemDBFileName);
+        //  copy files from the 'new' folder to <IronTest_Home>
+//        if (needsSystemDBUpgrade) {
+//            String systemDBFileName = getSystemDBFileName(configuration.getSystemDatabase());
+//            Path newDatabaseFolder = Paths.get(newDir.toString(), "database");
+//            Path ironTestHomeSystemDatabaseFolder = Paths.get(".", "database");
+//            Path sourceFile = Paths.get(newDatabaseFolder.toString(), systemDBFileName);
+//            Path targetFile = Paths.get(ironTestHomeSystemDatabaseFolder.toString(), systemDBFileName);
 //
-//                Files.copy(sourceFile, targetFile, StandardCopyOption.REPLACE_EXISTING);
-//                LOGGER.info("Copied " + systemDBFileName + " from " + newDatabaseFolder + " to " +
-//                        ironTestHomeSystemDatabaseFolder + ".");
-//            }
+//            Files.copy(sourceFile, targetFile, StandardCopyOption.REPLACE_EXISTING);
+//            LOGGER.info("Copied " + systemDBFileName + " from " + newDatabaseFolder + " to " +
+//                    ironTestHomeSystemDatabaseFolder + ".");
+//        }
+    }
+
+    private void copyNewJarFromDistToIronTestHome(DefaultArtifactVersion newJarFileVersion, String ironTestHome)
+            throws IOException {
+        String newJarFileName = "irontest-" + newJarFileVersion + ".jar";
+        Path soureFilePath = Paths.get(".", newJarFileName).toAbsolutePath();
+        Path targetFilePath = Paths.get(ironTestHome, newJarFileName).toAbsolutePath();
+        Files.copy(soureFilePath, targetFilePath);
+        LOGGER.info("Copyied " + soureFilePath + " to " + targetFilePath + ".");
+    }
+
+    private void deleteOldJarsFromIronTestHome(String ironTestHome) throws IOException {
+        try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(
+                Paths.get(ironTestHome), "irontest-*.jar")) {
+            dirStream.forEach(filePath -> {
+                try {
+                    Files.delete(filePath);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                LOGGER.info("Deleted " + filePath + ".");
+            });
+        }
     }
 
     private void copyFilesToBeUpgraded(String ironTestHome, DefaultArtifactVersion systemDatabaseVersion,
@@ -93,10 +116,10 @@ public class UpgradeActions {
             CopyFilesUpgrade upgrade = constructor.newInstance();
             Map<String, String> filePathMap = upgrade.getFilePathMap();
             for (Map.Entry<String, String> mapEntry: filePathMap.entrySet()) {
-                Path sourceFile = Paths.get(".", mapEntry.getKey()).toAbsolutePath();
-                Path targetFile = Paths.get(ironTestHome, mapEntry.getValue()).toAbsolutePath();
-                Files.copy(sourceFile, targetFile, StandardCopyOption.REPLACE_EXISTING);
-                LOGGER.info("Copyied " + sourceFile + " to " + targetFile + ".");
+                Path sourceFilePath = Paths.get(".", mapEntry.getKey()).toAbsolutePath();
+                Path targetFilePath = Paths.get(ironTestHome, mapEntry.getValue()).toAbsolutePath();
+                Files.copy(sourceFilePath, targetFilePath, StandardCopyOption.REPLACE_EXISTING);
+                LOGGER.info("Copyied " + sourceFilePath + " to " + targetFilePath + ".");
             }
         }
     }
