@@ -2,7 +2,7 @@ package io.irontest.upgrade;
 
 import java.util.Map;
 
-public interface CopyFilesUpgrade {
+public interface CopyFiles {
     /**
      *
      * @return A map of sourceFileInDistFolder -> targetFileInIronTestHome

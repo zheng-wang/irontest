@@ -15,8 +15,8 @@ import java.nio.file.*;
 import java.util.*;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
+import java.util.logging.Formatter;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 import java.util.regex.Pattern;
 
 public class UpgradeActions {
@@ -25,15 +25,18 @@ public class UpgradeActions {
     protected void upgrade(DefaultArtifactVersion systemDatabaseVersion, DefaultArtifactVersion jarFileVersion,
                            String ironTestHome, String fullyQualifiedSystemDBURL, String user, String password)
             throws Exception {
-        System.out.println("Upgrading Iron Test from v" + systemDatabaseVersion + " to v" + jarFileVersion + ".");
+        Formatter logFormatter = new LogFormatter();
+        ConsoleHandler consoleHandler = new ConsoleHandler();
+        consoleHandler.setFormatter(logFormatter);
+        LOGGER.addHandler(consoleHandler);
+        LOGGER.info("Upgrading Iron Test from v" + systemDatabaseVersion + " to v" + jarFileVersion + ".");
 
         Path upgradeWorkspace = Files.createTempDirectory("irontest-upgrade-");
         Path logFilePath = Paths.get(upgradeWorkspace.toString(),
                 "upgrade-from-v" + systemDatabaseVersion + "-to-v" + jarFileVersion + ".log");
         FileHandler logFileHandler = new FileHandler(logFilePath.toString());
-        logFileHandler.setFormatter(new SimpleFormatter());
+        logFileHandler.setFormatter(logFormatter);
         LOGGER.addHandler(logFileHandler);
-        LOGGER.addHandler(new ConsoleHandler());
         LOGGER.info("Created temp upgrade directory " + upgradeWorkspace.toString());
 
         List<ResourceFile> applicableSystemDBUpgrades =
@@ -50,9 +53,11 @@ public class UpgradeActions {
         }
 
         //  do upgrade in the 'new' folder under the temp upgrade directory
+        Path oldDir;
+        Path newDir = null;
         if (needsSystemDBUpgrade) {
-            Path oldDir = Paths.get(upgradeWorkspace.toString(), "old");
-            Path newDir = Paths.get(upgradeWorkspace.toString(), "new");
+            oldDir = Paths.get(upgradeWorkspace.toString(), "old");
+            newDir = Paths.get(upgradeWorkspace.toString(), "new");
             Files.createDirectory(oldDir);
             Files.createDirectory(newDir);
 
@@ -65,19 +70,54 @@ public class UpgradeActions {
         deleteOldJarsFromIronTestHome(ironTestHome);
 
         copyNewJarFromDistToIronTestHome(jarFileVersion, ironTestHome);
-        
+
+        boolean clearBrowserCacheNeeded = clearBrowserCacheIfNeeded(systemDatabaseVersion, jarFileVersion);
+
         //  copy files from the 'new' folder to <IronTest_Home>
-//        if (needsSystemDBUpgrade) {
-//            String systemDBFileName = getSystemDBFileName(configuration.getSystemDatabase());
-//            Path newDatabaseFolder = Paths.get(newDir.toString(), "database");
-//            Path ironTestHomeSystemDatabaseFolder = Paths.get(".", "database");
-//            Path sourceFile = Paths.get(newDatabaseFolder.toString(), systemDBFileName);
-//            Path targetFile = Paths.get(ironTestHomeSystemDatabaseFolder.toString(), systemDBFileName);
-//
-//            Files.copy(sourceFile, targetFile, StandardCopyOption.REPLACE_EXISTING);
-//            LOGGER.info("Copied " + systemDBFileName + " from " + newDatabaseFolder + " to " +
-//                    ironTestHomeSystemDatabaseFolder + ".");
-//        }
+        if (needsSystemDBUpgrade) {
+            String systemDBFileName = getSystemDBFileName(fullyQualifiedSystemDBURL);
+            Path ironTestHomeSystemDatabaseFolder = Paths.get(ironTestHome, "database");
+            Path sourceFilePath = Paths.get(newDir.toString(), "database", systemDBFileName);
+            Path targetFilePath = Paths.get(ironTestHomeSystemDatabaseFolder.toString(), systemDBFileName);
+            Files.copy(sourceFilePath, targetFilePath, StandardCopyOption.REPLACE_EXISTING);
+            LOGGER.info("Copied " + sourceFilePath + " to " + targetFilePath + ".");
+        }
+
+        String lineDelimiter = "------------------------------------------------------------------------";
+        LOGGER.info(lineDelimiter);
+        LOGGER.info("UPGRADE SUCCESS");
+        LOGGER.info(lineDelimiter);
+        LOGGER.info("You can start Iron Test now.");
+        if (clearBrowserCacheNeeded) {
+            LOGGER.info("If Iron Test page is already open, refresh the page (no need to restart browser).");
+        }
+        LOGGER.info(lineDelimiter);
+        LOGGER.info("Refer to " + logFilePath + " for upgrade logs.");
+    }
+
+    private boolean clearBrowserCacheIfNeeded(DefaultArtifactVersion oldVersion, DefaultArtifactVersion newVersion) {
+        boolean clearBrowserCacheNeeded = false;
+        ClearBrowserCache cleanBrowserCache = new ClearBrowserCache();
+        Map<DefaultArtifactVersion, DefaultArtifactVersion> versionMap = cleanBrowserCache.getVersionMap();
+        for (Map.Entry<DefaultArtifactVersion, DefaultArtifactVersion> entry: versionMap.entrySet()) {
+            DefaultArtifactVersion fromVersion = entry.getKey();
+            DefaultArtifactVersion toVersion = entry.getValue();
+            if (fromVersion.compareTo(oldVersion) >= 0 && toVersion.compareTo(newVersion) <=0) {
+                clearBrowserCacheNeeded = true;
+                break;
+            }
+        }
+        if (clearBrowserCacheNeeded) {
+            System.out.println("Please clear browser cached images and files (last hour is enough). Type y and then Enter to confirm clear completion.");
+            Scanner scanner = new Scanner(System.in);
+            String line = null;
+            while (!"y".equalsIgnoreCase(line)) {
+                line = scanner.nextLine().trim();
+            }
+            LOGGER.info("User confirmed browser cache clear completion.");
+        }
+
+        return clearBrowserCacheNeeded;
     }
 
     private void copyNewJarFromDistToIronTestHome(DefaultArtifactVersion newJarFileVersion, String ironTestHome)
@@ -86,7 +126,7 @@ public class UpgradeActions {
         Path soureFilePath = Paths.get(".", newJarFileName).toAbsolutePath();
         Path targetFilePath = Paths.get(ironTestHome, newJarFileName).toAbsolutePath();
         Files.copy(soureFilePath, targetFilePath);
-        LOGGER.info("Copyied " + soureFilePath + " to " + targetFilePath + ".");
+        LOGGER.info("Copied " + soureFilePath + " to " + targetFilePath + ".");
     }
 
     private void deleteOldJarsFromIronTestHome(String ironTestHome) throws IOException {
@@ -112,14 +152,14 @@ public class UpgradeActions {
         for (ResourceFile clazzFile: applicableCopyFilesUpgrades) {
             Class clazz = Class.forName(clazzFile.getResourcePath().replace("/", ".")
                     .replace(".class", ""));
-            Constructor<CopyFilesUpgrade> constructor = clazz.getConstructor();
-            CopyFilesUpgrade upgrade = constructor.newInstance();
+            Constructor<CopyFiles> constructor = clazz.getConstructor();
+            CopyFiles upgrade = constructor.newInstance();
             Map<String, String> filePathMap = upgrade.getFilePathMap();
             for (Map.Entry<String, String> mapEntry: filePathMap.entrySet()) {
                 Path sourceFilePath = Paths.get(".", mapEntry.getKey()).toAbsolutePath();
                 Path targetFilePath = Paths.get(ironTestHome, mapEntry.getValue()).toAbsolutePath();
                 Files.copy(sourceFilePath, targetFilePath, StandardCopyOption.REPLACE_EXISTING);
-                LOGGER.info("Copyied " + sourceFilePath + " to " + targetFilePath + ".");
+                LOGGER.info("Copied " + sourceFilePath + " to " + targetFilePath + ".");
             }
         }
     }
@@ -182,10 +222,7 @@ public class UpgradeActions {
             throws IOException {
         Path oldDatabaseFolder = Files.createDirectory(Paths.get(oldDir.toString(), "database"));
         Path newDatabaseFolder = Files.createDirectory(Paths.get(newDir.toString(), "database"));
-
         String systemDBFileName = getSystemDBFileName(fullyQualifiedSystemDBURL);
-
-        System.out.println(systemDBFileName);
 
         Path sourceFile = Paths.get(ironTestHome, "database", systemDBFileName);
         Path targetOldFile = Paths.get(oldDatabaseFolder.toString(), systemDBFileName);
