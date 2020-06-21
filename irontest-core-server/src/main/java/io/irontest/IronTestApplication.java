@@ -36,11 +36,13 @@ import io.irontest.resources.*;
 import io.irontest.upgrade.UpgradeCommand;
 import io.irontest.utils.IronTestUtils;
 import io.irontest.ws.ArticleSOAP;
+import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.jdbi.v3.core.Jdbi;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
@@ -108,7 +110,13 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
     }
 
     @Override
-    public void run(IronTestConfiguration configuration, Environment environment) {
+    public void run(IronTestConfiguration configuration, Environment environment) throws IOException {
+        if (!checkVersion(configuration, environment)) {
+            System.out.println("Press Enter to exit.");
+            System.in.read();
+            System.exit(0);
+        }
+
         //  Override Java's trusted cacerts with our own trust store if available.
         //  Notice that setting the properties without the trust store being existing could cause unexpected result
         //  at runtime with Java 10 (Java 1.8 does not have the issue), such as failure of SOAP test step run (caused
@@ -129,6 +137,31 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
 
         createSystemResources(configuration, environment, wireMockServer);
         createSampleResources(configuration, environment);
+    }
+
+    /**
+     *
+     * @param configuration
+     * @param environment
+     * @return true if version check finds no problem, false otherwise.
+     */
+    private boolean checkVersion(IronTestConfiguration configuration, Environment environment) {
+        final JdbiFactory jdbiFactory = new JdbiFactory();
+        final Jdbi jdbi = jdbiFactory.build(environment, configuration.getSystemDatabase(), "systemDatabase");
+        DefaultArtifactVersion systemDBVersion = IronTestUtils.getSystemDBVersion(jdbi);
+        DefaultArtifactVersion jarFileVersion = new DefaultArtifactVersion(Version.VERSION);
+        int comparison = systemDBVersion.compareTo(jarFileVersion);
+        if (comparison == 0) {
+            //  do nothing, as system database and the jar file are of the same version
+        } else if (comparison > 0) {    //  system database version is bigger
+            System.out.printf(IronTestConstants.PROMPT_TEXT_WHEN_SYSTEM_DB_VERSION_IS_BIGGER_THAN_JAR_VERSION,
+                    systemDBVersion, jarFileVersion);
+            System.out.println();
+            return false;
+        } else {    //  system database version is smaller
+
+        }
+        return true;
     }
 
     private void createSystemResources(IronTestConfiguration configuration, Environment environment, WireMockServer wireMockServer) {

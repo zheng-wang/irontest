@@ -37,6 +37,8 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.util.EntityUtils;
+import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
+import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.internal.SqlScriptParser;
 import org.w3c.dom.Document;
 
@@ -358,5 +360,13 @@ public final class IronTestUtils {
 
     public static String base64EncodeByteArray(byte[] bytes) {
         return bytes == null ? null : Base64.encodeBase64String(bytes);
+    }
+
+    public static DefaultArtifactVersion getSystemDBVersion(Jdbi jdbi) {
+        String versionStr = jdbi.withHandle(handle ->
+                handle.createQuery("select version from version")
+                        .mapTo(String.class)
+                        .findOnly());
+        return new DefaultArtifactVersion(versionStr);
     }
 }
