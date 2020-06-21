@@ -1,11 +1,30 @@
 package io.irontest.upgrade;
 
-import java.util.Map;
+import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 
-public interface CopyFiles {
-    /**
-     *
-     * @return A map of sourceFileInDistFolder -> targetFileInIronTestHome
-     */
-    Map<String, String> getFilePathMap();
+import java.util.ArrayList;
+import java.util.List;
+
+public class CopyFiles {
+    private List<CopyFilesForOneVersionUpgrade> allFiles = new ArrayList();
+
+    public CopyFiles() {
+        CopyFilesForOneVersionUpgrade filesForOneVersion = new CopyFilesForOneVersionUpgrade(
+                new DefaultArtifactVersion("0.14.0"), new DefaultArtifactVersion("0.15.0"));
+        filesForOneVersion.getFilePathMap().put("start.bat", "start.bat");
+        filesForOneVersion.getFilePathMap().put("start-team.bat", "start-team.bat");
+        allFiles.add(filesForOneVersion);
+    }
+
+    public List<CopyFilesForOneVersionUpgrade> getApplicableCopyFiles(DefaultArtifactVersion oldVersion,
+                                                                      DefaultArtifactVersion newVersion) {
+        List<CopyFilesForOneVersionUpgrade> result = new ArrayList<>();
+        for (CopyFilesForOneVersionUpgrade filesForOneVersionUpgrade: allFiles) {
+            if (filesForOneVersionUpgrade.getFromVersion().compareTo(oldVersion) >= 0 &&
+                    filesForOneVersionUpgrade.getToVersion().compareTo(newVersion) <=0) {
+                result.add(filesForOneVersionUpgrade);
+            }
+        }
+        return result;
+    }
 }

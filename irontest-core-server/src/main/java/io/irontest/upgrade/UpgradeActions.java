@@ -8,8 +8,6 @@ import org.reflections.scanners.ResourcesScanner;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.*;
@@ -143,18 +141,12 @@ public class UpgradeActions {
         }
     }
 
-    private void copyFilesToBeUpgraded(String ironTestHome, DefaultArtifactVersion systemDatabaseVersion,
-                                       DefaultArtifactVersion jarFileVersion)
-            throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException,
-            InstantiationException, IOException {
-        List<ResourceFile> applicableCopyFilesUpgrades = getApplicableUpgradeResourceFiles(systemDatabaseVersion,
-                jarFileVersion, "copyfiles", "CopyFiles", "class");
-        for (ResourceFile clazzFile: applicableCopyFilesUpgrades) {
-            Class clazz = Class.forName(clazzFile.getResourcePath().replace("/", ".")
-                    .replace(".class", ""));
-            Constructor<CopyFiles> constructor = clazz.getConstructor();
-            CopyFiles upgrade = constructor.newInstance();
-            Map<String, String> filePathMap = upgrade.getFilePathMap();
+    private void copyFilesToBeUpgraded(String ironTestHome, DefaultArtifactVersion oldVersion,
+                                       DefaultArtifactVersion newVersion) throws IOException {
+        List<CopyFilesForOneVersionUpgrade> applicableCopyFiles =
+                new CopyFiles().getApplicableCopyFiles(oldVersion, newVersion);
+        for (CopyFilesForOneVersionUpgrade filesForOneVersionUpgrade: applicableCopyFiles) {
+            Map<String, String> filePathMap = filesForOneVersionUpgrade.getFilePathMap();
             for (Map.Entry<String, String> mapEntry: filePathMap.entrySet()) {
                 Path sourceFilePath = Paths.get(".", mapEntry.getKey()).toAbsolutePath();
                 Path targetFilePath = Paths.get(ironTestHome, mapEntry.getValue()).toAbsolutePath();
