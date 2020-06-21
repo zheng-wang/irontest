@@ -111,7 +111,10 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
 
     @Override
     public void run(IronTestConfiguration configuration, Environment environment) throws IOException {
-        if (!checkVersion(configuration, environment)) {
+        final JdbiFactory jdbiFactory = new JdbiFactory();
+        final Jdbi systemDBJdbi = jdbiFactory.build(environment, configuration.getSystemDatabase(), "systemDatabase");
+
+        if (!checkVersion(systemDBJdbi)) {
             System.out.println("Press Enter to exit.");
             System.in.read();
             System.exit(0);
@@ -135,20 +138,16 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         );
         wireMockServer.start();
 
-        createSystemResources(configuration, environment, wireMockServer);
+        createSystemResources(configuration, environment, systemDBJdbi, wireMockServer);
         createSampleResources(configuration, environment);
     }
 
     /**
-     *
-     * @param configuration
-     * @param environment
+     * @param systemDBJdbi
      * @return true if version check finds no problem, false otherwise.
      */
-    private boolean checkVersion(IronTestConfiguration configuration, Environment environment) {
-        final JdbiFactory jdbiFactory = new JdbiFactory();
-        final Jdbi jdbi = jdbiFactory.build(environment, configuration.getSystemDatabase(), "systemDatabase");
-        DefaultArtifactVersion systemDBVersion = IronTestUtils.getSystemDBVersion(jdbi);
+    private boolean checkVersion(Jdbi systemDBJdbi) {
+        DefaultArtifactVersion systemDBVersion = IronTestUtils.getSystemDBVersion(systemDBJdbi);
         DefaultArtifactVersion jarFileVersion = new DefaultArtifactVersion(Version.VERSION);
         int comparison = systemDBVersion.compareTo(jarFileVersion);
         if (comparison == 0) {  //  system database and the jar file are of the same version
@@ -170,33 +169,32 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         }
     }
 
-    private void createSystemResources(IronTestConfiguration configuration, Environment environment, WireMockServer wireMockServer) {
-        final JdbiFactory jdbiFactory = new JdbiFactory();
-        final Jdbi jdbi = jdbiFactory.build(environment, configuration.getSystemDatabase(), "systemDatabase");
-        jdbi.registerArgument(new PropertiesArgumentFactory());
+    private void createSystemResources(IronTestConfiguration configuration, Environment environment, Jdbi systemDBJdbi,
+                                       WireMockServer wireMockServer) {
+        systemDBJdbi.registerArgument(new PropertiesArgumentFactory());
 
         //  create DAO objects
-        final VersionDAO versionDAO = jdbi.onDemand(VersionDAO.class);
-        final FolderDAO folderDAO = jdbi.onDemand(FolderDAO.class);
-        final EnvironmentDAO environmentDAO = jdbi.onDemand(EnvironmentDAO.class);
-        final EndpointDAO endpointDAO = jdbi.onDemand(EndpointDAO.class);
-        final TestcaseDAO testcaseDAO = jdbi.onDemand(TestcaseDAO.class);
-        final TeststepDAO teststepDAO = jdbi.onDemand(TeststepDAO.class);
-        final AssertionDAO assertionDAO = jdbi.onDemand(AssertionDAO.class);
-        final PropertyExtractorDAO propertyExtractorDAO = jdbi.onDemand(PropertyExtractorDAO.class);
-        final UtilsDAO utilsDAO = jdbi.onDemand(UtilsDAO.class);
-        final FolderTreeNodeDAO folderTreeNodeDAO = jdbi.onDemand(FolderTreeNodeDAO.class);
-        final UserDefinedPropertyDAO udpDAO = jdbi.onDemand(UserDefinedPropertyDAO.class);
-        final DataTableDAO dataTableDAO = jdbi.onDemand(DataTableDAO.class);
-        final DataTableColumnDAO dataTableColumnDAO = jdbi.onDemand(DataTableColumnDAO.class);
-        final DataTableCellDAO dataTableCellDAO = jdbi.onDemand(DataTableCellDAO.class);
-        final TestcaseRunDAO testcaseRunDAO = jdbi.onDemand(TestcaseRunDAO.class);
-        final TestcaseIndividualRunDAO testcaseIndividualRunDAO = jdbi.onDemand(TestcaseIndividualRunDAO.class);
-        final TeststepRunDAO teststepRunDAO = jdbi.onDemand(TeststepRunDAO.class);
-        final HTTPStubMappingDAO httpStubMappingDAO = jdbi.onDemand(HTTPStubMappingDAO.class);
+        final VersionDAO versionDAO = systemDBJdbi.onDemand(VersionDAO.class);
+        final FolderDAO folderDAO = systemDBJdbi.onDemand(FolderDAO.class);
+        final EnvironmentDAO environmentDAO = systemDBJdbi.onDemand(EnvironmentDAO.class);
+        final EndpointDAO endpointDAO = systemDBJdbi.onDemand(EndpointDAO.class);
+        final TestcaseDAO testcaseDAO = systemDBJdbi.onDemand(TestcaseDAO.class);
+        final TeststepDAO teststepDAO = systemDBJdbi.onDemand(TeststepDAO.class);
+        final AssertionDAO assertionDAO = systemDBJdbi.onDemand(AssertionDAO.class);
+        final PropertyExtractorDAO propertyExtractorDAO = systemDBJdbi.onDemand(PropertyExtractorDAO.class);
+        final UtilsDAO utilsDAO = systemDBJdbi.onDemand(UtilsDAO.class);
+        final FolderTreeNodeDAO folderTreeNodeDAO = systemDBJdbi.onDemand(FolderTreeNodeDAO.class);
+        final UserDefinedPropertyDAO udpDAO = systemDBJdbi.onDemand(UserDefinedPropertyDAO.class);
+        final DataTableDAO dataTableDAO = systemDBJdbi.onDemand(DataTableDAO.class);
+        final DataTableColumnDAO dataTableColumnDAO = systemDBJdbi.onDemand(DataTableColumnDAO.class);
+        final DataTableCellDAO dataTableCellDAO = systemDBJdbi.onDemand(DataTableCellDAO.class);
+        final TestcaseRunDAO testcaseRunDAO = systemDBJdbi.onDemand(TestcaseRunDAO.class);
+        final TestcaseIndividualRunDAO testcaseIndividualRunDAO = systemDBJdbi.onDemand(TestcaseIndividualRunDAO.class);
+        final TeststepRunDAO teststepRunDAO = systemDBJdbi.onDemand(TeststepRunDAO.class);
+        final HTTPStubMappingDAO httpStubMappingDAO = systemDBJdbi.onDemand(HTTPStubMappingDAO.class);
         UserDAO userDAO = null;
         if (isInTeamMode(configuration)) {
-            userDAO = jdbi.onDemand(UserDAO.class);
+            userDAO = systemDBJdbi.onDemand(UserDAO.class);
         }
 
         AppInfo appInfo = new AppInfo();
