@@ -53,10 +53,10 @@ public class UpgradeCommand extends Command {
             System.out.println("Jar file version " + jarFileVersion + " is a SNAPSHOT version. Upgrade is not supported.");
         } else if (comparison == 0) {
             System.out.println("System database and the jar file are of the same version, so no need to upgrade.");
-        } else if (comparison > 0) {    //  system database version is bigger
+        } else if (comparison > 0) {    //  system database version is bigger than the jar file version
             System.out.printf(IronTestConstants.PROMPT_TEXT_WHEN_SYSTEM_DB_VERSION_IS_BIGGER_THAN_JAR_VERSION,
                     systemDBVersion, jarFileVersion);
-        } else {    //  system database version is smaller
+        } else {    //  system database version is smaller than the jar file version
             UpgradeActions upgradeActions = new UpgradeActions();
             upgradeActions.upgrade(systemDBVersion, jarFileVersion, ironTestHome, fullyQualifiedSystemDBURL,
                     systemDBConfiguration.getUser(), systemDBConfiguration.getPassword());

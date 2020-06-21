@@ -151,17 +151,23 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         DefaultArtifactVersion systemDBVersion = IronTestUtils.getSystemDBVersion(jdbi);
         DefaultArtifactVersion jarFileVersion = new DefaultArtifactVersion(Version.VERSION);
         int comparison = systemDBVersion.compareTo(jarFileVersion);
-        if (comparison == 0) {
-            //  do nothing, as system database and the jar file are of the same version
-        } else if (comparison > 0) {    //  system database version is bigger
+        if (comparison == 0) {  //  system database and the jar file are of the same version
+            return true;
+        } else if (comparison > 0) {    //  system database version is bigger than the jar file version
             System.out.printf(IronTestConstants.PROMPT_TEXT_WHEN_SYSTEM_DB_VERSION_IS_BIGGER_THAN_JAR_VERSION,
                     systemDBVersion, jarFileVersion);
             System.out.println();
             return false;
-        } else {    //  system database version is smaller
-
+        } else {    //  system database version is smaller than the jar file version
+            System.out.printf("System database version %1$s is smaller than jar file version %2$s.%n", systemDBVersion,
+                    jarFileVersion);
+            System.out.println("Please download and build the latest release of Iron Test. Under the dist directory, " +
+                    "run command 'java -jar <jarFileName> upgrade <IronTest_Home>' to upgrade your existing " +
+                    "Iron Test instance.");
+            System.out.println("Follow the instructions to finish upgrade. In the end, you should see in the " +
+                    "command line output 'UPGRADE SUCCESS'.");
+            return false;
         }
-        return true;
     }
 
     private void createSystemResources(IronTestConfiguration configuration, Environment environment, WireMockServer wireMockServer) {
