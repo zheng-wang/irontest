@@ -1,5 +1,6 @@
 package io.irontest.utils;
 
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.common.Encoding;
@@ -251,6 +252,7 @@ public final class IronTestUtils {
         } else if (trimmedInput.startsWith("[") || trimmedInput.startsWith("{")) {   //  potentially json array/object (impossible to be xml)
             //  notice that string "111 222 333" will be parsed by Jackson as Integer 111, so only pretty print potential json array/object here.
             ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.enable(JsonParser.Feature.STRICT_DUPLICATE_DETECTION);  //  haven't found a way, without custom code, to pretty print JSON with duplicate keys (which is invalid JSON)
             Object jsonObject;
             try {
                 jsonObject = objectMapper.readValue(input, Object.class);
