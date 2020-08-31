@@ -13,13 +13,19 @@
   </div>
   <div class="required" ng-class="{ 'has-error' : submitted && httpStubForm.url.$invalid }">
     <label for="url" class="col-lg-1 control-label">URL</label>
-    <div class="col-lg-7">
-      <input id="url" name="url" type="text" class="form-control" ng-change="autoSave(httpStubForm.$valid)"
-             ng-model="httpStub.spec.request.url" spellcheck="false" ng-readonly="appStatus.isForbidden()"
-             required>
+    <div class="col-lg-6">
+      <input id="url" name="url" type="text" class="form-control" ng-change="requestURLChanged(httpStubForm.$valid)"
+             ng-model="httpStubModelObject.requestURL" spellcheck="false" ng-readonly="appStatus.isForbidden()" required>
       <div ng-show="submitted && httpStubForm.url.$invalid" class="help-block">
         <p ng-show="httpStubForm.url.$error.required">URL is required</p>
       </div>
+    </div>
+    <div class="col-lg-2 checkbox">
+      <label>
+        <input type="checkbox" ng-model="isRequestURLRegexMatching"
+               ng-change="toggleRequestURLRegexMatching(httpStubForm.$valid)"
+               ng-disabled="appStatus.isForbidden()">Regex Matching
+      </label>
     </div>
   </div>
   <div class="col-lg-1 pull-right btn-group" uib-dropdown keyboard-nav>

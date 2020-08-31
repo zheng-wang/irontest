@@ -7,6 +7,8 @@ angular.module('irontest').controller('HTTPStubController', ['$scope', 'HTTPStub
     const SPEC_TAB_INDEX = 1;
     $scope.activeTabIndex = SPEC_TAB_INDEX;
     $scope.isStubStateful = false;
+    $scope.httpStubModelObject = { requestURL: null };
+    $scope.isRequestURLRegexMatching = false;
     var timer;
 
     $scope.autoSave = function(isValid) {
@@ -36,17 +38,25 @@ angular.module('irontest').controller('HTTPStubController', ['$scope', 'HTTPStub
         testcaseId: $stateParams.testcaseId, httpStubId: $stateParams.httpStubId
       }, function(httpStub) {
         $scope.httpStub = httpStub;
+        var request = httpStub.spec.request;
 
         var scenarioName = httpStub.spec.scenarioName
         if (scenarioName && scenarioName.trim() !== '') {
           $scope.isStubStateful = true;
         }
 
-        $scope.requestBodyMainPattern = IronTestUtils.getRequestBodyMainPattern(
-          httpStub.spec.request.method, httpStub.spec.request.bodyPatterns);
+        if (request.urlPattern) {
+          $scope.httpStubModelObject.requestURL = request.urlPattern;
+          $scope.isRequestURLRegexMatching = true;
+        } else {
+          $scope.httpStubModelObject.requestURL = request.url;
+          $scope.isRequestURLRegexMatching = false;
+        }
+
+        $scope.requestBodyMainPattern = IronTestUtils.getRequestBodyMainPattern(request.method, request.bodyPatterns);
 
         //  set request and response headers
-        var requestHeaders = httpStub.spec.request.headers;
+        var requestHeaders = request.headers;
         if (requestHeaders) {
           $scope.requestHeaderGridOptions.data = Object.keys(requestHeaders).map(function(key) {
             var header = requestHeaders[key];
@@ -101,6 +111,16 @@ angular.module('irontest').controller('HTTPStubController', ['$scope', 'HTTPStub
       $scope.update(isValid);
     };
 
+    $scope.requestURLChanged = function(isValid) {
+      var request = $scope.httpStub.spec.request;
+      if ($scope.isRequestURLRegexMatching) {
+        request.urlPattern = $scope.httpStubModelObject.requestURL;
+      } else {
+        request.url = $scope.httpStubModelObject.requestURL;
+      }
+      $scope.autoSave(isValid);
+    };
+
     $scope.requestBodyMainPatternNameChanged = function(isValid) {
       var newMainPatternName = $scope.requestBodyMainPattern.name;
       var request = $scope.httpStub.spec.request;
@@ -121,6 +141,20 @@ angular.module('irontest').controller('HTTPStubController', ['$scope', 'HTTPStub
         }
         bodyPattern[newMainPatternName] = hiddenMainPatternValue;
         bodyPatterns.push(bodyPattern);
+      }
+      $scope.update(isValid);
+    };
+
+    $scope.toggleRequestURLRegexMatching = function(isValid) {
+      var request = $scope.httpStub.spec.request;
+      if ($scope.isRequestURLRegexMatching) {
+        request.url = request.urlPattern;
+        delete request.urlPattern;
+        $scope.isRequestURLRegexMatching = false;
+      } else {
+        request.urlPattern = request.url;
+        delete request.url;
+        $scope.isRequestURLRegexMatching = true;
       }
       $scope.update(isValid);
     };
