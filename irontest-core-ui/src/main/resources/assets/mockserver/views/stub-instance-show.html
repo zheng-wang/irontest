@@ -19,8 +19,14 @@
       <div class="form-group">
         <div class="col-lg-1">Method:</div>
         <div class="col-lg-1">{{ stubInstance.request.method }}</div>
-        <div class="col-lg-1">URL:</div>
-        <div class="col-lg-8">{{ stubInstance.request.url }}</div>
+        <div ng-if="stubInstance.request.urlPattern">
+          <div class="col-lg-2">URL (Regex Matching):</div>
+          <div class="col-lg-8">{{ stubInstance.request.urlPattern }}</div>
+        </div>>
+        <div ng-if="stubInstance.request.url">
+          <div class="col-lg-1">URL:</div>
+          <div class="col-lg-8">{{ stubInstance.request.url }}</div>
+        </div>
       </div>
       <div class="form-group">
         <div class="col-lg-offset-6 col-lg-2">Response Status Code:</div>

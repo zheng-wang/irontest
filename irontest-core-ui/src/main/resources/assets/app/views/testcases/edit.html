@@ -273,7 +273,9 @@
 </script>
 <script type="text/ng-template" id="httpStubGridURLCellTemplate.html">
   <div class="ui-grid-cell-contents">
-    <a ui-sref="httpstub_edit({ testcaseId: row.entity.testcaseId, httpStubId: row.entity.id })">{{COL_FIELD}}</a>
+    <a ui-sref="httpstub_edit({ testcaseId: row.entity.testcaseId, httpStubId: row.entity.id })">
+      {{ row.entity.spec.request.urlPattern ? row.entity.spec.request.urlPattern : row.entity.spec.request.url }}
+    </a>
   </div>
 </script>
 <script type="text/ng-template" id="httpStubGridDeleteCellTemplate.html">

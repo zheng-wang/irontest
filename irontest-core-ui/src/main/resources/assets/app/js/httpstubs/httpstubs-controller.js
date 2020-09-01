@@ -17,7 +17,7 @@ angular.module('irontest').controller('HTTPStubsController', ['$scope', 'HTTPStu
           cellTemplate: 'httpStubGridNOCellTemplate.html'
         },
         {
-          name: 'spec.request.url', displayName: 'URL', width: '50%', cellTemplate:'httpStubGridURLCellTemplate.html'
+          name: 'url', displayName: 'URL', width: '50%', cellTemplate:'httpStubGridURLCellTemplate.html'
         },
         {
           name: 'spec.request.method', displayName: 'Method', width: 70, minWidth: 70

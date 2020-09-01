@@ -6,7 +6,7 @@
           ng-class="{ 'list-item-clicked' : $parent.selectedStubInstanceId === stubInstance.id }">
         <a ng-click="stubInstanceSelected(stubInstance.id)" href="">
           <!-- leave the div here to enable mouseover effect on the anchor when mouse is over anywhere outside the anchor but in the list item -->
-          <div>{{ stubInstance.request.url }}</div>
+          <div>{{ stubInstance.request.urlPattern ? stubInstance.request.urlPattern : stubInstance.request.url }}</div>
         </a>
       </li>
     </ul>
