@@ -60,12 +60,12 @@ To launch Iron Test application, cd to `<IronTest_Home>` and run below command
 
 On Windows, alternatively you can simply run `<IronTest_Home>\start.bat`. You might want to create a shortcut of it on your Windows Desktop, Task Bar or Start Menu for more convenient launching.
 
-To verify the application is successfully launched, open a web browser, and go to Iron Test home page http://localhost:8081/ui (no ending '/'). 
+To verify the application is successfully launched, open a web browser, and go to Iron Test home page http://localhost:8090/ui (no ending '/'). 
 
 Though the UI is crossing browsers, Google Chrome is preferred as it is the main browser that is used to test the application.
 
 ## Use
-Open Iron Test home page (http://localhost:8081/ui). 
+Open Iron Test home page (http://localhost:8090/ui). 
 
 ### Integrated JSON HTTP API Testing
 We are going to demo how to test a JSON HTTP API that updates an article in database. 
@@ -116,7 +116,7 @@ Click the Back link to return to test case edit view.
 #### Populate Step 2 
 Click the name of step 2 to open its edit view.
 
-Under the Endpoint Details tab, enter URL `http://localhost:8081/api/articles/2`. Ignore Username and Password fields as they are not used in this demo.
+Under the Endpoint Details tab, enter URL `http://localhost:8090/api/articles/2`. Ignore Username and Password fields as they are not used in this demo.
 
 Under the Invocation tab, select `PUT` from the Method dropdown list, click the menu dropdown button and select `Show HTTP Headers`.
 
