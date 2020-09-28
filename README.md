@@ -192,7 +192,7 @@ To shut down the application
     
     On Linux/Unix: kill -SIGINT <pid>
     
-You can tune Iron Test application to suit your runtime needs by changing contents of the config.yml under `<IronTest_Home>`. Refer to [Dropwizard doc](https://www.dropwizard.io/1.3.4/docs/manual/configuration.html) for how to do it. Re-launch the application for the changes to take effect.
+You can tune Iron Test application to suit your runtime needs by changing contents of the config.yml under `<IronTest_Home>`. For example, you can change the UI port number through the property `server > applicationConnectors > port` in config.yml. Refer to [Dropwizard doc](https://www.dropwizard.io/1.3.4/docs/manual/configuration.html) for more information. Re-launch Iron Test for the changes to take effect.
     
 To move Iron Test to a different folder or computer/VM, just shut down the application, copy the whole `<IronTest_Home>` folder over, and launch the application from there.
 
