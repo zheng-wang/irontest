@@ -35,4 +35,8 @@ public class ResourceFile implements Comparable<ResourceFile> {
     public int compareTo(ResourceFile o) {
         return this.fromVersion.compareTo(o.fromVersion);
     }
+
+    public String getResourceAsText() {
+        return "aaa";
+    }
 }

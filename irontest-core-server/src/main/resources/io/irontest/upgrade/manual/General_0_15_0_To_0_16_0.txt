@@ -1,0 +1,6 @@
+Please manually update the config.yml file under your <IronTest_Home>:
+    Change the value of property "server > applicationConnectors > port" to 8090
+    Change the value of property "server > adminConnectors > port" to 8091
+    Change the value of property "wireMock > port" to 8092
+
+Type y and then Enter to confirm update completion.

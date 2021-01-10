@@ -29,6 +29,7 @@ public class UpgradeActions {
         LOGGER.addHandler(consoleHandler);
         LOGGER.info("Upgrading Iron Test from v" + systemDatabaseVersion + " to v" + jarFileVersion + ".");
 
+        //  set up temp upgrade directory
         Path upgradeWorkspace = Files.createTempDirectory("irontest-upgrade-");
         Path logFilePath = Paths.get(upgradeWorkspace.toString(),
                 "upgrade-from-v" + systemDatabaseVersion + "-to-v" + jarFileVersion + ".log");
@@ -36,32 +37,13 @@ public class UpgradeActions {
         logFileHandler.setFormatter(logFormatter);
         LOGGER.addHandler(logFileHandler);
         LOGGER.info("Created temp upgrade directory " + upgradeWorkspace.toString());
+        Path oldFolderInTempUpgradeDir = Paths.get(upgradeWorkspace.toString(), "old");
+        Path newFolderInTempUpgradeDir = Paths.get(upgradeWorkspace.toString(), "new");
+        Files.createDirectory(oldFolderInTempUpgradeDir);
+        Files.createDirectory(newFolderInTempUpgradeDir);
 
-        List<ResourceFile> applicableSystemDBUpgrades =
-                getApplicableUpgradeResourceFiles(systemDatabaseVersion, jarFileVersion, "db", "SystemDB", "sql");
-        boolean needsSystemDBUpgrade = !applicableSystemDBUpgrades.isEmpty();
-        if (needsSystemDBUpgrade) {
-            System.out.println("Please manually backup <IronTest_Home>/database folder to your normal maintenance backup location. Type y and then Enter to confirm backup completion.");
-            Scanner scanner = new Scanner(System.in);
-            String line = null;
-            while (!"y".equalsIgnoreCase(line)) {
-                line = scanner.nextLine().trim();
-            }
-            LOGGER.info("User confirmed system database backup completion.");
-        }
-
-        //  do upgrade in the 'new' folder under the temp upgrade directory
-        Path oldDir;
-        Path newDir = null;
-        if (needsSystemDBUpgrade) {
-            oldDir = Paths.get(upgradeWorkspace.toString(), "old");
-            newDir = Paths.get(upgradeWorkspace.toString(), "new");
-            Files.createDirectory(oldDir);
-            Files.createDirectory(newDir);
-
-            upgradeSystemDB(ironTestHome, fullyQualifiedSystemDBURL, user, password, applicableSystemDBUpgrades,
-                    oldDir, newDir, jarFileVersion);
-        }
+        boolean needsSystemDBUpgrade = upgradeSystemDBIfNeeded(systemDatabaseVersion, jarFileVersion, ironTestHome,
+                fullyQualifiedSystemDBURL, user, password, oldFolderInTempUpgradeDir, newFolderInTempUpgradeDir);
 
         copyFilesToBeUpgraded(ironTestHome, systemDatabaseVersion, jarFileVersion);
 
@@ -75,11 +57,13 @@ public class UpgradeActions {
         if (needsSystemDBUpgrade) {
             String systemDBFileName = getSystemDBFileName(fullyQualifiedSystemDBURL);
             Path ironTestHomeSystemDatabaseFolder = Paths.get(ironTestHome, "database");
-            Path sourceFilePath = Paths.get(newDir.toString(), "database", systemDBFileName);
+            Path sourceFilePath = Paths.get(newFolderInTempUpgradeDir.toString(), "database", systemDBFileName);
             Path targetFilePath = Paths.get(ironTestHomeSystemDatabaseFolder.toString(), systemDBFileName);
             Files.copy(sourceFilePath, targetFilePath, StandardCopyOption.REPLACE_EXISTING);
             LOGGER.info("Copied " + sourceFilePath + " to " + targetFilePath + ".");
         }
+
+        requestUserToExecuteGeneralManualUpgradesIfNeeded(systemDatabaseVersion, jarFileVersion);
 
         String lineDelimiter = "------------------------------------------------------------------------";
         LOGGER.info(lineDelimiter);
@@ -91,6 +75,30 @@ public class UpgradeActions {
         }
         LOGGER.info(lineDelimiter);
         LOGGER.info("Refer to " + logFilePath + " for upgrade logs.");
+    }
+
+    private boolean upgradeSystemDBIfNeeded(DefaultArtifactVersion systemDatabaseVersion, DefaultArtifactVersion jarFileVersion,
+                                            String ironTestHome, String fullyQualifiedSystemDBURL, String user, String password,
+                                            Path oldFolderInTempUpgradeDir, Path newFolderInTempUpgradeDir) throws IOException {
+        List<ResourceFile> applicableSystemDBUpgrades =
+                getApplicableUpgradeResourceFiles(systemDatabaseVersion, jarFileVersion, "db", "SystemDB", "sql");
+        boolean needsSystemDBUpgrade = !applicableSystemDBUpgrades.isEmpty();
+        if (needsSystemDBUpgrade) {
+            System.out.println("Please manually backup <IronTest_Home>/database folder to your normal maintenance backup location. Type y and then Enter to confirm backup completion.");
+            Scanner scanner = new Scanner(System.in);
+            String line = null;
+            while (!"y".equalsIgnoreCase(line)) {
+                line = scanner.nextLine().trim();
+            }
+            LOGGER.info("User confirmed system database backup completion.");
+
+            upgradeSystemDB(ironTestHome, fullyQualifiedSystemDBURL, user, password, applicableSystemDBUpgrades,
+                    oldFolderInTempUpgradeDir, newFolderInTempUpgradeDir, jarFileVersion);
+
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private boolean clearBrowserCacheIfNeeded(DefaultArtifactVersion oldVersion, DefaultArtifactVersion newVersion) {
@@ -242,5 +250,19 @@ public class UpgradeActions {
                 .bind(0, jarFileVersion.toString())
                 .execute());
         LOGGER.info("Updated Version to " + jarFileVersion + " in " + newSystemDBURL + ".");
+    }
+
+    private void requestUserToExecuteGeneralManualUpgradesIfNeeded(DefaultArtifactVersion systemDatabaseVersion, DefaultArtifactVersion jarFileVersion) {
+        List<ResourceFile> applicableGeneralManualUpgrades =
+                getApplicableUpgradeResourceFiles(systemDatabaseVersion, jarFileVersion, "manual", "General", "txt");
+        for (ResourceFile manualStep: applicableGeneralManualUpgrades) {
+            System.out.println(manualStep.getResourceAsText());
+            Scanner scanner = new Scanner(System.in);
+            String line = null;
+            while (!"y".equalsIgnoreCase(line)) {
+                line = scanner.nextLine().trim();
+            }
+            LOGGER.info("User confirmed manual step completion.");
+        }
     }
 }
