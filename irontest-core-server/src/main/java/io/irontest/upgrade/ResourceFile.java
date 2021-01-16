@@ -1,6 +1,11 @@
 package io.irontest.upgrade;
 
+import org.apache.cxf.helpers.IOUtils;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 public class ResourceFile implements Comparable<ResourceFile> {
     private DefaultArtifactVersion fromVersion;
@@ -36,7 +41,12 @@ public class ResourceFile implements Comparable<ResourceFile> {
         return this.fromVersion.compareTo(o.fromVersion);
     }
 
-    public String getResourceAsText() {
-        return "aaa";
+    public String getResourceAsText() throws IOException {
+        String result;
+        //  read text file from inside a jar file
+        try (InputStream is = getClass().getClassLoader().getResourceAsStream(resourcePath)) {
+            result = IOUtils.toString(is, StandardCharsets.UTF_8.name());
+        }
+        return result;
     }
 }

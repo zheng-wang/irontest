@@ -1,14 +1,11 @@
 package io.irontest.upgrade;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.jdbi.v3.core.Jdbi;
 import org.reflections.Reflections;
 import org.reflections.scanners.ResourcesScanner;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.*;
 import java.util.logging.ConsoleHandler;
@@ -18,7 +15,7 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 public class UpgradeActions {
-    private static Logger LOGGER = Logger.getLogger("Upgrade");
+    private static final Logger LOGGER = Logger.getLogger("Upgrade");
 
     protected void upgrade(DefaultArtifactVersion systemDatabaseVersion, DefaultArtifactVersion jarFileVersion,
                            String ironTestHome, String fullyQualifiedSystemDBURL, String user, String password)
@@ -182,6 +179,7 @@ public class UpgradeActions {
                 getClass().getPackage().getName() + "." + subPackage, new ResourcesScanner());
         Set<String> upgradeFilePaths =
                 reflections.getResources(Pattern.compile(prefix + ".*\\." + extension));
+
         for (String upgradeFilePath: upgradeFilePaths) {
             String[] upgradeFilePathFragments = upgradeFilePath.split("/");
             String upgradeFileName = upgradeFilePathFragments[upgradeFilePathFragments.length - 1];
@@ -237,10 +235,8 @@ public class UpgradeActions {
 
         //  run SQL scripts against the system database in the 'new' folder
         for (ResourceFile sqlFile: applicableSystemDBUpgrades) {
-            try (InputStream is = getClass().getClassLoader().getResourceAsStream(sqlFile.getResourcePath())) {
-                String sqlScript = IOUtils.toString(is, StandardCharsets.UTF_8.name());
-                jdbi.withHandle(handle -> handle.createScript(sqlScript).execute());
-            }
+            String sqlScript = sqlFile.getResourceAsText();
+            jdbi.withHandle(handle -> handle.createScript(sqlScript).execute());
             LOGGER.info("Executed SQL script " + sqlFile.getResourcePath() + " in " + newSystemDBURL + ".");
         }
 
@@ -252,7 +248,7 @@ public class UpgradeActions {
         LOGGER.info("Updated Version to " + jarFileVersion + " in " + newSystemDBURL + ".");
     }
 
-    private void requestUserToExecuteGeneralManualUpgradesIfNeeded(DefaultArtifactVersion systemDatabaseVersion, DefaultArtifactVersion jarFileVersion) {
+    private void requestUserToExecuteGeneralManualUpgradesIfNeeded(DefaultArtifactVersion systemDatabaseVersion, DefaultArtifactVersion jarFileVersion) throws IOException {
         List<ResourceFile> applicableGeneralManualUpgrades =
                 getApplicableUpgradeResourceFiles(systemDatabaseVersion, jarFileVersion, "manual", "General", "txt");
         for (ResourceFile manualStep: applicableGeneralManualUpgrades) {

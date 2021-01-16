@@ -303,7 +303,6 @@
                                 </goals>
                                 <configuration>
                                     <mainClass>io.irontest.IronTestApplication</mainClass>
-                                    <commandlineArgs>upgrade</commandlineArgs>
                                 </configuration>
                             </execution>
                         </executions>
