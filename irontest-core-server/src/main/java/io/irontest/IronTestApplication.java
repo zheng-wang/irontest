@@ -20,6 +20,7 @@ import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.jdbi3.JdbiFactory;
 import io.dropwizard.jetty.ConnectorFactory;
 import io.dropwizard.jetty.HttpConnectorFactory;
+import io.dropwizard.lifecycle.ServerLifecycleListener;
 import io.dropwizard.logging.DefaultLoggingFactory;
 import io.dropwizard.server.DefaultServerFactory;
 import io.dropwizard.setup.Bootstrap;
@@ -37,6 +38,7 @@ import io.irontest.upgrade.UpgradeCommand;
 import io.irontest.utils.IronTestUtils;
 import io.irontest.ws.ArticleSOAP;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
+import org.eclipse.jetty.server.Server;
 import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.jdbi.v3.core.Jdbi;
@@ -140,6 +142,18 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
 
         createSystemResources(configuration, environment, systemDBJdbi, wireMockServer);
         createSampleResources(configuration, environment);
+
+        environment.lifecycle().addServerLifecycleListener(new ServerLifecycleListener() {
+            @Override
+            public void serverStarted(Server server) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                System.out.println("Iron Test started with UI address http://localhost:" +  + getLocalPort(server) + "/ui");
+            }
+        });
     }
 
     /**
