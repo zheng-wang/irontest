@@ -35,6 +35,8 @@ public class EndpointMapper implements RowMapper<Endpoint> {
         endpoint.setType(type);
         endpoint.setDescription(rs.getString("description"));
         endpoint.setUrl(fields.contains("url") ? rs.getString("url") : null);
+        endpoint.setHost(fields.contains("host") ? rs.getString("host") : null);
+        endpoint.setPort(fields.contains("port") ? (Integer) rs.getObject("port") : null);
         endpoint.setUsername(fields.contains("username") ? rs.getString("username") : null);
         endpoint.setPassword(fields.contains("password") ? rs.getString("password") : null);
         if (fields.contains("environment_id") && rs.getObject("environment_id") != null) {

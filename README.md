@@ -4,8 +4,8 @@ Iron Test is an open source tool for integration testing a variety of APIs. It i
 Supported API types
 * HTTP (including RESTful services)
 * SOAP
-* FTP(S)
 * Relational databases (H2, Oracle, SQL Server)
+* FTP(S)
 * AMQP
 * WebSphere MQ
 * IBM Integration Bus (IIB)

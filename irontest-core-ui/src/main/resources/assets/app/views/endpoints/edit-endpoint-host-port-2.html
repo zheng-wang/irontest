@@ -1,0 +1,19 @@
+<div class="form-group">
+  <label for="host" class="col-lg-2 control-label">Host</label>
+  <div class="col-lg-10">
+    <input name="host" id="host" type="text" class="form-control" spellcheck="false" ng-model="endpoint.host"
+           ng-change="autoSave(endpointForm.$valid)" ng-readonly="appStatus.isForbidden()">
+  </div>
+</div>
+<div class="form-group" ng-class="{ 'has-error' : submitted && endpointForm.port.$invalid }">
+  <label for="port" class="col-lg-2 control-label">Port</label>
+  <div class="col-lg-10">
+    <input name="port" id="port" type="text" class="form-control" ng-model="endpoint.port"
+           ng-change="autoSave(endpointForm.$valid)" maxlength="5"
+           pattern="^([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$"
+           ng-readonly="appStatus.isForbidden()">
+    <div ng-show="submitted && endpointForm.port.$invalid" class="help-block">
+      <p ng-show="endpointForm.port.$error.pattern">Please enter a valid port number</p>
+    </div>
+  </div>
+</div>

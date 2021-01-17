@@ -23,7 +23,8 @@ public interface EndpointDAO {
 
     @SqlUpdate("CREATE TABLE IF NOT EXISTS endpoint (id BIGINT DEFAULT endpoint_sequence.NEXTVAL PRIMARY KEY, " +
             "environment_id int, name varchar(200) NOT NULL DEFAULT CURRENT_TIMESTAMP, type varchar(20) NOT NULL, " +
-            "description CLOB, url varchar(1000), username varchar(200), password varchar(500), other_properties CLOB, " +
+            "description CLOB, url varchar(1000), host varchar(200), port int, username varchar(200), " +
+            "password varchar(500), other_properties CLOB, " +
             "created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, " +
             "FOREIGN KEY (environment_id) REFERENCES environment(id) ON DELETE CASCADE, " +
@@ -99,7 +100,8 @@ public interface EndpointDAO {
     }
 
     @SqlUpdate("update endpoint set environment_id = :evId, name = :ep.name, type = :ep.type, " +
-            "description = :ep.description, url = :ep.url, username = :ep.username, password = CASE " +
+            "description = :ep.description, url = :ep.url, host = :ep.host, port = :ep.port, " +
+            "username = :ep.username, password = CASE " +
                 "WHEN COALESCE(password, '') <> COALESCE(:ep.password, '') " + // encrypt only when password is changed
                     "THEN ENCRYPT('AES', '" + ENDPOINT_PASSWORD_ENCRYPTION_KEY + "', STRINGTOUTF8(:ep.password)) " +
                 "ELSE password END, " +
