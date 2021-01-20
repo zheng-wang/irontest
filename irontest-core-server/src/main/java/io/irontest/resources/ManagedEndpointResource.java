@@ -4,10 +4,7 @@ import io.irontest.db.EndpointDAO;
 import io.irontest.models.AppInfo;
 import io.irontest.models.AppMode;
 import io.irontest.models.Environment;
-import io.irontest.models.endpoint.Endpoint;
-import io.irontest.models.endpoint.MQConnectionMode;
-import io.irontest.models.endpoint.MQEndpointProperties;
-import io.irontest.models.endpoint.SOAPEndpointProperties;
+import io.irontest.models.endpoint.*;
 
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.*;
@@ -36,9 +33,15 @@ public class ManagedEndpointResource {
         endpoint.setEnvironment(env);
         if (Endpoint.TYPE_SOAP.equals(endpoint.getType())) {
             endpoint.setOtherProperties(new SOAPEndpointProperties());
+        } else if (Endpoint.TYPE_FTP.equals(endpoint.getType())) {
+            endpoint.setOtherProperties(new FTPEndpointProperties());
         } else if (Endpoint.TYPE_MQ.equals(endpoint.getType())) {
-            ((MQEndpointProperties) endpoint.getOtherProperties()).setConnectionMode(
+            MQEndpointProperties otherProperties = new MQEndpointProperties();
+            otherProperties.setConnectionMode(
                     appInfo.getAppMode() == AppMode.LOCAL ? MQConnectionMode.BINDINGS : MQConnectionMode.CLIENT);
+            endpoint.setOtherProperties(otherProperties);
+        } else if (Endpoint.TYPE_IIB.equals(endpoint.getType())) {
+            endpoint.setOtherProperties(new IIBEndpointProperties());
         }
         long id = endpointDAO.insertManagedEndpoint(endpoint);
         endpoint.setId(id);

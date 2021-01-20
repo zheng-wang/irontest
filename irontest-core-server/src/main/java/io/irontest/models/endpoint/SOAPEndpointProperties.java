@@ -1,11 +1,10 @@
 package io.irontest.models.endpoint;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import io.irontest.models.Properties;
 import io.irontest.resources.ResourceJsonViews;
 
 @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
-public class SOAPEndpointProperties extends Properties {
+public class SOAPEndpointProperties extends EndpointProperties {
     private String wsdlURL = "?wsdl";
     private boolean wsdlURLByConvention = true;
 

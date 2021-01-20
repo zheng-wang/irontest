@@ -102,8 +102,7 @@ angular.module('irontest').controller('EnvironmentsController', ['$scope', 'Envi
 
     $scope.createEndpoint = function(endpointType) {
       var endpoint = new ManagedEndpoints({
-        type: endpointType,
-        otherProperties: {}  //  adding this property here to avoid Jackson 'Missing property' error (http://stackoverflow.com/questions/28089484/deserialization-with-jsonsubtypes-for-no-value-missing-property-error)
+        type: endpointType
       });
       endpoint.$save({ environmentId: $stateParams.environmentId }, function(returnEndpoint) {
         $state.go('endpoint_edit', {environmentId: $stateParams.environmentId, endpointId: returnEndpoint.id,

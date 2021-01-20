@@ -1,11 +1,8 @@
 package io.irontest.models.endpoint;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.irontest.models.Environment;
-import io.irontest.models.Properties;
 import io.irontest.resources.ResourceJsonViews;
 
 public class Endpoint {
@@ -38,16 +35,7 @@ public class Endpoint {
     @JsonView(ResourceJsonViews.TeststepEdit.class)
     private String password;
     @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
-    @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY,
-            property = "type", visible = true, defaultImpl = Properties.class)
-    @JsonSubTypes({
-            @JsonSubTypes.Type(value = SOAPEndpointProperties.class, name = Endpoint.TYPE_SOAP),
-            @JsonSubTypes.Type(value = JMSEndpointProperties.class, name = Endpoint.TYPE_JMS),
-            @JsonSubTypes.Type(value = FTPEndpointProperties.class, name = Endpoint.TYPE_FTP),
-            @JsonSubTypes.Type(value = MQEndpointProperties.class, name = Endpoint.TYPE_MQ),
-            @JsonSubTypes.Type(value = IIBEndpointProperties.class, name = Endpoint.TYPE_IIB)
-    })
-    private Properties otherProperties = new Properties();
+    private EndpointProperties otherProperties = new EndpointProperties();
 
     public Endpoint() {}
 
@@ -131,11 +119,11 @@ public class Endpoint {
         this.environment = environment;
     }
 
-    public Properties getOtherProperties() {
+    public EndpointProperties getOtherProperties() {
         return otherProperties;
     }
 
-    public void setOtherProperties(Properties otherProperties) {
+    public void setOtherProperties(EndpointProperties otherProperties) {
         this.otherProperties = otherProperties;
     }
 

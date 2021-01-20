@@ -186,6 +186,7 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
     private void createSystemResources(IronTestConfiguration configuration, Environment environment, Jdbi systemDBJdbi,
                                        WireMockServer wireMockServer) {
         systemDBJdbi.registerArgument(new PropertiesArgumentFactory());
+        systemDBJdbi.registerArgument(new EndpointPropertiesArgumentFactory());
 
         //  create DAO objects
         final VersionDAO versionDAO = systemDBJdbi.onDemand(VersionDAO.class);

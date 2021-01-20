@@ -66,6 +66,15 @@ angular.module('irontest').controller('EndpointsController', ['$scope', 'Managed
       otherProperties.svrConnChannelName = null;
 
       $scope.update(isValid);  //  update immediately (no timeout)
-    }
+    };
+
+    $scope.jmsProviderChanged = function(isValid) {
+      var otherProperties = $scope.endpoint.otherProperties;
+      if (otherProperties.jmsProvider === 'Solace') {
+        otherProperties['@type'] = 'JMSSolaceEndpointProperties';
+      }
+
+      $scope.update(isValid);  //  update immediately (no timeout)
+    };
   }
 ]);

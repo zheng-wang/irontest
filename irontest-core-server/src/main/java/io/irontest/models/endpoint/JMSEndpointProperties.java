@@ -1,8 +1,6 @@
 package io.irontest.models.endpoint;
 
-import io.irontest.models.Properties;
-
-public class JMSEndpointProperties extends Properties {
+public class JMSEndpointProperties extends EndpointProperties {
     private String jmsProvider;
 
     public String getJmsProvider() {

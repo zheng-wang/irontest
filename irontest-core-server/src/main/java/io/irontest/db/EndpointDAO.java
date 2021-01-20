@@ -1,7 +1,10 @@
 package io.irontest.db;
 
 import io.irontest.models.AppMode;
-import io.irontest.models.endpoint.*;
+import io.irontest.models.endpoint.Endpoint;
+import io.irontest.models.endpoint.MQConnectionMode;
+import io.irontest.models.endpoint.MQEndpointProperties;
+import io.irontest.models.endpoint.SOAPEndpointProperties;
 import io.irontest.models.teststep.Teststep;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
@@ -63,7 +66,6 @@ public interface EndpointDAO {
             switch (teststepType) {
                 case Teststep.TYPE_HTTP:
                     endpoint.setType(Endpoint.TYPE_HTTP);
-                    endpoint.setOtherProperties(new HTTPEndpointProperties());
                     break;
                 case Teststep.TYPE_SOAP:
                     endpoint.setType(Endpoint.TYPE_SOAP);
