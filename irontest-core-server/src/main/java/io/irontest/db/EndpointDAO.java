@@ -1,10 +1,7 @@
 package io.irontest.db;
 
 import io.irontest.models.AppMode;
-import io.irontest.models.endpoint.Endpoint;
-import io.irontest.models.endpoint.MQConnectionMode;
-import io.irontest.models.endpoint.MQEndpointProperties;
-import io.irontest.models.endpoint.SOAPEndpointProperties;
+import io.irontest.models.endpoint.*;
 import io.irontest.models.teststep.Teststep;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
@@ -73,6 +70,7 @@ public interface EndpointDAO {
                     break;
                 case Teststep.TYPE_FTP:
                     endpoint.setType(Endpoint.TYPE_FTP);
+                    endpoint.setOtherProperties(new FTPEndpointProperties());
                     break;
                 case Teststep.TYPE_DB:
                     endpoint.setType(Endpoint.TYPE_DB);
@@ -86,6 +84,7 @@ public interface EndpointDAO {
                     break;
                 case Teststep.TYPE_IIB:
                     endpoint.setType(Endpoint.TYPE_IIB);
+                    endpoint.setOtherProperties(new IIBEndpointProperties());
                     break;
                 case Teststep.TYPE_AMQP:
                     endpoint.setType(Endpoint.TYPE_AMQP);

@@ -3,6 +3,7 @@ package io.irontest.core.teststep;
 import com.ibm.mqlight.api.*;
 import io.irontest.models.teststep.AMQPTeststepProperties;
 import io.irontest.models.teststep.Teststep;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +16,11 @@ public class AMQPTeststepRunner extends TeststepRunner {
     public BasicTeststepRun run() throws Exception {
         Teststep teststep = getTeststep();
         AMQPTeststepProperties otherProperties = (AMQPTeststepProperties) teststep.getOtherProperties();
+
+        //  validate arguments
+        if ("".equals(StringUtils.trimToEmpty(otherProperties.getNodeAddress()))) {
+            throw new IllegalArgumentException("Target Address not specified.");
+        }
 
         List<Exception> exceptionListDuringSending = new ArrayList<>();
 

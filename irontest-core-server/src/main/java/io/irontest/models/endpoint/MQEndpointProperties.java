@@ -2,9 +2,11 @@ package io.irontest.models.endpoint;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.irontest.resources.ResourceJsonViews;
 
+@JsonTypeName(EndpointProperties.MQ_ENDPOINT_PROPERTIES)
 public class MQEndpointProperties extends EndpointProperties {
     @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     private MQConnectionMode connectionMode = MQConnectionMode.BINDINGS;

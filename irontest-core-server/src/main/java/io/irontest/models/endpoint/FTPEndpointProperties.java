@@ -2,9 +2,11 @@ package io.irontest.models.endpoint;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.irontest.resources.ResourceJsonViews;
 
+@JsonTypeName(EndpointProperties.FTP_ENDPOINT_PROPERTIES)
 public class FTPEndpointProperties extends EndpointProperties {
     @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     private String host;

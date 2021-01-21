@@ -1,8 +1,10 @@
 package io.irontest.models.endpoint;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.irontest.resources.ResourceJsonViews;
 
+@JsonTypeName(EndpointProperties.SOAP_ENDPOINT_PROPERTIES)
 @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
 public class SOAPEndpointProperties extends EndpointProperties {
     private String wsdlURL = "?wsdl";
