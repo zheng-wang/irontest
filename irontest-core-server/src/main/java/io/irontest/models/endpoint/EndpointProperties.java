@@ -17,4 +17,13 @@ public class EndpointProperties {
     protected static final String FTP_ENDPOINT_PROPERTIES = "FTPEndpointProperties";
     protected static final String MQ_ENDPOINT_PROPERTIES = "MQEndpointProperties";
     protected static final String IIB_ENDPOINT_PROPERTIES = "IIBEndpointProperties";
+
+    /**
+     * Construct url when it is not supposed to be provided by user.
+     * This method should return non-null string when url is needed but not supposed to be provided by user.
+     * This method is supposed to be overridden by sub classes.
+     */
+    public String constructUrl(String host, Integer port) {
+        return null;
+    }
 }
