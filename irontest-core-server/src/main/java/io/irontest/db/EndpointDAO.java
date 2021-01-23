@@ -111,10 +111,6 @@ public interface EndpointDAO {
 
     default void update(Endpoint endpoint) {
         Long environmentId = endpoint.getEnvironment() == null ? null : endpoint.getEnvironment().getId();
-        String constructedUrl = endpoint.getOtherProperties().constructUrl(endpoint.getHost(), endpoint.getPort());
-        if (constructedUrl != null) {
-            endpoint.setUrl(constructedUrl);
-        }
         _update(endpoint, environmentId);
     }
 

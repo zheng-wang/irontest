@@ -28,7 +28,7 @@ angular.module('irontest').controller('IIBTeststepActionController', ['$scope', 
           (endpointOtherProperties.connectionMode === 'Client' && (!endpointOtherProperties.host ||
           !endpointOtherProperties.port || !endpointOtherProperties.svrConnChannelName));
       } else {        //  endpoint type is IIB
-        return !endpointOtherProperties.host || !endpointOtherProperties.port;
+        return !endpoint.host || !endpoint.port;
       }
     };
 

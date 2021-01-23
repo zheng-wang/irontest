@@ -74,7 +74,8 @@ public class Endpoint {
     }
 
     public String getUrl() {
-        return url;
+        String constructedUrl = getOtherProperties().constructUrl(this.host, this.port);
+        return constructedUrl == null ? url : constructedUrl;
     }
 
     public void setUrl(String url) {

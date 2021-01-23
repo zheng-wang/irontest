@@ -41,7 +41,7 @@ public class IIB100TeststepRunner extends IIBTeststepRunnerBase {
         Constructor<BrokerConnectionParameters> constructor = clazz.getConstructor(
                 String.class, Integer.TYPE, String.class, String.class, Boolean.TYPE);
         BrokerConnectionParameters bcp = constructor.newInstance(
-                    endpointProperties.getHost(), endpointProperties.getPort(), endpoint.getUsername(),
+                    endpoint.getHost(), endpoint.getPort(), endpoint.getUsername(),
                     decryptedEndpointPassword, endpointProperties.isUseSSL());
         setBrokerConnectionParameters(bcp);
     }
