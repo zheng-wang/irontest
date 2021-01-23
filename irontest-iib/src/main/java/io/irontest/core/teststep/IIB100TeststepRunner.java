@@ -1,7 +1,6 @@
 package io.irontest.core.teststep;
 
 import com.ibm.broker.config.proxy.BrokerConnectionParameters;
-import io.irontest.core.teststep.IIBTeststepRunnerBase;
 import io.irontest.models.endpoint.Endpoint;
 import io.irontest.models.endpoint.IIBEndpointProperties;
 import org.eclipse.jetty.util.log.Log;

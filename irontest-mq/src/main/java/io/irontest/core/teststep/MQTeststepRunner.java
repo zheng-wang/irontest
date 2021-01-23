@@ -4,6 +4,7 @@ import com.ibm.mq.*;
 import com.ibm.mq.constants.CMQC;
 import com.ibm.mq.headers.MQMD;
 import com.ibm.mq.headers.*;
+import io.irontest.models.endpoint.Endpoint;
 import io.irontest.models.endpoint.MQConnectionMode;
 import io.irontest.models.endpoint.MQEndpointProperties;
 import io.irontest.models.teststep.*;
@@ -39,7 +40,8 @@ public class MQTeststepRunner extends TeststepRunner {
         BasicTeststepRun basicTeststepRun = new BasicTeststepRun();
 
         APIResponse response = null;
-        MQEndpointProperties endpointProperties = (MQEndpointProperties) teststep.getEndpoint().getOtherProperties();
+        Endpoint endpoint = teststep.getEndpoint();
+        MQEndpointProperties endpointProperties = (MQEndpointProperties) endpoint.getOtherProperties();
         MQQueueManager queueManager = null;
         try {
             //  connect to queue manager
@@ -47,8 +49,8 @@ public class MQTeststepRunner extends TeststepRunner {
                 queueManager = new MQQueueManager(endpointProperties.getQueueManagerName());
             } else {
                 Hashtable qmConnProperties = new Hashtable();
-                qmConnProperties.put(CMQC.HOST_NAME_PROPERTY,  endpointProperties.getHost());
-                qmConnProperties.put(CMQC.PORT_PROPERTY, endpointProperties.getPort());
+                qmConnProperties.put(CMQC.HOST_NAME_PROPERTY,  endpoint.getHost());
+                qmConnProperties.put(CMQC.PORT_PROPERTY, endpoint.getPort());
                 qmConnProperties.put(CMQC.CHANNEL_PROPERTY, endpointProperties.getSvrConnChannelName());
                 queueManager = new MQQueueManager(endpointProperties.getQueueManagerName(), qmConnProperties);
             }

@@ -1,7 +1,5 @@
 package io.irontest.models.endpoint;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.irontest.resources.ResourceJsonViews;
@@ -12,10 +10,8 @@ public class MQEndpointProperties extends EndpointProperties {
     private MQConnectionMode connectionMode = MQConnectionMode.BINDINGS;
     @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     private String queueManagerName;
-    @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
-    private String host;
-    @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
-    private Integer port;
+
+    //  only meaningful when connection mode is Client
     @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
     private String svrConnChannelName;
 
@@ -35,22 +31,6 @@ public class MQEndpointProperties extends EndpointProperties {
         this.queueManagerName = queueManagerName;
     }
 
-    public String getHost() {
-        return host;
-    }
-
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    public Integer getPort() {
-        return port;
-    }
-
-    public void setPort(Integer port) {
-        this.port = port;
-    }
-
     public String getSvrConnChannelName() {
         return svrConnChannelName;
     }
@@ -59,19 +39,9 @@ public class MQEndpointProperties extends EndpointProperties {
         this.svrConnChannelName = svrConnChannelName;
     }
 
-    /**
-     * Used to unify queue manager address display on test step action tab and test case run report.
-     * @return
-     */
-    @JsonProperty
-    @JsonView(ResourceJsonViews.TeststepEdit.class)
-    public String getQueueManagerAddress() {
+    @Override
+    public String constructUrl(String host, Integer port) {
         return connectionMode == MQConnectionMode.BINDINGS ?
                 queueManagerName : host + ':' + port + '/' + queueManagerName;
-    }
-
-    @JsonIgnore
-    public void setQueueManagerAddress(String queueManagerAddress) {
-        //  do nothing
     }
 }

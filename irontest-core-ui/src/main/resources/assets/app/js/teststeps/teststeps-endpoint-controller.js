@@ -71,9 +71,10 @@ angular.module('irontest').controller('TeststepsEndpointController', ['$scope',
 
     $scope.mqEndpointConnectionModeChanged = function(isValid) {
       //  clear properties for Client connection mode, to avoid saving unintended values
-      var endpointProperties = $scope.teststep.endpoint.otherProperties;
-      endpointProperties.host = null;
-      endpointProperties.port = null;
+      var endpoint = $scope.teststep.endpoint;
+      var endpointProperties = endpoint.otherProperties;
+      endpoint.host = null;
+      endpoint.port = null;
       endpointProperties.svrConnChannelName = null;
 
       if (!$scope.isInShareEndpointMode()) {

@@ -36,10 +36,11 @@ angular.module('irontest').controller('MQTeststepActionController', ['$scope', '
     };
 
     $scope.endpointInfoIncomplete = function() {
-      var endpointOtherProperties = $scope.teststep.endpoint.otherProperties;
+      var endpoint = $scope.teststep.endpoint;
+      var endpointOtherProperties = endpoint.otherProperties;
       return !endpointOtherProperties.queueManagerName ||
-        (endpointOtherProperties.connectionMode === 'Client' && (!endpointOtherProperties.host ||
-          !endpointOtherProperties.port || !endpointOtherProperties.svrConnChannelName));
+        (endpointOtherProperties.connectionMode === 'Client' && (!endpoint.host || !endpoint.port ||
+          !endpointOtherProperties.svrConnChannelName));
     };
 
     $scope.actionInfoIncomplete = function() {

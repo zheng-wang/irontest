@@ -60,9 +60,10 @@ angular.module('irontest').controller('EndpointsController', ['$scope', 'Managed
     };
 
     $scope.mqEndpointConnectionModeChanged = function(isValid) {
-      var otherProperties = $scope.endpoint.otherProperties;
-      otherProperties.host = null;
-      otherProperties.port = null;
+      var endpoint = $scope.endpoint;
+      var otherProperties = endpoint.otherProperties;
+      endpoint.host = null;
+      endpoint.port = null;
       otherProperties.svrConnChannelName = null;
 
       $scope.update(isValid);  //  update immediately (no timeout)

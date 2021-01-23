@@ -32,6 +32,6 @@
     </#if>
     topic with topic string "${ (stepOtherProperties.topicString??)?then(stepOtherProperties.topicString, 'null') }"
   </#if>
-  <#t>on queue manager "${ endpointOtherProperties.queueManagerAddress }"
+  <#t>on queue manager "${ teststep.endpoint.url }"
   <#t><#if endpointOtherProperties.connectionMode == "Client"> through channel "${ (endpointOtherProperties.svrConnChannelName??)?then(endpointOtherProperties.svrConnChannelName, 'null') }"</#if>.
 </#macro>
