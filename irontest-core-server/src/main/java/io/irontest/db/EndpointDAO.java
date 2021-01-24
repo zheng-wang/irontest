@@ -68,12 +68,15 @@ public interface EndpointDAO {
                     endpoint.setType(Endpoint.TYPE_SOAP);
                     endpoint.setOtherProperties(new SOAPEndpointProperties());
                     break;
+                case Teststep.TYPE_DB:
+                    endpoint.setType(Endpoint.TYPE_DB);
+                    break;
+                case Teststep.TYPE_JMS:
+                    endpoint.setType(Endpoint.TYPE_JMS);
+                    break;
                 case Teststep.TYPE_FTP:
                     endpoint.setType(Endpoint.TYPE_FTP);
                     endpoint.setOtherProperties(new FTPEndpointProperties());
-                    break;
-                case Teststep.TYPE_DB:
-                    endpoint.setType(Endpoint.TYPE_DB);
                     break;
                 case Teststep.TYPE_MQ:
                     endpoint.setType(Endpoint.TYPE_MQ);
