@@ -19,8 +19,8 @@ angular.module('irontest').controller('FTPTeststepActionController', ['$scope', 
     };
 
     $scope.endpointInfoIncomplete = function() {
-      var endpointOtherProperties = $scope.teststep.endpoint.otherProperties;
-      return !endpointOtherProperties.host || !endpointOtherProperties.port;
+      var endpoint = $scope.teststep.endpoint;
+      return !endpoint.host || !endpoint.port;
     };
 
     $scope.actionInfoIncomplete = function() {

@@ -3,7 +3,7 @@
   <label for="ftpServerURL" class="col-lg-2 control-label">FTP Server URL</label>
   <div class="col-lg-8">
     <input type="text" name="ftpServerURL" id="ftpServerURL" class="form-control" readonly
-           value="{{teststep.endpoint.otherProperties.ftpServerURL}}">
+           ng-model="teststep.endpoint.constructedUrl">
   </div>
 </div>
 

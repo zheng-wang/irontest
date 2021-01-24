@@ -1,6 +1,7 @@
 package io.irontest.models.endpoint;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.irontest.models.Environment;
 import io.irontest.resources.ResourceJsonViews;
@@ -74,12 +75,22 @@ public class Endpoint {
     }
 
     public String getUrl() {
-        String constructedUrl = getOtherProperties().constructUrl(this.host, this.port);
-        return constructedUrl == null ? url : constructedUrl;
+        return url;
     }
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    @JsonProperty
+    @JsonView(ResourceJsonViews.TeststepEdit.class)
+    public String getConstructedUrl() {
+        return getOtherProperties().constructUrl(this.host, this.port);
+    }
+
+    @JsonIgnore
+    public void setConstructedUrl(String constructedUrl) {
+        //  do nothing
     }
 
     public String getHost() {

@@ -83,7 +83,7 @@ public class FTPTeststepRunner extends TeststepRunner {
             }
         });
         try {
-            ftpClient.connect(endpointProperties.getHost(), endpointProperties.getPort());
+            ftpClient.connect(endpoint.getHost(), endpoint.getPort());
             ftpClient.login(username, password);
             ftpClient.enterLocalPassiveMode();
             if (endpointProperties.isUseSSL()) {
