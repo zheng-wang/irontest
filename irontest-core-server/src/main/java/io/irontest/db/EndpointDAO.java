@@ -50,8 +50,8 @@ public interface EndpointDAO {
      * @param endpoint
      * @return
      */
-    @SqlUpdate("insert into endpoint (name, type, description, url, username, password, other_properties) " +
-               "values (:ep.name, :ep.type, :ep.description, :ep.url, :ep.username, :ep.password, :ep.otherProperties)")
+    @SqlUpdate("insert into endpoint (name, type, description, url, host, port, username, password, other_properties) " +
+               "values (:ep.name, :ep.type, :ep.description, :ep.url, :ep.host, :ep.port, :ep.username, :ep.password, :ep.otherProperties)")
     @GetGeneratedKeys
     long insertUnmanagedEndpoint(@BindBean("ep") Endpoint endpoint);
 
@@ -140,8 +140,8 @@ public interface EndpointDAO {
      * @param oldTeststepId
      * @return new endpoint id if one endpoint is duplicated; null otherwise.
      */
-    @SqlUpdate("insert into endpoint (name, type, description, url, username, password, other_properties) " +
-            "select e.name, e.type, e.description, e.url, e.username, e.password, e.other_properties " +
+    @SqlUpdate("insert into endpoint (name, type, description, url, host, port, username, password, other_properties) " +
+            "select e.name, e.type, e.description, e.url, e.host, e.port, e.username, e.password, e.other_properties " +
             "from teststep t left outer join endpoint e on t.endpoint_id = e.id where t.id = :oldTeststepId " +
             "and e.id is not null and e.environment_id is null")
     @GetGeneratedKeys
