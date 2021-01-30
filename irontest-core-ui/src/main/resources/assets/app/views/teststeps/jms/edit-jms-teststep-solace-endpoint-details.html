@@ -4,8 +4,8 @@
   <label for="vpn" class="col-lg-2 control-label">VPN</label>
   <div class="col-lg-10">
     <input name="vpn" id="vpn" type="text" class="form-control" ng-model="teststep.endpoint.otherProperties.vpn"
-           ng-change="autoSave(endpointForm.$valid)" spellcheck="false" n
-           g-readonly="appStatus.isForbidden() || (!isInShareEndpointMode() && teststep.endpoint.environment)">
+           spellcheck="false" ng-change="isInShareEndpointMode() ? angular.noop() : autoSave(teststepForm.$valid)"
+           ng-readonly="appStatus.isForbidden() || (!isInShareEndpointMode() && teststep.endpoint.environment)">
   </div>
 </div>
 
