@@ -62,10 +62,12 @@
                    ng-include="'/ui/views/teststeps/http/edit-http-teststep-endpoint-details.html'"></div>
               <div ng-if="teststep.type === 'SOAP'" ng-controller="SOAPTeststepEndpointController"
                    ng-include="'/ui/views/teststeps/soap/edit-soap-teststep-endpoint-details.html'"></div>
-              <div ng-if="teststep.type === 'FTP'"
-                   ng-include="'/ui/views/teststeps/ftp/edit-ftp-teststep-endpoint-details.html'"></div>
               <div ng-if="teststep.type === 'DB'"
                    ng-include="'/ui/views/teststeps/db/edit-db-teststep-endpoint-details.html'"></div>
+              <div ng-if="teststep.type === 'JMS'" ng-controller="JMSTeststepEndpointController"
+                   ng-include="'/ui/views/teststeps/jms/edit-jms-teststep-endpoint-details.html'"></div>
+              <div ng-if="teststep.type === 'FTP'"
+                   ng-include="'/ui/views/teststeps/ftp/edit-ftp-teststep-endpoint-details.html'"></div>
               <div ng-if="teststep.type === 'MQ'"
                    ng-include="'/ui/views/teststeps/mq/edit-mq-teststep-endpoint-details.html'"></div>
               <div ng-if="teststep.type === 'IIB'" ng-controller="IIBTeststepEndpointController"
@@ -97,12 +99,15 @@
             <div ng-if="teststep.type === 'SOAP' || teststep.type === 'HTTP'"
                  ng-include="'/ui/views/teststeps/edit-invocation-details-http.html'"
                  ng-controller="TeststepHTTPActionController"></div>
-            <div ng-if="teststep.type === 'FTP'"
-                 ng-include="'/ui/views/teststeps/ftp/edit-ftp-teststep-action.html'"
-                 ng-controller="FTPTeststepActionController"></div>
             <div ng-if="teststep.type === 'DB'"
                  ng-include="'/ui/views/teststeps/db/edit-db-teststep-invocation.html'"
                  ng-controller="DBTeststepActionController"></div>
+            <div ng-if="teststep.type === 'JMS'"
+                 ng-include="'/ui/views/teststeps/jms/edit-jms-teststep-action.html'"
+                 ng-controller="JMSTeststepActionController"></div>
+            <div ng-if="teststep.type === 'FTP'"
+                 ng-include="'/ui/views/teststeps/ftp/edit-ftp-teststep-action.html'"
+                 ng-controller="FTPTeststepActionController"></div>
             <div ng-if="teststep.type === 'MQ'"
                  ng-include="'/ui/views/teststeps/mq/edit-mq-teststep-action.html'"
                  ng-controller="MQTeststepActionController"></div>

@@ -1,0 +1,13 @@
+<div class="form-group">
+  <label for="jmsProvider" class="col-lg-2 control-label">JMS Provider</label>
+  <div class="col-lg-10">
+    <select name="jmsProvider" id="jmsProvider" class="form-control" ng-model="teststep.endpoint.otherProperties.jmsProvider"
+            ng-change="jmsProviderChanged(teststepForm.$valid)"
+            ng-disabled="appStatus.isForbidden() || (!isInShareEndpointMode() && teststep.endpoint.environment)">
+      <option value="Solace">Solace</option>
+    </select>
+  </div>
+</div>
+
+<div ng-if="teststep.endpoint.otherProperties.jmsProvider === 'Solace'"
+     ng-include="'/ui/views/teststeps/jms/edit-jms-teststep-solace-endpoint-details.html'"></div>
