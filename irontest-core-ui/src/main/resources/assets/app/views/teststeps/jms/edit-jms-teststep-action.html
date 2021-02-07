@@ -33,3 +33,35 @@
     </div>
   </div>
 </div>
+<div class="form-group">
+  <label for="action" class="col-lg-2 control-label">Action</label>
+  <div class="col-lg-2">
+    <select name="action" id="action" class="form-control" ng-model="teststep.action"
+            ng-change="actionChanged(teststepForm.$valid)"
+            ng-disabled="appStatus.isForbidden() || steprun.status === 'ongoing'">
+      <option value="Clear" ng-if="teststep.otherProperties.destinationType === 'Queue'">Clear</option>
+      <option value="CheckDepth" ng-if="teststep.otherProperties.destinationType === 'Queue'">Check Depth</option>
+      <option value="Send" ng-if="teststep.otherProperties.destinationType === 'Queue'">Send</option>
+      <option value="Receive" ng-if="teststep.otherProperties.destinationType === 'Queue'">Receive</option>
+      <option value="Publish" ng-if="teststep.otherProperties.destinationType === 'Topic'">Publish</option>
+    </select>
+  </div>
+  <div class="col-lg-1">
+    <button type="button" class="btn btn-info btn-block" ng-click="doAction()"
+            ng-disabled="appStatus.isForbidden() || endpointInfoIncomplete() || actionInfoIncomplete() ||
+              steprun.status === 'ongoing'">Do</button>
+  </div>
+  <div class="col-lg-4">       <!-- Action run status message -->
+    <h5 ng-if="teststep.action === 'Clear' && steprun.status === 'ongoing'">Clearing queue ...</h5>
+    <h5 ng-if="teststep.action === 'Clear' && steprun.status === 'finished'">Queue cleared.</h5>
+    <h5 ng-if="teststep.action === 'CheckDepth' && steprun.status === 'ongoing'">Checking queue depth ...</h5>
+    <h5 ng-if="teststep.action === 'CheckDepth' && steprun.status === 'finished'">
+      Queue depth is {{ steprun.response.queueDepth }}</h5>
+    <h5 ng-if="teststep.action === 'Receive' && steprun.status === 'finished'">
+      {{ steprun.response === null ? 'No more message available on the queue.' : 'Message read.' }}</h5>
+    <h5 ng-if="teststep.action === 'Send' && steprun.status === 'ongoing'">Sending message ...</h5>
+    <h5 ng-if="teststep.action === 'Send' && steprun.status === 'finished'">Message sent.</h5>
+    <h5 ng-if="teststep.action === 'Publish' && steprun.status === 'ongoing'">Publishing message ...</h5>
+    <h5 ng-if="teststep.action === 'Publish' && steprun.status === 'finished'">Message published.</h5>
+  </div>
+</div>
