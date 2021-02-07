@@ -21,10 +21,6 @@ import java.util.Hashtable;
 
 public class MQTeststepRunner extends TeststepRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(MQTeststepRunner.class);
-    //  disable the default 2033 logging (seems not needed since IBM MQ 8.0)
-    static {
-        MQException.logExclude(CMQC.MQRC_NO_MSG_AVAILABLE);
-    }
 
     public BasicTeststepRun run() throws Exception {
         Teststep teststep = getTeststep();
