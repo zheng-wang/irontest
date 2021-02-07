@@ -24,8 +24,6 @@
         <mq.jar.com.ibm.mq.jmqi>${lib.mq}/com.ibm.mq.jmqi.jar</mq.jar.com.ibm.mq.jmqi>
         <mq.jar.com.ibm.mq.headers>${lib.mq}/com.ibm.mq.headers.jar</mq.jar.com.ibm.mq.headers>
         <mq.jar.com.ibm.mq.pcf>${lib.mq}/com.ibm.mq.pcf.jar</mq.jar.com.ibm.mq.pcf>
-        <mq.jar.com.ibm.mq.commonservices>${lib.mq}/com.ibm.mq.commonservices.jar</mq.jar.com.ibm.mq.commonservices>
-        <mq.jar.connector>${lib.mq}/connector.jar</mq.jar.connector>
         <distDir>dist</distDir>
         <uberJarFileName>irontest-${project.version}</uberJarFileName>
     </properties>
@@ -134,7 +132,7 @@
                                         <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                             <manifestEntries>
                                                 <Main-Class>io.irontest.IronTestApplication</Main-Class>
-                                                <Class-Path>${jdbc.driver.oracle.6} ${jdbc.driver.oracle.8} ${jdbc.driver.sqlserver} ${mq.jar.com.ibm.mq} ${mq.jar.com.ibm.mq.jmqi} ${mq.jar.com.ibm.mq.commonservices} ${mq.jar.com.ibm.mq.pcf} ${mq.jar.com.ibm.mq.headers} ${mq.jar.connector}</Class-Path>
+                                                <Class-Path>${jdbc.driver.oracle.6} ${jdbc.driver.oracle.8} ${jdbc.driver.sqlserver} ${mq.jar.com.ibm.mq} ${mq.jar.com.ibm.mq.jmqi} ${mq.jar.com.ibm.mq.pcf} ${mq.jar.com.ibm.mq.headers}</Class-Path>
                                             </manifestEntries>
                                         </transformer>
                                         <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">

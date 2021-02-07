@@ -13,7 +13,7 @@
     <artifactId>irontest-mq</artifactId>
 
     <properties>
-        <mq.version>[7.5.0.0, 8.0.0.50]</mq.version>
+        <mq.version>[8.0.0.0, 8.0.0.50]</mq.version>
     </properties>
 
     <dependencies>
@@ -46,28 +46,4 @@
             <version>${mq.version}</version>
         </dependency>
     </dependencies>
-
-    <profiles>
-        <profile>
-            <id>mq-7.5-specific-dependencies</id>
-            <activation>
-                <!-- Use this property as switch because currently Maven does not support version number range in activation, such as mq.version - [7.5.0.0,8.0.0.0) -->
-                <property>
-                    <name>mq.version.is75</name>
-                </property>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>com.ibm</groupId>
-                    <artifactId>com.ibm.mq.commonservices</artifactId>
-                    <version>${mq.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>javax.resource</groupId>
-                    <artifactId>connector</artifactId>
-                    <version>1.3.0</version>
-                </dependency>
-            </dependencies>
-        </profile>
-    </profiles>
 </project>
