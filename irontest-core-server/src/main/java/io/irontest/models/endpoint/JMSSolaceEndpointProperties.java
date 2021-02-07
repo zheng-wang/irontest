@@ -16,4 +16,9 @@ public class JMSSolaceEndpointProperties extends JMSEndpointProperties {
     public void setVpn(String vpn) {
         this.vpn = vpn;
     }
+
+    @Override
+    public String constructUrl(String host, Integer port) {
+        return host + ':' + port + '/' + vpn;
+    }
 }

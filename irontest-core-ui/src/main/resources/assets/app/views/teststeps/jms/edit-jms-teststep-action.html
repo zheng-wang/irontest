@@ -1,0 +1,35 @@
+<div class="form-group"></div> <!-- spacer -->
+<div class="form-group">
+  <label for="endpointAddress" class="col-lg-2 control-label">Endpoint Address</label>
+  <div class="col-lg-7">
+    <input type="text" name="endpointAddress" id="endpointAddress" class="form-control" readonly
+           ng-model="teststep.endpoint.constructedUrl">
+  </div>
+</div>
+<div class="form-group">
+  <label for="destinationType" class="col-lg-2 control-label">Destination Type</label>
+  <div class="col-lg-2">
+    <select name="destinationType" id="destinationType" class="form-control"
+            ng-model="teststep.otherProperties.destinationType" ng-change="destinationTypeChanged(teststepForm.$valid)"
+            ng-disabled="appStatus.isForbidden() || steprun.status === 'ongoing'">
+      <option value="Queue">Queue</option>
+      <option value="Topic">Topic</option>
+    </select>
+  </div>
+  <div ng-if="teststep.otherProperties.destinationType === 'Queue'">
+    <label for="queueName" class="col-lg-1 control-label" style="padding-left:0">Queue Name</label>
+    <div class="col-lg-5">
+      <input name="queueName" type="text" class="form-control" ng-change="autoSave(teststepForm.$valid)"
+             ng-model="teststep.otherProperties.queueName" id="queueName" spellcheck="false"
+             ng-readonly="appStatus.isForbidden()">
+    </div>
+  </div>
+  <div ng-if="teststep.otherProperties.destinationType === 'Topic'">
+    <label for="topicString" class="col-lg-1 control-label">Topic String</label>
+    <div class="col-lg-5">
+      <input name="topicString" type="text" class="form-control" ng-change="autoSave(teststepForm.$valid)"
+             ng-model="teststep.otherProperties.topicString" id="topicString" spellcheck="false"
+             ng-readonly="appStatus.isForbidden()">
+    </div>
+  </div>
+</div>
