@@ -39,6 +39,10 @@ public class Teststep {
     public static final String ACTION_ENQUEUE = "Enqueue";
     public static final String ACTION_PUBLISH = "Publish";
 
+    /* of JMS test step */
+    public static final String ACTION_SEND = "Send";
+    public static final String ACTION_BROWSE = "Browse";
+
     @JsonView(ResourceJsonViews.TeststepEdit.class)
     private long id;   //  id being 0 means this is dynamically created test step object (no record in the Teststep database table).
     @JsonView(ResourceJsonViews.TeststepEdit.class)

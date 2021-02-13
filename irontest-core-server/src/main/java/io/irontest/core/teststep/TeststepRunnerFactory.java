@@ -6,6 +6,7 @@ import io.irontest.core.MapValueLookup;
 import io.irontest.core.testcase.TestcaseRunContext;
 import io.irontest.db.UtilsDAO;
 import io.irontest.models.endpoint.Endpoint;
+import io.irontest.models.endpoint.JMSEndpointProperties;
 import io.irontest.models.teststep.APIRequest;
 import io.irontest.models.teststep.HTTPStubsSetupTeststepProperties;
 import io.irontest.models.teststep.Teststep;
@@ -28,6 +29,15 @@ public class TeststepRunnerFactory {
         return instance;
     }
 
+    private String resolveTeststepRunnerClassName(Teststep teststep) {
+        if (Teststep.TYPE_JMS.equals(teststep.getType())) {
+            JMSEndpointProperties endpointProperties = (JMSEndpointProperties) teststep.getEndpoint().getOtherProperties();
+            return "io.irontest.core.teststep." + teststep.getType() + endpointProperties.getJmsProvider() + "TeststepRunner";
+        } else {
+            return "io.irontest.core.teststep." + teststep.getType() + "TeststepRunner";
+        }
+    }
+
     /**
      * This method modifies content of the propertyExtractor object.
      * @param teststep
@@ -41,7 +51,7 @@ public class TeststepRunnerFactory {
                                             Map<String, String> referenceableStringProperties,
                                             Map<String, Endpoint> referenceableEndpointProperties, TestcaseRunContext testcaseRunContext) throws Exception {
         TeststepRunner runner;
-        Class runnerClass = Class.forName("io.irontest.core.teststep." + teststep.getType() + "TeststepRunner");
+        Class runnerClass = Class.forName(resolveTeststepRunnerClassName(teststep));
         Constructor<TeststepRunner> constructor = runnerClass.getConstructor();
         runner = constructor.newInstance();
 

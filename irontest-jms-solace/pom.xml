@@ -11,4 +11,16 @@
 
     <artifactId>irontest-jms-solace</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>io.irontest</groupId>
+            <artifactId>irontest-core-server</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.solacesystems</groupId>
+            <artifactId>sol-jcsmp</artifactId>
+            <version>10.10.0</version>
+        </dependency>
+    </dependencies>
 </project>
