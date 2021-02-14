@@ -1,3 +1,5 @@
-<#if stepRun.teststep.action == "CheckDepth">
-  ${stepRun.response.queueDepth}
+<#if teststep.action == "CheckDepth">
+  ${ response.queueDepth }
+<#elseif teststep.action == "Clear">
+  Cleared ${ response.clearedMessagesCount } messages.
 </#if>

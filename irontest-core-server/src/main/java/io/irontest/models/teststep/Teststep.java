@@ -33,15 +33,17 @@ public class Teststep {
     public static final String ACTION_WAIT_FOR_PROCESSING_COMPLETION = "WaitForProcessingCompletion";
 
     /* of MQ test step */
-    public static final String ACTION_CLEAR = "Clear";
-    public static final String ACTION_CHECK_DEPTH = "CheckDepth";
-    public static final String ACTION_DEQUEUE = "Dequeue";
     public static final String ACTION_ENQUEUE = "Enqueue";
-    public static final String ACTION_PUBLISH = "Publish";
+    public static final String ACTION_DEQUEUE = "Dequeue";
 
     /* of JMS test step */
     public static final String ACTION_SEND = "Send";
     public static final String ACTION_BROWSE = "Browse";
+
+    /* of both MQ test step and JMS test step */
+    public static final String ACTION_CLEAR = "Clear";
+    public static final String ACTION_CHECK_DEPTH = "CheckDepth";
+    public static final String ACTION_PUBLISH = "Publish";
 
     @JsonView(ResourceJsonViews.TeststepEdit.class)
     private long id;   //  id being 0 means this is dynamically created test step object (no record in the Teststep database table).

@@ -50,27 +50,31 @@
 
 <#-- Request, Response, and Assertions info -->
 <#assign teststepTypes = ["HTTP", "SOAP", "DB", "JMS", "FTP", "MQ", "AMQP", "HTTPStubRequestsCheck"]>
-<#if teststepTypes?seq_contains(teststep.type) && !(teststep.type == 'MQ' && teststep.action == 'Clear') &&
-    !(teststep.type == 'JMS' && teststep.action == 'Clear')>
+<#if teststepTypes?seq_contains(teststep.type) && !(teststep.type == 'MQ' && teststep.action == 'Clear')>
   <div class="form-group"></div> <#-- spacer -->
 
   <#assign hasRequestTab = !(teststep.type == 'MQ' && (teststep.action == 'CheckDepth' || teststep.action == 'Dequeue')) &&
-    !(teststep.type == 'JMS' && (teststep.action == 'CheckDepth' || teststep.action == 'Browse')) &&
+    !(teststep.type == 'JMS' && (teststep.action == 'CheckDepth' || teststep.action == 'Clear' || teststep.action == 'Browse')) &&
     teststep.type != 'HTTPStubRequestsCheck'>
-  <#assign hasResponseAndAssertionsTabs = !(teststep.type == 'MQ' && (teststep.action == 'Enqueue' || teststep.action == 'Publish')) &&
+  <#assign hasResponseTab = !(teststep.type == 'MQ' && (teststep.action == 'Enqueue' || teststep.action == 'Publish')) &&
     !(teststep.type == 'JMS' && (teststep.action == 'Send' || teststep.action == 'Publish')) &&
     teststep.type != 'AMQP' && teststep.type != 'FTP'>
+  <#assign hasAssertionsTab = !(teststep.type == 'MQ' && (teststep.action == 'Enqueue' || teststep.action == 'Publish')) &&
+      !(teststep.type == 'JMS' && (teststep.action == 'Clear' || teststep.action == 'Send' || teststep.action == 'Publish')) &&
+      teststep.type != 'AMQP' && teststep.type != 'FTP'>
   <div>
     <#-- Nav tabs -->
     <ul class="nav nav-tabs tabs-in-test-report" role="tablist">
       <#-- use data-target attribute instead of href attribute on the anchor elements, to avoid spoiling routes of
         angular app on the test case edit view. Refer to https://stackoverflow.com/questions/19225968/bootstrap-tab-is-not-working-when-tab-with-data-target-instead-of-href for more details -->
       <#if hasRequestTab>
-        <li role="presentation" ${ (hasResponseAndAssertionsTabs)?then('', 'class=active') }><a data-target="#step-run-${ stepRun.id?string.computer }-request" aria-controls="request" role="tab" data-toggle="tab">Request</a></li>
+        <li role="presentation" ${ (hasResponseTab)?then('', 'class=active') }><a data-target="#step-run-${ stepRun.id?string.computer }-request" aria-controls="request" role="tab" data-toggle="tab">Request</a></li>
       </#if>
-      <#if hasResponseAndAssertionsTabs>
+      <#if hasResponseTab>
         <#-- set Response tab to be active as response is the most interesting information -->
         <li role="presentation" class="active"><a data-target="#step-run-${ stepRun.id?string.computer }-response" aria-controls="response" role="tab" data-toggle="tab">Response</a></li>
+      </#if>
+      <#if hasAssertionsTab>
         <li role="presentation"><a data-target="#step-run-${ stepRun.id?string.computer }-assertions" aria-controls="assertions" role="tab" data-toggle="tab">Assertions</a></li>
       </#if>
     </ul>
@@ -78,14 +82,16 @@
     <#-- Tab panes -->
     <div class="tab-content" id="request-response-assertions-tab-panes">
       <#if hasRequestTab>
-        <div role="tabpanel" class="tab-pane ${ (hasResponseAndAssertionsTabs)?then('', 'active') }" id="step-run-${ stepRun.id?string.computer }-request">
+        <div role="tabpanel" class="tab-pane ${ (hasResponseTab)?then('', 'active') }" id="step-run-${ stepRun.id?string.computer }-request">
           <#include "teststepRequest.ftl">
         </div>
       </#if>
-      <#if hasResponseAndAssertionsTabs>
+      <#if hasResponseTab>
         <div role="tabpanel" class="tab-pane active" id="step-run-${ stepRun.id?string.computer }-response">
           <#include "teststepResponse.ftl">
         </div>
+      </#if>
+      <#if hasAssertionsTab>
         <div role="tabpanel" class="tab-pane" id="step-run-${ stepRun.id?string.computer }-assertions">
           <#include "teststepAssertions.ftl">
         </div>

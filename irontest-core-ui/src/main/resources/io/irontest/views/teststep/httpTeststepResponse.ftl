@@ -8,7 +8,7 @@
 <div class="row">
   <div class="col-lg-12">
     <textarea class="form-control message-body-textarea" readonly>
-      <#t>${ (stepRun.response.httpBody??)?then(ironTestUtilsAdatper.prettyPrintJSONOrXML(stepRun.response.httpBody), '') }
+      <#t>${ (response.httpBody??)?then(ironTestUtilsAdatper.prettyPrintJSONOrXML(response.httpBody), '') }
     </textarea>
   </div>
 </div>

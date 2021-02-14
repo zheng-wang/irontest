@@ -2,7 +2,7 @@
 
 <div class="row">
   <div class="col-lg-12">
-    <#list stepRun.response.allServeEvents as stubRequest>
+    <#list response.allServeEvents as stubRequest>
       <div class="row">
         <div class="col-lg-1">Stub Request:</div>
         <form name="stubRequestForm" class="form-horizontal col-lg-11" role="form" novalidate>

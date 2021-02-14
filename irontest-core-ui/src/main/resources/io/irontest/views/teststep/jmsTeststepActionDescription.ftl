@@ -23,6 +23,4 @@
   </#if>
   topic "${ (stepOtherProperties.topicString??)?then(stepOtherProperties.topicString, 'null') }"
 </#if>
-<#if endpointProperties.jmsProvider == 'Solace'>
-  on Solace router "${ endpoint.constructedUrl }"
-</#if>
+<#t><#if endpointProperties.jmsProvider == 'Solace'>on Solace router "${ endpoint.constructedUrl }"</#if>.

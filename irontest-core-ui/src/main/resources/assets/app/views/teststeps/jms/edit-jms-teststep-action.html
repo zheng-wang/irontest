@@ -53,10 +53,12 @@
   </div>
   <div class="col-lg-4">       <!-- Action run status message -->
     <h5 ng-if="teststep.action === 'Clear' && steprun.status === 'ongoing'">Clearing queue ...</h5>
-    <h5 ng-if="teststep.action === 'Clear' && steprun.status === 'finished'">Queue cleared.</h5>
+    <h5 ng-if="teststep.action === 'Clear' && steprun.status === 'finished'">
+      Queue cleared ({{ steprun.response.clearedMessagesCount }} messages).
+    </h5>
     <h5 ng-if="teststep.action === 'CheckDepth' && steprun.status === 'ongoing'">Checking queue depth ...</h5>
     <h5 ng-if="teststep.action === 'CheckDepth' && steprun.status === 'finished'">
-      Queue depth is {{ steprun.response.queueDepth }}</h5>
+      Queue depth is {{ steprun.response.queueDepth }}.</h5>
     <h5 ng-if="teststep.action === 'Receive' && steprun.status === 'finished'">
       {{ steprun.response === null ? 'No more message available on the queue.' : 'Message read.' }}</h5>
     <h5 ng-if="teststep.action === 'Send' && steprun.status === 'ongoing'">Sending message ...</h5>

@@ -60,6 +60,7 @@ public class JMSSolaceTeststepRunner extends TeststepRunner {
         //  do the action
         switch (action) {
             case Teststep.ACTION_CLEAR:
+                response = clearQueue(session, queue);
                 break;
             case Teststep.ACTION_CHECK_DEPTH:
                 response = checkDepth(session, queue);
@@ -72,6 +73,29 @@ public class JMSSolaceTeststepRunner extends TeststepRunner {
                 throw new IllegalArgumentException("Unrecognized action " + action + ".");
         }
 
+        return response;
+    }
+
+    private JMSClearQueueResponse clearQueue(JCSMPSession session, Queue queue) throws JCSMPException {
+        JMSClearQueueResponse response = new JMSClearQueueResponse();
+
+        ConsumerFlowProperties consumerFlowProperties = new ConsumerFlowProperties();
+        consumerFlowProperties.setEndpoint(queue);
+
+        FlowReceiver receiver = session.createFlow(null, consumerFlowProperties, null);
+        receiver.start();
+        BytesXMLMessage msg;
+        int clearedMessagesCount = 0;
+        do {
+            msg = receiver.receive(100);      //  this timeout is only affecting the time wait after fetching the last message, or when the queue is empty
+            if (msg != null) {
+                clearedMessagesCount++;
+            }
+        } while (msg != null);
+
+        receiver.close();
+
+        response.setClearedMessagesCount(clearedMessagesCount);
         return response;
     }
 

@@ -1,3 +1,3 @@
 <textarea class="form-control message-body-textarea" readonly>
-  <#t>${ (stepRun.response.rowsJSON??)?then(stepRun.response.rowsJSON, stepRun.response.statementExecutionResults) }
+  <#t>${ (response.rowsJSON??)?then(response.rowsJSON, response.statementExecutionResults) }
 </textarea>
