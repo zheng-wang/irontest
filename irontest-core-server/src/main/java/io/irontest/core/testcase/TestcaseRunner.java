@@ -219,6 +219,10 @@ public abstract class TestcaseRunner {
                     }
                 }
             }
+        } else if (Teststep.TYPE_JMS.equals(teststepType)) {
+            if (Teststep.ACTION_CHECK_DEPTH.equals(teststepAction)) {
+                result = ((JMSCheckQueueDepthResponse) apiResponse).getQueueDepth();
+            }
         }
 
         return result;

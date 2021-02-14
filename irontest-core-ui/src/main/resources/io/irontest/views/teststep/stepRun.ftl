@@ -1,6 +1,7 @@
 <#ftl encoding='UTF-8'>
 
 <#assign teststep = stepRun.teststep>
+<#assign stepOtherProperties = teststep.otherProperties>
 <#if teststep.apiRequest??>  <#-- not all test steps have apiRequest (e.g. Wait step) -->
   <#assign apiRequest = teststep.apiRequest>
 </#if>
@@ -48,13 +49,16 @@
 </#if>
 
 <#-- Request, Response, and Assertions info -->
-<#assign teststepTypes = ["HTTP", "SOAP", "FTP", "DB", "MQ", "AMQP", "HTTPStubRequestsCheck"]>
-<#if teststepTypes?seq_contains(teststep.type) && !(teststep.type == 'MQ' && teststep.action == 'Clear')>
+<#assign teststepTypes = ["HTTP", "SOAP", "DB", "JMS", "FTP", "MQ", "AMQP", "HTTPStubRequestsCheck"]>
+<#if teststepTypes?seq_contains(teststep.type) && !(teststep.type == 'MQ' && teststep.action == 'Clear') &&
+    !(teststep.type == 'JMS' && teststep.action == 'Clear')>
   <div class="form-group"></div> <#-- spacer -->
 
   <#assign hasRequestTab = !(teststep.type == 'MQ' && (teststep.action == 'CheckDepth' || teststep.action == 'Dequeue')) &&
+    !(teststep.type == 'JMS' && (teststep.action == 'CheckDepth' || teststep.action == 'Browse')) &&
     teststep.type != 'HTTPStubRequestsCheck'>
   <#assign hasResponseAndAssertionsTabs = !(teststep.type == 'MQ' && (teststep.action == 'Enqueue' || teststep.action == 'Publish')) &&
+    !(teststep.type == 'JMS' && (teststep.action == 'Send' || teststep.action == 'Publish')) &&
     teststep.type != 'AMQP' && teststep.type != 'FTP'>
   <div>
     <#-- Nav tabs -->

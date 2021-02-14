@@ -75,8 +75,8 @@ public class JMSSolaceTeststepRunner extends TeststepRunner {
         return response;
     }
 
-    private MQCheckQueueDepthResponse checkDepth(JCSMPSession session, Queue queue) throws JCSMPException {
-        MQCheckQueueDepthResponse response = new MQCheckQueueDepthResponse();
+    private JMSCheckQueueDepthResponse checkDepth(JCSMPSession session, Queue queue) throws JCSMPException {
+        JMSCheckQueueDepthResponse response = new JMSCheckQueueDepthResponse();
 
         BrowserProperties properties = new BrowserProperties();
         properties.setEndpoint(queue);

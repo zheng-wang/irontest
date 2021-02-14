@@ -65,3 +65,15 @@
     <h5 ng-if="teststep.action === 'Publish' && steprun.status === 'finished'">Message published.</h5>
   </div>
 </div>
+
+<div ng-if="teststep.action === 'CheckDepth'">
+  <div class="form-group">
+    <label for="queueDepthAssertionValue" class="col-lg-2 control-label">Assertion</label>
+    <div class="col-lg-2"><h5>Queue depth equals</h5></div>
+    <div class="col-lg-5">
+      <input name="queueDepthAssertionValue" id="queueDepthAssertionValue" type="number" class="form-control"
+             ng-model="teststep.assertions[0].otherProperties.number" ng-change="autoSave(teststepForm.$valid)"
+             ng-readonly="appStatus.isForbidden()">
+    </div>
+  </div>
+</div>

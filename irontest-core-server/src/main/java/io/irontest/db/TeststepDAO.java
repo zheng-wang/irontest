@@ -87,21 +87,19 @@ public interface TeststepDAO extends CrossReferenceDAO {
 
     @Transaction
     default long insert(Teststep teststep, AppMode appMode) throws JsonProcessingException {
-        //  set sample request where applicable
-        String sampleRequest = null;
-        if (Teststep.TYPE_DB.equals(teststep.getType())){
-            sampleRequest = "select * from ? where ?";
-        }
-
-        //  set initial/default property values (in the Properties sub-class) or API request
+        //  set initial/default values
         Properties otherProperties = new Properties();
         APIRequest apiRequest = new APIRequest();
+        String sampleRequest = null;
         switch (teststep.getType()) {
             case Teststep.TYPE_HTTP:
                 otherProperties = new HTTPTeststepProperties();
                 break;
             case Teststep.TYPE_SOAP:
                 otherProperties = new SOAPTeststepProperties();
+                break;
+            case Teststep.TYPE_DB:
+                sampleRequest = "select * from ? where ?";
                 break;
             case Teststep.TYPE_FTP:
                 apiRequest = new FtpPutRequestFileFromText();
@@ -177,11 +175,14 @@ public interface TeststepDAO extends CrossReferenceDAO {
             case Teststep.TYPE_HTTP:
                 processHTTPTeststepBackupRestore(oldTeststep, teststep);
                 break;
-            case Teststep.TYPE_FTP:
-                processFTPTeststep(oldTeststep, teststep);
-                break;
             case Teststep.TYPE_DB:
                 processDBTeststep(teststep);
+                break;
+            case Teststep.TYPE_JMS:
+                processJMSTeststep(oldTeststep,teststep);
+                break;
+            case Teststep.TYPE_FTP:
+                processFTPTeststep(oldTeststep, teststep);
                 break;
             case Teststep.TYPE_MQ:
                 processMQTeststep(oldTeststep, teststep);
@@ -205,6 +206,25 @@ public interface TeststepDAO extends CrossReferenceDAO {
         updateEndpointIfExists(oldEndpoint, newEndpoint);
 
         updateAssertions(teststep);
+    }
+
+    default void processJMSTeststep(Teststep oldTeststep, Teststep teststep) {
+        if (teststep.getAction() != null) {      //  newly created JMS test step does not have action and does not need the processing
+            String oldAction = oldTeststep.getAction();
+            String newAction = teststep.getAction();
+            if (!newAction.equals(oldAction)) {    //  action is switched, so clear things
+                teststep.setApiRequest(null);
+                teststep.getAssertions().clear();
+
+                if (Teststep.ACTION_CHECK_DEPTH.equals(newAction)) {
+                    Assertion assertion = new Assertion();
+                    teststep.getAssertions().add(assertion);
+                    assertion.setName("Queue depth equals");
+                    assertion.setType(Assertion.TYPE_INTEGER_EQUAL);
+                    assertion.setOtherProperties(new IntegerEqualAssertionProperties(0));
+                }
+            }
+        }
     }
 
     default void processHTTPTeststepBackupRestore(Teststep oldTeststep, Teststep teststep) {
