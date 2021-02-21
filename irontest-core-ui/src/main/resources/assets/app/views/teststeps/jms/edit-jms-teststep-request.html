@@ -1,0 +1,45 @@
+<div class="form-group form-group-reduced-bottom-margin">
+  <div class="col-lg-10">
+    <uib-tabset active="1">
+      <uib-tab index="0" heading="Properties">
+        <div class="form-group form-group-reduced-bottom-margin"></div> <!-- smaller spacer -->
+        <div class="form-group">
+          <div class="col-lg-1">
+            <button class="btn btn-info" ng-click="createRequestProperty()" ng-disabled="appStatus.isForbidden()">Create</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-lg-12">
+            <div ui-grid="requestMessagePropertiesGridOptions" ui-grid-resize-columns ui-grid-edit ui-grid-cellNav
+                 class="ui-grid jms-request-message-properties-grid"></div>
+          </div>
+        </div>
+      </uib-tab>
+      <uib-tab index="1" heading="Body">
+        <div class="form-group form-group-reduced-bottom-margin"></div> <!-- smaller spacer -->
+        <div class="form-group">
+          <div class="col-lg-12">
+            <textarea class="form-control" ng-model="teststep.apiRequest.body" rows="30" spellcheck="false"
+                      ng-change="autoSave(teststepForm.$valid)" ng-readonly="appStatus.isForbidden()"></textarea>
+          </div>
+        </div>
+      </uib-tab>
+    </uib-tabset>
+  </div>
+</div>
+
+<!-- Request properties grid cell templates -->
+<script type="text/ng-template" id="requestPropertiesGridEditableCellTemplate.html">
+  <div class="ui-grid-cell-contents">
+    <input type="text" class="form-control" ui-grid-editor ng-model="MODEL_COL_FIELD" spellcheck="false"
+           ng-readonly="grid.appScope.appStatus.isForbidden()">
+  </div>
+</script>
+<script type="text/ng-template" id="requestPropertiesGridDeleteCellTemplate.html">
+  <div class="ui-grid-cell-contents">
+    <a ng-click="grid.appScope.appStatus.isForbidden() ? angular.noop() : grid.appScope.deleteRequestProperty(row.entity)"
+       ng-class="{'no-underline' : grid.appScope.appStatus.isForbidden()}" href="">
+      <i class="glyphicon glyphicon-trash center-block text-center"></i>
+    </a>
+  </div>
+</script>

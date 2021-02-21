@@ -216,12 +216,21 @@ public interface TeststepDAO extends CrossReferenceDAO {
                 teststep.setApiRequest(null);
                 teststep.getAssertions().clear();
 
-                if (Teststep.ACTION_CHECK_DEPTH.equals(newAction)) {
-                    Assertion assertion = new Assertion();
-                    teststep.getAssertions().add(assertion);
-                    assertion.setName("Queue depth equals");
-                    assertion.setType(Assertion.TYPE_INTEGER_EQUAL);
-                    assertion.setOtherProperties(new IntegerEqualAssertionProperties(0));
+                switch (newAction) {
+                    case Teststep.ACTION_CHECK_DEPTH:
+                        Assertion assertion = new Assertion();
+                        teststep.getAssertions().add(assertion);
+                        assertion.setName("Queue depth equals");
+                        assertion.setType(Assertion.TYPE_INTEGER_EQUAL);
+                        assertion.setOtherProperties(new IntegerEqualAssertionProperties(0));
+                        break;
+                    case Teststep.ACTION_SEND:
+                        //  fall through
+                    case Teststep.ACTION_PUBLISH:
+                        teststep.setApiRequest(new JMSRequest());
+                        break;
+                    default:
+                        break;
                 }
             }
         }

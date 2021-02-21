@@ -67,5 +67,31 @@ angular.module('irontest').controller('JMSTeststepActionController', ['$scope', 
         IronTestUtils.openErrorHTTPResponseModal(error);
       });
     };
+
+    $scope.requestMessagePropertiesGridOptions = {
+      data: 'teststep.apiRequest.properties', enableColumnMenus: false,
+      columnDefs: [
+        {
+          name: 'name', width: '30%', enableCellEdit: true, enableCellEditOnFocus: true,
+          editableCellTemplate: 'requestPropertiesGridEditableCellTemplate.html'
+        },
+        {
+          name: 'value', enableCellEdit: true, enableCellEditOnFocus: true,
+          editableCellTemplate: 'requestPropertiesGridEditableCellTemplate.html'
+        },
+        {
+          name: 'delete', width: 70, minWidth: 60, enableSorting: false,
+          cellTemplate: 'requestPropertiesGridDeleteCellTemplate.html'
+        }
+      ],
+      onRegisterApi: function (gridApi) {
+        gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, newValue, oldValue){
+          if (newValue !== oldValue) {
+            //  update test step immediately (no timeout)
+            $scope.update(true);
+          }
+        });
+      }
+    };
   }
 ]);

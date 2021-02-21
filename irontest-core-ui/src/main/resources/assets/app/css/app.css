@@ -330,3 +330,7 @@
   height: 100% !important;
   margin-top: 10px;
 }
+
+.jms-request-message-properties-grid {
+  height: 550px;
+}
