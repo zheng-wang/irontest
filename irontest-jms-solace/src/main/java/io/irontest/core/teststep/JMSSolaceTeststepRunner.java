@@ -1,17 +1,18 @@
 package io.irontest.core.teststep;
 
 import com.solacesystems.jcsmp.*;
+import com.solacesystems.jms.SolConnectionFactory;
+import com.solacesystems.jms.SolJmsUtility;
 import io.irontest.models.endpoint.Endpoint;
 import io.irontest.models.endpoint.JMSSolaceEndpointProperties;
+import io.irontest.models.teststep.APIRequest;
 import io.irontest.models.teststep.JMSDestinationType;
 import io.irontest.models.teststep.JMSTeststepProperties;
 import io.irontest.models.teststep.Teststep;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import javax.jms.Connection;
 
 public class JMSSolaceTeststepRunner extends TeststepRunner {
-    private static final Logger LOGGER = LoggerFactory.getLogger(JMSSolaceTeststepRunner.class);
-
     public BasicTeststepRun run() throws Exception {
         Teststep teststep = getTeststep();
         String action = teststep.getAction();
@@ -27,25 +28,9 @@ public class JMSSolaceTeststepRunner extends TeststepRunner {
 
         APIResponse response = null;
         Endpoint endpoint = teststep.getEndpoint();
-        JMSSolaceEndpointProperties endpointProperties = (JMSSolaceEndpointProperties) endpoint.getOtherProperties();
-        JCSMPSession session = null;
-        try {
-            //  create session
-            JCSMPProperties properties = new JCSMPProperties();
-            properties.setProperty(JCSMPProperties.HOST, endpoint.getHost() + ":" + endpoint.getPort());
-            properties.setProperty(JCSMPProperties.USERNAME, endpoint.getUsername());
-            properties.setProperty(JCSMPProperties.PASSWORD, getDecryptedEndpointPassword());
-            properties.setProperty(JCSMPProperties.VPN_NAME,  endpointProperties.getVpn());
-            session = JCSMPFactory.onlyInstance().createSession(properties);
-
-            if (JMSDestinationType.QUEUE == teststepProperties.getDestinationType()) {
-                response = doQueueAction(session, teststepProperties.getQueueName(), action);
-            } else if (JMSDestinationType.TOPIC == teststepProperties.getDestinationType()) {
-            }
-        } finally {
-            if (session != null) {
-                session.closeSession();
-            }
+        if (JMSDestinationType.QUEUE == teststepProperties.getDestinationType()) {
+            response = doQueueAction(endpoint, teststepProperties.getQueueName(), action, teststep.getApiRequest());
+        } else if (JMSDestinationType.TOPIC == teststepProperties.getDestinationType()) {
         }
 
         basicTeststepRun.setResponse(response);
@@ -53,19 +38,40 @@ public class JMSSolaceTeststepRunner extends TeststepRunner {
         return basicTeststepRun;
     }
 
-    private APIResponse doQueueAction(JCSMPSession session, String queueName, String action) throws JCSMPException {
+    private JCSMPSession createJCSMPSession(Endpoint endpoint) throws InvalidPropertiesException {
+        JMSSolaceEndpointProperties endpointProperties = (JMSSolaceEndpointProperties) endpoint.getOtherProperties();
+        JCSMPProperties properties = new JCSMPProperties();
+        properties.setProperty(JCSMPProperties.HOST, endpoint.getHost() + ":" + endpoint.getPort());
+        properties.setProperty(JCSMPProperties.USERNAME, endpoint.getUsername());
+        properties.setProperty(JCSMPProperties.PASSWORD, getDecryptedEndpointPassword());
+        properties.setProperty(JCSMPProperties.VPN_NAME,  endpointProperties.getVpn());
+        return JCSMPFactory.onlyInstance().createSession(properties);
+    }
+
+    private Connection createJMSConnection(Endpoint endpoint) throws Exception {
+        JMSSolaceEndpointProperties endpointProperties = (JMSSolaceEndpointProperties) endpoint.getOtherProperties();
+        SolConnectionFactory connectionFactory = SolJmsUtility.createConnectionFactory();
+        connectionFactory.setHost(endpoint.getHost());
+        connectionFactory.setPort(endpoint.getPort());
+        connectionFactory.setVPN(endpointProperties.getVpn());
+        connectionFactory.setUsername(endpoint.getUsername());
+        connectionFactory.setPassword(endpoint.getPassword());
+        return connectionFactory.createConnection();
+    }
+
+    private APIResponse doQueueAction(Endpoint endpoint, String queueName, String action, APIRequest apiRequest) throws Exception {
         APIResponse response = null;
-        Queue queue = JCSMPFactory.onlyInstance().createQueue(queueName);
 
         //  do the action
         switch (action) {
             case Teststep.ACTION_CLEAR:
-                response = clearQueue(session, queue);
+                response = clearQueue(endpoint, queueName);
                 break;
             case Teststep.ACTION_CHECK_DEPTH:
-                response = checkDepth(session, queue);
+                response = checkDepth(endpoint, queueName);
                 break;
             case Teststep.ACTION_SEND:
+                sendMessageToQueue(endpoint, queueName, apiRequest);
                 break;
             case Teststep.ACTION_BROWSE:
                 break;
@@ -76,47 +82,69 @@ public class JMSSolaceTeststepRunner extends TeststepRunner {
         return response;
     }
 
-    private JMSClearQueueResponse clearQueue(JCSMPSession session, Queue queue) throws JCSMPException {
+    private JMSClearQueueResponse clearQueue(Endpoint endpoint, String queueName) throws JCSMPException {
         JMSClearQueueResponse response = new JMSClearQueueResponse();
-
-        ConsumerFlowProperties consumerFlowProperties = new ConsumerFlowProperties();
-        consumerFlowProperties.setEndpoint(queue);
-
-        FlowReceiver receiver = session.createFlow(null, consumerFlowProperties, null);
-        receiver.start();
-        BytesXMLMessage msg;
         int clearedMessagesCount = 0;
-        do {
-            msg = receiver.receive(100);      //  this timeout is only affecting the time wait after fetching the last message, or when the queue is empty
-            if (msg != null) {
-                clearedMessagesCount++;
-            }
-        } while (msg != null);
+        JCSMPSession session = createJCSMPSession(endpoint);
+        try {
+            Queue queue = JCSMPFactory.onlyInstance().createQueue(queueName);
 
-        receiver.close();
+            ConsumerFlowProperties consumerFlowProperties = new ConsumerFlowProperties();
+            consumerFlowProperties.setEndpoint(queue);
+
+            FlowReceiver receiver = session.createFlow(null, consumerFlowProperties, null);
+            receiver.start();
+            BytesXMLMessage msg;
+
+            do {
+                msg = receiver.receive(100);      //  this timeout is only affecting the time wait after fetching the last message, or when the queue is empty
+                if (msg != null) {
+                    clearedMessagesCount++;
+                }
+            } while (msg != null);
+
+            receiver.close();
+        } finally {
+            if (session != null) {
+                session.closeSession();
+            }
+        }
 
         response.setClearedMessagesCount(clearedMessagesCount);
+
         return response;
     }
 
-    private JMSCheckQueueDepthResponse checkDepth(JCSMPSession session, Queue queue) throws JCSMPException {
+    private JMSCheckQueueDepthResponse checkDepth(Endpoint endpoint, String queueName) throws JCSMPException {
         JMSCheckQueueDepthResponse response = new JMSCheckQueueDepthResponse();
-
-        BrowserProperties properties = new BrowserProperties();
-        properties.setEndpoint(queue);
-        properties.setWaitTimeout(50);
-        Browser browser = session.createBrowser(properties);
-        BytesXMLMessage message;
         int queueDepth = 0;
-        do {
-            message = browser.getNext();
-            if (message != null) {
-                queueDepth++;
+        JCSMPSession session = createJCSMPSession(endpoint);
+        try {
+            Queue queue = JCSMPFactory.onlyInstance().createQueue(queueName);
+
+            BrowserProperties properties = new BrowserProperties();
+            properties.setEndpoint(queue);
+            properties.setWaitTimeout(50);
+            Browser browser = session.createBrowser(properties);
+            BytesXMLMessage message;
+            do {
+                message = browser.getNext();
+                if (message != null) {
+                    queueDepth++;
+                }
+            } while (message != null);
+        } finally {
+            if (session != null) {
+                session.closeSession();
             }
-        } while (message != null);
+        }
 
         response.setQueueDepth(queueDepth);
 
         return response;
+    }
+
+    private void sendMessageToQueue(Endpoint endpoint, String queueName, APIRequest apiRequest) throws Exception {
+        //Connection connection = createJMSConnection(endpoint);
     }
 }

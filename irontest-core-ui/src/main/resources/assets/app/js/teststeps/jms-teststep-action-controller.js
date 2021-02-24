@@ -93,5 +93,21 @@ angular.module('irontest').controller('JMSTeststepActionController', ['$scope', 
         });
       }
     };
+
+    $scope.createRequestProperty = function() {
+      $scope.teststep.apiRequest.properties.push(
+        { name: 'Name1', value: 'Value1' }
+      );
+
+      //  update test step immediately (no timeout)
+      $scope.update(true);
+    };
+
+    $scope.deleteRequestProperty = function(property) {
+      IronTestUtils.deleteArrayElementByProperty($scope.teststep.apiRequest.properties, '$$hashKey', property.$$hashKey);
+
+      //  update test step immediately (no timeout)
+      $scope.update(true);
+    };
   }
 ]);

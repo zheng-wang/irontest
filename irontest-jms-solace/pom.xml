@@ -11,6 +11,10 @@
 
     <artifactId>irontest-jms-solace</artifactId>
 
+    <properties>
+        <solace.version>10.10.0</solace.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>io.irontest</groupId>
@@ -20,7 +24,12 @@
         <dependency>
             <groupId>com.solacesystems</groupId>
             <artifactId>sol-jcsmp</artifactId>
-            <version>10.10.0</version>
+            <version>${solace.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.solacesystems</groupId>
+            <artifactId>sol-jms</artifactId>
+            <version>${solace.version}</version>
         </dependency>
     </dependencies>
 </project>
