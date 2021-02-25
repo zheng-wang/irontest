@@ -152,6 +152,7 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
                     e.printStackTrace();
                 }
                 System.out.println("Iron Test started with UI address http://localhost:" +  + getLocalPort(server) + "/ui");
+                System.out.println();
             }
         });
     }

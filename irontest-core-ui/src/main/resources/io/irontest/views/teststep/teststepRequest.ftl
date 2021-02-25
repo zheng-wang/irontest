@@ -2,6 +2,8 @@
 
 <#if teststep.type == 'HTTP' || teststep.type == 'SOAP'>
   <#include "httpTeststepRequest.ftl">
+<#elseif teststep.type == "JMS">
+  <#include "jmsTeststepRequest.ftl">
 <#elseif teststep.type == "FTP">
   <#include "ftpTeststepRequest.ftl">
 <#elseif teststep.type == "MQ">
