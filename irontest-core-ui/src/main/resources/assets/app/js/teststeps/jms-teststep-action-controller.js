@@ -5,6 +5,7 @@
 //    ng-include also creates a scope.
 angular.module('irontest').controller('JMSTeststepActionController', ['$scope', '$timeout', 'IronTestUtils', 'Teststeps',
   function($scope, $timeout, IronTestUtils, Teststeps) {
+    $scope.activeTabIndex = 1;
     var timer;
     $scope.steprun = {};
 

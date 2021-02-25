@@ -1,6 +1,6 @@
 <div class="form-group form-group-reduced-bottom-margin">
   <div class="col-lg-10">
-    <uib-tabset active="1">
+    <uib-tabset active="activeTabIndex">
       <uib-tab index="0" heading="Properties">
         <div class="form-group form-group-reduced-bottom-margin"></div> <!-- smaller spacer -->
         <div class="form-group">
@@ -10,8 +10,8 @@
         </div>
         <div class="form-group">
           <div class="col-lg-12">
-            <div ui-grid="requestMessagePropertiesGridOptions" ui-grid-resize-columns ui-grid-edit ui-grid-cellNav
-                 class="ui-grid jms-request-message-properties-grid"></div>
+            <div ng-if="activeTabIndex === 0" ui-grid="requestMessagePropertiesGridOptions" ui-grid-resize-columns
+                 ui-grid-edit ui-grid-cellNav class="ui-grid jms-request-message-properties-grid"></div>
           </div>
         </div>
       </uib-tab>

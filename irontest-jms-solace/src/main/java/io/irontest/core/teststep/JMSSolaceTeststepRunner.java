@@ -5,12 +5,10 @@ import com.solacesystems.jms.SolConnectionFactory;
 import com.solacesystems.jms.SolJmsUtility;
 import io.irontest.models.endpoint.Endpoint;
 import io.irontest.models.endpoint.JMSSolaceEndpointProperties;
-import io.irontest.models.teststep.APIRequest;
-import io.irontest.models.teststep.JMSDestinationType;
-import io.irontest.models.teststep.JMSTeststepProperties;
-import io.irontest.models.teststep.Teststep;
+import io.irontest.models.teststep.*;
 
 import javax.jms.Connection;
+import javax.jms.MessageProducer;
 
 public class JMSSolaceTeststepRunner extends TeststepRunner {
     public BasicTeststepRun run() throws Exception {
@@ -145,6 +143,27 @@ public class JMSSolaceTeststepRunner extends TeststepRunner {
     }
 
     private void sendMessageToQueue(Endpoint endpoint, String queueName, APIRequest apiRequest) throws Exception {
-        //Connection connection = createJMSConnection(endpoint);
+        Connection connection = createJMSConnection(endpoint);
+        javax.jms.Session session = null;
+
+        try {
+            session = connection.createSession(false, javax.jms.Session.AUTO_ACKNOWLEDGE);
+            javax.jms.Queue queue = session.createQueue(queueName);
+            MessageProducer messageProducer = session.createProducer(queue);
+            JMSRequest request = (JMSRequest) apiRequest;
+            javax.jms.TextMessage message = session.createTextMessage(request.getBody());
+            for (JMSMessageProperty property: request.getProperties()) {
+                message.setStringProperty(property.getName(), property.getValue());
+            }
+
+            messageProducer.send(queue, message);
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+            if (connection != null) {
+                connection.close();
+            }
+        }
     }
 }
