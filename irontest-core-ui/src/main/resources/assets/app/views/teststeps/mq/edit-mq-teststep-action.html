@@ -17,7 +17,7 @@
     </select>
   </div>
   <div ng-if="teststep.otherProperties.destinationType === 'Queue'">
-    <label for="queueName" class="col-lg-1 control-label" style="padding-left:0">Queue Name</label>
+    <label for="queueName" class="col-lg-1 control-label no-left-padding">Queue Name</label>
     <div class="col-lg-5">
       <input name="queueName" type="text" class="form-control" ng-change="autoSave(teststepForm.$valid)"
              ng-model="teststep.otherProperties.queueName" id="queueName" spellcheck="false"

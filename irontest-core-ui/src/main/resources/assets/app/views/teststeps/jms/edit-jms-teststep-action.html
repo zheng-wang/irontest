@@ -17,7 +17,7 @@
     </select>
   </div>
   <div ng-if="teststep.otherProperties.destinationType === 'Queue'">
-    <label for="queueName" class="col-lg-1 control-label" style="padding-left:0">Queue Name</label>
+    <label for="queueName" class="col-lg-1 control-label no-left-padding">Queue Name</label>
     <div class="col-lg-5">
       <input name="queueName" type="text" class="form-control" ng-change="autoSave(teststepForm.$valid)"
              ng-model="teststep.otherProperties.queueName" id="queueName" spellcheck="false"
@@ -45,6 +45,18 @@
       <option value="Browse" ng-if="teststep.otherProperties.destinationType === 'Queue'">Browse</option>
       <option value="Publish" ng-if="teststep.otherProperties.destinationType === 'Topic'">Publish</option>
     </select>
+  </div>
+  <div ng-if="teststep.action === 'Browse'"
+       ng-class="{ 'has-error' : savingStatus.submitted && teststepForm.browseMessageIndex.$invalid }">
+    <label for="browseMessageIndex" class="col-lg-1 control-label no-left-padding">Message Index</label>
+    <div class="col-lg-1">
+      <input name="browseMessageIndex" id="browseMessageIndex" type="text" class="form-control"
+             pattern="^[1-9]\d*$" ng-model="teststep.otherProperties.browseMessageIndex"
+             ng-change="autoSave(teststepForm.$valid)" ng-readonly="appStatus.isForbidden()">
+      <div ng-show="savingStatus.submitted && teststepForm.browseMessageIndex.$invalid" class="help-block">
+        <p ng-show="teststepForm.browseMessageIndex.$error.pattern">Message Index must be a positive integer</p>
+      </div>
+    </div>
   </div>
   <div class="col-lg-1">
     <button type="button" class="btn btn-info btn-block" ng-click="doAction()"
@@ -82,3 +94,5 @@
 
 <div ng-if="teststep.action === 'Send' || teststep.action === 'Publish'"
      ng-include="'/ui/views/teststeps/jms/edit-jms-teststep-request.html'"></div>
+
+<div ng-if="teststep.action === 'Browse'" ng-include="'/ui/views/teststeps/jms/edit-jms-teststep-browse-action.html'"></div>
