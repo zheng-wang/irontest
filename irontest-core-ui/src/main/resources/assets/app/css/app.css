@@ -320,17 +320,17 @@
   margin-bottom: 10px;
 }
 
-.mq-message-details-tabset, .jms-message-details-tabset {
+.mq-message-details-tabset {
   height: calc(100% - 46px);
 }
-.mq-message-details-tabset div, .jms-message-details-tabset div {
+.mq-message-details-tabset div {
   height: 100% !important;
 }
-.mq-message-details-tabset textarea, .jms-message-details-tabset textarea {
+.mq-message-details-tabset textarea {
   height: 100% !important;
   margin-top: 10px;
 }
 
-.jms-request-message-properties-grid {
+.jms-request-message-properties-grid, .jms-response-message-header-grid {
   height: 550px;
 }

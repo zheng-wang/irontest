@@ -17,12 +17,12 @@ angular.module('irontest').directive('heightAdjustableElementInColumn', function
       var initialHeightFactor = attrs['heightAdjustableElementInColumn'];   //  initial proportion of tabContentHeight
       element.height(tabContentsHeight * initialHeightFactor);
 
-      //  another element has been removed from the column (tab content)
+      //  another element has been removed from the column
       scope.$on('elementRemovedFromColumn', function(event, args) {
         element.height(element.height() + args.elementHeight);
       });
 
-      //  another element has been inserted into the column (tab content)
+      //  another element has been inserted into the column
       scope.$on('elementInsertedIntoColumn', function(event, args) {
         element.height(element.height() - args.elementHeight);
       });
