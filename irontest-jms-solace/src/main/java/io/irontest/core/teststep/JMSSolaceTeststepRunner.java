@@ -9,6 +9,8 @@ import io.irontest.models.teststep.*;
 
 import javax.jms.Connection;
 import javax.jms.MessageProducer;
+import javax.jms.QueueBrowser;
+import java.util.Enumeration;
 
 public class JMSSolaceTeststepRunner extends TeststepRunner {
     public BasicTeststepRun run() throws Exception {
@@ -27,7 +29,7 @@ public class JMSSolaceTeststepRunner extends TeststepRunner {
         APIResponse response = null;
         Endpoint endpoint = teststep.getEndpoint();
         if (JMSDestinationType.QUEUE == teststepProperties.getDestinationType()) {
-            response = doQueueAction(endpoint, teststepProperties.getQueueName(), action, teststep.getApiRequest());
+            response = doQueueAction(teststepProperties, endpoint, action, teststep.getApiRequest());
         } else if (JMSDestinationType.TOPIC == teststepProperties.getDestinationType()) {
         }
 
@@ -57,21 +59,24 @@ public class JMSSolaceTeststepRunner extends TeststepRunner {
         return connectionFactory.createConnection();
     }
 
-    private APIResponse doQueueAction(Endpoint endpoint, String queueName, String action, APIRequest apiRequest) throws Exception {
+    private APIResponse doQueueAction(JMSTeststepProperties teststepOtherProperties, Endpoint endpoint, String action,
+                                      APIRequest apiRequest) throws Exception {
         APIResponse response = null;
 
         //  do the action
         switch (action) {
             case Teststep.ACTION_CLEAR:
-                response = clearQueue(endpoint, queueName);
+                response = clearQueue(endpoint, teststepOtherProperties.getQueueName());
                 break;
             case Teststep.ACTION_CHECK_DEPTH:
-                response = checkDepth(endpoint, queueName);
+                response = checkDepth(endpoint, teststepOtherProperties.getQueueName());
                 break;
             case Teststep.ACTION_SEND:
-                sendMessageToQueue(endpoint, queueName, apiRequest);
+                sendMessageToQueue(endpoint, teststepOtherProperties.getQueueName(), apiRequest);
                 break;
             case Teststep.ACTION_BROWSE:
+                response = browseQueue(endpoint, teststepOtherProperties.getQueueName(),
+                        teststepOtherProperties.getBrowseMessageIndex());
                 break;
             default:
                 throw new IllegalArgumentException("Unrecognized action " + action + ".");
@@ -165,5 +170,39 @@ public class JMSSolaceTeststepRunner extends TeststepRunner {
                 connection.close();
             }
         }
+    }
+
+    private APIResponse browseQueue(Endpoint endpoint, String queueName, int browseMessageIndex) throws Exception {
+        JMSBrowseQueueResponse response = null;
+        Connection connection = createJMSConnection(endpoint);
+        javax.jms.Session session = null;
+
+        try {
+            session = connection.createSession(false, javax.jms.Session.AUTO_ACKNOWLEDGE);
+            javax.jms.Queue queue = session.createQueue(queueName);
+
+            QueueBrowser browser = session.createBrowser(queue);
+            Enumeration<javax.jms.Message> messages = browser.getEnumeration();
+
+            int index = 0;
+            while (messages.hasMoreElements()) {
+                index++;
+                javax.jms.TextMessage message = (javax.jms.TextMessage) messages.nextElement();
+                if (index == browseMessageIndex) {
+                    response = new JMSBrowseQueueResponse();
+                    response.setBody(message.getText());
+                    break;
+                }
+            }
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+            if (connection != null) {
+                connection.close();
+            }
+        }
+
+        return response;
     }
 }

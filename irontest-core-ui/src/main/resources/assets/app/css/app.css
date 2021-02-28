@@ -331,6 +331,6 @@
   margin-top: 10px;
 }
 
-.jms-request-message-properties-grid, .jms-response-message-header-grid {
+.jms-request-message-properties-grid {
   height: 550px;
 }

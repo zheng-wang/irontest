@@ -111,13 +111,5 @@ angular.module('irontest').controller('JMSTeststepActionController', ['$scope', 
       //  update test step immediately (no timeout)
       $scope.update(true);
     };
-
-    $scope.responseMessageHeaderGridOptions = {
-      data: 'teststep.apiRequest.header', enableColumnMenus: false,
-      columnDefs: [
-        { name: 'name', width: '30%' },
-        { name: 'value' }
-      ]
-    };
   }
 ]);

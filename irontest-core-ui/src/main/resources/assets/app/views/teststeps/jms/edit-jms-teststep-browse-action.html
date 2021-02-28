@@ -4,9 +4,21 @@
       <uib-tab index="0" heading="Header">
         <div class="form-group form-group-reduced-bottom-margin"></div> <!-- smaller spacer -->
         <div class="form-group">
-          <div class="col-lg-12">
-            <div ng-if="responseMessageActiveTabIndex === 0" ui-grid="responseMessageHeaderGridOptions"
-                 ui-grid-resize-columns class="ui-grid jms-response-message-header-grid"></div>
+          <div class="col-lg-8" height-adjustable-element-in-column="0.65" style="overflow-y: auto">
+            <table class="table table-condensed table-bordered table-hover">
+              <thead>
+                <tr>
+                  <th width="30%">Name</th>
+                  <th>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="headerField in steprun.response.header">
+                  <td>{{ headerField.name }}</td>
+                  <td>{{ headerField.value }}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </uib-tab>
@@ -17,9 +29,9 @@
       </uib-tab>
       <uib-tab index="2" heading="Body">
         <div class="form-group form-group-reduced-bottom-margin"></div> <!-- smaller spacer -->
-        <div class="col-lg-12" height-adjustable-element-in-column="0.65">
-          <textarea class="form-control full-height-important" ng-model="steprun.response.body" spellcheck="false"
-                    ng-readonly="appStatus.isForbidden()"></textarea>
+        <div class="col-lg-12">
+          <textarea class="form-control" ng-model="steprun.response.body" spellcheck="false"
+                    ng-readonly="appStatus.isForbidden()" height-adjustable-element-in-column="0.65"></textarea>
         </div>
       </uib-tab>
     </uib-tabset>

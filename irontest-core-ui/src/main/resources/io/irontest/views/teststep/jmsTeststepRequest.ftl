@@ -15,22 +15,27 @@
     <#-- Properties tab pane -->
     <div role="tabpanel" class="tab-pane" id="step-run-${ stepRun.id?string.computer }-request-properties">
       <#if (apiRequest.properties?size > 0)>
-        <table class="table table-condensed table-hover">
-          <thead>
-            <tr>
-              <td width="25%">Name</td>
-              <td>Value</td>
-            </tr>
-          </thead>
-          <tbody>
-            <#list apiRequest.properties as property>
-              <tr>
-                <td>${ property.name }</td>
-                <td>${ property.value }</td>
-              </tr>
-            </#list>
-          </tbody>
-        </table>
+        <div class="form-group"></div> <#-- spacer -->
+        <div class="form-group">
+          <div class="col-lg-8">
+            <table class="table table-condensed table-bordered table-hover">
+              <thead>
+                <tr>
+                  <th width="30%">Name</th>
+                  <th>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                <#list apiRequest.properties as property>
+                  <tr>
+                    <td>${ property.name }</td>
+                    <td>${ property.value }</td>
+                  </tr>
+                </#list>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </#if>
     </div>
     <#-- Body tab pane -->
