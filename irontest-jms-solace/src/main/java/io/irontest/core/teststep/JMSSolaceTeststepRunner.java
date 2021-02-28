@@ -10,9 +10,15 @@ import io.irontest.models.teststep.*;
 import javax.jms.Connection;
 import javax.jms.MessageProducer;
 import javax.jms.QueueBrowser;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Enumeration;
+import java.util.Map;
 
 public class JMSSolaceTeststepRunner extends TeststepRunner {
+    private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+
     public BasicTeststepRun run() throws Exception {
         Teststep teststep = getTeststep();
         String action = teststep.getAction();
@@ -56,6 +62,7 @@ public class JMSSolaceTeststepRunner extends TeststepRunner {
         connectionFactory.setVPN(endpointProperties.getVpn());
         connectionFactory.setUsername(endpoint.getUsername());
         connectionFactory.setPassword(endpoint.getPassword());
+        connectionFactory.setBrowserTimeoutInMS(100);    //  only needed for using JMS QueueBrowser
         return connectionFactory.createConnection();
     }
 
@@ -191,6 +198,27 @@ public class JMSSolaceTeststepRunner extends TeststepRunner {
                 if (index == browseMessageIndex) {
                     response = new JMSBrowseQueueResponse();
                     response.setBody(message.getText());
+                    Map<String, String> header = response.getHeader();
+                    header.put(JMSConstants.JMS_MESSAGE_ID, message.getJMSMessageID());
+                    header.put(JMSConstants.JMS_CORRELATION_ID, message.getJMSCorrelationID());
+                    header.put(JMSConstants.JMS_TIMESTAMP,
+                            dateFormat.format(new Date(message.getJMSTimestamp())));
+                    header.put(JMSConstants.JMS_TYPE, message.getJMSType());
+                    header.put(JMSConstants.JMS_DESTINATION, message.getJMSDestination().toString());
+                    String jmsDeliveryMode = JMSConstants.UNKNOWN;
+                    if (message.getJMSDeliveryMode() == javax.jms.DeliveryMode.PERSISTENT) {
+                        jmsDeliveryMode = JMSConstants.PERSISTENT;
+                    } else if (message.getJMSDeliveryMode() == javax.jms.DeliveryMode.NON_PERSISTENT) {
+                        jmsDeliveryMode = JMSConstants.NON_PERSISTENT;
+                    }
+                    header.put(JMSConstants.JMS_DELIVERY_MODE, jmsDeliveryMode);
+                    header.put(JMSConstants.JMS_EXPIRATION, message.getJMSExpiration() == 0 ?
+                            null : dateFormat.format(new Date(message.getJMSExpiration())));
+                    header.put(JMSConstants.JMS_PRIORITY, Integer.toString(message.getJMSPriority()));
+                    header.put(JMSConstants.JMS_REDELIVERED, Boolean.toString(message.getJMSRedelivered()));
+                    header.put(JMSConstants.JMS_REPLY_TO, message.getJMSReplyTo() == null ?
+                            null : message.getJMSReplyTo().toString());
+
                     break;
                 }
             }

@@ -13,9 +13,9 @@
                 </tr>
               </thead>
               <tbody>
-                <tr ng-repeat="headerField in steprun.response.header">
-                  <td>{{ headerField.name }}</td>
-                  <td>{{ headerField.value }}</td>
+                <tr ng-repeat="(name, value) in steprun.response.header">
+                  <td>{{ name }}</td>
+                  <td>{{ value }}</td>
                 </tr>
               </tbody>
             </table>
