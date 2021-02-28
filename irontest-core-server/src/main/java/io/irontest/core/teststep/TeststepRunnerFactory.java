@@ -119,7 +119,7 @@ public class TeststepRunnerFactory {
 
         //  resolve property references in teststep.apiRequest (null safe)
         String apiRequestJSON = objectMapper.writeValueAsString(teststep.getApiRequest());
-        propertyReferenceResolver = new MapValueLookup(referenceableStringProperties, false);
+        propertyReferenceResolver = new MapValueLookup(referenceableStringProperties, true);
         String resolvedApiRequestJSON = new StrSubstitutor(propertyReferenceResolver).replace(apiRequestJSON);
         undefinedStringProperties.addAll(propertyReferenceResolver.getUnfoundKeys());
         APIRequest resolvedApiRequest = objectMapper.readValue(resolvedApiRequestJSON, APIRequest.class);

@@ -9,7 +9,7 @@ public class JMSTeststepProperties extends Properties {
     private JMSDestinationType destinationType = JMSDestinationType.QUEUE;    //  queue is the default destination type
     private String queueName;
     private String topicString;
-    private Integer browseMessageIndex;    //  only used in Browse action
+    private Integer browseMessageIndex = 1;    //  only used in Browse action; default value 1
 
     public JMSDestinationType getDestinationType() {
         return destinationType;

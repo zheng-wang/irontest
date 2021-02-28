@@ -204,6 +204,12 @@ public abstract class TestcaseRunner {
             result = ((WireMockServerAPIResponse) apiResponse).getAllServeEvents();
         } else if (Teststep.TYPE_DB.equals(teststepType)) {
             result = ((DBAPIResponse) apiResponse).getRowsJSON();
+        } else if (Teststep.TYPE_JMS.equals(teststepType)) {
+            if (Teststep.ACTION_CHECK_DEPTH.equals(teststepAction)) {
+                result = ((JMSCheckQueueDepthResponse) apiResponse).getQueueDepth();
+            } else if (Teststep.ACTION_BROWSE.equals(teststepAction)) {
+                result = ((JMSBrowseQueueResponse) apiResponse).getBody();
+            }
         } else if (Teststep.TYPE_MQ.equals(teststepType)) {
             if (Teststep.ACTION_CHECK_DEPTH.equals(teststepAction)) {
                 result = ((MQCheckQueueDepthResponse) apiResponse).getQueueDepth();
@@ -218,10 +224,6 @@ public abstract class TestcaseRunner {
                         result = mqDequeueResponse.getBodyAsText();
                     }
                 }
-            }
-        } else if (Teststep.TYPE_JMS.equals(teststepType)) {
-            if (Teststep.ACTION_CHECK_DEPTH.equals(teststepAction)) {
-                result = ((JMSCheckQueueDepthResponse) apiResponse).getQueueDepth();
             }
         }
 

@@ -9,49 +9,49 @@
           Create <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" uib-dropdown-menu role="menu">
-          <li class="text-center" ng-if="teststep.type === 'HTTP' || teststep.type === 'SOAP'">
+          <li class="text-center" ng-if="['HTTP', 'SOAP'].includes(teststep.type)">
             <hr class="divider-left">On Headers<hr class="divider-right">
           </li>
-          <li class="text-center" ng-if="teststep.type === 'MQ'">
+          <li class="text-center" ng-if="['MQ'].includes(teststep.type)">
             <hr class="divider-left-short">On MQRFH2 Header<hr class="divider-right-short">
           </li>
-          <li role="menuitem" ng-if="teststep.type === 'MQ'">
+          <li role="menuitem" ng-if="['MQ'].includes(teststep.type)">
             <a ng-click="assertionsModelObj.createAssertion('HasAnMQRFH2FolderEqualToXml')" href="">HasAnMQRFH2FolderEqualToXml Assertion</a>
           </li>
-          <li role="menuitem" ng-if="teststep.type === 'HTTP' || teststep.type === 'SOAP'">
+          <li role="menuitem" ng-if="['HTTP', 'SOAP'].includes(teststep.type)">
             <a ng-click="assertionsModelObj.createAssertion('StatusCodeEqual')" href="">StatusCodeEqual Assertion</a>
           </li>
-          <li class="text-center" ng-if="teststep.type === 'HTTP' || teststep.type === 'SOAP' || teststep.type === 'MQ'">
+          <li class="text-center" ng-if="['HTTP', 'SOAP', 'MQ'].includes(teststep.type)">
             <hr class="divider-left">On Body<hr class="divider-right">
           </li>
-          <li role="menuitem" ng-if="teststep.type === 'HTTP' || teststep.type === 'DB' || teststep.type === 'MQ'">
+          <li role="menuitem" ng-if="['HTTP', 'DB', 'JMS', 'MQ'].includes(teststep.type)">
             <a ng-click="assertionsModelObj.createAssertion('JSONEqual')" href="">JSONEqual Assertion</a>
           </li>
-          <li role="menuitem" ng-if="teststep.type === 'HTTP' || teststep.type === 'DB' || teststep.type === 'MQ'">
+          <li role="menuitem" ng-if="['HTTP', 'DB', 'JMS, 'MQ'].includes(teststep.type)">
             <a ng-click="assertionsModelObj.createAssertion('JSONPath')" href="">JSONPath Assertion</a>
           </li>
-          <li role="menuitem" ng-if="teststep.type === 'HTTP' || teststep.type === 'SOAP' || teststep.type === 'MQ'">
+          <li role="menuitem" ng-if="['HTTP', 'SOAP', 'JMS', 'MQ'].includes(teststep.type)">
             <a ng-click="assertionsModelObj.createAssertion('XMLEqual')" href="">XMLEqual Assertion</a>
           </li>
-          <li role="menuitem" ng-if="teststep.type === 'HTTP' || teststep.type === 'SOAP' || teststep.type === 'MQ'">
+          <li role="menuitem" ng-if="['HTTP', 'SOAP', 'JMS', 'MQ'].includes(teststep.type)">
             <a ng-click="assertionsModelObj.createAssertion('XPath')" href="">XPath Assertion</a>
           </li>
-          <li role="menuitem" ng-if="teststep.type === 'HTTP' || teststep.type === 'SOAP' || teststep.type === 'MQ'">
+          <li role="menuitem" ng-if="['HTTP', 'SOAP', 'JMS', 'MQ'].includes(teststep.type)">
             <a ng-click="assertionsModelObj.createAssertion('XMLValidAgainstXSD')" href="">XMLValidAgainstXSD Assertion</a>
           </li>
-          <li role="menuitem" ng-if="teststep.type === 'DB'">
+          <li role="menuitem" ng-if="['DB'].includes(teststep.type)">
             <a ng-click="assertionsModelObj.createAssertion('JSONPathXMLEqual')" href="">JSONPathXMLEqual Assertion</a>
           </li>
-          <li role="menuitem" ng-if="teststep.type === 'SOAP' || teststep.type === 'HTTP' || teststep.type === 'MQ'">
+          <li role="menuitem" ng-if="['SOAP', 'HTTP', 'JMS', 'MQ'].includes(teststep.type)">
             <a ng-click="assertionsModelObj.createAssertion('Contains')" href="">Contains Assertion</a>
           </li>
-          <li role="menuitem" ng-if="teststep.type === 'HTTP' || teststep.type === 'MQ'">
+          <li role="menuitem" ng-if="['HTTP', 'JMS', 'MQ'].includes(teststep.type)">
             <a ng-click="assertionsModelObj.createAssertion('TextEqual')" href="">TextEqual Assertion</a>
           </li>
-          <li role="menuitem" ng-if="teststep.type === 'HTTP' || teststep.type === 'MQ'">
+          <li role="menuitem" ng-if="['HTTP', 'JMS', 'MQ'].includes(teststep.type)">
             <a ng-click="assertionsModelObj.createAssertion('Substring')" href="">Substring Assertion</a>
           </li>
-          <li role="menuitem" ng-if="teststep.type === 'HTTP' || teststep.type === 'MQ'">
+          <li role="menuitem" ng-if="['HTTP', 'JMS', 'MQ'].includes(teststep.type)">
             <a ng-click="assertionsModelObj.createAssertion('RegexMatch')" href="">RegexMatch Assertion</a>
           </li>
         </ul>

@@ -117,6 +117,8 @@ angular.module('irontest').controller('AssertionsController', ['$scope', '$rootS
         } else {
           input = apiResponse.httpBody;
         }
+      } else if ($scope.teststep.type === 'JMS') {
+        input = apiResponse.body;
       } else if ($scope.teststep.type === 'MQ') {
         if (assertion.type === 'HasAnMQRFH2FolderEqualToXml') {
           input = apiResponse.mqrfh2Header;
