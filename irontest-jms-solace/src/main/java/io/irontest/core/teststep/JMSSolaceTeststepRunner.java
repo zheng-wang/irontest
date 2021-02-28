@@ -37,6 +37,7 @@ public class JMSSolaceTeststepRunner extends TeststepRunner {
         if (JMSDestinationType.QUEUE == teststepProperties.getDestinationType()) {
             response = doQueueAction(teststepProperties, endpoint, action, teststep.getApiRequest());
         } else if (JMSDestinationType.TOPIC == teststepProperties.getDestinationType()) {
+            doTopicAction(endpoint, teststepProperties.getTopicString(), teststep.getApiRequest());
         }
 
         basicTeststepRun.setResponse(response);
@@ -70,7 +71,6 @@ public class JMSSolaceTeststepRunner extends TeststepRunner {
                                       APIRequest apiRequest) throws Exception {
         APIResponse response = null;
 
-        //  do the action
         switch (action) {
             case Teststep.ACTION_CLEAR:
                 response = clearQueue(endpoint, teststepOtherProperties.getQueueName());
@@ -90,6 +90,31 @@ public class JMSSolaceTeststepRunner extends TeststepRunner {
         }
 
         return response;
+    }
+
+    private void doTopicAction(Endpoint endpoint, String topicString, APIRequest apiRequest) throws Exception {
+        Connection connection = createJMSConnection(endpoint);
+        javax.jms.Session session = null;
+
+        try {
+            session = connection.createSession(false, javax.jms.Session.AUTO_ACKNOWLEDGE);
+            javax.jms.Topic topic = session.createTopic(topicString);
+            MessageProducer messageProducer = session.createProducer(topic);
+            JMSRequest request = (JMSRequest) apiRequest;
+            javax.jms.TextMessage message = session.createTextMessage(request.getBody());
+            for (JMSMessageProperty property: request.getProperties()) {
+                message.setStringProperty(property.getName(), property.getValue());
+            }
+
+            messageProducer.send(message);
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+            if (connection != null) {
+                connection.close();
+            }
+        }
     }
 
     private JMSClearQueueResponse clearQueue(Endpoint endpoint, String queueName) throws JCSMPException {
@@ -168,7 +193,7 @@ public class JMSSolaceTeststepRunner extends TeststepRunner {
                 message.setStringProperty(property.getName(), property.getValue());
             }
 
-            messageProducer.send(queue, message);
+            messageProducer.send(message);
         } finally {
             if (session != null) {
                 session.close();

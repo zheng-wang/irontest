@@ -209,6 +209,13 @@ public interface TeststepDAO extends CrossReferenceDAO {
     }
 
     default void processJMSTeststep(Teststep oldTeststep, Teststep teststep) {
+        JMSTeststepProperties oldTeststepProperties = (JMSTeststepProperties) oldTeststep.getOtherProperties();
+        JMSTeststepProperties newTeststepProperties = (JMSTeststepProperties) teststep.getOtherProperties();
+        if (newTeststepProperties.getDestinationType() != oldTeststepProperties.getDestinationType()) {
+            newTeststepProperties.setQueueName(null);
+            newTeststepProperties.setTopicString(null);
+        }
+
         if (teststep.getAction() != null) {      //  newly created JMS test step does not have action and does not need the processing
             String oldAction = oldTeststep.getAction();
             String newAction = teststep.getAction();

@@ -21,16 +21,13 @@
     </#if>
     queue "${ (stepOtherProperties.queueName??)?then(stepOtherProperties.queueName, 'null') }"
   <#elseif stepOtherProperties.destinationType == "Topic">
-    <#if teststep.action == "Publish">
-      Publish message
-      <#if teststep.requestType == "Text">
-        from text
-      <#elseif teststep.requestType == "File">
-        from file "${ teststep.requestFilename }"
-      </#if>
-      onto
+    Publish message
+    <#if teststep.requestType == "Text">
+      from text
+    <#elseif teststep.requestType == "File">
+      from file "${ teststep.requestFilename }"
     </#if>
-    topic with topic string "${ (stepOtherProperties.topicString??)?then(stepOtherProperties.topicString, 'null') }"
+    onto topic with topic string "${ (stepOtherProperties.topicString??)?then(stepOtherProperties.topicString, 'null') }"
   </#if>
   <#t>on queue manager "${ teststep.endpoint.constructedUrl }"
   <#t><#if endpointOtherProperties.connectionMode == "Client"> through channel "${ (endpointOtherProperties.svrConnChannelName??)?then(endpointOtherProperties.svrConnChannelName, 'null') }"</#if>.
