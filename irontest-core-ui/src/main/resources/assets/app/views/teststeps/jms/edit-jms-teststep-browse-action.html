@@ -23,8 +23,24 @@
         </div>
       </uib-tab>
       <uib-tab index="1" heading="Properties">
-        <div height-adjustable-element-in-column="0.65">
-          Properties
+        <div class="form-group form-group-reduced-bottom-margin"></div> <!-- smaller spacer -->
+        <div class="form-group">
+          <div class="col-lg-8" height-adjustable-element-in-column="0.65" style="overflow-y: auto">
+            <table class="table table-condensed table-bordered table-hover">
+              <thead>
+              <tr>
+                <th width="30%">Name</th>
+                <th>Value</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr ng-repeat="(name, value) in steprun.response.properties">
+                <td>{{ name }}</td>
+                <td>{{ value }}</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </uib-tab>
       <uib-tab index="2" heading="Body">

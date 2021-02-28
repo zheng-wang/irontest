@@ -197,7 +197,8 @@ public class JMSSolaceTeststepRunner extends TeststepRunner {
                 javax.jms.TextMessage message = (javax.jms.TextMessage) messages.nextElement();
                 if (index == browseMessageIndex) {
                     response = new JMSBrowseQueueResponse();
-                    response.setBody(message.getText());
+
+                    //  set header
                     Map<String, String> header = response.getHeader();
                     header.put(JMSConstants.JMS_MESSAGE_ID, message.getJMSMessageID());
                     header.put(JMSConstants.JMS_CORRELATION_ID, message.getJMSCorrelationID());
@@ -218,6 +219,16 @@ public class JMSSolaceTeststepRunner extends TeststepRunner {
                     header.put(JMSConstants.JMS_REDELIVERED, Boolean.toString(message.getJMSRedelivered()));
                     header.put(JMSConstants.JMS_REPLY_TO, message.getJMSReplyTo() == null ?
                             null : message.getJMSReplyTo().toString());
+
+                    //  set properties
+                    Enumeration propertyNames = message.getPropertyNames();
+                    while (propertyNames.hasMoreElements()) {
+                        String propertyName = (String) propertyNames.nextElement();
+                        response.getProperties().put(propertyName, message.getStringProperty(propertyName));
+                    }
+
+                    //  set body
+                    response.setBody(message.getText());
 
                     break;
                 }
