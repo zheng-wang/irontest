@@ -5,6 +5,7 @@ Supported API types
 * HTTP (including RESTful services)
 * SOAP
 * Relational databases (H2, Oracle, SQL Server)
+* JMS (Solace)
 * FTP(S)
 * AMQP
 * WebSphere MQ
@@ -12,8 +13,8 @@ Supported API types
 
 The tool 
 * has GUI, saving user programming skills. Developers also have better experience using GUIed tool, as writing, reading and maintaining code are more brain power draining.
+* intends to provide a platform enabling integrating testing capabilities for all types of APIs (potentially including mainframe and IOT).
 * provides advanced features like unlimited level folder structure for test case management, centralized and environment based endpoints management, user defined properties, data driven testing, HTTP stubs (mock services), full-text test case searching (TBD), and built-in (no VCS) team collaboration (partially done).
-* intends to provide a platform enabling integrating testing capabilities for all types of APIs (potentially including mainframe and IOT) so that user does not have to pick up a new set of tools for testing a new type of API.
 * is designed for testers and developers, but in the same team/organization BAs or architects may also benefit from it. The thought here is that API test cases contain valuable business knowledge, and this knowledge should be shared and easily accessible and consumable to everyone in the team/organization.
 * does not support performance testing (for now).
 
