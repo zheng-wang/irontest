@@ -116,10 +116,16 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         final JdbiFactory jdbiFactory = new JdbiFactory();
         final Jdbi systemDBJdbi = jdbiFactory.build(environment, configuration.getSystemDatabase(), "systemDatabase");
 
-        if (!checkVersion(systemDBJdbi)) {
-            System.out.println("Press Enter to exit.");
-            System.in.read();
-            System.exit(0);
+        //  compare system database version with uber jar version to see whether an upgrade is needed
+        Integer versionTableCount = systemDBJdbi.withHandle(handle ->
+                handle.createQuery("select count(*) from information_schema.tables where table_name = 'VERSION'")
+                      .mapTo(Integer.class).findOnly());
+        if (versionTableCount == 1) {      //  VERSION table exists in the system database (i.e. we are not starting a brand new Iron Test build)
+            if (!checkVersion(systemDBJdbi)) {
+                System.out.println("Press Enter to exit.");
+                System.in.read();
+                System.exit(0);
+            }
         }
 
         //  Override Java's trusted cacerts with our own trust store if available.
