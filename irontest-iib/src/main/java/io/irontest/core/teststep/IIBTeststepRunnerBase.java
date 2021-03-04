@@ -13,7 +13,6 @@ import java.util.Date;
 
 public class IIBTeststepRunnerBase extends TeststepRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(IIBTeststepRunnerBase.class);
-    private static final int ACTIVITY_LOG_POLLING_TIMEOUT = 30;    // in seconds
     private BrokerConnectionParameters bcp;
 
     protected void setBrokerConnectionParameters(BrokerConnectionParameters bcp) {
@@ -50,7 +49,7 @@ public class IIBTeststepRunnerBase extends TeststepRunner {
                     stop(messageFlowProxy, basicTeststepRun);
                     break;
                 case Teststep.ACTION_WAIT_FOR_PROCESSING_COMPLETION:
-                    waitForProcessingCompletion(messageFlowProxy);
+                    waitForProcessingCompletion(messageFlowProxy, teststepProperties.getWaitForProcessingCompletionTimeout());
                     break;
                 default:
                     throw new Exception("Unrecognized action " + action);
@@ -121,7 +120,7 @@ public class IIBTeststepRunnerBase extends TeststepRunner {
         }
     }
 
-    private void waitForProcessingCompletion(MessageFlowProxy messageFlowProxy)
+    private void waitForProcessingCompletion(MessageFlowProxy messageFlowProxy, Integer activityLogPollingTimeout)
             throws Exception {
         if (!messageFlowProxy.isRunning()) {
             throw new Exception("Message flow not running.");
@@ -129,7 +128,7 @@ public class IIBTeststepRunnerBase extends TeststepRunner {
             TestcaseRunContext testcaseRunContext = getTestcaseRunContext();
             Date referenceTime = testcaseRunContext.getTestcaseIndividualRunStartTime() == null ?
                     testcaseRunContext.getTestcaseRunStartTime() : testcaseRunContext.getTestcaseIndividualRunStartTime();
-            Date pollingEndTime = DateUtils.addSeconds(new Date(), ACTIVITY_LOG_POLLING_TIMEOUT);
+            Date pollingEndTime = DateUtils.addSeconds(new Date(), activityLogPollingTimeout);
             ActivityLogEntry processingCompletionSignal = null;
             ActivityLogEntry potentialProcessingCompletionSignal = null;
             int previousNewLogsCount = 0;

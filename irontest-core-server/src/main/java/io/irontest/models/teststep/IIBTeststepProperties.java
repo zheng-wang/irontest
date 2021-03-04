@@ -9,6 +9,7 @@ public class IIBTeststepProperties extends Properties {
     private String integrationServerName;
     private String applicationName;
     private String messageFlowName;
+    private Integer waitForProcessingCompletionTimeout = 20;        // in seconds
 
     public String getIntegrationServerName() {
         return integrationServerName;
@@ -32,5 +33,13 @@ public class IIBTeststepProperties extends Properties {
 
     public void setMessageFlowName(String messageFlowName) {
         this.messageFlowName = messageFlowName;
+    }
+
+    public Integer getWaitForProcessingCompletionTimeout() {
+        return waitForProcessingCompletionTimeout;
+    }
+
+    public void setWaitForProcessingCompletionTimeout(Integer waitForProcessingCompletionTimeout) {
+        this.waitForProcessingCompletionTimeout = waitForProcessingCompletionTimeout;
     }
 }

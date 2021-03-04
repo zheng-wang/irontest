@@ -32,7 +32,7 @@
 </div>
 <div class="form-group">
   <label for="action" class="col-lg-2 control-label">Action</label>
-  <div class="col-lg-2">
+  <div class="col-lg-3">
     <select name="action" id="action" class="form-control" ng-model="teststep.action"
             ng-change="actionChanged(teststepForm.$valid)"
             ng-disabled="appStatus.isForbidden() || steprun.status === 'ongoing'">
@@ -50,5 +50,19 @@
     <h5 ng-if="steprun.status === 'ongoing'">
       {{ teststep.action === 'Start' ? 'Starting' : 'Stopping' }} message flow ...</h5>
     <h5 ng-if="steprun.status === 'finished'">{{ steprun.infoMessage }}</h5>
+  </div>
+</div>
+
+<div ng-if="teststep.action === 'WaitForProcessingCompletion'">
+  <div class="form-group" ng-class="{ 'has-error': savingStatus.submitted && teststepForm.waitForProcessingCompletionTimeout.$invalid }">
+    <label for="waitForProcessingCompletionTimeout" class="col-lg-2 control-label no-left-padding">Timeout (seconds)</label>
+    <div class="col-lg-7">
+      <input name="waitForProcessingCompletionTimeout" id="waitForProcessingCompletionTimeout" type="text" class="form-control"
+             pattern="^[1-9]\d*$" ng-model="teststep.otherProperties.waitForProcessingCompletionTimeout"
+             ng-change="autoSave(teststepForm.$valid)" ng-readonly="appStatus.isForbidden()">
+      <div ng-show="savingStatus.submitted && teststepForm.waitForProcessingCompletionTimeout.$invalid" class="help-block">
+        <p ng-show="teststepForm.waitForProcessingCompletionTimeout.$error.pattern">Timeout must be a positive integer</p>
+      </div>
+    </div>
   </div>
 </div>
