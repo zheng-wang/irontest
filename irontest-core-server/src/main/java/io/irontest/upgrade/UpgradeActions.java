@@ -39,7 +39,8 @@ public class UpgradeActions {
         Files.createDirectory(oldFolderInTempUpgradeDir);
         Files.createDirectory(newFolderInTempUpgradeDir);
 
-        boolean needsSystemDBUpgrade = upgradeSystemDBIfNeeded(systemDatabaseVersion, jarFileVersion, ironTestHome,
+        //  system DB upgrade includes schema change and/or data migration
+        boolean needsSystemDBUpgrade = upgradeSystemDBInTempDirIfNeeded(systemDatabaseVersion, jarFileVersion, ironTestHome,
                 fullyQualifiedSystemDBURL, user, password, oldFolderInTempUpgradeDir, newFolderInTempUpgradeDir);
 
         copyFilesToBeUpgraded(ironTestHome, systemDatabaseVersion, jarFileVersion);
@@ -50,17 +51,20 @@ public class UpgradeActions {
 
         boolean clearBrowserCacheNeeded = clearBrowserCacheIfNeeded(systemDatabaseVersion, jarFileVersion);
 
-        //  copy files from the 'new' folder to <IronTest_Home>
-        if (needsSystemDBUpgrade) {
+        //  request user to execute pre system database change (upgrade, or simply version update) general manual upgrades if needed
+        preSystemDBChangeGeneralManualUpgrades(systemDatabaseVersion, jarFileVersion);
+
+        if (needsSystemDBUpgrade) {            //  copy files from the temp 'new' folder to <IronTest_Home>
             String systemDBFileName = getSystemDBFileName(fullyQualifiedSystemDBURL);
             Path ironTestHomeSystemDatabaseFolder = Paths.get(ironTestHome, "database");
             Path sourceFilePath = Paths.get(newFolderInTempUpgradeDir.toString(), "database", systemDBFileName);
             Path targetFilePath = Paths.get(ironTestHomeSystemDatabaseFolder.toString(), systemDBFileName);
             Files.copy(sourceFilePath, targetFilePath, StandardCopyOption.REPLACE_EXISTING);
             LOGGER.info("Copied " + sourceFilePath + " to " + targetFilePath + ".");
+        } else {    //  only update version of system database under <IronTest_Home>
+            Jdbi jdbi = Jdbi.create(fullyQualifiedSystemDBURL, user, password);
+            updateVersionTableInSystemDatabase(jdbi, fullyQualifiedSystemDBURL, jarFileVersion);
         }
-
-        requestUserToExecuteGeneralManualUpgradesIfNeeded(systemDatabaseVersion, jarFileVersion);
 
         String lineDelimiter = "------------------------------------------------------------------------";
         LOGGER.info(lineDelimiter);
@@ -74,7 +78,7 @@ public class UpgradeActions {
         LOGGER.info("Refer to " + logFilePath + " for upgrade logs.");
     }
 
-    private boolean upgradeSystemDBIfNeeded(DefaultArtifactVersion systemDatabaseVersion, DefaultArtifactVersion jarFileVersion,
+    private boolean upgradeSystemDBInTempDirIfNeeded(DefaultArtifactVersion systemDatabaseVersion, DefaultArtifactVersion jarFileVersion,
                                             String ironTestHome, String fullyQualifiedSystemDBURL, String user, String password,
                                             Path oldFolderInTempUpgradeDir, Path newFolderInTempUpgradeDir) throws IOException {
         List<ResourceFile> applicableSystemDBUpgrades =
@@ -89,7 +93,7 @@ public class UpgradeActions {
             }
             LOGGER.info("User confirmed system database backup completion.");
 
-            upgradeSystemDB(ironTestHome, fullyQualifiedSystemDBURL, user, password, applicableSystemDBUpgrades,
+            upgradeSystemDBInTempDir(ironTestHome, fullyQualifiedSystemDBURL, user, password, applicableSystemDBUpgrades,
                     oldFolderInTempUpgradeDir, newFolderInTempUpgradeDir, jarFileVersion);
 
             return true;
@@ -214,7 +218,7 @@ public class UpgradeActions {
         return systemDBFileName;
     }
 
-    private void upgradeSystemDB(String ironTestHome, String fullyQualifiedSystemDBURL, String user, String password,
+    private void upgradeSystemDBInTempDir(String ironTestHome, String fullyQualifiedSystemDBURL, String user, String password,
                                  List<ResourceFile> applicableSystemDBUpgrades, Path oldDir, Path newDir,
                                  DefaultArtifactVersion jarFileVersion)
             throws IOException {
@@ -240,19 +244,22 @@ public class UpgradeActions {
             LOGGER.info("Executed SQL script " + sqlFile.getResourcePath() + " in " + newSystemDBURL + ".");
         }
 
-        //  update Version table
-        jdbi.withHandle(handle -> handle
-                .createUpdate("update version set version = ?, updated = CURRENT_TIMESTAMP")
-                .bind(0, jarFileVersion.toString())
-                .execute());
-        LOGGER.info("Updated Version to " + jarFileVersion + " in " + newSystemDBURL + ".");
+        updateVersionTableInSystemDatabase(jdbi, newSystemDBURL, jarFileVersion);
     }
 
-    private void requestUserToExecuteGeneralManualUpgradesIfNeeded(DefaultArtifactVersion systemDatabaseVersion, DefaultArtifactVersion jarFileVersion) throws IOException {
+    private void updateVersionTableInSystemDatabase(Jdbi jdbi, String systemDBURL, DefaultArtifactVersion newVersion) {
+        jdbi.withHandle(handle -> handle
+                .createUpdate("update version set version = ?, updated = CURRENT_TIMESTAMP")
+                .bind(0, newVersion.toString())
+                .execute());
+        LOGGER.info("Updated Version to " + newVersion + " in " + systemDBURL + ".");
+    }
+
+    private void preSystemDBChangeGeneralManualUpgrades(DefaultArtifactVersion systemDatabaseVersion, DefaultArtifactVersion jarFileVersion) throws IOException {
         List<ResourceFile> applicableGeneralManualUpgrades =
-                getApplicableUpgradeResourceFiles(systemDatabaseVersion, jarFileVersion, "manual", "General", "txt");
+                getApplicableUpgradeResourceFiles(systemDatabaseVersion, jarFileVersion, "manual", "GeneralPreSystemDBChange", "txt");
         for (ResourceFile manualStep: applicableGeneralManualUpgrades) {
-            System.out.println(manualStep.getResourceAsText());
+            LOGGER.info(manualStep.getResourceAsText());    //  display manual step details to user
             Scanner scanner = new Scanner(System.in);
             String line = null;
             while (!"y".equalsIgnoreCase(line)) {
