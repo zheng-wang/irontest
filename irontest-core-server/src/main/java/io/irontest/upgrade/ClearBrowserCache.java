@@ -13,6 +13,7 @@ public class ClearBrowserCache {
         versionMap.put(new DefaultArtifactVersion("0.12.4"), new DefaultArtifactVersion("0.13.0"));
         versionMap.put(new DefaultArtifactVersion("0.13.0"), new DefaultArtifactVersion("0.14.0"));
         versionMap.put(new DefaultArtifactVersion("0.14.0"), new DefaultArtifactVersion("0.15.0"));
+        versionMap.put(new DefaultArtifactVersion("0.15.0"), new DefaultArtifactVersion("0.16.0"));
     }
 
     public Map<DefaultArtifactVersion, DefaultArtifactVersion> getVersionMap() {

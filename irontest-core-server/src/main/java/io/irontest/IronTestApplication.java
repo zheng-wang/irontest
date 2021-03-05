@@ -171,7 +171,9 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         DefaultArtifactVersion systemDBVersion = IronTestUtils.getSystemDBVersion(systemDBJdbi);
         DefaultArtifactVersion jarFileVersion = new DefaultArtifactVersion(Version.VERSION);
         int comparison = systemDBVersion.compareTo(jarFileVersion);
-        if (comparison == 0) {  //  system database and the jar file are of the same version
+        if ("SNAPSHOT".equals(systemDBVersion.getQualifier()) || "SNAPSHOT".equals(jarFileVersion.getQualifier())) {
+            return true;               //  SNAPSHOT jar or system DB is not considered for upgrade
+        } else if (comparison == 0) {  //  system database and the jar file are of the same version
             return true;
         } else if (comparison > 0) {    //  system database version is bigger than the jar file version
             System.out.printf(IronTestConstants.PROMPT_TEXT_WHEN_SYSTEM_DB_VERSION_IS_BIGGER_THAN_JAR_VERSION,

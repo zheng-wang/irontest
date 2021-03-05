@@ -43,13 +43,15 @@ public class UpgradeActions {
         boolean needsSystemDBUpgrade = upgradeSystemDBInTempDirIfNeeded(systemDatabaseVersion, jarFileVersion, ironTestHome,
                 fullyQualifiedSystemDBURL, user, password, oldFolderInTempUpgradeDir, newFolderInTempUpgradeDir);
 
+        boolean clearBrowserCacheNeeded = clearBrowserCacheIfNeeded(systemDatabaseVersion, jarFileVersion);
+
+        //  ------------------------- below steps will modify files in <IronTest_Home> -------------------------
+
         copyFilesToBeUpgraded(ironTestHome, systemDatabaseVersion, jarFileVersion);
 
         deleteOldJarsFromIronTestHome(ironTestHome);
 
         copyNewJarFromDistToIronTestHome(jarFileVersion, ironTestHome);
-
-        boolean clearBrowserCacheNeeded = clearBrowserCacheIfNeeded(systemDatabaseVersion, jarFileVersion);
 
         //  request user to execute pre system database change (upgrade, or simply version update) general manual upgrades if needed
         preSystemDBChangeGeneralManualUpgrades(systemDatabaseVersion, jarFileVersion);
@@ -85,7 +87,7 @@ public class UpgradeActions {
                 getApplicableUpgradeResourceFiles(systemDatabaseVersion, jarFileVersion, "db", "SystemDB", "sql");
         boolean needsSystemDBUpgrade = !applicableSystemDBUpgrades.isEmpty();
         if (needsSystemDBUpgrade) {
-            System.out.println("Please manually backup <IronTest_Home>/database folder to your normal maintenance backup location. Type y and then Enter to confirm backup completion.");
+            System.out.println("Please manually backup <IronTest_Home>/database folder to your normal maintenance backup location. To confirm backup completion, type y and then Enter.");
             Scanner scanner = new Scanner(System.in);
             String line = null;
             while (!"y".equalsIgnoreCase(line)) {
@@ -115,7 +117,7 @@ public class UpgradeActions {
             }
         }
         if (clearBrowserCacheNeeded) {
-            System.out.println("Please clear browser cached images and files (last hour is enough). Type y and then Enter to confirm clear completion.");
+            System.out.println("Please clear browser cached images and files (last hour is enough). To confirm clear completion, type y and then Enter.");
             Scanner scanner = new Scanner(System.in);
             String line = null;
             while (!"y".equalsIgnoreCase(line)) {
