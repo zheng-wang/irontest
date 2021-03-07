@@ -53,6 +53,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static com.github.tomakehurst.wiremock.common.Metadata.metadata;
 import static io.irontest.IronTestConstants.WIREMOCK_STUB_METADATA_ATTR_NAME_IRON_TEST_ID;
@@ -171,7 +172,9 @@ public final class IronTestUtils {
         }
 
         final HTTPAPIResponse apiResponse = new HTTPAPIResponse();
+        final AtomicReference<Date> responseReceivedTime = new AtomicReference<>();
         ResponseHandler<Void> responseHandler = httpResponse -> {
+            responseReceivedTime.set(new Date());
             apiResponse.setStatusCode(httpResponse.getStatusLine().getStatusCode());
             apiResponse.getHttpHeaders().add(
                     new HTTPHeader("*Status-Line*", httpResponse.getStatusLine().toString()));
@@ -200,11 +203,15 @@ public final class IronTestUtils {
         HttpClient httpClient = httpClientBuilder.build();
 
         //  invoke the API
+        Date invocationStartTime = new Date();
         try {
             httpClient.execute(httpRequest, responseHandler);
         } catch (ClientProtocolException e) {
             throw new RuntimeException(e.getCause().getMessage(), e);
         }
+
+        long responseTime = responseReceivedTime.get().getTime() - invocationStartTime.getTime();
+        apiResponse.setResponseTime(responseTime);
 
         return apiResponse;
     }

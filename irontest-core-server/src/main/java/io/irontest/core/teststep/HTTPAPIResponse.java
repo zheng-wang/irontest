@@ -10,8 +10,9 @@ import java.util.List;
  */
 public class HTTPAPIResponse extends APIResponse {
     private int statusCode;
-    private List<HTTPHeader> httpHeaders = new ArrayList<HTTPHeader>();
+    private List<HTTPHeader> httpHeaders = new ArrayList<>();
     private String httpBody;
+    private long responseTime;     //  in milliseconds
 
     public int getStatusCode() {
         return statusCode;
@@ -35,5 +36,13 @@ public class HTTPAPIResponse extends APIResponse {
 
     public void setHttpHeaders(List<HTTPHeader> httpHeaders) {
         this.httpHeaders = httpHeaders;
+    }
+
+    public long getResponseTime() {
+        return responseTime;
+    }
+
+    public void setResponseTime(long responseTime) {
+        this.responseTime = responseTime;
     }
 }

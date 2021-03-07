@@ -1,3 +1,8 @@
+<div class="row">
+  <div class="col-lg-12">Response Time: ${ response.responseTime }ms</div>
+</div>
+
+<div class="form-group"></div> <#-- spacer -->
 <#include "httpResponseHeaders.ftl">
 
 <div class="form-group"></div> <#-- spacer -->
