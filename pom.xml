@@ -55,6 +55,7 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <modules>
+                <module>irontest-common</module>
                 <module>irontest-core-server</module>
                 <module>irontest-core-ui</module>
                 <module>irontest-jms-solace</module>
@@ -66,6 +67,7 @@
         <profile>
             <id>dev</id>
             <modules>
+                <module>irontest-common</module>
                 <module>irontest-core-server</module>
                 <module>irontest-core-ui</module>
                 <module>irontest-jms-solace</module>

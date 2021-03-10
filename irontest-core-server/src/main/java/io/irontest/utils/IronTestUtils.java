@@ -370,12 +370,4 @@ public final class IronTestUtils {
     public static String base64EncodeByteArray(byte[] bytes) {
         return bytes == null ? null : Base64.encodeBase64String(bytes);
     }
-
-    public static DefaultArtifactVersion getSystemDBVersion(Jdbi jdbi) {
-        String versionStr = jdbi.withHandle(handle ->
-                handle.createQuery("select version from version")
-                        .mapTo(String.class)
-                        .findOnly());
-        return new DefaultArtifactVersion(versionStr);
-    }
 }

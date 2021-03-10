@@ -30,11 +30,12 @@ import io.irontest.auth.AuthResponseFilter;
 import io.irontest.auth.ResourceAuthenticator;
 import io.irontest.auth.ResourceAuthorizer;
 import io.irontest.auth.SimplePrincipal;
+import io.irontest.common.Constants;
+import io.irontest.common.Utils;
 import io.irontest.db.*;
 import io.irontest.models.AppInfo;
 import io.irontest.models.AppMode;
 import io.irontest.resources.*;
-import io.irontest.upgrade.UpgradeCommand;
 import io.irontest.utils.IronTestUtils;
 import io.irontest.ws.ArticleSOAP;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
@@ -67,8 +68,6 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
 
     @Override
     public void initialize(Bootstrap<IronTestConfiguration> bootstrap) {
-        bootstrap.addCommand(new UpgradeCommand());
-
         bootstrap.addBundle(new AssetsBundle("/assets/app", "/ui", "index.htm", "ui"));
         bootstrap.addBundle(new AssetsBundle("/META-INF/resources/webjars", "/ui/lib", null, "lib"));
         bootstrap.addBundle(new AssetsBundle("/assets/mockserver", "/ui/mockserver", "mockserver.htm", "mockserver"));
@@ -168,7 +167,7 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
      * @return true if version check finds no problem, false otherwise.
      */
     private boolean checkVersion(Jdbi systemDBJdbi) {
-        DefaultArtifactVersion systemDBVersion = IronTestUtils.getSystemDBVersion(systemDBJdbi);
+        DefaultArtifactVersion systemDBVersion = Utils.getSystemDBVersion(systemDBJdbi);
         DefaultArtifactVersion jarFileVersion = new DefaultArtifactVersion(Version.VERSION);
         int comparison = systemDBVersion.compareTo(jarFileVersion);
         if ("SNAPSHOT".equals(systemDBVersion.getQualifier()) || "SNAPSHOT".equals(jarFileVersion.getQualifier())) {
@@ -176,7 +175,7 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
         } else if (comparison == 0) {  //  system database and the jar file are of the same version
             return true;
         } else if (comparison > 0) {    //  system database version is bigger than the jar file version
-            System.out.printf(IronTestConstants.PROMPT_TEXT_WHEN_SYSTEM_DB_VERSION_IS_BIGGER_THAN_JAR_VERSION,
+            System.out.printf(Constants.PROMPT_TEXT_WHEN_SYSTEM_DB_VERSION_IS_BIGGER_THAN_JAR_VERSION,
                     systemDBVersion, jarFileVersion);
             System.out.println();
             return false;
