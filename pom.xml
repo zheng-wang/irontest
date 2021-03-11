@@ -48,6 +48,16 @@
         <maven.install.skip>true</maven.install.skip>  <!-- Avoid installing Iron Test jars to Maven local repository -->
     </properties>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+                <version>1.4.196</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <profiles>
         <profile>
             <id>default</id>

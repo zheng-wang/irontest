@@ -90,7 +90,6 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>1.4.196</version>
         </dependency>
         <dependency>
             <groupId>com.github.roskart.dropwizard-jaxws</groupId>
@@ -172,11 +171,6 @@
             <groupId>commons-net</groupId>
             <artifactId>commons-net</artifactId>
             <version>3.6</version>
-        </dependency>
-        <dependency> <!-- only used for getting the class DefaultArtifactVersion -->
-            <groupId>org.apache.maven</groupId>
-            <artifactId>maven-artifact</artifactId>
-            <version>3.6.3</version>
         </dependency>
 
         <!-- WireMock's dependencies -->

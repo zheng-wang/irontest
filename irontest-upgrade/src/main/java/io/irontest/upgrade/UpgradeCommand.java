@@ -1,5 +1,7 @@
 package io.irontest.upgrade;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import io.irontest.Version;
 import io.irontest.common.Constants;
 import io.irontest.common.Utils;
@@ -7,8 +9,8 @@ import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.jdbi.v3.core.Jdbi;
 import picocli.CommandLine;
 
+import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @CommandLine.Command(name = "upgrade", description = "Upgrade Iron Test")
@@ -18,13 +20,19 @@ public class UpgradeCommand implements Runnable {
 
     @Override
     public void run() {
-//        IronTestConfiguration configuration = getIronTestConfiguration(ironTestHome);
-//        DataSourceFactory systemDBConfiguration = configuration.getSystemDatabase();
-//        String fullyQualifiedSystemDBURL = getFullyQualifiedSystemDBURL(ironTestHome, systemDBConfiguration.getUrl());
-//        DefaultArtifactVersion systemDBVersion = getSystemDBVersionStr(fullyQualifiedSystemDBURL, systemDBConfiguration.getUser(),
-//                systemDBConfiguration.getPassword());
+        SystemDatabaseYml systemDBConfiguration;
+        ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+        try {
+            ConfigYml configYml = mapper.readValue(new File(ironTestHome, "config.yml"), ConfigYml.class);
+            systemDBConfiguration = configYml.getSystemDatabase();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to read config.yml under " + ironTestHome, e);
+        }
+
+        String fullyQualifiedSystemDBURL = getFullyQualifiedSystemDBURL(ironTestHome, systemDBConfiguration.getUrl());
+        DefaultArtifactVersion systemDBVersion = getSystemDBVersionStr(fullyQualifiedSystemDBURL, systemDBConfiguration.getUser(),
+                systemDBConfiguration.getPassword());
         DefaultArtifactVersion jarFileVersion = new DefaultArtifactVersion(Version.VERSION);
-                DefaultArtifactVersion systemDBVersion = new DefaultArtifactVersion("");
 
         int comparison = systemDBVersion.compareTo(jarFileVersion);
         if ("SNAPSHOT".equals(systemDBVersion.getQualifier())) {
@@ -38,20 +46,14 @@ public class UpgradeCommand implements Runnable {
                     systemDBVersion, jarFileVersion);
         } else {    //  system database version is smaller than the jar file version
             UpgradeActions upgradeActions = new UpgradeActions();
-//            upgradeActions.upgrade(systemDBVersion, jarFileVersion, ironTestHome, fullyQualifiedSystemDBURL,
-//                    systemDBConfiguration.getUser(), systemDBConfiguration.getPassword());
+            try {
+                upgradeActions.upgrade(systemDBVersion, jarFileVersion, ironTestHome, fullyQualifiedSystemDBURL,
+                        systemDBConfiguration.getUser(), systemDBConfiguration.getPassword());
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to upgrade Iron Test under " + ironTestHome);
+            }
         }
     }
-
-//    private IronTestConfiguration getIronTestConfiguration(String ironTestHome) throws IOException, ConfigurationException {
-//        Path configYmlFilePath = Paths.get(ironTestHome, "config.yml");
-//        ObjectMapper objectMapper = Jackson.newObjectMapper();
-//        Validator validator = Validators.newValidator();
-//        YamlConfigurationFactory<IronTestConfiguration> factory =
-//                new YamlConfigurationFactory<>(IronTestConfiguration.class, validator, objectMapper, "dw");
-//        IronTestConfiguration configuration = factory.build(configYmlFilePath.toFile());
-//        return configuration;
-//    }
 
     private String getFullyQualifiedSystemDBURL(String ironTestHome, String originalSystemDBURL) {
         String systemDBBaseURL = originalSystemDBURL.split(";")[0];
