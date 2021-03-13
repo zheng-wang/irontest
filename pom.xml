@@ -107,9 +107,11 @@
         <profile>
             <id>prod</id>
             <modules>
+                <module>irontest-common</module>
                 <module>irontest-core-server</module>
                 <module>irontest-core-ui</module>
                 <module>irontest-jms-solace</module>
+                <module>irontest-upgrade</module>
                 <module>irontest-assembly</module>
             </modules>
         </profile>

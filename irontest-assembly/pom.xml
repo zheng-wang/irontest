@@ -165,11 +165,18 @@
                                     <includeEmptyDirs>true</includeEmptyDirs>
                                     <outputDirectory>${distDir}</outputDirectory>
                                     <resources>
-                                        <!-- copy jar -->
+                                        <!-- copy irontest uber jar -->
                                         <resource>
                                             <directory>target</directory>
                                             <includes>
                                                 <include>${uberJarFileName}.jar</include>
+                                            </includes>
+                                        </resource>
+                                        <!-- copy irontest-upgrade-to uber jar -->
+                                        <resource>
+                                            <directory>../irontest-upgrade/target</directory>
+                                            <includes>
+                                                <include>irontest-upgrade-to-${project.version}.jar</include>
                                             </includes>
                                         </resource>
                                         <!-- copy config.yml -->
