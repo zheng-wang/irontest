@@ -50,7 +50,7 @@ public class UpgradeCommand implements Runnable {
                 upgradeActions.upgrade(systemDBVersion, jarFileVersion, ironTestHome, fullyQualifiedSystemDBURL,
                         systemDBConfiguration.getUser(), systemDBConfiguration.getPassword());
             } catch (Exception e) {
-                throw new RuntimeException("Failed to upgrade Iron Test under " + ironTestHome);
+                throw new RuntimeException("Failed to upgrade Iron Test under " + ironTestHome, e);
             }
         }
     }
