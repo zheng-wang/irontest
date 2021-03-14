@@ -1,0 +1,25 @@
+<div ng-controller="TeststepsActionController">
+  <div ng-if="teststep.type === 'SOAP' || teststep.type === 'HTTP'"
+       ng-include="'/ui/views/teststeps/edit-invocation-details-http.html'"
+       ng-controller="TeststepHTTPActionController"></div>
+  <div ng-if="teststep.type === 'DB'"
+       ng-include="'/ui/views/teststeps/db/edit-db-teststep-invocation.html'"
+       ng-controller="DBTeststepActionController"></div>
+  <div ng-if="teststep.type === 'JMS'"
+       ng-include="'/ui/views/teststeps/jms/edit-jms-teststep-action.html'"
+       ng-controller="JMSTeststepActionController"></div>
+  <div ng-if="teststep.type === 'FTP'"
+       ng-include="'/ui/views/teststeps/ftp/edit-ftp-teststep-action.html'"
+       ng-controller="FTPTeststepActionController"></div>
+  <div ng-if="teststep.type === 'MQ'"
+       ng-include="'/ui/views/teststeps/mq/edit-mq-teststep-action.html'"
+       ng-controller="MQTeststepActionController"></div>
+  <div ng-if="teststep.type === 'IIB'"
+       ng-include="'/ui/views/teststeps/iib/edit-iib-teststep-action.html'"
+       ng-controller="IIBTeststepActionController"></div>
+  <div ng-if="teststep.type === 'AMQP'"
+       ng-include="'/ui/views/teststeps/amqp/edit-amqp-teststep-action.html'"
+       ng-controller="AMQPTeststepActionController"></div>
+  <div ng-if="teststep.type === 'Wait'"
+       ng-include="'/ui/views/teststeps/wait/edit-wait-teststep-action.html'"></div>
+</div>

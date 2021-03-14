@@ -16,110 +16,17 @@
     <form name="teststepForm" class="form-horizontal" role="form" novalidate>
       <uib-tabset active="activeTabIndex">
         <uib-tab heading="Basic Info">
-          <div class="form-group"></div> <!-- spacer -->
-          <div class="col-lg-9">
-            <div class="form-group required" ng-class="{ 'has-error' : savingStatus.submitted && teststepForm.name.$invalid }">
-              <label for="name" class="col-lg-2 control-label">Name</label>
-              <div class="col-lg-10">
-                <input name="name" type="text" class="form-control" ng-model="teststep.name"
-                       irt-select="{{ activeTabIndex === 0 && teststepNewlyCreated() }}"
-                       ng-change="autoSave(teststepForm.$valid)" id="name" placeholder="Name"
-                       ng-readonly="appStatus.isForbidden()" required>
-                <div ng-show="savingStatus.submitted && teststepForm.name.$invalid" class="help-block">
-                  <p ng-show="teststepForm.name.$error.required">Name is required</p>
-                </div>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="description" class="col-lg-2 control-label">Description</label>
-              <div class="col-lg-10">
-              <textarea name="description" ng-model="teststep.description" ng-change="autoSave(teststepForm.$valid)"
-                        id="description" cols="30" rows="10" placeholder="Description" class="form-control"
-                        ng-readonly="appStatus.isForbidden()"></textarea>
-              </div>
-            </div>
-          </div>
+          <div ng-include="'/ui/views/teststeps/edit-basic-info.html'"></div>
         </uib-tab>
         <!-- can't use ng-if to replace ng-show below, as ng-if seems turning the tab index to 2 instead of 1
         when the tab is displayed  -->
         <uib-tab ng-show="teststep.endpoint || teststep.endpointProperty" heading="Endpoint Details"
                  deselect="isInShareEndpointMode() ? cancelShareEndpoint() : angular.noop()">
-          <div ng-controller="TeststepsEndpointController">
-            <div class="form-group"></div> <!-- spacer -->
-            <div class="form-group" ng-if="teststep.type === 'DB'">
-              <div class="col-lg-2 pull-right">
-                <button ng-if="teststep.endpoint" type="button" class="btn btn-info" ng-click="useEndpointProperty()"
-                        ng-disabled="appStatus.isForbidden()">Use Endpoint Property</button>
-                <button ng-if="teststep.endpointProperty" type="button" class="btn btn-info" ng-click="useDirectEndpoint()"
-                        ng-disabled="appStatus.isForbidden()">Use Direct Endpoint</button>
-              </div>
-            </div>
-            <div class="col-lg-10" ng-if="teststep.endpoint">
-              <!-- common for all types of endpoints -->
-              <div ng-include="'/ui/views/teststeps/edit-endpoint-details-basic-info.html'"></div>
-
-              <div ng-if="teststep.type === 'HTTP'"
-                   ng-include="'/ui/views/teststeps/http/edit-http-teststep-endpoint-details.html'"></div>
-              <div ng-if="teststep.type === 'SOAP'" ng-controller="SOAPTeststepEndpointController"
-                   ng-include="'/ui/views/teststeps/soap/edit-soap-teststep-endpoint-details.html'"></div>
-              <div ng-if="teststep.type === 'DB'"
-                   ng-include="'/ui/views/teststeps/db/edit-db-teststep-endpoint-details.html'"></div>
-              <div ng-if="teststep.type === 'JMS'" ng-controller="JMSTeststepEndpointController"
-                   ng-include="'/ui/views/teststeps/jms/edit-jms-teststep-endpoint-details.html'"></div>
-              <div ng-if="teststep.type === 'FTP'"
-                   ng-include="'/ui/views/teststeps/ftp/edit-ftp-teststep-endpoint-details.html'"></div>
-              <div ng-if="teststep.type === 'MQ'"
-                   ng-include="'/ui/views/teststeps/mq/edit-mq-teststep-endpoint-details.html'"></div>
-              <div ng-if="teststep.type === 'IIB'" ng-controller="IIBTeststepEndpointController"
-                   ng-include="'/ui/views/teststeps/iib/edit-iib-teststep-endpoint-details.html'"></div>
-              <div ng-if="teststep.type === 'AMQP'"
-                   ng-include="'/ui/views/teststeps/amqp/edit-amqp-teststep-endpoint-details.html'"></div>
-
-              <!-- common for all types of endpoints -->
-              <div ng-include="'/ui/views/teststeps/edit-endpoint-details-bottom-part.html'"></div>
-            </div>
-            <div class="col-lg-10" ng-if="teststep.endpointProperty">
-              <div class="form-group"></div> <!-- spacer -->
-              <div class="form-group"></div> <!-- spacer -->
-              <div class="form-group"></div> <!-- spacer -->
-              <div class="form-group">
-                <label for="endpointProperty" class="col-lg-2 control-label">Endpoint Property</label>
-                <div class="col-lg-10">
-                  <input id="endpointProperty" name="endpointProperty" type="text" class="form-control"
-                         ng-model="teststep.endpointProperty" ng-change="autoSave(teststepForm.$valid)"
-                         ng-readonly="appStatus.isForbidden()" spellcheck="false">
-                </div>
-              </div>
-            </div>
-          </div>
+          <div ng-include="'/ui/views/teststeps/edit-endpoint-details.html'"></div>
         </uib-tab>
         <uib-tab heading="{{ getActionOrInvocationTabHeading() }}"
                  deselect="getActionOrInvocationTabHeading() === 'Invocation' ? $broadcast('InvocationTabDeselected') : angular.noop()">
-          <div ng-controller="TeststepsActionController">
-            <div ng-if="teststep.type === 'SOAP' || teststep.type === 'HTTP'"
-                 ng-include="'/ui/views/teststeps/edit-invocation-details-http.html'"
-                 ng-controller="TeststepHTTPActionController"></div>
-            <div ng-if="teststep.type === 'DB'"
-                 ng-include="'/ui/views/teststeps/db/edit-db-teststep-invocation.html'"
-                 ng-controller="DBTeststepActionController"></div>
-            <div ng-if="teststep.type === 'JMS'"
-                 ng-include="'/ui/views/teststeps/jms/edit-jms-teststep-action.html'"
-                 ng-controller="JMSTeststepActionController"></div>
-            <div ng-if="teststep.type === 'FTP'"
-                 ng-include="'/ui/views/teststeps/ftp/edit-ftp-teststep-action.html'"
-                 ng-controller="FTPTeststepActionController"></div>
-            <div ng-if="teststep.type === 'MQ'"
-                 ng-include="'/ui/views/teststeps/mq/edit-mq-teststep-action.html'"
-                 ng-controller="MQTeststepActionController"></div>
-            <div ng-if="teststep.type === 'IIB'"
-                 ng-include="'/ui/views/teststeps/iib/edit-iib-teststep-action.html'"
-                 ng-controller="IIBTeststepActionController"></div>
-            <div ng-if="teststep.type === 'AMQP'"
-                 ng-include="'/ui/views/teststeps/amqp/edit-amqp-teststep-action.html'"
-                 ng-controller="AMQPTeststepActionController"></div>
-            <div ng-if="teststep.type === 'Wait'"
-                 ng-include="'/ui/views/teststeps/wait/edit-wait-teststep-action.html'"></div>
-            </div>
+          <div ng-include="'/ui/views/teststeps/edit-invocation-details.html'"></div>
         </uib-tab>
       </uib-tabset>
     </form>

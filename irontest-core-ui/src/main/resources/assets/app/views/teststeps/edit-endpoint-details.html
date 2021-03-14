@@ -1,0 +1,48 @@
+<div ng-controller="TeststepsEndpointController">
+  <div class="form-group"></div> <!-- spacer -->
+  <div class="form-group" ng-if="teststep.type === 'DB'">
+    <div class="col-lg-2 pull-right">
+      <button ng-if="teststep.endpoint" type="button" class="btn btn-info" ng-click="useEndpointProperty()"
+              ng-disabled="appStatus.isForbidden()">Use Endpoint Property</button>
+      <button ng-if="teststep.endpointProperty" type="button" class="btn btn-info" ng-click="useDirectEndpoint()"
+              ng-disabled="appStatus.isForbidden()">Use Direct Endpoint</button>
+    </div>
+  </div>
+  <div class="col-lg-10" ng-if="teststep.endpoint">
+    <!-- common for all types of endpoints -->
+    <div ng-include="'/ui/views/teststeps/edit-endpoint-details-basic-info.html'"></div>
+
+    <div ng-if="teststep.type === 'HTTP'"
+         ng-include="'/ui/views/teststeps/http/edit-http-teststep-endpoint-details.html'"></div>
+    <div ng-if="teststep.type === 'SOAP'" ng-controller="SOAPTeststepEndpointController"
+         ng-include="'/ui/views/teststeps/soap/edit-soap-teststep-endpoint-details.html'"></div>
+    <div ng-if="teststep.type === 'DB'"
+         ng-include="'/ui/views/teststeps/db/edit-db-teststep-endpoint-details.html'"></div>
+    <div ng-if="teststep.type === 'JMS'" ng-controller="JMSTeststepEndpointController"
+         ng-include="'/ui/views/teststeps/jms/edit-jms-teststep-endpoint-details.html'"></div>
+    <div ng-if="teststep.type === 'FTP'"
+         ng-include="'/ui/views/teststeps/ftp/edit-ftp-teststep-endpoint-details.html'"></div>
+    <div ng-if="teststep.type === 'MQ'"
+         ng-include="'/ui/views/teststeps/mq/edit-mq-teststep-endpoint-details.html'"></div>
+    <div ng-if="teststep.type === 'IIB'" ng-controller="IIBTeststepEndpointController"
+         ng-include="'/ui/views/teststeps/iib/edit-iib-teststep-endpoint-details.html'"></div>
+    <div ng-if="teststep.type === 'AMQP'"
+         ng-include="'/ui/views/teststeps/amqp/edit-amqp-teststep-endpoint-details.html'"></div>
+
+    <!-- common for all types of endpoints -->
+    <div ng-include="'/ui/views/teststeps/edit-endpoint-details-bottom-part.html'"></div>
+  </div>
+  <div class="col-lg-10" ng-if="teststep.endpointProperty">
+    <div class="form-group"></div> <!-- spacer -->
+    <div class="form-group"></div> <!-- spacer -->
+    <div class="form-group"></div> <!-- spacer -->
+    <div class="form-group">
+      <label for="endpointProperty" class="col-lg-2 control-label">Endpoint Property</label>
+      <div class="col-lg-10">
+        <input id="endpointProperty" name="endpointProperty" type="text" class="form-control"
+               ng-model="teststep.endpointProperty" ng-change="autoSave(teststepForm.$valid)"
+               ng-readonly="appStatus.isForbidden()" spellcheck="false">
+      </div>
+    </div>
+  </div>
+</div>
