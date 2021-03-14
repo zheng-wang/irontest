@@ -15,7 +15,7 @@ update endpoint set other_properties = case when other_properties like '%"useSSL
 -- update MQ endpoints
 update endpoint set other_properties = replace(other_properties, '"host":null,"port":null,') where type = 'MQ' and other_properties like '%"connectionMode":"Bindings"%';
 update endpoint set host = substring(other_properties, locate('"host":', other_properties) + 8, locate('","', other_properties, locate('"host":', other_properties) + 8) - (locate('"host":', other_properties) + 8)) where type = 'MQ' and other_properties like '%"connectionMode":"Client"%';
-update endpoint set port = cast(substring(other_properties, locate('"port":', other_properties) + 7, locate(',"', other_properties, locate('"port":', other_properties) + 7) - (locate('"port":', other_properties) + 7)) as int) where type = 'MQ' and other_properties like '%"connectionMode":"Client"%';
+update endpoint set port = case when other_properties like '%"port":null%' then null else cast(substring(other_properties, locate('"port":', other_properties) + 7, locate(',"', other_properties, locate('"port":', other_properties) + 7) - (locate('"port":', other_properties) + 7)) as int) end where type = 'MQ' and other_properties like '%"connectionMode":"Client"%';
 update endpoint set other_properties = replace(other_properties, substring(other_properties, locate('"host":', other_properties), locate('"svrConnChannelName":', other_properties) - locate('"host":', other_properties))) where type = 'MQ' and other_properties like '%"connectionMode":"Client"%';
 update endpoint set other_properties = replace(other_properties, substring(other_properties, locate(',"queueManagerAddress":', other_properties)), '}') where type = 'MQ';
 
