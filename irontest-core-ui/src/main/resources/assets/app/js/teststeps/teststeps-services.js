@@ -14,6 +14,12 @@ angular.module('irontest').factory('Teststeps', ['$resource',
           verb: 'run'
         }
       },
+      unmanageEndpoint: {
+        method: 'POST',
+        params: {
+          verb: 'unmanageEndpoint'
+        }
+      },
       useEndpointProperty: {
         method: 'POST',
         params: {

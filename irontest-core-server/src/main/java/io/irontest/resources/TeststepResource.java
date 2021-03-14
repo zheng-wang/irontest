@@ -78,6 +78,14 @@ public class TeststepResource {
     @JsonView(ResourceJsonViews.TeststepEdit.class)
     public TeststepWrapper findById(@PathParam("teststepId") long teststepId) {
         TeststepWrapper wrapper = new TeststepWrapper();
+
+        wrapper.setTeststep(_findById(teststepId));
+        populateParametersInWrapper(wrapper);
+
+        return wrapper;
+    }
+
+    private Teststep _findById(long teststepId) {
         Teststep teststep;
         TeststepRequestType requestType = teststepDAO.findRequestTypeById(teststepId);
         if (requestType == TeststepRequestType.FILE) {
@@ -85,10 +93,7 @@ public class TeststepResource {
         } else {
             teststep = teststepDAO.findById_Complete(teststepId);
         }
-        wrapper.setTeststep(teststep);
-        populateParametersInWrapper(wrapper);
-
-        return wrapper;
+        return teststep;
     }
 
     @PUT @Path("{teststepId}")
@@ -122,6 +127,14 @@ public class TeststepResource {
     @PermitAll
     public void delete(@PathParam("teststepId") long teststepId) {
         teststepDAO.deleteById(teststepId);
+    }
+
+    @POST @Path("{teststepId}/unmanageEndpoint")
+    @PermitAll
+    public Teststep unmanageEndpoint(@PathParam("teststepId") long teststepId) {
+        teststepDAO.unmanageEndpoint(teststepId);
+
+        return _findById(teststepId);
     }
 
     /**

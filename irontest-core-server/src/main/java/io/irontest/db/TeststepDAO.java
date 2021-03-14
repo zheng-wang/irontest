@@ -646,4 +646,10 @@ public interface TeststepDAO extends CrossReferenceDAO {
 
         return findById_Complete(teststepId);
     }
+
+    @Transaction
+    default void unmanageEndpoint(long teststepId) {
+        long newEndpointId = endpointDAO().duplicateManagedEndpointIntoUnmanaged(teststepId);
+        updateEndpointIdByIdForDuplication(teststepId, newEndpointId);
+    }
 }

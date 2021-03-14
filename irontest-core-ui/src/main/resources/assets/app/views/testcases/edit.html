@@ -15,8 +15,8 @@
           <div class="form-group no-bottom-margin">  <!-- use no-bottom-margin class to facilitate testcase run result outline area display -->
             <label for="description" class="col-lg-2 control-label">Description</label>
             <div class="col-lg-10">
-              <textarea name="description" ng-model="testcase.description" ng-change="autoSave(testcaseForm.$valid)"
-                        id="description" rows="30" placeholder="Description" class="form-control"
+              <textarea name="description" id="description" class="form-control" rows="30"
+                        ng-model="testcase.description" ng-change="autoSave(testcaseForm.$valid)"
                         ng-readonly="appStatus.isForbidden()" ng-style="styleOfMajorElementOnSelectedTab"></textarea>
             </div>
           </div>

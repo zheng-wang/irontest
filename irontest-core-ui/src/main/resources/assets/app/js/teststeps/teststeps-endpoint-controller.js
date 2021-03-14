@@ -69,6 +69,19 @@ angular.module('irontest').controller('TeststepsEndpointController', ['$scope',
       delete $scope.environments;
     };
 
+    $scope.unmanageEndpoint = function() {
+      var teststep = new Teststeps({
+        id: $scope.teststep.id,
+        testcaseId: $scope.teststep.testcaseId
+      });
+      teststep.$unmanageEndpoint(function(response) {
+        $scope.$emit('successfullySaved');
+        $scope.setTeststep(response);
+      }, function(error) {
+        IronTestUtils.openErrorHTTPResponseModal(error);
+      });
+    };
+
     $scope.mqEndpointConnectionModeChanged = function(isValid) {
       //  clear properties for Client connection mode, to avoid saving unintended values
       var endpoint = $scope.teststep.endpoint;

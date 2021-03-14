@@ -139,14 +139,26 @@ public interface EndpointDAO {
     void deleteUnmanagedEndpointById(@Bind("id") long id);
 
     /**
-     * Duplicate the endpoint of the specified test step if the endpoint exists and is an unmanaged one.
-     * @param oldTeststepId
+     * Duplicate the endpoint (as an unmanaged one) of the specified test step if the endpoint exists and is an unmanaged one.
+     * @param teststepId
      * @return new endpoint id if one endpoint is duplicated; null otherwise.
      */
-    @SqlUpdate("insert into endpoint (name, type, description, url, host, port, username, password, other_properties) " +
-            "select e.name, e.type, e.description, e.url, e.host, e.port, e.username, e.password, e.other_properties " +
-            "from teststep t left outer join endpoint e on t.endpoint_id = e.id where t.id = :oldTeststepId " +
+    @SqlUpdate("insert into endpoint (name, type, url, host, port, username, password, other_properties) " +
+            "select e.name, e.type, e.url, e.host, e.port, e.username, e.password, e.other_properties " +
+            "from teststep t left outer join endpoint e on t.endpoint_id = e.id where t.id = :teststepId " +
             "and e.id is not null and e.environment_id is null")
     @GetGeneratedKeys
-    Long duplicateUnmanagedEndpoint(@Bind("oldTeststepId") long oldTeststepId);
+    Long duplicateUnmanagedEndpoint(@Bind("teststepId") long teststepId);
+
+    /**
+     * Duplicate the endpoint (as an unmanaged one) of the specified test step if the endpoint exists and is a managed one.
+     * @param teststepId
+     * @return new endpoint id if one endpoint is duplicated; null otherwise.
+     */
+    @SqlUpdate("insert into endpoint (name, type, url, host, port, username, password, other_properties) " +
+            "select 'Unmanaged Endpoint', e.type, e.url, e.host, e.port, e.username, e.password, e.other_properties " +
+            "from teststep t left outer join endpoint e on t.endpoint_id = e.id where t.id = :teststepId " +
+            "and e.id is not null and e.environment_id is not null")
+    @GetGeneratedKeys
+    long duplicateManagedEndpointIntoUnmanaged(@Bind("teststepId") long teststepId);
 }
