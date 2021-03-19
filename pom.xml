@@ -118,6 +118,7 @@
         <profile>
             <id>sonatype-ossrh</id>
             <modules>
+                <module>irontest-common</module>
                 <module>irontest-core-server</module>
                 <module>irontest-iib</module>
                 <module>irontest-mq</module>
