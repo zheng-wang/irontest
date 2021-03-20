@@ -16,7 +16,7 @@ public class CopyFiles {
         allFiles.add(filesForOneVersion);
 
         filesForOneVersion = new CopyFilesForOneVersionUpgrade(
-                new DefaultArtifactVersion("0.16.0"), new DefaultArtifactVersion("0.16.1"));
+                new DefaultArtifactVersion("0.16.1"), new DefaultArtifactVersion("0.16.2"));
         filesForOneVersion.getFilePathMap().put("start.bat", "start.bat");
         allFiles.add(filesForOneVersion);
     }
