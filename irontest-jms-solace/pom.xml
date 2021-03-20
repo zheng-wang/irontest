@@ -7,7 +7,7 @@
     <parent>
         <artifactId>irontest-parent</artifactId>
         <groupId>io.irontest</groupId>
-        <version>0.16.2</version>
+        <version>0.16.3</version>
     </parent>
 
     <artifactId>irontest-jms-solace</artifactId>
