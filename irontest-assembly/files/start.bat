@@ -1,10 +1,15 @@
 @echo off
+setlocal enabledelayedexpansion
 cd %~dp0
 
 set count=0
 for /f %%i in ('dir /b /on irontest-*.jar 2^>nul') do (
-  set /a count+=1
-  set jarFile=%%i
+  set tmpfile=%%i
+  REM exclude the upgrade jar
+  if "x!tmpfile:-upgrade-to-=!"=="x!tmpfile!" (
+    set /a count+=1
+	set jarFile=!tmpfile!
+  )
 )
 
 if "%~1"=="team" (
