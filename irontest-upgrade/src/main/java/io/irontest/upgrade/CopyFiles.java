@@ -14,6 +14,11 @@ public class CopyFiles {
         filesForOneVersion.getFilePathMap().put("start.bat", "start.bat");
         filesForOneVersion.getFilePathMap().put("start-team.bat", "start-team.bat");
         allFiles.add(filesForOneVersion);
+
+        filesForOneVersion = new CopyFilesForOneVersionUpgrade(
+                new DefaultArtifactVersion("0.16.0"), new DefaultArtifactVersion("0.16.1"));
+        filesForOneVersion.getFilePathMap().put("start.bat", "start.bat");
+        allFiles.add(filesForOneVersion);
     }
 
     public List<CopyFilesForOneVersionUpgrade> getApplicableCopyFiles(DefaultArtifactVersion oldVersion,
