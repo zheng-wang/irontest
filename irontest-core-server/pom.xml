@@ -7,7 +7,7 @@
     <parent>
         <artifactId>irontest-parent</artifactId>
         <groupId>io.irontest</groupId>
-        <version>0.16.1</version>
+        <version>0.16.2</version>
     </parent>
 
     <artifactId>irontest-core-server</artifactId>
