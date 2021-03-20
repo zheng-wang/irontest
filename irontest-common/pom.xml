@@ -12,6 +12,18 @@
 
     <artifactId>irontest-common</artifactId>
 
+    <profiles>
+        <profile>
+            <id>sonatype-ossrh</id>
+            <properties>
+                <maven.source.skip>true</maven.source.skip>
+                <maven.javadoc.skip>true</maven.javadoc.skip>
+                <gpg.skip>true</gpg.skip>
+                <maven.deploy.skip>true</maven.deploy.skip>
+            </properties>
+        </profile>
+    </profiles>
+
     <dependencies>
         <dependency> <!-- only used for getting the class DefaultArtifactVersion -->
             <groupId>org.apache.maven</groupId>
