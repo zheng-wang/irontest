@@ -23,7 +23,7 @@ Table of Contents:
 - [Download](#download)
 - [Launch](#launch)
 - [Use](#use)
-    - [Integrated JSON HTTP API Testing](#integrated-json-http-api-testing)
+    - [Integrated REST API Testing](#integrated-rest-api-testing)
         - [Create Test Case Outline](#create-test-case-outline)
         - [Populate Step 1](#populate-step-1)
         - [Populate Step 2](#populate-step-2)
@@ -55,8 +55,8 @@ Though the UI is crossing browsers, Google Chrome is preferred as it is the main
 
 ## Use
 
-### Integrated JSON HTTP API Testing
-We are going to demo how to test a JSON HTTP API that updates an article in database. 
+### Integrated REST API Testing
+We are going to demo how to test a REST API that updates an article in database. 
 
 The API is the sample Article API that is bundled with Iron Test. It does CRUD operations against the Article table in a sample H2 database. The sample database is automatically created under `<IronTest_Home>/database` when Iron Test is launched for the first time.
  
@@ -168,7 +168,7 @@ The first time you launch the application, two new folders are created automatic
 
     database - where system database and a sample database are located. Both are H2 databases. 
         System database is used to store all test cases, environments, endpoints, etc. you create using Iron Test.
-        Sample database is for you to play with Iron Test basic features such as JSON HTTP API testing or database testing. An Article table is in it.
+        Sample database is for you to play with Iron Test basic features such as REST API testing or database testing. An Article table is in it.
     
     logs - where Iron Test application runtime logs are located.
     
