@@ -34,7 +34,7 @@ Table of Contents:
 - [License](#license)
         
 ## Download
-Download [latest Iron Test release](https://github.com/zheng-wang/irontest/releases/latest/download/irontest-dist.zip) and unpack it. The created folder will be referred to as `<IronTest_Home>` hereafter.
+Download the [latest Iron Test release](https://github.com/zheng-wang/irontest/releases/latest/download/irontest-dist.zip) and unpack it. The created folder will be referred to as `<IronTest_Home>` hereafter.
 
 ## Launch
 Prerequisites: JRE (Java SE Runtime Environment) or JDK 8+.
