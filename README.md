@@ -54,7 +54,6 @@ Open a web browser, and go to the UI address.
 Though the UI is crossing browsers, Google Chrome is preferred as it is the main browser that is used to test the application.
 
 ## Use
-Open Iron Test home page (http://localhost:8090/ui). 
 
 ### Integrated JSON HTTP API Testing
 We are going to demo how to test a JSON HTTP API that updates an article in database. 
