@@ -4,24 +4,23 @@ Iron Test is an open source tool for integration testing a variety of APIs. It i
 Supported API types
 * HTTP (including RESTful services)
 * SOAP
-* Relational databases (H2, Oracle, SQL Server)
+* Relational databases (Oracle, SQL Server, H2)
 * JMS (Solace)
 * FTP(S)
 * AMQP
-* WebSphere MQ
+* IBM MQ
 * IBM Integration Bus (IIB)
 
 The tool 
 * has GUI, saving user programming skills. Developers also have better experience using GUIed tool, as writing, reading and maintaining code are more brain power draining.
-* intends to provide a platform enabling integrating testing capabilities for all types of APIs (potentially including mainframe and IOT).
+* intends to provide a platform enabling integrating testing capabilities for all types of APIs.
 * provides advanced features like unlimited level folder structure for test case management, centralized and environment based endpoints management, user defined properties, data driven testing, HTTP stubs (mock services), full-text test case searching (TBD), and built-in (no VCS) team collaboration (partially done).
 * is designed for testers and developers, but in the same team/organization BAs or architects may also benefit from it. The thought here is that API test cases contain valuable business knowledge, and this knowledge should be shared and easily accessible and consumable to everyone in the team/organization.
 * does not support performance testing (for now).
 
 Table of Contents:
 
-- [Build](#build)
-- [Deploy](#deploy)
+- [Download](#download)
 - [Launch](#launch)
 - [Use](#use)
     - [Integrated JSON HTTP API Testing](#integrated-json-http-api-testing)
@@ -34,28 +33,13 @@ Table of Contents:
 - [Maintain](#maintain)
 - [License](#license)
         
-## Build
-Prerequisites: JDK (Java SE Development Kit) 8+, Apache Maven 3.3+.
-
-Download the latest Iron Test source code release from [here](https://github.com/zheng-wang/irontest/releases) to your local machine. Extract it, cd to the project directory (in which there is README.md), and run below Maven command
-
-`mvn clean package -P prod`
-
-An `irontest-assembly/dist` folder is created containing the files and folders for deployment.
-
-Notice that if this is the first time you build Iron Test, it could take 10 minutes (depending on your network speed) for Maven to download all the dependencies. From the second time, you should see the build time decreased to around 30 seconds, as the dependencies are already in your Maven local repository.
-  
-## Deploy
-Create a folder on any computer/VM that has access to the APIs you want to test. This folder will be referred to as `<IronTest_Home>` hereafter.
-
-Copy all files and folders from `dist` to `<IronTest_Home>`.
-
-The build itself can interact with HTTP APIs, SOAP web services and open source databases (like H2). To enable interacting with other types of APIs or systems such as Oracle database or WebSphere MQ, refer to this [wiki page](https://github.com/zheng-wang/irontest/wiki/Interact-with-Other-Systems).
+## Download
+Download [latest Iron Test release](https://github.com/zheng-wang/irontest/releases/latest/download/irontest-dist.zip) and unpack it. The created folder will be referred to as `<IronTest_Home>` hereafter.
 
 ## Launch
 Prerequisites: JRE (Java SE Runtime Environment) or JDK 8+.
 
-To launch Iron Test application, cd to `<IronTest_Home>` and run below command
+Open a command line window, cd to `<IronTest_Home>` and run below command
 
 `java -Djava.net.useSystemProxies=true -jar <jarFilename> server config.yml`
 
