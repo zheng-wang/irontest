@@ -36,6 +36,8 @@ Table of Contents:
 ## Download
 Download the [latest Iron Test release](https://github.com/zheng-wang/irontest/releases/latest/download/irontest-dist.zip) and unpack it. The created folder will be referred to as `<IronTest_Home>` hereafter.
 
+Alternatively, you can also [build Iron Test by yourself](https://github.com/zheng-wang/irontest/wiki/Build-Iron-Test-by-Yourself).
+
 ## Launch
 Prerequisites: JRE (Java SE Runtime Environment) or JDK 8+.
 
