@@ -45,7 +45,7 @@ Open a command line window, cd to `<IronTest_Home>` and run below command
 
 `java -Djava.net.useSystemProxies=true -jar <jarFilename> server config.yml`
 
-On Windows, alternatively you can simply run `<IronTest_Home>\start.bat`. You might want to create a shortcut of it on your Windows Desktop, Task Bar or Start Menu for more convenient launching.
+On Windows, alternatively you can simply run `<IronTest_Home>\start.bat`.
 
 Once the application is successfully launched, there will be a log like below displayed in the command line output
 
