@@ -51,9 +51,7 @@ Once the application is successfully launched, there will be a log like below di
 
 `Iron Test started with UI address http://localhost:8090/ui`
 
-Open a web browser, and go to the UI address. 
-
-Though the UI is crossing browsers, Google Chrome is preferred as it is the main browser that is used to test the application.
+Open a web browser (Google Chrome preferred), and go to the UI address. 
 
 ## Use
 
