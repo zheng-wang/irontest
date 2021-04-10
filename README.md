@@ -43,7 +43,7 @@ Prerequisites: JRE (Java SE Runtime Environment) or JDK 8+.
 
 Open a command line window, cd to `<IronTest_Home>` and run below command
 
-`java -Djava.net.useSystemProxies=true -jar <jarFilename> server config.yml`
+`java -Djava.net.useSystemProxies=true -jar irontest-<version>.jar server config.yml`
 
 On Windows, alternatively you can simply run `<IronTest_Home>\start.bat`.
 
