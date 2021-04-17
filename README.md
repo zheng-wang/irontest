@@ -23,7 +23,8 @@ Table of Contents:
 - [Download](#download)
 - [Launch](#launch)
 - [Use](#use)
-    - [Integrated REST API Testing](#integrated-rest-api-testing)
+    - [Ad Hoc Invocation](#ad-hoc-invocation)
+    - [Automated Test Case](#automated-test-case)
         - [Create Test Case Outline](#create-test-case-outline)
         - [Populate Step 1](#populate-step-1)
         - [Populate Step 2](#populate-step-2)
@@ -55,7 +56,20 @@ Open a web browser (Google Chrome preferred), and go to the UI address.
 
 ## Use
 
-### Integrated REST API Testing
+### Ad Hoc Invocation
+If you only want to invoke an API and see its response, just need to create a test step in a new or existing test case.
+
+To create a new test case, right click on a folder in the tree, select Create Test Case and give it a name.
+
+![New Ad Hoc Test Case](screenshots/basic-use/new-ad-hoc-test-case.png)
+
+Suppose you want to invoke a REST API. On the right pane of the screen, i.e. the test case edit view, under the Test Steps tab, click Create dropdown button and select HTTP Step. The test step edit view opens.
+
+Under the Basic Info tab, set the test step name. Under the Endpoint Details tab, set the API URL, like `http://dummy.restapiexample.com/api/v1/employee/1`. Under the Invocation tab, select Method `GET` and click Invoke button.
+
+![Ad Hoc HTTP Invocation](screenshots/basic-use/ad-hoc-http-invocation.png)
+
+### Automated Test Case
 We are going to demo how to test a REST API that updates an article in database. 
 
 The API is the sample Article API that is bundled with Iron Test. It does CRUD operations against the Article table in a sample H2 database. The sample database is automatically created under `<IronTest_Home>/database` when Iron Test is launched for the first time.
@@ -68,22 +82,18 @@ We are planning to have three test steps in our test case
 ```
 
 #### Create Test Case Outline
-First of all, create the (empty) test case by right clicking on a folder in the tree and selecting Create Test Case. Give it a name. The test case edit view shows as below.
-
-![New Test Case](screenshots/basic-use/new-test-case.png)
-
-You can create your preferred folder structure for managing test cases, by right clicking on folder and selecting needed context menu item.
+First of all, create a new test case. (You can create your preferred folder structure for managing test cases, by right clicking on folder and selecting needed context menu item.)
 
 Now we can add test steps to the test case.
 
-Under the Test Steps tab, click Create dropdown button and select Database Step. Enter the name of step 1 `Set up database data`. Click Back link to return to the test case edit view. Repeat this to add the other two test steps (one HTTP Step and one Database Step). The test case outline is created as shown below.
+Under the Test Steps tab, click Create dropdown button and select Database Step. Enter the name of step 1 `Set up database data`. Click `Back` link to return to the test case edit view. Repeat this to add the other two test steps (one HTTP Step and one Database Step). The test case outline is created as shown below.
 
 ![Test Case Outline](screenshots/basic-use/test-case-outline.png)
 
 #### Populate Step 1 
 Click the name of step 1 to open its edit view.
           
-Under the Endpoint Details tab, enter JDBC URL `jdbc:h2:./database/sample;AUTO_SERVER=TRUE` which will be used by the test step to connect to the sample database. Here `./database/sample` in the URL equals to `<IronTest_Home>/database/sample`, as Iron Test application is launched from directory `<IronTest_Home>`. Then enter Username and Password which can be found in `<IronTest_Home>/config.yml`.
+Under the Endpoint Details tab, set JDBC URL `jdbc:h2:./database/sample;AUTO_SERVER=TRUE` which will be used by the test step to connect to the sample database. Here `./database/sample` in the URL equals to `<IronTest_Home>/database/sample`, as Iron Test application is launched from directory `<IronTest_Home>`. Then set Username and Password which can be found in `<IronTest_Home>/config.yml`.
 
 Under the Invocation tab, enter below SQL script.
 ```
@@ -95,7 +105,7 @@ insert into article (id, title, content) values (1, 'article1', 'content1');
 insert into article (id, title, content) values (2, 'article2', 'content2');
 ```
 
-Click the Invoke button to try it out (run the script), like shown below.
+Click the Invoke button to try it out (i.e. run the script), like shown below.
 
 ![Database Setup](screenshots/basic-use/database-setup.png)
 
@@ -104,7 +114,7 @@ Click the Back link to return to test case edit view.
 #### Populate Step 2 
 Click the name of step 2 to open its edit view.
 
-Under the Endpoint Details tab, enter URL `http://localhost:8090/api/articles/2`. Ignore Username and Password fields as they are not used in this demo.
+Under the Endpoint Details tab, set URL `http://localhost:8090/api/articles/2`. Ignore Username and Password fields as they are not used in this demo.
 
 Under the Invocation tab, select `PUT` from the Method dropdown list, click the menu dropdown button and select `Show HTTP Headers`.
 
@@ -122,7 +132,7 @@ Input the request body for updating article 2.
 
 Click the Invoke button to try it out and you'll see a successful response in the right pane. 
 
-Click the Assertions button to open the assertions pane. In the assertions pane, click Create dropdown button and select `StatusCodeEqual Assertion` to create a StatusCodeEqual assertion. Enter the expected HTTP response status code (here 200), and click the Verify button to verify the assertion, as shown below.
+Click the Assertions button to open the assertions pane. In the assertions pane, click Create dropdown button and select `StatusCodeEqual Assertion` to create a StatusCodeEqual assertion. Set the expected HTTP response status code (here 200), and click the Verify button to verify the assertion, as shown below.
 
 ![HTTP Invocation and Assertion](screenshots/basic-use/http-invocation-and-assertion.png)
 
