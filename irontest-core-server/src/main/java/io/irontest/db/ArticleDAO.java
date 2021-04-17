@@ -18,6 +18,10 @@ public interface ArticleDAO {
             "updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)")
     void createTableIfNotExists();
 
+    @SqlUpdate("insert into article (id, title, content) select 1, 'article1', 'content1' " +
+            "where not exists (select id from article where id = 1)")
+    void insertArticle1IfNotExists();
+
     @SqlUpdate("insert into article (title, content) values (:title, :content)")
     @GetGeneratedKeys
     long insert(@BindBean Article article);

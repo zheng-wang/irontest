@@ -319,6 +319,7 @@ public class IronTestApplication extends Application<IronTestConfiguration> {
 
         //  create database tables
         articleDAO.createTableIfNotExists();
+        articleDAO.insertArticle1IfNotExists();
 
         //  register APIs
         environment.jersey().register(new ArticleResource(articleDAO));
