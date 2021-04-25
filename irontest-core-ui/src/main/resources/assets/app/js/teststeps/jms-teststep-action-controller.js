@@ -56,8 +56,26 @@ angular.module('irontest').controller('JMSTeststepActionController', ['$scope', 
     $scope.doAction = function() {
       clearPreviousRunStatus();
 
-      var teststep = new Teststeps($scope.teststep);
       $scope.steprun.status = 'ongoing';
+
+      //  for Browse action, get queue depth first
+      if ($scope.teststep.action === 'Browse') {
+        var checkQueueDepthStep = new Teststeps($scope.teststep);
+        checkQueueDepthStep.action = 'CheckDepth';
+        checkQueueDepthStep.$run(function(basicTeststepRun) {
+          $scope.steprun.queueDepth = basicTeststepRun.response.queueDepth;    //  set additional info into the steprun object
+          $scope._doAction();
+        }, function(error) {
+          $scope.steprun.status = 'failed';
+          IronTestUtils.openErrorHTTPResponseModal(error);
+        });
+      } else {
+        $scope._doAction();
+      }
+    };
+
+    $scope._doAction = function() {
+      var teststep = new Teststeps($scope.teststep);
       teststep.$run(function(basicTeststepRun) {
         $scope.steprun.response = basicTeststepRun.response;
         $scope.steprun.status = 'finished';
