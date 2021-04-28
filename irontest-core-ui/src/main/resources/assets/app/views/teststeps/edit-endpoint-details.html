@@ -28,6 +28,8 @@
          ng-include="'/ui/views/teststeps/iib/edit-iib-teststep-endpoint-details.html'"></div>
     <div ng-if="teststep.type === 'AMQP'"
          ng-include="'/ui/views/teststeps/amqp/edit-amqp-teststep-endpoint-details.html'"></div>
+    <div ng-if="teststep.type === 'MQTT'"
+         ng-include="'/ui/views/teststeps/mqtt/edit-mqtt-teststep-endpoint-details.html'"></div>
 
     <!-- common for all types of endpoints -->
     <div ng-include="'/ui/views/teststeps/edit-endpoint-details-bottom-part.html'"></div>
