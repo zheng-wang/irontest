@@ -5,14 +5,14 @@ import io.irontest.models.Properties;
 import io.irontest.resources.ResourceJsonViews;
 
 @JsonView({ResourceJsonViews.TeststepEdit.class, ResourceJsonViews.TestcaseExport.class})
-public class AMQPTeststepProperties extends Properties {
-    private String nodeAddress;
+public class MQTTTeststepProperties extends Properties {
+    private String topicString;
 
-    public String getNodeAddress() {
-        return nodeAddress;
+    public String getTopicString() {
+        return topicString;
     }
 
-    public void setNodeAddress(String nodeAddress) {
-        this.nodeAddress = nodeAddress;
+    public void setTopicString(String topicString) {
+        this.topicString = topicString;
     }
 }

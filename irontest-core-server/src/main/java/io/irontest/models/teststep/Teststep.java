@@ -86,6 +86,7 @@ public class Teststep {
             @JsonSubTypes.Type(value = MQTeststepProperties.class, name = Teststep.TYPE_MQ),
             @JsonSubTypes.Type(value = IIBTeststepProperties.class, name = Teststep.TYPE_IIB),
             @JsonSubTypes.Type(value = AMQPTeststepProperties.class, name = Teststep.TYPE_AMQP),
+            @JsonSubTypes.Type(value = MQTTTeststepProperties.class, name = Teststep.TYPE_MQTT),
             @JsonSubTypes.Type(value = WaitTeststepProperties.class, name = Teststep.TYPE_WAIT),
             @JsonSubTypes.Type(value = HTTPStubsSetupTeststepProperties.class, name = Teststep.TYPE_HTTP_STUBS_SETUP)})
     private Properties otherProperties = new Properties();

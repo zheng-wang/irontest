@@ -107,6 +107,9 @@ public interface TeststepDAO extends CrossReferenceDAO {
             case Teststep.TYPE_MQ:
                 otherProperties = new MQTeststepProperties();
                 break;
+            case Teststep.TYPE_MQTT:
+                apiRequest = new MQTTRequest();
+                break;
             case Teststep.TYPE_WAIT:
                 otherProperties = new WaitTeststepProperties("1000");
                 break;

@@ -20,6 +20,9 @@
   <div ng-if="teststep.type === 'AMQP'"
        ng-include="'/ui/views/teststeps/amqp/edit-amqp-teststep-action.html'"
        ng-controller="AMQPTeststepActionController"></div>
+  <div ng-if="teststep.type === 'MQTT'"
+      ng-include="'/ui/views/teststeps/mqtt/edit-mqtt-teststep-action.html'"
+      ng-controller="MQTTTeststepActionController"></div>
   <div ng-if="teststep.type === 'Wait'"
        ng-include="'/ui/views/teststeps/wait/edit-wait-teststep-action.html'"></div>
 </div>

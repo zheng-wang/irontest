@@ -1,0 +1,42 @@
+<div class="form-group"></div> <!-- spacer -->
+<div class="form-group">
+  <label for="serverURI" class="col-lg-2 control-label">Server URI</label>
+  <div class="col-lg-8">
+    <input name="serverURI" id="serverURI" type="text" class="form-control" ng-model="teststep.endpoint.url"
+           ng-change="autoSave(teststepForm.$valid)" spellcheck="false"
+           ng-readonly="appStatus.isForbidden() || teststep.endpoint.environment">
+  </div>
+</div>
+
+<div class="form-group">
+  <div>
+    <label for="topicString" class="col-lg-2 control-label">Topic String</label>
+    <div class="col-lg-8">
+      <input id="topicString" name="topicString" type="text" class="form-control" spellcheck="false"
+             ng-model="teststep.otherProperties.topicString" ng-change="autoSave(teststepForm.$valid)"
+             ng-readonly="appStatus.isForbidden()">
+    </div>
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="col-lg-2 control-label">Action</label>
+  <div class="col-lg-3"><h5>Publish</h5></div>
+  <div class="col-lg-1">
+    <button type="button" class="btn btn-info btn-block" ng-click="doAction()"
+            ng-disabled="appStatus.isForbidden() || endpointInfoIncomplete() || actionInfoIncomplete() ||
+              steprun.status === 'ongoing'">Do</button>
+  </div>
+  <div class="col-lg-4">       <!-- Action run status message -->
+    <h5 ng-if="steprun.status === 'ongoing'">Publishing message ...</h5>
+    <h5 ng-if="steprun.status === 'finished'">Message published.</h5>
+  </div>
+</div>
+
+<div class="form-group">
+  <div class="col-lg-10">
+    <textarea id="requestPayload" name="requestPayload" class="form-control" spellcheck="false" rows="30"
+              ng-model="teststep.apiRequest.payload" ng-change="autoSave(teststepForm.$valid)"
+              ng-readonly="appStatus.isForbidden()" placeholder="Payload"></textarea>
+  </div>
+</div>
