@@ -15,6 +15,7 @@ public class Endpoint {
     public static final String TYPE_MQ = "MQ";
     public static final String TYPE_IIB = "IIB";
     public static final String TYPE_AMQP = "AMQP";
+    public static final String TYPE_MQTT = "MQTT";
 
     @JsonView(ResourceJsonViews.TeststepEdit.class)
     private long id;

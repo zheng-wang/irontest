@@ -44,6 +44,11 @@
             <artifactId>irontest-jms-solace</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>io.irontest</groupId>
+            <artifactId>irontest-mqtt</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <profiles>

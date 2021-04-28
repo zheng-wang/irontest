@@ -21,6 +21,7 @@ public class Teststep {
     public static final String TYPE_MQ = "MQ";
     public static final String TYPE_IIB = "IIB";
     public static final String TYPE_AMQP = "AMQP";
+    public static final String TYPE_MQTT = "MQTT";
     public static final String TYPE_WAIT = "Wait";
 
     public static final String TYPE_WAIT_UNTIL_NEXT_SECOND = "WaitUntilNextSecond";

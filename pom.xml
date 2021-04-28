@@ -69,6 +69,7 @@
                 <module>irontest-core-server</module>
                 <module>irontest-core-ui</module>
                 <module>irontest-jms-solace</module>
+                <module>irontest-mqtt</module>
                 <module>irontest-assembly</module>
                 <module>irontest-iib</module>
                 <module>irontest-mq</module>
@@ -81,6 +82,7 @@
                 <module>irontest-core-server</module>
                 <module>irontest-core-ui</module>
                 <module>irontest-jms-solace</module>
+                <module>irontest-mqtt</module>
                 <module>irontest-assembly</module>
                 <module>irontest-iib</module>
                 <module>irontest-mq</module>
@@ -111,6 +113,7 @@
                 <module>irontest-core-server</module>
                 <module>irontest-core-ui</module>
                 <module>irontest-jms-solace</module>
+                <module>irontest-mqtt</module>
                 <module>irontest-upgrade</module>
                 <module>irontest-assembly</module>
             </modules>
