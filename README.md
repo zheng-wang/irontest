@@ -66,7 +66,7 @@ To create a new test case, right click on a folder in the tree, select Create Te
 
 Suppose you want to invoke a REST API. On the right pane of the screen, i.e. the test case edit view, under the Test Steps tab, click Create dropdown button and select HTTP Step. The test step edit view opens.
 
-Under the Basic Info tab, set the test step name. Under the Invocation tab, select Method like `GET`, set URL like `http://dummy.restapiexample.com/api/v1/employee/1` and click Invoke button.
+Under the Basic Info tab, set the test step name. Under the Invocation tab, select Method like `GET`, set URL like `http://localhost:8090/api/articles` (an Iron Test bundled API) and click Invoke button.
 
 ![Ad Hoc HTTP Invocation](screenshots/basic-use/ad-hoc-http-invocation.png)
 
