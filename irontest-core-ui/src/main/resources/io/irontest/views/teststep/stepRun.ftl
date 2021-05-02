@@ -49,19 +49,19 @@
 </#if>
 
 <#-- Request, Response, and Assertions info -->
-<#assign teststepTypes = ["HTTP", "SOAP", "DB", "JMS", "FTP", "MQ", "AMQP", "HTTPStubRequestsCheck"]>
+<#assign teststepTypes = ["HTTP", "SOAP", "DB", "JMS", "FTP", "MQ", "AMQP", "MQTT", "HTTPStubRequestsCheck"]>
 <#if teststepTypes?seq_contains(teststep.type) && !(teststep.type == 'MQ' && teststep.action == 'Clear')>
   <div class="form-group"></div> <#-- spacer -->
 
   <#assign hasRequestTab = !(teststep.type == 'MQ' && (teststep.action == 'CheckDepth' || teststep.action == 'Dequeue')) &&
     !(teststep.type == 'JMS' && (teststep.action == 'CheckDepth' || teststep.action == 'Clear' || teststep.action == 'Browse')) &&
-    teststep.type != 'HTTPStubRequestsCheck'>
+    !['HTTPStubRequestsCheck']?seq_contains(teststep.type)>
   <#assign hasResponseTab = !(teststep.type == 'MQ' && (teststep.action == 'Enqueue' || teststep.action == 'Publish')) &&
     !(teststep.type == 'JMS' && (teststep.action == 'Send' || teststep.action == 'Publish')) &&
-    teststep.type != 'AMQP' && teststep.type != 'FTP'>
+    !['FTP', 'AMQP', 'MQTT']?seq_contains(teststep.type)>
   <#assign hasAssertionsTab = !(teststep.type == 'MQ' && (teststep.action == 'Enqueue' || teststep.action == 'Publish')) &&
-      !(teststep.type == 'JMS' && (teststep.action == 'Clear' || teststep.action == 'Send' || teststep.action == 'Publish')) &&
-      teststep.type != 'AMQP' && teststep.type != 'FTP'>
+    !(teststep.type == 'JMS' && (teststep.action == 'Clear' || teststep.action == 'Send' || teststep.action == 'Publish')) &&
+    !['FTP', 'AMQP', 'MQTT']?seq_contains(teststep.type)>
   <div>
     <#-- Nav tabs -->
     <ul class="nav nav-tabs tabs-in-test-report" role="tablist">
