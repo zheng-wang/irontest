@@ -1,6 +1,6 @@
-<#if stepRun.teststep.action == 'WaitForProcessingCompletion'>Wait for processing completion of<#else>${stepRun.teststep.action}</#if>
- message flow "${ stepRun.teststep.otherProperties.messageFlowName }"
-<#if stepRun.teststep.otherProperties.applicationName??>in application "${stepRun.teststep.otherProperties.applicationName}"</#if>
-on integration server "${ stepRun.teststep.otherProperties.integrationServerName }"
-<#t>on integration node "${ stepRun.teststep.endpoint.constructedUrl }"
-<#if stepRun.teststep.endpoint.type == 'MQ' && stepRun.teststep.endpoint.otherProperties.connectionMode == 'Client'> through channel "${ (stepRun.teststep.endpoint.otherProperties.svrConnChannelName??)?then(stepRun.teststep.endpoint.otherProperties.svrConnChannelName, 'null') }"</#if>.
+<#if teststep.action == 'WaitForProcessingCompletion'>Wait for processing completion of<#else>${teststep.action}</#if>
+ message flow "${ stepOtherProperties.messageFlowName }"
+<#if stepOtherProperties.applicationName??>in application "${stepOtherProperties.applicationName}"</#if>
+on integration server "${ stepOtherProperties.integrationServerName }"
+<#t>on integration node "${ endpoint.constructedUrl }"
+<#if endpoint.type == 'MQ' && endpointProperties.connectionMode == 'Client'> through channel "${ (endpointProperties.svrConnChannelName??)?then(endpointProperties.svrConnChannelName, 'null') }"</#if>.

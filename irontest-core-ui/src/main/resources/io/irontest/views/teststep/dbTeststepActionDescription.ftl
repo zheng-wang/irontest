@@ -1,2 +1,2 @@
-Run SQL statement(s) on database with JDBC URL "${ (stepRun.teststep.endpoint.url??)?then(stepRun.teststep.endpoint.url, 'null') }"
-<#if stepRun.teststep.endpoint.username??>and username "${ stepRun.teststep.endpoint.username }"</#if>.
+Run SQL statement(s) on database with JDBC URL "${ (endpoint.url??)?then(endpoint.url, 'null') }"
+<#if endpoint.username??>and username "${ endpoint.username }"</#if>.

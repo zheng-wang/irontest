@@ -1,2 +1,2 @@
-<#t>Invoke SOAP web service "${ (stepRun.teststep.endpoint.url??)?then(stepRun.teststep.endpoint.url, 'null') }"
-<#if stepRun.teststep.endpoint.username??> with username "${ stepRun.teststep.endpoint.username }"</#if>.
+<#t>Invoke SOAP web service "${ (endpoint.url??)?then(endpoint.url, 'null') }"
+<#if endpoint.username??> with username "${ endpoint.username }"</#if>.

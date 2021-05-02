@@ -1,2 +1,2 @@
-<#t>Invoke HTTP API "${ (stepRun.teststep.endpoint.url??)?then(stepRun.teststep.endpoint.url, 'null') }" using method ${ stepRun.teststep.otherProperties.httpMethod }
-<#if stepRun.teststep.endpoint.username??> with username "${ stepRun.teststep.endpoint.username }"</#if>.
+<#t>Invoke HTTP API "${ (endpoint.url??)?then(endpoint.url, 'null') }" using method ${ stepOtherProperties.httpMethod }
+<#if endpoint.username??> with username "${ endpoint.username }"</#if>.

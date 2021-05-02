@@ -1,1 +1,1 @@
-Wait ${ stepRun.teststep.otherProperties.milliseconds } milliseconds.
+Wait ${ stepOtherProperties.milliseconds } milliseconds.
