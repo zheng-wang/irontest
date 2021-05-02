@@ -62,8 +62,8 @@ public class JMSSolaceTeststepRunner extends TeststepRunner {
         connectionFactory.setPort(endpoint.getPort());
         connectionFactory.setVPN(endpointProperties.getVpn());
         connectionFactory.setUsername(endpoint.getUsername());
-        connectionFactory.setPassword(endpoint.getPassword());
-        connectionFactory.setBrowserTimeoutInMS(100);    //  only needed for using JMS QueueBrowser
+        connectionFactory.setPassword(getDecryptedEndpointPassword());
+        connectionFactory.setBrowserTimeoutInMS(200);    //  only needed for using JMS QueueBrowser
         return connectionFactory.createConnection();
     }
 
@@ -219,7 +219,7 @@ public class JMSSolaceTeststepRunner extends TeststepRunner {
             int index = 0;
             while (messages.hasMoreElements()) {
                 index++;
-                javax.jms.TextMessage message = (javax.jms.TextMessage) messages.nextElement();
+                javax.jms.Message message = messages.nextElement();
                 if (index == browseMessageIndex) {
                     response = new JMSBrowseQueueResponse();
 
@@ -253,7 +253,18 @@ public class JMSSolaceTeststepRunner extends TeststepRunner {
                     }
 
                     //  set body
-                    response.setBody(message.getText());
+                    String body;
+                    if (message instanceof javax.jms.TextMessage) {
+                        body = ((javax.jms.TextMessage) message).getText();
+                    } else if (message instanceof javax.jms.BytesMessage) {
+                        javax.jms.BytesMessage bytesMessage = (javax.jms.BytesMessage) message;
+                        byte[] bytes = new byte[(int) bytesMessage.getBodyLength()];
+                        bytesMessage.readBytes(bytes);
+                        body = new String(bytes);
+                    } else {
+                        throw new RuntimeException("Message type " + message.getClass() + " currently unsupported.");
+                    }
+                    response.setBody(body);
 
                     break;
                 }
