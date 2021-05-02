@@ -8,6 +8,7 @@ Supported API types
 * JMS (Solace)
 * FTP(S)
 * AMQP
+* MQTT
 * IBM MQ
 * IBM Integration Bus (IIB)
 
