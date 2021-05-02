@@ -1,0 +1,2 @@
+<#t>Publish message to topic "${ (stepOtherProperties.topicString??)?then(stepOtherProperties.topicString, 'null') }" at MQTT server URI "${ endpoint.url }"
+<#if endpoint.username??> with username "${ endpoint.username }"</#if>.
