@@ -8,6 +8,7 @@ import io.irontest.models.OracleTIMESTAMPTZSerializer;
 import io.irontest.models.endpoint.Endpoint;
 import io.irontest.models.teststep.Teststep;
 import io.irontest.utils.IronTestUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.statement.Query;
@@ -54,7 +55,7 @@ public class DBTeststepRunner extends TeststepRunner {
 
         Endpoint endpoint = teststep.getEndpoint();
         Jdbi jdbi;
-        if (endpoint.getUsername() == null) {
+        if ("".equals(StringUtils.trimToEmpty(endpoint.getUsername()))) {
             jdbi = Jdbi.create(endpoint.getUrl());
         } else {
             jdbi = Jdbi.create(endpoint.getUrl(), endpoint.getUsername(), getDecryptedEndpointPassword());
@@ -66,7 +67,7 @@ public class DBTeststepRunner extends TeststepRunner {
             Query query = handle.createQuery(statements.get(0))
                     .setMaxRows(5000);          //  limit the number of returned rows
             //  obtain columnNames in case the query returns no row
-            final List<String> columnNames = new ArrayList<String>();
+            final List<String> columnNames = new ArrayList<>();
             query.addCustomizer(new StatementCustomizer() {
                 public void afterExecution(PreparedStatement stmt, StatementContext ctx) throws SQLException {
                     ResultSetMetaData metaData = stmt.getMetaData();
