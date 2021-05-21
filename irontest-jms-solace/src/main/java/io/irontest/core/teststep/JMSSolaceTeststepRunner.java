@@ -159,7 +159,7 @@ public class JMSSolaceTeststepRunner extends TeststepRunner {
 
             BrowserProperties properties = new BrowserProperties();
             properties.setEndpoint(queue);
-            properties.setWaitTimeout(50);
+            properties.setWaitTimeout(100);                   //  50 is too small and often causes incomplete depth check
             Browser browser = session.createBrowser(properties);
             BytesXMLMessage message;
             do {
