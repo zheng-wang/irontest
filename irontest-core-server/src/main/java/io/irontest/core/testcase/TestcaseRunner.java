@@ -208,7 +208,7 @@ public abstract class TestcaseRunner {
             if (Teststep.ACTION_CHECK_DEPTH.equals(teststepAction)) {
                 result = ((JMSCheckQueueDepthResponse) apiResponse).getQueueDepth();
             } else if (Teststep.ACTION_BROWSE.equals(teststepAction)) {
-                result = ((JMSBrowseQueueResponse) apiResponse).getBody();
+                result = apiResponse == null ? null : ((JMSBrowseQueueResponse) apiResponse).getBody();
             }
         } else if (Teststep.TYPE_MQ.equals(teststepType)) {
             if (Teststep.ACTION_CHECK_DEPTH.equals(teststepAction)) {
