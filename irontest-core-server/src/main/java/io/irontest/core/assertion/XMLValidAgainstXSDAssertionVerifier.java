@@ -27,7 +27,7 @@ import java.util.List;
 public class XMLValidAgainstXSDAssertionVerifier extends AssertionVerifier {
     /**
      *
-     * @param inputs  contains only one argument: the XML string that the assertion is verified against
+     * @param inputs  contains only one argument: the XML string that the assertion is verifying against the XSD
      * @return
      * @throws Exception
      */

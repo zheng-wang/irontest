@@ -18,6 +18,7 @@ public class Assertion {
     public static final String TYPE_XML_VALID_AGAINST_XSD = "XMLValidAgainstXSD";
     public static final String TYPE_JSON_EQUAL = "JSONEqual";
     public static final String TYPE_JSONPATH = "JSONPath";
+    public static final String TYPE_JSON_VALID_AGAINST_JSON_SCHEMA = "JSONValidAgainstJSONSchema";
     public static final String TYPE_JSONPATH_XMLEQUAL = "JSONPathXMLEqual";
     public static final String TYPE_HTTP_STUB_HIT = "HTTPStubHit";
     public static final String TYPE_ALL_HTTP_STUB_REQUESTS_MATCHED = "AllHTTPStubRequestsMatched";
@@ -47,6 +48,7 @@ public class Assertion {
             @JsonSubTypes.Type(value = XMLValidAgainstXSDAssertionProperties.class, name = Assertion.TYPE_XML_VALID_AGAINST_XSD),
             @JsonSubTypes.Type(value = JSONEqualAssertionProperties.class, name = Assertion.TYPE_JSON_EQUAL),
             @JsonSubTypes.Type(value = JSONPathAssertionProperties.class, name = Assertion.TYPE_JSONPATH),
+            @JsonSubTypes.Type(value = JSONValidAgainstJSONSchemaAssertionProperties.class, name = Assertion.TYPE_JSON_VALID_AGAINST_JSON_SCHEMA),
             @JsonSubTypes.Type(value = JSONPathXMLEqualAssertionProperties.class, name = Assertion.TYPE_JSONPATH_XMLEQUAL),
             @JsonSubTypes.Type(value = HTTPStubHitAssertionProperties.class, name = Assertion.TYPE_HTTP_STUB_HIT),
             @JsonSubTypes.Type(value = HTTPStubsHitInOrderAssertionProperties.class, name = Assertion.TYPE_HTTP_STUBS_HIT_IN_ORDER),

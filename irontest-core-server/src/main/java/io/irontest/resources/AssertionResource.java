@@ -10,10 +10,7 @@ import io.irontest.db.UserDefinedPropertyDAO;
 import io.irontest.models.DataTable;
 import io.irontest.models.TestResult;
 import io.irontest.models.UserDefinedProperty;
-import io.irontest.models.assertion.Assertion;
-import io.irontest.models.assertion.AssertionVerificationRequest;
-import io.irontest.models.assertion.AssertionVerificationResult;
-import io.irontest.models.assertion.XMLValidAgainstXSDAssertionProperties;
+import io.irontest.models.assertion.*;
 import io.irontest.models.teststep.MQRFH2Header;
 import io.irontest.utils.IronTestUtils;
 import org.apache.commons.io.IOUtils;
@@ -60,8 +57,9 @@ public class AssertionResource {
     public AssertionVerificationResult verify(AssertionVerificationRequest assertionVerificationRequest) throws IOException {
         Assertion assertion = assertionVerificationRequest.getAssertion();
 
-        //  populate xsd file bytes for XMLValidAgainstXSDAssertion which are not passed from UI to this method
-        if (Assertion.TYPE_XML_VALID_AGAINST_XSD.equals(assertion.getType())) {
+        //  populate xsd file bytes for JSONValidAgainstJSONSchema or XMLValidAgainstXSD assertion which are not passed from UI to this method
+        if (Assertion.TYPE_JSON_VALID_AGAINST_JSON_SCHEMA.equals(assertion.getType()) ||
+                Assertion.TYPE_XML_VALID_AGAINST_XSD.equals(assertion.getType())) {
             assertion.setOtherProperties(assertionDAO.findById(assertion.getId()).getOtherProperties());
         }
 
@@ -137,6 +135,55 @@ public class AssertionResource {
         Assertion assertion = assertionDAO.findById(assertionId);
         XMLValidAgainstXSDAssertionProperties assertionProperties =
                 (XMLValidAgainstXSDAssertionProperties) assertion.getOtherProperties();
+        String fileName = assertionProperties.getFileName();
+        return Response.ok(assertionProperties.getFileBytes())
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                .build();
+    }
+
+    /**
+     * Save the uploaded JSON Schema file into the (JSONValidAgainstJSONSchema) assertion.
+     * Use @POST instead of @PUT because ng-file-upload seems not working with PUT.
+     * @param assertionId
+     * @param inputStream
+     * @param contentDispositionHeader
+     * @return
+     */
+    @POST @Path("assertions/{assertionId}/jsonSchemaFile")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @PermitAll
+    public void saveJSONSchemaFile(@PathParam("assertionId") long assertionId,
+                            @FormDataParam("file") InputStream inputStream,
+                            @FormDataParam("file") FormDataContentDisposition contentDispositionHeader) throws IOException {
+        //  check the file
+        String fileName = contentDispositionHeader.getFileName();
+        if (!fileName.toLowerCase().endsWith(".json")) {
+            throw new IllegalArgumentException("Only .json file is supported.");
+        }
+
+        JSONValidAgainstJSONSchemaAssertionProperties properties = new JSONValidAgainstJSONSchemaAssertionProperties();
+        properties.setFileName(fileName);
+        byte[] fileBytes;
+        try {
+            fileBytes = IOUtils.toByteArray(inputStream);
+        } finally {
+            inputStream.close();
+        }
+        properties.setFileBytes(fileBytes);
+        assertionDAO.updateOtherProperties(assertionId, properties);
+    }
+
+    /**
+     * Download the JSON Schema file from the (JSONValidAgainstJSONSchema) assertion.
+     * @param assertionId
+     * @return
+     */
+    @GET @Path("assertions/{assertionId}/jsonSchemaFile")
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public Response getJSONSchemaFile(@PathParam("assertionId") long assertionId) {
+        Assertion assertion = assertionDAO.findById(assertionId);
+        JSONValidAgainstJSONSchemaAssertionProperties assertionProperties =
+                (JSONValidAgainstJSONSchemaAssertionProperties) assertion.getOtherProperties();
         String fileName = assertionProperties.getFileName();
         return Response.ok(assertionProperties.getFileBytes())
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")

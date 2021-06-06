@@ -100,14 +100,16 @@ public class TeststepResource {
     @PermitAll
     @JsonView(ResourceJsonViews.TeststepEdit.class)
     public TeststepWrapper update(Teststep teststep) throws Exception {
-        //  Restore otherProperties from system database for existing XMLValidAgainstXSD assertions, as they are not
-        //  supposed to be updated through this API (currently used for UI only).
-        //  Without this code, whenever a new XMLValidAgainstXSD assertion is added, or an existing XMLValidAgainstXSD
-        //  assertion is deleted, all existing XMLValidAgainstXSD assertions in the same test step will see their
+        //  Restore otherProperties from system database for existing JSONValidAgainstJSONSchema or XMLValidAgainstXSD
+        //  assertions, as they are not supposed to be updated through this API (currently used for UI only).
+        //  Without this code, whenever a new JSONValidAgainstJSONSchema or XMLValidAgainstXSD assertion is added, or an
+        //  existing JSONValidAgainstJSONSchema or XMLValidAgainstXSD assertion is deleted, all existing
+        //  JSONValidAgainstJSONSchema or XMLValidAgainstXSD assertions in the same test step will see their
         //  otherProperties.fileBytes set to null in system database.
         List<Assertion> assertions = teststep.getAssertions();
         for (Assertion assertion: assertions) {
-            if (assertion.getId() != null && Assertion.TYPE_XML_VALID_AGAINST_XSD.endsWith(assertion.getType())) {
+            if (assertion.getId() != null && (Assertion.TYPE_JSON_VALID_AGAINST_JSON_SCHEMA.endsWith(assertion.getType()) ||
+                    Assertion.TYPE_XML_VALID_AGAINST_XSD.endsWith(assertion.getType()))) {
                 assertion.setOtherProperties(assertionDAO.findById(assertion.getId()).getOtherProperties());
             }
         }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.irontest.core.MapValueLookup;
 import io.irontest.models.assertion.Assertion;
+import io.irontest.models.assertion.JSONValidAgainstJSONSchemaAssertionProperties;
 import org.apache.commons.text.StrSubstitutor;
 
 import java.io.IOException;
@@ -66,6 +67,9 @@ public class AssertionVerifierFactory {
                 break;
             case Assertion.TYPE_JSON_EQUAL:
                 result = new JSONEqualAssertionVerifier();
+                break;
+            case Assertion.TYPE_JSON_VALID_AGAINST_JSON_SCHEMA:
+                result = new JSONValidAgainstJSONSchemaAssertionVerifier();
                 break;
             case Assertion.TYPE_HTTP_STUB_HIT:
                 result = new HTTPStubHitAssertionVerifier();
