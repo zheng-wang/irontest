@@ -10,6 +10,7 @@ import io.irontest.models.assertion.JSONValidAgainstJSONSchemaAssertionVerificat
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Set;
+import java.util.StringJoiner;
 
 public class JSONValidAgainstJSONSchemaAssertionVerifier extends AssertionVerifier {
     /**
@@ -48,8 +49,8 @@ public class JSONValidAgainstJSONSchemaAssertionVerifier extends AssertionVerifi
             result.setResult(TestResult.PASSED);
         } else {
             result.setResult(TestResult.FAILED);
-            StringBuffer failureDetails = new StringBuffer();
-            validationResult.forEach(validationMessage -> failureDetails.append(validationMessage).append("\n"));
+            StringJoiner failureDetails = new StringJoiner("\n");
+            validationResult.forEach(validationMessage -> failureDetails.add(validationMessage.toString() + "."));
             result.setFailureDetails(failureDetails.toString());
         }
 
