@@ -1,4 +1,4 @@
-:warning: | No more development here. Project has been migrated to https://github.com/apitestbase/apitestbase.
+:warning: | No more development here. Project has been migrated to https://github.com/apitestbase/apitestbase-release.
 :---: | :---
 
 # Iron Test
